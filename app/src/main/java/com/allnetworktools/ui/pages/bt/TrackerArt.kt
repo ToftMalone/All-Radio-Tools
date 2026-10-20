@@ -73,15 +73,51 @@ private fun rounded(l: Float, t: Float, r: Float, b: Float, radius: Float) =
 
 private fun Path.minus(other: Path) = Path().also { it.op(this, other, PathOperation.Difference) }
 
-/** AirTag: a glossy white disc, slightly domed, with its polished rim. */
+/**
+ * AirTag from the back, the side everyone recognises: a thick glossy white rim, a thin chrome ring, then the
+ * mirror-polished steel disc (dark, it reflects the room) with the engraved lettering around and the white apple.
+ */
 private fun DrawScope.airTag() {
-    shadowed(circle(50f, 50f, 40f)) { p ->
-        drawPath(p, Brush.radialGradient(listOf(Color.White, Color(0xFFF1F2F4), Color(0xFFD9DCE1)), Offset(42f, 40f), 48f))
-        drawPath(p, Color(0xFFB8BDC5), style = Stroke(2.2f))
+    val c = Offset(50f, 50f)
+    shadowed(circle(50f, 50f, 43f)) { p ->
+        // White plastic rim, lit from the top left.
+        drawPath(p, Brush.linearGradient(listOf(Color.White, Color(0xFFF4F5F7), Color(0xFFD3D6DB)), Offset(15f, 10f), Offset(85f, 92f)))
+        drawPath(p, Color(0xFFB9BDC3), style = Stroke(1f))
     }
-    // The dome's edge and a highlight.
-    drawCircle(Color(0xFFE3E6EA), 31f, Offset(50f, 50f), style = Stroke(1.6f))
-    drawOval(Color.White.copy(alpha = 0.9f), Offset(28f, 24f), Size(22f, 12f))
+    drawArc(Color.White, 150f, 110f, false, Offset(9f, 9f), Size(82f, 82f), style = Stroke(2f, cap = androidx.compose.ui.graphics.StrokeCap.Round))
+    // Chrome ring.
+    drawCircle(Brush.linearGradient(listOf(Color(0xFFF2F3F5), Color(0xFF8E939A), Color(0xFFE6E8EB), Color(0xFF7A7F86)), Offset(20f, 20f), Offset(80f, 80f)), 34f, c)
+    // Mirror steel: near black, a touch lighter towards the edge, with a soft reflection.
+    drawCircle(Brush.radialGradient(listOf(Color(0xFF0B0B0C), Color(0xFF141415), Color(0xFF2C2D30)), c, 32f), 31.5f, c)
+    drawArc(Color.White.copy(alpha = 0.10f), 200f, 80f, false, Offset(22f, 22f), Size(56f, 56f), style = Stroke(5f))
+    // Engraved lettering running round the disc: fine grey strokes, too small to read at icon size, as on the real thing.
+    val rnd = java.util.Random(7)
+    var ang = -80.0
+    while (ang < 260) {
+        val len = 2.0 + rnd.nextInt(4)
+        if (rnd.nextInt(9) != 0) {
+            val a0 = Math.toRadians(ang); val a1 = Math.toRadians(ang + len)
+            drawLine(
+                Color(0xFFB4B7BC).copy(alpha = 0.75f),
+                Offset(50f + 26.5f * kotlin.math.cos(a0).toFloat(), 50f + 26.5f * kotlin.math.sin(a0).toFloat()),
+                Offset(50f + 26.5f * kotlin.math.cos(a1).toFloat(), 50f + 26.5f * kotlin.math.sin(a1).toFloat()),
+                1.4f,
+            )
+        }
+        ang += len + 1.6
+    }
+    // The apple: two lobes on top, a narrower bottom, the bite on the right and the leaf.
+    val body = Path().apply {
+        addOval(androidx.compose.ui.geometry.Rect(39.5f, 42.5f, 51.5f, 62f))
+        addOval(androidx.compose.ui.geometry.Rect(48.5f, 42.5f, 60.5f, 62f))
+    }.let { p -> Path().also { it.op(p, Path().apply { addOval(androidx.compose.ui.geometry.Rect(42f, 50f, 58f, 64.5f)) }, PathOperation.Union) } }
+    val notch = circle(50f, 42.5f, 2.6f)
+    val bite = circle(62.6f, 51f, 4.6f)
+    val apple = Path().also { it.op(body, notch, PathOperation.Difference) }.let { p -> Path().also { it.op(p, bite, PathOperation.Difference) } }
+    drawPath(apple, Color.White)
+    rotate(-40f, Offset(52.5f, 38.5f)) {
+        drawOval(Color.White, Offset(50.5f, 34.2f), Size(4.2f, 8.6f))
+    }
 }
 
 /** iPhone: dark frame, colourful screen, Dynamic Island. */
