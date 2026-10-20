@@ -16,7 +16,6 @@ import com.allnetworktools.data.WifiBand
 import com.allnetworktools.data.net.DnsAnswer
 import com.allnetworktools.data.net.DnsRecord
 import com.allnetworktools.data.net.DnsType
-import com.allnetworktools.data.net.SpeedServer
 import com.allnetworktools.data.BleDevice
 import com.allnetworktools.data.BleKind
 import com.allnetworktools.data.GattNames
@@ -185,12 +184,13 @@ class ScreenshotTest {
         c.phase = Phase.Results
     }
     @Test fun speedEmpty() = shot("71_speed_empty", nav = tool(Tool.Speed)) { vm ->
-        vm.tools.speed.server = SpeedServer("Paris", "CDG", "Free SAS")
+        vm.tools.speed.meta = SpeedFake.meta
     }
     @Test fun speedResults() = shot("72_speed_results", nav = tool(Tool.Speed)) { vm ->
         val c = vm.tools.speed
-        c.server = SpeedServer("Paris", "CDG", "Free SAS")
-        c.ping = 6f; c.jitter = 1.2f; c.down = 842f; c.up = 612f; c.current = 842f
+        c.meta = SpeedFake.meta
+        c.snap = SpeedFake.finished()
+        c.measuredAt = 1_792_485_000_000
         c.phase = Phase.Results
     }
     @Test fun pingDark() = shot("73_ping_dark", dark = true, nav = tool(Tool.Ping)) { vm ->

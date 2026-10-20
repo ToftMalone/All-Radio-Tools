@@ -1,159 +1,742 @@
 package com.allnetworktools.data.net
 
+import java.io.BufferedInputStream
+import java.io.IOException
+import java.io.InputStream
 import java.io.OutputStream
 import java.net.HttpURLConnection
+import java.net.InetSocketAddress
+import java.net.Socket
 import java.net.URL
+import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
+import javax.net.ssl.SSLSocket
+import javax.net.ssl.SSLSocketFactory
 import kotlin.math.abs
+import kotlin.math.ceil
+import kotlin.math.floor
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.awaitCancellation
+import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runInterruptible
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
 
-enum class SpeedStage { Ping, Download, Upload, Done }
+/*
+ * speed.cloudflare.com, measured the way the site measures it: the site runs Cloudflare's open-source engine
+ * (@cloudflare/speedtest 1.14) with its default configuration, and this file ports that engine step for step — the
+ * same 25-step plan of latency, download, upload and packet-loss rounds against the same endpoints, the same rules
+ * for stopping a direction early, the same per-request timing (time to first byte minus the server's own time) and
+ * the same results maths (90th percentile bandwidth, median latency, jitter, loaded latency, AIM scores).
+ */
 
-data class SpeedSample(
-    val stage: SpeedStage,
-    /** Current throughput (Mb/s) or ping (ms) while [stage] is Ping. */
-    val value: Float,
-    val pingMs: Float? = null,
-    val jitterMs: Float? = null,
-    val downMbps: Float? = null,
-    val upMbps: Float? = null,
+sealed interface CfStep {
+    data class Latency(val packets: Int) : CfStep
+    data class Transfer(val down: Boolean, val bytes: Long, val count: Int, val bypassMinDuration: Boolean = false) : CfStep
+    data class PacketLoss(val packets: Int, val batchSize: Int, val batchWaitMs: Long, val responsesWaitMs: Long, val connectionTimeoutMs: Long = 5000) : CfStep
+}
+
+object CfConfig {
+    const val HOST = "speed.cloudflare.com"
+    const val TURN_URI = "turn.speed.cloudflare.com:50000"
+
+    val steps: List<CfStep> = listOf(
+        CfStep.Latency(2), // initial ttfb estimation
+        CfStep.Transfer(true, 100_000, 1, bypassMinDuration = true), // initial download estimation
+        CfStep.Latency(20),
+        CfStep.Transfer(true, 100_000, 9),
+        CfStep.Latency(2),
+        CfStep.Transfer(true, 1_000_000, 8),
+        CfStep.Latency(2),
+        CfStep.Transfer(false, 100_000, 8),
+        CfStep.Latency(2),
+        CfStep.PacketLoss(1000, batchSize = 10, batchWaitMs = 10, responsesWaitMs = 3000),
+        CfStep.Transfer(false, 1_000_000, 6),
+        CfStep.Latency(2),
+        CfStep.Transfer(true, 10_000_000, 6),
+        CfStep.Latency(2),
+        CfStep.Transfer(false, 10_000_000, 4),
+        CfStep.Latency(2),
+        CfStep.Transfer(true, 25_000_000, 4),
+        CfStep.Latency(2),
+        CfStep.Transfer(false, 25_000_000, 4),
+        CfStep.Latency(2),
+        CfStep.Transfer(true, 100_000_000, 3),
+        CfStep.Latency(2),
+        CfStep.Transfer(false, 50_000_000, 3),
+        CfStep.Latency(2),
+        CfStep.Transfer(true, 250_000_000, 2),
+    )
+
+    const val LOADED_LATENCY_THROTTLE_MS = 400L
+    const val FINISH_REQUEST_DURATION = 1000.0
+    const val ESTIMATED_SERVER_TIME = 0.0
+    const val LATENCY_PERCENTILE = 0.5
+    const val BANDWIDTH_PERCENTILE = 0.9
+    const val BANDWIDTH_MIN_REQUEST_DURATION = 10.0
+    const val LOADED_REQUEST_MIN_DURATION = 250.0
+    const val LOADED_LATENCY_MAX_POINTS = 20
+    const val MAX_RETRIES = 3
+}
+
+/** One request as the transport saw it: milliseconds, and bytes received (headers and body). */
+class CfRaw(val ttfb: Double, val payloadMs: Double, val transferSize: Long, val connectMs: Double, val serverTiming: String?)
+
+/** One request as the engine scores it. [ping] is the time to first byte minus the server's time; bps is null when unusable. */
+data class CfTiming(
+    val bytes: Long,
+    val ttfb: Double,
+    val payloadMs: Double,
+    val serverTime: Double,
+    val transferSize: Long,
+    val ping: Double,
+    val duration: Double,
+    val bps: Double?,
+    val atMs: Long,
 )
 
-data class SpeedServer(val city: String?, val colo: String?, val isp: String?)
+class CfHttpException(val status: Int, val retryAfter: String?) : IOException("HTTP $status")
 
-/** Throughput test against Cloudflare's public speed test endpoints. */
-object SpeedTest {
-    private const val BASE = "https://speed.cloudflare.com"
-    private const val PHASE_MS = 10_000L
-    /** TCP slow start: the first seconds are left out of the result. */
-    private const val WARMUP_MS = 2_000L
-    /** The live value is the throughput over this sliding window, not 250 ms bursts. */
-    private const val WINDOW_MS = 2_000L
-    private const val STREAMS = 4
+/** Requests on two lanes: 0 carries the measurements, 1 the latency pings sent while a transfer loads the line. */
+interface CfTransport {
+    fun exchange(lane: Int, down: Boolean, bytes: Long, during: String?): CfRaw
+    /** Aborts whatever [lane] is doing, from another thread. */
+    fun abort(lane: Int)
+}
 
-    suspend fun server(): SpeedServer = withContext(Dispatchers.IO) {
-        runCatching {
-            val c = URL("$BASE/meta").openConnection() as HttpURLConnection
-            c.connectTimeout = 5000; c.readTimeout = 5000
-            val j = JSONObject(c.inputStream.bufferedReader().readText())
-            SpeedServer(j.optString("city").ifEmpty { null }, j.optString("colo").ifEmpty { null }, j.optString("asOrganization").ifEmpty { null })
-        }.getOrDefault(SpeedServer(null, null, null))
-    }
-
-    private fun open(path: String, timeout: Int = 10_000) = (URL("$BASE$path").openConnection() as HttpURLConnection).apply {
-        connectTimeout = timeout; readTimeout = timeout
-        setRequestProperty("User-Agent", "AllRadioTools")
-    }
-
-    fun run(): Flow<SpeedSample> = channelFlow {
-        // Ping: time to first byte of empty downloads, first one discarded (TLS handshake).
-        val pings = mutableListOf<Float>()
-        withContext(Dispatchers.IO) {
-            repeat(9) { i ->
-                val t0 = System.nanoTime()
-                val c = open("/__down?bytes=0")
-                c.inputStream.use { it.read() }
-                c.disconnect()
-                val ms = (System.nanoTime() - t0) / 1e6f
-                if (i > 0) {
-                    pings += ms
-                    send(SpeedSample(SpeedStage.Ping, ms))
-                }
+/** The engine's request timing, with its running estimate of the gap between the server's own time and what the client sees. */
+class CfClock(var serverTimeDelta: Double = 0.0) {
+    fun timing(raw: CfRaw, down: Boolean, bytes: Long, atMs: Long): CfTiming {
+        val serverTime = serverTime(raw.serverTiming)
+        // On a new HTTP/1.1 connection, the time to first byte minus the TCP handshake is the server's total time.
+        if (serverTime != null && raw.connectMs > 0) {
+            val delta = maxOf(0.0, raw.ttfb - raw.connectMs) - serverTime
+            if (delta > 0 && delta <= 15 && delta <= serverTime && serverTime <= 150) {
+                serverTimeDelta = serverTimeDelta * 0.25 + delta * 0.75
             }
         }
-        val ping = pings.sorted()[pings.size / 2]
-        val jitter = pings.zipWithNext { a, b -> abs(a - b) }.average().toFloat()
-
-        val down = measure(SpeedStage.Download, ping, jitter, null) { counter, active ->
-            while (active()) {
-                val c = open("/__down?bytes=50000000")
-                try {
-                    c.inputStream.use { input ->
-                        val buf = ByteArray(64 * 1024)
-                        while (active()) {
-                            val n = input.read(buf)
-                            if (n < 0) break
-                            counter.addAndGet(n.toLong())
-                        }
-                    }
-                } finally {
-                    c.disconnect()
-                }
-            }
-        }
-        val up = measure(SpeedStage.Upload, ping, jitter, down) { counter, active ->
-            val chunk = ByteArray(64 * 1024)
-            while (active()) {
-                val c = open("/__up")
-                try {
-                    c.requestMethod = "POST"; c.doOutput = true
-                    val size = 25_000_000
-                    c.setFixedLengthStreamingMode(size)
-                    c.setRequestProperty("Content-Type", "application/octet-stream")
-                    val out: OutputStream = c.outputStream
-                    var sent = 0
-                    while (sent < size && active()) {
-                        val n = minOf(chunk.size, size - sent)
-                        out.write(chunk, 0, n)
-                        sent += n
-                        counter.addAndGet(n.toLong())
-                    }
-                    if (sent == size) {
-                        out.close()
-                        c.inputStream.use { it.readBytes() }
-                    }
-                } catch (_: Exception) {
-                    if (active()) throw java.io.IOException("upload interrupted")
-                } finally {
-                    c.disconnect()
-                }
-            }
-        }
-        send(SpeedSample(SpeedStage.Done, down, ping, jitter, down, up))
+        val base = serverTime ?: CfConfig.ESTIMATED_SERVER_TIME
+        var ping = raw.ttfb - base - serverTimeDelta
+        if (ping <= 1) ping = maxOf(0.0, raw.ttfb - base)
+        val duration = if (down) ping + raw.payloadMs else raw.ttfb
+        val bits = if (down && raw.transferSize > 0) 8.0 * raw.transferSize else 8.0 * bytes * 1.005
+        val bps = if (duration == 0.0) null else bits / (duration / 1000)
+        return CfTiming(bytes, raw.ttfb, raw.payloadMs, serverTime ?: -1.0, raw.transferSize, ping, duration, bps, atMs)
     }
+
+    companion object {
+        private val reqDur = Regex("""(?:^|,\s*)cfReq(?:uest)?Dur(?:ation)?;\s*dur=([0-9.]+)""", RegexOption.IGNORE_CASE)
+        private val speedDur = Regex("""(?:^|,\s*)cfSpeed[a-zA-Z]*;\s*dur=([0-9.]+)""", RegexOption.IGNORE_CASE)
+
+        fun serverTime(header: String?): Double? {
+            header ?: return null
+            reqDur.find(header)?.groupValues?.get(1)?.toDoubleOrNull()?.let { if (it > 0.01) return it }
+            val sum = speedDur.findAll(header).sumOf { it.groupValues[1].toDoubleOrNull() ?: 0.0 }
+            return if (sum > 0.01) sum else null
+        }
+    }
+}
+
+enum class CfExperience { Streaming, Gaming, Rtc }
+
+/** [level] 0 bad, 1 poor, 2 average, 3 good, 4 great. */
+data class CfScore(val points: Int, val level: Int)
+
+data class CfPacketLoss(val total: Int, val sent: Int, val received: Int, val lost: List<Int>) {
+    val ratio: Double get() = if (sent == 0) 0.0 else lost.size.toDouble() / sent
+}
+
+class CfBucket(val bytes: Long) {
+    val timings = mutableListOf<CfTiming>()
+    val side = mutableListOf<CfTiming>()
+    var planned = 0
+}
+
+data class CfBucketView(val bytes: Long, val planned: Int, val timings: List<CfTiming>)
+
+data class CfSnapshot(
+    val stepIndex: Int,
+    val stepDone: Int,
+    val finished: Boolean,
+    val download: Double?,
+    val upload: Double?,
+    val latency: Double?,
+    val jitter: Double?,
+    val downLoadedLatency: Double?,
+    val downLoadedJitter: Double?,
+    val upLoadedLatency: Double?,
+    val upLoadedJitter: Double?,
+    val packetLoss: CfPacketLoss?,
+    val packetLossLive: CfPacketLoss?,
+    val packetLossError: String?,
+    val latencyPoints: List<Double>,
+    val downLoadedPoints: List<Double>,
+    val upLoadedPoints: List<Double>,
+    val downBuckets: List<CfBucketView>,
+    val upBuckets: List<CfBucketView>,
+    /** Null until the test ends; an experience is missing when one of its inputs could not be measured. */
+    val scores: Map<CfExperience, CfScore>?,
+    val durationMs: Long,
+) {
+    val step: CfStep? get() = CfConfig.steps.getOrNull(stepIndex)
+    val downPoints: List<CfTiming> get() = downBuckets.flatMap { it.timings }.sortedBy { it.atMs }
+    val upPoints: List<CfTiming> get() = upBuckets.flatMap { it.timings }.sortedBy { it.atMs }
+
+    companion object {
+        val Empty = CfSnapshot(-1, 0, false, null, null, null, null, null, null, null, null, null, null, null, emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), null, 0)
+    }
+}
+
+/** The engine's results maths. */
+object CfMath {
+    /** Linear interpolation between the closest ranks, 0 for no values. */
+    fun percentile(values: List<Double>, p: Double): Double {
+        if (values.isEmpty()) return 0.0
+        val s = values.sorted()
+        val idx = (s.size - 1) * p
+        val rem = idx % 1
+        if (rem == 0.0) return s[idx.toInt()]
+        val lo = s[floor(idx).toInt()]
+        val hi = s[ceil(idx).toInt()]
+        return lo + (hi - lo) * rem
+    }
+
+    /** Mean absolute difference between consecutive samples; null under two samples. */
+    fun jitter(values: List<Double>): Double? =
+        if (values.size < 2) null else values.zipWithNext { a, b -> abs(a - b) }.sum() / (values.size - 1)
+
+    fun bandwidth(buckets: Collection<CfBucket>): Double = percentile(
+        buckets.flatMap { it.timings }.filter { it.duration >= CfConfig.BANDWIDTH_MIN_REQUEST_DURATION }.mapNotNull { it.bps }.filter { it != 0.0 },
+        CfConfig.BANDWIDTH_PERCENTILE,
+    )
+
+    /** Pings sent during the transfer sizes that kept the line busy (every request at least 250 ms), the last 20. */
+    fun loadedPings(buckets: Collection<CfBucket>): List<Double> = buckets
+        .filter { b -> b.timings.isNotEmpty() && b.timings.minOf { it.duration } >= CfConfig.LOADED_REQUEST_MIN_DURATION }
+        .flatMap { it.side }
+        .takeLast(CfConfig.LOADED_LATENCY_MAX_POINTS)
+        .map { it.ping }
+
+    private fun threshold(domain: List<Double>, range: List<Int>): (Double) -> Int = { v ->
+        var i = 0
+        while (i < domain.size && v >= domain[i]) i++
+        range[i]
+    }
+
+    private val scoring: Map<String, (Double) -> Int> = mapOf(
+        "packetLoss" to threshold(listOf(0.01, 0.05, 0.25, 0.5), listOf(10, 5, 0, -10, -20)),
+        "latency" to threshold(listOf(10.0, 20.0, 50.0, 100.0, 500.0), listOf(20, 10, 5, 0, -10, -20)),
+        "loadedLatencyIncrease" to threshold(listOf(10.0, 20.0, 50.0, 100.0, 500.0), listOf(20, 10, 5, 0, -10, -20)),
+        "jitter" to threshold(listOf(10.0, 20.0, 100.0, 500.0), listOf(10, 5, 0, -10, -20)),
+        "download" to threshold(listOf(1e6, 10e6, 50e6, 100e6), listOf(0, 5, 10, 20, 30)),
+        "upload" to threshold(listOf(1e6, 10e6, 50e6, 100e6), listOf(0, 5, 10, 20, 30)),
+    )
+
+    private val experiences: Map<CfExperience, Pair<List<String>, List<Double>>> = mapOf(
+        CfExperience.Streaming to (listOf("latency", "packetLoss", "download", "loadedLatencyIncrease") to listOf(15.0, 20.0, 40.0, 60.0)),
+        CfExperience.Gaming to (listOf("latency", "packetLoss", "loadedLatencyIncrease") to listOf(5.0, 15.0, 25.0, 30.0)),
+        CfExperience.Rtc to (listOf("latency", "jitter", "packetLoss", "loadedLatencyIncrease") to listOf(5.0, 15.0, 25.0, 40.0)),
+    )
 
     /**
-     * Runs [STREAMS] transfers for [PHASE_MS] and returns the mean after warm-up. Every 250 ms it emits the throughput of
-     * the last [WINDOW_MS] (or since the start, at first): reads arrive in bursts, and a 250 ms rate jumps around.
+     * AIM scores. Values follow the site's summary: absent when never measured, an unmeasured packet loss counts 0 points,
+     * and a missing loaded latency next to a measured one makes the increase NaN, which scores like the best band.
      */
-    private suspend fun kotlinx.coroutines.channels.ProducerScope<SpeedSample>.measure(
-        stage: SpeedStage,
-        ping: Float,
-        jitter: Float,
-        down: Float?,
-        transfer: (AtomicLong, () -> Boolean) -> Unit,
-    ): Float = coroutineScope {
-        val counter = AtomicLong()
-        val start = System.nanoTime()
-        fun elapsed() = (System.nanoTime() - start) / 1_000_000L
-        val active = { elapsed() < PHASE_MS && isActive }
-        val jobs = List(STREAMS) { launch(Dispatchers.IO) { runCatching { transfer(counter, active) }.onFailure { if (elapsed() < PHASE_MS) throw it } } }
-        var warmBytes = -1L
-        var warmT = 0L
-        val marks = ArrayDeque<Pair<Long, Long>>().apply { add(0L to 0L) }
-        while (elapsed() < PHASE_MS) {
-            delay(250)
-            val t = elapsed()
-            val b = counter.get()
-            if (t >= WARMUP_MS && warmBytes < 0) { warmBytes = b; warmT = t }
-            marks.addLast(t to b)
-            while (marks.size > 2 && t - marks[1].first >= WINDOW_MS) marks.removeFirst()
-            val (t0, b0) = marks.first()
-            val mbps = (b - b0) * 8f / ((t - t0).coerceAtLeast(1) / 1000f) / 1e6f
-            send(SpeedSample(stage, mbps, ping, jitter, down))
+    fun scores(download: Double?, upload: Double?, latency: Double?, jitter: Double?, downLoaded: Double?, upLoaded: Double?, packetLoss: Double?): Map<CfExperience, CfScore> {
+        val increase = if (latency != null && latency != 0.0 && ((downLoaded ?: 0.0) != 0.0 || (upLoaded ?: 0.0) != 0.0)) {
+            maxOf(downLoaded ?: Double.NaN, upLoaded ?: Double.NaN) - latency
+        } else null
+        val values = mapOf(
+            "packetLoss" to packetLoss, "latency" to latency, "loadedLatencyIncrease" to increase,
+            "jitter" to if (latency != null) jitter ?: Double.NaN else null, "download" to download, "upload" to upload,
+        )
+        val points = buildMap {
+            scoring.forEach { (k, fn) ->
+                val v = values[k]
+                when {
+                    v != null -> put(k, fn(v))
+                    k == "packetLoss" -> put(k, 0)
+                }
+            }
         }
-        val endT = elapsed()
-        val endBytes = counter.get()
-        jobs.forEach { it.cancel() }
-        if (warmBytes < 0) { warmBytes = 0; warmT = 0 }
-        (endBytes - warmBytes) * 8f / ((endT - warmT).coerceAtLeast(1) / 1000f) / 1e6f
+        return buildMap {
+            experiences.forEach { (e, def) ->
+                val (input, thresholds) = def
+                if (input.all { it in points }) {
+                    val sum = maxOf(0, input.sumOf { points.getValue(it) })
+                    put(e, CfScore(sum, threshold(thresholds, listOf(0, 1, 2, 3, 4))(sum.toDouble())))
+                }
+            }
+        }
+    }
+}
+
+/**
+ * Runs the plan. [run] picks up where a paused run stopped: the step, and the requests already made in it. A request cut
+ * by a pause is lost, as on the site.
+ */
+class CfEngine(
+    private val transport: CfTransport,
+    private val packetLoss: suspend (CfStep.PacketLoss, (CfPacketLoss) -> Unit) -> CfPacketLoss,
+    private val now: () -> Long = System::currentTimeMillis,
+) {
+    private val lock = Any()
+    private val latency = mutableListOf<CfTiming>()
+    private val down = LinkedHashMap<Long, CfBucket>()
+    private val up = LinkedHashMap<Long, CfBucket>()
+    private var downStarted = false
+    private var upStarted = false
+    private var downDone = false
+    private var upDone = false
+    private var loss: CfPacketLoss? = null
+    private var lossLive: CfPacketLoss? = null
+    private var lossError: String? = null
+    private val clock = CfClock()
+    private var stepIndex = 0
+    private var counter = 0
+    private var plannedStep = -1
+    private val round = mutableListOf<Double>()
+    private var runMs = 0L
+    var finished = false
+        private set
+
+    suspend fun run(onUpdate: (CfSnapshot) -> Unit) {
+        val started = now()
+        val emit = { onUpdate(snapshot(runMs + now() - started)) }
+        try {
+            while (stepIndex < CfConfig.steps.size) {
+                emit()
+                when (val step = CfConfig.steps[stepIndex]) {
+                    is CfStep.Latency -> while (counter < step.packets) {
+                        val t = request(0, true, 0, "idle")
+                        synchronized(lock) { latency += t }
+                        counter++
+                        emit()
+                    }
+                    is CfStep.Transfer -> if (!(if (step.down) downDone else upDone)) transfer(step, emit)
+                    is CfStep.PacketLoss -> {
+                        synchronized(lock) { lossLive = CfPacketLoss(step.packets, 0, 0, emptyList()); lossError = null }
+                        emit()
+                        try {
+                            val r = packetLoss(step) { synchronized(lock) { lossLive = it }; emit() }
+                            synchronized(lock) { loss = r; lossLive = r }
+                        } catch (e: CancellationException) {
+                            throw e
+                        } catch (e: Exception) {
+                            synchronized(lock) { lossError = e.message ?: e.javaClass.simpleName; lossLive = null }
+                        }
+                    }
+                }
+                stepIndex++
+                counter = 0
+                round.clear()
+            }
+            finished = true
+        } finally {
+            runMs += now() - started
+        }
+        onUpdate(snapshot(runMs))
+    }
+
+    private suspend fun transfer(step: CfStep.Transfer, emit: () -> Unit) = coroutineScope {
+        val bucket = synchronized(lock) {
+            if (step.down) downStarted = true else upStarted = true
+            (if (step.down) down else up).getOrPut(step.bytes) { CfBucket(step.bytes) }.also {
+                if (plannedStep != stepIndex) { it.planned += step.count; plannedStep = stepIndex }
+            }
+        }
+        // Latency under load: zero-byte pings on their own connection, one every 400 ms after the previous answer.
+        val sideClock = CfClock(clock.serverTimeDelta)
+        val side = launch {
+            delay(20)
+            while (isActive) {
+                runCatching { io(1) { transport.exchange(1, true, 0, if (step.down) "download" else "upload") } }
+                    .onSuccess { raw -> synchronized(lock) { bucket.side += sideClock.timing(raw, true, 0, now()) }; emit() }
+                    .onFailure { if (it is CancellationException) throw it }
+                delay(CfConfig.LOADED_LATENCY_THROTTLE_MS)
+            }
+        }
+        try {
+            while (counter < step.count) {
+                val t = request(0, step.down, step.bytes, null)
+                if (t.bps != null && t.bps.isFinite() && t.bps > 0) {
+                    synchronized(lock) { bucket.timings += t }
+                    round += t.duration
+                }
+                counter++
+                emit()
+            }
+        } finally {
+            side.cancel()
+        }
+        val lastOfType = CfConfig.steps.drop(stepIndex + 1).none { it is CfStep.Transfer && it.down == step.down }
+        val slowEnough = !step.bypassMinDuration && round.isNotEmpty() && round.min() > CfConfig.FINISH_REQUEST_DURATION
+        if (lastOfType || slowEnough) synchronized(lock) { if (step.down) downDone = true else upDone = true }
+    }
+
+    /** One request on [lane], retried up to three times after a 429 as the server's Retry-After says. */
+    private suspend fun request(lane: Int, down: Boolean, bytes: Long, during: String?): CfTiming {
+        var retries = 0
+        while (true) {
+            try {
+                val raw = io(lane) { transport.exchange(lane, down, bytes, during) }
+                return clock.timing(raw, down, bytes, now())
+            } catch (e: CfHttpException) {
+                if (e.status != 429 || retries++ >= CfConfig.MAX_RETRIES) throw e
+                delay(retryDelay(e.retryAfter))
+            }
+        }
+    }
+
+    private fun retryDelay(retryAfter: String?): Long {
+        retryAfter ?: return 5000
+        retryAfter.trim().toDoubleOrNull()?.let { if (it >= 0) return (it * 1000).toLong() }
+        return runCatching { maxOf(0L, java.text.SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", java.util.Locale.US).parse(retryAfter)!!.time - now()) }.getOrDefault(5000)
+    }
+
+    /** Blocking transport call that a cancelled coroutine aborts by closing the lane's connection. */
+    private suspend fun <T> io(lane: Int, block: () -> T): T = coroutineScope {
+        val done = AtomicBoolean(false)
+        val watch = launch(start = CoroutineStart.UNDISPATCHED) {
+            try { awaitCancellation() } finally { if (!done.get()) transport.abort(lane) }
+        }
+        try {
+            runInterruptible(Dispatchers.IO) { block() }
+        } finally {
+            done.set(true)
+            watch.cancel()
+        }
+    }
+
+    fun snapshot(durationMs: Long = runMs): CfSnapshot = synchronized(lock) {
+        val pings = latency.map { it.ping }
+        val lat = if (pings.isEmpty()) null else CfMath.percentile(pings, CfConfig.LATENCY_PERCENTILE)
+        val jit = CfMath.jitter(pings)
+        val dl = if (downStarted) CfMath.bandwidth(down.values) else null
+        val ul = if (upStarted) CfMath.bandwidth(up.values) else null
+        val dPings = if (downStarted) CfMath.loadedPings(down.values) else null
+        val uPings = if (upStarted) CfMath.loadedPings(up.values) else null
+        val dLoaded = dPings?.let { CfMath.percentile(it, CfConfig.LATENCY_PERCENTILE) }
+        val uLoaded = uPings?.let { CfMath.percentile(it, CfConfig.LATENCY_PERCENTILE) }
+        CfSnapshot(
+            stepIndex = stepIndex,
+            stepDone = counter,
+            finished = finished,
+            download = dl,
+            upload = ul,
+            latency = lat,
+            jitter = jit,
+            downLoadedLatency = dLoaded,
+            downLoadedJitter = dPings?.let(CfMath::jitter),
+            upLoadedLatency = uLoaded,
+            upLoadedJitter = uPings?.let(CfMath::jitter),
+            packetLoss = loss,
+            packetLossLive = lossLive,
+            packetLossError = lossError,
+            latencyPoints = pings,
+            downLoadedPoints = dPings.orEmpty(),
+            upLoadedPoints = uPings.orEmpty(),
+            downBuckets = down.values.map { CfBucketView(it.bytes, it.planned, it.timings.toList()) },
+            upBuckets = up.values.map { CfBucketView(it.bytes, it.planned, it.timings.toList()) },
+            scores = if (finished) CfMath.scores(dl, ul, lat, jit, dLoaded, uLoaded, loss?.ratio) else null,
+            durationMs = durationMs,
+        )
+    }
+}
+
+/** Where the test runs from and to, as speed.cloudflare.com/meta reports it. */
+data class CfMeta(
+    val clientIp: String?,
+    val asn: Int?,
+    val asOrganization: String?,
+    val city: String?,
+    val region: String?,
+    val country: String?,
+    val lat: Double?,
+    val lon: Double?,
+    val colo: String?,
+    val coloCity: String?,
+    val coloCountry: String?,
+    val coloLat: Double?,
+    val coloLon: Double?,
+)
+
+/** HTTP/1.1 over TLS on a kept-alive socket per lane, timed like the browser's resource timing. */
+class CfHttp(private val host: String = CfConfig.HOST) : CfTransport {
+    private val lanes = ConcurrentHashMap<Int, Lane>()
+
+    override fun exchange(lane: Int, down: Boolean, bytes: Long, during: String?): CfRaw =
+        lanes.getOrPut(lane) { Lane() }.exchange(down, bytes, during)
+
+    override fun abort(lane: Int) {
+        lanes[lane]?.closeSocket()
+    }
+
+    fun close() {
+        lanes.values.forEach { it.closeSocket() }
+        lanes.clear()
+    }
+
+    private inner class Lane {
+        @Volatile private var socket: Socket? = null
+        private var input: InputStream? = null
+        private var output: OutputStream? = null
+        private val buf = ByteArray(64 * 1024)
+
+        fun closeSocket() {
+            runCatching { socket?.close() }
+            socket = null
+        }
+
+        fun exchange(down: Boolean, bytes: Long, during: String?): CfRaw {
+            val path = if (down) "/__down?" + (during?.let { "during=$it&" } ?: "") + "bytes=$bytes" else "/__up?bytes=$bytes"
+            val reused = socket != null
+            val connectMs = if (reused) 0.0 else connect()
+            return try {
+                send(path, if (down) 0 else bytes, connectMs)
+            } catch (e: IOException) {
+                closeSocket()
+                // A kept-alive connection the server already closed fails before any answer: retry once on a new one.
+                if (!reused || e is CfHttpException || e is Answered || Thread.currentThread().isInterrupted) throw (e as? Answered)?.cause ?: e
+                try {
+                    send(path, if (down) 0 else bytes, connect())
+                } catch (again: Answered) {
+                    throw again.cause
+                }
+            }
+        }
+
+        /** Returns the TCP handshake time (the browser's connectStart → secureConnectionStart). */
+        private fun connect(): Double {
+            val raw = Socket()
+            socket = raw
+            raw.tcpNoDelay = true
+            val t0 = System.nanoTime()
+            raw.connect(InetSocketAddress(host, 443), 10_000)
+            val tcp = (System.nanoTime() - t0) / 1e6
+            val ssl = (SSLSocketFactory.getDefault() as SSLSocketFactory).createSocket(raw, host, 443, true) as SSLSocket
+            socket = ssl
+            ssl.soTimeout = 30_000
+            ssl.sslParameters = ssl.sslParameters.apply { endpointIdentificationAlgorithm = "HTTPS" }
+            ssl.startHandshake()
+            input = BufferedInputStream(ssl.inputStream, 64 * 1024)
+            output = ssl.outputStream
+            return tcp
+        }
+
+        private fun send(path: String, upload: Long, connectMs: Double): CfRaw {
+            val out = output!!
+            val inp = input!!
+            val head = buildString {
+                append(if (upload > 0) "POST" else "GET").append(' ').append(path).append(" HTTP/1.1\r\n")
+                append("Host: ").append(host).append("\r\n")
+                append("User-Agent: ").append(USER_AGENT).append("\r\n")
+                append("Accept: */*\r\n")
+                append("Referer: https://").append(host).append("/\r\n")
+                if (upload > 0) append("Content-Type: text/plain;charset=UTF-8\r\nContent-Length: ").append(upload).append("\r\n")
+                append("Connection: keep-alive\r\n\r\n")
+            }.toByteArray()
+            val t0 = System.nanoTime()
+            out.write(head)
+            var left = upload
+            while (left > 0) {
+                val n = minOf(left, ZEROS.size.toLong()).toInt()
+                out.write(ZEROS, 0, n)
+                left -= n
+            }
+            out.flush()
+            val first = inp.read()
+            if (first < 0) throw IOException("connection closed")
+            val tFirst = System.nanoTime()
+            try {
+                var received = 1L
+                val lines = mutableListOf<String>()
+                val line = StringBuilder().append(first.toChar())
+                while (true) {
+                    val c = inp.read()
+                    if (c < 0) throw IOException("connection closed")
+                    received++
+                    if (c == '\n'.code) {
+                        val l = line.toString().trimEnd('\r')
+                        line.setLength(0)
+                        if (l.isEmpty()) break
+                        lines += l
+                    } else line.append(c.toChar())
+                }
+                val status = lines.first().split(' ').getOrNull(1)?.toIntOrNull() ?: throw IOException("bad status line")
+                val headers = lines.drop(1).mapNotNull { h -> h.indexOf(':').takeIf { it > 0 }?.let { h.substring(0, it).trim().lowercase() to h.substring(it + 1).trim() } }
+                fun header(name: String) = headers.filter { it.first == name }.map { it.second }
+                val length = header("content-length").firstOrNull()?.toLongOrNull()
+                val chunked = header("transfer-encoding").any { it.contains("chunked", true) }
+                received += when {
+                    chunked -> readChunked(inp)
+                    length != null -> readExactly(inp, length)
+                    else -> readToEnd(inp).also { closeSocket() }
+                }
+                val tEnd = System.nanoTime()
+                if (header("connection").any { it.equals("close", true) }) closeSocket()
+                if (status !in 200..299) {
+                    closeSocket()
+                    throw CfHttpException(status, header("retry-after").firstOrNull())
+                }
+                return CfRaw(
+                    ttfb = (tFirst - t0) / 1e6,
+                    payloadMs = (tEnd - tFirst) / 1e6,
+                    transferSize = received,
+                    connectMs = connectMs,
+                    serverTiming = header("server-timing").joinToString(", ").ifEmpty { null },
+                )
+            } catch (e: CfHttpException) {
+                throw e
+            } catch (e: IOException) {
+                throw Answered(e)
+            }
+        }
+
+        private fun readExactly(inp: InputStream, n: Long): Long {
+            var left = n
+            while (left > 0) {
+                val r = inp.read(buf, 0, minOf(left, buf.size.toLong()).toInt())
+                if (r < 0) throw IOException("connection closed")
+                left -= r
+            }
+            return n
+        }
+
+        private fun readToEnd(inp: InputStream): Long {
+            var total = 0L
+            while (true) {
+                val r = inp.read(buf)
+                if (r < 0) return total
+                total += r
+            }
+        }
+
+        private fun readChunked(inp: InputStream): Long {
+            var total = 0L
+            while (true) {
+                val sizeLine = readLine(inp)
+                total += sizeLine.length + 2
+                val size = sizeLine.substringBefore(';').trim().toLong(16)
+                if (size == 0L) {
+                    while (true) {
+                        val trailer = readLine(inp)
+                        total += trailer.length + 2
+                        if (trailer.isEmpty()) return total
+                    }
+                }
+                total += readExactly(inp, size)
+                total += readLine(inp).length + 2
+            }
+        }
+
+        private fun readLine(inp: InputStream): String {
+            val sb = StringBuilder()
+            while (true) {
+                val c = inp.read()
+                if (c < 0) throw IOException("connection closed")
+                if (c == '\n'.code) return sb.toString().trimEnd('\r')
+                sb.append(c.toChar())
+            }
+        }
+    }
+
+    /** A failure after the server started answering: never retried. */
+    private class Answered(override val cause: IOException) : IOException(cause)
+
+    companion object {
+        const val USER_AGENT = "Mozilla/5.0 (Linux; Android) AllRadioTools"
+        private val ZEROS = ByteArray(64 * 1024) { '0'.code.toByte() }
+
+        private fun get(path: String): String {
+            val c = URL("https://${CfConfig.HOST}$path").openConnection() as HttpURLConnection
+            c.connectTimeout = 5000; c.readTimeout = 5000
+            c.setRequestProperty("User-Agent", USER_AGENT)
+            c.setRequestProperty("Referer", "https://${CfConfig.HOST}/")
+            c.setRequestProperty("Origin", "https://${CfConfig.HOST}")
+            return try { c.inputStream.bufferedReader().readText() } finally { c.disconnect() }
+        }
+
+        suspend fun meta(): CfMeta? = withContext(Dispatchers.IO) {
+            runCatching {
+                val j = JSONObject(get("/meta"))
+                fun s(o: JSONObject?, k: String) = o?.optString(k)?.ifEmpty { null }
+                fun d(o: JSONObject?, k: String) = o?.optString(k)?.toDoubleOrNull()
+                val colo = j.optJSONObject("colo")
+                CfMeta(
+                    clientIp = s(j, "clientIp"),
+                    asn = j.optInt("asn").takeIf { it > 0 },
+                    asOrganization = s(j, "asOrganization"),
+                    city = s(j, "city"),
+                    region = s(j, "region"),
+                    country = s(j, "country"),
+                    lat = d(j, "latitude"),
+                    lon = d(j, "longitude"),
+                    colo = s(colo, "iata") ?: s(j, "colo"),
+                    coloCity = s(colo, "city"),
+                    coloCountry = s(colo, "cca2"),
+                    coloLat = d(colo, "lat"),
+                    coloLon = d(colo, "lon"),
+                )
+            }.getOrNull()
+        }
+
+        /**
+         * The site's packet-loss test: 1000 numbered UDP messages, in batches of ten every 10 ms, from one TURN allocation to
+         * another through turn.speed.cloudflare.com, then 3 s of silence after the last answer before counting the missing ones.
+         */
+        suspend fun packetLoss(step: CfStep.PacketLoss, onProgress: (CfPacketLoss) -> Unit): CfPacketLoss = withContext(Dispatchers.IO) {
+            val creds = runCatching { JSONObject(get("/turn-creds")) }.getOrNull()
+            val user = creds?.optString("username")?.ifEmpty { null }
+            val pass = creds?.optString("credential")?.ifEmpty { null }
+            if (creds == null || creds.has("error") || user == null || pass == null) throw IOException("unable to get turn server credentials")
+            val server = TurnClient.resolve(creds.optString("server").ifEmpty { CfConfig.TURN_URI })
+            runPacketLoss(step, TurnClient(server, user, pass), TurnClient(server, user, pass), onProgress)
+        }
+
+        suspend fun runPacketLoss(step: CfStep.PacketLoss, sender: TurnClient, receiver: TurnClient, onProgress: (CfPacketLoss) -> Unit): CfPacketLoss = coroutineScope {
+            try {
+                val deadline = System.currentTimeMillis() + step.connectionTimeoutMs
+                val relayA = runInterruptible { sender.allocate(deadline) }
+                val relayB = runInterruptible { receiver.allocate(deadline) }
+                runInterruptible { sender.permit(relayB.address, deadline); receiver.permit(relayA.address, deadline) }
+                val received = ConcurrentHashMap.newKeySet<Int>()
+                val lastAnswer = AtomicLong(0)
+                val rx = launch(Dispatchers.IO) {
+                    while (isActive) {
+                        val data = receiver.receive() ?: continue
+                        val n = String(data).toIntOrNull() ?: continue
+                        if (n in 1..step.packets && received.add(n)) lastAnswer.set(System.currentTimeMillis())
+                    }
+                }
+                fun result(sent: Int) = CfPacketLoss(step.packets, sent, received.size, (1..sent).filter { it !in received })
+                var sent = 0
+                while (sent < step.packets) {
+                    repeat(minOf(step.batchSize, step.packets - sent)) {
+                        sent++
+                        sender.send(relayB, sent.toString().toByteArray())
+                    }
+                    onProgress(result(sent))
+                    delay(step.batchWaitMs)
+                }
+                val allSent = System.currentTimeMillis()
+                while (received.size < sent && System.currentTimeMillis() - maxOf(allSent, lastAnswer.get()) < step.responsesWaitMs) {
+                    delay(50)
+                    onProgress(result(sent))
+                }
+                rx.cancelAndJoin()
+                result(sent).also(onProgress)
+            } finally {
+                sender.close()
+                receiver.close()
+            }
+        }
     }
 }
