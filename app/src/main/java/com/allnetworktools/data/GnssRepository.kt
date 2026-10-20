@@ -2,7 +2,11 @@ package com.allnetworktools.data
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.location.GnssMeasurementRequest
+import android.location.GnssMeasurementsEvent
 import android.location.GnssStatus
+import android.os.Build
+import android.os.SystemClock
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
@@ -135,6 +139,85 @@ open class GnssRepository(private val context: Context) {
         follow(LocationManager.FUSED_PROVIDER) { s, l -> s.copy(fused = l) }
         trySend(set)
         awaitClose { listeners.forEach { mgr.removeUpdates(it) } }
+    }
+
+    /** What the GNSS chip supports, or null when Android does not say. */
+    open fun capabilities(): GnssCaps? = runCatching {
+        val c = lm!!.gnssCapabilities
+        val u = Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE
+        GnssCaps(
+            measurements = c.hasMeasurements(),
+            navigationMessages = c.hasNavigationMessages(),
+            antennaInfo = c.hasAntennaInfo(),
+            measurementCorrections = if (u) c.hasMeasurementCorrections() else null,
+            lowPowerMode = if (u) c.hasLowPowerMode() else null,
+            satelliteBlocklist = if (u) c.hasSatelliteBlocklist() else null,
+            satellitePvt = if (u) c.hasSatellitePvt() else null,
+            correlationVectors = if (u) c.hasMeasurementCorrelationVectors() else null,
+            multibandTracking = if (u) c.hasPowerMultibandTracking() else null,
+        )
+    }.getOrNull()
+
+    /**
+     * Raw measurements, one epoch a second, with full tracking (every satellite, every band, no duty cycling). The GPS
+     * provider is kept running meanwhile: the chip only measures while a location request is active.
+     */
+    open fun raw(): Flow<RawEpoch> = callbackFlow {
+        val mgr = lm ?: run { awaitClose { }; return@callbackFlow }
+        val cb = object : GnssMeasurementsEvent.Callback() {
+            override fun onGnssMeasurementsReceived(event: GnssMeasurementsEvent) {
+                trySend(epochOf(event))
+            }
+        }
+        val keepAlive = LocationListener { }
+        runCatching {
+            mgr.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000L, 0f, keepAlive, context.mainLooper)
+            mgr.registerGnssMeasurementsCallback(GnssMeasurementRequest.Builder().setFullTracking(true).build(), context.mainExecutor, cb)
+        }
+        awaitClose {
+            mgr.unregisterGnssMeasurementsCallback(cb)
+            mgr.removeUpdates(keepAlive)
+        }
+    }
+
+    @Suppress("DEPRECATION")
+    private fun epochOf(e: GnssMeasurementsEvent): RawEpoch {
+        val c = e.clock
+        val clock = RawClock(
+            timeNanos = c.timeNanos,
+            fullBiasNanos = if (c.hasFullBiasNanos()) c.fullBiasNanos else null,
+            biasNanos = if (c.hasBiasNanos()) c.biasNanos else 0.0,
+            biasUncertaintyNanos = if (c.hasBiasUncertaintyNanos()) c.biasUncertaintyNanos else null,
+            driftNanosPerSecond = if (c.hasDriftNanosPerSecond()) c.driftNanosPerSecond else null,
+            driftUncertaintyNanosPerSecond = if (c.hasDriftUncertaintyNanosPerSecond()) c.driftUncertaintyNanosPerSecond else null,
+            leapSecond = if (c.hasLeapSecond()) c.leapSecond else null,
+            hardwareDiscontinuityCount = c.hardwareClockDiscontinuityCount,
+            elapsedRealtimeNanos = if (c.hasElapsedRealtimeNanos()) c.elapsedRealtimeNanos else null,
+        )
+        val ms = e.measurements.map { m ->
+            RawMeasurement(
+                constellation = constellationOf(m.constellationType),
+                svid = m.svid,
+                carrierHz = if (m.hasCarrierFrequencyHz()) m.carrierFrequencyHz.toDouble() else null,
+                cn0 = m.cn0DbHz,
+                state = m.state,
+                receivedSvTimeNanos = m.receivedSvTimeNanos,
+                receivedSvTimeUncertaintyNanos = m.receivedSvTimeUncertaintyNanos,
+                timeOffsetNanos = m.timeOffsetNanos,
+                pseudorangeRateMps = m.pseudorangeRateMetersPerSecond,
+                adrState = m.accumulatedDeltaRangeState,
+                adrMeters = m.accumulatedDeltaRangeMeters,
+                multipath = m.multipathIndicator,
+                codeType = if (m.hasCodeType()) m.codeType else null,
+                agcDb = if (m.hasAutomaticGainControlLevelDb()) m.automaticGainControlLevelDb else null,
+            )
+        }
+        val agc = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            e.gnssAutomaticGainControls.map { RawAgc(constellationOf(it.constellationType), it.carrierFrequencyHz.toDouble(), it.levelDb) }
+        } else {
+            ms.filter { it.agcDb != null }.distinctBy { it.constellation to it.carrierHz }.map { RawAgc(it.constellation, it.carrierHz ?: 1575.42e6, it.agcDb!!) }
+        }
+        return RawEpoch(clock, ms, agc, System.currentTimeMillis(), SystemClock.elapsedRealtimeNanos())
     }
 
     /** Fix type from GSA and HDOP from GGA/GSA. */

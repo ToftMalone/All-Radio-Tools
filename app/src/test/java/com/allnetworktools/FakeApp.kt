@@ -222,6 +222,9 @@ private fun Context.fakeGnss() = object : GnssRepository(this@fakeGnss) {
         extras = android.os.Bundle().apply { putInt("satellites", 13) }
     }
 
+    override fun raw(): Flow<com.allnetworktools.data.RawEpoch> = flowOf(GnssFake.epoch(sats))
+    override fun capabilities() = com.allnetworktools.data.GnssCaps(true, true, false, true, true, true, true, false, true)
+
     override fun positions(refreshMs: Long): Flow<com.allnetworktools.data.PositionSet> = flowOf(
         com.allnetworktools.data.PositionSet(
             gnss = at(LocationManager.GPS_PROVIDER, 0.0, 0.0, 3.2f),

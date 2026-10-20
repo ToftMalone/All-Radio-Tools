@@ -196,6 +196,23 @@ class ScreenshotTest {
         c.floorVersion++
         c.x = 5.6f; c.z = -4f
     }
+    @Test fun gnssIntegrity() = shot("75_gnss_integrity", nav = NavState(Network.Gnss, Page.ToolPage(Tool.GnssIntegrity)))
+    @Test fun gnssRaw() = shot("76_gnss_raw", nav = NavState(Network.Gnss, Page.ToolPage(Tool.GnssRaw)))
+    @Test fun gnssCompass() = shot("77_gnss_compass", nav = NavState(Network.Gnss, Page.ToolPage(Tool.CompassCheck)))
+    @Test fun gnssClock() = shot("78_gnss_clock", nav = NavState(Network.Gnss, Page.ToolPage(Tool.GnssClock)))
+    @Test fun gnssSkyMask() = shot("79_gnss_sky_mask", nav = NavState(Network.Gnss, Page.ToolPage(Tool.SkyMask))) { vm ->
+        val fake = (0 until 40).map { k ->
+            (0 until 24).map { i ->
+                val az = (i * 15f + k) % 360
+                val el = 12f + (i * 7 % 70)
+                // A building to the north-east: everything low between 20° and 110° is weak or lost.
+                val cn0 = if (az in 20f..110f && el < 45f) (if (i % 3 == 0) 18f else 0f) else 30f + el / 5
+                com.allnetworktools.data.Satellite(com.allnetworktools.data.Constellation.GPS, i + 1, cn0, el, az, cn0 > 25, null)
+            }
+        }
+        fake.forEach { vm.tools.skyMask.mask.feed(it) }
+        vm.tools.skyMask.version++
+    }
     @Test fun speedEmpty() = shot("71_speed_empty", nav = tool(Tool.Speed)) { vm ->
         vm.tools.speed.meta = SpeedFake.meta
     }

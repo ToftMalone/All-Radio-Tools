@@ -31,6 +31,10 @@ class ToolsHub(private val app: AntApplication, private val scope: CoroutineScop
     val bleIdentify by lazy { com.allnetworktools.ui.pages.bt.BleIdentifyController(scope, app.bluetooth) }
     val tracker by lazy { TrackerController(app, scope) }
     val positionCompare = com.allnetworktools.ui.pages.gnss.PositionCompareController()
+    val integrity = com.allnetworktools.ui.pages.gnss.IntegrityController()
+    val raw = com.allnetworktools.ui.pages.gnss.RawController()
+    val compassCheck = com.allnetworktools.ui.pages.gnss.CompassController()
+    val skyMask = com.allnetworktools.ui.pages.gnss.SkyMaskController()
     private val probes by lazy { com.allnetworktools.data.RealProbes() }
     private val links by lazy { com.allnetworktools.data.LinkReader(app) }
     val audit by lazy { com.allnetworktools.ui.pages.wifi.AuditController(probes, links, scope) }

@@ -200,6 +200,11 @@ private fun PageBody(vm: MainViewModel, net: Network, page: Page) {
             }
             Tool.Sky -> SkyTool(vm)
             Tool.PositionCompare -> com.allnetworktools.ui.pages.gnss.PositionCompareTool(vm)
+            Tool.GnssIntegrity -> com.allnetworktools.ui.pages.gnss.IntegrityTool(vm)
+            Tool.GnssRaw -> com.allnetworktools.ui.pages.gnss.RawTool(vm)
+            Tool.CompassCheck -> com.allnetworktools.ui.pages.gnss.CompassCheckTool(vm)
+            Tool.GnssClock -> com.allnetworktools.ui.pages.gnss.GnssClockTool(vm)
+            Tool.SkyMask -> com.allnetworktools.ui.pages.gnss.SkyMaskTool(vm)
             Tool.Spectrum -> com.allnetworktools.ui.pages.sdr.SpectrumTool(vm)
             Tool.Adsb -> com.allnetworktools.ui.pages.sdr.AdsbTool(vm)
             Tool.Sonde -> com.allnetworktools.ui.pages.sdr.SondeTool(vm)

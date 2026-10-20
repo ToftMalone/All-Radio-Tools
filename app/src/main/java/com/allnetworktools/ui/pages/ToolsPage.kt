@@ -80,7 +80,22 @@ private fun groups(net: Network, connectedDevice: String?, servingLabel: String?
         ),
     )
     Network.Gnss -> listOf(
-        ToolGroup("Outils", listOf(ToolEntry(Tool.PositionCompare, "Comparer les positions", "GNSS, réseau et fusionnée"))),
+        ToolGroup(
+            "Outils",
+            listOf(
+                ToolEntry(Tool.PositionCompare, "Comparer les positions", "GNSS, réseau et fusionnée"),
+                ToolEntry(Tool.GnssClock, "Horloge atomique", "Heure UTC des satellites, écart du téléphone"),
+                ToolEntry(Tool.CompassCheck, "Boussole et cap GNSS", "Vérifier la boussole en marchant"),
+                ToolEntry(Tool.SkyMask, "Masque du ciel", "Où le ciel est caché par les obstacles"),
+            ),
+        ),
+        ToolGroup(
+            "Expert",
+            listOf(
+                ToolEntry(Tool.GnssIntegrity, "Brouillage et leurrage", "Détecter un brouilleur ou de faux signaux"),
+                ToolEntry(Tool.GnssRaw, "Mesures brutes", "Bi-fréquence L1/L5, export RINEX"),
+            ),
+        ),
     )
     Network.Talkie -> emptyList()
     Network.Sdr -> listOf(

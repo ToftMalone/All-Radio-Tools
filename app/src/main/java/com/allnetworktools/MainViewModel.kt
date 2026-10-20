@@ -36,6 +36,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -309,6 +310,14 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     }.stateIn(viewModelScope, sharing, GnssState())
 
     fun lastKnownLocation() = g.gnss.lastKnownLocation()
+
+    /** Raw GNSS measurements, only while a tool that needs them is open. */
+    val gnssRaw: kotlinx.coroutines.flow.SharedFlow<com.allnetworktools.data.RawEpoch> =
+        whenAvailable<com.allnetworktools.data.RawEpoch?>(Network.Gnss, null) { g.gnss.raw() }
+            .filterNotNull()
+            .shareIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), replay = 1)
+
+    fun gnssCapabilities() = g.gnss.capabilities()
 
     val wifiDirect get() = g.wifiDirect
 

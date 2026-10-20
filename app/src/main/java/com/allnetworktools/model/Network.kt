@@ -79,6 +79,11 @@ enum class Tool(
 
     Sky(Network.Gnss, "Ciel GNSS", Sym.SatelliteAlt, implemented = true),
     PositionCompare(Network.Gnss, "Comparer les positions", Sym.ShareLocation, Sym.Refresh),
+    GnssIntegrity(Network.Gnss, "Brouillage et leurrage", Sym.Shield, Sym.RestartAlt),
+    GnssRaw(Network.Gnss, "Mesures brutes", Sym.Monitoring),
+    CompassCheck(Network.Gnss, "Boussole et cap GNSS", Sym.Explore, Sym.RestartAlt),
+    GnssClock(Network.Gnss, "Horloge atomique", Sym.Schedule),
+    SkyMask(Network.Gnss, "Masque du ciel", Sym.Radar, Sym.RestartAlt),
 
     Spectrum(Network.Sdr, "Analyseur de spectre", Sym.BarChart),
     Adsb(Network.Sdr, "Avions (ADS-B)", Sym.Flight),

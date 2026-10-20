@@ -100,21 +100,23 @@ private fun DrawScope.iPhone() {
     drawRoundRect(Color(0xFF2A2C31), Offset(25.2f, 38f), Size(1.8f, 10f), CornerRadius(1f, 1f))
 }
 
-/** AirPods: two white buds with their stems, the dark speaker grille facing out. */
+/** AirPods (3rd/4th generation): two round white heads on short stems, angled towards each other. */
 private fun DrawScope.airPods() {
     fun bud(mirror: Boolean) {
         val sx = if (mirror) -1f else 1f
         withTransform({ scale(sx, 1f, Offset(50f, 50f)) }) {
-            rotate(-12f, Offset(36f, 50f)) {
-                val head = Path().apply { addOval(androidx.compose.ui.geometry.Rect(22f, 16f, 46f, 40f)) }
-                val stem = rounded(31f, 30f, 41f, 86f, 5f)
+            rotate(14f, Offset(30f, 48f)) {
+                val head = Path().apply { addOval(androidx.compose.ui.geometry.Rect(14f, 22f, 46f, 52f)) }
+                val stem = rounded(30f, 40f, 42f, 80f, 6f)
                 val shape = Path().also { it.op(head, stem, PathOperation.Union) }
                 shadowed(shape) { p ->
-                    drawPath(p, Brush.linearGradient(listOf(Color.White, Color(0xFFE2E5EA)), Offset(22f, 16f), Offset(46f, 86f)))
+                    drawPath(p, Brush.linearGradient(listOf(Color.White, Color(0xFFE2E5EA)), Offset(14f, 22f), Offset(46f, 80f)))
                     drawPath(p, Color(0xFFB8BDC5), style = Stroke(1.6f))
                 }
-                drawOval(Color(0xFF3A3D44), Offset(27f, 21f), Size(9f, 6f))
-                drawRoundRect(Color(0xFFC9CDD3), Offset(33.5f, 80f), Size(5f, 4f), CornerRadius(2f, 2f))
+                // Speaker grille on the inner face, a vent on top, the microphone at the stem's tip.
+                drawOval(Color(0xFF3A3D44), Offset(32f, 30f), Size(10f, 8f))
+                drawOval(Color(0xFF8E939B), Offset(20f, 26f), Size(7f, 3.5f))
+                drawRoundRect(Color(0xFFC9CDD3), Offset(33.5f, 74f), Size(5f, 3.5f), CornerRadius(1.75f, 1.75f))
             }
         }
     }
@@ -122,16 +124,18 @@ private fun DrawScope.airPods() {
     bud(true)
 }
 
-/** Galaxy SmartTag2: a long dark pebble with a big key-ring hole at the top and a round button. */
+/** Galaxy SmartTag2: a flat, rounded capsule whose metal-lined key-ring hole fills nearly half of it. */
 private fun DrawScope.smartTag() {
-    val body = rounded(29f, 5f, 71f, 95f, 21f).minus(circle(50f, 25f, 10.5f))
+    val body = rounded(22f, 9f, 78f, 91f, 28f).minus(circle(50f, 35f, 16.5f))
     shadowed(body) { p ->
-        drawPath(p, Brush.linearGradient(listOf(Color(0xFF4B4F57), Color(0xFF1C1E22)), Offset(29f, 5f), Offset(71f, 95f)))
+        drawPath(p, Brush.linearGradient(listOf(Color(0xFF4B4F57), Color(0xFF1C1E22)), Offset(22f, 9f), Offset(78f, 91f)))
         drawPath(p, Color(0xFF5E636C), style = Stroke(1.4f))
     }
-    drawCircle(Color(0xFF6B7079), 10.5f, Offset(50f, 25f), style = Stroke(1.2f))
-    drawCircle(Brush.radialGradient(listOf(Color(0xFF3A3E45), Color(0xFF26282D)), Offset(48f, 64f), 12f), 10f, Offset(50f, 66f))
-    drawCircle(Color(0xFF6B7079), 10f, Offset(50f, 66f), style = Stroke(1.2f))
+    // The metal ring lining the hole.
+    drawCircle(Brush.linearGradient(listOf(Color(0xFFE2E5EA), Color(0xFF8E939B)), Offset(34f, 19f), Offset(66f, 51f)), 16.5f, Offset(50f, 35f), style = Stroke(3.2f))
+    // The button, a soft dot in the lower half.
+    drawCircle(Color(0xFF34373D), 6.5f, Offset(50f, 72f))
+    drawCircle(Color(0xFF666B74), 6.5f, Offset(50f, 72f), style = Stroke(1f))
 }
 
 /** Tile Mate: a white rounded square, the key-ring hole in a corner, the logo plate in the middle. */
