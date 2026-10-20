@@ -83,6 +83,30 @@ class CoverageTest {
         assertTrue(m.csv(walk).startsWith("horodatage_ms,x_m,z_m,rssi_dbm,bssid"))
     }
 
+    @Test fun wifimanPalette() {
+        val p = com.allnetworktools.data.CoveragePalette
+        assertEquals(0xFFE53935.toInt(), p.argb(-95f))
+        assertEquals(0xFFFDD835.toInt(), p.argb(-60f))
+        assertEquals(0xFF26A69A.toInt(), p.argb(-20f))
+        // Halfway between yellow (-60) and yellow-green (-50).
+        assertEquals(((0xFD + 0xC0) / 2).toFloat(), ((p.argb(-55f) shr 16) and 0xFF).toFloat(), 1f)
+        assertEquals("Bon", p.quality(-65))
+    }
+
+    @Test fun paintsTheFloorUnderThePhone() {
+        val f = com.allnetworktools.data.PaintedFloor()
+        f.paint(0.05f, 0.05f, -1.2f, -50)
+        // A 30 cm brush in 10 cm tiles: about π × 3² tiles.
+        assertTrue("${f.size}", f.size in 25..32)
+        assertEquals(-50f, f.rssiAt(0, 0)!!, 0f)
+        f.paint(0.05f, 0.05f, -1.2f, -70)
+        assertEquals(-60f, f.rssiAt(0, 0)!!, 1e-4f)
+        val v = f.vertices()
+        assertEquals(f.size * 6 * 7, v.size)
+        assertEquals(-1.2f, v[1], 0f)
+        assertNull(f.rssiAt(10, 10))
+    }
+
     @Test fun samplesEveryFortyCentimetres() {
         assertTrue(m.shouldSample(null, 0f, 0f))
         assertTrue(!m.shouldSample(at(0f, 0f, -50), 0.3f, 0f))

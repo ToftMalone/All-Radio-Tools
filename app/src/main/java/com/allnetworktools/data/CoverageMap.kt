@@ -134,3 +134,96 @@ class StepWalker(private val stepM: Float = 0.7f) {
 }
 
 fun magnitude(x: Float, y: Float, z: Float) = sqrt(x * x + y * y + z * z)
+
+/** WiFiman's signal scale: red at -80 dBm through orange, yellow and green to teal at -30 dBm. */
+object CoveragePalette {
+    val stops = listOf(
+        -80 to 0xFFE53935.toInt(),
+        -70 to 0xFFFB8C00.toInt(),
+        -60 to 0xFFFDD835.toInt(),
+        -50 to 0xFFC0CA33.toInt(),
+        -40 to 0xFF43A047.toInt(),
+        -30 to 0xFF26A69A.toInt(),
+    )
+
+    fun argb(rssi: Float): Int {
+        if (rssi <= stops.first().first) return stops.first().second
+        if (rssi >= stops.last().first) return stops.last().second
+        val i = stops.indexOfLast { it.first <= rssi }
+        val (r0, c0) = stops[i]
+        val (r1, c1) = stops[i + 1]
+        val t = (rssi - r0) / (r1 - r0)
+        fun ch(c: Int, s: Int) = (c shr s) and 0xFF
+        fun mix(s: Int) = (ch(c0, s) + (ch(c1, s) - ch(c0, s)) * t).toInt().coerceIn(0, 255)
+        return (0xFF shl 24) or (mix(16) shl 16) or (mix(8) shl 8) or mix(0)
+    }
+
+    /** French wording of the quality, as the bottom bar shows it. */
+    fun quality(rssi: Int) = when {
+        rssi >= -50 -> "Excellent"
+        rssi >= -60 -> "Très bon"
+        rssi >= -67 -> "Bon"
+        rssi >= -75 -> "Moyen"
+        else -> "Faible"
+    }
+}
+
+/**
+ * The floor painted while walking, in 10 cm tiles: every position paints the tiles within [BRUSH_M] with the signal
+ * measured there (averaged when walked over again), each tile at the floor height first seen under it.
+ */
+class PaintedFloor {
+    private class Tile(var sum: Float, var count: Int, val y: Float)
+    private val tiles = LinkedHashMap<Long, Tile>()
+
+    val size get() = tiles.size
+
+    fun clear() = tiles.clear()
+
+    fun paint(x: Float, z: Float, floorY: Float, rssi: Int) {
+        val r = (BRUSH_M / TILE_M).toInt() + 1
+        val cx = floor(x / TILE_M).toInt()
+        val cz = floor(z / TILE_M).toInt()
+        for (i in cx - r..cx + r) for (j in cz - r..cz + r) {
+            if (hypot((i + 0.5f) * TILE_M - x, (j + 0.5f) * TILE_M - z) > BRUSH_M) continue
+            val t = tiles.getOrPut(key(i, j)) { Tile(0f, 0, floorY) }
+            t.sum += rssi; t.count++
+        }
+    }
+
+    fun rssiAt(i: Int, j: Int): Float? = tiles[key(i, j)]?.let { it.sum / it.count }
+
+    /** Every tile as (column, row, signal). */
+    fun tiles(): List<Triple<Int, Int, Float>> = tiles.map { (k, t) -> Triple((k shr 32).toInt(), k.toInt(), t.sum / t.count) }
+
+    /** Two triangles per tile, slightly inset so the grid shows: x, y, z, r, g, b, a for each vertex. */
+    fun vertices(alpha: Float = 0.82f): FloatArray {
+        val out = FloatArray(tiles.size * 6 * 7)
+        var k = 0
+        val inset = TILE_M * 0.09f
+        for ((key, t) in tiles) {
+            val i = (key shr 32).toInt()
+            val j = key.toInt()
+            val c = CoveragePalette.argb(t.sum / t.count)
+            val r = ((c shr 16) and 0xFF) / 255f
+            val g = ((c shr 8) and 0xFF) / 255f
+            val b = (c and 0xFF) / 255f
+            val x0 = i * TILE_M + inset
+            val x1 = (i + 1) * TILE_M - inset
+            val z0 = j * TILE_M + inset
+            val z1 = (j + 1) * TILE_M - inset
+            for ((vx, vz) in arrayOf(x0 to z0, x1 to z0, x1 to z1, x0 to z0, x1 to z1, x0 to z1)) {
+                out[k++] = vx; out[k++] = t.y; out[k++] = vz
+                out[k++] = r; out[k++] = g; out[k++] = b; out[k++] = alpha
+            }
+        }
+        return out
+    }
+
+    private fun key(i: Int, j: Int) = (i.toLong() shl 32) or (j.toLong() and 0xFFFFFFFFL)
+
+    companion object {
+        const val TILE_M = 0.1f
+        const val BRUSH_M = 0.3f
+    }
+}

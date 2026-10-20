@@ -190,6 +190,8 @@ class ScreenshotTest {
         val walk = (0..14).map { com.allnetworktools.data.CoverageSample(it * 0.4f, 0f, -42 - it * 2, "aa", it * 1000L) } +
             (1..10).map { com.allnetworktools.data.CoverageSample(5.6f, -it * 0.4f, -70 - it * 2, "aa", 20_000L + it * 1000L) }
         c.samples.addAll(walk)
+        walk.forEach { s -> (0..3).forEach { k -> c.floor.paint(s.x + if (s.z == 0f) k * 0.1f else 0f, s.z - if (s.z != 0f) k * 0.1f else 0f, 0f, s.rssi) } }
+        c.floorVersion++
         c.x = 5.6f; c.z = -4f
     }
     @Test fun speedEmpty() = shot("71_speed_empty", nav = tool(Tool.Speed)) { vm ->

@@ -11,8 +11,6 @@ import android.opengl.GLSurfaceView
 import android.opengl.Matrix
 import android.os.Handler
 import android.os.Looper
-import com.allnetworktools.data.CoverageMap
-import com.allnetworktools.data.CoverageSample
 import com.google.ar.core.ArCoreApk
 import com.google.ar.core.CameraConfig
 import com.google.ar.core.CameraConfigFilter
@@ -90,47 +88,30 @@ object ArCoverage {
 data class ArPose(val x: Float, val z: Float, val floorY: Float, val headingRad: Float, val tracking: TrackingState, val failure: TrackingFailureReason, val depth: Boolean)
 
 /**
- * Draws the camera image and, on the floor, a coloured disc at every measurement (green strong, red weak), plus a
- * pulsing one under the phone. Runs on the GL thread; [samples] is replaced from the UI thread.
+ * Draws the camera image dimmed, and on the floor the painted tiles (see PaintedFloor) with the phone's position as a
+ * blue dot and arrow, the way WiFiman's AR signal map looks. Runs on the GL thread; [tiles] is replaced from the UI.
  */
 class ArCoverageRenderer(
     private val session: Session,
     private val rotation: () -> Int,
-    private val colors: IntArray,
     private val onPose: (ArPose) -> Unit,
 ) : GLSurfaceView.Renderer {
-    @Volatile var samples: List<CoverageSample> = emptyList()
-    @Volatile var currentRssi: Int = -70
+    /** Interleaved x, y, z, r, g, b, a per vertex, six vertices per tile. */
+    @Volatile var tiles: FloatArray = FloatArray(0)
 
     private val main = Handler(Looper.getMainLooper())
     private var cameraTex = 0
     private var bgProgram = 0
-    private var discProgram = 0
+    private var flatProgram = 0
     private val quad = floats(-1f, -1f, 1f, -1f, -1f, 1f, 1f, 1f)
     private val quadUv = floats(0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f)
-    private val disc: FloatBuffer
+    private var tileBuffer: FloatBuffer = floats()
+    private var tileSource: FloatArray? = null
     private val proj = FloatArray(16)
     private val view = FloatArray(16)
     private val vp = FloatArray(16)
-    private val model = FloatArray(16)
-    private val mvp = FloatArray(16)
     private var floorY = Float.NaN
     private var lastReport = 0L
-    private var width = 1
-    private var height = 1
-
-    init {
-        // Triangle fan: centre, then the rim; the third coordinate is the distance from the centre (0 or 1).
-        val n = 32
-        val v = FloatArray((n + 2) * 3)
-        for (i in 0..n) {
-            val a = 2 * Math.PI * i / n
-            v[(i + 1) * 3] = cos(a).toFloat()
-            v[(i + 1) * 3 + 1] = sin(a).toFloat()
-            v[(i + 1) * 3 + 2] = 1f
-        }
-        disc = floats(*v)
-    }
 
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
         GLES20.glClearColor(0f, 0f, 0f, 1f)
@@ -144,11 +125,10 @@ class ArCoverageRenderer(
         GLES20.glTexParameteri(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR)
         session.setCameraTextureName(cameraTex)
         bgProgram = program(BG_VERTEX, BG_FRAGMENT)
-        discProgram = program(DISC_VERTEX, DISC_FRAGMENT)
+        flatProgram = program(FLAT_VERTEX, FLAT_FRAGMENT)
     }
 
     override fun onSurfaceChanged(gl: GL10?, w: Int, h: Int) {
-        width = w; height = h
         GLES20.glViewport(0, 0, w, h)
         session.setDisplayGeometry(rotation(), w, h)
     }
@@ -164,6 +144,9 @@ class ArCoverageRenderer(
         drawBackground()
         val camera = frame.camera
         val pose = camera.pose
+        // Heading of the camera's view direction on the floor, clockwise from the map's up (-z).
+        val fwd = pose.zAxis
+        val heading = kotlin.math.atan2(-fwd[0], fwd[2])
         if (camera.trackingState == TrackingState.TRACKING) {
             // Floor: the first horizontal plane or depth point straight below the phone; else 1.3 m under it.
             val hit = runCatching {
@@ -178,14 +161,12 @@ class ArCoverageRenderer(
             camera.getProjectionMatrix(proj, 0, 0.05f, 100f)
             camera.getViewMatrix(view, 0)
             Matrix.multiplyMM(vp, 0, proj, 0, view, 0)
-            drawDiscs(pose.tx(), pose.tz())
+            drawTiles()
+            drawMarker(pose.tx(), floorY + 0.01f, pose.tz(), heading)
         }
         val now = System.currentTimeMillis()
         if (now - lastReport >= 100) {
             lastReport = now
-            // Heading of the camera's view direction on the floor, clockwise from the map's up (-z).
-            val fwd = pose.zAxis
-            val heading = kotlin.math.atan2(-fwd[0], fwd[2])
             val p = ArPose(
                 pose.tx(), pose.tz(), floorY, heading, camera.trackingState, camera.trackingFailureReason,
                 session.config.depthMode != Config.DepthMode.DISABLED,
@@ -200,6 +181,7 @@ class ArCoverageRenderer(
         GLES20.glUseProgram(bgProgram)
         GLES20.glActiveTexture(GLES20.GL_TEXTURE0)
         GLES20.glBindTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, cameraTex)
+        GLES20.glUniform1f(GLES20.glGetUniformLocation(bgProgram, "u_Dim"), DIM)
         val pos = GLES20.glGetAttribLocation(bgProgram, "a_Position")
         val uv = GLES20.glGetAttribLocation(bgProgram, "a_TexCoord")
         quad.position(0); quadUv.position(0)
@@ -213,44 +195,69 @@ class ArCoverageRenderer(
         GLES20.glDepthMask(true)
     }
 
-    private fun drawDiscs(camX: Float, camZ: Float) {
+    /** Draws triangles from interleaved x, y, z, r, g, b, a vertices. */
+    private fun drawFlat(buf: FloatBuffer, count: Int, mode: Int = GLES20.GL_TRIANGLES) {
+        if (count == 0) return
         GLES20.glEnable(GLES20.GL_BLEND)
         GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA)
-        GLES20.glUseProgram(discProgram)
-        val pos = GLES20.glGetAttribLocation(discProgram, "a_Position")
-        val uMvp = GLES20.glGetUniformLocation(discProgram, "u_Mvp")
-        val uColor = GLES20.glGetUniformLocation(discProgram, "u_Color")
-        disc.position(0)
-        GLES20.glVertexAttribPointer(pos, 3, GLES20.GL_FLOAT, false, 0, disc)
+        GLES20.glUseProgram(flatProgram)
+        val pos = GLES20.glGetAttribLocation(flatProgram, "a_Position")
+        val col = GLES20.glGetAttribLocation(flatProgram, "a_Color")
+        GLES20.glUniformMatrix4fv(GLES20.glGetUniformLocation(flatProgram, "u_Mvp"), 1, false, vp, 0)
+        buf.position(0)
+        GLES20.glVertexAttribPointer(pos, 3, GLES20.GL_FLOAT, false, 28, buf)
+        buf.position(3)
+        GLES20.glVertexAttribPointer(col, 4, GLES20.GL_FLOAT, false, 28, buf)
         GLES20.glEnableVertexAttribArray(pos)
-        fun draw(x: Float, y: Float, z: Float, r: Float, rssi: Float, alpha: Float) {
-            Matrix.setIdentityM(model, 0)
-            Matrix.translateM(model, 0, x, y, z)
-            // The mesh lies in x-y: turn it flat onto the floor.
-            Matrix.rotateM(model, 0, -90f, 1f, 0f, 0f)
-            Matrix.scaleM(model, 0, r, r, 1f)
-            Matrix.multiplyMM(mvp, 0, vp, 0, model, 0)
-            GLES20.glUniformMatrix4fv(uMvp, 1, false, mvp, 0)
-            val c = color(CoverageMap.level(rssi))
-            GLES20.glUniform4f(uColor, c[0], c[1], c[2], alpha)
-            GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, 0, 34)
-        }
-        val list = samples
-        list.forEach { s -> draw(s.x, (if (s.floorY != 0f) s.floorY else floorY) + 0.005f, s.z, 0.24f, s.rssi.toFloat(), 0.8f) }
-        val pulse = 0.28f + 0.06f * sin(System.nanoTime() / 2.5e8).toFloat()
-        draw(camX, floorY + 0.01f, camZ, pulse, currentRssi.toFloat(), 0.55f)
+        GLES20.glEnableVertexAttribArray(col)
+        GLES20.glDrawArrays(mode, 0, count)
         GLES20.glDisableVertexAttribArray(pos)
+        GLES20.glDisableVertexAttribArray(col)
         GLES20.glDisable(GLES20.GL_BLEND)
     }
 
-    /** Red → amber → green, as on the map. */
-    private fun color(v: Float): FloatArray {
-        val (a, b, t) = if (v < 0.5f) Triple(colors[0], colors[1], v * 2) else Triple(colors[1], colors[2], (v - 0.5f) * 2)
-        fun ch(c: Int, s: Int) = ((c shr s) and 0xFF) / 255f
-        return floatArrayOf(ch(a, 16) + (ch(b, 16) - ch(a, 16)) * t, ch(a, 8) + (ch(b, 8) - ch(a, 8)) * t, ch(a, 0) + (ch(b, 0) - ch(a, 0)) * t)
+    private fun drawTiles() {
+        val src = tiles
+        if (src !== tileSource) {
+            tileSource = src
+            tileBuffer = floats(*src)
+        }
+        drawFlat(tileBuffer, src.size / 7)
+    }
+
+    /** WiFiman's position marker: a white-ringed blue dot with an arrow ahead of it, flat on the floor. */
+    private fun drawMarker(x: Float, y: Float, z: Float, heading: Float) {
+        val v = ArrayList<Float>()
+        fun vertex(px: Float, pz: Float, c: FloatArray) { v += px; v += y; v += pz; v += c[0]; v += c[1]; v += c[2]; v += c[3] }
+        fun disc(r: Float, c: FloatArray) {
+            val n = 28
+            for (i in 0 until n) {
+                val a0 = 2 * Math.PI * i / n
+                val a1 = 2 * Math.PI * (i + 1) / n
+                vertex(x, z, c)
+                vertex(x + r * cos(a0).toFloat(), z + r * sin(a0).toFloat(), c)
+                vertex(x + r * cos(a1).toFloat(), z + r * sin(a1).toFloat(), c)
+            }
+        }
+        val white = floatArrayOf(1f, 1f, 1f, 1f)
+        val blue = floatArrayOf(0.11f, 0.42f, 0.95f, 1f)
+        // Arrow: heading is clockwise from -z.
+        val fx = sin(heading); val fz = -cos(heading)
+        val sx = -fz; val sz = fx
+        fun p(f: Float, s: Float) = (x + fx * f + sx * s) to (z + fz * f + sz * s)
+        val (tx, tz) = p(0.2f, 0f)
+        val (lx, lz) = p(0.1f, -0.06f)
+        val (rx, rz) = p(0.1f, 0.06f)
+        vertex(tx, tz, blue); vertex(lx, lz, blue); vertex(rx, rz, blue)
+        disc(0.075f, white)
+        disc(0.055f, blue)
+        drawFlat(floats(*v.toFloatArray()), v.size / 7)
     }
 
     private companion object {
+        /** Camera image brightness under the map. */
+        const val DIM = 0.45f
+
         const val BG_VERTEX = """
             attribute vec4 a_Position;
             attribute vec2 a_TexCoord;
@@ -262,23 +269,24 @@ class ArCoverageRenderer(
             precision mediump float;
             varying vec2 v_TexCoord;
             uniform samplerExternalOES u_Texture;
-            void main() { gl_FragColor = texture2D(u_Texture, v_TexCoord); }
+            uniform float u_Dim;
+            void main() { gl_FragColor = vec4(texture2D(u_Texture, v_TexCoord).rgb * u_Dim, 1.0); }
         """
-        const val DISC_VERTEX = """
+        const val FLAT_VERTEX = """
             attribute vec3 a_Position;
+            attribute vec4 a_Color;
             uniform mat4 u_Mvp;
-            varying float v_R;
-            void main() { gl_Position = u_Mvp * vec4(a_Position.xy, 0.0, 1.0); v_R = a_Position.z; }
+            varying vec4 v_Color;
+            void main() { gl_Position = u_Mvp * vec4(a_Position, 1.0); v_Color = a_Color; }
         """
-        const val DISC_FRAGMENT = """
+        const val FLAT_FRAGMENT = """
             precision mediump float;
-            uniform vec4 u_Color;
-            varying float v_R;
-            void main() { gl_FragColor = vec4(u_Color.rgb, u_Color.a * (1.0 - 0.55 * v_R * v_R)); }
+            varying vec4 v_Color;
+            void main() { gl_FragColor = v_Color; }
         """
 
         fun floats(vararg v: Float): FloatBuffer =
-            ByteBuffer.allocateDirect(v.size * 4).order(ByteOrder.nativeOrder()).asFloatBuffer().apply { put(v); position(0) }
+            ByteBuffer.allocateDirect(maxOf(v.size, 1) * 4).order(ByteOrder.nativeOrder()).asFloatBuffer().apply { put(v); position(0) }
 
         fun program(vs: String, fs: String): Int {
             fun shader(type: Int, src: String) = GLES20.glCreateShader(type).also { GLES20.glShaderSource(it, src); GLES20.glCompileShader(it) }

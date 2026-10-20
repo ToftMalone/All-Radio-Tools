@@ -21,6 +21,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,6 +32,7 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -54,6 +59,8 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import com.allnetworktools.data.CoverageCell
 import com.allnetworktools.data.CoverageMap
+import com.allnetworktools.data.CoveragePalette
+import com.allnetworktools.data.PaintedFloor
 import com.allnetworktools.data.CoverageSample
 import com.allnetworktools.data.StepDetector
 import com.allnetworktools.data.StepWalker
@@ -61,6 +68,7 @@ import com.allnetworktools.data.WifiConnection
 import com.allnetworktools.data.magnitude
 import com.allnetworktools.ui.LocalActions
 import com.allnetworktools.ui.components.AntFilterChip
+import com.allnetworktools.ui.components.IconCircleButton
 import com.allnetworktools.ui.components.InfoList
 import com.allnetworktools.ui.components.InfoRow
 import com.allnetworktools.ui.components.SectionCard
@@ -107,6 +115,9 @@ class CoverageController {
     var arError by mutableStateOf<String?>(null)
     /** Checked once when the tool opens: ARCore's answer can take a moment. */
     var support by mutableStateOf<ArSupport?>(null)
+    /** The floor painted in AR, 10 cm tiles; [floorVersion] changes when it does. */
+    val floor = PaintedFloor()
+    var floorVersion by mutableIntStateOf(0)
     private var rssi = -127
     private var bssid: String? = null
 
@@ -115,6 +126,8 @@ class CoverageController {
     fun start(mode: CoverageMode) {
         this.mode = mode
         samples.clear()
+        floor.clear()
+        floorVersion++
         x = 0f; z = 0f
         tracking = null
         arError = null
@@ -125,6 +138,8 @@ class CoverageController {
 
     fun clear() {
         samples.clear()
+        floor.clear()
+        floorVersion++
         running = false
     }
 
@@ -140,7 +155,13 @@ class CoverageController {
         failure = p.failure
         depth = p.depth
         heading = p.headingRad
-        if (p.tracking == TrackingState.TRACKING) moved(p.x, p.z, p.floorY)
+        if (p.tracking == TrackingState.TRACKING) {
+            moved(p.x, p.z, p.floorY)
+            if (running && rssi > -127) {
+                floor.paint(p.x, p.z, p.floorY, rssi)
+                floorVersion++
+            }
+        }
     }
 }
 
@@ -173,11 +194,8 @@ fun CoverageTool(c: CoverageController, conn: WifiConnection?) {
             return@PageColumn
         }
         val arPossible = support.possible
-        if (c.running && c.mode == CoverageMode.Ar) {
-            ArView(c, conn.rssi)
-        } else if (!c.running || c.mode == CoverageMode.Steps) {
-            SignalHero(c, conn)
-        }
+        if (c.running && c.mode == CoverageMode.Ar) ArScreen(c, conn)
+        SignalHero(c, conn)
         if (c.running && c.mode == CoverageMode.Steps) StepTracking(c)
         if (c.samples.isNotEmpty() || c.running) CoverageMapCard(c)
         if (c.samples.isNotEmpty()) StatsTiles(c.samples)
@@ -243,11 +261,98 @@ private fun SignalHero(c: CoverageController, conn: WifiConnection) {
 }
 
 /** The camera with the measurements painted on the floor, and what ARCore needs when it is not tracking yet. */
+/**
+ * Full-screen AR, as in WiFiman: the camera dimmed, the walked floor painted in 10 cm tiles of the signal colour, a
+ * blue dot and arrow under the phone, the dBm scale and the network at the bottom.
+ */
 @Composable
-private fun ArView(c: CoverageController, rssi: Int) {
+private fun ArScreen(c: CoverageController, conn: WifiConnection) {
+    androidx.compose.ui.window.Dialog(
+        { c.stop() },
+        androidx.compose.ui.window.DialogProperties(usePlatformDefaultWidth = false, decorFitsSystemWindows = false),
+    ) {
+        Box(Modifier.fillMaxSize().background(Color.Black)) {
+            ArCamera(c)
+            val insets = androidx.compose.foundation.layout.WindowInsets.safeDrawing
+            Box(Modifier.fillMaxWidth().align(Alignment.TopCenter).windowInsetsPadding(insets).padding(horizontal = 8.dp, vertical = 4.dp).height(48.dp)) {
+                IconCircleButton(Sym.Close, { c.stop() }, Modifier.align(Alignment.CenterStart), tint = Color.White, size = 44.dp)
+                Text("Force du signal", Modifier.align(Alignment.Center), style = rf(17, 22, 600), color = Color.White)
+            }
+            val hint = when {
+                c.tracking == TrackingState.TRACKING -> if (c.floor.size == 0) "Marchez : le sol se colore sous vos pas" else null
+                c.failure == TrackingFailureReason.INSUFFICIENT_LIGHT -> "Trop sombre : allumez la lumière"
+                c.failure == TrackingFailureReason.EXCESSIVE_MOTION -> "Bougez plus lentement"
+                c.failure == TrackingFailureReason.INSUFFICIENT_FEATURES -> "Visez le sol ou des objets texturés"
+                c.failure == TrackingFailureReason.CAMERA_UNAVAILABLE -> "Caméra utilisée par une autre application"
+                else -> "Balayez lentement le sol avec la caméra…"
+            }
+            hint?.let {
+                Text(
+                    it,
+                    Modifier.align(Alignment.Center).clip(RoundedCornerShape(14.dp)).background(Color.Black.copy(alpha = 0.6f)).padding(horizontal = 14.dp, vertical = 8.dp),
+                    style = rf(14, 20, 600), color = Color.White,
+                )
+            }
+            Column(Modifier.align(Alignment.BottomCenter).fillMaxWidth()) {
+                ScaleBar(Modifier.padding(horizontal = 8.dp, vertical = 10.dp))
+                NetworkBar(conn)
+            }
+        }
+    }
+}
+
+/** The dBm scale: a rounded colour bar with the values written on it. */
+@Composable
+private fun ScaleBar(modifier: Modifier) {
+    val stops = CoveragePalette.stops
+    Box(
+        modifier.fillMaxWidth().height(26.dp).clip(RoundedCornerShape(13.dp))
+            .background(Brush.horizontalGradient(listOf(Color(stops.first().second)) + stops.map { Color(it.second) })),
+    ) {
+        Row(Modifier.fillMaxSize().padding(horizontal = 10.dp), verticalAlignment = Alignment.CenterVertically) {
+            Text("dBm", Modifier.weight(1f), style = rf(12, 16, 700), color = Color.White)
+            stops.forEach { (v, _) -> Text("$v", Modifier.weight(1f), style = rf(12, 16, 700, tnum = true), color = Color.White, textAlign = androidx.compose.ui.text.style.TextAlign.Center) }
+        }
+    }
+}
+
+@Composable
+private fun NetworkBar(conn: WifiConnection) {
+    val color = Color(CoveragePalette.argb(conn.rssi.toFloat()))
+    Row(
+        Modifier.fillMaxWidth().background(Color(0xFF1B1B1F)).windowInsetsPadding(androidx.compose.foundation.layout.WindowInsets.navigationBars)
+            .padding(horizontal = 16.dp, vertical = 12.dp),
+        verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp),
+    ) {
+        Box(Modifier.size(36.dp).clip(androidx.compose.foundation.shape.CircleShape).background(Color.White.copy(alpha = 0.12f)), contentAlignment = Alignment.Center) {
+            com.allnetworktools.ui.components.Symbol(Sym.Wifi, size = 20.dp, filled = true, tint = Color.White)
+        }
+        Column(Modifier.weight(1f)) {
+            Text(conn.ssid ?: "Réseau masqué", style = rf(15, 20, 600), color = Color.White, maxLines = 1)
+            Text(
+                listOfNotNull(conn.bssid?.uppercase(), bandOf(conn.frequency)).joinToString(" · "),
+                style = rf(12, 16), color = Color.White.copy(alpha = 0.6f), maxLines = 1,
+            )
+        }
+        Column(horizontalAlignment = Alignment.End) {
+            Text("${conn.rssi} dBm", style = rf(17, 22, 700, tnum = true), color = color)
+            Text(CoveragePalette.quality(conn.rssi), style = rf(12, 16, 600), color = Color.White.copy(alpha = 0.8f))
+        }
+    }
+}
+
+private fun bandOf(mhz: Int) = when {
+    mhz in 2400..2500 -> "2,4 GHz"
+    mhz in 4900..5900 -> "5 GHz"
+    mhz in 5925..7125 -> "6 GHz"
+    else -> null
+}
+
+/** The ARCore session and its GL view, filling the dialog. */
+@Composable
+private fun ArCamera(c: CoverageController) {
     val context = LocalContext.current
     val lifecycle = LocalLifecycleOwner.current.lifecycle
-    val colors = intArrayOf(cs.error.toArgb(), AntTheme.net.fair.toArgb(), AntTheme.net.good.toArgb())
     val created = remember { runCatching { ArCoverage.session(context) } }
     val session = created.getOrNull()
     if (session == null) {
@@ -259,9 +364,8 @@ private fun ArView(c: CoverageController, rssi: Int) {
     }
     val (arSession, tof) = session
     LaunchedEffect(tof) { c.tof = tof }
-    val renderer = remember { ArCoverageRenderer(arSession, { runCatching { context.display.rotation }.getOrDefault(0) }, colors) { c.onArPose(it) } }
-    renderer.samples = c.samples.toList()
-    renderer.currentRssi = rssi
+    val renderer = remember { ArCoverageRenderer(arSession, { runCatching { context.display.rotation }.getOrDefault(0) }) { c.onArPose(it) } }
+    LaunchedEffect(c.floorVersion) { renderer.tiles = c.floor.vertices() }
     var view by remember { mutableStateOf<GLSurfaceView?>(null) }
     DisposableEffect(lifecycle) {
         fun resume() { runCatching { arSession.resume() }.onFailure { c.arError = "Caméra indisponible : ${it.message}" }; view?.onResume() }
@@ -281,46 +385,22 @@ private fun ArView(c: CoverageController, rssi: Int) {
             arSession.close()
         }
     }
-    Box(Modifier.fillMaxWidth().aspectRatio(3f / 4f).clip(RoundedCornerShape(28.dp)).background(Color.Black)) {
-        AndroidView(
-            factory = { ctx ->
-                GLSurfaceView(ctx).apply {
-                    preserveEGLContextOnPause = true
-                    setEGLContextClientVersion(2)
-                    setEGLConfigChooser(8, 8, 8, 8, 16, 0)
-                    setRenderer(renderer)
-                    renderMode = GLSurfaceView.RENDERMODE_CONTINUOUSLY
-                    view = this
-                    onResume()
-                }
-            },
-            modifier = Modifier.fillMaxSize(),
-        )
-        val level = CoverageMap.level(rssi.toFloat())
-        Row(
-            Modifier.align(Alignment.TopStart).padding(12.dp).clip(RoundedCornerShape(16.dp)).background(Color.Black.copy(alpha = 0.55f)).padding(horizontal = 12.dp, vertical = 6.dp),
-            verticalAlignment = Alignment.Bottom,
-        ) {
-            Text("$rssi", style = gs(28, 32, 600, tnum = true), color = signalColor(level))
-            Text(" dBm", Modifier.padding(bottom = 3.dp), style = rf(13, 18, 600), color = Color.White)
-        }
-        val hint = when {
-            c.tracking == TrackingState.TRACKING -> null
-            c.failure == TrackingFailureReason.INSUFFICIENT_LIGHT -> "Trop sombre : allumez la lumière"
-            c.failure == TrackingFailureReason.EXCESSIVE_MOTION -> "Bougez plus lentement"
-            c.failure == TrackingFailureReason.INSUFFICIENT_FEATURES -> "Visez le sol ou des objets texturés"
-            c.failure == TrackingFailureReason.CAMERA_UNAVAILABLE -> "Caméra utilisée par une autre application"
-            else -> "Balayez lentement le sol avec la caméra…"
-        }
-        Text(
-            hint ?: "Marchez : un point est posé tous les 40 cm",
-            Modifier.align(Alignment.BottomCenter).padding(12.dp).clip(RoundedCornerShape(14.dp)).background(Color.Black.copy(alpha = 0.55f)).padding(horizontal = 12.dp, vertical = 6.dp),
-            style = rf(13, 18, 600), color = Color.White,
-        )
-    }
+    AndroidView(
+        factory = { ctx ->
+            GLSurfaceView(ctx).apply {
+                preserveEGLContextOnPause = true
+                setEGLContextClientVersion(2)
+                setEGLConfigChooser(8, 8, 8, 8, 16, 0)
+                setRenderer(renderer)
+                renderMode = GLSurfaceView.RENDERMODE_CONTINUOUSLY
+                view = this
+                onResume()
+            }
+        },
+        modifier = Modifier.fillMaxSize(),
+    )
 }
 
-/** Steps from the accelerometer, heading from the rotation-vector sensor (compass + gyroscope). */
 @Composable
 private fun StepTracking(c: CoverageController) {
     val context = LocalContext.current
@@ -354,25 +434,14 @@ private fun StepTracking(c: CoverageController) {
 }
 
 @Composable
-private fun signalColor(v: Float): Color {
-    val good = AntTheme.net.good
-    val fair = AntTheme.net.fair
-    val bad = cs.error
-    return if (v < 0.5f) lerp(bad, fair, v * 2) else lerp(fair, good, (v - 0.5f) * 2)
-}
-
-/** Top-down map of the walked floor: 50 cm squares coloured by signal, the path, and where the phone is. */
-@Composable
 private fun CoverageMapCard(c: CoverageController) {
     val samples = c.samples.toList()
     val cells = remember(samples.size) { CoverageMap.cells(samples) }
-    val good = AntTheme.net.good
-    val fair = AntTheme.net.fair
-    val bad = cs.error
+    val painted = remember(c.floorVersion) { c.floor.tiles() }
     val path = cs.onSurface
     val me = AntTheme.accent.accent
     val grid = cs.outlineVariant
-    fun color(v: Float): Color = if (v < 0.5f) lerp(bad, fair, v * 2) else lerp(fair, good, (v - 0.5f) * 2)
+    fun color(rssi: Float) = Color(CoveragePalette.argb(rssi))
     SectionCard(padding = PaddingValues(8.dp)) {
         Box(Modifier.fillMaxWidth().aspectRatio(1f).clip(RoundedCornerShape(20.dp)).background(cs.surfaceContainerHigh)) {
             Canvas(Modifier.fillMaxSize()) {
@@ -394,8 +463,14 @@ private fun CoverageMapCard(c: CoverageController) {
                     drawLine(grid, Offset(gx, 0f), Offset(gx, size.height), 1f)
                     drawLine(grid, Offset(0f, gz), Offset(size.width, gz), 1f)
                 }
-                cells.forEach { k: CoverageCell ->
-                    drawRect(color(CoverageMap.level(k.rssi)).copy(alpha = 0.75f), at(k.ix * cell, k.iz * cell), Size(cell * scale + 1f, cell * scale + 1f))
+                if (painted.isNotEmpty()) {
+                    // In AR: the floor exactly as painted, tile by tile.
+                    val t = PaintedFloor.TILE_M
+                    painted.forEach { (i, j, v) -> drawRect(color(v).copy(alpha = 0.85f), at(i * t, j * t), Size(t * scale * 0.84f, t * scale * 0.84f)) }
+                } else {
+                    cells.forEach { k: CoverageCell ->
+                        drawRect(color(k.rssi).copy(alpha = 0.75f), at(k.ix * cell, k.iz * cell), Size(cell * scale + 1f, cell * scale + 1f))
+                    }
                 }
                 if (samples.size > 1) {
                     val p = Path()
@@ -479,14 +554,8 @@ private fun DevicePanel(support: ArSupport, c: CoverageController) {
 
 @Composable
 private fun Legend() {
-    val good = AntTheme.net.good
-    val fair = AntTheme.net.fair
-    val bad = cs.error
     SectionCard {
-        Box(Modifier.fillMaxWidth().height(10.dp).clip(RoundedCornerShape(5.dp)).background(Brush.horizontalGradient(listOf(bad, fair, good))))
-        Row(Modifier.fillMaxWidth().padding(top = 6.dp), horizontalArrangement = Arrangement.SpaceBetween) {
-            listOf(-90, -80, -70, -60, -50).forEach { Text(fmt(it), style = rf(11, 14, tnum = true), color = cs.onSurfaceVariant) }
-        }
-        Text("dBm · au-dessus de -67 dBm : appels vidéo et streaming confortables", Modifier.padding(top = 4.dp), style = rf(12, 16), color = cs.onSurfaceVariant)
+        ScaleBar(Modifier)
+        Text("Au-dessus de -67 dBm : appels vidéo et streaming confortables", Modifier.padding(top = 8.dp), style = rf(12, 16), color = cs.onSurfaceVariant)
     }
 }
