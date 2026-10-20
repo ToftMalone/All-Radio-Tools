@@ -78,6 +78,7 @@ dependencies {
     implementation(libs.material.components)
     implementation(libs.osmdroid)
     implementation(libs.usb.serial)
+    implementation(libs.arcore)
     debugImplementation(libs.compose.ui.tooling)
     debugImplementation(libs.compose.ui.test.manifest)
 

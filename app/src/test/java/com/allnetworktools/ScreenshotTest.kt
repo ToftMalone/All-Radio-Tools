@@ -183,6 +183,15 @@ class ScreenshotTest {
         listOf("Système" to 18f, "Cloudflare" to 9f, "Google" to 14f, "Quad9" to 21f).forEach { (k, v) -> c.compare[k] = v }
         c.phase = Phase.Results
     }
+    @Test fun coverageWalk() = shot("74_coverage_walk", nav = tool(Tool.Coverage)) { vm ->
+        val c = vm.tools.coverage
+        c.support = com.allnetworktools.ui.pages.wifi.ArSupport(com.google.ar.core.ArCoreApk.Availability.SUPPORTED_INSTALLED, tofCamera = true)
+        // An L-shaped walk through a flat: along a corridor, then into a room further from the box.
+        val walk = (0..14).map { com.allnetworktools.data.CoverageSample(it * 0.4f, 0f, -42 - it * 2, "aa", it * 1000L) } +
+            (1..10).map { com.allnetworktools.data.CoverageSample(5.6f, -it * 0.4f, -70 - it * 2, "aa", 20_000L + it * 1000L) }
+        c.samples.addAll(walk)
+        c.x = 5.6f; c.z = -4f
+    }
     @Test fun speedEmpty() = shot("71_speed_empty", nav = tool(Tool.Speed)) { vm ->
         vm.tools.speed.meta = SpeedFake.meta
     }

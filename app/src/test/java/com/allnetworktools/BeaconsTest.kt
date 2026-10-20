@@ -57,16 +57,54 @@ class BeaconsTest {
 }
 
 class CoverageTest {
+    private val m = com.allnetworktools.data.CoverageMap
+    private fun at(x: Float, z: Float, rssi: Int) = com.allnetworktools.data.CoverageSample(x, z, rssi, "aa", 0)
+
     @Test fun interpolatesBetweenMeasurements() {
-        val pts = listOf(
-            com.allnetworktools.ui.pages.wifi.CoveragePoint(0f, 0f, -50),
-            com.allnetworktools.ui.pages.wifi.CoveragePoint(1f, 0f, -90),
-        )
-        val c = com.allnetworktools.ui.pages.wifi.Coverage
-        assertEquals(-50f, c.estimate(pts, 0f, 0f)!!, 1e-4f)
-        assertEquals(-70f, c.estimate(pts, 0.5f, 0f)!!, 1e-3f)
-        assertTrue(c.estimate(pts, 0.1f, 0f)!! > -55f)
-        assertNull(c.estimate(emptyList(), 0.5f, 0.5f))
-        assertEquals(1f, c.level(-40f)); assertEquals(0f, c.level(-95f))
+        val pts = listOf(at(0f, 0f, -50), at(1f, 0f, -90))
+        assertEquals(-70f, m.estimate(pts, 0.5f, 0f)!!, 1e-3f)
+        assertTrue(m.estimate(pts, 0f, 0f)!! > -53f)
+        // Nobody walked there: no colour.
+        assertNull(m.estimate(pts, 5f, 5f))
+        assertNull(m.estimate(emptyList(), 0f, 0f))
+        assertEquals(1f, m.level(-40f)); assertEquals(0f, m.level(-95f))
+    }
+
+    @Test fun mapsTheWalkedCorridor() {
+        // A 4 m corridor walked every 40 cm, strong at one end and weak at the other.
+        val walk = (0..10).map { at(it * 0.4f, 0f, -45 - it * 4) }
+        val cells = m.cells(walk)
+        val stats = m.stats(walk, cells)
+        assertEquals(4f, stats.distanceM, 1e-3f)
+        // About 4 + 2 × 1.25 m long and 2 × 1.25 m wide, in 50 cm squares.
+        assertTrue("area ${stats.areaM2}", stats.areaM2 in 12f..20f)
+        assertTrue(stats.goodShare in 0.3f..0.8f)
+        assertEquals(-85, stats.minRssi); assertEquals(-45, stats.maxRssi)
+        assertTrue(m.csv(walk).startsWith("horodatage_ms,x_m,z_m,rssi_dbm,bssid"))
+    }
+
+    @Test fun samplesEveryFortyCentimetres() {
+        assertTrue(m.shouldSample(null, 0f, 0f))
+        assertTrue(!m.shouldSample(at(0f, 0f, -50), 0.3f, 0f))
+        assertTrue(m.shouldSample(at(0f, 0f, -50), 0.3f, 0.3f))
+    }
+
+    @Test fun countsStepsFromTheAccelerometer() {
+        fun steps(amp: Double, hz: Double): Int {
+            val d = com.allnetworktools.data.StepDetector()
+            val rnd = java.util.Random(1)
+            return (0 until 500).count { i -> // 10 s at 50 Hz
+                val t = i / 50.0
+                d.feed((t * 1e9).toLong(), (9.81 + amp * kotlin.math.sin(2 * Math.PI * hz * t) + 0.1 * rnd.nextGaussian()).toFloat())
+            }
+        }
+        val walking = steps(2.5, 1.8)
+        assertTrue("walking $walking", walking in 16..19)
+        assertEquals(0, steps(0.0, 1.8))
+        val w = com.allnetworktools.data.StepWalker(0.7f)
+        w.step(0f)
+        assertEquals(-0.7f, w.z, 1e-5f)
+        w.step((Math.PI / 2).toFloat())
+        assertEquals(0.7f, w.x, 1e-5f)
     }
 }
