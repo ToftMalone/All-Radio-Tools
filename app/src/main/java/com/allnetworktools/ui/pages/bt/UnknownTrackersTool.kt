@@ -35,7 +35,6 @@ import com.allnetworktools.data.TrackerKind
 import com.allnetworktools.data.TrackerNet
 import com.allnetworktools.data.probeFindMy
 import com.allnetworktools.data.TrackerSignal
-import com.allnetworktools.ui.components.LeadingIcon
 import com.allnetworktools.ui.components.PillButton
 import com.allnetworktools.ui.components.SectionCard
 import com.allnetworktools.ui.components.Symbol
@@ -331,15 +330,6 @@ fun UnknownTrackersTool(
     }
 }
 
-/** Icon of each kind of tag, as in AirGuard: a disc for the AirTag, a key ring for the SmartTag, a phone for an Apple device… */
-internal fun kindIcon(k: TrackerKind) = when (k) {
-    TrackerKind.AirTag -> Sym.Adjust
-    TrackerKind.AppleDevice -> Sym.Smartphone
-    TrackerKind.AirPods -> Sym.Headphones
-    TrackerKind.GoogleTag -> Sym.Sell
-    TrackerKind.SmartTag -> Sym.Key
-    TrackerKind.Tile -> Sym.CropSquare
-}
 
 private val clock = java.text.SimpleDateFormat("HH:mm", java.util.Locale.FRANCE)
 
@@ -351,7 +341,7 @@ private fun TrackerRow(t: TrackerCandidate, onClick: () -> Unit) {
         Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp)).clickable(onClick = onClick).padding(vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-        LeadingIcon(kindIcon(t.kind), acc.container, acc.onContainer, 44.dp, RoundedCornerShape(14.dp), 24.dp)
+        TrackerBadge(t.kind, acc.container, 44.dp, RoundedCornerShape(14.dp), 36.dp)
         Column(Modifier.weight(1f)) {
             Text(t.title, style = rf(16, 22, 600), maxLines = 1, overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis)
             Text(
@@ -422,7 +412,7 @@ private fun TrackerHero(t: TrackerCandidate, now: Long, onLocate: (BleDevice) ->
     val acc = AntTheme.accent
     HeroCard {
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(14.dp)) {
-            LeadingIcon(kindIcon(t.kind), col, if (a.level == FollowLevel.Following) cs.onError else Color.White, 56.dp, RoundedCornerShape(20.dp), 28.dp)
+            TrackerBadge(t.kind, col, 56.dp, RoundedCornerShape(20.dp), 46.dp)
             Column(Modifier.weight(1f)) {
                 Text(t.title, style = gs(22, 28, 500), maxLines = 2)
                 Text(t.signal.net.label, style = rf(13, 18), maxLines = 1)

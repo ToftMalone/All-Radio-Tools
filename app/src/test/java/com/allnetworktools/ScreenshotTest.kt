@@ -29,6 +29,8 @@ import org.junit.After
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Rule
+import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.background
 import org.junit.Test
 import com.allnetworktools.data.sdr.Meshtastic
 import org.junit.runner.RunWith
@@ -358,6 +360,28 @@ class ScreenshotTest {
             listOf(tag("F2:6B:91:0C:3A:58", "1EFF4C00121910" + "5A".repeat(22) + "0201", 38, walk, -61)),
             System.currentTimeMillis() - 41 * 60_000L, 2380.0,
         )
+    }
+    /** Every tag drawing, large on light and dark tiles and at list size, to check them by eye. */
+    @Test fun trackerArtGallery() {
+        compose.setContent {
+            androidx.compose.foundation.layout.Column(androidx.compose.ui.Modifier.background(androidx.compose.ui.graphics.Color.White)) {
+                listOf(androidx.compose.ui.graphics.Color(0xFFDAE2FF), androidx.compose.ui.graphics.Color(0xFFB3261E), androidx.compose.ui.graphics.Color(0xFF1B1B1F)).forEach { bg ->
+                    androidx.compose.foundation.layout.Row {
+                        com.allnetworktools.data.TrackerKind.entries.forEach { k ->
+                            com.allnetworktools.ui.pages.bt.TrackerBadge(k, bg, 68.dp, androidx.compose.foundation.shape.RoundedCornerShape(20.dp), 56.dp)
+                        }
+                    }
+                }
+                androidx.compose.foundation.layout.Row {
+                    com.allnetworktools.data.TrackerKind.entries.forEach { k ->
+                        com.allnetworktools.ui.pages.bt.TrackerBadge(k, androidx.compose.ui.graphics.Color(0xFFDAE2FF), 44.dp, androidx.compose.foundation.shape.RoundedCornerShape(14.dp), 36.dp)
+                    }
+                }
+            }
+        }
+        val bitmap = compose.onRoot().captureToImage().asAndroidBitmap()
+        val dir = File(System.getProperty("screenshots.dir") ?: "build/screenshots").apply { mkdirs() }
+        File(dir, "D6_tracker_art.png").outputStream().use { bitmap.compress(Bitmap.CompressFormat.PNG, 100, it) }
     }
     @Test fun unknownTrackersEmpty() = shot("D5_unknown_trackers_empty", dark = true, nav = bt(Tool.UnknownTrackers)) { vm ->
         Scenario.bleEmpty = true
