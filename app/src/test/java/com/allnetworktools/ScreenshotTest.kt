@@ -29,6 +29,7 @@ import org.junit.After
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Rule
+import androidx.compose.foundation.layout.size
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.background
 import org.junit.Test
@@ -389,6 +390,7 @@ class ScreenshotTest {
                         }
                     }
                 }
+                com.allnetworktools.ui.pages.bt.TrackerArt(com.allnetworktools.data.TrackerKind.AirTag, androidx.compose.ui.Modifier.size(300.dp))
                 androidx.compose.foundation.layout.Row {
                     com.allnetworktools.data.TrackerKind.entries.forEach { k ->
                         com.allnetworktools.ui.pages.bt.TrackerBadge(k, androidx.compose.ui.graphics.Color(0xFFDAE2FF), 44.dp, androidx.compose.foundation.shape.RoundedCornerShape(14.dp), 36.dp)

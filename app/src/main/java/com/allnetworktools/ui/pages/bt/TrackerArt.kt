@@ -91,34 +91,52 @@ private fun DrawScope.airTag() {
     // Mirror steel: near black, a touch lighter towards the edge, with a soft reflection.
     drawCircle(Brush.radialGradient(listOf(Color(0xFF0B0B0C), Color(0xFF141415), Color(0xFF2C2D30)), c, 32f), 31.5f, c)
     drawArc(Color.White.copy(alpha = 0.10f), 200f, 80f, false, Offset(22f, 22f), Size(56f, 56f), style = Stroke(5f))
-    // Engraved lettering running round the disc: fine grey strokes, too small to read at icon size, as on the real thing.
-    val rnd = java.util.Random(7)
-    var ang = -80.0
-    while (ang < 260) {
-        val len = 2.0 + rnd.nextInt(4)
-        if (rnd.nextInt(9) != 0) {
-            val a0 = Math.toRadians(ang); val a1 = Math.toRadians(ang + len)
-            drawLine(
-                Color(0xFFB4B7BC).copy(alpha = 0.75f),
-                Offset(50f + 26.5f * kotlin.math.cos(a0).toFloat(), 50f + 26.5f * kotlin.math.sin(a0).toFloat()),
-                Offset(50f + 26.5f * kotlin.math.cos(a1).toFloat(), 50f + 26.5f * kotlin.math.sin(a1).toFloat()),
-                1.4f,
-            )
-        }
-        ang += len + 1.6
+    // The engraved lettering, running round the disc as on the real tag.
+    val r = 25.6f
+    // Start at the top left, as on the tag, and size the text so it closes the circle exactly.
+    val ring = android.graphics.Path().apply { addArc(50f - r, 50f - r, 50f + r, 50f + r, 140f, 359.9f) }
+    val text = "Bluetooth LE • Ultra Wideband • AirTag • Designed by Apple in California • Assembled in China • "
+    val paint = android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG).apply {
+        color = android.graphics.Color.argb(220, 0xC4, 0xC7, 0xCC)
+        typeface = android.graphics.Typeface.create(android.graphics.Typeface.SANS_SERIF, android.graphics.Typeface.NORMAL)
+        textSize = 3f
     }
-    // The apple: two lobes on top, a narrower bottom, the bite on the right and the leaf.
+    val circumference = (2 * Math.PI * r).toFloat()
+    paint.textSize = 3f * circumference * 0.985f / paint.measureText(text)
+    drawContext.canvas.nativeCanvas.drawTextOnPath(text, ring, 0f, 0f, paint)
+    drawPath(applePath(), Color.White)
+}
+
+/**
+ * The apple, drawn on a 100 × 120 box with cubic curves (two shoulders around the stem's dip, the round bite on the
+ * right, the two small bumps at the bottom, the almond leaf leaning right), then placed at the disc's centre.
+ */
+private fun applePath(): Path {
+    val k = 0.2f
+    fun x(v: Float) = 40f + v * k
+    fun y(v: Float) = 39.5f + v * k
     val body = Path().apply {
-        addOval(androidx.compose.ui.geometry.Rect(39.5f, 42.5f, 51.5f, 62f))
-        addOval(androidx.compose.ui.geometry.Rect(48.5f, 42.5f, 60.5f, 62f))
-    }.let { p -> Path().also { it.op(p, Path().apply { addOval(androidx.compose.ui.geometry.Rect(42f, 50f, 58f, 64.5f)) }, PathOperation.Union) } }
-    val notch = circle(50f, 42.5f, 2.6f)
-    val bite = circle(62.6f, 51f, 4.6f)
-    val apple = Path().also { it.op(body, notch, PathOperation.Difference) }.let { p -> Path().also { it.op(p, bite, PathOperation.Difference) } }
-    drawPath(apple, Color.White)
-    rotate(-40f, Offset(52.5f, 38.5f)) {
-        drawOval(Color.White, Offset(50.5f, 34.2f), Size(4.2f, 8.6f))
+        moveTo(x(50f), y(33f))
+        cubicTo(x(56f), y(27f), x(66f), y(24f), x(74f), y(25f))
+        cubicTo(x(82f), y(25f), x(88f), y(29f), x(92f), y(35f))
+        // The bite.
+        cubicTo(x(79f), y(43f), x(78f), y(63f), x(93f), y(71f))
+        cubicTo(x(97f), y(82f), x(90f), y(99f), x(81f), y(108f))
+        cubicTo(x(75f), y(116f), x(67f), y(118f), x(60f), y(114.5f))
+        cubicTo(x(55f), y(112f), x(45f), y(112f), x(40f), y(114.5f))
+        cubicTo(x(32f), y(118f), x(23f), y(115f), x(16f), y(104f))
+        cubicTo(x(5f), y(88f), x(1f), y(68f), x(4f), y(55f))
+        cubicTo(x(7f), y(36f), x(20f), y(25f), x(32f), y(25f))
+        cubicTo(x(40f), y(25f), x(46f), y(29f), x(50f), y(33f))
+        close()
     }
+    val leaf = Path().apply {
+        moveTo(x(49f), y(22f))
+        cubicTo(x(48f), y(10f), x(57f), y(1f), x(70f), y(0f))
+        cubicTo(x(71f), y(12f), x(62f), y(21f), x(49f), y(22f))
+        close()
+    }
+    return Path().also { it.op(body, leaf, PathOperation.Union) }
 }
 
 /** iPhone: dark frame, colourful screen, Dynamic Island. */
