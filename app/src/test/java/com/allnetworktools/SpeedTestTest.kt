@@ -128,6 +128,23 @@ class SpeedTestTest {
         Unit
     }
 
+    @Test fun csvLikeTheSite() {
+        fun t(bytes: Long, ping: Double, at: Long) = CfTiming(bytes, ping + 2, 5.5, 2.0, bytes + 412, ping, ping + 5.5, 1.25e8, at)
+        val s = CfSnapshot.Empty.copy(
+            downBuckets = listOf(CfBucketView(1_000_000, 2, listOf(t(1_000_000, 10.0, 1000), t(1_000_000, 11.5, 2000)), listOf(t(0, 30.0, 900), t(0, 31.0, 1500), t(0, 32.0, 2500)))),
+            upBuckets = listOf(CfBucketView(100_000, 1, listOf(t(100_000, 12.0, 1700)))),
+        )
+        assertEquals(
+            listOf(
+                "time,direction,bytes,latency,bps,duration,serverTime,responseSize,loadedLatencies",
+                "1000,download,1000000,10,125000000,15.5,2,1000412,30",
+                "1700,upload,100000,12,125000000,17.5,2,100412,",
+                "2000,download,1000000,11.5,125000000,17,2,1000412,31 32",
+            ),
+            com.allnetworktools.data.net.CfCsv.format(s).split("\n"),
+        )
+    }
+
     @Test fun stunFingerprintAndAddresses() {
         val tid = ByteArray(12) { it.toByte() }
         val addr = InetSocketAddress(InetAddress.getByName("192.0.2.1"), 32853)

@@ -45,7 +45,8 @@ sealed interface CfStep {
 
 object CfConfig {
     const val HOST = "speed.cloudflare.com"
-    const val TURN_URI = "turn.speed.cloudflare.com:50000"
+    /** The site overrides the engine's default relay (turn.speed.cloudflare.com:50000) with this one. */
+    const val TURN_URI = "turn.cloudflare.com:3478"
 
     val steps: List<CfStep> = listOf(
         CfStep.Latency(2), // initial ttfb estimation
@@ -75,14 +76,15 @@ object CfConfig {
         CfStep.Transfer(true, 250_000_000, 2),
     )
 
-    const val LOADED_LATENCY_THROTTLE_MS = 400L
+    // The site's own overrides of the engine defaults (400 ms, 250 ms, 20 points).
+    const val LOADED_LATENCY_THROTTLE_MS = 100L
     const val FINISH_REQUEST_DURATION = 1000.0
     const val ESTIMATED_SERVER_TIME = 0.0
     const val LATENCY_PERCENTILE = 0.5
     const val BANDWIDTH_PERCENTILE = 0.9
     const val BANDWIDTH_MIN_REQUEST_DURATION = 10.0
-    const val LOADED_REQUEST_MIN_DURATION = 250.0
-    const val LOADED_LATENCY_MAX_POINTS = 20
+    const val LOADED_REQUEST_MIN_DURATION = 100.0
+    const val LOADED_LATENCY_MAX_POINTS = 100
     const val MAX_RETRIES = 3
 }
 
@@ -159,7 +161,7 @@ class CfBucket(val bytes: Long) {
     var planned = 0
 }
 
-data class CfBucketView(val bytes: Long, val planned: Int, val timings: List<CfTiming>)
+data class CfBucketView(val bytes: Long, val planned: Int, val timings: List<CfTiming>, val side: List<CfTiming> = emptyList())
 
 data class CfSnapshot(
     val stepIndex: Int,
@@ -194,6 +196,35 @@ data class CfSnapshot(
     }
 }
 
+/** The site's "download CSV": one row per download and upload request, with the loaded-latency pings sent during it. */
+object CfCsv {
+    fun format(s: CfSnapshot): String {
+        class Row(val time: Long, val cells: List<String>)
+        val rows = mutableListOf<Row>()
+        listOf("download" to s.downBuckets, "upload" to s.upBuckets).forEach { (dir, buckets) ->
+            buckets.sortedBy { it.bytes }.forEach { b ->
+                // Each ping goes to the first request that ended after it, or the last one.
+                val owner = b.side.map { p -> b.timings.indexOfFirst { it.atMs > p.atMs }.let { i -> if (i >= 0) i else b.timings.size - 1 } }
+                b.timings.forEachIndexed { i, t ->
+                    val loaded = b.side.filterIndexed { k, _ -> owner[k] == i }.joinToString(" ") { num(it.ping) }
+                    rows += Row(t.atMs, listOf(t.atMs.toString(), dir, b.bytes.toString(), num(t.ping), t.bps?.let(::num) ?: "", num(t.duration), num(t.serverTime), t.transferSize.toString(), loaded))
+                }
+            }
+        }
+        return buildString {
+            append("time,direction,bytes,latency,bps,duration,serverTime,responseSize,loadedLatencies")
+            rows.sortedBy { it.time }.forEach { r -> append('\n').append(r.cells.joinToString(",")) }
+        }
+    }
+
+    /** Numbers as JavaScript prints them: no ".0" on whole values, no exponent. */
+    fun num(v: Double): String = when {
+        v.isNaN() -> "NaN"
+        v == Math.rint(v) && abs(v) < 1e21 -> v.toLong().toString()
+        else -> java.math.BigDecimal(v.toString()).toPlainString()
+    }
+}
+
 /** The engine's results maths. */
 object CfMath {
     /** Linear interpolation between the closest ranks, 0 for no values. */
@@ -217,7 +248,7 @@ object CfMath {
         CfConfig.BANDWIDTH_PERCENTILE,
     )
 
-    /** Pings sent during the transfer sizes that kept the line busy (every request at least 250 ms), the last 20. */
+    /** Pings sent during the transfer sizes that kept the line busy (every request at least 100 ms), the last 100. */
     fun loadedPings(buckets: Collection<CfBucket>): List<Double> = buckets
         .filter { b -> b.timings.isNotEmpty() && b.timings.minOf { it.duration } >= CfConfig.LOADED_REQUEST_MIN_DURATION }
         .flatMap { it.side }
@@ -443,8 +474,8 @@ class CfEngine(
             latencyPoints = pings,
             downLoadedPoints = dPings.orEmpty(),
             upLoadedPoints = uPings.orEmpty(),
-            downBuckets = down.values.map { CfBucketView(it.bytes, it.planned, it.timings.toList()) },
-            upBuckets = up.values.map { CfBucketView(it.bytes, it.planned, it.timings.toList()) },
+            downBuckets = down.values.map { CfBucketView(it.bytes, it.planned, it.timings.toList(), it.side.toList()) },
+            upBuckets = up.values.map { CfBucketView(it.bytes, it.planned, it.timings.toList(), it.side.toList()) },
             scores = if (finished) CfMath.scores(dl, ul, lat, jit, dLoaded, uLoaded, loss?.ratio) else null,
             durationMs = durationMs,
         )
@@ -470,6 +501,9 @@ data class CfMeta(
 
 /** HTTP/1.1 over TLS on a kept-alive socket per lane, timed like the browser's resource timing. */
 class CfHttp(private val host: String = CfConfig.HOST) : CfTransport {
+    /** The site tags every request of a run with a random measurement id. */
+    private val measId = (Math.random() * 1e16).toLong().toString()
+
     private val lanes = ConcurrentHashMap<Int, Lane>()
 
     override fun exchange(lane: Int, down: Boolean, bytes: Long, during: String?): CfRaw =
@@ -496,7 +530,7 @@ class CfHttp(private val host: String = CfConfig.HOST) : CfTransport {
         }
 
         fun exchange(down: Boolean, bytes: Long, during: String?): CfRaw {
-            val path = if (down) "/__down?" + (during?.let { "during=$it&" } ?: "") + "bytes=$bytes" else "/__up?bytes=$bytes"
+            val path = (if (down) "/__down" else "/__up") + "?measId=$measId&" + (during?.let { "during=$it&" } ?: "") + "bytes=$bytes"
             val reused = socket != null
             val connectMs = if (reused) 0.0 else connect()
             return try {
@@ -690,7 +724,7 @@ class CfHttp(private val host: String = CfConfig.HOST) : CfTransport {
 
         /**
          * The site's packet-loss test: 1000 numbered UDP messages, in batches of ten every 10 ms, from one TURN allocation to
-         * another through turn.speed.cloudflare.com, then 3 s of silence after the last answer before counting the missing ones.
+         * another through turn.cloudflare.com, then 3 s of silence after the last answer before counting the missing ones.
          */
         suspend fun packetLoss(step: CfStep.PacketLoss, onProgress: (CfPacketLoss) -> Unit): CfPacketLoss = withContext(Dispatchers.IO) {
             val creds = runCatching { JSONObject(get("/turn-creds")) }.getOrNull()

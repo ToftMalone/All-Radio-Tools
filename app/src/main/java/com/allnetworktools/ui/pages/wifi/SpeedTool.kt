@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import com.allnetworktools.data.Country
 import com.allnetworktools.data.WorldMap
 import com.allnetworktools.data.net.CfBucketView
+import com.allnetworktools.data.net.CfCsv
 import com.allnetworktools.data.net.CfConfig
 import com.allnetworktools.data.net.CfEngine
 import com.allnetworktools.data.net.CfExperience
@@ -145,22 +146,8 @@ class SpeedController(private val scope: CoroutineScope) {
         snap = CfSnapshot.Empty
     }
 
-    fun csv(): String = buildString {
-        val s = snap
-        append("type,taille_octets,debit_bps,duree_ms,ping_ms,horodatage_ms\r\n")
-        s.downBuckets.forEach { b -> b.timings.forEach { append("download,${b.bytes},${it.bps ?: ""},${it.duration},${it.ping},${it.atMs}\r\n") } }
-        s.upBuckets.forEach { b -> b.timings.forEach { append("upload,${b.bytes},${it.bps ?: ""},${it.duration},${it.ping},${it.atMs}\r\n") } }
-        s.latencyPoints.forEach { append("latence_inactif,0,,,$it,\r\n") }
-        s.downLoadedPoints.forEach { append("latence_download,0,,,$it,\r\n") }
-        s.upLoadedPoints.forEach { append("latence_upload,0,,,$it,\r\n") }
-        append("\r\nresume,valeur\r\n")
-        append("download_bps,${s.download ?: ""}\r\nupload_bps,${s.upload ?: ""}\r\n")
-        append("latence_ms,${s.latency ?: ""}\r\ngigue_ms,${s.jitter ?: ""}\r\n")
-        append("latence_chargee_download_ms,${s.downLoadedLatency ?: ""}\r\nlatence_chargee_upload_ms,${s.upLoadedLatency ?: ""}\r\n")
-        append("perte_paquets,${s.packetLoss?.ratio ?: ""}\r\n")
-        s.scores?.forEach { (e, sc) -> append("score_${e.name.lowercase()},${levelNames[sc.level]}\r\n") }
-        meta?.let { append("serveur,${it.colo ?: ""}\r\nasn,${it.asn ?: ""}\r\n") }
-    }
+    /** The site's CSV export, byte for byte the same columns. */
+    fun csv(): String = CfCsv.format(snap)
 }
 
 @Composable
@@ -170,14 +157,11 @@ fun SpeedTool(c: SpeedController, networkLabel: String, networkIcon: String) {
     val s = c.snap
     LaunchedEffect(Unit) { c.loadMeta() }
     LaunchedEffect(c.phase) { if (c.phase == Phase.Results) haptics.confirm() }
-    if (c.phase == Phase.Results) {
-        TopBarAction(Sym.IosShare) {
-            actions.share(
-                "Test de débit",
-                "Débit $networkLabel (speed.cloudflare.com) : ↓ ${mbpsOf(s.download)} Mb/s · ↑ ${mbpsOf(s.upload)} Mb/s · latence ${msOf(s.latency)} ms · gigue ${msOf(s.jitter)} ms · perte ${pctOf(s.packetLoss?.ratio)} %",
-            )
-        }
+    val export = {
+        val name = "speed-results-${c.measuredAt / 1000}.csv"
+        actions.saveFile(name, "text/csv") { c.csv().toByteArray() }
     }
+    if (c.phase == Phase.Results) TopBarAction(Sym.Download, export)
     val start = { haptics.confirm(); c.start() }
     PageColumn {
         SectionTitle("Votre vitesse Internet")
@@ -200,7 +184,7 @@ fun SpeedTool(c: SpeedController, networkLabel: String, networkIcon: String) {
             val at = SimpleDateFormat("d MMM yyyy 'à' HH:mm", Locale.FRANCE).format(Date(c.measuredAt))
             Row(Modifier.fillMaxWidth().padding(horizontal = 4.dp), verticalAlignment = Alignment.CenterVertically) {
                 Text("Mesuré le $at · ${s.durationMs / 1000} s", Modifier.weight(1f), style = rf(12, 16), color = cs.onSurfaceVariant)
-                TextAction("CSV", { actions.saveFile("speedtest-${SimpleDateFormat("yyyy-MM-dd_HH-mm", Locale.ROOT).format(Date(c.measuredAt))}.csv", "text/csv") { c.csv().toByteArray() } }, trailingIcon = Sym.Download)
+                TextAction("Exporter en CSV", export, trailingIcon = Sym.Download)
             }
         }
     }
@@ -536,7 +520,8 @@ private fun PacketLossMeasurements(s: CfSnapshot) {
         androidx.compose.material3.HorizontalDivider(color = cs.outlineVariant, thickness = 1.dp)
         Column(Modifier.fillMaxWidth().padding(vertical = 12.dp)) {
             if (s.packetLossError != null || live == null) {
-                Text("Impossible de mesurer la perte de paquets (relais TURN injoignable depuis ce réseau).", style = rf(13, 18), color = cs.onSurfaceVariant)
+                Text("Impossible de mesurer la perte de paquets : le relais TURN de Cloudflare (UDP 3478) ne répond pas depuis ce réseau.", style = rf(13, 18), color = cs.onSurfaceVariant)
+                s.packetLossError?.let { Text(it, Modifier.padding(top = 4.dp), style = rf(11, 14), color = cs.onSurfaceVariant) }
                 return@Column
             }
             val good = AntTheme.net.good
