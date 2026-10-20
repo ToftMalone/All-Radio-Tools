@@ -22,6 +22,7 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.graphics.drawscope.withTransform
+import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.unit.Dp
 import com.allnetworktools.data.TrackerKind
 
@@ -174,17 +175,41 @@ private fun DrawScope.smartTag() {
     drawCircle(Color(0xFF666B74), 6.5f, Offset(50f, 72f), style = Stroke(1f))
 }
 
-/** Tile Mate: a white rounded square, the key-ring hole in a corner, the logo plate in the middle. */
+/**
+ * Tile Mate (2024): a navy face in a coral frame whose top-left corner opens into the key-ring loop, a round recessed
+ * button with Tile's looping mark in the middle, and the "tile" wordmark in coral at the bottom right.
+ */
 private fun DrawScope.tileMate() {
-    val body = rounded(14f, 14f, 86f, 86f, 17f).minus(circle(27.5f, 27.5f, 5.5f))
-    shadowed(body) { p ->
-        drawPath(p, Brush.linearGradient(listOf(Color.White, Color(0xFFE4E7EB)), Offset(14f, 14f), Offset(86f, 86f)))
-        drawPath(p, Color(0xFFB8BDC5), style = Stroke(1.8f))
+    val coral = Color(0xFFF26B4E)
+    // Frame, with the loop's opening near the top-left corner.
+    val hole = rounded(16.5f, 16.5f, 34f, 34f, 5.5f)
+    val frame = rounded(11f, 11f, 89f, 89f, 22f).minus(hole)
+    shadowed(frame) { p ->
+        drawPath(p, Brush.linearGradient(listOf(Color(0xFFFF8A6E), coral, Color(0xFFD9553A)), Offset(11f, 11f), Offset(89f, 89f)))
     }
-    drawCircle(Color(0xFFB8BDC5), 5.5f, Offset(27.5f, 27.5f), style = Stroke(1.4f))
-    // The "tile" mark: a small dark rounded square with a white dot.
-    drawRoundRect(Color(0xFF1F2328), Offset(41f, 47f), Size(18f, 18f), CornerRadius(5f, 5f))
-    drawCircle(Color.White, 3f, Offset(50f, 56f))
+    // Navy face, cut back around the loop so the coral shows there.
+    val face = rounded(14.5f, 14.5f, 85.5f, 85.5f, 19f).minus(rounded(11f, 11f, 40f, 40f, 10f))
+    drawPath(face, Brush.linearGradient(listOf(Color(0xFF34407A), Color(0xFF232D5C), Color(0xFF1A2249)), Offset(15f, 15f), Offset(85f, 85f)))
+    drawArc(Color.White.copy(alpha = 0.16f), 250f, 70f, false, Offset(16f, 16f), Size(68f, 68f), style = Stroke(1.2f))
+    // Recessed round button: darker, lit on its lower edge, the looping mark engraved in it.
+    val c = Offset(52f, 50f)
+    drawCircle(Brush.radialGradient(listOf(Color(0xFF1B2350), Color(0xFF151C40)), c, 15f), 14.5f, c)
+    drawArc(Color.White.copy(alpha = 0.22f), 20f, 140f, false, Offset(c.x - 14.5f, c.y - 14.5f), Size(29f, 29f), style = Stroke(1.1f))
+    drawArc(Color.Black.copy(alpha = 0.35f), 200f, 140f, false, Offset(c.x - 14.5f, c.y - 14.5f), Size(29f, 29f), style = Stroke(1.1f))
+    val mark = Color(0xFF3B4888)
+    // Tile's mark: an open loop whose inner teardrop comes down to the bottom of the outer one.
+    drawArc(mark, 115f, 310f, false, Offset(c.x - 7.5f, c.y - 7.5f), Size(15f, 15f), style = Stroke(1.5f, cap = androidx.compose.ui.graphics.StrokeCap.Round))
+    drawOval(mark, Offset(c.x - 3f, c.y - 4.5f), Size(6f, 12f), style = Stroke(1.5f))
+    // Wordmark.
+    drawContext.canvas.nativeCanvas.drawText(
+        "tile", 76f, 80f,
+        android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG).apply {
+            color = android.graphics.Color.rgb(0xF2, 0x6B, 0x4E)
+            textSize = 13f
+            typeface = android.graphics.Typeface.create(android.graphics.Typeface.SANS_SERIF, android.graphics.Typeface.BOLD)
+            textAlign = android.graphics.Paint.Align.RIGHT
+        },
+    )
 }
 
 /** Find Hub tag (Moto Tag, Chipolo, Pebblebee…): a dark disc on a key-ring tab, its button ringed in Google's colours. */
