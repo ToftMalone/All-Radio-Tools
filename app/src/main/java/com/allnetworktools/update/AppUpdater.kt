@@ -32,6 +32,18 @@ data class UpdateInfo(
     val sha256: String?,
 )
 
+private val NotesBlock = Regex("""<!--\s*([A-Za-z]{2,3}(?:-[A-Za-z0-9]+)?)[ \t]*\r?\n(.*?)-->""", RegexOption.DOT_MATCHES_ALL)
+
+/**
+ * Release notes in the phone's language. A release body is written in English, with each translation hidden in an
+ * HTML comment that GitHub does not show: `<!-- fr` on its own line, the French notes, then `-->`.
+ */
+fun localizedNotes(body: String, language: String = java.util.Locale.getDefault().language): String {
+    NotesBlock.findAll(body).firstOrNull { it.groupValues[1].substringBefore('-').equals(language, true) }
+        ?.let { return it.groupValues[2].trim() }
+    return body.replace(NotesBlock, "").trim()
+}
+
 /** One published release, for the changelog. */
 data class ReleaseNote(val tag: String, val publishedAt: String, val notes: String)
 
@@ -92,7 +104,7 @@ open class AppUpdater(
         // Only ever download from this repository's releases.
         if (!url.startsWith("https://github.com/$repo/releases/download/")) return null
         return UpdateInfo(
-            version = tag.removePrefix("v"), tag = tag, notes = o.optString("body"), apkUrl = url, sizeBytes = apk.optLong("size"),
+            version = tag.removePrefix("v"), tag = tag, notes = localizedNotes(o.optString("body")), apkUrl = url, sizeBytes = apk.optLong("size"),
             sha256 = apk.optString("digest").takeIf { it.startsWith("sha256:") }?.removePrefix("sha256:"),
         ).takeIf { isNewerVersion(tag, currentVersion) }
     }
@@ -102,7 +114,7 @@ open class AppUpdater(
         val a = org.json.JSONArray(json)
         return (0 until a.length()).map { a.getJSONObject(it) }
             .filter { !it.optBoolean("draft") && !it.optBoolean("prerelease") }
-            .map { ReleaseNote(it.getString("tag_name"), it.optString("published_at"), it.optString("body")) }
+            .map { ReleaseNote(it.getString("tag_name"), it.optString("published_at"), localizedNotes(it.optString("body"))) }
             .sortedWith { x, y -> if (isNewerVersion(x.tag, y.tag)) -1 else if (isNewerVersion(y.tag, x.tag)) 1 else 0 }
     }
 

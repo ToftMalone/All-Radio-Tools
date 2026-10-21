@@ -53,6 +53,14 @@ class UpdaterTest {
         assertNull(updater.parse(release("v0.3", asset = "notes.txt")))
     }
 
+    @Test fun notesFollowThePhoneLanguage() {
+        val body = "- New tool\n- Faster scan\n\n<!-- fr\n- Nouvel outil\n- Scan plus rapide\n-->\n"
+        assertEquals("- Nouvel outil\n- Scan plus rapide", com.allnetworktools.update.localizedNotes(body, "fr"))
+        assertEquals("- New tool\n- Faster scan", com.allnetworktools.update.localizedNotes(body, "en"))
+        assertEquals("- New tool\n- Faster scan", com.allnetworktools.update.localizedNotes(body, "de"))
+        assertEquals("- Seulement", com.allnetworktools.update.localizedNotes("- Seulement", "fr"))
+    }
+
     @Test fun changelogBecomesAList() {
         val items = com.allnetworktools.ui.changelogItems("## Nouveautés\r\n- Premier point\n- **Deuxième** point\n  suite du deuxième\n\n- `Troisième`")
         assertEquals(listOf("Premier point", "Deuxième point suite du deuxième", "Troisième"), items)

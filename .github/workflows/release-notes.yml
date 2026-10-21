@@ -1,0 +1,28 @@
+name: Release notes
+
+# Recopie les notes de .github/release-notes/vX.md dans la release GitHub vX déjà publiée, quand elles changent.
+on:
+  push:
+    branches: ['main']
+    paths: ['.github/release-notes/**']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Mettre à jour les releases
+        run: |
+          for f in .github/release-notes/v*.md; do
+            t="$(basename "$f" .md)"
+            if gh release view "$t" > /dev/null 2>&1; then
+              gh release edit "$t" --notes-file "$f" > /dev/null && echo "$t mise à jour"
+            fi
+          done
