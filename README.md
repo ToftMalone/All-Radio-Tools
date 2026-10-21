@@ -152,6 +152,12 @@ The workflow needs the `KEYSTORE_BASE64`, `KEYSTORE_PASSWORD`, `KEY_ALIAS` and `
 
 ---
 
+## 📜 License
+
+All Radio Tools is free software released under the [GNU General Public License v3.0](LICENSE): you may use, study, share and modify it, provided that derived versions stay under the same license and publish their source code.
+
+---
+
 ## 🙏 Thanks
 
 - [@cloudflare/speedtest](https://github.com/cloudflare/speedtest), the open source engine behind speed.cloudflare.com, ported for the speed test.
