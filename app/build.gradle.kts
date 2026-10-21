@@ -13,8 +13,8 @@ android {
         applicationId = "com.allnetworktools"
         minSdk = 31
         targetSdk = 37
-        versionCode = 38
-        versionName = "1.4"
+        versionCode = 39
+        versionName = "1.4.1"
     }
 
     buildTypes {
