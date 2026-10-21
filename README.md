@@ -4,7 +4,7 @@
 
 All Radio Tools réunit les outils pour explorer le Wi-Fi, le Bluetooth, le réseau mobile, le GNSS et, avec un HackRF, les ondes radio : avions, ballons-sondes, navires, drones, satellites météo, réseaux Meshtastic, et même le GPS reçu par le HackRF seul.
 
-> 🇫🇷 Application entièrement en français, écrite en Kotlin avec Jetpack Compose et Material 3.
+> 🌍 Application en français et en anglais (elle suit la langue du téléphone), écrite en Kotlin avec Jetpack Compose et Material 3.
 
 ---
 
