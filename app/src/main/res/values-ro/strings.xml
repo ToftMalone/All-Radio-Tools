@@ -386,6 +386,8 @@
     <string name="security_downgraded">"Securitate retrogradată"</string>
     <string name="access_points_require">"puncte de acces cer"</string>
     <string name="access_point_requires">"punct de acces cere"</string>
+    <string name="access_points_accept">"acceptă"</string>
+    <string name="access_point_accepts">"acceptă"</string>
     <string name="wpa3_an_older_protocol">"%1$s %2$s WPA3, %3$s %4$s un protocol mai vechi. "</string>
     <string name="this_is_the_pattern_of_a">"Este tiparul unui atac de retrogradare sau al unui repetor vechi."</string>
     <string name="obsolete_encryption">"Criptare învechită"</string>
@@ -2201,6 +2203,29 @@
     <string name="not_enough_storage">"Spațiu de stocare insuficient"</string>
     <string name="installation_failed_code">"Instalare eșuată (cod %1$s)"</string>
     <string name="less_than_a_minute">"mai puțin de un minut"</string>
+    <string name="yes">"Da"</string>
+    <string name="no">"Nu"</string>
+    <string name="connectable">"Conectabil"</string>
+    <string name="l1_l5_received">"L1 + L5 recepționate"</string>
+    <string name="l1_only">"Doar L1"</string>
+    <string name="north">"nord"</string>
+    <string name="east">"est"</string>
+    <string name="south">"sud"</string>
+    <string name="west">"vest"</string>
+    <string name="cargo">"Navă de mărfuri"</string>
+    <string name="tanker">"Petrolier"</string>
+    <string name="france">"Franța"</string>
+    <string name="portugal">"Portugalia"</string>
+    <string name="malta">"Malta"</string>
+    <string name="panama">"Panama"</string>
+    <string name="luxembourg">"Luxemburg"</string>
+    <string name="ukraine">"Ucraina"</string>
+    <string name="bahamas">"Bahamas"</string>
+    <string name="satellite">"Satelit"</string>
+    <string name="signal">"Semnal"</string>
+    <string name="notifications">"Notificări"</string>
+    <string name="constellations">"Constelații"</string>
+    <string name="identification">"Identificare"</string>
     <plurals name="p_permissions">
         <item quantity="one">"permisiune"</item>
         <item quantity="few">"permisiuni"</item>
@@ -2505,5 +2530,10 @@
         <item quantity="one">"Conexiune scurtă doar pentru citire la %1$d dispozitiv din apropiere pentru a citi numele, modelul și producătorul."</item>
         <item quantity="few">"Conexiune scurtă doar pentru citire la %1$d dispozitive din apropiere pentru a citi numele, modelul și producătorul."</item>
         <item quantity="other">"Conexiune scurtă doar pentru citire la %1$d de dispozitive din apropiere pentru a citi numele, modelul și producătorul."</item>
+    </plurals>
+    <plurals name="p_epochs">
+        <item quantity="one">"%1$d epocă"</item>
+        <item quantity="few">"%1$d epoci"</item>
+        <item quantity="other">"%1$d de epoci"</item>
     </plurals>
 </resources>

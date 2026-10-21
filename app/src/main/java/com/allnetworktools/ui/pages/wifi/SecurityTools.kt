@@ -267,7 +267,7 @@ fun MitmTool(c: MitmController, conn: WifiConnection?) {
                     S(R.string.first_router) to (s.firstHop ?: S(R.string.no_answer_2)),
                     S(R.string.dhcp_server) to (s.dhcpServer ?: "—"),
                     "DNS" to s.dns.joinToString().ifEmpty { "—" },
-                    S(R.string.ipv6_routers) to s.ipv6Routers.joinToString().ifEmpty { "aucun" },
+                    S(R.string.ipv6_routers) to s.ipv6Routers.joinToString().ifEmpty { S(R.string.none) },
                 ).forEach { (k, v) -> com.allnetworktools.ui.components.InfoRow(k, v) }
             }
         }

@@ -386,6 +386,8 @@
     <string name="security_downgraded">"Захист знижено"</string>
     <string name="access_points_require">"точки доступу вимагають"</string>
     <string name="access_point_requires">"точка доступу вимагає"</string>
+    <string name="access_points_accept">"приймають"</string>
+    <string name="access_point_accepts">"приймає"</string>
     <string name="wpa3_an_older_protocol">"%1$s %2$s WPA3, %3$s %4$s старіший протокол. "</string>
     <string name="this_is_the_pattern_of_a">"Це ознака атаки зниження або старого повторювача."</string>
     <string name="obsolete_encryption">"Застаріле шифрування"</string>
@@ -2201,6 +2203,29 @@
     <string name="not_enough_storage">"Недостатньо місця"</string>
     <string name="installation_failed_code">"Встановлення не вдалося (код %1$s)"</string>
     <string name="less_than_a_minute">"менше хвилини"</string>
+    <string name="yes">"Так"</string>
+    <string name="no">"Ні"</string>
+    <string name="connectable">"Можна підключитися"</string>
+    <string name="l1_l5_received">"Приймаються L1 + L5"</string>
+    <string name="l1_only">"Лише L1"</string>
+    <string name="north">"північ"</string>
+    <string name="east">"схід"</string>
+    <string name="south">"південь"</string>
+    <string name="west">"захід"</string>
+    <string name="cargo">"Вантажне судно"</string>
+    <string name="tanker">"Танкер"</string>
+    <string name="france">"Франція"</string>
+    <string name="portugal">"Португалія"</string>
+    <string name="malta">"Мальта"</string>
+    <string name="panama">"Панама"</string>
+    <string name="luxembourg">"Люксембург"</string>
+    <string name="ukraine">"Україна"</string>
+    <string name="bahamas">"Багами"</string>
+    <string name="satellite">"Супутник"</string>
+    <string name="signal">"Сигнал"</string>
+    <string name="notifications">"Сповіщення"</string>
+    <string name="constellations">"Сузір’я"</string>
+    <string name="identification">"Ідентифікація"</string>
     <plurals name="p_permissions">
         <item quantity="one">"дозвіл"</item>
         <item quantity="few">"дозволи"</item>
@@ -2566,5 +2591,11 @@
         <item quantity="few">"Короткочасне підключення лише для читання до %1$d пристроїв поблизу, щоб прочитати назву, модель і виробника."</item>
         <item quantity="many">"Короткочасне підключення лише для читання до %1$d пристроїв поблизу, щоб прочитати назву, модель і виробника."</item>
         <item quantity="other">"Короткочасне підключення лише для читання до %1$d пристрою поблизу, щоб прочитати назву, модель і виробника."</item>
+    </plurals>
+    <plurals name="p_epochs">
+        <item quantity="one">"%1$d епоха"</item>
+        <item quantity="few">"%1$d епохи"</item>
+        <item quantity="many">"%1$d епох"</item>
+        <item quantity="other">"%1$d епохи"</item>
     </plurals>
 </resources>

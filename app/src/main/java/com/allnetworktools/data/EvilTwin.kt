@@ -89,7 +89,7 @@ object EvilTwin {
         if (wpa3Only.isNotEmpty() && weaker.isNotEmpty()) {
             findings += TwinFinding(
                 TwinRisk.Medium, S(R.string.security_downgraded),
-                S(R.string.wpa3_an_older_protocol, wpa3Only.size, if (wpa3Only.size > 1) S(R.string.access_points_require) else S(R.string.access_point_requires), weaker.size, if (weaker.size > 1) "acceptent" else "accepte") +
+                S(R.string.wpa3_an_older_protocol, wpa3Only.size, if (wpa3Only.size > 1) S(R.string.access_points_require) else S(R.string.access_point_requires), weaker.size, if (weaker.size > 1) S(R.string.access_points_accept) else S(R.string.access_point_accepts)) +
                     S(R.string.this_is_the_pattern_of_a),
                 weaker.map { it.bssid }.toSet(),
             )

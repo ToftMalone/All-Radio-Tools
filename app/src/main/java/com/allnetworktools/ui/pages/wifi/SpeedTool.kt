@@ -66,7 +66,6 @@ import com.allnetworktools.ui.tools.ToolButton
 import com.allnetworktools.ui.tools.ToolButtons
 import com.allnetworktools.ui.tools.ToolError
 import com.allnetworktools.util.fmt
-import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import kotlin.math.abs
@@ -183,7 +182,7 @@ fun SpeedTool(c: SpeedController, networkLabel: String, networkIcon: String) {
             PacketLossMeasurements(s)
         }
         if (c.phase == Phase.Results) {
-            val at = SimpleDateFormat("d MMM yyyy 'à' HH:mm", Locale.getDefault()).format(Date(c.measuredAt))
+            val at = java.text.DateFormat.getDateTimeInstance(java.text.DateFormat.MEDIUM, java.text.DateFormat.SHORT, Locale.getDefault()).format(Date(c.measuredAt))
             Row(Modifier.fillMaxWidth().padding(horizontal = 4.dp), verticalAlignment = Alignment.CenterVertically) {
                 Text(S(R.string.measured_on_s, at, s.durationMs / 1000), Modifier.weight(1f), style = rf(12, 16), color = cs.onSurfaceVariant)
                 TextAction(S(R.string.export_to_csv), export, trailingIcon = Sym.Download)

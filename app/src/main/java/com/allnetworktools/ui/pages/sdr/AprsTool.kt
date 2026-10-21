@@ -241,7 +241,7 @@ private fun weatherLine(w: AprsWeather): String = listOfNotNull(
     w.tempF?.let { "%.0f °C".format(Locale.getDefault(), (it - 32) / 1.8) },
     w.humidity?.let { "$it %" },
     w.pressureHpa?.let { "%.0f hPa".format(Locale.getDefault(), it) },
-    w.windMph?.let { S(R.string.wind_km_h, (it * 1.609).roundToInt()) + (w.windDir?.let { d -> " à $d°" } ?: "") },
+    w.windMph?.let { S(R.string.wind_km_h, (it * 1.609).roundToInt()) + (w.windDir?.let { d -> " · $d°" } ?: "") },
 ).joinToString(" · ")
 
 @Composable

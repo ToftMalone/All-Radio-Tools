@@ -386,6 +386,8 @@
     <string name="security_downgraded">"Seguridad degradada"</string>
     <string name="access_points_require">"puntos de acceso exigen"</string>
     <string name="access_point_requires">"punto de acceso exige"</string>
+    <string name="access_points_accept">"aceptan"</string>
+    <string name="access_point_accepts">"acepta"</string>
     <string name="wpa3_an_older_protocol">"%1$s %2$s WPA3, %3$s %4$s un protocolo más antiguo. "</string>
     <string name="this_is_the_pattern_of_a">"Es el patrón de un ataque de degradación, o de un repetidor antiguo."</string>
     <string name="obsolete_encryption">"Cifrado obsoleto"</string>
@@ -2201,6 +2203,29 @@
     <string name="not_enough_storage">"Almacenamiento insuficiente"</string>
     <string name="installation_failed_code">"Fallo de la instalación (código %1$s)"</string>
     <string name="less_than_a_minute">"menos de un minuto"</string>
+    <string name="yes">"Sí"</string>
+    <string name="no">"No"</string>
+    <string name="connectable">"Conectable"</string>
+    <string name="l1_l5_received">"L1 + L5 recibidas"</string>
+    <string name="l1_only">"Solo L1"</string>
+    <string name="north">"norte"</string>
+    <string name="east">"este"</string>
+    <string name="south">"sur"</string>
+    <string name="west">"oeste"</string>
+    <string name="cargo">"Carguero"</string>
+    <string name="tanker">"Petrolero"</string>
+    <string name="france">"Francia"</string>
+    <string name="portugal">"Portugal"</string>
+    <string name="malta">"Malta"</string>
+    <string name="panama">"Panamá"</string>
+    <string name="luxembourg">"Luxemburgo"</string>
+    <string name="ukraine">"Ucrania"</string>
+    <string name="bahamas">"Bahamas"</string>
+    <string name="satellite">"Satélite"</string>
+    <string name="signal">"Señal"</string>
+    <string name="notifications">"Notificaciones"</string>
+    <string name="constellations">"Constelaciones"</string>
+    <string name="identification">"Identificación"</string>
     <plurals name="p_permissions">
         <item quantity="one">"permiso"</item>
         <item quantity="other">"permisos"</item>
@@ -2444,5 +2469,9 @@
     <plurals name="p_brief_connection">
         <item quantity="one">"Conexión breve de solo lectura a %1$d dispositivo cercano para leer el nombre, el modelo y el fabricante."</item>
         <item quantity="other">"Conexión breve de solo lectura a %1$d dispositivos cercanos para leer el nombre, el modelo y el fabricante."</item>
+    </plurals>
+    <plurals name="p_epochs">
+        <item quantity="one">"%1$d época"</item>
+        <item quantity="other">"%1$d épocas"</item>
     </plurals>
 </resources>

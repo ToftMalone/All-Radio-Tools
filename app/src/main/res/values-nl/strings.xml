@@ -386,6 +386,8 @@
     <string name="security_downgraded">"Beveiliging verlaagd"</string>
     <string name="access_points_require">"toegangspunten vereisen"</string>
     <string name="access_point_requires">"toegangspunt vereist"</string>
+    <string name="access_points_accept">"accepteren"</string>
+    <string name="access_point_accepts">"accepteert"</string>
     <string name="wpa3_an_older_protocol">"%1$s %2$s WPA3, %3$s %4$s een ouder protocol. "</string>
     <string name="this_is_the_pattern_of_a">"Dit is het patroon van een downgrade-aanval, of van een oude repeater."</string>
     <string name="obsolete_encryption">"Verouderde versleuteling"</string>
@@ -2201,6 +2203,29 @@
     <string name="not_enough_storage">"Onvoldoende opslagruimte"</string>
     <string name="installation_failed_code">"Installatie mislukt (code %1$s)"</string>
     <string name="less_than_a_minute">"minder dan een minuut"</string>
+    <string name="yes">"Ja"</string>
+    <string name="no">"Nee"</string>
+    <string name="connectable">"Verbindbaar"</string>
+    <string name="l1_l5_received">"L1 + L5 ontvangen"</string>
+    <string name="l1_only">"Alleen L1"</string>
+    <string name="north">"noord"</string>
+    <string name="east">"oost"</string>
+    <string name="south">"zuid"</string>
+    <string name="west">"west"</string>
+    <string name="cargo">"Vrachtschip"</string>
+    <string name="tanker">"Tanker"</string>
+    <string name="france">"Frankrijk"</string>
+    <string name="portugal">"Portugal"</string>
+    <string name="malta">"Malta"</string>
+    <string name="panama">"Panama"</string>
+    <string name="luxembourg">"Luxemburg"</string>
+    <string name="ukraine">"Oekraïne"</string>
+    <string name="bahamas">"Bahama\'s"</string>
+    <string name="satellite">"Satelliet"</string>
+    <string name="signal">"Signaal"</string>
+    <string name="notifications">"Meldingen"</string>
+    <string name="constellations">"Constellaties"</string>
+    <string name="identification">"Identificatie"</string>
     <plurals name="p_permissions">
         <item quantity="one">"toestemming"</item>
         <item quantity="other">"toestemmingen"</item>
@@ -2444,5 +2469,9 @@
     <plurals name="p_brief_connection">
         <item quantity="one">"Korte alleen-lezen-verbinding met %1$d apparaat in de buurt om naam, model en fabrikant te lezen."</item>
         <item quantity="other">"Korte alleen-lezen-verbinding met %1$d apparaten in de buurt om naam, model en fabrikant te lezen."</item>
+    </plurals>
+    <plurals name="p_epochs">
+        <item quantity="one">"%1$d epoch"</item>
+        <item quantity="other">"%1$d epochs"</item>
     </plurals>
 </resources>

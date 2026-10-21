@@ -97,7 +97,7 @@ private fun dist(a: Location?, b: Location?) = if (a == null || b == null) null 
 private fun meters(m: Float) = if (m >= 1000) "${fmt(m / 1000, 1)} km" else "${fmt(m)} m"
 
 private fun compass(bearing: Float): String {
-    val dirs = listOf("nord", S(R.string.north_east), "est", S(R.string.south_east), "sud", S(R.string.south_west), "ouest", S(R.string.north_west))
+    val dirs = listOf(S(R.string.north), S(R.string.north_east), S(R.string.east), S(R.string.south_east), S(R.string.south), S(R.string.south_west), S(R.string.west), S(R.string.north_west))
     return dirs[(((bearing % 360 + 360) % 360) / 45f).roundToInt() % 8]
 }
 

@@ -386,6 +386,8 @@
     <string name="security_downgraded">"Güvenlik düşürülmüş"</string>
     <string name="access_points_require">"erişim noktası istiyor"</string>
     <string name="access_point_requires">"erişim noktası istiyor"</string>
+    <string name="access_points_accept">"kabul ediyor"</string>
+    <string name="access_point_accepts">"kabul ediyor"</string>
     <string name="wpa3_an_older_protocol">"%1$s %2$s WPA3, %3$s %4$s daha eski bir protokol. "</string>
     <string name="this_is_the_pattern_of_a">"Bu, bir sürüm düşürme saldırısının ya da eski bir tekrarlayıcının işaretidir."</string>
     <string name="obsolete_encryption">"Eski şifreleme"</string>
@@ -2201,6 +2203,29 @@
     <string name="not_enough_storage">"Yeterli depolama alanı yok"</string>
     <string name="installation_failed_code">"Yükleme başarısız (kod %1$s)"</string>
     <string name="less_than_a_minute">"bir dakikadan az"</string>
+    <string name="yes">"Evet"</string>
+    <string name="no">"Hayır"</string>
+    <string name="connectable">"Bağlanılabilir"</string>
+    <string name="l1_l5_received">"L1 + L5 alınıyor"</string>
+    <string name="l1_only">"Yalnızca L1"</string>
+    <string name="north">"kuzey"</string>
+    <string name="east">"doğu"</string>
+    <string name="south">"güney"</string>
+    <string name="west">"batı"</string>
+    <string name="cargo">"Kargo gemisi"</string>
+    <string name="tanker">"Tanker"</string>
+    <string name="france">"Fransa"</string>
+    <string name="portugal">"Portekiz"</string>
+    <string name="malta">"Malta"</string>
+    <string name="panama">"Panama"</string>
+    <string name="luxembourg">"Lüksemburg"</string>
+    <string name="ukraine">"Ukrayna"</string>
+    <string name="bahamas">"Bahamalar"</string>
+    <string name="satellite">"Uydu"</string>
+    <string name="signal">"Sinyal"</string>
+    <string name="notifications">"Bildirimler"</string>
+    <string name="constellations">"Takımyıldızlar"</string>
+    <string name="identification">"Tanımlama"</string>
     <plurals name="p_permissions">
         <item quantity="one">"izin"</item>
         <item quantity="other">"izin"</item>
@@ -2444,5 +2469,9 @@
     <plurals name="p_brief_connection">
         <item quantity="one">"Ad, model ve üreticiyi okumak için yakındaki %1$d cihaza kısa salt okunur bağlantı."</item>
         <item quantity="other">"Ad, model ve üreticiyi okumak için yakındaki %1$d cihaza kısa salt okunur bağlantı."</item>
+    </plurals>
+    <plurals name="p_epochs">
+        <item quantity="one">"%1$d dönem"</item>
+        <item quantity="other">"%1$d dönem"</item>
     </plurals>
 </resources>

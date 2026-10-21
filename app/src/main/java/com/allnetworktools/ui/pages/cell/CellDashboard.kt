@@ -136,7 +136,7 @@ fun CellDashboard(vm: MainViewModel) {
                 TextAction(S(R.string.allow_location_to_read_the_identifiers), { actions.request(PermGroup.Location) }, color = roles.accent, trailingIcon = null)
             }
             CellIdentityRows(serving)
-            InfoRow(S(R.string.roaming_2), if (s?.roaming == true) "Oui" else "Non")
+            InfoRow(S(R.string.roaming_2), if (s?.roaming == true) S(R.string.yes) else S(R.string.no))
         }
         if (sims.isNotEmpty()) {
             SectionCard(padding = androidx.compose.foundation.layout.PaddingValues(start = 16.dp, end = 16.dp, top = 6.dp, bottom = 8.dp)) {

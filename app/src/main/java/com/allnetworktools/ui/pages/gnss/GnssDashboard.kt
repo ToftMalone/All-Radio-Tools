@@ -110,7 +110,7 @@ fun GnssDashboard(vm: MainViewModel) {
         }
         SectionCard(shape = RoundedCornerShape(28.dp), onClick = { vm.navigate { it.copy(page = com.allnetworktools.Page.ToolPage(com.allnetworktools.model.Tool.Sky)) } }) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Text("Constellations", Modifier.weight(1f), style = rf(16, 22, 600))
+                Text(S(R.string.constellations), Modifier.weight(1f), style = rf(16, 22, 600))
                 com.allnetworktools.ui.components.Symbol(Sym.ChevronRight, size = 22.dp, tint = cs.onSurfaceVariant)
             }
             if (g.visible.isEmpty()) {

@@ -197,7 +197,7 @@ private fun LanItem(d: LanDevice, riseIndex: Int, index: Int, count: Int, onClic
                 Text(d.name, Modifier.weight(1f, fill = false), style = rf(15, 20, 600), maxLines = 1, overflow = TextOverflow.Ellipsis)
                 if (d.isSelf) {
                     Box(Modifier.height(20.dp).clip(RoundedCornerShape(6.dp)).background(acc.accent).padding(horizontal = 6.dp), contentAlignment = Alignment.Center) {
-                        Text("VOUS", style = rf(10, 12, 700), color = acc.onAccent)
+                        Text(S(R.string.you).uppercase(), style = rf(10, 12, 700), color = acc.onAccent)
                     }
                 }
             }

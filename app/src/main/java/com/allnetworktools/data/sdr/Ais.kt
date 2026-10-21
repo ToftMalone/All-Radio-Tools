@@ -103,8 +103,8 @@ object Ais {
         50 -> S(R.string.pilot); 51 -> S(R.string.search_and_rescue); 52 -> S(R.string.tug); 53 -> S(R.string.port_tender); 54 -> S(R.string.anti_pollution)
         55 -> S(R.string.law_enforcement); 58 -> S(R.string.medical)
         in 60..69 -> S(R.string.passenger)
-        in 70..79 -> "Cargo"
-        in 80..89 -> "Pétrolier"
+        in 70..79 -> S(R.string.cargo)
+        in 80..89 -> S(R.string.tanker)
         in 90..99 -> S(R.string.other)
         else -> null
     }
@@ -117,12 +117,12 @@ object Ais {
 
     /** Flag state from the Maritime Identification Digits at the start of a ship's MMSI (the common ones). */
     fun country(mmsi: Int): String? = when (mmsi / 1_000_000) {
-        226, 227, 228 -> "France"; 232, 233, 234, 235 -> S(R.string.united_kingdom); 211, 218 -> S(R.string.germany); 244, 245, 246 -> S(R.string.netherlands)
-        205 -> S(R.string.belgium); 224, 225 -> S(R.string.spain); 247 -> S(R.string.italy); 263, 255 -> "Portugal"; 219, 220 -> S(R.string.denmark); 257, 258, 259 -> S(R.string.norway)
-        265, 266 -> S(R.string.sweden); 230 -> S(R.string.finland); 250 -> S(R.string.ireland); 237, 239, 240, 241 -> S(R.string.greece); 215, 248, 249, 256 -> "Malte"
-        636, 637 -> S(R.string.liberia); 351, 352, 353, 354, 355, 356, 357, 370, 371, 372, 373 -> "Panama"; 538 -> S(R.string.marshall_islands)
-        209, 210, 212 -> S(R.string.cyprus); 253 -> "Luxembourg"; 201 -> S(R.string.albania); 203 -> S(R.string.austria); 272 -> "Ukraine"
-        273 -> S(R.string.russia); 271 -> S(R.string.turkey); 308, 309, 311 -> "Bahamas"; 338, 366, 367, 368, 369 -> S(R.string.united_states); 412, 413, 414 -> S(R.string.china)
+        226, 227, 228 -> S(R.string.france); 232, 233, 234, 235 -> S(R.string.united_kingdom); 211, 218 -> S(R.string.germany); 244, 245, 246 -> S(R.string.netherlands)
+        205 -> S(R.string.belgium); 224, 225 -> S(R.string.spain); 247 -> S(R.string.italy); 263, 255 -> S(R.string.portugal); 219, 220 -> S(R.string.denmark); 257, 258, 259 -> S(R.string.norway)
+        265, 266 -> S(R.string.sweden); 230 -> S(R.string.finland); 250 -> S(R.string.ireland); 237, 239, 240, 241 -> S(R.string.greece); 215, 248, 249, 256 -> S(R.string.malta)
+        636, 637 -> S(R.string.liberia); 351, 352, 353, 354, 355, 356, 357, 370, 371, 372, 373 -> S(R.string.panama); 538 -> S(R.string.marshall_islands)
+        209, 210, 212 -> S(R.string.cyprus); 253 -> S(R.string.luxembourg); 201 -> S(R.string.albania); 203 -> S(R.string.austria); 272 -> S(R.string.ukraine)
+        273 -> S(R.string.russia); 271 -> S(R.string.turkey); 308, 309, 311 -> S(R.string.bahamas); 338, 366, 367, 368, 369 -> S(R.string.united_states); 412, 413, 414 -> S(R.string.china)
         else -> null
     }
 }

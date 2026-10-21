@@ -386,6 +386,8 @@
     <string name="security_downgraded">"Sécurité rétrogradée"</string>
     <string name="access_points_require">"points d'accès exigent"</string>
     <string name="access_point_requires">"point d'accès exige"</string>
+    <string name="access_points_accept">"acceptent"</string>
+    <string name="access_point_accepts">"accepte"</string>
     <string name="wpa3_an_older_protocol">"%1$s %2$s WPA3, %3$s %4$s un protocole plus ancien. "</string>
     <string name="this_is_the_pattern_of_a">"C'est le schéma d'une attaque par rétrogradation (« downgrade »), ou d'un vieux répéteur."</string>
     <string name="obsolete_encryption">"Chiffrement obsolète"</string>
@@ -2201,6 +2203,29 @@
     <string name="not_enough_storage">"Espace de stockage insuffisant"</string>
     <string name="installation_failed_code">"Échec de l'installation (code %1$s)"</string>
     <string name="less_than_a_minute">"moins d'une minute"</string>
+    <string name="yes">"Oui"</string>
+    <string name="no">"Non"</string>
+    <string name="connectable">"Connectable"</string>
+    <string name="l1_l5_received">"L1 + L5 captés"</string>
+    <string name="l1_only">"L1 seulement"</string>
+    <string name="north">"nord"</string>
+    <string name="east">"est"</string>
+    <string name="south">"sud"</string>
+    <string name="west">"ouest"</string>
+    <string name="cargo">"Cargo"</string>
+    <string name="tanker">"Pétrolier"</string>
+    <string name="france">"France"</string>
+    <string name="portugal">"Portugal"</string>
+    <string name="malta">"Malte"</string>
+    <string name="panama">"Panama"</string>
+    <string name="luxembourg">"Luxembourg"</string>
+    <string name="ukraine">"Ukraine"</string>
+    <string name="bahamas">"Bahamas"</string>
+    <string name="satellite">"Satellite"</string>
+    <string name="signal">"Signal"</string>
+    <string name="notifications">"Notifications"</string>
+    <string name="constellations">"Constellations"</string>
+    <string name="identification">"Identification"</string>
     <plurals name="p_permissions">
         <item quantity="one">"autorisation"</item>
         <item quantity="other">"autorisations"</item>
@@ -2505,5 +2530,10 @@
         <item quantity="one">"Connexion brève en lecture seule à %1$d appareil proche pour lire nom, modèle et fabricant."</item>
         <item quantity="many">"Connexion brève en lecture seule à %1$d appareils proches pour lire nom, modèle et fabricant."</item>
         <item quantity="other">"Connexion brève en lecture seule à %1$d appareils proches pour lire nom, modèle et fabricant."</item>
+    </plurals>
+    <plurals name="p_epochs">
+        <item quantity="one">"%1$d époque"</item>
+        <item quantity="many">"%1$d d\'époques"</item>
+        <item quantity="other">"%1$d époques"</item>
     </plurals>
 </resources>

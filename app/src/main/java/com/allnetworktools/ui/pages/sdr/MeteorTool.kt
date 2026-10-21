@@ -349,7 +349,7 @@ fun MeteorTool(vm: MainViewModel) {
 
         SectionCard {
             Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                Text("Satellite", style = rf(13, 18, 600), color = cs.onSurfaceVariant)
+                Text(S(R.string.satellite), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     MeteorSats.all.forEach { s ->
                         val f = "%.3f".format(Locale.US, s.freqMhz)

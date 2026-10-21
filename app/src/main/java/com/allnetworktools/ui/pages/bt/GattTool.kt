@@ -381,7 +381,7 @@ internal fun AdvertCard(device: BleDevice?) {
         InfoRow(S(R.string.manufacturer_data), device.manufacturerHex?.let { if (it.length > 26) it.take(26) + "…" else it } ?: S(R.string.none_2))
         InfoRow(S(R.string.tx_power), device.txPower?.let { "$it dBm" } ?: S(R.string.not_advertised))
         InfoRow(S(R.string.observed_interval), device.intervalMs?.let { "≈ $it ms" } ?: "—")
-        InfoRow("Connectable", if (device.connectable) "Oui" else "Non")
+        InfoRow(S(R.string.connectable), if (device.connectable) S(R.string.yes) else S(R.string.no))
         InfoRow(S(R.string.address), device.addressNote)
         InfoRow(S(R.string.advertising), if (device.extended) S(R.string.ble_5_extended) else S(R.string.classic_legacy))
     }
@@ -575,7 +575,7 @@ private fun NotifyLog(c: GattController) {
     ) {
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             if (c.subscribed > 0) BlinkDot(acc.accent, 8.dp, 1200) else Box(Modifier.size(8.dp).clip(CircleShape).background(cs.outline))
-            Text("Notifications", Modifier.weight(1f), style = rf(14, 20, 600), color = acc.accent)
+            Text(S(R.string.notifications), Modifier.weight(1f), style = rf(14, 20, 600), color = acc.accent)
             Text("${c.subscribed} ${P(R.plurals.p_subscribed, c.subscribed)}", style = rf(12, 16), color = cs.onSurfaceVariant)
         }
         if (c.log.isEmpty()) Text(S(R.string.waiting_for_data), Modifier.padding(top = 8.dp), style = rf(13, 18), color = cs.onSurfaceVariant)

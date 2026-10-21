@@ -242,8 +242,8 @@ fun RawTool(vm: MainViewModel) {
             )
             if (e != null) {
                 Row(Modifier.padding(top = 12.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    HeroChip(if (dual) "L1 + L5 captés" else "L1 seulement", if (dual) AntTheme.net.good else AntTheme.net.fair)
-                    HeroChip("${c.epochs} ${com.allnetworktools.util.plural(c.epochs, "époque", "époques")}", AntTheme.accent.accent)
+                    HeroChip(if (dual) S(R.string.l1_l5_received) else S(R.string.l1_only), if (dual) AntTheme.net.good else AntTheme.net.fair)
+                    HeroChip(com.allnetworktools.util.P(R.plurals.p_epochs, c.epochs, c.epochs), AntTheme.accent.accent)
                 }
             }
         }
@@ -254,7 +254,7 @@ fun RawTool(vm: MainViewModel) {
         }
         if (e != null) SignalTable(e)
         InfoList(S(R.string.chip_capabilities)) {
-            fun yes(v: Boolean?) = when (v) { true -> "Oui"; false -> "Non"; null -> S(R.string.unknown) }
+            fun yes(v: Boolean?) = when (v) { true -> S(R.string.yes); false -> S(R.string.no); null -> S(R.string.unknown) }
             InfoRow(S(R.string.raw_measurements), yes(caps?.measurements ?: (e != null)))
             InfoRow(S(R.string.navigation_messages), yes(caps?.navigationMessages))
             InfoRow(S(R.string.multi_band_tracking), yes(caps?.multibandTracking))

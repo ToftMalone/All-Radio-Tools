@@ -484,7 +484,7 @@ private fun TrackerHero(t: TrackerCandidate, now: Long, onLocate: (BleDevice) ->
 @Composable
 private fun ProbeCard(t: TrackerCandidate, onIdentify: () -> Unit) {
     SectionCard {
-        Text("Identification", style = rf(14, 20, 600), color = AntTheme.accent.accent)
+        Text(S(R.string.identification), style = rf(14, 20, 600), color = AntTheme.accent.accent)
         Text(
             S(R.string.find_my_status_byte) + (t.signal.appleStatus?.let { "0x%02X".format(it) } ?: "—") + " → " + t.signal.kind.label,
             Modifier.padding(top = 8.dp), style = rf(13, 18, tnum = true),
@@ -506,7 +506,7 @@ private fun SignalCard(t: TrackerCandidate) {
     val pts = t.sightings.takeLast(60).map { it.rssi.toFloat() }
     SectionCard {
         Row(verticalAlignment = Alignment.Bottom) {
-            Text("Signal", Modifier.weight(1f), style = rf(14, 20, 600), color = AntTheme.accent.accent)
+            Text(S(R.string.signal), Modifier.weight(1f), style = rf(14, 20, 600), color = AntTheme.accent.accent)
             if (pts.isNotEmpty()) Text("min ${fmt(pts.min().toInt())} · max ${fmt(pts.max().toInt())} dBm", style = rf(12, 16, tnum = true), color = cs.onSurfaceVariant)
         }
         if (pts.size >= 2) {
