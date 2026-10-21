@@ -88,7 +88,7 @@ private fun pctOf(v: Double?) = v?.let { if (it == 0.0) "0" else fmt((it * 100).
 /** 100 ko, 1 Mo, 250 Mo: the transfer sizes the way the site labels them, in French units. */
 fun sizeLabel(bytes: Long) = if (bytes >= 1_000_000) S(R.string.mb, bytes / 1_000_000) else S(R.string.kb, bytes / 1_000)
 
-val levelNames = listOf(S(R.string.bad), S(R.string.poor), S(R.string.fair), "Bon", S(R.string.excellent))
+val levelNames = listOf(S(R.string.bad), S(R.string.poor), S(R.string.fair), S(R.string.good), S(R.string.excellent))
 
 class SpeedController(private val scope: CoroutineScope) {
     var phase by mutableStateOf(Phase.Idle)

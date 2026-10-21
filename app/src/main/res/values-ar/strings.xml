@@ -2226,6 +2226,11 @@
     <string name="identification">"التعرّف"</string>
     <string name="access_points_accept">"تقبل"</string>
     <string name="access_point_accepts">"تقبل"</string>
+    <string name="good">"جيد"</string>
+    <string name="diagnostics">"التشخيص"</string>
+    <string name="expert">"خبير"</string>
+    <string name="drones">"المسيّرات"</string>
+    <string name="ping_download_upload">"Ping، التنزيل، الرفع"</string>
     <plurals name="p_permissions">
         <item quantity="zero">"إذن"</item>
         <item quantity="one">"إذن"</item>

@@ -2226,6 +2226,11 @@
     <string name="notifications">"Oznámení"</string>
     <string name="constellations">"Konstelace"</string>
     <string name="identification">"Identifikace"</string>
+    <string name="good">"Dobrý"</string>
+    <string name="diagnostics">"Diagnostika"</string>
+    <string name="expert">"Expert"</string>
+    <string name="drones">"Drony"</string>
+    <string name="ping_download_upload">"Ping, stahování, odesílání"</string>
     <plurals name="p_permissions">
         <item quantity="one">"oprávnění"</item>
         <item quantity="few">"oprávnění"</item>

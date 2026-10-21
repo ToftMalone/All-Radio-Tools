@@ -2226,6 +2226,11 @@
     <string name="identification">"Nhận dạng"</string>
     <string name="access_points_accept">"chấp nhận"</string>
     <string name="access_point_accepts">"chấp nhận"</string>
+    <string name="good">"Tốt"</string>
+    <string name="diagnostics">"Chẩn đoán"</string>
+    <string name="expert">"Chuyên gia"</string>
+    <string name="drones">"Drone"</string>
+    <string name="ping_download_upload">"Ping, tải xuống, tải lên"</string>
     <plurals name="p_permissions">
         <item quantity="other">"quyền"</item>
     </plurals>

@@ -2226,6 +2226,11 @@
     <string name="identification">"पहचान"</string>
     <string name="access_points_accept">"पुराना प्रोटोकॉल स्वीकार करते हैं"</string>
     <string name="access_point_accepts">"पुराना प्रोटोकॉल स्वीकार करता है"</string>
+    <string name="good">"अच्छा"</string>
+    <string name="diagnostics">"निदान"</string>
+    <string name="expert">"विशेषज्ञ"</string>
+    <string name="drones">"ड्रोन"</string>
+    <string name="ping_download_upload">"Ping, डाउनलोड, अपलोड"</string>
     <plurals name="p_permissions">
         <item quantity="one">"अनुमति"</item>
         <item quantity="other">"अनुमतियाँ"</item>

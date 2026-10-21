@@ -116,7 +116,7 @@ fun BleScanner(vm: MainViewModel) {
         val counts = devices.groupingBy { it.kind }.eachCount()
         val kinds = counts.keys.sortedWith(compareBy({ it == BleKind.Unknown }, { -(counts[it] ?: 0) }))
         Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            AntFilterChip(ALL, filter == ALL, { filter = ALL }, roles.container, roles.onContainer, trailing = devices.size.toString())
+            AntFilterChip(S(R.string.all), filter == ALL, { filter = ALL }, roles.container, roles.onContainer, trailing = devices.size.toString())
             kinds.forEach { k ->
                 AntFilterChip(k.filter, filter == k.filter, { filter = k.filter }, roles.container, roles.onContainer, trailing = counts[k].toString())
             }

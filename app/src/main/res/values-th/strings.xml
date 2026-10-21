@@ -2226,6 +2226,11 @@
     <string name="identification">"การระบุตัวตน"</string>
     <string name="access_points_accept">"จุดยอมรับโปรโตคอลที่เก่ากว่า"</string>
     <string name="access_point_accepts">"จุดยอมรับโปรโตคอลที่เก่ากว่า"</string>
+    <string name="good">"ดี"</string>
+    <string name="diagnostics">"การวินิจฉัย"</string>
+    <string name="expert">"ผู้เชี่ยวชาญ"</string>
+    <string name="drones">"โดรน"</string>
+    <string name="ping_download_upload">"Ping, ดาวน์โหลด, อัปโหลด"</string>
     <plurals name="p_permissions">
         <item quantity="other">"สิทธิ์"</item>
     </plurals>

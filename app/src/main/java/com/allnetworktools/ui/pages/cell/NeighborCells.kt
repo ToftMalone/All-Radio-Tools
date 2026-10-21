@@ -89,7 +89,7 @@ fun NeighborCells(vm: MainViewModel) {
         }
         Row(Modifier.fillMaxWidth().padding(start = 4.dp, end = 4.dp, top = 4.dp), verticalAlignment = Alignment.CenterVertically) {
             Text("${neighbors.size} ${P(R.plurals.p_neighbour_cells, neighbors.size)}", Modifier.weight(1f), style = rf(13, 18), color = cs.onSurfaceVariant)
-            Legend(listOf("Bon" to AntTheme.net.good, S(R.string.fair) to AntTheme.net.fair, S(R.string.weak) to AntTheme.net.poor))
+            Legend(listOf(S(R.string.good) to AntTheme.net.good, S(R.string.fair) to AntTheme.net.fair, S(R.string.weak) to AntTheme.net.poor))
         }
         if (!perms.location) {
             EmptyStateCard(

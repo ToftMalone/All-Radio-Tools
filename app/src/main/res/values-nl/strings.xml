@@ -2226,6 +2226,11 @@
     <string name="notifications">"Meldingen"</string>
     <string name="constellations">"Constellaties"</string>
     <string name="identification">"Identificatie"</string>
+    <string name="good">"Goed"</string>
+    <string name="diagnostics">"Diagnose"</string>
+    <string name="expert">"Expert"</string>
+    <string name="drones">"Drones"</string>
+    <string name="ping_download_upload">"Ping, download, upload"</string>
     <plurals name="p_permissions">
         <item quantity="one">"toestemming"</item>
         <item quantity="other">"toestemmingen"</item>

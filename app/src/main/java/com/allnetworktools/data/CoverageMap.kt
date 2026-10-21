@@ -164,7 +164,7 @@ object CoveragePalette {
     fun quality(rssi: Int) = when {
         rssi >= -50 -> S(R.string.excellent)
         rssi >= -60 -> S(R.string.very_good)
-        rssi >= -67 -> "Bon"
+        rssi >= -67 -> S(R.string.good)
         rssi >= -75 -> S(R.string.fair)
         else -> S(R.string.weak)
     }

@@ -2226,6 +2226,11 @@
     <string name="identification">"识别"</string>
     <string name="access_points_accept">"个接受较旧的协议"</string>
     <string name="access_point_accepts">"个接受较旧的协议"</string>
+    <string name="good">"良好"</string>
+    <string name="diagnostics">"诊断"</string>
+    <string name="expert">"专家"</string>
+    <string name="drones">"无人机"</string>
+    <string name="ping_download_upload">"Ping、下载、上传"</string>
     <plurals name="p_permissions">
         <item quantity="other">"项权限"</item>
     </plurals>

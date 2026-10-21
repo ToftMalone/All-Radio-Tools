@@ -2226,6 +2226,11 @@
     <string name="notifications">"Notificări"</string>
     <string name="constellations">"Constelații"</string>
     <string name="identification">"Identificare"</string>
+    <string name="good">"Bun"</string>
+    <string name="diagnostics">"Diagnosticare"</string>
+    <string name="expert">"Expert"</string>
+    <string name="drones">"Drone"</string>
+    <string name="ping_download_upload">"Ping, descărcare, încărcare"</string>
     <plurals name="p_permissions">
         <item quantity="one">"permisiune"</item>
         <item quantity="few">"permisiuni"</item>

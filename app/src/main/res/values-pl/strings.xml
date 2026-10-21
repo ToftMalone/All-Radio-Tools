@@ -2226,6 +2226,11 @@
     <string name="notifications">"Powiadomienia"</string>
     <string name="constellations">"Konstelacje"</string>
     <string name="identification">"Identyfikacja"</string>
+    <string name="good">"Dobry"</string>
+    <string name="diagnostics">"Diagnostyka"</string>
+    <string name="expert">"Ekspert"</string>
+    <string name="drones">"Drony"</string>
+    <string name="ping_download_upload">"Ping, pobieranie, wysyłanie"</string>
     <plurals name="p_permissions">
         <item quantity="one">"uprawnienie"</item>
         <item quantity="few">"uprawnienia"</item>

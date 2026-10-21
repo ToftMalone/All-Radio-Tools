@@ -138,7 +138,7 @@ fun CellDetailTool(state: CellState?, arg: String?, onNeighbors: () -> Unit) {
         val muted = cs.onSurfaceVariant
         fun q(v: Int?, spec: QualitySpec): Pair<String, androidx.compose.ui.graphics.Color> = when {
             v == null -> S(R.string.not_measured) to muted
-            v >= spec.good -> "Bon" to net.good
+            v >= spec.good -> S(R.string.good) to net.good
             v >= spec.fair -> S(R.string.fair) to net.fair
             else -> S(R.string.weak) to net.poor
         }

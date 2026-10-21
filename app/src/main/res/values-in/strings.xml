@@ -2226,6 +2226,11 @@
     <string name="identification">"Identifikasi"</string>
     <string name="access_points_accept">"menerima"</string>
     <string name="access_point_accepts">"menerima"</string>
+    <string name="good">"Baik"</string>
+    <string name="diagnostics">"Diagnostik"</string>
+    <string name="expert">"Ahli"</string>
+    <string name="drones">"Drone"</string>
+    <string name="ping_download_upload">"Ping, unduh, unggah"</string>
     <plurals name="p_permissions">
         <item quantity="other">"izin"</item>
     </plurals>

@@ -2226,6 +2226,11 @@
     <string name="identification">"識別"</string>
     <string name="access_points_accept">"台は古いプロトコルを許可しています"</string>
     <string name="access_point_accepts">"台は古いプロトコルを許可しています"</string>
+    <string name="good">"良好"</string>
+    <string name="diagnostics">"診断"</string>
+    <string name="expert">"エキスパート"</string>
+    <string name="drones">"ドローン"</string>
+    <string name="ping_download_upload">"Ping、ダウンロード、アップロード"</string>
     <plurals name="p_permissions">
         <item quantity="other">"権限"</item>
     </plurals>

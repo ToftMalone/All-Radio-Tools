@@ -2226,6 +2226,11 @@
     <string name="notifications">"Aviseringar"</string>
     <string name="constellations">"Konstellationer"</string>
     <string name="identification">"Identifiering"</string>
+    <string name="good">"Bra"</string>
+    <string name="diagnostics">"Diagnostik"</string>
+    <string name="expert">"Expert"</string>
+    <string name="drones">"Drönare"</string>
+    <string name="ping_download_upload">"Ping, nedladdning, uppladdning"</string>
     <plurals name="p_permissions">
         <item quantity="one">"behörighet"</item>
         <item quantity="other">"behörigheter"</item>

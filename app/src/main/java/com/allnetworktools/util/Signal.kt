@@ -16,7 +16,7 @@ fun signalValue(dbm: Int?, settings: AppSettings, floor: Float, ceiling: Float):
     else -> SignalValue(fmt(dbm), "dBm")
 }
 
-enum class Quality(val label: String) { Good("Bon"), Fair(S(R.string.fair)), Poor(S(R.string.weak)) }
+enum class Quality(val label: String) { Good(S(R.string.good)), Fair(S(R.string.fair)), Poor(S(R.string.weak)) }
 
 fun quality(value: Float, good: Float, fair: Float) = when {
     value >= good -> Quality.Good
@@ -32,7 +32,7 @@ fun NetworkColors.of(q: Quality): Color = when (q) {
 
 fun wifiQualityLabel(rssi: Int): String = when {
     rssi > -55 -> S(R.string.excellent)
-    rssi > -67 -> "Bon"
+    rssi > -67 -> S(R.string.good)
     rssi > -75 -> S(R.string.fair)
     else -> S(R.string.weak)
 }

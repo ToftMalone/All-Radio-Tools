@@ -2226,6 +2226,11 @@
     <string name="identification">"식별"</string>
     <string name="access_points_accept">"개는 이전 프로토콜을 허용합니다"</string>
     <string name="access_point_accepts">"개는 이전 프로토콜을 허용합니다"</string>
+    <string name="good">"좋음"</string>
+    <string name="diagnostics">"진단"</string>
+    <string name="expert">"전문가"</string>
+    <string name="drones">"드론"</string>
+    <string name="ping_download_upload">"Ping, 다운로드, 업로드"</string>
     <plurals name="p_permissions">
         <item quantity="other">"권한"</item>
     </plurals>

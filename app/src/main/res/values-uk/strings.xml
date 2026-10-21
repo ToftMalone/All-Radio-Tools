@@ -2226,6 +2226,11 @@
     <string name="notifications">"Сповіщення"</string>
     <string name="constellations">"Сузір’я"</string>
     <string name="identification">"Ідентифікація"</string>
+    <string name="good">"Добрий"</string>
+    <string name="diagnostics">"Діагностика"</string>
+    <string name="expert">"Експерт"</string>
+    <string name="drones">"Дрони"</string>
+    <string name="ping_download_upload">"Пінг, завантаження, вивантаження"</string>
     <plurals name="p_permissions">
         <item quantity="one">"дозвіл"</item>
         <item quantity="few">"дозволи"</item>

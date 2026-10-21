@@ -14,7 +14,12 @@ open class AntApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         com.allnetworktools.util.Res.context = this
+        startLocale = resources.configuration.locales[0]
     }
+
+    /** Language the process started in: labels built once (enum titles, lists) are in this language. */
+    var startLocale: java.util.Locale? = null
+        private set
 
     open val settings by lazy { SettingsRepository(this) }
     open val permissions by lazy { PermissionsRepository(this) }

@@ -46,11 +46,11 @@ private data class ToolGroup(val title: String, val items: List<ToolEntry>)
 
 private fun groups(net: Network, connectedDevice: String?, servingLabel: String?): List<ToolGroup> = when (net) {
     Network.Wifi -> listOf(
-        ToolGroup(S(R.string.analysis), listOf(ToolEntry(Tool.Speed, S(R.string.speed_test), "Ping, download, upload"), ToolEntry(Tool.Coverage, S(R.string.coverage_map), S(R.string.the_signal_room_by_room)))),
+        ToolGroup(S(R.string.analysis), listOf(ToolEntry(Tool.Speed, S(R.string.speed_test), S(R.string.ping_download_upload)), ToolEntry(Tool.Coverage, S(R.string.coverage_map), S(R.string.the_signal_room_by_room)))),
         ToolGroup(S(R.string.local_network), listOf(ToolEntry(Tool.Lan, S(R.string.lan_devices), S(R.string.host_discovery)), ToolEntry(Tool.Ports, S(R.string.port_scan), S(R.string.tcp_common_ports)))),
         ToolGroup(S(R.string.discovery), listOf(ToolEntry(Tool.WifiDirect, "Wi-Fi Direct", S(R.string.devices_connected_directly)))),
         ToolGroup(
-            "Diagnostic",
+            S(R.string.diagnostics),
             listOf(ToolEntry(Tool.Ping, "Ping", S(R.string.latency_jitter_loss)), ToolEntry(Tool.Trace, "Traceroute", S(R.string.hops_to_the_host)), ToolEntry(Tool.Dns, "DNS Lookup", "A, AAAA, MX, TXT, NS"), ToolEntry(Tool.Whois, "Whois", S(R.string.domain_or_ip_address))),
         ),
         ToolGroup(
@@ -93,7 +93,7 @@ private fun groups(net: Network, connectedDevice: String?, servingLabel: String?
             ),
         ),
         ToolGroup(
-            "Expert",
+            S(R.string.expert),
             listOf(
                 ToolEntry(Tool.GnssIntegrity, S(R.string.jamming_and_spoofing), S(R.string.detect_a_jammer_or_fake_signals)),
                 ToolEntry(Tool.GnssRaw, S(R.string.raw_measurements), S(R.string.dual_frequency_l1_l5_rinex_export)),
@@ -102,7 +102,7 @@ private fun groups(net: Network, connectedDevice: String?, servingLabel: String?
     )
     Network.Talkie -> emptyList()
     Network.Sdr -> listOf(
-        ToolGroup(S(R.string.tools), listOf(ToolEntry(Tool.Adsb, S(R.string.aircraft_ads_b), S(R.string.map_of_aircraft_on_1090_mhz)), ToolEntry(Tool.Sonde, S(R.string.radiosondes), S(R.string.rs41_m10_and_m20_sondes_around)), ToolEntry(Tool.Fm, S(R.string.fm_radio), S(R.string.listening_and_rds_87_5_to)), ToolEntry(Tool.Ais, S(R.string.ships_ais), S(R.string.map_of_ships_on_162_mhz)), ToolEntry(Tool.Meteor, S(R.string.weather_satellites_meteor_m), S(R.string.lrpt_images_on_137_mhz)), ToolEntry(Tool.Aprs, S(R.string.ham_radio_aprs), S(R.string.beacons_on_144_800_mhz)), ToolEntry(Tool.Acars, S(R.string.aircraft_messages_acars), S(R.string.airliner_messaging_131_mhz)), ToolEntry(Tool.Meshtastic, "Meshtastic", S(R.string.messages_positions_and_lora_nodes_868)), ToolEntry(Tool.GpsSdr, S(R.string.gps_receiver), S(R.string.position_computed_by_the_hackrf_1575)), ToolEntry(Tool.Fpv, "Drones", S(R.string.analog_fpv_dji_and_rc_links)))),
+        ToolGroup(S(R.string.tools), listOf(ToolEntry(Tool.Adsb, S(R.string.aircraft_ads_b), S(R.string.map_of_aircraft_on_1090_mhz)), ToolEntry(Tool.Sonde, S(R.string.radiosondes), S(R.string.rs41_m10_and_m20_sondes_around)), ToolEntry(Tool.Fm, S(R.string.fm_radio), S(R.string.listening_and_rds_87_5_to)), ToolEntry(Tool.Ais, S(R.string.ships_ais), S(R.string.map_of_ships_on_162_mhz)), ToolEntry(Tool.Meteor, S(R.string.weather_satellites_meteor_m), S(R.string.lrpt_images_on_137_mhz)), ToolEntry(Tool.Aprs, S(R.string.ham_radio_aprs), S(R.string.beacons_on_144_800_mhz)), ToolEntry(Tool.Acars, S(R.string.aircraft_messages_acars), S(R.string.airliner_messaging_131_mhz)), ToolEntry(Tool.Meshtastic, "Meshtastic", S(R.string.messages_positions_and_lora_nodes_868)), ToolEntry(Tool.GpsSdr, S(R.string.gps_receiver), S(R.string.position_computed_by_the_hackrf_1575)), ToolEntry(Tool.Fpv, S(R.string.drones), S(R.string.analog_fpv_dji_and_rc_links)))),
     )
 }
 

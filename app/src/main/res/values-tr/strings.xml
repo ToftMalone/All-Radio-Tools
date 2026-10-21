@@ -2226,6 +2226,11 @@
     <string name="notifications">"Bildirimler"</string>
     <string name="constellations">"Takımyıldızlar"</string>
     <string name="identification">"Tanımlama"</string>
+    <string name="good">"İyi"</string>
+    <string name="diagnostics">"Tanılama"</string>
+    <string name="expert">"Uzman"</string>
+    <string name="drones">"Dronlar"</string>
+    <string name="ping_download_upload">"Ping, indirme, yükleme"</string>
     <plurals name="p_permissions">
         <item quantity="one">"izin"</item>
         <item quantity="other">"izin"</item>
