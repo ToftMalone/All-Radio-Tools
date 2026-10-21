@@ -1,156 +1,162 @@
 # 📡 All Radio Tools
 
-**Tout ce qui émet autour de vous, dans une seule application Android.**
+**Everything that transmits around you, in one Android app.**
 
-All Radio Tools réunit les outils pour explorer le Wi-Fi, le Bluetooth, le réseau mobile, le GNSS et, avec un HackRF, les ondes radio : avions, ballons-sondes, navires, drones, satellites météo, réseaux Meshtastic, et même le GPS reçu par le HackRF seul.
+All Radio Tools brings together tools to explore Wi-Fi, Bluetooth, the mobile network, GNSS and, with a HackRF, the radio waves themselves: aircraft, radiosondes, ships, drones, weather satellites, Meshtastic networks, and even GPS received by the HackRF alone.
 
-> 🌍 Application en français et en anglais (elle suit la langue du téléphone), écrite en Kotlin avec Jetpack Compose et Material 3.
-
----
-
-## 📲 Installer
-
-1. Téléchargez le dernier `AllRadioTools-vX.Y.apk` depuis la page [Releases](https://github.com/ToftMalone/All-Radio-Tools/releases).
-2. Autorisez l'installation depuis cette source quand Android le demande.
-3. Les mises à jour suivantes sont proposées **dans l'application** : elle compare sa version à la dernière release GitHub.
-
-**Prérequis :** Android 12 ou plus (API 31). L'application vise Android 17.
+> 🌍 Available in English and French (it follows the phone's language). Written in Kotlin with Jetpack Compose and Material 3.
+>
+> 🇫🇷 [Version française](README.fr.md)
 
 ---
 
-## 🧰 Les outils
+## 📲 Install
 
-L'écran d'accueil propose six réseaux. Chacun a son tableau de bord, son outil principal dans le dock flottant et une page « Outils ».
+1. Download the latest `AllRadioTools-vX.Y.apk` from the [Releases](https://github.com/ToftMalone/All-Radio-Tools/releases) page.
+2. Allow installs from this source when Android asks.
+3. Later updates are offered **inside the app**: it compares its version with the latest GitHub release.
+
+**Requirements:** Android 12 or later (API 31). The app targets Android 17.
+
+---
+
+## 🧰 Tools
+
+The home screen offers six networks. Each one has its dashboard, its main tool in the floating dock and a "Tools" page.
 
 ### 📶 Wi-Fi
 
-| Outil | À quoi ça sert |
+| Tool | What it does |
 | --- | --- |
-| Scanner Wi-Fi | Réseaux alentour, canaux, occupation, points d'accès du réseau connecté |
-| Test de débit | Le test de [speed.cloudflare.com](https://speed.cloudflare.com), étape par étape : mêmes mesures, mêmes calculs (débit au 90ᵉ centile, latence et gigue au repos et sous charge, perte de paquets via le relais TURN de Cloudflare), score de qualité réseau et export CSV identique au site |
-| Carte de couverture | On marche, la carte se dessine : en **réalité augmentée** (ARCore, capteur ToF quand il existe) le sol se colore sous vos pas comme dans WiFiman ; sans ARCore, un podomètre et la boussole tracent le parcours |
-| Appareils du LAN | Découvrir les appareils du réseau |
-| Ping, Traceroute, Scan de ports, DNS | Les classiques du diagnostic réseau |
-| Whois | Propriétaire d'un domaine ou d'une adresse IP |
-| Wi-Fi Direct | Appareils Wi-Fi Direct à proximité |
-| Audit du réseau | Chiffrement, WPS, PMF, box |
-| Faux points d'accès | « Evil twin » du réseau connecté |
-| Homme du milieu | ARP spoofing et DHCP pirate |
+| Wi-Fi scanner | Nearby networks, channels, congestion, access points of the connected network |
+| Speed test | The [speed.cloudflare.com](https://speed.cloudflare.com) test, step by step: same measurements, same calculations (90th percentile throughput, idle and loaded latency and jitter, packet loss through Cloudflare's TURN relay), network quality score and the same CSV export as the site |
+| Coverage map | Walk around and the map draws itself: in **augmented reality** (ARCore, ToF sensor when available) the floor is coloured under your feet like in WiFiman; without ARCore, a step counter and the compass trace your path |
+| LAN devices | Discover the devices on your network |
+| Ping, Traceroute, Port scan, DNS | The network diagnostic classics |
+| Whois | Who owns a domain or an IP address |
+| Wi-Fi Direct | Nearby Wi-Fi Direct devices |
+| Network audit | Encryption, WPS, PMF, router |
+| Rogue access points | "Evil twins" of the connected network |
+| Man in the middle | ARP spoofing and rogue DHCP |
 
 ### 🔵 Bluetooth
 
-| Outil | À quoi ça sert |
+| Tool | What it does |
 | --- | --- |
-| Scanner BLE | Appareils à proximité avec filtres et identification (fabricant, modèle, services) |
-| Appareil BLE | Exploration GATT d'un appareil |
-| Chaud/Froid | Retrouver un appareil au signal |
-| Traqueurs inconnus | Les traqueurs qui pourraient vous suivre (AirTag, accessoires Localiser, AirPods, tags Google, Galaxy SmartTag, Tile), chacun avec son **dessin fidèle à l'objet**, triés par date de détection, avec « faire sonner » |
-| Balises | iBeacon, Eddystone, AltBeacon |
-| Batterie des écouteurs | AirPods et Beats : gauche, droite, boîtier |
+| BLE scanner | Nearby devices with filters and identification (manufacturer, model, services) |
+| BLE device | GATT exploration of a device |
+| Hot/Cold | Find a device by its signal |
+| Unknown trackers | Trackers that might be following you (AirTag, Find My accessories, AirPods, Google tags, Galaxy SmartTag, Tile), each with a **drawing faithful to the real object**, sorted by detection time, with "play sound" |
+| Beacons | iBeacon, Eddystone, AltBeacon |
+| Earbuds battery | AirPods and Beats: left, right, case |
 
-### 📱 Réseau mobile
+### 📱 Mobile network
 
-| Outil | À quoi ça sert |
+| Tool | What it does |
 | --- | --- |
-| Cellule de service | Identifiants et mesures de la cellule connectée (LTE, NR) |
-| Cellules voisines | Cellules détectées par le modem |
-| Journal de handover | Changements de cellule en trajet, lancé à la main, export CSV |
-| Carte des antennes | Antennes de votre opérateur, d'après les données ouvertes de l'ANFR |
+| Serving cell | Identifiers and measurements of the connected cell (LTE, NR) |
+| Neighbouring cells | Cells seen by the modem |
+| Handover log | Cell changes while travelling, started by hand, CSV export |
+| Cell tower map | Your carrier's towers, from ANFR open data (France) |
 
 ### 🛰️ GNSS
 
-| Outil | À quoi ça sert |
+| Tool | What it does |
 | --- | --- |
-| Ciel GNSS | Sky plot et carte du monde des satellites, prédiction des passages |
-| Comparer les positions | GNSS, réseau et position fusionnée |
-| Horloge atomique | Heure UTC des satellites à la milliseconde, avance ou retard du téléphone, semaine GPS, secondes intercalaires, dérive du quartz |
-| Boussole et cap GNSS | Compare la boussole (corrigée de la déclinaison) au cap des satellites en marchant |
-| Masque du ciel | Où le ciel est caché par les immeubles ou les arbres, d'après les satellites présents mais muets |
-| Brouillage et leurrage | 8 indices surveillés en continu (force des signaux, AGC, satellites perdus, signaux trop semblables, sauts, accord avec le réseau, heure, position simulée) |
-| Mesures brutes | Bandes captées (bi-fréquence L1/L5, E1/E5a, B1C/B2a…), pseudodistances, phase, multitrajet, export **RINEX 3.04** pour RTKLIB ou CSRS-PPP |
+| GNSS sky | Sky plot and world map of the satellites, pass prediction |
+| Compare positions | GNSS, network and fused position |
+| Atomic clock | Satellite UTC time to the millisecond, how far ahead or behind the phone is, GPS week, leap seconds, crystal drift |
+| Compass and GNSS heading | Compares the compass (corrected for declination) with the satellite heading while you walk |
+| Sky mask | Where buildings or trees hide the sky, from satellites that are present but silent |
+| Jamming and spoofing | 8 indicators watched continuously (signal strength, AGC, lost satellites, signals too alike, jumps, agreement with the network, time, mock location) |
+| Raw measurements | Bands received (dual frequency L1/L5, E1/E5a, B1C/B2a…), pseudoranges, carrier phase, multipath, **RINEX 3.04** export for RTKLIB or CSRS-PPP |
 
-### 📻 SDR (HackRF, en réception uniquement)
+### 📻 SDR (HackRF, receive only)
 
-| Outil | Contenu |
+| Tool | What it does |
 | --- | --- |
-| Analyseur de spectre | Spectre et chute d'eau, de 1 MHz à 6 GHz |
-| Avions (ADS-B) | Carte des avions sur 1090 MHz |
-| Messages d'avions (ACARS) | Messagerie des avions de ligne sur les 3 canaux européens, 131 MHz |
-| Ballons-sondes | Vaisala RS41 et Meteomodem M10 / M20 vers 403 MHz, avec prédiction d'atterrissage |
-| Radio FM | Écoute et RDS |
-| Navires (AIS) | Carte des navires sur 162 MHz |
-| Radioamateurs (APRS) | Balises sur 144,800 MHz |
-| Meshtastic | Réception et déchiffrement des trames LoRa : choix de la région, du préréglage, de la fréquence et des canaux |
-| Récepteur GPS | La position calculée par le HackRF seul, avec son antenne télescopique, sur 1575,42 MHz |
-| Satellites météo (Meteor-M) | Images LRPT sur 137 MHz |
-| Drones | FPV analogique, DJI (DroneID) et radiocommandes (ExpressLRS, Crossfire, FrSky, FlySky, Spektrum) |
+| Spectrum analyser | Spectrum and waterfall, 1 MHz to 6 GHz |
+| Aircraft (ADS-B) | Map of aircraft on 1090 MHz |
+| Aircraft messages (ACARS) | Airliner messaging on the 3 European channels, 131 MHz |
+| Radiosondes | Vaisala RS41 and Meteomodem M10 / M20 around 403 MHz, with landing prediction |
+| FM radio | Listening and RDS |
+| Ships (AIS) | Map of ships on 162 MHz |
+| Ham radio (APRS) | Beacons on 144.800 MHz |
+| Meshtastic | Receives and decrypts LoRa frames: choice of region, preset, frequency and channels |
+| GPS receiver | The position computed by the HackRF alone, with its telescopic antenna, on 1575.42 MHz |
+| Weather satellites (Meteor-M) | LRPT images on 137 MHz |
+| Drones | Analogue FPV, DJI (DroneID) and remote controls (ExpressLRS, Crossfire, FrSky, FlySky, Spektrum) |
 
-Les décodeurs fonctionnent avec le **HackRF seul** : ni le Wi-Fi ni le Bluetooth du téléphone ne sont utilisés. La carte SDR reste grisée tant qu'aucun HackRF n'est branché en USB.
+The decoders work with the **HackRF alone**: neither the phone's Wi-Fi nor its Bluetooth is used. The SDR card stays greyed out until a HackRF is plugged in over USB.
 
-### 🔌 Talkie-walkie
+### 🔌 Handheld radio
 
-Lire, modifier et réécrire les mémoires d'un **Baofeng UV-5R**, d'un **Radtel RT-470X** ou d'un **Quansheng UV-K5 / UV-K6 / UV-5R Plus** par câble de programmation USB (puces CH340, CP210x, FTDI, PL2303), avec des préréglages (PMR446, relais, marine…). Sans câble, la carte reste consultable mais les outils ne se lancent pas.
+Read, edit and write back the memories of a **Baofeng UV-5R**, a **Radtel RT-470X** or a **Quansheng UV-K5 / UV-K6 / UV-5R Plus** over a USB programming cable (CH340, CP210x, FTDI, PL2303 chips), with presets (PMR446, repeaters, marine…). Without a cable the card can still be browsed, but the tools won't start.
 
 ### 📤 Exports
 
-Uniquement quand vous le demandez, à l'emplacement que vous choisissez :
-- **CSV** : test de débit, carte de couverture, avions, ballons-sondes, navires, APRS, Meshtastic, journal de handover ;
-- **RINEX** : mesures brutes GNSS ;
-- **PNG** : images Meteor-M.
+Only when you ask, to the location you choose:
+- **CSV**: speed test, coverage map, aircraft, radiosondes, ships, APRS, Meshtastic, handover log;
+- **RINEX**: GNSS raw measurements;
+- **PNG**: Meteor-M images.
 
-L'application ne garde aucune copie : rien n'est enregistré sans votre action.
+The app keeps no copy: nothing is saved without your action.
 
 ---
 
-## 🔐 Autorisations
+## 🔐 Permissions
 
-| Autorisation | Pourquoi |
+| Permission | Why |
 | --- | --- |
-| Position précise | Scans Wi-Fi, cellules, GNSS (imposée par Android) |
-| Appareils à proximité | Scan et connexion Bluetooth |
-| Téléphone | Opérateur, cellules, double SIM |
-| Caméra | Carte de couverture en réalité augmentée (demandée seulement à son lancement) |
-| Réseau local (Android 17) | Scan du LAN, ping, scan de ports |
-| Installer des applications | Mise à jour intégrée |
+| Precise location | Wi-Fi scans, cells, GNSS (required by Android) |
+| Nearby devices | Bluetooth scanning and connection |
+| Phone | Carrier, cells, dual SIM |
+| Camera | Augmented reality coverage map (asked only when it starts) |
+| Local network (Android 17) | LAN scan, ping, port scan |
+| Install apps | Built-in updates |
 
-Aucun compte, aucune publicité, aucun traceur. Internet sert aux mises à jour, au test de débit (Cloudflare), aux éléments de satellites (CelesTrak) et aux données d'antennes. La réalité augmentée utilise « Services Google Play pour la RA » s'il est installé ; sinon le podomètre prend le relais.
-
----
-
-## ⚖️ Usage responsable
-
-- Le SDR est utilisé **en réception seulement**. Respectez la législation de votre pays sur l'écoute des fréquences.
-- Les outils de sécurité Wi-Fi (audit, faux points d'accès, homme du milieu, scan de ports) sont faits pour **vos propres réseaux** ou ceux que vous avez l'autorisation de tester.
-- « Traqueurs inconnus » et « Brouillage et leurrage » servent à **vous protéger**, pas à pister ou gêner les autres.
+No account, no ads, no trackers. Internet is used for updates, the speed test (Cloudflare), satellite elements (CelesTrak) and cell tower data. Augmented reality uses "Google Play Services for AR" if installed; otherwise the step counter takes over.
 
 ---
 
-## 🛠️ Compiler
+## ⚖️ Responsible use
+
+- The SDR is used **for reception only**. Follow your country's laws on listening to radio frequencies.
+- The Wi-Fi security tools (audit, rogue access points, man in the middle, port scan) are meant for **your own networks** or those you are allowed to test.
+- "Unknown trackers" and "Jamming and spoofing" are there to **protect you**, not to track or disrupt others.
+
+---
+
+## 🛠️ Build
 
 ```bash
-./gradlew :app:assembleDebug        # APK de debug
-./gradlew :app:testDebugUnitTest    # tests (Robolectric) et captures d'écran
+./gradlew :app:assembleDebug        # debug APK
+./gradlew :app:testDebugUnitTest    # tests (Robolectric) and screenshots
 ./gradlew :app:lintDebug            # lint
 ```
 
-Il faut un JDK récent et le SDK Android (API 37). Les scripts `scripts/` servent à récupérer les polices et à générer la carte du monde.
+You need a recent JDK and the Android SDK (API 37). The `scripts/` folder fetches the fonts and generates the world map.
 
-### 🚀 Publier une version
+### 🌍 Translations
 
-1. Mettre à jour `versionCode` et `versionName` dans `app/build.gradle.kts`.
-2. Écrire le tag dans `.github/release-version` (par ex. `v1.3`) et les notes dans `.github/release-notes/v1.3.md`.
-   Les notes sont en anglais (c'est ce qu'affiche GitHub), suivies de chaque traduction dans un commentaire HTML : `<!-- fr`, les notes en français, puis `-->`. L'application montre celle qui correspond à la langue du téléphone, sinon l'anglais.
-3. Pousser sur `main` : le workflow GitHub Actions construit l'APK signé et crée la release avec `AllRadioTools-v1.3.apk`.
+English is the default language (`app/src/main/res/values/strings.xml`); each translation lives in its own folder, such as `values-fr/`. Every text the app shows goes through these files, including plurals.
 
-Le workflow a besoin des secrets `KEYSTORE_BASE64`, `KEYSTORE_PASSWORD`, `KEY_ALIAS` et `KEY_PASSWORD`.
+### 🚀 Publishing a release
+
+1. Update `versionCode` and `versionName` in `app/build.gradle.kts`.
+2. Write the tag in `.github/release-version` (e.g. `v1.3`) and the notes in `.github/release-notes/v1.3.md`.
+   The notes are in English (that's what GitHub shows), followed by each translation in an HTML comment: `<!-- fr`, the French notes, then `-->`. The app shows the one matching the phone's language, otherwise English.
+3. Push to `main`: the GitHub Actions workflow builds the signed APK and creates the release with `AllRadioTools-v1.3.apk`.
+
+The workflow needs the `KEYSTORE_BASE64`, `KEYSTORE_PASSWORD`, `KEY_ALIAS` and `KEY_PASSWORD` secrets. Editing a notes file later updates the published release automatically.
 
 ---
 
-## 🙏 Remerciements
+## 🙏 Thanks
 
-- [@cloudflare/speedtest](https://github.com/cloudflare/speedtest), le moteur open source de speed.cloudflare.com, porté pour le test de débit.
-- [AirGuard](https://github.com/seemoo-lab/AirGuard) (SEEMOO, TU Darmstadt) pour la détection des traqueurs.
-- [gr-lora_sdr](https://github.com/tapparelj/gr-lora_sdr) (EPFL) et [Meshtastic](https://meshtastic.org) pour la couche LoRa et le protocole.
-- [rs1729/RS](https://github.com/rs1729/RS) pour les formats de sondes.
-- Google [GNSS Measurement Tools](https://github.com/google/gps-measurement-tools) pour le calcul des pseudodistances.
-- Roboto Flex, Google Sans Flex et Material Symbols pour l'interface.
+- [@cloudflare/speedtest](https://github.com/cloudflare/speedtest), the open source engine behind speed.cloudflare.com, ported for the speed test.
+- [AirGuard](https://github.com/seemoo-lab/AirGuard) (SEEMOO, TU Darmstadt) for tracker detection.
+- [gr-lora_sdr](https://github.com/tapparelj/gr-lora_sdr) (EPFL) and [Meshtastic](https://meshtastic.org) for the LoRa layer and the protocol.
+- [rs1729/RS](https://github.com/rs1729/RS) for the radiosonde formats.
+- Google [GNSS Measurement Tools](https://github.com/google/gps-measurement-tools) for the pseudorange computation.
+- Roboto Flex, Google Sans Flex and Material Symbols for the interface.
