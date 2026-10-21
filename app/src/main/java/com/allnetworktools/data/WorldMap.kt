@@ -8,6 +8,8 @@ import kotlin.math.cos
 import kotlin.math.sin
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import com.allnetworktools.R
+import com.allnetworktools.util.S
 
 /** A country outline: rings of (lon, lat) pairs in degrees, stored flat as [lon0, lat0, lon1, lat1, …]. */
 class Country(val name: String, val rings: List<FloatArray>) {
@@ -65,24 +67,24 @@ object WorldMap {
 
     /** Rough ocean name for points outside every country. */
     fun oceanAt(lat: Double, lon: Double): String = when {
-        lat < -60 -> "Océan Austral"
-        lat > 66 -> "Océan Arctique"
+        lat < -60 -> S(R.string.southern_ocean)
+        lat > 66 -> S(R.string.arctic_ocean)
         // Enclosed and marginal seas first: the broad ocean boxes below would swallow them.
-        lat in 48.5..51.3 && lon in -5.5..2.0 -> "La Manche"
-        lat in 51.0..61.0 && lon in -4.0..9.0 -> "Mer du Nord"
-        lat in 53.5..66.0 && lon in 9.0..30.5 -> "Mer Baltique"
-        lat in 43.0..48.5 && lon in -10.0..-1.0 -> "Golfe de Gascogne"
-        lat in 61.0..66.0 && lon in -5.0..15.0 -> "Mer de Norvège"
-        lat in 40.5..47.0 && lon in 27.0..42.0 -> "Mer Noire"
-        lat in 36.5..47.5 && lon in 46.5..55.0 -> "Mer Caspienne"
-        lat in 30.0..46.0 && lon in -6.0..36.5 -> "Mer Méditerranée"
-        lat in 12.0..30.0 && lon in 32.0..44.0 -> "Mer Rouge"
-        lat in 23.5..30.5 && lon in 47.5..57.0 -> "Golfe Persique"
-        lon in 20.0..146.0 && lat < 25 && !(lon > 100 && lat > 0) -> "Océan Indien"
-        lat >= 0 && lon in -100.0..-5.0 && !(lon < -80 && lat < 9) -> "Océan Atlantique"
-        lat < 0 && lon in -68.0..20.0 -> "Océan Atlantique"
-        lat >= 0 && lon in -5.0..15.0 -> "Océan Atlantique"
-        else -> "Océan Pacifique"
+        lat in 48.5..51.3 && lon in -5.5..2.0 -> S(R.string.english_channel)
+        lat in 51.0..61.0 && lon in -4.0..9.0 -> S(R.string.north_sea)
+        lat in 53.5..66.0 && lon in 9.0..30.5 -> S(R.string.baltic_sea)
+        lat in 43.0..48.5 && lon in -10.0..-1.0 -> S(R.string.bay_of_biscay)
+        lat in 61.0..66.0 && lon in -5.0..15.0 -> S(R.string.norwegian_sea)
+        lat in 40.5..47.0 && lon in 27.0..42.0 -> S(R.string.black_sea)
+        lat in 36.5..47.5 && lon in 46.5..55.0 -> S(R.string.caspian_sea)
+        lat in 30.0..46.0 && lon in -6.0..36.5 -> S(R.string.mediterranean_sea)
+        lat in 12.0..30.0 && lon in 32.0..44.0 -> S(R.string.red_sea)
+        lat in 23.5..30.5 && lon in 47.5..57.0 -> S(R.string.persian_gulf)
+        lon in 20.0..146.0 && lat < 25 && !(lon > 100 && lat > 0) -> S(R.string.indian_ocean)
+        lat >= 0 && lon in -100.0..-5.0 && !(lon < -80 && lat < 9) -> S(R.string.atlantic_ocean)
+        lat < 0 && lon in -68.0..20.0 -> S(R.string.atlantic_ocean)
+        lat >= 0 && lon in -5.0..15.0 -> S(R.string.atlantic_ocean)
+        else -> S(R.string.pacific_ocean)
     }
 }
 

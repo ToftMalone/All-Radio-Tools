@@ -48,8 +48,10 @@ import com.allnetworktools.ui.theme.cs
 import com.allnetworktools.ui.theme.gs
 import com.allnetworktools.ui.theme.rf
 import com.allnetworktools.ui.tools.mono
+import com.allnetworktools.R
+import com.allnetworktools.util.S
 
-enum class NameMode(val label: String) { All("Tous"), Named("Avec nom"), Unnamed("Sans nom") }
+enum class NameMode(val label: String) { All(S(R.string.all)), Named(S(R.string.with_name)), Unnamed(S(R.string.unnamed)) }
 
 /** RSSI slider floor: at this value the RSSI filter is off. */
 const val RssiOff = -100
@@ -125,7 +127,7 @@ fun BleSearchBar(f: BleFilterState, onOpenSheet: () -> Unit) {
         ) {
             Symbol(Sym.Search, size = 22.dp, tint = cs.onSurfaceVariant)
             Box(Modifier.weight(1f)) {
-                if (f.text.isEmpty()) Text("Nom, modèle ou adresse", style = rf(15, 20), color = cs.onSurfaceVariant)
+                if (f.text.isEmpty()) Text(S(R.string.name_model_or_address), style = rf(15, 20), color = cs.onSurfaceVariant)
                 BasicTextField(
                     f.text, { f.text = it }, Modifier.fillMaxWidth(), singleLine = true,
                     textStyle = rf(15, 20).copy(color = cs.onSurface), cursorBrush = SolidColor(acc.accent),
@@ -174,10 +176,10 @@ fun BleSearchBar(f: BleFilterState, onOpenSheet: () -> Unit) {
 fun BleActiveFilters(f: BleFilterState, onOpen: () -> Unit) {
     val items = buildList {
         if (f.nameMode != NameMode.All) add(f.nameMode.label to { f.nameMode = NameMode.All })
-        f.rawPattern?.let { add("Données 0x$it" to { f.raw = "" }) }
+        f.rawPattern?.let { add(S(R.string.data_0x, it) to { f.raw = "" }) }
         if (f.minRssi > RssiOff) add("RSSI ≥ ${com.allnetworktools.util.fmt(f.minRssi)}" to { f.minRssi = RssiOff })
-        f.exclude.forEach { v -> add("Sans ${v.label}" to { f.exclude = f.exclude - v }) }
-        f.include.forEach { v -> add("${v.label} uniquement" to { f.include = f.include - v }) }
+        f.exclude.forEach { v -> add(S(R.string.without, v.label) to { f.exclude = f.exclude - v }) }
+        f.include.forEach { v -> add(S(R.string.only, v.label) to { f.include = f.include - v }) }
     }
     if (items.isEmpty()) return
     val acc = AntTheme.accent
@@ -203,11 +205,11 @@ fun BleFilterSheet(f: BleFilterState, matching: Int, total: Int, onDismiss: () -
     ModalBottomSheet(onDismissRequest = onDismiss, containerColor = cs.surfaceContainerLow) {
         Column(Modifier.padding(start = 20.dp, end = 20.dp, bottom = 24.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Text("Filtres", Modifier.weight(1f), style = gs(24, 30, 500))
+                Text(S(R.string.filters), Modifier.weight(1f), style = gs(24, 30, 500))
                 Text("$matching / $total", style = rf(14, 20, 600, tnum = true), color = cs.onSurfaceVariant)
             }
             Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                Text("Données d'annonce brutes", style = rf(14, 20, 600), color = acc.accent)
+                Text(S(R.string.raw_advertising_data), style = rf(14, 20, 600), color = acc.accent)
                 Row(
                     Modifier.fillMaxWidth().height(52.dp).clip(RoundedCornerShape(16.dp)).background(cs.surfaceContainerHigh).padding(horizontal = 16.dp),
                     verticalAlignment = Alignment.CenterVertically,
@@ -223,39 +225,39 @@ fun BleFilterSheet(f: BleFilterState, matching: Int, total: Int, onDismiss: () -
                     if (f.raw.isNotEmpty()) Box(Modifier.size(32.dp).clip(CircleShape).clickable { f.raw = "" }, contentAlignment = Alignment.Center) { Symbol(Sym.Cancel, size = 20.dp, tint = cs.onSurfaceVariant) }
                 }
                 Text(
-                    if (f.rawInvalid) "Hexadécimal uniquement (0-9, A-F)" else "Suite d'octets recherchée dans le paquet (ex. FF4C00 : données fabricant Apple)",
+                    if (f.rawInvalid) S(R.string.hexadecimal_only_0_9_a_f) else S(R.string.byte_sequence_searched_in_the_packet),
                     style = rf(12, 16), color = if (f.rawInvalid) cs.error else cs.onSurfaceVariant,
                 )
             }
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text("Exclure", style = rf(14, 20, 600), color = acc.accent)
+                Text(S(R.string.exclude), style = rf(14, 20, 600), color = acc.accent)
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     BleVendor.entries.forEach { v -> AntFilterChip(v.label, v in f.exclude, { f.toggleExclude(v) }, cs.errorContainer, cs.onErrorContainer) }
                 }
             }
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text("Inclure uniquement", style = rf(14, 20, 600), color = acc.accent)
+                Text(S(R.string.include_only), style = rf(14, 20, 600), color = acc.accent)
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     BleVendor.entries.forEach { v -> AntFilterChip(v.label, v in f.include, { f.toggleInclude(v) }) }
                 }
             }
             Column {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text("RSSI minimum", Modifier.weight(1f), style = rf(14, 20, 600), color = acc.accent)
-                    Text(if (f.minRssi <= RssiOff) "Tous" else "≥ ${com.allnetworktools.util.fmt(f.minRssi)} dBm", style = rf(14, 20, 600, tnum = true))
+                    Text(S(R.string.minimum_rssi), Modifier.weight(1f), style = rf(14, 20, 600), color = acc.accent)
+                    Text(if (f.minRssi <= RssiOff) S(R.string.all) else "≥ ${com.allnetworktools.util.fmt(f.minRssi)} dBm", style = rf(14, 20, 600, tnum = true))
                 }
                 Slider(
                     f.minRssi.toFloat(), { f.minRssi = it.toInt() }, valueRange = RssiOff.toFloat()..-30f, steps = 13,
                     colors = SliderDefaults.colors(thumbColor = acc.accent, activeTrackColor = acc.accent),
                 )
                 Row {
-                    Text("−100 (tous)", Modifier.weight(1f), style = rf(11, 14), color = cs.onSurfaceVariant)
-                    Text("−30 dBm (très proche)", style = rf(11, 14), color = cs.onSurfaceVariant)
+                    Text(S(R.string.n_100_all), Modifier.weight(1f), style = rf(11, 14), color = cs.onSurfaceVariant)
+                    Text(S(R.string.n_30_dbm_very_close), style = rf(11, 14), color = cs.onSurfaceVariant)
                 }
             }
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                PillButton("Réinitialiser", { f.reset() }, Modifier.weight(1f), icon = Sym.RestartAlt, height = 48.dp, outlined = true, bg = acc.accent)
-                PillButton("Afficher $matching", onDismiss, Modifier.weight(1f), icon = Sym.Check, height = 48.dp, bg = acc.accent, fg = acc.onAccent)
+                PillButton(S(R.string.reset), { f.reset() }, Modifier.weight(1f), icon = Sym.RestartAlt, height = 48.dp, outlined = true, bg = acc.accent)
+                PillButton(S(R.string.show, matching), onDismiss, Modifier.weight(1f), icon = Sym.Check, height = 48.dp, bg = acc.accent, fg = acc.onAccent)
             }
         }
     }

@@ -7,6 +7,8 @@ import kotlin.math.cos
 import kotlin.math.exp
 import kotlin.math.log10
 import kotlin.math.sin
+import com.allnetworktools.R
+import com.allnetworktools.util.S
 
 /** What a station's RDS data told so far. */
 data class RdsInfo(
@@ -47,10 +49,10 @@ object Rds {
     }
 
     val PTY = listOf(
-        "Aucun", "Infos", "Actualité", "Info pratique", "Sport", "Éducation", "Fiction", "Culture", "Sciences", "Divers", "Pop", "Rock",
-        "Variété douce", "Classique léger", "Classique", "Autre musique", "Météo", "Économie", "Jeunesse", "Société", "Religion",
-        "Libre antenne", "Voyages", "Loisirs", "Jazz", "Country", "Musique nationale", "Oldies", "Folk", "Documentaire",
-        "Test d'alarme", "Alarme",
+        S(R.string.none), S(R.string.news), S(R.string.current_affairs), S(R.string.information), "Sport", S(R.string.education), "Fiction", "Culture", S(R.string.science), S(R.string.varied), "Pop", "Rock",
+        S(R.string.soft_music), S(R.string.light_classical), S(R.string.classic), S(R.string.other_music), S(R.string.weather), S(R.string.finance), S(R.string.children_s), S(R.string.social_affairs), "Religion",
+        S(R.string.phone_in), S(R.string.travel), S(R.string.leisure), "Jazz", "Country", S(R.string.national_music), "Oldies", "Folk", S(R.string.documentary),
+        S(R.string.alarm_test), S(R.string.alarm),
     )
 }
 

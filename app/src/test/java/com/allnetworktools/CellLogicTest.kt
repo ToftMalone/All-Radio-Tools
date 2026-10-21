@@ -19,7 +19,7 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 
 @RunWith(RobolectricTestRunner::class)
-@Config(sdk = [35])
+@Config(sdk = [35], qualifiers = "fr")
 class CellLogicTest {
     @Test fun nrRssiIsEstimatedFromRsrpAndRsrq() {
         // RSSI = RSRP + 10·log10(20) − RSRQ

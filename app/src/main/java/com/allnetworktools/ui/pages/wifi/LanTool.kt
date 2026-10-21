@@ -61,6 +61,8 @@ import com.allnetworktools.util.fmt
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import com.allnetworktools.R
+import com.allnetworktools.util.S
 
 class LanController(private val scope: CoroutineScope, private val scanner: LanScanner) {
     var phase by mutableStateOf(Phase.Idle)
@@ -117,14 +119,14 @@ fun LanTool(c: LanController, conn: WifiConnection?, onDevice: (String) -> Unit)
     val subnet = c.subnet.ifEmpty { conn?.ipv4?.let { "${it.substringBeforeLast('.')}.0/${(conn.prefix ?: 24).coerceIn(24, 30)}" } ?: "—" }
     PageColumn {
         if (c.phase == Phase.Error) {
-            ToolError(Sym.WifiOff, "Aucun réseau local", "Connectez-vous à un réseau Wi-Fi pour scanner ses appareils.", "Réessayer", start)
+            ToolError(Sym.WifiOff, S(R.string.no_local_network), S(R.string.connect_to_a_wi_fi_network_2), S(R.string.retry), start)
         }
         HeroCard {
             Row(verticalAlignment = Alignment.Top) {
                 Column(Modifier.weight(1f)) {
                     Text(subnet, style = gs(26, 32, 500))
                     Text(
-                        listOfNotNull(conn?.ssid, conn?.gateway?.let { "passerelle $it" }).joinToString(" · ").ifEmpty { "Réseau local" },
+                        listOfNotNull(conn?.ssid, conn?.gateway?.let { S(R.string.gateway_2, it) }).joinToString(" · ").ifEmpty { S(R.string.local_network) },
                         Modifier.graphicsLayer { alpha = 0.85f }, style = rf(13, 18),
                     )
                 }
@@ -135,18 +137,18 @@ fun LanTool(c: LanController, conn: WifiConnection?, onDevice: (String) -> Unit)
                     Row(Modifier.padding(top = 18.dp), verticalAlignment = Alignment.Bottom) {
                         HeroMetric(c.scanned.toString(), "/ ${c.total}", 52)
                         Box(Modifier.weight(1f))
-                        Text("${c.devices.size} trouvés", Modifier.padding(bottom = 8.dp), style = rf(13, 18, 600))
+                        Text(S(R.string.found_2, c.devices.size), Modifier.padding(bottom = 8.dp), style = rf(13, 18, 600))
                     }
                     ProgressBar(c.scanned / c.total.toFloat().coerceAtLeast(1f), Modifier.padding(top = 10.dp), track = cs.surface)
-                    Text("Sondes ICMP / TCP · mDNS à l'écoute", Modifier.padding(top = 8.dp).graphicsLayer { alpha = 0.85f }, style = mono(12, 16))
+                    Text(S(R.string.icmp_tcp_probes_mdns_listening), Modifier.padding(top = 8.dp).graphicsLayer { alpha = 0.85f }, style = mono(12, 16))
                 }
                 Phase.Results -> {
                     HeroMetric(c.devices.size.toString(), "appareils", 52, Modifier.padding(top = 18.dp))
-                    Text("Scan terminé en ${fmt(c.durationMs / 1000f, 1)} s · ICMP, TCP, mDNS", Modifier.graphicsLayer { alpha = 0.85f }, style = rf(13, 18))
+                    Text(S(R.string.scan_finished_in_s_icmp_tcp, fmt(c.durationMs / 1000f, 1)), Modifier.graphicsLayer { alpha = 0.85f }, style = rf(13, 18))
                 }
                 else -> {
                     FlowRow(Modifier.padding(top = 16.dp), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                        listOf("ICMP", "TCP", "mDNS", "DNS inverse").forEach {
+                        listOf("ICMP", "TCP", "mDNS", S(R.string.reverse_dns)).forEach {
                             Box(Modifier.height(28.dp).clip(RoundedCornerShape(8.dp)).background(cs.surface).padding(horizontal = 10.dp), contentAlignment = Alignment.Center) {
                                 Text(it, style = rf(12, 16, 500), color = cs.onSurface)
                             }
@@ -155,16 +157,16 @@ fun LanTool(c: LanController, conn: WifiConnection?, onDevice: (String) -> Unit)
                 }
             }
             val b = when (c.phase) {
-                Phase.Running -> ToolButton("Arrêter", Sym.Stop, BtnKind.Outline) { c.stop() }
-                Phase.Results, Phase.Empty -> ToolButton("Relancer le scan", Sym.Refresh, BtnKind.Outline, start)
-                else -> ToolButton("Lancer le scan", Sym.PlayArrow, BtnKind.Big, start)
+                Phase.Running -> ToolButton(S(R.string.stop), Sym.Stop, BtnKind.Outline) { c.stop() }
+                Phase.Results, Phase.Empty -> ToolButton(S(R.string.restart_the_scan), Sym.Refresh, BtnKind.Outline, start)
+                else -> ToolButton(S(R.string.start_the_scan), Sym.PlayArrow, BtnKind.Big, start)
             }
             ToolButtons(b, modifier = Modifier.padding(top = 16.dp))
         }
         if (c.phase == Phase.Results) {
             val cats = c.devices.map { it.kind.third }.distinct()
             Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                AntFilterChip("Tous", c.filter == null, { c.filter = null })
+                AntFilterChip(S(R.string.all), c.filter == null, { c.filter = null })
                 LanCategory.entries.filter { it in cats }.forEach { cat -> AntFilterChip(cat.label, c.filter == cat, { c.filter = cat }) }
             }
         }
@@ -175,7 +177,7 @@ fun LanTool(c: LanController, conn: WifiConnection?, onDevice: (String) -> Unit)
             }
         }
         if (c.phase == Phase.Empty) {
-            ToolEmpty(Sym.DevicesOther, "Aucun autre appareil", "Seul cet appareil répond. Le réseau isole peut-être ses clients (Wi-Fi invité, isolation AP).", "Relancer le scan", start)
+            ToolEmpty(Sym.DevicesOther, S(R.string.no_other_device), S(R.string.only_this_device_answers_the_network), S(R.string.restart_the_scan), start)
         }
     }
 }

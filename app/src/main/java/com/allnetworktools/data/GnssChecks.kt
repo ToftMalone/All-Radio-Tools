@@ -4,6 +4,8 @@ import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.math.sqrt
+import com.allnetworktools.R
+import com.allnetworktools.util.S
 
 enum class Verdict { Unknown, Ok, Warn, Alert }
 
@@ -72,7 +74,7 @@ class GnssIntegrity {
         val base = baselineCn0
         val drop = if (strong != null && base != null) base - strong else null
         checks += IntegrityCheck(
-            "Niveau des signaux",
+            S(R.string.signal_level),
             when {
                 strong == null -> if (listed.size >= 6) Verdict.Alert else Verdict.Unknown
                 drop!! >= 10 -> Verdict.Alert
@@ -80,91 +82,91 @@ class GnssIntegrity {
                 else -> Verdict.Ok
             },
             when {
-                strong == null && listed.size >= 6 -> "${listed.size} satellites au-dessus de l'horizon mais aucun n'est capté"
-                strong == null -> "Aucun satellite capté pour l'instant"
-                else -> "Moyenne des 4 plus forts : ${fmt1(strong)} dB-Hz (référence ${fmt1(base!!)})"
+                strong == null && listed.size >= 6 -> S(R.string.satellites_above_the_horizon_but_none, listed.size)
+                strong == null -> S(R.string.no_satellite_received_yet)
+                else -> S(R.string.average_of_the_4_strongest_db, fmt1(strong), fmt1(base!!))
             },
         )
         // 2. Automatic gain control.
         val agcDrops = s.agc.mapNotNull { a -> agcBaseline["${a.constellation}-${(a.carrierHz / 1e6).toInt()}"]?.let { it - a.levelDb } }
         val agcDrop = agcDrops.maxOrNull()
         checks += IntegrityCheck(
-            "Gain d'entrée (AGC)",
+            S(R.string.input_gain_agc),
             when {
                 agcDrop == null -> Verdict.Unknown
                 agcDrop >= 8 -> Verdict.Alert
                 agcDrop >= 4 -> Verdict.Warn
                 else -> Verdict.Ok
             },
-            if (agcDrop == null) "Ce téléphone ne publie pas son AGC" else "Baisse de ${fmt1(maxOf(0.0, agcDrop))} dB par rapport au début : un brouilleur fait baisser le gain",
+            if (agcDrop == null) S(R.string.this_phone_does_not_publish_its) else S(R.string.down_db_since_the_start_a, fmt1(maxOf(0.0, agcDrop))),
         )
         // 3. Share of the sky that should be heard but is not.
         val lost = if (listed.isEmpty()) null else listed.count { it.cn0 <= 0f }.toDouble() / listed.size
         checks += IntegrityCheck(
-            "Satellites perdus",
+            S(R.string.lost_satellites),
             when {
                 lost == null || listed.size < 4 -> Verdict.Unknown
                 lost >= 0.8 -> Verdict.Alert
                 lost >= 0.5 -> Verdict.Warn
                 else -> Verdict.Ok
             },
-            if (lost == null) "Pas encore de satellites au-dessus de 15°" else "${listed.count { it.cn0 <= 0f }} sur ${listed.size} satellites hauts ne sont pas captés",
+            if (lost == null) S(R.string.no_satellite_above_15_yet) else S(R.string.of_high_satellites_are_not_received, listed.count { it.cn0 <= 0f }, listed.size),
         )
         // 4. Signals too alike: a single transmitter on the ground.
         val spread = stdDev(tracked.map { it.cn0.toDouble() })
         val corr = correlation(tracked.map { it.elevation.toDouble() }, tracked.map { it.cn0.toDouble() })
         checks += IntegrityCheck(
-            "Signaux trop semblables",
+            S(R.string.signals_too_alike),
             when {
                 tracked.size < 6 -> Verdict.Unknown
                 spread!! < 1.5 && (strong ?: 0.0) > 38 -> Verdict.Alert
                 spread < 2.5 && (corr ?: 1.0) < 0.1 -> Verdict.Warn
                 else -> Verdict.Ok
             },
-            if (tracked.size < 6) "Il faut au moins 6 satellites captés" else
-                "Écart entre satellites ${fmt1(spread!!)} dB, lien avec l'élévation ${corr?.let { fmt2(it) } ?: "—"} (un vrai ciel : > 3 dB et lien positif)",
+            if (tracked.size < 6) S(R.string.at_least_6_received_satellites_are) else
+                S(R.string.spread_between_satellites_db_link_with, fmt1(spread!!), corr?.let { fmt2(it) } ?: "—"),
         )
         // 5. Impossible jumps.
         checks += IntegrityCheck(
-            "Sauts de position",
+            S(R.string.position_jumps),
             when {
                 lastFix == null -> Verdict.Unknown
                 maxJumpMps > 340 -> Verdict.Alert
                 maxJumpMps > 70 -> Verdict.Warn
                 else -> Verdict.Ok
             },
-            if (lastFix == null) "Pas encore de position" else "Vitesse apparente maximale ${fmt1(maxJumpMps * 3.6)} km/h",
+            if (lastFix == null) S(R.string.no_position_yet) else S(R.string.highest_apparent_speed_km_h, fmt1(maxJumpMps * 3.6)),
         )
         // 6. Agreement with the network position.
         val netDist = if (s.lat != null && s.lon != null && s.networkLat != null && s.networkLon != null) haversine(s.lat, s.lon, s.networkLat, s.networkLon) else null
         val tol = maxOf(1000.0, 3.0 * (s.networkAccuracyM ?: 0f))
         checks += IntegrityCheck(
-            "Accord avec le réseau",
+            S(R.string.agreement_with_the_network),
             when {
                 netDist == null -> Verdict.Unknown
                 netDist > 5 * tol -> Verdict.Alert
                 netDist > tol -> Verdict.Warn
                 else -> Verdict.Ok
             },
-            if (netDist == null) "Il faut une position GNSS et une position réseau (Wi-Fi, antennes)" else "La position réseau est à ${if (netDist >= 1000) fmt1(netDist / 1000) + " km" else "${netDist.toInt()} m"}",
+            if (netDist == null) S(R.string.a_gnss_position_and_a_network) else S(R.string.the_network_position_is_away, if (netDist >= 1000) fmt1(netDist / 1000) + " km" else "${netDist.toInt()} m"),
         )
         // 7. GNSS time against the phone's network-synchronised clock.
         val dt = s.timeOffsetMs
         checks += IntegrityCheck(
-            "Heure des satellites",
+            S(R.string.satellite_time),
             when {
                 dt == null -> Verdict.Unknown
                 abs(dt) > 10_000 -> Verdict.Alert
                 abs(dt) > 2_000 -> Verdict.Warn
                 else -> Verdict.Ok
             },
-            if (dt == null) "Pas encore d'heure GNSS" else "Écart avec l'horloge du téléphone : ${fmt1(dt / 1000)} s",
+            if (dt == null) S(R.string.no_gnss_time_yet) else S(R.string.offset_from_the_phone_s_clock, fmt1(dt / 1000)),
         )
         // 8. Location simulated by an app.
         checks += IntegrityCheck(
-            "Position simulée",
+            S(R.string.simulated_position),
             if (s.mock) Verdict.Alert else if (s.lat == null) Verdict.Unknown else Verdict.Ok,
-            if (s.mock) "Android signale une position fictive, fournie par une application" else "Position fournie par la puce GNSS",
+            if (s.mock) S(R.string.android_reports_a_mock_location_supplied) else S(R.string.position_from_the_gnss_chip),
         )
         val jam = worst(checks.take(3))
         val spoof = worst(checks.drop(3))
@@ -211,8 +213,8 @@ class GnssIntegrity {
     }
 }
 
-private fun fmt1(v: Double) = String.format(java.util.Locale.FRANCE, "%.1f", v)
-private fun fmt2(v: Double) = String.format(java.util.Locale.FRANCE, "%.2f", v)
+private fun fmt1(v: Double) = String.format(java.util.Locale.getDefault(), "%.1f", v)
+private fun fmt2(v: Double) = String.format(java.util.Locale.getDefault(), "%.2f", v)
 
 /** Compass check: the GNSS course while walking or driving against the magnetic heading corrected by the declination. */
 class CompassCheck {

@@ -43,8 +43,17 @@ android {
     testOptions {
         unitTests {
             isIncludeAndroidResources = true
-            all { it.systemProperty("screenshots.dir", layout.buildDirectory.dir("screenshots").get().asFile.path) }
+            all {
+                it.systemProperty("screenshots.dir", layout.buildDirectory.dir("screenshots").get().asFile.path)
+                // Plain JVM tests read the French texts (Robolectric ones get them from their locale qualifier).
+                it.systemProperty("ant.strings", file("src/main/res/values-fr").path)
+                it.jvmArgs("-Duser.language=fr", "-Duser.country=FR")
+            }
         }
+    }
+    androidResources {
+        // Lists the app's languages for Android 13+'s per-app language setting.
+        generateLocaleConfig = true
     }
     buildFeatures {
         compose = true

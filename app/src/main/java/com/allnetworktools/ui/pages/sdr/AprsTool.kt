@@ -90,6 +90,9 @@ import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Overlay
+import com.allnetworktools.R
+import com.allnetworktools.util.S
+import com.allnetworktools.util.P
 
 /** Immutable copy of a station, object or item for the UI. */
 data class AprsInfo(
@@ -145,14 +148,14 @@ class AprsController(private val repo: SdrRepository, private val scope: Corouti
 
     fun start(device: SdrDevice) {
         if (running || starting) return
-        val hz = parsedHz() ?: run { error = "Fréquence invalide (100 à 1000 MHz)"; return }
+        val hz = parsedHz() ?: run { error = S(R.string.invalid_frequency_100_to_1000_mhz); return }
         onAcquire()
         error = null
         starting = true
         scope.launch {
             try {
-                if (!repo.hasPermission(device) && !repo.requestPermission(device)) { error = "Accès USB au HackRF refusé"; return@launch }
-                val r = withContext(Dispatchers.IO) { repo.open(device) } ?: run { error = "Impossible d'ouvrir le HackRF"; return@launch }
+                if (!repo.hasPermission(device) && !repo.requestPermission(device)) { error = S(R.string.usb_access_to_the_hackrf_refused); return@launch }
+                val r = withContext(Dispatchers.IO) { repo.open(device) } ?: run { error = S(R.string.could_not_open_the_hackrf); return@launch }
                 val lna = lnaGain
                 val vga = vgaGain
                 val withAmp = amp
@@ -161,7 +164,7 @@ class AprsController(private val repo: SdrRepository, private val scope: Corouti
                     r.setSampleRate(rate, HackRf.filterFor(rate)) && r.setFrequency(hz - rate / 4) &&
                         r.setLnaGain(lna) && r.setVgaGain(vga) && r.setAmp(withAmp)
                 }
-                if (!ok) { r.close(); error = "Le HackRF n'a pas accepté la configuration"; return@launch }
+                if (!ok) { r.close(); error = S(R.string.the_hackrf_did_not_accept_the); return@launch }
                 radio = r
                 listeningHz = hz
                 startPipeline(r)
@@ -235,10 +238,10 @@ class AprsController(private val repo: SdrRepository, private val scope: Corouti
 private fun kmh(kn: Double) = "${(kn * 1.852).roundToInt()} km/h"
 
 private fun weatherLine(w: AprsWeather): String = listOfNotNull(
-    w.tempF?.let { "%.0f °C".format(Locale.FRANCE, (it - 32) / 1.8) },
+    w.tempF?.let { "%.0f °C".format(Locale.getDefault(), (it - 32) / 1.8) },
     w.humidity?.let { "$it %" },
-    w.pressureHpa?.let { "%.0f hPa".format(Locale.FRANCE, it) },
-    w.windMph?.let { "vent ${(it * 1.609).roundToInt()} km/h" + (w.windDir?.let { d -> " à $d°" } ?: "") },
+    w.pressureHpa?.let { "%.0f hPa".format(Locale.getDefault(), it) },
+    w.windMph?.let { S(R.string.wind_km_h, (it * 1.609).roundToInt()) + (w.windDir?.let { d -> " à $d°" } ?: "") },
 ).joinToString(" · ")
 
 @Composable
@@ -260,25 +263,25 @@ fun AprsTool(vm: MainViewModel) {
         HeroCard {
             Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                 Text("${c.stations.size}", style = gs(56, 60, 500, -1.5f, tnum = true))
-                Text(plural(c.stations.size, "station", "stations"), Modifier.padding(bottom = 8.dp), style = rf(18, 24, 500))
+                Text(P(R.plurals.p_stations, c.stations.size), Modifier.padding(bottom = 8.dp), style = rf(18, 24, 500))
             }
             Text(
-                "${withPos.size} ${plural(withPos.size, "positionnée", "positionnées")} · ${c.listeningHz?.let { "%.3f".format(Locale.FRANCE, it / 1e6) } ?: c.frequencyMhz.replace('.', ',')} MHz",
+                S(R.string.mhz, withPos.size, P(R.plurals.p_located_positionnee, withPos.size), c.listeningHz?.let { "%.3f".format(Locale.getDefault(), it / 1e6) } ?: c.frequencyMhz.replace('.', ',')),
                 style = rf(14, 20),
             )
             Row(Modifier.padding(top = 12.dp)) {
                 when {
                     c.error != null -> HeroChip(c.error!!, AntTheme.net.poor)
-                    c.starting -> HeroChip("Démarrage du HackRF…", AntTheme.net.fair, blink = true)
-                    c.running -> HeroChip("${c.totalPackets} ${plural(c.totalPackets, "paquet", "paquets")} reçus", AntTheme.net.good, blink = true)
-                    device == null -> HeroChip("Aucun HackRF branché", AntTheme.net.poor)
-                    else -> HeroChip("${device!!.name} prêt", AntTheme.net.good)
+                    c.starting -> HeroChip(S(R.string.starting_the_hackrf), AntTheme.net.fair, blink = true)
+                    c.running -> HeroChip(S(R.string.received_2, c.totalPackets, P(R.plurals.p_packets, c.totalPackets)), AntTheme.net.good, blink = true)
+                    device == null -> HeroChip(S(R.string.no_hackrf_plugged_in), AntTheme.net.poor)
+                    else -> HeroChip(S(R.string.ready, device!!.name), AntTheme.net.good)
                 }
             }
         }
         val d = device
-        if (c.running || c.starting) StartButton("Arrêter", Sym.Stop) { c.stop() }
-        else StartButton("Lancer la réception", Sym.PlayArrow, enabled = d != null && c.parsedHz() != null) { d?.let(c::start) }
+        if (c.running || c.starting) StartButton(S(R.string.stop), Sym.Stop) { c.stop() }
+        else StartButton(S(R.string.start_receiving), Sym.PlayArrow, enabled = d != null && c.parsedHz() != null) { d?.let(c::start) }
         AprsMap(c, withPos, me, Modifier.fillMaxWidth().aspectRatio(1f).clip(RoundedCornerShape(24.dp)))
         if (c.stations.isNotEmpty()) {
             SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)) {
@@ -290,13 +293,13 @@ fun AprsTool(vm: MainViewModel) {
         }
         SectionCard {
             Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                Text("Fréquence", style = rf(13, 18, 600), color = cs.onSurfaceVariant)
+                Text(S(R.string.frequency), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    listOf("144.800" to "Europe", "144.390" to "Amérique du Nord", "145.825" to "Satellites (ISS)").forEach { (f, l) ->
+                    listOf("144.800" to "Europe", "144.390" to S(R.string.north_america), "145.825" to S(R.string.satellites_iss)).forEach { (f, l) ->
                         AntFilterChip("${f.replace('.', ',')} · $l", c.frequencyMhz == f, { if (c.frequencyMhz != f && !c.starting) { if (c.running) c.stop(); c.frequencyMhz = f } })
                     }
                 }
-                if (!c.running) HostInputField(c.frequencyMhz, { c.frequencyMhz = it }, "Fréquence (MHz)", Sym.Stream, keyboardType = KeyboardType.Decimal)
+                if (!c.running) HostInputField(c.frequencyMhz, { c.frequencyMhz = it }, S(R.string.frequency_mhz), Sym.Stream, keyboardType = KeyboardType.Decimal)
                 GainSettings(
                     c.lnaGain, listOf(16, 24, 32, 40), { c.lnaGain = it; c.applyGains() },
                     c.vgaGain, listOf(20, 30, 40), { c.vgaGain = it; c.applyGains() },
@@ -308,11 +311,11 @@ fun AprsTool(vm: MainViewModel) {
             Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 Symbol(Sym.Info, size = 22.dp, tint = AntTheme.accent.accent)
                 Text(
-                    "L'APRS est le réseau de balises des radioamateurs : position, route, vitesse, météo, état. " +
-                        "Les stations émettent toutes les 1 à 30 minutes, il faut donc laisser tourner quelques minutes. " +
-                        "Les messages texte entre opérateurs ne sont jamais affichés" +
-                        (if (heardMessages > 0) " ($heardMessages ${plural(heardMessages, "message entendu", "messages entendus")}, ignoré${if (heardMessages > 1) "s" else ""})" else "") +
-                        ". Réception seule.",
+                    S(R.string.aprs_is_the_radio_amateurs_beacon) +
+                        S(R.string.stations_transmit_every_1_to_30) +
+                        S(R.string.text_messages_between_operators_are_never) +
+                        (if (heardMessages > 0) P(R.plurals.p_messages_heard_ignored, heardMessages, heardMessages) else "") +
+                        S(R.string.receive_only_2),
                     style = rf(13, 18), color = cs.onSurfaceVariant,
                 )
             }
@@ -336,22 +339,22 @@ private fun StationRow(s: AprsInfo, me: Pair<Double, Double>?, selected: Boolean
         Column(Modifier.weight(1f)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(s.title, Modifier.weight(1f), style = rf(15, 20, 600), maxLines = 1, overflow = TextOverflow.Ellipsis)
-                Text(if (s.ageS < 60) "il y a ${s.ageS} s" else "il y a ${s.ageS / 60} min", style = rf(12, 16, tnum = true), color = cs.onSurfaceVariant)
+                Text(if (s.ageS < 60) S(R.string.s_ago, s.ageS) else S(R.string.min_ago, s.ageS / 60), style = rf(12, 16, tnum = true), color = cs.onSurfaceVariant)
             }
             Text(
                 s.weather?.let(::weatherLine)?.takeIf { it.isNotEmpty() }
                     ?: listOfNotNull(
-                        Aprs.symbolName(s.symbol), s.speedKn?.takeIf { it > 0.5 }?.let(::kmh), s.courseDeg?.takeIf { s.moving }?.let { "cap $it°" },
+                        Aprs.symbolName(s.symbol), s.speedKn?.takeIf { it > 0.5 }?.let(::kmh), s.courseDeg?.takeIf { s.moving }?.let { S(R.string.heading, it) },
                         s.altitudeM?.let { "${it.roundToInt()} m" },
-                    ).joinToString(" · ").ifEmpty { s.status ?: "Pas de position" },
+                    ).joinToString(" · ").ifEmpty { s.status ?: S(R.string.no_position) },
                 style = rf(13, 18, tnum = true), maxLines = 1, overflow = TextOverflow.Ellipsis,
             )
             Text(
                 listOfNotNull(
                     (s.comment ?: s.status)?.takeIf { s.weather == null || s.comment != null },
                     s.via?.let { "via $it" },
-                    if (me != null && s.lat != null && s.lon != null) "%.0f km".format(Locale.FRANCE, AdsbTracker.haversineKm(me.first, me.second, s.lat, s.lon)) else null,
-                    "${s.packets} ${plural(s.packets, "paquet", "paquets")}",
+                    if (me != null && s.lat != null && s.lon != null) "%.0f km".format(Locale.getDefault(), AdsbTracker.haversineKm(me.first, me.second, s.lat, s.lon)) else null,
+                    "${s.packets} ${P(R.plurals.p_packets, s.packets)}",
                 ).joinToString(" · "),
                 style = rf(12, 16, tnum = true), color = cs.onSurfaceVariant, maxLines = 2, overflow = TextOverflow.Ellipsis,
             )
@@ -486,7 +489,7 @@ private fun AprsMap(c: AprsController, stations: List<AprsInfo>, me: Pair<Double
             if (me != null) IconCircleButton(Sym.MyLocation, { map.controller.animateTo(GeoPoint(me.first, me.second), 10.0, 600L) }, size = 36.dp, bg = bg, tint = AntTheme.accent.accent)
         }
         Text(
-            "© les contributeurs d'OpenStreetMap",
+            S(R.string.openstreetmap_contributors),
             Modifier.align(Alignment.BottomStart).padding(6.dp).clip(RoundedCornerShape(6.dp)).background(cs.surface.copy(alpha = 0.85f)).padding(horizontal = 6.dp, vertical = 2.dp),
             style = rf(10, 12), color = cs.onSurfaceVariant,
         )

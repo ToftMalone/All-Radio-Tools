@@ -59,6 +59,8 @@ import com.allnetworktools.util.fmt
 import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.sin
+import com.allnetworktools.R
+import com.allnetworktools.util.S
 
 private val Dirs = listOf("N", "NE", "E", "SE", "S", "SO", "O", "NO")
 
@@ -92,16 +94,16 @@ fun GnssDashboard(vm: MainViewModel) {
                     verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp),
                 ) {
                     BlinkDot(roles.onAccent, 8.dp)
-                    Text(if (g.fix == FixType.None) "Recherche…" else g.fix.label, style = rf(13, 18, 700), color = roles.onAccent)
+                    Text(if (g.fix == FixType.None) S(R.string.searching) else g.fix.label, style = rf(13, 18, 700), color = roles.onAccent)
                 }
                 Row(Modifier.padding(top = 10.dp), verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                     Text(g.used.size.toString(), style = gs(52, 56, 500, -1.5f, tnum = true), color = roles.onContainer)
                     Text("/ ${g.visible.size}", Modifier.padding(bottom = 6.dp), style = rf(18, 24, 500), color = roles.onContainer)
                 }
-                Text("satellites utilisés / visibles", style = rf(13, 18), color = roles.onContainer)
+                Text(S(R.string.satellites_used_visible), style = rf(13, 18), color = roles.onContainer)
             }
             Column(horizontalAlignment = Alignment.End) {
-                HeroLine("Précision", loc?.takeIf { it.hasAccuracy() }?.let { "±${distanceText(it.accuracy, units, 1)}" } ?: "—")
+                HeroLine(S(R.string.accuracy), loc?.takeIf { it.hasAccuracy() }?.let { "±${distanceText(it.accuracy, units, 1)}" } ?: "—")
                 HeroLine("HDOP", g.hdop?.let { fmt(it, 1) } ?: "—")
                 HeroLine("TTFF", g.ttffMs?.let { "${fmt(it / 1000f, 1)} s" } ?: "—")
             }
@@ -112,7 +114,7 @@ fun GnssDashboard(vm: MainViewModel) {
                 com.allnetworktools.ui.components.Symbol(Sym.ChevronRight, size = 22.dp, tint = cs.onSurfaceVariant)
             }
             if (g.visible.isEmpty()) {
-                Text("Recherche de satellites… Placez-vous à l'extérieur, ciel dégagé.", Modifier.padding(top = 6.dp), style = rf(14, 20), color = cs.onSurfaceVariant)
+                Text(S(R.string.searching_for_satellites_go_outside_under), Modifier.padding(top = 6.dp), style = rf(14, 20), color = cs.onSurfaceVariant)
             } else {
                 FlowRow(Modifier.padding(top = 10.dp), horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                     Constellation.entries.forEach { c ->
@@ -129,7 +131,7 @@ fun GnssDashboard(vm: MainViewModel) {
                         }
                     }
                 }
-                Text("Sky plot et carte du monde dans l'outil Ciel GNSS", Modifier.padding(top = 10.dp), style = rf(12, 16), color = cs.onSurfaceVariant)
+                Text(S(R.string.sky_plot_and_world_map_in), Modifier.padding(top = 10.dp), style = rf(12, 16), color = cs.onSurfaceVariant)
             }
         }
         TileGrid(
@@ -137,14 +139,14 @@ fun GnssDashboard(vm: MainViewModel) {
                 "Latitude" to (loc?.let { coord(it.latitude, "N", "S") } ?: "—"),
                 "Longitude" to (loc?.let { coord(it.longitude, "E", "O") } ?: "—"),
                 "Altitude" to (loc?.takeIf { it.hasAltitude() }?.let { "${distanceText(it.altitude.toFloat(), units)} (WGS84)" } ?: "—"),
-                "Précision" to (loc?.takeIf { it.hasAccuracy() }?.let { "±${distanceText(it.accuracy, units, 1)}" } ?: "—"),
-                "Vitesse" to (loc?.takeIf { it.hasSpeed() }?.let { speedText(it.speed, units) } ?: "—"),
+                S(R.string.accuracy) to (loc?.takeIf { it.hasAccuracy() }?.let { "±${distanceText(it.accuracy, units, 1)}" } ?: "—"),
+                S(R.string.speed) to (loc?.takeIf { it.hasSpeed() }?.let { speedText(it.speed, units) } ?: "—"),
                 "Cap" to (loc?.takeIf { it.hasBearing() }?.let { "${Math.round(it.bearing)}°" } ?: "—"),
             ),
         ) { (k, v), mod -> ValueTile(k, v, mod) }
         if (g.satellites.isNotEmpty()) {
             SectionCard {
-                CardHeader("C/N0 par satellite") { Text("dB-Hz", style = rf(12, 16), color = cs.onSurfaceVariant) }
+                CardHeader(S(R.string.c_n0_per_satellite)) { Text("dB-Hz", style = rf(12, 16), color = cs.onSurfaceVariant) }
                 val bars = g.satellites.sortedWith(compareByDescending<Satellite> { it.used }.thenByDescending { it.cn0 }).take(16)
                 Cn0Bars(bars)
             }

@@ -79,6 +79,8 @@ import com.allnetworktools.ui.theme.Sym
 import com.allnetworktools.ui.theme.cs
 import com.allnetworktools.ui.theme.gs
 import com.allnetworktools.ui.theme.rf
+import com.allnetworktools.R
+import com.allnetworktools.util.S
 
 data class TopAction(val icon: String, val onClick: () -> Unit)
 
@@ -98,11 +100,11 @@ fun TopBarAction(icon: String, onClick: () -> Unit) {
 private fun titles(nav: NavState): Pair<String, String> {
     val net = nav.network ?: Network.Wifi
     return when (val p = nav.page) {
-        Page.Changelog -> "Journal des nouveautés" to "Paramètres"
-        Page.Settings -> "Paramètres" to "All Radio Tools ${com.allnetworktools.BuildConfig.VERSION_NAME}"
+        Page.Changelog -> S(R.string.changelog) to S(R.string.settings)
+        Page.Settings -> S(R.string.settings) to "All Radio Tools ${com.allnetworktools.BuildConfig.VERSION_NAME}"
         Page.Dashboard -> net.label to "Dashboard"
-        Page.Tools -> net.label to "Outils"
-        is Page.ToolPage -> p.tool.title to "${net.label} · Outils"
+        Page.Tools -> net.label to S(R.string.tools)
+        is Page.ToolPage -> p.tool.title to S(R.string.tools_2, net.label)
         Page.Home -> "" to ""
     }
 }
@@ -224,8 +226,8 @@ private fun PageBody(vm: MainViewModel, net: Network, page: Page) {
                 val modern = android.os.Build.VERSION.SDK_INT >= 33
                 com.allnetworktools.ui.pages.wifi.WifiDirectTool(
                     vm.wifiDirect, if (modern) perms.nearby else perms.location,
-                    if (modern) "Android demande l'autorisation « Appareils à proximité » pour rechercher les appareils Wi-Fi Direct."
-                    else "Android demande l'autorisation de localisation pour rechercher les appareils Wi-Fi Direct.",
+                    if (modern) S(R.string.android_needs_the_nearby_devices_permission)
+                    else S(R.string.android_needs_the_location_permission_to),
                 ) { actions.request(if (modern) PermGroup.Nearby else PermGroup.Location) }
             }
             Tool.Gatt, Tool.Paired, Tool.Tracker, Tool.UnknownTrackers, Tool.TrackerDetail, Tool.Beacons, Tool.Earbuds -> BtToolRoute(vm, page)
@@ -274,7 +276,7 @@ private fun WifiToolRoute(vm: MainViewModel, page: Page.ToolPage) {
             val (label, icon) = when {
                 conn != null -> listOfNotNull(conn.ssid, standardLabel(conn.standard)?.first, "${conn.band.label} GHz").joinToString(" · ") to Sym.Wifi
                 cell != null -> listOfNotNull(cell.operator, cell.techLabel).joinToString(" · ") to Sym.CellBars3
-                else -> "Réseau actif" to Sym.Public
+                else -> S(R.string.active_network) to Sym.Public
             }
             SpeedTool(tools.speed, label, icon)
         }
@@ -361,7 +363,7 @@ private fun ComingSoon(tool: Tool) {
         StatePanel(
             icon = tool.icon,
             title = tool.title,
-            message = "Cet outil arrive dans la prochaine version de l'application.",
+            message = S(R.string.this_tool_arrives_in_the_next),
             primary = null,
         )
     }

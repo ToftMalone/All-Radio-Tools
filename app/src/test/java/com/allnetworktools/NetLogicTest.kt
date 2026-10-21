@@ -15,7 +15,7 @@ import org.robolectric.annotation.Config
 
 /** Parser checks against real responses captured from Cloudflare's resolver. */
 @RunWith(RobolectricTestRunner::class)
-@Config(sdk = [35])
+@Config(sdk = [35], qualifiers = "fr")
 class NetLogicTest {
     private fun b64(s: String) = Base64.getDecoder().decode(s)
 

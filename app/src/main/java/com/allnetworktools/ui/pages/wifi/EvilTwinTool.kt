@@ -47,6 +47,9 @@ import com.allnetworktools.ui.tools.mono
 import com.allnetworktools.ui.tools.ToolEmpty
 import com.allnetworktools.util.plural
 import kotlinx.coroutines.flow.StateFlow
+import com.allnetworktools.R
+import com.allnetworktools.util.S
+import com.allnetworktools.util.P
 
 /** Remembers when each BSSID and SSID was first seen while the tool is used. */
 class EvilTwinController {
@@ -95,11 +98,11 @@ fun EvilTwinTool(
     val reports = if (ssid == null) emptyList() else EvilTwin.analyze(scan.orEmpty().filter { it.ssid == ssid }, c.firstSeen, c.ssidFirstSeen, System.currentTimeMillis())
     PageColumn {
         if (!locationOk) {
-            ToolError(Sym.LocationOff, "Localisation requise", "Android exige la position précise, et la localisation activée, pour lire les résultats d'un scan Wi-Fi.", "Autoriser", onFixLocation)
+            ToolError(Sym.LocationOff, S(R.string.location_needed_2), S(R.string.android_requires_precise_location_with_location), S(R.string.allow), onFixLocation)
             return@PageColumn
         }
         if (ssid == null) {
-            ToolEmpty(Sym.WifiOff, "Pas de Wi-Fi", "Connectez-vous à un réseau Wi-Fi : l'outil vérifie les points d'accès qui diffusent son nom.", null)
+            ToolEmpty(Sym.WifiOff, S(R.string.no_wi_fi), S(R.string.connect_to_a_wi_fi_network), null)
             return@PageColumn
         }
         val mine = reports.firstOrNull()
@@ -108,19 +111,19 @@ fun EvilTwinTool(
         HeroCard {
             Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                 Text(suspicious.toString(), style = gs(56, 60, 500, -1.5f, tnum = true))
-                Text(plural(suspicious, "point d'accès suspect", "points d'accès suspects"), Modifier.padding(bottom = 8.dp), style = rf(18, 24, 500))
+                Text(P(R.plurals.p_suspicious_access_points, suspicious), Modifier.padding(bottom = 8.dp), style = rf(18, 24, 500))
             }
             val aps = mine?.aps?.size ?: 0
             Text(
-                "$aps ${plural(aps, "point d'accès diffuse", "points d'accès diffusent")} « $ssid »",
+                "$aps ${P(R.plurals.p_access_points_broadcast, aps)} « $ssid »",
                 style = rf(14, 20),
             )
             Row(Modifier.padding(top = 12.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 when {
-                    scan == null -> HeroChip("Scan en cours…", AntTheme.net.fair, blink = true)
-                    connectedFlagged -> HeroChip("Votre point d'accès est suspect", cs.error, blink = true)
-                    mine != null -> HeroChip("Votre réseau : ${mine.risk.label.lowercase()}", riskColor(mine.risk))
-                    else -> HeroChip("Analyse à chaque scan", AntTheme.net.good)
+                    scan == null -> HeroChip(S(R.string.scanning_2), AntTheme.net.fair, blink = true)
+                    connectedFlagged -> HeroChip(S(R.string.your_access_point_is_suspicious), cs.error, blink = true)
+                    mine != null -> HeroChip(S(R.string.your_network, mine.risk.label.lowercase()), riskColor(mine.risk))
+                    else -> HeroChip(S(R.string.analysed_at_each_scan), AntTheme.net.good)
                 }
             }
         }
@@ -129,7 +132,7 @@ fun EvilTwinTool(
                 Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                     Symbol(Sym.Warning, size = 24.dp, filled = true, tint = cs.onErrorContainer)
                     Text(
-                        "Vous êtes connecté à ${conn!!.bssid?.uppercase()}, signalé ci-dessous. Si vous n'êtes pas sûr de ce point d'accès, déconnectez-vous ou n'utilisez que des sites en HTTPS et un VPN.",
+                        S(R.string.you_are_connected_to_flagged_below, conn!!.bssid?.uppercase()),
                         style = rf(13, 18), color = cs.onErrorContainer,
                     )
                 }
@@ -140,9 +143,9 @@ fun EvilTwinTool(
             Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 Symbol(Sym.Info, size = 22.dp, tint = AntTheme.accent.accent)
                 Text(
-                    "Un faux point d'accès (« evil twin ») reprend le nom d'un réseau connu. Un scan ne peut pas prouver qu'un point d'accès est faux : " +
-                        "l'outil compare la sécurité annoncée, le fabricant (préfixe de l'adresse), les adresses générées par logiciel et les apparitions soudaines. " +
-                        "Les réseaux maillés et les box d'un même opérateur sont normalement cohérents entre eux.",
+                    S(R.string.a_fake_access_point_evil_twin) +
+                        S(R.string.the_tool_compares_the_advertised_security) +
+                        S(R.string.mesh_networks_and_the_routers_of),
                     style = rf(13, 18), color = cs.onSurfaceVariant,
                 )
             }
@@ -156,7 +159,7 @@ private fun ReportCard(r: SsidReport, conn: WifiConnection?) {
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             Column(Modifier.weight(1f)) {
                 Text(r.ssid, style = rf(16, 22, 600), maxLines = 1)
-                Text("${r.aps.size} ${plural(r.aps.size, "point d'accès", "points d'accès")}" + if (r.ssid == conn?.ssid) " · votre réseau" else "", style = rf(12, 16), color = cs.onSurfaceVariant)
+                Text("${r.aps.size} ${P(R.plurals.p_access_points, r.aps.size)}" + if (r.ssid == conn?.ssid) S(R.string.your_network_2) else "", style = rf(12, 16), color = cs.onSurfaceVariant)
             }
             TechChip(r.risk.label, riskColor(r.risk), if (r.risk == TwinRisk.High) cs.onError else Color.White)
         }
@@ -177,11 +180,11 @@ private fun ReportCard(r: SsidReport, conn: WifiConnection?) {
                 Row(Modifier.fillMaxWidth().padding(vertical = 8.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                     Box(Modifier.size(8.dp).clip(CircleShape).background(flagged?.let { riskColor(it.risk) } ?: cs.outlineVariant))
                     Column(Modifier.weight(1f)) {
-                        Text(ap.bssid.uppercase() + if (connected) "  · connecté" else "", style = mono(12.5f, 18, if (connected) 700 else 500))
+                        Text(ap.bssid.uppercase() + if (connected) S(R.string.connected_3) else "", style = mono(12.5f, 18, if (connected) 700 else 500))
                         Text(
                             listOfNotNull(
                                 ap.security, "${ap.band.label} GHz · ch ${ap.channel}",
-                                if (EvilTwin.locallyAdministered(ap.bssid)) "adresse locale" else null,
+                                if (EvilTwin.locallyAdministered(ap.bssid)) S(R.string.local_address) else null,
                             ).joinToString(" · "),
                             style = rf(12, 16), color = cs.onSurfaceVariant, maxLines = 1,
                         )

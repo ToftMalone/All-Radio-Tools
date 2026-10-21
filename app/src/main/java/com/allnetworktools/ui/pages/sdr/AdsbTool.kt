@@ -84,6 +84,9 @@ import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Overlay
+import com.allnetworktools.R
+import com.allnetworktools.util.S
+import com.allnetworktools.util.P
 
 /** Immutable copy of an aircraft for the UI. */
 data class Plane(
@@ -130,8 +133,8 @@ class AdsbController(private val repo: SdrRepository, private val scope: Corouti
         starting = true
         scope.launch {
             try {
-                if (!repo.hasPermission(device) && !repo.requestPermission(device)) { error = "Accès USB au HackRF refusé"; return@launch }
-                val r = withContext(Dispatchers.IO) { repo.open(device) } ?: run { error = "Impossible d'ouvrir le HackRF"; return@launch }
+                if (!repo.hasPermission(device) && !repo.requestPermission(device)) { error = S(R.string.usb_access_to_the_hackrf_refused); return@launch }
+                val r = withContext(Dispatchers.IO) { repo.open(device) } ?: run { error = S(R.string.could_not_open_the_hackrf); return@launch }
                 val lna = lnaGain
                 val vga = vgaGain
                 val withAmp = amp
@@ -139,7 +142,7 @@ class AdsbController(private val repo: SdrRepository, private val scope: Corouti
                     r.setSampleRate(2_000_000, HackRf.filterFor(2_000_000)) && r.setFrequency(1_090_000_000) &&
                         r.setLnaGain(lna) && r.setVgaGain(vga) && r.setAmp(withAmp)
                 }
-                if (!ok) { r.close(); error = "Le HackRF n'a pas accepté la configuration"; return@launch }
+                if (!ok) { r.close(); error = S(R.string.the_hackrf_did_not_accept_the); return@launch }
                 radio = r
                 startPipeline(r)
                 running = true
@@ -212,8 +215,8 @@ class AdsbController(private val repo: SdrRepository, private val scope: Corouti
     }
 }
 
-private fun ft(v: Int) = "%,d ft".format(Locale.FRANCE, v).replace(' ', ' ') + " (" + "%,d m".format(Locale.FRANCE, (v * 0.3048).roundToInt()).replace(' ', ' ') + ")"
-private fun kt(v: Double) = "${v.roundToInt()} kt (${(v * 1.852).roundToInt()} km/h)"
+private fun ft(v: Int) = "%,d ft".format(Locale.getDefault(), v).replace(' ', ' ') + " (" + "%,d m".format(Locale.getDefault(), (v * 0.3048).roundToInt()).replace(' ', ' ') + ")"
+private fun kt(v: Double) = S(R.string.kt_km_h, v.roundToInt(), (v * 1.852).roundToInt())
 
 @Composable
 fun AdsbTool(vm: MainViewModel) {
@@ -222,7 +225,7 @@ fun AdsbTool(vm: MainViewModel) {
     if (c.planes.isNotEmpty()) TopBarAction(Sym.Download) {
         val snapshot = c.planes
         val now = System.currentTimeMillis()
-        actions.saveFile("avions-${Export.stamp(now)}.csv", "text/csv") { Export.planes(snapshot, now).toByteArray() }
+        actions.saveFile(S(R.string.aircraft_csv, Export.stamp(now)), "text/csv") { Export.planes(snapshot, now).toByteArray() }
     }
     val device by vm.sdrDevice.collectAsStateWithLifecycle()
     // The phone's position only centres the map and gives distances; it is read while this screen is open.
@@ -234,22 +237,22 @@ fun AdsbTool(vm: MainViewModel) {
         HeroCard {
             Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                 Text("${c.planes.size}", style = gs(56, 60, 500, -1.5f, tnum = true))
-                Text(plural(c.planes.size, "avion", "avions"), Modifier.padding(bottom = 8.dp), style = rf(18, 24, 500))
+                Text(P(R.plurals.p_aircraft, c.planes.size), Modifier.padding(bottom = 8.dp), style = rf(18, 24, 500))
             }
-            Text("${withPos.size} ${plural(withPos.size, "positionné", "positionnés")} · 1090 MHz", style = rf(14, 20))
+            Text("${withPos.size} ${P(R.plurals.p_located, withPos.size)} · 1090 MHz", style = rf(14, 20))
             Row(Modifier.padding(top = 12.dp)) {
                 when {
                     c.error != null -> HeroChip(c.error!!, AntTheme.net.poor)
-                    c.starting -> HeroChip("Démarrage du HackRF…", AntTheme.net.fair, blink = true)
-                    c.running -> HeroChip("${c.messagesPerSecond} messages/s", AntTheme.net.good, blink = true)
-                    device == null -> HeroChip("Aucun HackRF branché", AntTheme.net.poor)
-                    else -> HeroChip("${device!!.name} prêt", AntTheme.net.good)
+                    c.starting -> HeroChip(S(R.string.starting_the_hackrf), AntTheme.net.fair, blink = true)
+                    c.running -> HeroChip(S(R.string.messages_s, c.messagesPerSecond), AntTheme.net.good, blink = true)
+                    device == null -> HeroChip(S(R.string.no_hackrf_plugged_in), AntTheme.net.poor)
+                    else -> HeroChip(S(R.string.ready, device!!.name), AntTheme.net.good)
                 }
             }
         }
         val d = device
-        if (c.running || c.starting) StartButton("Arrêter", Sym.Stop) { c.stop() }
-        else StartButton("Lancer la réception", Sym.PlayArrow, enabled = d != null) { d?.let(c::start) }
+        if (c.running || c.starting) StartButton(S(R.string.stop), Sym.Stop) { c.stop() }
+        else StartButton(S(R.string.start_receiving), Sym.PlayArrow, enabled = d != null) { d?.let(c::start) }
         AdsbMap(c, withPos, me, Modifier.fillMaxWidth().aspectRatio(1f).clip(RoundedCornerShape(24.dp)))
         if (c.planes.isNotEmpty()) {
             SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)) {
@@ -272,9 +275,9 @@ fun AdsbTool(vm: MainViewModel) {
             Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 Symbol(Sym.Info, size = 22.dp, tint = AntTheme.accent.accent)
                 Text(
-                    "Les avions diffusent en clair leur identité, altitude, vitesse et position (ADS-B) pour la sécurité aérienne. " +
-                        "Une position demande deux trames (paire et impaire) en moins de 10 s. Antenne verticale dégagée : jusqu'à 100–200 km. " +
-                        "Réception seule.",
+                    S(R.string.aircraft_broadcast_their_identity_altitude_speed) +
+                        S(R.string.a_position_needs_two_frames_even) +
+                        S(R.string.receive_only),
                     style = rf(13, 18), color = cs.onSurfaceVariant,
                 )
             }
@@ -297,7 +300,7 @@ private fun PlaneRow(p: Plane, me: Pair<Double, Double>?, selected: Boolean, onC
         Column(Modifier.weight(1f)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(p.callsign ?: p.hex, Modifier.weight(1f), style = rf(15, 20, 600), maxLines = 1)
-                Text(if (p.ageS <= 1) "à l'instant" else "il y a ${p.ageS} s", style = rf(12, 16, tnum = true), color = cs.onSurfaceVariant)
+                Text(if (p.ageS <= 1) S(R.string.just_now) else S(R.string.s_ago, p.ageS), style = rf(12, 16, tnum = true), color = cs.onSurfaceVariant)
             }
             Text(
                 listOfNotNull(p.altitudeFt?.let(::ft), p.speedKt?.let(::kt)).joinToString(" · ").ifEmpty { "ICAO ${p.hex}" },
@@ -306,9 +309,9 @@ private fun PlaneRow(p: Plane, me: Pair<Double, Double>?, selected: Boolean, onC
             Text(
                 listOfNotNull(
                     if (p.callsign != null) "ICAO ${p.hex}" else null,
-                    p.headingDeg?.let { "cap ${it.roundToInt()}°" },
+                    p.headingDeg?.let { S(R.string.heading, it.roundToInt()) },
                     p.verticalFtMin?.let { if (it > 64) "↑ $it ft/min" else if (it < -64) "↓ ${-it} ft/min" else "palier" },
-                    if (me != null && p.lat != null && p.lon != null) "%.0f km".format(Locale.FRANCE, AdsbTracker.haversineKm(me.first, me.second, p.lat, p.lon)) else null,
+                    if (me != null && p.lat != null && p.lon != null) "%.0f km".format(Locale.getDefault(), AdsbTracker.haversineKm(me.first, me.second, p.lat, p.lon)) else null,
                 ).joinToString(" · "),
                 style = rf(12, 16, tnum = true), color = cs.onSurfaceVariant,
             )
@@ -442,7 +445,7 @@ private fun AdsbMap(c: AdsbController, planes: List<Plane>, me: Pair<Double, Dou
             if (me != null) IconCircleButton(Sym.MyLocation, { map.controller.animateTo(GeoPoint(me.first, me.second), 9.0, 600L) }, size = 36.dp, bg = bg, tint = AntTheme.accent.accent)
         }
         Text(
-            "© les contributeurs d'OpenStreetMap",
+            S(R.string.openstreetmap_contributors),
             Modifier.align(Alignment.BottomStart).padding(6.dp).clip(RoundedCornerShape(6.dp)).background(cs.surface.copy(alpha = 0.85f)).padding(horizontal = 6.dp, vertical = 2.dp),
             style = rf(10, 12), color = cs.onSurfaceVariant,
         )

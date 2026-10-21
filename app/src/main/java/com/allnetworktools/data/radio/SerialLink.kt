@@ -19,6 +19,8 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
+import com.allnetworktools.R
+import com.allnetworktools.util.S
 
 /** A byte pipe to a radio: a USB programming cable in the app, a simulated radio in the tests. */
 interface SerialLink : java.io.Closeable {
@@ -146,6 +148,6 @@ open class RadioCableRepository(private val context: Context) {
         0x067b -> "Prolific PL2303"
         0x10c4 -> "Silicon Labs CP210x"
         0x1a86 -> "WCH CH340"
-        else -> d.productName ?: "USB-série"
+        else -> d.productName ?: S(R.string.usb_serial)
     }
 }

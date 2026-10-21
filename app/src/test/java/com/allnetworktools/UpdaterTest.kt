@@ -13,7 +13,7 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 
 @RunWith(RobolectricTestRunner::class)
-@Config(sdk = [35])
+@Config(sdk = [35], qualifiers = "fr")
 class UpdaterTest {
     private val updater = AppUpdater(ApplicationProvider.getApplicationContext(), "0.1")
 

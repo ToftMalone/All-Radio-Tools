@@ -1,6 +1,8 @@
 package com.allnetworktools.data
 
 import kotlin.math.pow
+import com.allnetworktools.R
+import com.allnetworktools.util.S
 
 enum class BeaconKind(val label: String) { IBeacon("iBeacon"), EddystoneUid("Eddystone UID"), EddystoneUrl("Eddystone URL"), EddystoneEid("Eddystone EID"), AltBeacon("AltBeacon") }
 
@@ -74,7 +76,7 @@ object Beacons {
                 val b = d.u16be(20)
                 return Beacon(
                     BeaconKind.AltBeacon, "$id · $a / $b",
-                    listOf("Identifiant" to id, "ID 2" to a.toString(), "ID 3" to b.toString(), "Fabricant" to "0x%04X".format(company)),
+                    listOf(S(R.string.identifier) to id, "ID 2" to a.toString(), "ID 3" to b.toString(), S(R.string.manufacturer) to "0x%04X".format(company)),
                     d[22].toInt(),
                 )
             }
@@ -86,12 +88,12 @@ object Beacons {
                 0x00 -> if (d.size >= 18) {
                     val ns = hex(d, 2, 12)
                     val inst = hex(d, 12, 18)
-                    return Beacon(BeaconKind.EddystoneUid, "$ns · $inst", listOf("Espace de noms" to ns, "Instance" to inst), tx)
+                    return Beacon(BeaconKind.EddystoneUid, "$ns · $inst", listOf(S(R.string.namespace) to ns, "Instance" to inst), tx)
                 }
-                0x10 -> eddystoneUrl(d, 2)?.let { url -> return Beacon(BeaconKind.EddystoneUrl, url, listOf("Adresse" to url), tx) }
+                0x10 -> eddystoneUrl(d, 2)?.let { url -> return Beacon(BeaconKind.EddystoneUrl, url, listOf(S(R.string.address) to url), tx) }
                 0x30 -> if (d.size >= 10) {
                     val eid = hex(d, 2, 10)
-                    return Beacon(BeaconKind.EddystoneEid, eid, listOf("Identifiant éphémère" to eid), tx)
+                    return Beacon(BeaconKind.EddystoneEid, eid, listOf(S(R.string.ephemeral_identifier) to eid), tx)
                 }
             }
         }
@@ -131,7 +133,7 @@ object Earbuds {
         val d = Ad.manufacturer(ads)[0x004C] ?: return null
         if (d.size < 8 || d.u8(0) != 0x07 || d.u8(1) < 6) return null
         val model = d.u16be(3)
-        val name = BleIdentify.AirPods[model] ?: "Écouteurs Apple / Beats (0x%04X)".format(model)
+        val name = BleIdentify.AirPods[model] ?: S(R.string.apple_beats_earbuds_0x).format(model)
         val status = d.u8(5)
         val flip = (status shr 4) and 0x02 == 0
         val battery = d.u8(6)

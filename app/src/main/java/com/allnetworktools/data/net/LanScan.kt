@@ -25,8 +25,10 @@ import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
+import com.allnetworktools.R
+import com.allnetworktools.util.S
 
-enum class LanCategory(val label: String) { Network("Réseau"), Computers("Ordinateurs"), Media("Multimédia"), Home("Maison connectée"), Other("Autres") }
+enum class LanCategory(val label: String) { Network(S(R.string.network)), Computers(S(R.string.computers)), Media(S(R.string.multimedia)), Home(S(R.string.smart_home)), Other(S(R.string.others)) }
 
 data class LanDevice(
     val ip: String,
@@ -44,8 +46,8 @@ data class LanDevice(
         isSelf -> android.os.Build.MODEL
         mdnsName != null -> mdnsName
         hostname != null -> hostname.substringBefore('.')
-        isGateway -> "Passerelle"
-        else -> "Appareil inconnu"
+        isGateway -> S(R.string.gateway)
+        else -> S(R.string.unknown_device)
     }
 
     private fun has(vararg types: String) = types.any { t -> services.any { it.startsWith(t) } }
@@ -53,21 +55,21 @@ data class LanDevice(
 
     /** icon, type label, category */
     val kind: Triple<String, String, LanCategory> get() = when {
-        isGateway -> Triple(Sym.Router, "Passerelle", LanCategory.Network)
-        isSelf -> Triple(Sym.Smartphone, "Cet appareil", LanCategory.Computers)
-        has("_googlecast") -> Triple(Sym.Cast, "Lecteur multimédia", LanCategory.Media)
-        has("_airplay", "_raop") || "tv" in host -> Triple(Sym.Tv, "Téléviseur / AirPlay", LanCategory.Media)
-        has("_spotify-connect", "_sonos") -> Triple(Sym.Speaker, "Enceinte", LanCategory.Media)
-        has("_ipp", "_printer", "_pdl-datastream") || 9100 in openPorts || 631 in openPorts -> Triple(Sym.Print, "Imprimante", LanCategory.Computers)
-        has("_hap", "_hue", "_matter", "_home-assistant", "_esphomelib") || 8123 in openPorts || 1883 in openPorts -> Triple(Sym.Lightbulb, "Domotique", LanCategory.Home)
+        isGateway -> Triple(Sym.Router, S(R.string.gateway), LanCategory.Network)
+        isSelf -> Triple(Sym.Smartphone, S(R.string.this_device), LanCategory.Computers)
+        has("_googlecast") -> Triple(Sym.Cast, S(R.string.media_player), LanCategory.Media)
+        has("_airplay", "_raop") || "tv" in host -> Triple(Sym.Tv, S(R.string.tv_airplay), LanCategory.Media)
+        has("_spotify-connect", "_sonos") -> Triple(Sym.Speaker, S(R.string.speaker), LanCategory.Media)
+        has("_ipp", "_printer", "_pdl-datastream") || 9100 in openPorts || 631 in openPorts -> Triple(Sym.Print, S(R.string.printer), LanCategory.Computers)
+        has("_hap", "_hue", "_matter", "_home-assistant", "_esphomelib") || 8123 in openPorts || 1883 in openPorts -> Triple(Sym.Lightbulb, S(R.string.home_automation), LanCategory.Home)
         listOf("ps4", "ps5", "xbox", "switch", "playstation").any { it in host } -> Triple(Sym.Gamepad, "Console", LanCategory.Media)
-        has("_smb", "_afpovertcp", "_nfs") && (5000 in openPorts || 5001 in openPorts || "nas" in host || "synology" in host) -> Triple(Sym.Storage, "Stockage réseau", LanCategory.Computers)
-        62078 in openPorts || listOf("iphone", "ipad", "android", "galaxy", "pixel", "redmi", "oneplus").any { it in host } -> Triple(Sym.Smartphone, "Téléphone / tablette", LanCategory.Computers)
+        has("_smb", "_afpovertcp", "_nfs") && (5000 in openPorts || 5001 in openPorts || "nas" in host || "synology" in host) -> Triple(Sym.Storage, S(R.string.network_storage), LanCategory.Computers)
+        62078 in openPorts || listOf("iphone", "ipad", "android", "galaxy", "pixel", "redmi", "oneplus").any { it in host } -> Triple(Sym.Smartphone, S(R.string.phone_tablet), LanCategory.Computers)
         has("_companion-link", "_workstation", "_ssh", "_sftp") || 3389 in openPorts || 22 in openPorts ||
-            listOf("macbook", "imac", "laptop", "desktop", "pc-").any { it in host } -> Triple(Sym.Laptop, "Ordinateur", LanCategory.Computers)
-        445 in openPorts || 139 in openPorts -> Triple(Sym.Laptop, "Ordinateur (SMB)", LanCategory.Computers)
-        listOf("esp", "tasmota", "shelly", "tuya", "sonoff").any { it in host } -> Triple(Sym.Memory, "Module IoT", LanCategory.Home)
-        else -> Triple(Sym.DevicesOther, "Appareil", LanCategory.Other)
+            listOf("macbook", "imac", "laptop", "desktop", "pc-").any { it in host } -> Triple(Sym.Laptop, S(R.string.computer), LanCategory.Computers)
+        445 in openPorts || 139 in openPorts -> Triple(Sym.Laptop, S(R.string.computer_smb), LanCategory.Computers)
+        listOf("esp", "tasmota", "shelly", "tuya", "sonoff").any { it in host } -> Triple(Sym.Memory, S(R.string.iot_module), LanCategory.Home)
+        else -> Triple(Sym.DevicesOther, S(R.string.device_2), LanCategory.Other)
     }
 }
 

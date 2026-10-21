@@ -61,9 +61,12 @@ import com.allnetworktools.ui.tools.ProgressBar
 import com.allnetworktools.util.plural
 import java.util.Locale
 import kotlin.math.roundToLong
+import com.allnetworktools.R
+import com.allnetworktools.util.S
+import com.allnetworktools.util.P
 
 internal fun fmtMhz(hz: Long): String {
-    val s = "%.6f".format(Locale.FRANCE, hz / 1e6).trimEnd('0')
+    val s = "%.6f".format(Locale.getDefault(), hz / 1e6).trimEnd('0')
     val dec = s.substringAfter(',', "")
     return if (dec.length < 3) s + "0".repeat(3 - dec.length) else s
 }
@@ -72,10 +75,10 @@ private fun parseDecimal(s: String): Double? = s.trim().replace(',', '.').toDoub
 
 private fun summary(ch: RadioChannel): String = buildList {
     add(fmtMhz(ch.rxHz) + " MHz")
-    ch.offsetHz?.takeIf { it != 0L }?.let { add("%+.3f".format(Locale.FRANCE, it / 1e6).let { s -> "$s MHz" }) }
+    ch.offsetHz?.takeIf { it != 0L }?.let { add("%+.3f".format(Locale.getDefault(), it / 1e6).let { s -> "$s MHz" }) }
     if (ch.txTone != Tone.None) add("TX ${ch.txTone.label}")
     if (ch.rxTone != Tone.None) add("RX ${ch.rxTone.label}")
-    add(if (ch.wide) "25 kHz" else "12,5 kHz")
+    add(if (ch.wide) "25 kHz" else S(R.string.n_12_5_khz))
 }.joinToString(" · ")
 
 /** Read the memories of a handheld through its programming cable, edit them, write them back. */
@@ -97,31 +100,31 @@ fun ChannelsTool(vm: MainViewModel) {
                     Symbol(Sym.Radio, size = 28.dp, filled = true, tint = acc.onAccent)
                 }
                 Column(Modifier.weight(1f)) {
-                    Text(c.detected?.label ?: "Talkie-walkie", style = gs(22, 28, 500), maxLines = 1)
+                    Text(c.detected?.label ?: S(R.string.handheld_radio), style = gs(22, 28, 500), maxLines = 1)
                     Text(
-                        "${c.count} ${plural(c.count, "canal", "canaux")}" + (c.detected?.let { " sur ${it.slots}" } ?: "") +
-                            if (c.changed > 0 && c.count > 0) " · ${c.changed} à écrire" else "",
+                        "${c.count} ${P(R.plurals.p_channels, c.count)}" + (c.detected?.let { S(R.string.of_2, it.slots) } ?: "") +
+                            if (c.changed > 0 && c.count > 0) S(R.string.to_write, c.changed) else "",
                         style = rf(14, 20),
                     )
                 }
             }
             Row(Modifier.padding(top = 12.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                HeroChip(cable?.let { "Câble ${it.name}" } ?: "Aucun câble USB", if (cable != null) AntTheme.net.good else cs.outline)
-                if (c.detected == null && cable != null) HeroChip("Modèle reconnu à la lecture", cs.outline)
+                HeroChip(cable?.let { S(R.string.cable, it.name) } ?: S(R.string.no_usb_cable), if (cable != null) AntTheme.net.good else cs.outline)
+                if (c.detected == null && cable != null) HeroChip(S(R.string.model_recognised_when_reading), cs.outline)
             }
             if (c.busy) {
                 Text(c.phase.label, Modifier.padding(top = 14.dp), style = rf(14, 20, 600))
                 ProgressBar(c.progress, Modifier.padding(top = 8.dp))
             } else {
                 Row(Modifier.fillMaxWidth().padding(top = 16.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    PillButton("Lire", { cable?.let(c::read) }, Modifier.weight(1f), icon = Sym.Download, height = 48.dp, enabled = cable != null)
+                    PillButton(S(R.string.read), { cable?.let(c::read) }, Modifier.weight(1f), icon = Sym.Download, height = 48.dp, enabled = cable != null)
                     PillButton(
-                        "Écrire", { confirmWrite = true }, Modifier.weight(1f), icon = Sym.Upload, height = 48.dp,
+                        S(R.string.write_2), { confirmWrite = true }, Modifier.weight(1f), icon = Sym.Upload, height = 48.dp,
                         bg = cs.surface, fg = acc.accent, enabled = cable != null && (c.count > 0 || c.changed > 0),
                     )
                 }
                 if (c.canRestore) {
-                    Box(Modifier.padding(top = 4.dp)) { TextAction("Rétablir l'état d'avant l'écriture", { cable?.let(c::restore) }, trailingIcon = Sym.Undo) }
+                    Box(Modifier.padding(top = 4.dp)) { TextAction(S(R.string.restore_the_state_before_writing), { cable?.let(c::restore) }, trailingIcon = Sym.Undo) }
                 }
             }
         }
@@ -145,8 +148,8 @@ fun ChannelsTool(vm: MainViewModel) {
                 Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                     Symbol(Sym.Cable, size = 22.dp, tint = acc.accent)
                     Text(
-                        "Branchez le câble de programmation sur la prise USB-C du téléphone (avec un adaptateur OTG si besoin) et sur la prise " +
-                            "casque-micro du talkie, allumé. Vous pouvez déjà composer une liste de canaux sans le talkie.",
+                        S(R.string.plug_the_programming_cable_into_the) +
+                            S(R.string.headset_socket_of_the_radio_switched),
                         style = rf(13, 18), color = cs.onSurfaceVariant,
                     )
                 }
@@ -164,21 +167,21 @@ fun ChannelsTool(vm: MainViewModel) {
 
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             PillButton(
-                "Nouveau canal", { c.firstFree()?.let { editing = RadioChannel(it, 0, 0, "") } }, Modifier.weight(1f),
+                S(R.string.new_channel), { c.firstFree()?.let { editing = RadioChannel(it, 0, 0, "") } }, Modifier.weight(1f),
                 icon = Sym.Add, height = 44.dp, outlined = true, bg = acc.accent, enabled = c.firstFree() != null,
             )
-            PillButton("Préréglages", { presets = true }, Modifier.weight(1f), icon = Sym.PlaylistAdd, height = 44.dp, outlined = true, bg = acc.accent)
+            PillButton(S(R.string.presets), { presets = true }, Modifier.weight(1f), icon = Sym.PlaylistAdd, height = 44.dp, outlined = true, bg = acc.accent)
         }
-        if (c.count > 0 && !c.busy) TextAction("Tout effacer", { confirmClear = true }, color = cs.error, trailingIcon = Sym.Delete)
+        if (c.count > 0 && !c.busy) TextAction(S(R.string.clear_all), { confirmClear = true }, color = cs.error, trailingIcon = Sym.Delete)
 
         SectionCard {
             Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 Symbol(Sym.Info, size = 22.dp, tint = acc.accent)
                 Text(
-                    "L'application ne fait jamais émettre le talkie : elle lit et écrit sa mémoire. Seuls les canaux modifiés sont réécrits, le reste " +
-                        "(réglages, touches, DTMF) n'est pas touché, et le talkie est relu pour vérifier. Programmer est libre ; émettre ne l'est pas : " +
-                        "une licence radioamateur est nécessaire sur les bandes amateur, et le PMR446 n'accepte que des appareils homologués. " +
-                        "La liste n'est jamais enregistrée : elle disparaît à la fermeture de l'application.",
+                    S(R.string.the_app_never_makes_the_radio) +
+                        S(R.string.settings_keys_dtmf_is_untouched_and) +
+                        S(R.string.amateur_bands_need_an_amateur_radio) +
+                        S(R.string.the_list_is_never_saved_it),
                     style = rf(13, 18), color = cs.onSurfaceVariant,
                 )
             }
@@ -198,26 +201,26 @@ fun ChannelsTool(vm: MainViewModel) {
         AlertDialog(
             onDismissRequest = { confirmWrite = false },
             icon = { Symbol(Sym.Upload, size = 24.dp, tint = acc.accent) },
-            title = { Text("Écrire dans le talkie ?") },
+            title = { Text(S(R.string.write_to_the_radio)) },
             text = {
                 Text(
-                    "Le talkie va être reconnu et relu, puis ${if (c.changed > 0) "${c.changed} ${plural(c.changed, "canal modifié", "canaux modifiés")}" else "la liste"} " +
-                        "seront écrits ; les canaux du talkie absents de la liste seront effacés. Il sera ensuite relu pour vérification, " +
-                        "et vous pourrez rétablir son état précédent.",
+                    S(R.string.the_radio_will_be_recognised_and, if (c.changed > 0) "${c.changed} ${P(R.plurals.p_channels_changed, c.changed)}" else S(R.string.the_list)) +
+                        S(R.string.will_be_written_the_radio_s) +
+                        S(R.string.and_you_will_be_able_to),
                     style = rf(14, 20),
                 )
             },
-            confirmButton = { TextButton({ confirmWrite = false; cable?.let(c::write) }) { Text("Écrire") } },
-            dismissButton = { TextButton({ confirmWrite = false }) { Text("Annuler") } },
+            confirmButton = { TextButton({ confirmWrite = false; cable?.let(c::write) }) { Text(S(R.string.write_2)) } },
+            dismissButton = { TextButton({ confirmWrite = false }) { Text(S(R.string.cancel)) } },
         )
     }
     if (confirmClear) {
         AlertDialog(
             onDismissRequest = { confirmClear = false },
-            title = { Text("Effacer la liste ?") },
-            text = { Text("Les canaux de la liste affichée seront retirés. Le talkie n'est modifié qu'au moment d'écrire.", style = rf(14, 20)) },
-            confirmButton = { TextButton({ confirmClear = false; c.clearAll() }) { Text("Effacer", color = cs.error) } },
-            dismissButton = { TextButton({ confirmClear = false }) { Text("Annuler") } },
+            title = { Text(S(R.string.clear_the_list)) },
+            text = { Text(S(R.string.the_channels_of_the_displayed_list), style = rf(14, 20)) },
+            confirmButton = { TextButton({ confirmClear = false; c.clearAll() }) { Text(S(R.string.clear), color = cs.error) } },
+            dismissButton = { TextButton({ confirmClear = false }) { Text(S(R.string.cancel)) } },
         )
     }
 }
@@ -235,12 +238,12 @@ private fun ChannelRow(slot: Int, ch: RadioChannel, onClick: () -> Unit) {
             Text(ch.name.ifEmpty { fmtMhz(ch.rxHz) + " MHz" }, style = rf(16, 22, 600), maxLines = 1)
             Text(summary(ch), style = rf(12, 16), color = cs.onSurfaceVariant, maxLines = 2)
         }
-        if (!ch.transmits) TechChip("Écoute", cs.surfaceContainerHighest, cs.onSurfaceVariant)
+        if (!ch.transmits) TechChip(S(R.string.listening_4), cs.surfaceContainerHighest, cs.onSurfaceVariant)
         Symbol(Sym.ChevronRight, size = 22.dp, tint = cs.onSurfaceVariant)
     }
 }
 
-private enum class TxMode(val label: String) { Simplex("Simplex"), Shift("Décalage"), ListenOnly("Écoute seule") }
+private enum class TxMode(val label: String) { Simplex("Simplex"), Shift(S(R.string.offset)), ListenOnly(S(R.string.listen_only)) }
 
 /** Form for one memory. */
 @Composable
@@ -266,14 +269,14 @@ private fun ChannelEditor(spec: RadioLimits, initial: RadioChannel, exists: Bool
     var error by remember { mutableStateOf<String?>(null) }
 
     fun build(): RadioChannel? {
-        val mhz = parseDecimal(rx) ?: run { error = "Fréquence invalide (en MHz, par exemple 145,500)."; return null }
+        val mhz = parseDecimal(rx) ?: run { error = S(R.string.invalid_frequency_in_mhz_for_example); return null }
         val rxHz = (mhz * 1e6).roundToLong()
-        if (!spec.inBand(rxHz)) { error = "Cette fréquence est hors des bandes de réception du ${spec.label}."; return null }
+        if (!spec.inBand(rxHz)) { error = S(R.string.this_frequency_is_outside_the_s, spec.label); return null }
         val txHz = when (mode) {
             TxMode.Simplex -> rxHz
             TxMode.ListenOnly -> null
             TxMode.Shift -> {
-                val k = parseDecimal(shift) ?: run { error = "Décalage invalide (en kHz, par exemple −600)."; return null }
+                val k = parseDecimal(shift) ?: run { error = S(R.string.invalid_offset_in_khz_for_example); return null }
                 rxHz + (k * 1000).roundToLong()
             }
         }
@@ -282,35 +285,35 @@ private fun ChannelEditor(spec: RadioLimits, initial: RadioChannel, exists: Bool
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Canal ${initial.slot + 1}") },
+        title = { Text(S(R.string.channel, initial.slot + 1)) },
         text = {
             Column(Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(14.dp)) {
                 OutlinedTextField(
                     name, { name = it.uppercase().take(spec.nameLength) }, Modifier.fillMaxWidth(), singleLine = true,
-                    label = { Text("Nom (${spec.nameLength} caractères)") },
+                    label = { Text(S(R.string.name_characters, spec.nameLength)) },
                 )
                 OutlinedTextField(
                     rx, { rx = it; error = null }, Modifier.fillMaxWidth(), singleLine = true,
-                    label = { Text("Réception (MHz)") },
+                    label = { Text(S(R.string.receive_mhz)) },
                     keyboardOptions = androidx.compose.foundation.text.KeyboardOptions(keyboardType = KeyboardType.Decimal),
                 )
-                Text("Émission", style = rf(13, 18, 600), color = AntTheme.accent.accent)
+                Text(S(R.string.transmit), style = rf(13, 18, 600), color = AntTheme.accent.accent)
                 SegmentedRow(TxMode.entries.map { it to it.label }, mode, { mode = it }, Modifier.fillMaxWidth(), selectedColor = AntTheme.accent.accent, onSelectedColor = AntTheme.accent.onAccent)
                 if (mode == TxMode.Shift) {
                     OutlinedTextField(
                         shift, { shift = it; error = null }, Modifier.fillMaxWidth(), singleLine = true,
-                        label = { Text("Décalage d'émission (kHz)") },
+                        label = { Text(S(R.string.transmit_offset_khz)) },
                         keyboardOptions = androidx.compose.foundation.text.KeyboardOptions(keyboardType = KeyboardType.Decimal),
                     )
                 }
-                if (mode != TxMode.ListenOnly) ToneField("Tonalité d'émission", txTone) { txTone = it }
-                ToneField("Tonalité de réception (silencieux)", rxTone) { rxTone = it }
-                Text("Puissance", style = rf(13, 18, 600), color = AntTheme.accent.accent)
+                if (mode != TxMode.ListenOnly) ToneField(S(R.string.transmit_tone), txTone) { txTone = it }
+                ToneField(S(R.string.receive_tone_squelch), rxTone) { rxTone = it }
+                Text(S(R.string.power), style = rf(13, 18, 600), color = AntTheme.accent.accent)
                 SegmentedRow(spec.powers.map { it to it.label }, power, { power = it }, Modifier.fillMaxWidth(), selectedColor = AntTheme.accent.accent, onSelectedColor = AntTheme.accent.onAccent)
-                Text("Bande passante", style = rf(13, 18, 600), color = AntTheme.accent.accent)
-                SegmentedRow(listOf(true to "Large 25 kHz", false to "Étroite 12,5 kHz"), wide, { wide = it }, Modifier.fillMaxWidth(), selectedColor = AntTheme.accent.accent, onSelectedColor = AntTheme.accent.onAccent)
+                Text(S(R.string.bandwidth), style = rf(13, 18, 600), color = AntTheme.accent.accent)
+                SegmentedRow(listOf(true to S(R.string.wide_25_khz), false to S(R.string.narrow_12_5_khz)), wide, { wide = it }, Modifier.fillMaxWidth(), selectedColor = AntTheme.accent.accent, onSelectedColor = AntTheme.accent.onAccent)
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text("Inclus dans le balayage", Modifier.weight(1f), style = rf(15, 20))
+                    Text(S(R.string.included_in_scan), Modifier.weight(1f), style = rf(15, 20))
                     Switch(
                         scan, { scan = it },
                         colors = SwitchDefaults.colors(checkedTrackColor = AntTheme.accent.accent, checkedThumbColor = AntTheme.accent.onAccent),
@@ -319,11 +322,11 @@ private fun ChannelEditor(spec: RadioLimits, initial: RadioChannel, exists: Bool
                 error?.let { Text(it, style = rf(13, 18), color = cs.error) }
             }
         },
-        confirmButton = { TextButton({ build()?.let(onSave) }) { Text("Enregistrer") } },
+        confirmButton = { TextButton({ build()?.let(onSave) }) { Text(S(R.string.record)) } },
         dismissButton = {
             Row {
-                if (exists) TextButton(onDelete) { Text("Supprimer", color = cs.error) }
-                TextButton(onDismiss) { Text("Annuler") }
+                if (exists) TextButton(onDelete) { Text(S(R.string.delete), color = cs.error) }
+                TextButton(onDismiss) { Text(S(R.string.cancel)) }
             }
         },
     )
@@ -335,18 +338,18 @@ private fun ToneField(label: String, tone: Tone, onChange: (Tone) -> Unit) {
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Text(label, style = rf(13, 18, 600), color = AntTheme.accent.accent)
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            AntFilterChip("Aucune", tone == Tone.None, { onChange(Tone.None) })
+            AntFilterChip(S(R.string.none_2), tone == Tone.None, { onChange(Tone.None) })
             AntFilterChip("CTCSS", tone is Tone.Ctcss, { if (tone !is Tone.Ctcss) onChange(Tone.Ctcss(88.5)) })
             AntFilterChip("DCS", tone is Tone.Dcs, { if (tone !is Tone.Dcs) onChange(Tone.Dcs(23)) })
         }
         when (tone) {
             is Tone.Ctcss -> LazyRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                items(RadioTones.ctcss) { hz -> AntFilterChip("%.1f".format(Locale.FRANCE, hz), tone.hz == hz, { onChange(Tone.Ctcss(hz)) }) }
+                items(RadioTones.ctcss) { hz -> AntFilterChip("%.1f".format(Locale.getDefault(), hz), tone.hz == hz, { onChange(Tone.Ctcss(hz)) }) }
             }
             is Tone.Dcs -> {
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     AntFilterChip("Normal", !tone.inverted, { onChange(tone.copy(inverted = false)) })
-                    AntFilterChip("Inversé", tone.inverted, { onChange(tone.copy(inverted = true)) })
+                    AntFilterChip(S(R.string.reversed), tone.inverted, { onChange(tone.copy(inverted = true)) })
                 }
                 LazyRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                     items(RadioTones.dcs) { code -> AntFilterChip("%03d".format(code), tone.code == code, { onChange(tone.copy(code = code)) }) }
@@ -365,16 +368,16 @@ private fun PresetDialog(spec: RadioLimits, onAdd: (RadioPreset, Boolean) -> Pre
     val p = chosen
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(p?.title ?: "Préréglages") },
+        title = { Text(p?.title ?: S(R.string.presets)) },
         text = {
             Column(Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 when {
                     result != null -> {
                         val r = result!!
                         Text(
-                            "${r.added} ${plural(r.added, "canal ajouté", "canaux ajoutés")}" +
-                                (if (r.outOfBand > 0) ", ${r.outOfBand} hors des bandes du ${spec.label}" else "") +
-                                (if (r.noRoom > 0) ", ${r.noRoom} sans place libre" else "") + ".",
+                            "${r.added} ${P(R.plurals.p_channels_added, r.added)}" +
+                                (if (r.outOfBand > 0) S(R.string.outside_the_s_bands, r.outOfBand, spec.label) else "") +
+                                (if (r.noRoom > 0) S(R.string.with_no_free_slot, r.noRoom) else "") + ".",
                             style = rf(14, 20),
                         )
                     }
@@ -387,13 +390,13 @@ private fun PresetDialog(spec: RadioLimits, onAdd: (RadioPreset, Boolean) -> Pre
                         }
                     }
                     else -> {
-                        Text("${p.channels.size} canaux : ${p.subtitle}.", style = rf(14, 20))
+                        Text(S(R.string.channels_2, p.channels.size, p.subtitle), style = rf(14, 20))
                         Text(p.note, style = rf(13, 18), color = cs.onSurfaceVariant)
                         if (!p.alwaysListenOnly) {
                             Row(verticalAlignment = Alignment.CenterVertically) {
                                 Column(Modifier.weight(1f)) {
-                                    Text("Réception seule", style = rf(15, 20, 600))
-                                    Text("Le talkie n'émettra pas sur ces canaux", style = rf(12, 16), color = cs.onSurfaceVariant)
+                                    Text(S(R.string.receive_only_4), style = rf(15, 20, 600))
+                                    Text(S(R.string.the_radio_will_not_transmit_on), style = rf(12, 16), color = cs.onSurfaceVariant)
                                 }
                                 Switch(
                                     listenOnly, { listenOnly = it },
@@ -407,11 +410,11 @@ private fun PresetDialog(spec: RadioLimits, onAdd: (RadioPreset, Boolean) -> Pre
         },
         confirmButton = {
             when {
-                result != null -> TextButton(onDismiss) { Text("Fermer") }
-                p != null -> TextButton({ result = onAdd(p, listenOnly) }) { Text("Ajouter à la liste") }
-                else -> TextButton(onDismiss) { Text("Fermer") }
+                result != null -> TextButton(onDismiss) { Text(S(R.string.close)) }
+                p != null -> TextButton({ result = onAdd(p, listenOnly) }) { Text(S(R.string.add_to_the_list)) }
+                else -> TextButton(onDismiss) { Text(S(R.string.close)) }
             }
         },
-        dismissButton = { if (p != null && result == null) TextButton({ chosen = null }) { Text("Retour") } },
+        dismissButton = { if (p != null && result == null) TextButton({ chosen = null }) { Text(S(R.string.back)) } },
     )
 }

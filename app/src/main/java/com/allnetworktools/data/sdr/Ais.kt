@@ -4,6 +4,8 @@ import kotlin.math.PI
 import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin
+import com.allnetworktools.R
+import com.allnetworktools.util.S
 
 /** One decoded AIS message, reduced to what the app shows. Fields a message type does not carry stay null. */
 data class AisMessage(
@@ -95,32 +97,32 @@ object Ais {
     }
 
     fun shipTypeName(t: Int): String? = when (t) {
-        in 20..29 -> "Aéroglisseur"
-        30 -> "Pêche"; 31, 32 -> "Remorquage"; 33 -> "Dragage"; 34 -> "Plongée"; 35 -> "Militaire"; 36 -> "Voilier"; 37 -> "Plaisance"
-        in 40..49 -> "Engin rapide"
-        50 -> "Pilote"; 51 -> "Sauvetage"; 52 -> "Remorqueur"; 53 -> "Vedette portuaire"; 54 -> "Antipollution"
-        55 -> "Forces de l'ordre"; 58 -> "Navire médical"
-        in 60..69 -> "Passagers"
+        in 20..29 -> S(R.string.hovercraft)
+        30 -> S(R.string.fishing); 31, 32 -> S(R.string.towing); 33 -> S(R.string.dredging); 34 -> S(R.string.diving); 35 -> S(R.string.military); 36 -> S(R.string.sailing); 37 -> S(R.string.pleasure_craft)
+        in 40..49 -> S(R.string.high_speed_craft)
+        50 -> S(R.string.pilot); 51 -> S(R.string.search_and_rescue); 52 -> S(R.string.tug); 53 -> S(R.string.port_tender); 54 -> S(R.string.anti_pollution)
+        55 -> S(R.string.law_enforcement); 58 -> S(R.string.medical)
+        in 60..69 -> S(R.string.passenger)
         in 70..79 -> "Cargo"
         in 80..89 -> "Pétrolier"
-        in 90..99 -> "Autre"
+        in 90..99 -> S(R.string.other)
         else -> null
     }
 
     fun navStatusName(s: Int): String? = when (s) {
-        0 -> "En route"; 1 -> "Au mouillage"; 2 -> "Non maître de sa manœuvre"; 3 -> "Manœuvre limitée"; 4 -> "Contraint par son tirant d'eau"
-        5 -> "Amarré"; 6 -> "Échoué"; 7 -> "En pêche"; 8 -> "À la voile"
+        0 -> S(R.string.under_way); 1 -> S(R.string.at_anchor); 2 -> S(R.string.not_under_command); 3 -> S(R.string.restricted_manoeuvrability); 4 -> S(R.string.constrained_by_draught)
+        5 -> S(R.string.moored); 6 -> S(R.string.aground); 7 -> S(R.string.fishing_2); 8 -> S(R.string.under_sail)
         else -> null
     }
 
     /** Flag state from the Maritime Identification Digits at the start of a ship's MMSI (the common ones). */
     fun country(mmsi: Int): String? = when (mmsi / 1_000_000) {
-        226, 227, 228 -> "France"; 232, 233, 234, 235 -> "Royaume-Uni"; 211, 218 -> "Allemagne"; 244, 245, 246 -> "Pays-Bas"
-        205 -> "Belgique"; 224, 225 -> "Espagne"; 247 -> "Italie"; 263, 255 -> "Portugal"; 219, 220 -> "Danemark"; 257, 258, 259 -> "Norvège"
-        265, 266 -> "Suède"; 230 -> "Finlande"; 250 -> "Irlande"; 237, 239, 240, 241 -> "Grèce"; 215, 248, 249, 256 -> "Malte"
-        636, 637 -> "Libéria"; 351, 352, 353, 354, 355, 356, 357, 370, 371, 372, 373 -> "Panama"; 538 -> "Îles Marshall"
-        209, 210, 212 -> "Chypre"; 253 -> "Luxembourg"; 201 -> "Albanie"; 203 -> "Autriche"; 272 -> "Ukraine"
-        273 -> "Russie"; 271 -> "Turquie"; 308, 309, 311 -> "Bahamas"; 338, 366, 367, 368, 369 -> "États-Unis"; 412, 413, 414 -> "Chine"
+        226, 227, 228 -> "France"; 232, 233, 234, 235 -> S(R.string.united_kingdom); 211, 218 -> S(R.string.germany); 244, 245, 246 -> S(R.string.netherlands)
+        205 -> S(R.string.belgium); 224, 225 -> S(R.string.spain); 247 -> S(R.string.italy); 263, 255 -> "Portugal"; 219, 220 -> S(R.string.denmark); 257, 258, 259 -> S(R.string.norway)
+        265, 266 -> S(R.string.sweden); 230 -> S(R.string.finland); 250 -> S(R.string.ireland); 237, 239, 240, 241 -> S(R.string.greece); 215, 248, 249, 256 -> "Malte"
+        636, 637 -> S(R.string.liberia); 351, 352, 353, 354, 355, 356, 357, 370, 371, 372, 373 -> "Panama"; 538 -> S(R.string.marshall_islands)
+        209, 210, 212 -> S(R.string.cyprus); 253 -> "Luxembourg"; 201 -> S(R.string.albania); 203 -> S(R.string.austria); 272 -> "Ukraine"
+        273 -> S(R.string.russia); 271 -> S(R.string.turkey); 308, 309, 311 -> "Bahamas"; 338, 366, 367, 368, 369 -> S(R.string.united_states); 412, 413, 414 -> S(R.string.china)
         else -> null
     }
 }

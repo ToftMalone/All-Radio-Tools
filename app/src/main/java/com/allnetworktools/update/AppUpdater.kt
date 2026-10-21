@@ -18,6 +18,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
+import com.allnetworktools.R
+import com.allnetworktools.util.S
 
 /** A GitHub release newer than the installed version. */
 data class UpdateInfo(
@@ -111,7 +113,7 @@ open class AppUpdater(
         c.setRequestProperty("Accept", "application/vnd.github+json")
         c.setRequestProperty("User-Agent", "AllRadioTools/$currentVersion")
         try {
-            if (c.responseCode != 200) throw java.io.IOException("GitHub a répondu ${c.responseCode}")
+            if (c.responseCode != 200) throw java.io.IOException(S(R.string.github_answered, c.responseCode))
             parseReleases(c.inputStream.bufferedReader().readText())
         } finally {
             c.disconnect()
@@ -134,14 +136,14 @@ open class AppUpdater(
                     when (c.responseCode) {
                         404 -> null // no release published yet
                         200 -> parse(c.inputStream.bufferedReader().readText())
-                        else -> throw java.io.IOException("GitHub a répondu ${c.responseCode}")
+                        else -> throw java.io.IOException(S(R.string.github_answered, c.responseCode))
                     }
                 } finally {
                     c.disconnect()
                 }
             }
         } catch (e: Exception) {
-            _state.value = UpdateState.Failed("Vérification impossible : ${e.message ?: "réseau indisponible"}")
+            _state.value = UpdateState.Failed(S(R.string.check_failed, e.message ?: S(R.string.network_unavailable)))
             return
         }
         prefs.edit().putLong("last_check", System.currentTimeMillis()).apply()
@@ -169,7 +171,7 @@ open class AppUpdater(
                 c.setRequestProperty("User-Agent", "AllRadioTools/$currentVersion")
                 val digest = MessageDigest.getInstance("SHA-256")
                 try {
-                    if (c.responseCode != 200) throw java.io.IOException("Téléchargement refusé (${c.responseCode})")
+                    if (c.responseCode != 200) throw java.io.IOException(S(R.string.download_refused, c.responseCode))
                     val total = c.contentLengthLong.takeIf { it > 0 } ?: info.sizeBytes
                     c.inputStream.use { input ->
                         out.outputStream().use { o ->
@@ -192,12 +194,12 @@ open class AppUpdater(
                 }
                 val hex = digest.digest().joinToString("") { "%02x".format(it) }
                 if (info.sha256 != null && !info.sha256.equals(hex, true)) {
-                    out.delete(); throw java.io.IOException("Empreinte SHA-256 incorrecte : fichier corrompu ou altéré")
+                    out.delete(); throw java.io.IOException(S(R.string.wrong_sha_256_fingerprint_file_corrupt))
                 }
                 out
             }
         } catch (e: Exception) {
-            _state.value = UpdateState.Failed("Téléchargement impossible : ${e.message ?: "erreur réseau"}", info)
+            _state.value = UpdateState.Failed(S(R.string.download_failed, e.message ?: S(R.string.network_error)), info)
             return
         }
         pending = file to info
@@ -242,7 +244,7 @@ open class AppUpdater(
                 }
             }
         } catch (e: Exception) {
-            _state.value = UpdateState.Failed("Installation impossible : ${e.message}", info)
+            _state.value = UpdateState.Failed(S(R.string.installation_failed, e.message), info)
         }
     }
 
@@ -250,11 +252,11 @@ open class AppUpdater(
         val info = pending?.second
         _state.value = when (status) {
             PackageInstaller.STATUS_SUCCESS -> UpdateState.Idle
-            PackageInstaller.STATUS_FAILURE_ABORTED -> UpdateState.Failed("Installation annulée", info)
+            PackageInstaller.STATUS_FAILURE_ABORTED -> UpdateState.Failed(S(R.string.installation_cancelled), info)
             PackageInstaller.STATUS_FAILURE_CONFLICT, PackageInstaller.STATUS_FAILURE_INCOMPATIBLE ->
-                UpdateState.Failed("Signature différente de la version installée : désinstallez-la puis installez la mise à jour.", info)
-            PackageInstaller.STATUS_FAILURE_STORAGE -> UpdateState.Failed("Espace de stockage insuffisant", info)
-            else -> UpdateState.Failed(message ?: "Échec de l'installation (code $status)", info)
+                UpdateState.Failed(S(R.string.signature_differs_from_the_installed_version), info)
+            PackageInstaller.STATUS_FAILURE_STORAGE -> UpdateState.Failed(S(R.string.not_enough_storage), info)
+            else -> UpdateState.Failed(message ?: S(R.string.installation_failed_code, status), info)
         }
     }
 

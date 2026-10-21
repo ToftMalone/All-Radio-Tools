@@ -92,6 +92,8 @@ import com.allnetworktools.util.SignalValue
 import com.allnetworktools.util.plural
 import com.allnetworktools.util.signalValue
 import kotlinx.coroutines.delay
+import com.allnetworktools.R
+import com.allnetworktools.util.S
 
 /** What the home screen needs: which networks are available. No measurement runs from here. */
 data class HomeData(
@@ -223,12 +225,12 @@ private fun NetworkCard(
 
 /** Static description of each network: nothing here reads the radio. */
 private fun description(n: Network) = when (n) {
-    Network.Wifi -> "Réseaux alentour, canaux, débit, diagnostic et sécurité du Wi-Fi."
-    Network.Bluetooth -> "Appareils Bluetooth LE, traqueurs inconnus et recherche Chaud/Froid."
-    Network.Cellular -> "Cellules, antennes de votre opérateur et données mobiles."
-    Network.Gnss -> "Satellites, ciel, comparaison des positions et passages."
-    Network.Sdr -> "HackRF : spectre, avions, navires, ballons-sondes, drones FPV et plus."
-    Network.Talkie -> "Programmer un Baofeng, un Radtel ou un Quansheng par câble USB."
+    Network.Wifi -> S(R.string.nearby_networks_channels_speed_wi_fi)
+    Network.Bluetooth -> S(R.string.bluetooth_le_devices_unknown_trackers_and)
+    Network.Cellular -> S(R.string.cells_your_carrier_s_towers_and)
+    Network.Gnss -> S(R.string.satellites_sky_position_comparison_and_passes)
+    Network.Sdr -> S(R.string.hackrf_spectrum_aircraft_ships_radiosondes_fpv)
+    Network.Talkie -> S(R.string.program_a_baofeng_radtel_or_quansheng)
 }
 
 @Composable
@@ -315,36 +317,36 @@ private fun BlockedCardContent(network: Network, blocker: Blocker, onAction: (Bl
 /** A welcome line or a network joke, drawn once per launch of the app. */
 object Greetings {
     private val all = listOf(
-        "Bienvenue ! Les ondes vous attendent.",
-        "Content de vous revoir, les antennes sont prêtes.",
-        "Bonjour ! Quelle fréquence on explore aujourd'hui ?",
-        "Prêt à écouter le monde invisible ?",
-        "Les satellites vous saluent depuis l'orbite.",
-        "Le Wi-Fi, c'est comme l'amour : ça passe mieux sans murs.",
-        "Pourquoi le routeur est-il zen ? Il a trouvé sa passerelle.",
-        "Mon Wi-Fi s'appelle « Virus » : personne ne s'y connecte.",
-        "Un paquet UDP entre dans un bar. Le barman ne le voit jamais.",
-        "Je connais une blague sur TCP. Je la répète jusqu'à ce que vous l'ayez reçue.",
-        "Il y a 10 sortes de gens : ceux qui comptent en binaire, et les autres.",
-        "Le Bluetooth, c'est l'art de s'appairer sans se parler.",
-        "Ping ? Pong. Tout va bien.",
-        "Pas de 5G dans la cave ? Normal, elle a le trac.",
-        "Les ballons-sondes montent à 30 km. Votre moral aussi, j'espère.",
-        "Une antenne a épousé une parabole : la cérémonie était nulle, la réception excellente.",
-        "127.0.0.1 : rien ne vaut la maison.",
-        "Le DNS, c'est toujours lui. Même quand ce n'est pas lui.",
-        "Votre box clignote ? Elle vous fait un clin d'œil.",
-        "Un AirTag perdu ? Il n'est jamais vraiment seul.",
-        "Le GPS ne se perd jamais. Il recalcule.",
-        "Les avions crient leur position sur 1090 MHz. Écoutons-les.",
-        "Le talkie-walkie : le premier réseau social. À tour de rôle.",
-        "Over. Terminé. À vous les studios.",
-        "Ondes courtes, idées longues.",
-        "Le ciel n'a jamais été aussi bavard.",
-        "Mieux vaut un bon dBm qu'un long câble.",
-        "Le Wi-Fi ne traverse pas les murs. Il les contourne avec élégance.",
-        "Aujourd'hui, une constellation de bonnes nouvelles.",
-        "Silence radio ? Pas ici.",
+        S(R.string.welcome_the_airwaves_are_waiting),
+        S(R.string.good_to_see_you_again_the),
+        S(R.string.hello_which_frequency_shall_we_explore),
+        S(R.string.ready_to_listen_to_the_invisible),
+        S(R.string.the_satellites_wave_at_you_from),
+        S(R.string.wi_fi_is_like_love_it),
+        S(R.string.why_is_the_router_so_zen),
+        S(R.string.my_wi_fi_is_called_virus),
+        S(R.string.a_udp_packet_walks_into_a),
+        S(R.string.i_know_a_joke_about_tcp),
+        S(R.string.there_are_10_kinds_of_people),
+        S(R.string.bluetooth_is_the_art_of_pairing),
+        S(R.string.ping_pong_all_good),
+        S(R.string.no_5g_in_the_basement_normal),
+        S(R.string.radiosondes_climb_to_30_km_your),
+        S(R.string.an_antenna_married_a_dish_the),
+        S(R.string.n_127_0_0_1_there_s),
+        S(R.string.it_s_always_dns_even_when),
+        S(R.string.your_router_is_blinking_it_s),
+        S(R.string.a_lost_airtag_it_s_never),
+        S(R.string.gps_never_gets_lost_it_recalculates),
+        S(R.string.aircraft_shout_their_position_on_1090),
+        S(R.string.the_walkie_talkie_the_first_social),
+        S(R.string.over_roger_that_back_to_the),
+        S(R.string.short_waves_long_ideas),
+        S(R.string.the_sky_has_never_been_so),
+        S(R.string.better_a_good_dbm_than_a),
+        S(R.string.wi_fi_doesn_t_go_through),
+        S(R.string.today_a_constellation_of_good_news),
+        S(R.string.radio_silence_not_here),
     )
 
     val ofThisLaunch: String = all.random()

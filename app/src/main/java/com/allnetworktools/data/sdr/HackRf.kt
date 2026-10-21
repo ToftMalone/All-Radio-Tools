@@ -22,6 +22,8 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
+import com.allnetworktools.R
+import com.allnetworktools.util.S
 
 /** A HackRF-family board on the USB bus. */
 data class SdrDevice(val name: String, val usb: UsbDevice?)
@@ -78,7 +80,7 @@ class HackRf private constructor(
      */
     fun startRx(onSamples: (ByteArray, Int) -> Unit, onError: (String) -> Unit) {
         if (running) return
-        if (!out(REQ_SET_TRANSCEIVER_MODE, MODE_RECEIVE, 0)) { onError("Le HackRF refuse le mode réception"); return }
+        if (!out(REQ_SET_TRANSCEIVER_MODE, MODE_RECEIVE, 0)) { onError(S(R.string.the_hackrf_refuses_receive_mode)); return }
         running = true
         thread = Thread({
             val reqs = List(TRANSFERS) { UsbRequest().apply { initialize(conn, epIn) } }
@@ -91,10 +93,10 @@ class HackRf private constructor(
                     val r = try {
                         conn.requestWait(1000)
                     } catch (e: TimeoutException) {
-                        if (++timeouts >= 3) { onError("Plus aucun échantillon du HackRF"); break }
+                        if (++timeouts >= 3) { onError(S(R.string.no_more_samples_from_the_hackrf)); break }
                         continue
                     }
-                    if (r == null) { onError("Liaison USB interrompue"); break }
+                    if (r == null) { onError(S(R.string.usb_link_lost)); break }
                     timeouts = 0
                     val i = r.clientData as Int
                     val b = bufs[i]
@@ -106,7 +108,7 @@ class HackRf private constructor(
                     if (len > 0) onSamples(copy, len)
                 }
             } catch (e: Exception) {
-                if (running) onError(e.message ?: "Erreur USB")
+                if (running) onError(e.message ?: S(R.string.usb_error))
             } finally {
                 reqs.forEach { runCatching { it.cancel(); it.close() } }
             }

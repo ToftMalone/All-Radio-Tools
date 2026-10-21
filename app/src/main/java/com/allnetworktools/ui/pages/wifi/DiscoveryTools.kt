@@ -49,6 +49,9 @@ import java.net.UnknownHostException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import com.allnetworktools.R
+import com.allnetworktools.util.S
+import com.allnetworktools.util.P
 
 // ---- Whois ----------------------------------------------------------------------------------------
 
@@ -74,9 +77,9 @@ class WhoisController(private val scope: CoroutineScope) {
                 result = r
                 phase = if (r.text.isBlank() || r.text.contains("No match", true) || r.text.contains("NOT FOUND", true)) Phase.Empty else Phase.Results
             } catch (e: UnknownHostException) {
-                error = "Serveur whois injoignable : vérifiez la connexion Internet."; phase = Phase.Error
+                error = S(R.string.whois_server_unreachable_check_the_internet); phase = Phase.Error
             } catch (e: IOException) {
-                error = e.message ?: "Le serveur whois n'a pas répondu."; phase = Phase.Error
+                error = e.message ?: S(R.string.the_whois_server_did_not_answer); phase = Phase.Error
             }
         }
     }
@@ -92,21 +95,21 @@ fun WhoisTool(c: WhoisController) {
     if (r != null && c.phase == Phase.Results) TopBarAction(Sym.IosShare) { actions.share("Whois ${r.query}", r.hops.joinToString("\n\n") { "# ${it.server}\n${it.text}" }) }
     val start = { haptics.confirm(); c.start() }
     PageColumn {
-        if (c.phase == Phase.Error) ToolError(Sym.CloudOff, "Requête impossible", c.error ?: "", "Réessayer") { c.start() }
-        HostInputField(c.query, { c.query = it }, "Domaine ou adresse IP", Sym.TravelExplore, c.recent.items, onDone = start)
-        if (c.phase != Phase.Running) StartButton("Interroger", Sym.Search, enabled = c.query.isNotBlank(), onClick = start)
+        if (c.phase == Phase.Error) ToolError(Sym.CloudOff, S(R.string.query_failed), c.error ?: "", S(R.string.retry)) { c.start() }
+        HostInputField(c.query, { c.query = it }, S(R.string.domain_or_ip_address), Sym.TravelExplore, c.recent.items, onDone = start)
+        if (c.phase != Phase.Running) StartButton(S(R.string.look_up), Sym.Search, enabled = c.query.isNotBlank(), onClick = start)
         if (c.phase == Phase.Running) {
-            SectionCard { IndeterminateBar(); Text("Interrogation de whois.iana.org puis du registre…", Modifier.padding(top = 12.dp), style = rf(14, 20), color = cs.onSurfaceVariant) }
+            SectionCard { IndeterminateBar(); Text(S(R.string.querying_whois_iana_org_then_the), Modifier.padding(top = 12.dp), style = rf(14, 20), color = cs.onSurfaceVariant) }
         }
         if (c.phase == Phase.Empty) {
-            ToolEmpty(Sym.SearchOff, "Aucun enregistrement", "Le registre ne connaît pas « ${c.query} ». Le domaine est peut-être libre.", null)
+            ToolEmpty(Sym.SearchOff, S(R.string.no_record), S(R.string.the_registry_does_not_know_the, c.query), null)
         }
         if (r != null && c.phase == Phase.Results) {
             HeroCard {
                 Text(r.query, style = gs(26, 32, 500), maxLines = 2)
                 Text(
-                    if (r.isIp) listOfNotNull(r.netName, r.network).joinToString(" · ").ifEmpty { "Adresse IP" }
-                    else r.registrar ?: "Registrar non communiqué",
+                    if (r.isIp) listOfNotNull(r.netName, r.network).joinToString(" · ").ifEmpty { S(R.string.ip_address) }
+                    else r.registrar ?: S(R.string.registrar_not_disclosed),
                     Modifier.padding(top = 2.dp), style = rf(14, 20),
                 )
                 Row(Modifier.padding(top = 12.dp), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
@@ -114,22 +117,22 @@ fun WhoisTool(c: WhoisController) {
                     r.country?.let { HeroChip(it.uppercase(), cs.outline) }
                 }
             }
-            InfoList(if (r.isIp) "Réseau" else "Domaine") {
+            InfoList(if (r.isIp) S(R.string.network) else S(R.string.domain)) {
                 val rows = if (r.isIp) listOf(
-                    "Plage" to r.network, "Nom du réseau" to r.netName, "Organisation" to (r.registrant ?: r.description),
-                    "Pays" to r.country, "AS d'origine" to r.asn, "Mis à jour" to r.updated?.let(::shortDate),
+                    S(R.string.range) to r.network, S(R.string.network_name) to r.netName, S(R.string.organisation) to (r.registrant ?: r.description),
+                    S(R.string.country) to r.country, S(R.string.origin_as) to r.asn, S(R.string.updated) to r.updated?.let(::shortDate),
                 ) else listOf(
-                    "Registrar" to r.registrar, "Titulaire" to r.registrant, "Création" to r.created?.let(::shortDate),
-                    "Expiration" to r.expires?.let(::shortDate), "Mise à jour" to r.updated?.let(::shortDate),
-                    "Serveurs DNS" to r.nameServers.joinToString("\n").ifEmpty { null }, "Statut" to r.status.joinToString("\n").ifEmpty { null },
+                    "Registrar" to r.registrar, S(R.string.registrant) to r.registrant, S(R.string.created) to r.created?.let(::shortDate),
+                    S(R.string.expires) to r.expires?.let(::shortDate), S(R.string.updated_2) to r.updated?.let(::shortDate),
+                    S(R.string.dns_servers) to r.nameServers.joinToString("\n").ifEmpty { null }, S(R.string.status) to r.status.joinToString("\n").ifEmpty { null },
                     "DNSSEC" to r.dnssec,
                 )
                 rows.filter { it.second != null }.forEach { (k, v) -> InfoRow(k, v!!) { actions.copy(k, v) } }
-                if (rows.all { it.second == null }) Text("Réponse sans champ standard : voir la réponse brute.", Modifier.padding(vertical = 12.dp), style = rf(14, 20), color = cs.onSurfaceVariant)
+                if (rows.all { it.second == null }) Text(S(R.string.answer_without_standard_fields_see_the), Modifier.padding(vertical = 12.dp), style = rf(14, 20), color = cs.onSurfaceVariant)
             }
             SectionCard(padding = PaddingValues(16.dp)) {
                 Row(Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp)).clickable { c.showRaw = !c.showRaw }, verticalAlignment = Alignment.CenterVertically) {
-                    Text("Réponse brute · ${r.hops.size} ${plural(r.hops.size, "serveur")}", Modifier.weight(1f), style = rf(15, 20, 600))
+                    Text(S(R.string.raw_answer, r.hops.size, P(R.plurals.p_servers, r.hops.size)), Modifier.weight(1f), style = rf(15, 20, 600))
                     Symbol(if (c.showRaw) Sym.UnfoldLess else Sym.ChevronRight, size = 22.dp, tint = cs.onSurfaceVariant)
                 }
                 AnimatedVisibility(c.showRaw) {

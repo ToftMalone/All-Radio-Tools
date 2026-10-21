@@ -48,6 +48,8 @@ import com.allnetworktools.ui.tools.HeroCard
 import com.allnetworktools.ui.tools.ToolEmpty
 import com.allnetworktools.util.fmt
 import kotlinx.coroutines.delay
+import com.allnetworktools.R
+import com.allnetworktools.util.S
 
 /** Finds the cell the page is about: "serving" follows handovers, a key pins one physical cell. */
 fun findCell(state: CellState?, arg: String?): Pair<CellMeasure, Boolean>? {
@@ -90,15 +92,15 @@ fun CellDetailTool(state: CellState?, arg: String?, onNeighbors: () -> Unit) {
     val m = found?.first
     val serving = found?.second == true
     if (m != null) {
-        TopBarAction(Sym.ContentCopy) { actions.copy("Cellule", report(m, state)) }
+        TopBarAction(Sym.ContentCopy) { actions.copy(S(R.string.cell_2), report(m, state)) }
     }
     PageColumn {
         if (m == null) {
             if (lost || history.isEmpty()) {
                 ToolEmpty(
-                    Sym.CellNoData, "Cellule perdue",
-                    "Cette cellule n'est plus détectée. Les changements restent consignés dans le journal.",
-                    "Voir les cellules voisines", onNeighbors,
+                    Sym.CellNoData, S(R.string.cell_lost),
+                    S(R.string.this_cell_is_no_longer_detected),
+                    S(R.string.see_the_neighbour_cells), onNeighbors,
                 )
             }
             return@PageColumn
@@ -121,7 +123,7 @@ fun CellDetailTool(state: CellState?, arg: String?, onNeighbors: () -> Unit) {
                     m.arfcnText()?.let { Text(it, style = rf(13, 18, tnum = true)) }
                     Row(Modifier.padding(top = 4.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                         if (serving) BlinkDot(AntTheme.net.good, 8.dp) else Box(Modifier.size(8.dp).clip(CircleShape).background(cs.outline))
-                        Text(if (serving) "Cellule de service" else "Cellule voisine", style = rf(12, 16, 600))
+                        Text(if (serving) S(R.string.serving_cell) else S(R.string.neighbour_cell), style = rf(12, 16, 600))
                     }
                 }
             }
@@ -135,23 +137,23 @@ fun CellDetailTool(state: CellState?, arg: String?, onNeighbors: () -> Unit) {
         data class Tile(val k: String, val v: String, val q: String, val c: androidx.compose.ui.graphics.Color)
         val muted = cs.onSurfaceVariant
         fun q(v: Int?, spec: QualitySpec): Pair<String, androidx.compose.ui.graphics.Color> = when {
-            v == null -> "non mesuré" to muted
+            v == null -> S(R.string.not_measured) to muted
             v >= spec.good -> "Bon" to net.good
-            v >= spec.fair -> "Moyen" to net.fair
-            else -> "Faible" to net.poor
+            v >= spec.fair -> S(R.string.fair) to net.fair
+            else -> S(R.string.weak) to net.poor
         }
         val tiles = buildList {
             q(m.rsrq, RsrqSpec).let { (t, c) -> add(Tile(if (nr) "SS-RSRQ" else "RSRQ", m.rsrq?.let { "${fmt(it)} dB" } ?: "—", t, c)) }
             q(m.sinr, SinrSpec).let { (t, c) -> add(Tile(if (nr) "SS-SINR" else "RSSNR", m.sinr?.let { "${fmt(it)} dB" } ?: "—", t, c)) }
-            q(m.rssi, RssiSpec).let { (t, c) -> add(Tile(if (m.rssiEstimated) "RSSI (estimé)" else "RSSI", m.rssi?.let { "${if (m.rssiEstimated) "≈ " else ""}${fmt(it)} dBm" } ?: "—", t, c)) }
+            q(m.rssi, RssiSpec).let { (t, c) -> add(Tile(if (m.rssiEstimated) S(R.string.rssi_estimated) else "RSSI", m.rssi?.let { "${if (m.rssiEstimated) "≈ " else ""}${fmt(it)} dBm" } ?: "—", t, c)) }
             val taNote = when {
-                m.timingAdvance == null -> "non mesuré"
+                m.timingAdvance == null -> S(R.string.not_measured)
                 nr -> "≈ ${fmt(m.timingAdvance * 150)} m"
                 else -> "≈ ${fmt(m.timingAdvance * 78)} m"
             }
             add(Tile("Timing advance", m.timingAdvance?.let { if (nr) "$it µs" else "$it" } ?: "—", taNote, muted))
-            add(Tile("CQI", m.cqi?.toString() ?: "—", m.cqi?.let { if (it >= 10) "64QAM" else if (it >= 7) "16QAM" else "QPSK" } ?: "non mesuré", muted))
-            q(m.rsrp, RsrpSpec).let { (t, c) -> add(Tile("Qualité", t, "selon ${if (m.rsrp != null) "RSRP" else "le niveau"}", c)) }
+            add(Tile("CQI", m.cqi?.toString() ?: "—", m.cqi?.let { if (it >= 10) "64QAM" else if (it >= 7) "16QAM" else "QPSK" } ?: S(R.string.not_measured), muted))
+            q(m.rsrp, RsrpSpec).let { (t, c) -> add(Tile(S(R.string.quality), t, S(R.string.from, if (m.rsrp != null) "RSRP" else S(R.string.the_level)), c)) }
         }
         TileGrid(tiles) { t, mod ->
             Column(mod.clip(RoundedCornerShape(20.dp)).background(cs.surfaceContainerLow).padding(horizontal = 16.dp, vertical = 12.dp)) {
@@ -162,7 +164,7 @@ fun CellDetailTool(state: CellState?, arg: String?, onNeighbors: () -> Unit) {
         }
         val op = state?.operator.takeIf { serving }
         val ids = if (nr) listOf(
-            "NCI" to m.cellId?.let(::fmt), "gNB ID" to m.nodeId?.let(::fmt), "Secteur" to m.sector?.toString(),
+            "NCI" to m.cellId?.let(::fmt), "gNB ID" to m.nodeId?.let(::fmt), S(R.string.sector) to m.sector?.toString(),
             "PCI" to m.pci?.toString(), "TAC" to m.tac?.let(::fmt), "MCC / MNC" to mccMnc(m, op),
         ) else listOf(
             "CI" to m.cellId?.let(::fmt), "${if (m.tech == RadioTech.LTE) "eNB" else "RNC"} ID" to m.nodeId?.let(::fmt),
@@ -170,12 +172,12 @@ fun CellDetailTool(state: CellState?, arg: String?, onNeighbors: () -> Unit) {
             (if (m.tech == RadioTech.LTE) "TAC" else "LAC") to m.tac?.let(::fmt), "MCC / MNC" to mccMnc(m, op),
         )
         val radio = listOf(
-            "Bande" to bandDuplex(m),
+            S(R.string.band) to bandDuplex(m),
             (m.arfcnLabel ?: "ARFCN") to m.arfcn?.let(::fmt),
-            "Fréquence DL" to m.downlinkMhz?.let { "${fmt(it, 2)} MHz" },
-            "Largeur" to m.bandwidthKhz?.let { "${fmt(it / 1000)} MHz" },
+            S(R.string.dl_frequency) to m.downlinkMhz?.let { "${fmt(it, 2)} MHz" },
+            S(R.string.width) to m.bandwidthKhz?.let { "${fmt(it / 1000)} MHz" },
         )
-        Group("Identifiants", ids, 0)
+        Group(S(R.string.identifiers), ids, 0)
         Group("Radio", radio, 1)
     }
 }
@@ -192,7 +194,7 @@ private fun Group(title: String, rows: List<Pair<String, String?>>, index: Int) 
             Row(Modifier.fillMaxWidth().heightIn(min = 48.dp), verticalAlignment = Alignment.CenterVertically) {
                 Text(k, Modifier.weight(1f), style = rf(14, 20), color = cs.onSurfaceVariant)
                 Text(
-                    v ?: "Non fourni par le modem",
+                    v ?: S(R.string.not_provided_by_the_modem),
                     style = if (v == null) rf(12, 16).copy(fontStyle = FontStyle.Italic) else rf(14, 20, 500, tnum = true),
                     color = if (v == null) cs.onSurfaceVariant else cs.onSurface, textAlign = TextAlign.End,
                 )
@@ -203,7 +205,7 @@ private fun Group(title: String, rows: List<Pair<String, String?>>, index: Int) 
 
 private fun report(m: CellMeasure, s: CellState?): String = buildString {
     appendLine("${m.tech.short} ${m.title()} ${m.arfcnText().orEmpty()}")
-    s?.operator?.let { appendLine("Opérateur : $it") }
+    s?.operator?.let { appendLine(S(R.string.carrier_2, it)) }
     listOf("Cell ID" to m.cellId, "Node ID" to m.nodeId, "TAC" to m.tac, "MCC" to m.mcc, "MNC" to m.mnc, "RSRP" to m.rsrp, "RSRQ" to m.rsrq, "SINR" to m.sinr, "RSSI" to m.rssi, "TA" to m.timingAdvance)
         .filter { it.second != null }.forEach { (k, v) -> appendLine("$k : $v") }
 }

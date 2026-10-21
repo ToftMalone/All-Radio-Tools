@@ -62,6 +62,9 @@ import com.allnetworktools.util.fmt
 import com.allnetworktools.util.signalValue
 import com.allnetworktools.util.wifiQualityLabel
 import kotlinx.coroutines.delay
+import com.allnetworktools.R
+import com.allnetworktools.util.S
+import com.allnetworktools.util.P
 
 fun prefixToMask(prefix: Int): String {
     val mask = if (prefix == 0) 0L else (0xFFFFFFFFL shl (32 - prefix)) and 0xFFFFFFFFL
@@ -98,8 +101,8 @@ fun WifiDashboard(vm: MainViewModel) {
     if (c == null) {
         Box(Modifier.fillMaxSize().padding(bottom = 96.dp), contentAlignment = Alignment.Center) {
             StatePanel(
-                Sym.WifiFind, "Non connecté", "Le Wi-Fi est activé mais aucun réseau n'est associé. Le scanner reste disponible.",
-                PanelAction("Choisir un réseau", Sym.Wifi) { actions.openWifiPanel() },
+                Sym.WifiFind, S(R.string.not_connected), S(R.string.wi_fi_is_on_but_no),
+                PanelAction(S(R.string.choose_a_network), Sym.Wifi) { actions.openWifiPanel() },
             )
         }
         return
@@ -112,14 +115,14 @@ fun WifiDashboard(vm: MainViewModel) {
             Column(Modifier.fadeUp().fillMaxWidth().clip(RoundedCornerShape(32.dp)).background(roles.container).padding(start = 20.dp, end = 20.dp, top = 20.dp, bottom = 16.dp)) {
                 Row(verticalAlignment = Alignment.Top) {
                     Column(Modifier.weight(1f)) {
-                        Text(c.ssid ?: "SSID masqué", style = gs(28, 34, 500), maxLines = 1)
-                        val since = c.connectedAtElapsed?.let { "Connecté depuis ${durationFr(now - it)}" } ?: "Connecté"
+                        Text(c.ssid ?: S(R.string.hidden_ssid), style = gs(28, 34, 500), maxLines = 1)
+                        val since = c.connectedAtElapsed?.let { S(R.string.connected_for, durationFr(now - it)) } ?: S(R.string.connected)
                         Text(since, Modifier.graphicsLayer { alpha = 0.85f }, style = rf(14, 20))
                     }
                     Symbol(Sym.Wifi, size = 28.dp, filled = true, tint = roles.accent)
                 }
                 if (c.ssid == null && !perms.location) {
-                    TextAction("Autoriser la position pour afficher le SSID", { actions.request(PermGroup.Location) }, color = roles.accent)
+                    TextAction(S(R.string.allow_location_to_show_the_ssid), { actions.request(PermGroup.Location) }, color = roles.accent)
                 }
                 FlowRow(Modifier.padding(top = 14.dp), horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     IconChip(Sym.Lock, shortSecurity(c.security), roles.accent)
@@ -136,7 +139,7 @@ fun WifiDashboard(vm: MainViewModel) {
             }
         }
         SectionCard {
-            CardHeader("Signal en direct") {
+            CardHeader(S(R.string.live_signal)) {
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                     BlinkDot(cs.error, 8.dp, 1200)
                     Text(rateLabel(settings.refreshSeconds), style = rf(12, 16), color = cs.onSurfaceVariant)
@@ -146,32 +149,32 @@ fun WifiDashboard(vm: MainViewModel) {
         }
         TileGrid(
             listOf(
-                Triple(Sym.Upload, "Lien TX", c.linkTx?.let { fmt(it) } ?: "—") to "Mb/s",
-                Triple(Sym.Download, "Lien RX", c.linkRx?.let { fmt(it) } ?: "—") to "Mb/s",
-                Triple(Sym.GraphicEq, "Fréquence", fmt(c.frequency)) to "MHz",
-                Triple(Sym.Tag, "Canal", c.channel.toString()) to (ap?.let { "· ${it.widthMhz} MHz" } ?: ""),
+                Triple(Sym.Upload, S(R.string.tx_link), c.linkTx?.let { fmt(it) } ?: "—") to "Mb/s",
+                Triple(Sym.Download, S(R.string.rx_link), c.linkRx?.let { fmt(it) } ?: "—") to "Mb/s",
+                Triple(Sym.GraphicEq, S(R.string.frequency), fmt(c.frequency)) to "MHz",
+                Triple(Sym.Tag, S(R.string.channel_3), c.channel.toString()) to (ap?.let { "· ${it.widthMhz} MHz" } ?: ""),
             ),
         ) { (t, unit), mod -> MetricTile(t.second, t.third, unit, t.first, mod) }
-        InfoList("Point d'accès", roles.accent) {
-            InfoRow("BSSID", c.bssid ?: "Masqué")
-            InfoRow("Sécurité", c.security ?: "—")
+        InfoList(S(R.string.access_point), roles.accent) {
+            InfoRow("BSSID", c.bssid ?: S(R.string.blocked))
+            InfoRow(S(R.string.security_2), c.security ?: "—")
             std?.let { InfoRow("Standard", "${it.first} · ${it.second}") }
-            InfoRow("Bande", listOfNotNull("${c.band.label} GHz", unii(c.frequency)).joinToString(" · "))
-            ap?.let { InfoRow("Largeur", "${it.widthMhz} MHz") }
+            InfoRow(S(R.string.band), listOfNotNull("${c.band.label} GHz", unii(c.frequency)).joinToString(" · "))
+            ap?.let { InfoRow(S(R.string.width), "${it.widthMhz} MHz") }
         }
         val roams by vm.roams.collectAsStateWithLifecycle()
         if (roams.isNotEmpty()) RoamingCard(roams, scan)
-        InfoList("Réseau IP", roles.accent) {
+        InfoList(S(R.string.ip_network), roles.accent) {
             InfoRow("IPv4", c.ipv4 ?: "—", c.ipv4?.let { { actions.copy("IPv4", it) } })
-            c.prefix?.let { InfoRow("Masque", "${prefixToMask(it)} (/$it)") }
-            InfoRow("Passerelle", c.gateway ?: "—", c.gateway?.let { { actions.copy("Passerelle", it) } })
+            c.prefix?.let { InfoRow(S(R.string.mask), "${prefixToMask(it)} (/$it)") }
+            InfoRow(S(R.string.gateway), c.gateway ?: "—", c.gateway?.let { { actions.copy(S(R.string.gateway), it) } })
             InfoRow("DNS", c.dns.take(2).joinToString(" · ").ifEmpty { "—" })
             c.ipv6?.let { InfoRow("IPv6", it) { actions.copy("IPv6", it) } }
         }
     }
 }
 
-private val roamTime = java.text.SimpleDateFormat("HH:mm:ss", java.util.Locale.FRANCE)
+private val roamTime = java.text.SimpleDateFormat("HH:mm:ss", java.util.Locale.getDefault())
 
 /** Short form of a BSSID: the last three bytes are what tells two APs of one network apart. */
 private fun shortBssid(b: String) = b.uppercase().takeLast(8)
@@ -181,7 +184,7 @@ private fun RoamingCard(roams: List<com.allnetworktools.RoamEvent>, scan: List<c
     val roles = AntTheme.net.wifi
     fun freq(f: Int) = "${bandOf(f).label} GHz · ch ${channelOf(f)}"
     InfoList(
-        "Roaming · ${roams.size} ${plural(roams.size, "changement")} d'AP", roles.accent,
+        S(R.string.roaming_ap, roams.size, P(R.plurals.p_changes, roams.size)), roles.accent,
         trailing = { Text(roams.first().ssid ?: "", style = rf(12, 16), color = cs.onSurfaceVariant) },
     ) {
         roams.forEach { r ->
@@ -194,11 +197,11 @@ private fun RoamingCard(roams: List<com.allnetworktools.RoamEvent>, scan: List<c
                 }
                 val same = bandOf(r.fromFreq) == bandOf(r.toFreq)
                 Text(
-                    (if (same) freq(r.toFreq) else "${freq(r.fromFreq)} → ${freq(r.toFreq)} (changement de bande)") +
+                    (if (same) freq(r.toFreq) else S(R.string.band_change, freq(r.fromFreq), freq(r.toFreq))) +
                         " · ${fmt(r.rssiBefore)} → ${fmt(r.rssiAfter)} dBm",
                     style = rf(12, 16, tnum = true), color = cs.onSurfaceVariant,
                 )
-                r.stayedMs?.let { Text("Resté ${durationFr(it)} sur le précédent AP", style = rf(12, 16), color = cs.onSurfaceVariant) }
+                r.stayedMs?.let { Text(S(R.string.stayed_on_the_previous_ap, durationFr(it)), style = rf(12, 16), color = cs.onSurfaceVariant) }
             }
         }
     }

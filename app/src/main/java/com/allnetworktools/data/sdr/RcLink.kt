@@ -6,12 +6,14 @@ import kotlin.math.cos
 import kotlin.math.log10
 import kotlin.math.max
 import kotlin.math.min
+import com.allnetworktools.R
+import com.allnetworktools.util.S
 
 /** How a burst is modulated, from the shape of its short-time spectrum. */
 enum class RcModulation(val label: String) {
     Chirp("LoRa (chirps)"),
     Fsk("FSK / FLRC"),
-    Dsss("Étalement de spectre (DSSS)"),
+    Dsss(S(R.string.spread_spectrum_dsss)),
 }
 
 /** One packet of a frequency-hopping link: where and when, how wide, and how it is modulated. */
@@ -216,7 +218,7 @@ object RcBands {
         else -> windows(24) + windows(868) + windows(915)
     }
 
-    fun label(band: Int) = when (band) { 24 -> "2,4 GHz"; 868 -> "868 MHz"; 915 -> "915 MHz"; else -> "" }
+    fun label(band: Int) = when (band) { 24 -> S(R.string.n_2_4_ghz); 868 -> "868 MHz"; 915 -> "915 MHz"; else -> "" }
 }
 
 /** A remote-control link the tracker has recognised. */
@@ -256,11 +258,11 @@ private class Signature(
 private fun hz(vararg r: Double) = r.map { it to "${Math.round(it)} Hz" }
 
 private val SIGNATURES = listOf(
-    Signature("ExpressLRS 2,4 GHz", setOf(24), RcModulation.Chirp, 650.0..1300.0, hz(50.0, 100.0, 150.0, 250.0, 333.0, 500.0), 1000.0),
-    Signature("ExpressLRS 2,4 GHz", setOf(24), RcModulation.Fsk, 900.0..3200.0, listOf(500.0 to "F500 (FLRC)", 1000.0 to "F1000 (FLRC)"), 1000.0),
-    Signature("FrSky ACCST / ACCESS 2,4 GHz", setOf(24), RcModulation.Fsk, 150.0..900.0, listOf(1000.0 / 9 to "trame de 9 ms")),
-    Signature("FlySky AFHDS 2A", setOf(24), RcModulation.Fsk, 150.0..900.0, listOf(1000.0 / 3.85 to "trame de 3,85 ms")),
-    Signature("Spektrum DSMX", setOf(24), RcModulation.Dsss, 500.0..3200.0, listOf(1000.0 / 22 to "trame de 22 ms", 1000.0 / 11 to "trame de 11 ms")),
+    Signature(S(R.string.expresslrs_2_4_ghz), setOf(24), RcModulation.Chirp, 650.0..1300.0, hz(50.0, 100.0, 150.0, 250.0, 333.0, 500.0), 1000.0),
+    Signature(S(R.string.expresslrs_2_4_ghz), setOf(24), RcModulation.Fsk, 900.0..3200.0, listOf(500.0 to "F500 (FLRC)", 1000.0 to "F1000 (FLRC)"), 1000.0),
+    Signature(S(R.string.frsky_accst_access_2_4_ghz), setOf(24), RcModulation.Fsk, 150.0..900.0, listOf(1000.0 / 9 to S(R.string.n_9_ms_frame))),
+    Signature("FlySky AFHDS 2A", setOf(24), RcModulation.Fsk, 150.0..900.0, listOf(1000.0 / 3.85 to S(R.string.n_3_85_ms_frame))),
+    Signature("Spektrum DSMX", setOf(24), RcModulation.Dsss, 500.0..3200.0, listOf(1000.0 / 22 to S(R.string.n_22_ms_frame), 1000.0 / 11 to S(R.string.n_11_ms_frame))),
     Signature("ExpressLRS 868 MHz", setOf(868), RcModulation.Chirp, 400.0..850.0, hz(25.0, 50.0, 100.0, 200.0), 525.0),
     Signature("ExpressLRS 915 MHz", setOf(915), RcModulation.Chirp, 400.0..850.0, hz(25.0, 50.0, 100.0, 200.0), 600.0),
     Signature("TBS Crossfire", setOf(868, 915), RcModulation.Fsk, 100.0..600.0, listOf(150.0 to "150 Hz (FSK)")),
@@ -367,11 +369,11 @@ class RcLinkTracker {
             if (s.spacingKHz != null && !onGrid(hits, s.spacingKHz * 1e3)) continue
             val checks = buildList {
                 add("Modulation ${s.modulation.label}")
-                add("Largeur ${Math.round(bw)} kHz")
-                add("Cadence ${Math.round(rate)} paquets/s, ${Math.round(fit(d, 1 / rate) * 100)} % des écarts conformes")
-                add("Paquet de ${Math.round(dur)} µs, dans son créneau")
-                add("Sauts sur $channels fréquences")
-                if (s.spacingKHz != null) add("Grille de canaux de ${Math.round(s.spacingKHz)} kHz")
+                add(S(R.string.width_khz, Math.round(bw)))
+                add(S(R.string.rate_packets_s_of_gaps_as, Math.round(rate), Math.round(fit(d, 1 / rate) * 100)))
+                add(S(R.string.s_packet_within_its_slot, Math.round(dur)))
+                add(S(R.string.hops_over_frequencies, channels))
+                if (s.spacingKHz != null) add(S(R.string.khz_channel_grid, Math.round(s.spacingKHz)))
             }
             return RcLink(
                 g.key, s.protocol, variant, band, s.modulation, rate, bw, dur, channels,

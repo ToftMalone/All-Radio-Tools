@@ -1,5 +1,8 @@
 package com.allnetworktools.data.radio
 
+import com.allnetworktools.R
+import com.allnetworktools.util.S
+
 /** The radio did not answer as expected; the message is meant for the user. */
 open class RadioException(message: String) : Exception(message)
 
@@ -31,7 +34,7 @@ interface RadioLimits {
 
 /** Before a radio is recognised: the most generous limits, so a list can be prepared and then fitted to whatever answers. */
 object GenericRadio : RadioLimits {
-    override val label = "Talkie-walkie"
+    override val label = S(R.string.handheld_radio)
     override val slots = 256
     override val nameLength = 12
     override val bands = listOf(18_000_000L..1_000_000_000L)
@@ -67,7 +70,7 @@ interface RadioSpec : RadioLimits {
 internal fun ByteArray.hex() = joinToString(" ") { "%02X".format(it) }
 
 internal fun SerialLink.readExactly(count: Int, timeoutMs: Int, what: String): ByteArray =
-    read(count, timeoutMs).also { if (it.size != count) throw RadioException("Le talkie n'a pas répondu ($what).") }
+    read(count, timeoutMs).also { if (it.size != count) throw RadioException(S(R.string.the_radio_did_not_answer, what)) }
 
 /**
  * Baofeng UV-5R and its clones (BFB291 and earlier firmwares): 9600 baud, 128 memories of 16 bytes at 0x0000 and their
@@ -123,12 +126,12 @@ class Uv5rSpec(private val pauseMs: Long = 50) : RadioSpec {
     }
 
     private fun identify(link: SerialLink): String {
-        var last = "aucune réponse"
+        var last = S(R.string.no_answer)
         for (magic in MAGICS) {
             link.purge()
             for (b in magic) { link.write(byteArrayOf(b)); if (pauseMs > 0) Thread.sleep(10) }
             val ack = link.read(1, 1000)
-            if (ack.size != 1 || ack[0] != ACK) { last = if (ack.isEmpty()) "aucune réponse" else "réponse ${ack.hex()}"; pause(); continue }
+            if (ack.size != 1 || ack[0] != ACK) { last = if (ack.isEmpty()) S(R.string.no_answer) else S(R.string.answer, ack.hex()); pause(); continue }
             link.write(byteArrayOf(0x02))
             // The ident ends with 0xDD; some firmwares send 12 bytes instead of 8.
             val resp = java.io.ByteArrayOutputStream()
@@ -139,15 +142,15 @@ class Uv5rSpec(private val pauseMs: Long = 50) : RadioSpec {
                 if (b[0] == 0xDD.toByte()) break
             }
             val ident = resp.toByteArray()
-            if (ident.size != 8 && ident.size != 12) throw RadioException("Identification inattendue du talkie : ${ident.hex()}.")
+            if (ident.size != 8 && ident.size != 12) throw RadioException(S(R.string.unexpected_radio_identification, ident.hex()))
             link.write(byteArrayOf(ACK))
             val ack2 = link.read(1, 1000)
-            if (ack2.size != 1 || ack2[0] != ACK) throw RadioException("Le talkie a refusé le mode clonage.")
+            if (ack2.size != 1 || ack2[0] != ACK) throw RadioException(S(R.string.the_radio_refused_clone_mode))
             return ident.hex()
         }
         throw RadioNoAnswer(
-            "Le talkie ne répond pas ($last). Vérifiez que le câble est enfoncé à fond dans la prise du talkie, que celui-ci est allumé " +
-                "et que son volume n'est pas à zéro.",
+            S(R.string.the_radio_does_not_answer_check, last) +
+                S(R.string.and_that_its_volume_is_not),
         )
     }
 
@@ -155,13 +158,13 @@ class Uv5rSpec(private val pauseMs: Long = 50) : RadioSpec {
         link.write(byteArrayOf('S'.code.toByte(), (addr shr 8).toByte(), addr.toByte(), size.toByte()))
         if (!first) {
             val ack = link.read(1, 1000)
-            if (ack.size != 1 || ack[0] != ACK) throw RadioException("Le talkie a refusé d'envoyer le bloc %04X.".format(addr))
+            if (ack.size != 1 || ack[0] != ACK) throw RadioException(S(R.string.the_radio_refused_to_send_block).format(addr))
         }
-        val head = link.readExactly(4, 1000, "bloc %04X".format(addr))
+        val head = link.readExactly(4, 1000, S(R.string.block).format(addr))
         if (head[0] != 'X'.code.toByte() || (((head[1].toInt() and 0xFF) shl 8) or (head[2].toInt() and 0xFF)) != addr || head[3].toInt() != size) {
-            throw RadioException("Réponse inattendue du talkie au bloc %04X.".format(addr))
+            throw RadioException(S(R.string.unexpected_answer_from_the_radio_for).format(addr))
         }
-        val data = link.readExactly(size, 1000, "bloc %04X".format(addr))
+        val data = link.readExactly(size, 1000, S(R.string.block).format(addr))
         link.write(byteArrayOf(ACK))
         pause()
         return data
@@ -186,7 +189,7 @@ class Uv5rSpec(private val pauseMs: Long = 50) : RadioSpec {
             link.write(byteArrayOf('X'.code.toByte(), (a shr 8).toByte(), a.toByte(), REC.toByte()) + image.copyOfRange(a, a + REC))
             pause()
             val ack = link.read(1, 1000)
-            if (ack.size != 1 || ack[0] != ACK) throw RadioException("Le talkie a refusé le bloc %04X : rien de plus n'a été écrit.".format(a))
+            if (ack.size != 1 || ack[0] != ACK) throw RadioException(S(R.string.the_radio_refused_block_nothing_more).format(a))
             progress((i + 1f) / regions.size)
         }
     }
@@ -263,8 +266,8 @@ class Rt470xSpec(private val pauseMs: Long = 0) : RadioSpec {
         }
         if (!ok) {
             throw RadioNoAnswer(
-                "Le talkie ne répond pas. Vérifiez que le câble est enfoncé à fond dans la prise du talkie, que celui-ci est allumé, " +
-                    "puis éteignez-le et rallumez-le.",
+                S(R.string.the_radio_does_not_answer_check_2) +
+                    S(R.string.then_turn_it_off_and_on),
             )
         }
         link.write(byteArrayOf('F'.code.toByte()))
@@ -275,8 +278,8 @@ class Rt470xSpec(private val pauseMs: Long = 0) : RadioSpec {
     private fun readBlock(link: SerialLink, addr: Int, size: Int): ByteArray {
         val cmd = byteArrayOf('R'.code.toByte(), (addr shr 8).toByte(), addr.toByte(), size.toByte())
         link.write(cmd)
-        val resp = link.readExactly(4 + size, 1000, "bloc %04X".format(addr))
-        if (!resp.copyOf(4).contentEquals(cmd)) throw RadioException("Réponse inattendue du talkie au bloc %04X.".format(addr))
+        val resp = link.readExactly(4 + size, 1000, S(R.string.block).format(addr))
+        if (!resp.copyOf(4).contentEquals(cmd)) throw RadioException(S(R.string.unexpected_answer_from_the_radio_for).format(addr))
         return resp.copyOfRange(4, resp.size)
     }
 
@@ -293,14 +296,14 @@ class Rt470xSpec(private val pauseMs: Long = 0) : RadioSpec {
 
     override fun upload(link: SerialLink, image: ByteArray, slots: Collection<Int>, progress: (Float) -> Unit) {
         val (ident, known) = identify(link)
-        if (!known) throw RadioException("Firmware non reconnu ($ident) : l'écriture est refusée par sécurité. La lecture reste possible.")
+        if (!known) throw RadioException(S(R.string.unrecognised_firmware_writing_is_refused_for, ident))
         // Whole 64-byte blocks, as the manufacturer's software writes them: two memories each.
         val blocks = slots.map { it * REC / BLOCK * BLOCK }.distinct().sorted()
         blocks.forEachIndexed { i, a ->
             val cmd = byteArrayOf('W'.code.toByte(), (a shr 8).toByte(), a.toByte(), BLOCK.toByte())
             link.write(cmd + image.copyOfRange(a, a + BLOCK))
             val ack = link.read(1, 1000)
-            if (ack.size != 1 || ack[0] != ACK) throw RadioException("Le talkie a refusé le bloc %04X : rien de plus n'a été écrit.".format(a))
+            if (ack.size != 1 || ack[0] != ACK) throw RadioException(S(R.string.the_radio_refused_block_nothing_more).format(a))
             progress((i + 1f) / blocks.size)
         }
         runCatching { link.write(byteArrayOf('E'.code.toByte())) }
@@ -428,14 +431,14 @@ class UvK5Spec : RadioSpec {
 
     private fun receive(link: SerialLink, what: String, silentIsNoAnswer: Boolean = false): ByteArray {
         val head = link.read(4, 1500)
-        if (head.isEmpty() && silentIsNoAnswer) throw RadioNoAnswer("Le talkie ne répond pas.")
+        if (head.isEmpty() && silentIsNoAnswer) throw RadioNoAnswer(S(R.string.the_radio_does_not_answer))
         if (head.size != 4 || head[0] != 0xAB.toByte() || head[1] != 0xCD.toByte() || head[3].toInt() != 0) {
-            if (silentIsNoAnswer) throw RadioNoAnswer("Réponse inattendue : ${head.hex()}")
-            throw RadioException("Réponse inattendue du talkie ($what).")
+            if (silentIsNoAnswer) throw RadioNoAnswer(S(R.string.unexpected_answer, head.hex()))
+            throw RadioException(S(R.string.unexpected_answer_from_the_radio, what))
         }
         val body = link.readExactly(head[2].toInt() and 0xFF, 1500, what)
         val foot = link.readExactly(4, 1500, what)
-        if (foot[2] != 0xDC.toByte() || foot[3] != 0xBA.toByte()) throw RadioException("Trame incomplète du talkie ($what).")
+        if (foot[2] != 0xDC.toByte() || foot[3] != 0xBA.toByte()) throw RadioException(S(R.string.incomplete_frame_from_the_radio, what))
         return UvK5Packet.xor(body)
     }
 
@@ -443,15 +446,15 @@ class UvK5Spec : RadioSpec {
         link.purge()
         send(link, byteArrayOf(0x14, 0x05, 0x04, 0x00) + SESSION)
         val r = receive(link, "identification", silentIsNoAnswer = true)
-        if (r.isEmpty() || r[0].toInt() != 0x15) throw RadioNoAnswer("Ce n'est pas un UV-K5.")
+        if (r.isEmpty() || r[0].toInt() != 0x15) throw RadioNoAnswer(S(R.string.this_is_not_a_uv_k5))
         val fw = r.drop(4).takeWhile { it.toInt() != 0 }.map { (it.toInt() and 0xFF).toChar() }.joinToString("").trim()
         return fw to ("2.01." in fw)
     }
 
     private fun readBlock(link: SerialLink, addr: Int, size: Int): ByteArray {
         send(link, byteArrayOf(0x1B, 0x05, 0x08, 0x00, addr.toByte(), (addr shr 8).toByte(), size.toByte(), 0) + SESSION)
-        val r = receive(link, "bloc %04X".format(addr))
-        if (r.size < 8 + size || r[0].toInt() != 0x1C) throw RadioException("Réponse inattendue du talkie au bloc %04X.".format(addr))
+        val r = receive(link, S(R.string.block).format(addr))
+        if (r.size < 8 + size || r[0].toInt() != 0x1C) throw RadioException(S(R.string.unexpected_answer_from_the_radio_for).format(addr))
         return r.copyOfRange(8, 8 + size)
     }
 
@@ -467,13 +470,13 @@ class UvK5Spec : RadioSpec {
 
     override fun upload(link: SerialLink, image: ByteArray, slots: Collection<Int>, progress: (Float) -> Unit) {
         val (fw, known) = hello(link)
-        if (!known) throw RadioException("Firmware non reconnu ($fw) : l'écriture est refusée par sécurité. La lecture reste possible.")
+        if (!known) throw RadioException(S(R.string.unrecognised_firmware_writing_is_refused_for, fw))
         val pages = slots.sorted().flatMap { s -> listOf(s * REC to REC, NAMES + s * REC to REC, ATTR + s / 8 * 8 to 8) }.distinct()
         pages.forEachIndexed { i, (a, n) ->
             send(link, byteArrayOf(0x1D, 0x05, (n + 8).toByte(), 0, a.toByte(), (a shr 8).toByte(), n.toByte(), 1) + SESSION + image.copyOfRange(a, a + n))
-            val r = receive(link, "écriture %04X".format(a))
+            val r = receive(link, S(R.string.write).format(a))
             if (r.size < 6 || r[0].toInt() != 0x1E || r[4] != a.toByte() || r[5] != (a shr 8).toByte()) {
-                throw RadioException("Le talkie a refusé le bloc %04X : rien de plus n'a été écrit.".format(a))
+                throw RadioException(S(R.string.the_radio_refused_block_nothing_more).format(a))
             }
             progress((i + 1f) / pages.size)
         }

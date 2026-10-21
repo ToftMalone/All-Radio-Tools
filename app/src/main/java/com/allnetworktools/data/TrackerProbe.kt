@@ -2,6 +2,8 @@ package com.allnetworktools.data
 
 import android.content.Context
 import kotlinx.coroutines.withTimeoutOrNull
+import com.allnetworktools.R
+import com.allnetworktools.util.S
 
 /**
  * What a Find My accessory tells once connected: its name (Generic Access 0x2A00), model (Device Information
@@ -45,11 +47,11 @@ suspend fun probeFindMy(context: Context, address: String, timeoutMs: Long = 20_
                 read(0x1800, 0x2A00), read(0x180A, 0x2A24), services.any { it.uuid == SoundProtocol.AirTag.service }, services.size,
                 findMyMaker = readInfo(FINDMY_MAKER), findMyModel = readInfo(FINDMY_MODEL),
             )
-        } ?: FindMyProbe(null, null, false, 0, "pas de réponse en ${timeoutMs / 1000} s")
+        } ?: FindMyProbe(null, null, false, 0, S(R.string.no_answer_within_s, timeoutMs / 1000))
     } catch (e: GattException) {
-        FindMyProbe(null, null, false, 0, e.message ?: "erreur GATT ${e.status}")
+        FindMyProbe(null, null, false, 0, e.message ?: S(R.string.gatt_error_2, e.status))
     } catch (e: SecurityException) {
-        FindMyProbe(null, null, false, 0, "autorisation Bluetooth manquante")
+        FindMyProbe(null, null, false, 0, S(R.string.bluetooth_permission_missing))
     } finally {
         client.close()
     }

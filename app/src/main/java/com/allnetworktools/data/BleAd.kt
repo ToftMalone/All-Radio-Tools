@@ -1,5 +1,8 @@
 package com.allnetworktools.data
 
+import com.allnetworktools.R
+import com.allnetworktools.util.S
+
 /** One AD structure of an advertising payload: length, type, data (Bluetooth Core Spec, Vol 3 Part C §11). */
 class AdStructure(val type: Int, val data: ByteArray) {
     val hex: String get() = data.joinToString("") { "%02X".format(it) }
@@ -162,29 +165,29 @@ object Ad {
 
     fun typeName(type: Int): String = when (type) {
         FLAGS -> "Flags"
-        UUID16_PARTIAL -> "UUID 16 bits (partiel)"
-        UUID16 -> "UUID 16 bits"
-        UUID32_PARTIAL, UUID32 -> "UUID 32 bits"
-        UUID128_PARTIAL, UUID128 -> "UUID 128 bits"
-        NAME_SHORT -> "Nom (court)"
+        UUID16_PARTIAL -> S(R.string.n_16_bit_uuids_partial)
+        UUID16 -> S(R.string.n_16_bit_uuids)
+        UUID32_PARTIAL, UUID32 -> S(R.string.n_32_bit_uuids)
+        UUID128_PARTIAL, UUID128 -> S(R.string.n_128_bit_uuids)
+        NAME_SHORT -> S(R.string.name_short)
         NAME -> "Nom"
-        TX_POWER -> "Puissance TX"
-        CLASS_OF_DEVICE -> "Classe d'appareil"
-        0x12 -> "Intervalle de connexion"
-        SOLICIT16, SOLICIT128, 0x1F -> "Sollicitation de service"
-        SERVICE_DATA16, SERVICE_DATA32, SERVICE_DATA128 -> "Données de service"
-        0x17, 0x18 -> "Adresse cible"
-        APPEARANCE -> "Apparence"
-        ADV_INTERVAL -> "Intervalle d'annonce"
-        0x1B -> "Adresse LE"
-        0x1C -> "Rôle LE"
+        TX_POWER -> S(R.string.tx_power)
+        CLASS_OF_DEVICE -> S(R.string.device_class)
+        0x12 -> S(R.string.connection_interval)
+        SOLICIT16, SOLICIT128, 0x1F -> S(R.string.service_solicitation)
+        SERVICE_DATA16, SERVICE_DATA32, SERVICE_DATA128 -> S(R.string.service_data)
+        0x17, 0x18 -> S(R.string.target_address)
+        APPEARANCE -> S(R.string.appearance)
+        ADV_INTERVAL -> S(R.string.advertising_interval)
+        0x1B -> S(R.string.le_address)
+        0x1C -> S(R.string.le_role)
         0x24 -> "URI"
         MESH_PB_ADV -> "Mesh PB-ADV"
-        MESH_MESSAGE -> "Mesh (message)"
+        MESH_MESSAGE -> S(R.string.mesh_message)
         MESH_BEACON -> "Mesh (beacon)"
         0x2C -> "BIGInfo"
-        MANUFACTURER -> "Données fabricant"
-        else -> "Type inconnu"
+        MANUFACTURER -> S(R.string.manufacturer_data)
+        else -> S(R.string.unknown_type)
     }
 
     /** One readable line for the raw-frames list. */
@@ -192,8 +195,8 @@ object Ad {
         val d = s.data
         return when (s.type) {
             FLAGS -> if (d.isEmpty()) "—" else listOfNotNull(
-                if (d.u8(0) and 0x01 != 0) "LE limité" else null, if (d.u8(0) and 0x02 != 0) "LE général" else null,
-                if (d.u8(0) and 0x04 != 0) "sans BR/EDR" else null, if (d.u8(0) and 0x08 != 0) "double mode (contrôleur)" else null,
+                if (d.u8(0) and 0x01 != 0) S(R.string.le_limited) else null, if (d.u8(0) and 0x02 != 0) S(R.string.le_general) else null,
+                if (d.u8(0) and 0x04 != 0) S(R.string.no_br_edr) else null, if (d.u8(0) and 0x08 != 0) S(R.string.dual_mode_controller) else null,
             ).joinToString(" · ").ifEmpty { "0x%02X".format(d.u8(0)) }
             NAME, NAME_SHORT -> String(d, Charsets.UTF_8)
             TX_POWER -> if (d.isEmpty()) "—" else "${d[0]} dBm"
@@ -201,9 +204,9 @@ object Ad {
             ADV_INTERVAL -> advertisedIntervalMs(listOf(s))?.let { "$it ms" } ?: s.hex
             UUID16_PARTIAL, UUID16, SOLICIT16 -> (0 until d.size / 2).joinToString(", ") { "0x%04X".format(d.u16le(it * 2)) }
             UUID128_PARTIAL, UUID128, SOLICIT128 -> (0 until d.size / 16).joinToString("\n") { uuid128(d, it * 16) }
-            SERVICE_DATA16 -> if (d.size >= 2) "0x%04X · %s".format(d.u16le(0), d.hex(2).ifEmpty { "(vide)" }.take(72)) else s.hex
-            MANUFACTURER -> if (d.size >= 2) "${Companies.name(d.u16le(0)) ?: "ID"} (0x%04X) · %s".format(d.u16le(0), d.hex(2).ifEmpty { "(vide)" }.take(72)) else s.hex
-            else -> d.hex().take(72).ifEmpty { "(vide)" }
+            SERVICE_DATA16 -> if (d.size >= 2) "0x%04X · %s".format(d.u16le(0), d.hex(2).ifEmpty { S(R.string.empty) }.take(72)) else s.hex
+            MANUFACTURER -> if (d.size >= 2) "${Companies.name(d.u16le(0)) ?: "ID"} (0x%04X) · %s".format(d.u16le(0), d.hex(2).ifEmpty { S(R.string.empty) }.take(72)) else s.hex
+            else -> d.hex().take(72).ifEmpty { S(R.string.empty) }
         }
     }
 }
@@ -224,7 +227,7 @@ object Companies {
         0x058E to "Meta", 0x05A7 to "Sonos", 0x0822 to "Adafruit",
     )
 
-    fun name(id: Int): String? = names[id]?.let { if (id in chipset) "$it (puce)" else it }
+    fun name(id: Int): String? = names[id]?.let { if (id in chipset) S(R.string.chip, it) else it }
 
     fun isChipset(id: Int) = id in chipset
 

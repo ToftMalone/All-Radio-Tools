@@ -16,8 +16,10 @@ import java.net.InetAddress
 import java.net.URL
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import com.allnetworktools.R
+import com.allnetworktools.util.S
 
-enum class CheckLevel(val label: String) { Bad("Risque"), Warn("À améliorer"), Info("Info"), Good("OK") }
+enum class CheckLevel(val label: String) { Bad(S(R.string.risk)), Warn(S(R.string.to_improve)), Info("Info"), Good("OK") }
 
 data class SecCheck(val level: CheckLevel, val title: String, val detail: String)
 
@@ -47,44 +49,44 @@ object NetworkAudit {
         val c = caps.orEmpty()
         add(
             when {
-                sec.startsWith("Ouvert") -> SecCheck(CheckLevel.Bad, "Réseau ouvert", "Aucun chiffrement : toute personne à portée peut lire le trafic non chiffré (HTTP, DNS).")
-                "WEP" in sec -> SecCheck(CheckLevel.Bad, "Chiffrement WEP", "WEP se casse en quelques minutes. Passez la box en WPA2 ou WPA3.")
-                "OWE" in sec -> SecCheck(CheckLevel.Warn, "Enhanced Open (OWE)", "Le trafic est chiffré, mais n'importe qui peut se connecter et rien ne prouve l'identité du point d'accès.")
-                "192" in sec -> SecCheck(CheckLevel.Good, "WPA3-Entreprise 192 bits", "Le niveau de chiffrement Wi-Fi le plus élevé.")
-                "EAP" in sec -> SecCheck(CheckLevel.Good, "WPA-Entreprise", "Chaque utilisateur a ses identifiants : bonne pratique en entreprise, à condition de vérifier le certificat du serveur.")
-                "SAE" in sec -> SecCheck(CheckLevel.Good, "WPA3-Personnel", "Protocole actuel : protège le mot de passe contre les attaques hors ligne.")
-                "PSK" in sec || "WPA2" in sec -> SecCheck(CheckLevel.Info, "WPA2-Personnel", "Correct si le mot de passe est long et aléatoire. WPA3 protège mieux contre les attaques par dictionnaire.")
-                else -> SecCheck(CheckLevel.Info, "Sécurité : ${sec.ifEmpty { "inconnue" }}", "Android ne précise pas le protocole utilisé.")
+                sec.startsWith("Ouvert") -> SecCheck(CheckLevel.Bad, S(R.string.open_network), S(R.string.no_encryption_anyone_in_range_can))
+                "WEP" in sec -> SecCheck(CheckLevel.Bad, S(R.string.wep_encryption), S(R.string.wep_breaks_in_minutes_switch_the))
+                "OWE" in sec -> SecCheck(CheckLevel.Warn, "Enhanced Open (OWE)", S(R.string.traffic_is_encrypted_but_anyone_can))
+                "192" in sec -> SecCheck(CheckLevel.Good, S(R.string.wpa3_enterprise_192_bit), S(R.string.the_strongest_level_of_wi_fi))
+                "EAP" in sec -> SecCheck(CheckLevel.Good, S(R.string.wpa_enterprise), S(R.string.every_user_has_their_own_credentials))
+                "SAE" in sec -> SecCheck(CheckLevel.Good, S(R.string.wpa3_personal), S(R.string.current_protocol_protects_the_password_against))
+                "PSK" in sec || "WPA2" in sec -> SecCheck(CheckLevel.Info, S(R.string.wpa2_personal), S(R.string.fine_if_the_password_is_long))
+                else -> SecCheck(CheckLevel.Info, S(R.string.security, sec.ifEmpty { "inconnue" }), S(R.string.android_does_not_say_which_protocol))
             },
         )
         if ("SAE" in c && "PSK" in c) {
-            add(SecCheck(CheckLevel.Warn, "Mode de transition WPA2/WPA3", "Le point d'accès accepte encore WPA2 : un attaquant peut forcer une connexion en WPA2, plus facile à attaquer. Passez en WPA3 seul si tous vos appareils le gèrent."))
+            add(SecCheck(CheckLevel.Warn, S(R.string.wpa2_wpa3_transition_mode), S(R.string.the_access_point_still_accepts_wpa2)))
         }
         if ("TKIP" in c) {
-            add(SecCheck(CheckLevel.Bad, "Chiffrement TKIP", "TKIP (WPA1) est obsolète et vulnérable. Réglez la box sur « AES / CCMP » uniquement."))
+            add(SecCheck(CheckLevel.Bad, S(R.string.tkip_encryption), S(R.string.tkip_wpa1_is_obsolete_and_vulnerable)))
         }
         if ("WPS" in c) {
-            add(SecCheck(CheckLevel.Warn, "WPS activé", "Le code PIN WPS peut être forcé (attaques Pixie Dust, force brute) pour récupérer la clé Wi-Fi. Désactivez WPS dans la box."))
+            add(SecCheck(CheckLevel.Warn, S(R.string.wps_enabled), S(R.string.the_wps_pin_can_be_brute)))
         }
         when {
-            "MFPR" in c || ("SAE" in c && "PSK" !in c) -> add(SecCheck(CheckLevel.Good, "Trames de gestion protégées (PMF)", "Obligatoires : empêche les déconnexions forcées et certaines usurpations."))
-            "MFPC" in c -> add(SecCheck(CheckLevel.Info, "Trames de gestion protégées (PMF)", "Proposées mais pas obligatoires : les appareils anciens restent vulnérables aux déconnexions forcées."))
-            caps != null -> add(SecCheck(CheckLevel.Warn, "Trames de gestion non protégées", "Le point d'accès n'annonce pas PMF : un attaquant peut déconnecter les appareils à volonté (attaque par désauthentification)."))
+            "MFPR" in c || ("SAE" in c && "PSK" !in c) -> add(SecCheck(CheckLevel.Good, S(R.string.protected_management_frames_pmf), S(R.string.required_prevents_forced_disconnections_and_some)))
+            "MFPC" in c -> add(SecCheck(CheckLevel.Info, S(R.string.protected_management_frames_pmf), S(R.string.offered_but_not_required_older_devices)))
+            caps != null -> add(SecCheck(CheckLevel.Warn, S(R.string.unprotected_management_frames), S(R.string.the_access_point_does_not_advertise)))
         }
         if (conn.standard in 1..4) {
-            add(SecCheck(CheckLevel.Info, "Matériel ancien (Wi-Fi 4 ou antérieur)", "Les points d'accès anciens ne reçoivent souvent plus de mises à jour de sécurité."))
+            add(SecCheck(CheckLevel.Info, S(R.string.old_hardware_wi_fi_4_or), S(R.string.old_access_points_often_no_longer)))
         }
         if (link != null) {
             add(
-                if (link.privateDns) SecCheck(CheckLevel.Good, "DNS chiffré", "Vos requêtes DNS sont chiffrées" + (link.privateDnsServer?.let { " vers $it" } ?: "") + " : le réseau ne voit pas les noms des sites visités.")
-                else SecCheck(CheckLevel.Warn, "DNS en clair", "Le réseau peut voir et modifier les noms des sites que vous visitez. Activez le « DNS privé » dans les paramètres réseau d'Android."),
+                if (link.privateDns) SecCheck(CheckLevel.Good, S(R.string.encrypted_dns), S(R.string.your_dns_queries_are_encrypted) + (link.privateDnsServer?.let { S(R.string.to, it) } ?: "") + S(R.string.the_network_cannot_see_the_names))
+                else SecCheck(CheckLevel.Warn, S(R.string.plain_text_dns), S(R.string.the_network_can_see_and_change)),
             )
         }
         if (openPorts != null) {
-            if (23 in openPorts) add(SecCheck(CheckLevel.Bad, "Telnet ouvert sur la box", "Le port 23 de la passerelle accepte des connexions Telnet non chiffrées."))
-            if (80 in openPorts && 443 !in openPorts) add(SecCheck(CheckLevel.Warn, "Administration de la box en HTTP", "L'interface de la box n'est accessible qu'en HTTP : le mot de passe d'administration circule en clair sur le Wi-Fi."))
-            else if (443 in openPorts) add(SecCheck(CheckLevel.Good, "Administration de la box en HTTPS", "L'interface de la box est accessible en HTTPS."))
-            if (openPorts.isEmpty()) add(SecCheck(CheckLevel.Good, "Aucun port d'administration ouvert", "Ni Telnet, ni HTTP, ni HTTPS ne répondent sur la passerelle."))
+            if (23 in openPorts) add(SecCheck(CheckLevel.Bad, S(R.string.telnet_open_on_the_router), S(R.string.the_gateway_s_port_23_accepts)))
+            if (80 in openPorts && 443 !in openPorts) add(SecCheck(CheckLevel.Warn, S(R.string.router_administration_over_http), S(R.string.the_router_s_interface_is_only)))
+            else if (443 in openPorts) add(SecCheck(CheckLevel.Good, S(R.string.router_administration_over_https), S(R.string.the_router_s_interface_is_reachable)))
+            if (openPorts.isEmpty()) add(SecCheck(CheckLevel.Good, S(R.string.no_administration_port_open), S(R.string.neither_telnet_http_nor_https_answer)))
         }
     }
 
@@ -170,26 +172,26 @@ object MitmWatch {
     fun checks(s: GatewaySnapshot): List<SecCheck> = buildList {
         val gw = s.gateway
         when {
-            gw == null -> add(SecCheck(CheckLevel.Info, "Pas de passerelle IPv4", "Le réseau n'annonce pas de routeur IPv4."))
-            s.firstHop == null -> add(SecCheck(CheckLevel.Info, "Premier saut inconnu", "Le premier routeur n'a pas répondu au test (ICMP filtré)."))
-            s.firstHop == gw -> add(SecCheck(CheckLevel.Good, "Le trafic passe par la box", "Le premier routeur sur le chemin d'Internet est bien la passerelle $gw."))
+            gw == null -> add(SecCheck(CheckLevel.Info, S(R.string.no_ipv4_gateway), S(R.string.the_network_does_not_advertise_an)))
+            s.firstHop == null -> add(SecCheck(CheckLevel.Info, S(R.string.first_hop_unknown), S(R.string.the_first_router_did_not_answer)))
+            s.firstHop == gw -> add(SecCheck(CheckLevel.Good, S(R.string.traffic_goes_through_the_router), S(R.string.the_first_router_on_the_way, gw)))
             else -> add(
                 SecCheck(
-                    CheckLevel.Bad, "Un appareil s'intercale",
-                    "Vos paquets passent d'abord par ${s.firstHop} au lieu de la passerelle $gw. C'est la signature d'une usurpation ARP (« ARP spoofing ») ou d'une redirection ICMP.",
+                    CheckLevel.Bad, S(R.string.a_device_is_in_the_middle),
+                    S(R.string.your_packets_go_first_through_instead, s.firstHop, gw),
                 ),
             )
         }
         if (s.dhcpServer != null && gw != null && s.dhcpServer != gw) {
-            add(SecCheck(CheckLevel.Warn, "Serveur DHCP distinct de la box", "L'adresse IP a été attribuée par ${s.dhcpServer}, pas par la passerelle $gw. Normal en entreprise ; suspect sur un réseau domestique (serveur DHCP pirate)."))
+            add(SecCheck(CheckLevel.Warn, S(R.string.dhcp_server_other_than_the_router), S(R.string.the_ip_address_was_assigned_by, s.dhcpServer, gw)))
         } else if (s.dhcpServer != null) {
-            add(SecCheck(CheckLevel.Good, "Serveur DHCP : la passerelle", "L'adresse IP a été attribuée par la box elle-même."))
+            add(SecCheck(CheckLevel.Good, S(R.string.dhcp_server_the_gateway), S(R.string.the_ip_address_was_assigned_by_2)))
         }
         if (s.ipv6Routers.size > 1) {
-            add(SecCheck(CheckLevel.Warn, "Plusieurs routeurs IPv6", "${s.ipv6Routers.size} routeurs s'annoncent en IPv6 (${s.ipv6Routers.joinToString()}). Un appareil pirate peut détourner le trafic IPv6 ainsi (attaque SLAAC)."))
+            add(SecCheck(CheckLevel.Warn, S(R.string.several_ipv6_routers), S(R.string.routers_advertise_themselves_over_ipv6_a, s.ipv6Routers.size, s.ipv6Routers.joinToString())))
         }
         if (s.dns.any { d -> !isPrivate(d) && d != gw } && s.dns.none { it == gw }) {
-            add(SecCheck(CheckLevel.Info, "DNS public", "Le réseau distribue les serveurs DNS ${s.dns.joinToString()}."))
+            add(SecCheck(CheckLevel.Info, S(R.string.public_dns), S(R.string.the_network_hands_out_the_dns, s.dns.joinToString())))
         }
     }
 
@@ -197,11 +199,11 @@ object MitmWatch {
     fun changes(a: GatewaySnapshot, b: GatewaySnapshot): List<MitmEvent> = buildList {
         if (a.bssid != b.bssid) return@buildList
         val t = b.timeMs
-        if (a.gateway != b.gateway) add(MitmEvent(t, CheckLevel.Bad, "La passerelle a changé : ${a.gateway} → ${b.gateway}"))
-        if (a.dhcpServer != b.dhcpServer && a.dhcpServer != null && b.dhcpServer != null) add(MitmEvent(t, CheckLevel.Bad, "Le serveur DHCP a changé : ${a.dhcpServer} → ${b.dhcpServer}"))
-        if (a.dns.toSet() != b.dns.toSet()) add(MitmEvent(t, CheckLevel.Warn, "Les serveurs DNS ont changé : ${a.dns.joinToString()} → ${b.dns.joinToString()}"))
-        (b.ipv6Routers - a.ipv6Routers.toSet()).forEach { add(MitmEvent(t, CheckLevel.Warn, "Nouveau routeur IPv6 : $it")) }
-        if (a.firstHop != null && b.firstHop != null && a.firstHop != b.firstHop) add(MitmEvent(t, CheckLevel.Bad, "Le premier routeur a changé : ${a.firstHop} → ${b.firstHop}"))
+        if (a.gateway != b.gateway) add(MitmEvent(t, CheckLevel.Bad, S(R.string.the_gateway_changed, a.gateway, b.gateway)))
+        if (a.dhcpServer != b.dhcpServer && a.dhcpServer != null && b.dhcpServer != null) add(MitmEvent(t, CheckLevel.Bad, S(R.string.the_dhcp_server_changed, a.dhcpServer, b.dhcpServer)))
+        if (a.dns.toSet() != b.dns.toSet()) add(MitmEvent(t, CheckLevel.Warn, S(R.string.the_dns_servers_changed, a.dns.joinToString(), b.dns.joinToString())))
+        (b.ipv6Routers - a.ipv6Routers.toSet()).forEach { add(MitmEvent(t, CheckLevel.Warn, S(R.string.new_ipv6_router, it))) }
+        if (a.firstHop != null && b.firstHop != null && a.firstHop != b.firstHop) add(MitmEvent(t, CheckLevel.Bad, S(R.string.the_first_router_changed, a.firstHop, b.firstHop)))
     }
 
     fun isPrivate(ip: String): Boolean {

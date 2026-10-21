@@ -49,6 +49,9 @@ import com.allnetworktools.ui.theme.gs
 import com.allnetworktools.ui.theme.rf
 import com.allnetworktools.util.fmt
 import com.allnetworktools.util.plural
+import com.allnetworktools.R
+import com.allnetworktools.util.S
+import com.allnetworktools.util.P
 
 fun CellMeasure.title(): String = listOfNotNull(band ?: tech.short, pci?.let { "PCI $it" }).joinToString(" · ")
 fun CellMeasure.arfcnText(): String? = arfcn?.let { "${arfcnLabel ?: "ARFCN"} ${fmt(it)}" }
@@ -74,8 +77,8 @@ fun NeighborCells(vm: MainViewModel) {
         ) {
             LeadingIcon(Sym.CellTower, roles.accent, roles.onAccent, 52.dp, RoundedCornerShape(18.dp), 28.dp)
             Column(Modifier.weight(1f)) {
-                Text("CELLULE DE SERVICE", Modifier.graphicsLayer { alpha = 0.85f }, style = rf(12, 16, 600, 0.4f), color = roles.onContainer)
-                Text(serving?.let { "${it.tech.short} ${it.title()}" } ?: "Aucune", Modifier.padding(top = 2.dp), style = rf(16, 22, 600), color = roles.onContainer)
+                Text(S(R.string.serving_cell_2), Modifier.graphicsLayer { alpha = 0.85f }, style = rf(12, 16, 600, 0.4f), color = roles.onContainer)
+                Text(serving?.let { "${it.tech.short} ${it.title()}" } ?: S(R.string.none_2), Modifier.padding(top = 2.dp), style = rf(16, 22, 600), color = roles.onContainer)
                 val sub = listOfNotNull(serving?.arfcnText(), serving?.nodeId?.let { "${if (serving.tech == RadioTech.NR) "gNB" else "eNB"} ${fmt(it)}" }).joinToString(" · ")
                 if (sub.isNotEmpty()) Text(sub, Modifier.graphicsLayer { alpha = 0.85f }, style = rf(12, 16, tnum = true), color = roles.onContainer)
             }
@@ -85,17 +88,17 @@ fun NeighborCells(vm: MainViewModel) {
             }
         }
         Row(Modifier.fillMaxWidth().padding(start = 4.dp, end = 4.dp, top = 4.dp), verticalAlignment = Alignment.CenterVertically) {
-            Text("${neighbors.size} ${plural(neighbors.size, "cellule voisine", "cellules voisines")}", Modifier.weight(1f), style = rf(13, 18), color = cs.onSurfaceVariant)
-            Legend(listOf("Bon" to AntTheme.net.good, "Moyen" to AntTheme.net.fair, "Faible" to AntTheme.net.poor))
+            Text("${neighbors.size} ${P(R.plurals.p_neighbour_cells, neighbors.size)}", Modifier.weight(1f), style = rf(13, 18), color = cs.onSurfaceVariant)
+            Legend(listOf("Bon" to AntTheme.net.good, S(R.string.fair) to AntTheme.net.fair, S(R.string.weak) to AntTheme.net.poor))
         }
         if (!perms.location) {
             EmptyStateCard(
-                Sym.LocationOff, "Position requise",
-                "Android ne fournit la liste des cellules qu'aux applications autorisées à accéder à la position précise.",
-                PanelAction("Autoriser", Sym.MyLocation) { actions.request(PermGroup.Location) },
+                Sym.LocationOff, S(R.string.location_needed),
+                S(R.string.android_only_gives_the_list_of),
+                PanelAction(S(R.string.allow), Sym.MyLocation) { actions.request(PermGroup.Location) },
             )
         } else if (neighbors.isEmpty()) {
-            EmptyStateCard(Sym.CellTower, "Aucune cellule voisine", "Le modem ne signale pas de cellule voisine pour le moment. La liste se met à jour automatiquement.")
+            EmptyStateCard(Sym.CellTower, S(R.string.no_neighbour_cell), S(R.string.the_modem_reports_no_neighbour_cell))
         }
         Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
             neighbors.forEachIndexed { i, n -> NeighborItem(n, i, neighbors.size) { open(n.key) } }

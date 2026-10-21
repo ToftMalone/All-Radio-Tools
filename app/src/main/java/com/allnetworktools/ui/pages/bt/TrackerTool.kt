@@ -66,6 +66,8 @@ import com.allnetworktools.util.fmt
 import kotlin.math.pow
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import com.allnetworktools.R
+import com.allnetworktools.util.S
 
 /** Log-distance path loss with the usual BLE defaults (1 m reference −59 dBm, exponent 2.2). */
 const val TxAt1m = -59f
@@ -76,7 +78,7 @@ fun rssiToMeters(rssi: Float): Float = 10f.pow((TxAt1m - rssi) / (10f * PathLoss
 /** 0 = cold (−85 dBm or less) → 1 = right next to it (−50 dBm). */
 fun proximity(rssi: Float): Float = ((rssi + 85f) / 35f).coerceIn(0f, 1f)
 
-enum class Heat(val word: String) { Cold("Froid"), Warm("Tiède"), Hot("Chaud"), Found("Trouvé !") }
+enum class Heat(val word: String) { Cold(S(R.string.cold)), Warm(S(R.string.warm)), Hot(S(R.string.hot)), Found(S(R.string.found)) }
 
 fun heatOf(rssi: Float) = when {
     rssi > -50 -> Heat.Found
@@ -216,23 +218,23 @@ fun TrackerTool(c: TrackerController, heard: List<BleDevice>) {
             }
             Phase.Empty -> {
                 ToolEmpty(
-                    Sym.SearchOff, "Signal perdu",
-                    "${c.target?.displayName ?: "L'appareil"} n'émet plus depuis 10 s. Il est peut-être éteint, hors de portée ou en veille.",
-                    "Choisir un autre appareil",
+                    Sym.SearchOff, S(R.string.signal_lost),
+                    S(R.string.has_not_transmitted_for_10_s, c.target?.displayName ?: S(R.string.the_device)),
+                    S(R.string.choose_another_device),
                 ) { c.stop() }
             }
         }
         if (c.phase == Phase.Running) {
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 PillButton(
-                    if (c.ringing) "Sonnerie…" else "Faire sonner",
+                    if (c.ringing) S(R.string.ringing) else S(R.string.make_it_ring),
                     {
                         haptics.confirm()
-                        c.ring { ok -> actions.toast(if (ok) "Alerte envoyée à ${c.target?.displayName}" else "Cet appareil ne propose pas l'alerte immédiate") }
+                        c.ring { ok -> actions.toast(if (ok) S(R.string.alert_sent_to, c.target?.displayName) else S(R.string.this_device_does_not_offer_immediate)) }
                     },
                     Modifier.weight(1f), icon = Sym.VolumeUp, height = 48.dp, enabled = !c.ringing && c.target?.connectable == true,
                 )
-                PillButton("Arrêter", { haptics.segment(); c.stop() }, Modifier.weight(1f), icon = Sym.Stop, height = 48.dp, outlined = true, bg = AntTheme.accent.accent)
+                PillButton(S(R.string.stop), { haptics.segment(); c.stop() }, Modifier.weight(1f), icon = Sym.Stop, height = 48.dp, outlined = true, bg = AntTheme.accent.accent)
             }
         }
     }
@@ -245,18 +247,18 @@ private fun PickDevice(nearby: List<BleDevice>, onFollow: (BleDevice) -> Unit) {
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(16.dp)) {
             ShapeBadge(Sym.LocationSearching, cookieShape(), 64.dp, acc.accent, acc.onAccent, 30.dp, spinMs = 20_000)
             Column(Modifier.weight(1f)) {
-                Text("Choisissez un appareil à retrouver", style = gs(20, 26, 500), color = acc.onContainer)
+                Text(S(R.string.choose_a_device_to_find), style = gs(20, 26, 500), color = acc.onContainer)
                 Text(
-                    "Déplacez-vous : l'écran devient plus chaud à mesure que le signal se renforce.",
+                    S(R.string.move_around_the_screen_gets_hotter),
                     Modifier.padding(top = 4.dp), style = rf(13, 18), color = acc.onContainer,
                 )
             }
         }
     }
-    Text("À proximité · ${nearby.size}", Modifier.padding(start = 4.dp, top = 8.dp), style = rf(14, 20, 600), color = acc.accent)
+    Text(S(R.string.nearby_3, nearby.size), Modifier.padding(start = 4.dp, top = 8.dp), style = rf(14, 20, 600), color = acc.accent)
     if (nearby.isEmpty()) {
         SectionCard {
-            Text("Recherche des appareils BLE… Vérifiez que l'objet est allumé et à portée.", style = rf(14, 20), color = cs.onSurfaceVariant)
+            Text(S(R.string.searching_for_ble_devices_check_that), style = rf(14, 20), color = cs.onSurfaceVariant)
         }
     }
     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
@@ -271,7 +273,7 @@ private fun PickDevice(nearby: List<BleDevice>, onFollow: (BleDevice) -> Unit) {
                     Text(d.displayName, style = rf(15, 20, 600), maxLines = 1)
                     Text("${d.rssi} dBm · ≈ ${fmt(rssiToMeters(d.rssi.toFloat()), 1)} m", style = rf(12, 16, tnum = true), color = cs.onSurfaceVariant)
                 }
-                PillButton("Suivre", { onFollow(d) }, height = 36.dp, bg = acc.accent, fg = acc.onAccent)
+                PillButton(S(R.string.follow), { onFollow(d) }, height = 36.dp, bg = acc.accent, fg = acc.onAccent)
             }
         }
     }
@@ -300,9 +302,9 @@ private fun HotColdCard(c: TrackerController) {
             Symbol(d?.icon ?: Sym.Bluetooth, size = 22.dp, filled = true, tint = fg)
             Text(d?.displayName ?: "", Modifier.weight(1f), style = rf(16, 22, 600), color = fg, maxLines = 1)
             val (icon, text) = when (c.trend) {
-                1 -> Sym.TrendingUp to "Vous vous rapprochez"
-                -1 -> Sym.TrendingDown to "Vous vous éloignez"
-                else -> Sym.TrendingFlat to "Distance stable"
+                1 -> Sym.TrendingUp to S(R.string.getting_closer)
+                -1 -> Sym.TrendingDown to S(R.string.moving_away)
+                else -> Sym.TrendingFlat to S(R.string.steady_distance)
             }
             Row(
                 Modifier.height(28.dp).clip(RoundedCornerShape(14.dp)).background(cs.surface).padding(horizontal = 10.dp),
@@ -332,7 +334,7 @@ private fun HotColdCard(c: TrackerController) {
             Modifier.padding(top = 12.dp), style = gs(22, 28, 500, tnum = true), color = fg,
         )
         Row(Modifier.padding(top = 16.dp).fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            listOf("${fmt(c.rssi)} dBm" to "RSSI filtré", "${fmt(TxAt1m)} dBm" to "Tx @ 1 m", "n = 2,2" to "Modèle").forEach { (v, k) ->
+            listOf("${fmt(c.rssi)} dBm" to S(R.string.filtered_rssi), "${fmt(TxAt1m)} dBm" to "Tx @ 1 m", "n = 2,2" to S(R.string.model)).forEach { (v, k) ->
                 Column(Modifier.weight(1f).clip(RoundedCornerShape(18.dp)).background(cs.surface).padding(horizontal = 12.dp, vertical = 10.dp)) {
                     Text(v, style = gs(16, 22, 600, tnum = true), color = cs.onSurface, maxLines = 1)
                     Text(k, style = rf(11, 14), color = cs.onSurfaceVariant, maxLines = 1)
@@ -347,15 +349,15 @@ private fun HistoryCard(c: TrackerController) {
     val net = AntTheme.net
     SectionCard {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Text("Historique RSSI · 60 s", Modifier.weight(1f), style = rf(16, 22, 600))
-            Legend(listOf("chaud" to cs.error, "tiède" to net.gnss.accent, "froid" to net.wifi.accent))
+            Text(S(R.string.rssi_history_60_s), Modifier.weight(1f), style = rf(16, 22, 600))
+            Legend(listOf("chaud" to cs.error, S(R.string.warm_2) to net.gnss.accent, "froid" to net.wifi.accent))
         }
         LiveChart(
             c.history.toList(), -100f, -30f, 20f, AntTheme.accent.accent, Modifier.padding(top = 12.dp), capacity = 60,
             bands = listOf(ChartBand(-55f, -30f, cs.error), ChartBand(-70f, -55f, net.gnss.accent), ChartBand(-100f, -70f, net.wifi.accent)),
         )
         Text(
-            "Distance estimée par le modèle log-distance : les murs et le corps humain l'allongent.",
+            S(R.string.distance_estimated_with_the_log_distance),
             Modifier.padding(top = 4.dp), style = rf(12, 16), color = cs.onSurfaceVariant,
         )
     }
@@ -398,14 +400,14 @@ private fun rememberHeading(): Pair<Boolean, Float?> {
 private fun relativeWords(rel: Float): String {
     val r = ((rel % 360f) + 360f) % 360f
     return when {
-        r < 22.5f || r >= 337.5f -> "Droit devant vous"
-        r < 67.5f -> "Devant, à droite"
-        r < 112.5f -> "À votre droite"
-        r < 157.5f -> "Derrière, à droite"
-        r < 202.5f -> "Derrière vous"
-        r < 247.5f -> "Derrière, à gauche"
-        r < 292.5f -> "À votre gauche"
-        else -> "Devant, à gauche"
+        r < 22.5f || r >= 337.5f -> S(R.string.straight_ahead)
+        r < 67.5f -> S(R.string.ahead_to_the_right)
+        r < 112.5f -> S(R.string.to_your_right)
+        r < 157.5f -> S(R.string.behind_to_the_right)
+        r < 202.5f -> S(R.string.behind_you)
+        r < 247.5f -> S(R.string.behind_to_the_left)
+        r < 292.5f -> S(R.string.to_your_left)
+        else -> S(R.string.ahead_to_the_left)
     }
 }
 
@@ -417,17 +419,17 @@ private fun DirectionCard(c: TrackerController) {
     SectionCard {
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             Symbol(Sym.Navigation, size = 22.dp, filled = true, tint = acc.accent)
-            Text("Direction de l'appareil", Modifier.weight(1f), style = rf(16, 22, 600))
+            Text(S(R.string.direction_of_the_device), Modifier.weight(1f), style = rf(16, 22, 600))
         }
         val sweep = c.sweep
         val dir = c.direction
         when {
             !hasCompass -> Text(
-                "Ce téléphone n'a pas de boussole : la direction ne peut pas être mesurée.",
+                S(R.string.this_phone_has_no_compass_the),
                 Modifier.padding(top = 8.dp), style = rf(13, 18), color = cs.onSurfaceVariant,
             )
             heading == null -> Text(
-                "Lecture de la boussole…",
+                S(R.string.reading_the_compass),
                 Modifier.padding(top = 8.dp), style = rf(13, 18), color = cs.onSurfaceVariant,
             )
             sweep != null -> {
@@ -451,11 +453,11 @@ private fun DirectionCard(c: TrackerController) {
                     Text("${sweep.coveredCount} / ${sweep.sectors}", style = gs(22, 28, 600, tnum = true))
                 }
                 Text(
-                    "Tenez le téléphone à plat devant vous, contre le corps, et tournez lentement sur vous-même jusqu'à remplir le cercle. " +
-                        "Votre corps masque le signal venant de derrière : il est le plus fort face à l'appareil.",
+                    S(R.string.hold_the_phone_flat_in_front) +
+                        S(R.string.your_body_blocks_the_signal_from),
                     Modifier.padding(top = 10.dp), style = rf(13, 18), color = cs.onSurfaceVariant,
                 )
-                PillButton("Annuler", { c.cancelSweep() }, Modifier.fillMaxWidth().padding(top = 10.dp), height = 44.dp, outlined = true, bg = acc.accent)
+                PillButton(S(R.string.cancel), { c.cancelSweep() }, Modifier.fillMaxWidth().padding(top = 10.dp), height = 44.dp, outlined = true, bg = acc.accent)
             }
             dir != null -> {
                 val rel = dir.bearing - heading
@@ -469,23 +471,23 @@ private fun DirectionCard(c: TrackerController) {
                 }
                 Text(relativeWords(rel), Modifier.fillMaxWidth().padding(top = 12.dp), style = gs(24, 30, 500), textAlign = TextAlign.Center)
                 Text(
-                    "Cap ${fmt(dir.bearing)}° · confiance ${dir.confidence} (${fmt(dir.marginDb, 1)} dB d'écart avec l'arrière)",
+                    S(R.string.heading_confidence_db_more_than_behind, fmt(dir.bearing), dir.confidence, fmt(dir.marginDb, 1)),
                     Modifier.fillMaxWidth().padding(top = 2.dp), style = rf(13, 18, tnum = true), color = cs.onSurfaceVariant, textAlign = TextAlign.Center,
                 )
                 if (dir.confidence == "faible") {
                     Text(
-                        "Signal presque identique dans toutes les directions : rapprochez-vous ou refaites la mesure dans un endroit plus dégagé.",
+                        S(R.string.signal_almost_the_same_in_every),
                         Modifier.padding(top = 8.dp), style = rf(12, 16), color = cs.error,
                     )
                 }
-                PillButton("Mesurer à nouveau", { c.startSweep() }, Modifier.fillMaxWidth().padding(top = 12.dp), icon = Sym.ThreeSixty, height = 44.dp, outlined = true, bg = acc.accent)
+                PillButton(S(R.string.measure_again), { c.startSweep() }, Modifier.fillMaxWidth().padding(top = 12.dp), icon = Sym.ThreeSixty, height = 44.dp, outlined = true, bg = acc.accent)
             }
             else -> {
                 Text(
-                    "Le Bluetooth ne donne pas de direction directement. Faites un tour sur vous-même : l'application repère le côté où le signal est le plus fort, puis la flèche suit la boussole.",
+                    S(R.string.bluetooth_does_not_give_a_direction),
                     Modifier.padding(top = 8.dp), style = rf(13, 18), color = cs.onSurfaceVariant,
                 )
-                PillButton("Trouver la direction", { c.startSweep() }, Modifier.fillMaxWidth().padding(top = 12.dp), icon = Sym.ThreeSixty, height = 48.dp)
+                PillButton(S(R.string.find_the_direction), { c.startSweep() }, Modifier.fillMaxWidth().padding(top = 12.dp), icon = Sym.ThreeSixty, height = 48.dp)
             }
         }
     }

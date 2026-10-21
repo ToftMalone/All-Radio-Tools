@@ -69,6 +69,9 @@ import com.allnetworktools.util.fmt
 import com.allnetworktools.util.plural
 import kotlinx.coroutines.delay
 import kotlin.math.abs
+import com.allnetworktools.R
+import com.allnetworktools.util.S
+import com.allnetworktools.util.P
 
 private const val SCAN_PERIOD_MS = 30_000L
 
@@ -117,7 +120,7 @@ fun WifiScanner(vm: MainViewModel) {
             else -> Sym.Pause
         },
     ) {
-        if (throttled) actions.toast("Nouveau scan possible dans ${(throttledUntil - now) / 1000} s")
+        if (throttled) actions.toast(S(R.string.new_scan_possible_in_s, (throttledUntil - now) / 1000))
         else {
             haptics.segment(); paused = !paused
         }
@@ -128,9 +131,9 @@ fun WifiScanner(vm: MainViewModel) {
     PageColumn {
         if (throttled) {
             ErrorBanner(
-                Sym.Error, "Scan limité par Android",
-                "4 scans max. toutes les 2 minutes. Résultats affichés : il y a ${(now - resultsAt) / 1000} s.",
-                "Nouveau scan possible dans ${((throttledUntil - now) / 1000).coerceAtLeast(0)} s",
+                Sym.Error, S(R.string.scan_limited_by_android),
+                S(R.string.n_4_scans_max_every_2_minutes, (now - resultsAt) / 1000),
+                S(R.string.new_scan_possible_in_s, ((throttledUntil - now) / 1000).coerceAtLeast(0)),
             )
         }
         Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
@@ -139,10 +142,10 @@ fun WifiScanner(vm: MainViewModel) {
                 if (!paused && !throttled) PulseRing(roles.accent, 12.dp, filled = true)
             }
             Text(
-                if (paused || throttled) "Scan en pause" else "Scan en cours",
+                if (paused || throttled) S(R.string.scan_paused_2) else S(R.string.scanning_3),
                 Modifier.padding(start = 10.dp).weight(1f), style = rf(14, 20, 500),
             )
-            Text("${list.size} ${plural(list.size, "réseau", "réseaux")}", style = rf(12, 16), color = cs.onSurfaceVariant)
+            Text("${list.size} ${P(R.plurals.p_networks, list.size)}", style = rf(12, 16), color = cs.onSurfaceVariant)
         }
         SegmentedRow(
             WifiBand.entries.map { it to "${it.label} GHz" }, band, { band = it },
@@ -150,20 +153,20 @@ fun WifiScanner(vm: MainViewModel) {
         )
         if (!perms.location) {
             EmptyStateCard(
-                Sym.LocationOff, "Position requise",
-                "Android ne transmet les résultats de scan Wi-Fi qu'aux applications autorisées à accéder à la position précise.",
-                PanelAction("Autoriser", Sym.MyLocation) { actions.request(PermGroup.Location) },
+                Sym.LocationOff, S(R.string.location_needed),
+                S(R.string.android_only_gives_wi_fi_scan),
+                PanelAction(S(R.string.allow), Sym.MyLocation) { actions.request(PermGroup.Location) },
             )
             return@PageColumn
         }
         SectionCard(padding = androidx.compose.foundation.layout.PaddingValues(start = 12.dp, end = 12.dp, top = 16.dp, bottom = 12.dp)) {
             Row(Modifier.fillMaxWidth().padding(start = 4.dp, bottom = 4.dp), verticalAlignment = Alignment.CenterVertically) {
-                Text("Occupation des canaux", Modifier.weight(1f), style = rf(14, 20, 600))
+                Text(S(R.string.channel_use), Modifier.weight(1f), style = rf(14, 20, 600))
             }
             ChannelChart(list, band, conn?.bssid)
         }
         if (scan != null && list.isEmpty()) {
-            EmptyStateCard(Sym.WifiFind, "Aucun réseau sur ${band.label} GHz", "Le scan continue. Essayez une autre bande ou rapprochez-vous d'un point d'accès.")
+            EmptyStateCard(Sym.WifiFind, S(R.string.no_network_on_ghz, band.label), S(R.string.the_scan_goes_on_try_another))
         }
         key(band) {
             Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
@@ -254,8 +257,8 @@ private fun ScanItem(ap: WifiAp, own: Boolean, index: Int, count: Int) {
         }
         LeadingIcon(icon, roles.container, roles.onContainer)
         Column(Modifier.weight(1f)) {
-            Text(ap.ssid + if (own) " (connecté)" else "", style = rf(15, 20, 600), color = fg, maxLines = 1, overflow = TextOverflow.Ellipsis)
-            Text("Canal ${ap.channel} · ${ap.widthMhz} MHz", style = rf(12, 16), color = if (own) fg else cs.onSurfaceVariant)
+            Text(ap.ssid + if (own) S(R.string.connected_4) else "", style = rf(15, 20, 600), color = fg, maxLines = 1, overflow = TextOverflow.Ellipsis)
+            Text(S(R.string.channel_mhz, ap.channel, ap.widthMhz), style = rf(12, 16), color = if (own) fg else cs.onSurfaceVariant)
         }
         Column(horizontalAlignment = Alignment.End) {
             Text(fmt(ap.rssi), style = gs(20, 24, 500, tnum = true), color = fg)

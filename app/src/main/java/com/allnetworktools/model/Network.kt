@@ -1,6 +1,8 @@
 package com.allnetworktools.model
 
 import com.allnetworktools.ui.theme.Sym
+import com.allnetworktools.R
+import com.allnetworktools.util.S
 
 enum class Network(
     val label: String,
@@ -9,10 +11,10 @@ enum class Network(
 ) {
     Wifi("Wi-Fi", Sym.Wifi, "Scan"),
     Bluetooth("Bluetooth", Sym.Bluetooth, "BLE"),
-    Cellular("Réseau mobile", Sym.CellBars3, "Cellules"),
-    Gnss("GNSS", Sym.SatelliteAlt, "Ciel"),
-    Sdr("SDR", Sym.Antenna, "Spectre"),
-    Talkie("Talkie-walkie", Sym.Radio, "Canaux"),
+    Cellular(S(R.string.mobile_network), Sym.CellBars3, S(R.string.cells)),
+    Gnss("GNSS", Sym.SatelliteAlt, S(R.string.sky)),
+    Sdr("SDR", Sym.Antenna, S(R.string.spectrum)),
+    Talkie(S(R.string.handheld_radio), Sym.Radio, S(R.string.channels)),
     ;
 
     // Getters rather than constructor arguments: Tool's entries reference Network, so eager
@@ -49,55 +51,55 @@ enum class Tool(
     val parent: ToolParent = ToolParent.Tools,
     val implemented: Boolean = false,
 ) {
-    WifiScan(Network.Wifi, "Scanner Wi-Fi", Sym.WifiFind, implemented = true),
-    Lan(Network.Wifi, "Appareils du LAN", Sym.Devices, Sym.Refresh),
-    LanDevice(Network.Wifi, "Appareil du LAN", Sym.Devices, Sym.MoreVert, ToolParent.Other(Lan)),
+    WifiScan(Network.Wifi, S(R.string.wi_fi_scanner), Sym.WifiFind, implemented = true),
+    Lan(Network.Wifi, S(R.string.lan_devices), Sym.Devices, Sym.Refresh),
+    LanDevice(Network.Wifi, S(R.string.lan_device), Sym.Devices, Sym.MoreVert, ToolParent.Other(Lan)),
     Ping(Network.Wifi, "Ping", Sym.NetworkPing, Sym.IosShare),
     Trace(Network.Wifi, "Traceroute", Sym.Route, Sym.IosShare),
-    Ports(Network.Wifi, "Scan de ports", Sym.Lan, Sym.IosShare),
+    Ports(Network.Wifi, S(R.string.port_scan), Sym.Lan, Sym.IosShare),
     Dns(Network.Wifi, "DNS Lookup", Sym.Dns, Sym.History),
-    Speed(Network.Wifi, "Test de débit", Sym.Speed, Sym.History),
+    Speed(Network.Wifi, S(R.string.speed_test), Sym.Speed, Sym.History),
     Whois(Network.Wifi, "Whois", Sym.TravelExplore, Sym.IosShare),
-    EvilTwin(Network.Wifi, "Faux points d'accès", Sym.WifiTetheringError, Sym.Refresh),
-    Audit(Network.Wifi, "Audit du réseau", Sym.Shield, Sym.Refresh),
-    Mitm(Network.Wifi, "Homme du milieu", Sym.SwapHoriz, Sym.RestartAlt),
+    EvilTwin(Network.Wifi, S(R.string.fake_access_points), Sym.WifiTetheringError, Sym.Refresh),
+    Audit(Network.Wifi, S(R.string.network_audit), Sym.Shield, Sym.Refresh),
+    Mitm(Network.Wifi, S(R.string.man_in_the_middle), Sym.SwapHoriz, Sym.RestartAlt),
     WifiDirect(Network.Wifi, "Wi-Fi Direct", Sym.WifiTethering),
-    Coverage(Network.Wifi, "Carte de couverture", Sym.GridOn),
+    Coverage(Network.Wifi, S(R.string.coverage_map), Sym.GridOn),
 
-    BleScan(Network.Bluetooth, "Scanner BLE", Sym.BluetoothSearching, implemented = true),
-    Gatt(Network.Bluetooth, "Appareil BLE", Sym.AccountTree, Sym.MoreVert),
-    Paired(Network.Bluetooth, "Appareil appairé", Sym.Headphones, Sym.MoreVert, ToolParent.Dashboard),
-    Tracker(Network.Bluetooth, "Chaud/Froid", Sym.MyLocation),
-    UnknownTrackers(Network.Bluetooth, "Traqueurs inconnus", Sym.GppMaybe, Sym.RestartAlt),
-    TrackerDetail(Network.Bluetooth, "Traqueur", Sym.Sell, parent = ToolParent.Other(UnknownTrackers)),
-    Beacons(Network.Bluetooth, "Balises", Sym.Sensors),
-    Earbuds(Network.Bluetooth, "Batterie des écouteurs", Sym.Headphones),
+    BleScan(Network.Bluetooth, S(R.string.ble_scanner), Sym.BluetoothSearching, implemented = true),
+    Gatt(Network.Bluetooth, S(R.string.ble_device), Sym.AccountTree, Sym.MoreVert),
+    Paired(Network.Bluetooth, S(R.string.paired_device), Sym.Headphones, Sym.MoreVert, ToolParent.Dashboard),
+    Tracker(Network.Bluetooth, S(R.string.hot_cold), Sym.MyLocation),
+    UnknownTrackers(Network.Bluetooth, S(R.string.unknown_trackers), Sym.GppMaybe, Sym.RestartAlt),
+    TrackerDetail(Network.Bluetooth, S(R.string.tracker_2), Sym.Sell, parent = ToolParent.Other(UnknownTrackers)),
+    Beacons(Network.Bluetooth, S(R.string.beacons), Sym.Sensors),
+    Earbuds(Network.Bluetooth, S(R.string.earbuds_battery), Sym.Headphones),
 
-    CellDetail(Network.Cellular, "Cellule de service", Sym.CellTower, Sym.ContentCopy, implemented = true),
-    Neighbors(Network.Cellular, "Cellules voisines", Sym.CellTower, implemented = true),
-    Handover(Network.Cellular, "Journal de handover", Sym.SwapCalls),
+    CellDetail(Network.Cellular, S(R.string.serving_cell), Sym.CellTower, Sym.ContentCopy, implemented = true),
+    Neighbors(Network.Cellular, S(R.string.neighbour_cells), Sym.CellTower, implemented = true),
+    Handover(Network.Cellular, S(R.string.handover_log), Sym.SwapCalls),
 
-    Sky(Network.Gnss, "Ciel GNSS", Sym.SatelliteAlt, implemented = true),
-    PositionCompare(Network.Gnss, "Comparer les positions", Sym.ShareLocation, Sym.Refresh),
-    GnssIntegrity(Network.Gnss, "Brouillage et leurrage", Sym.Shield, Sym.RestartAlt),
-    GnssRaw(Network.Gnss, "Mesures brutes", Sym.Monitoring),
-    CompassCheck(Network.Gnss, "Boussole et cap GNSS", Sym.Explore, Sym.RestartAlt),
-    GnssClock(Network.Gnss, "Horloge atomique", Sym.Schedule),
-    SkyMask(Network.Gnss, "Masque du ciel", Sym.Radar, Sym.RestartAlt),
+    Sky(Network.Gnss, S(R.string.gnss_sky), Sym.SatelliteAlt, implemented = true),
+    PositionCompare(Network.Gnss, S(R.string.compare_positions), Sym.ShareLocation, Sym.Refresh),
+    GnssIntegrity(Network.Gnss, S(R.string.jamming_and_spoofing), Sym.Shield, Sym.RestartAlt),
+    GnssRaw(Network.Gnss, S(R.string.raw_measurements), Sym.Monitoring),
+    CompassCheck(Network.Gnss, S(R.string.compass_and_gnss_course), Sym.Explore, Sym.RestartAlt),
+    GnssClock(Network.Gnss, S(R.string.atomic_clock), Sym.Schedule),
+    SkyMask(Network.Gnss, S(R.string.sky_mask), Sym.Radar, Sym.RestartAlt),
 
-    Spectrum(Network.Sdr, "Analyseur de spectre", Sym.BarChart),
-    Adsb(Network.Sdr, "Avions (ADS-B)", Sym.Flight),
-    Sonde(Network.Sdr, "Ballons-sondes", Sym.Cloud),
-    Fm(Network.Sdr, "Radio FM", Sym.Radio),
-    Ais(Network.Sdr, "Navires (AIS)", Sym.Boat),
-    Aprs(Network.Sdr, "Radioamateurs (APRS)", Sym.Radio),
-    Acars(Network.Sdr, "Messages d'avions (ACARS)", Sym.Flight),
+    Spectrum(Network.Sdr, S(R.string.spectrum_analyser), Sym.BarChart),
+    Adsb(Network.Sdr, S(R.string.aircraft_ads_b), Sym.Flight),
+    Sonde(Network.Sdr, S(R.string.radiosondes), Sym.Cloud),
+    Fm(Network.Sdr, S(R.string.fm_radio), Sym.Radio),
+    Ais(Network.Sdr, S(R.string.ships_ais), Sym.Boat),
+    Aprs(Network.Sdr, S(R.string.ham_radio_aprs), Sym.Radio),
+    Acars(Network.Sdr, S(R.string.aircraft_messages_acars), Sym.Flight),
     Meshtastic(Network.Sdr, "Meshtastic", Sym.Hub),
-    GpsSdr(Network.Sdr, "Récepteur GPS", Sym.SatelliteAlt),
-    Meteor(Network.Sdr, "Satellites météo (Meteor-M)", Sym.SatelliteAlt),
+    GpsSdr(Network.Sdr, S(R.string.gps_receiver), Sym.SatelliteAlt),
+    Meteor(Network.Sdr, S(R.string.weather_satellites_meteor_m), Sym.SatelliteAlt),
     Fpv(Network.Sdr, "Drones", Sym.Videocam),
 
-    RadioChannels(Network.Talkie, "Canaux du talkie", Sym.Radio, implemented = true),
+    RadioChannels(Network.Talkie, S(R.string.radio_channels), Sym.Radio, implemented = true),
 
     ;
 

@@ -5,6 +5,8 @@ import kotlin.math.floor
 import kotlin.math.hypot
 import kotlin.math.sin
 import kotlin.math.sqrt
+import com.allnetworktools.R
+import com.allnetworktools.util.S
 
 /**
  * One measurement taken while walking: where the phone was, in metres on the floor (x to the right, z towards the
@@ -160,11 +162,11 @@ object CoveragePalette {
 
     /** French wording of the quality, as the bottom bar shows it. */
     fun quality(rssi: Int) = when {
-        rssi >= -50 -> "Excellent"
-        rssi >= -60 -> "Très bon"
+        rssi >= -50 -> S(R.string.excellent)
+        rssi >= -60 -> S(R.string.very_good)
         rssi >= -67 -> "Bon"
-        rssi >= -75 -> "Moyen"
-        else -> "Faible"
+        rssi >= -75 -> S(R.string.fair)
+        else -> S(R.string.weak)
     }
 }
 

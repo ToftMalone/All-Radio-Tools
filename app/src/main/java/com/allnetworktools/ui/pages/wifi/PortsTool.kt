@@ -72,8 +72,11 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
+import com.allnetworktools.R
+import com.allnetworktools.util.S
+import com.allnetworktools.util.P
 
-enum class PortPreset(val label: String, val sub: String) { Common("Courants", "Top 100"), All("Tous", "0 – 65535"), Custom("Personnalisé", "Plage") }
+enum class PortPreset(val label: String, val sub: String) { Common(S(R.string.common), "Top 100"), All(S(R.string.all), "0 – 65535"), Custom(S(R.string.custom), S(R.string.range)) }
 
 data class OpenPort(val port: Int, val service: String, val banner: String?, val warning: String?)
 
@@ -159,9 +162,9 @@ class PortsController(private val scope: CoroutineScope) {
     }
 
     fun report() = buildString {
-        appendLine("Scan de ports $host · ${preset.label} ($total ports)")
+        appendLine(S(R.string.port_scan_ports, host, preset.label, total))
         open.forEach { appendLine("${it.port}/tcp  ${it.service}  ${it.banner ?: ""}") }
-        appendLine("${open.size} ouverts · $closed fermés · $filtered filtrés")
+        appendLine(S(R.string.open_closed_filtered, open.size, closed, filtered))
     }
 }
 
@@ -181,18 +184,18 @@ fun PortsTool(c: PortsController, prefill: String?, gateway: String?) {
     val start = { haptics.confirm(); c.start() }
     PageColumn {
         if (c.phase == Phase.Error) {
-            ToolError(Sym.Block, "Hôte injoignable", "${c.host} ne répond pas au TCP. Vérifiez qu'il est allumé et sur le même réseau.", "Modifier") { c.phase = Phase.Idle }
+            ToolError(Sym.Block, S(R.string.host_unreachable), S(R.string.does_not_answer_over_tcp_check, c.host), S(R.string.edit)) { c.phase = Phase.Idle }
         }
         if (c.phase.form) {
-            HostInputField(c.host, { c.host = it }, "Hôte", recent = c.recent.items, onDone = start)
+            HostInputField(c.host, { c.host = it }, S(R.string.host), recent = c.recent.items, onDone = start)
             PresetSelector(c.preset) { c.preset = it }
             if (c.preset == PortPreset.Custom) {
                 Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                    NumberField("Port de début", c.from, { c.from = it }, Modifier.weight(1f))
-                    NumberField("Port de fin", c.to, { c.to = it }, Modifier.weight(1f))
+                    NumberField(S(R.string.start_port), c.from, { c.from = it }, Modifier.weight(1f))
+                    NumberField(S(R.string.end_port), c.to, { c.to = it }, Modifier.weight(1f))
                 }
             }
-            StartButton("Scanner ${fmt(c.ports().size)} ports", Sym.Radar, enabled = c.host.isNotBlank(), onClick = start)
+            StartButton(S(R.string.scan_ports, fmt(c.ports().size)), Sym.Radar, enabled = c.host.isNotBlank(), onClick = start)
         }
         if (c.phase.active || c.phase == Phase.Empty) {
             val frac = if (c.total == 0) 0f else c.scanned / c.total.toFloat()
@@ -203,38 +206,38 @@ fun PortsTool(c: PortsController, prefill: String?, gateway: String?) {
                         Text(c.host, style = gs(22, 28, 500), maxLines = 1)
                         Text("${fmt(c.scanned)} / ${fmt(c.total)} ports · ${c.preset.label.lowercase()}", style = rf(13, 18, tnum = true))
                         Text(
-                            if (c.phase == Phase.Running) "${c.open.size} ${plural(c.open.size, "ouvert")} · ~${fmt(c.portsPerSecond)} ports/s"
-                            else "${c.open.size} ${plural(c.open.size, "ouvert")} · terminé en ${fmt((c.endedAt - c.startedAt) / 1000f, 1)} s",
+                            if (c.phase == Phase.Running) S(R.string.ports_s, c.open.size, P(R.plurals.p_open, c.open.size), fmt(c.portsPerSecond))
+                            else S(R.string.finished_in_s, c.open.size, P(R.plurals.p_open, c.open.size), fmt((c.endedAt - c.startedAt) / 1000f, 1)),
                             Modifier.padding(top = 4.dp), style = rf(13, 18, 600),
                         )
                     }
                 }
                 if (c.phase != Phase.Running) {
                     Row(Modifier.padding(top = 16.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        HeroTile(c.open.size.toString(), "Ouverts", Modifier.weight(1f))
-                        HeroTile(fmt(c.closed), "Fermés", Modifier.weight(1f))
-                        HeroTile(fmt(c.filtered), "Filtrés", Modifier.weight(1f))
+                        HeroTile(c.open.size.toString(), S(R.string.open_4), Modifier.weight(1f))
+                        HeroTile(fmt(c.closed), S(R.string.closed), Modifier.weight(1f))
+                        HeroTile(fmt(c.filtered), S(R.string.filtered), Modifier.weight(1f))
                     }
                 }
                 if (c.phase == Phase.Running) {
-                    ToolButtons(ToolButton("Arrêter", Sym.Stop, BtnKind.Outline) { c.stop() }, modifier = Modifier.padding(top = 16.dp))
+                    ToolButtons(ToolButton(S(R.string.stop), Sym.Stop, BtnKind.Outline) { c.stop() }, modifier = Modifier.padding(top = 16.dp))
                 } else {
                     ToolButtons(
-                        ToolButton("Relancer", Sym.Refresh, BtnKind.Fill, start),
-                        ToolButton("Modifier", Sym.Tune, BtnKind.Outline) { c.phase = Phase.Idle },
+                        ToolButton(S(R.string.run_again), Sym.Refresh, BtnKind.Fill, start),
+                        ToolButton(S(R.string.edit), Sym.Tune, BtnKind.Outline) { c.phase = Phase.Idle },
                         modifier = Modifier.padding(top = 16.dp),
                     )
                 }
             }
         }
         if (c.phase.active && c.open.isNotEmpty()) {
-            SectionTitle("Ports ouverts")
+            SectionTitle(S(R.string.open_ports))
             Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                 c.open.forEachIndexed { i, p -> PortItem(p, i, c.open.size) }
             }
         }
         if (c.phase == Phase.Empty) {
-            ToolEmpty(Sym.Lock, "Aucun port ouvert", "Tous les ports testés sont fermés ou filtrés sur ${c.host}.", "Scanner une autre plage") { c.phase = Phase.Idle }
+            ToolEmpty(Sym.Lock, S(R.string.no_open_port), S(R.string.all_the_tested_ports_are_closed, c.host), S(R.string.scan_another_range)) { c.phase = Phase.Idle }
         }
     }
 }

@@ -1,6 +1,8 @@
 package com.allnetworktools.data.radio
 
 import kotlin.math.roundToInt
+import com.allnetworktools.R
+import com.allnetworktools.util.S
 
 /** Sub-audible signalling that opens a squelch (receive) or is sent with the voice (transmit). */
 sealed interface Tone {
@@ -10,13 +12,13 @@ sealed interface Tone {
 
     val label: String
         get() = when (this) {
-            None -> "Aucun"
-            is Ctcss -> "%.1f Hz".format(java.util.Locale.FRANCE, hz)
+            None -> S(R.string.none)
+            is Ctcss -> "%.1f Hz".format(java.util.Locale.getDefault(), hz)
             is Dcs -> "D%03dN".format(code).let { if (inverted) it.dropLast(1) + "I" else it }
         }
 }
 
-enum class RadioPower(val label: String) { High("Haute"), Medium("Moyenne"), Low("Basse") }
+enum class RadioPower(val label: String) { High(S(R.string.high)), Medium(S(R.string.medium)), Low(S(R.string.low)) }
 
 /** One memory of a handheld, in terms that do not depend on the radio model. */
 data class RadioChannel(

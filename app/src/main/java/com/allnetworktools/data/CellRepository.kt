@@ -24,6 +24,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.launch
+import com.allnetworktools.R
+import com.allnetworktools.util.S
 
 enum class RadioTech(val short: String) { NR("NR"), LTE("LTE"), WCDMA("3G"), GSM("2G") }
 
@@ -277,11 +279,11 @@ open class CellRepository(private val context: Context) {
             display?.overrideNetworkType == TelephonyDisplayInfo.OVERRIDE_NETWORK_TYPE_NR_ADVANCED -> Triple("5G+", "NON-STANDALONE", "5G+")
             nsa -> Triple("5G NSA", "NON-STANDALONE", "5G")
             display?.overrideNetworkType == TelephonyDisplayInfo.OVERRIDE_NETWORK_TYPE_LTE_ADVANCED_PRO -> Triple("4G+", "LTE ADVANCED PRO", "4G+")
-            display?.overrideNetworkType == TelephonyDisplayInfo.OVERRIDE_NETWORK_TYPE_LTE_CA -> Triple("4G+", "AGRÉGATION", "4G+")
+            display?.overrideNetworkType == TelephonyDisplayInfo.OVERRIDE_NETWORK_TYPE_LTE_CA -> Triple("4G+", S(R.string.aggregation), "4G+")
             net == TelephonyManager.NETWORK_TYPE_LTE || net == TelephonyManager.NETWORK_TYPE_IWLAN -> Triple("4G", "LTE", "4G")
             net in listOf(TelephonyManager.NETWORK_TYPE_HSPAP, TelephonyManager.NETWORK_TYPE_HSPA, TelephonyManager.NETWORK_TYPE_UMTS, TelephonyManager.NETWORK_TYPE_HSDPA, TelephonyManager.NETWORK_TYPE_HSUPA) -> Triple("3G", "UMTS", "3G")
             net in listOf(TelephonyManager.NETWORK_TYPE_EDGE, TelephonyManager.NETWORK_TYPE_GPRS, TelephonyManager.NETWORK_TYPE_GSM) -> Triple("2G", "GSM", "2G")
-            else -> Triple("—", "HORS SERVICE", "—")
+            else -> Triple("—", S(R.string.out_of_service), "—")
         }
         val inService = service?.state == ServiceState.STATE_IN_SERVICE
         val bandwidths = service?.cellBandwidths?.toList().orEmpty()
@@ -308,8 +310,8 @@ open class CellRepository(private val context: Context) {
         return list.map { s ->
             val tm = baseTm?.createForSubscriptionId(s.subscriptionId)
             val roles = buildList {
-                if (s.subscriptionId == dataId) add("Données mobiles")
-                if (s.subscriptionId == voiceId) add("Appels")
+                if (s.subscriptionId == dataId) add(S(R.string.mobile_data))
+                if (s.subscriptionId == voiceId) add(S(R.string.calls))
                 if (s.subscriptionId == smsId) add("SMS")
             }
             val type = runCatching { tm?.dataNetworkType }.getOrNull() ?: TelephonyManager.NETWORK_TYPE_UNKNOWN
@@ -332,7 +334,7 @@ open class CellRepository(private val context: Context) {
         TelephonyManager.NETWORK_TYPE_HSPAP, TelephonyManager.NETWORK_TYPE_HSPA, TelephonyManager.NETWORK_TYPE_UMTS,
         TelephonyManager.NETWORK_TYPE_HSDPA, TelephonyManager.NETWORK_TYPE_HSUPA -> "3G"
         TelephonyManager.NETWORK_TYPE_EDGE, TelephonyManager.NETWORK_TYPE_GPRS, TelephonyManager.NETWORK_TYPE_GSM -> "2G"
-        TelephonyManager.NETWORK_TYPE_UNKNOWN -> "En veille"
+        TelephonyManager.NETWORK_TYPE_UNKNOWN -> S(R.string.idle)
         else -> "—"
     }
 

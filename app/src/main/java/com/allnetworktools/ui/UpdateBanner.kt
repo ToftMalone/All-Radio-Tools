@@ -43,6 +43,8 @@ import com.allnetworktools.ui.theme.rf
 import com.allnetworktools.ui.tools.ProgressBar
 import com.allnetworktools.update.UpdateState
 import kotlinx.coroutines.launch
+import com.allnetworktools.R
+import com.allnetworktools.util.S
 
 /** Asks whether to install a newer version, with what changes in it. */
 @Composable
@@ -53,21 +55,21 @@ fun UpdateDialog(vm: MainViewModel) {
     AlertDialog(
         onDismissRequest = { vm.updater.postpone() },
         icon = { Symbol(Sym.Update, size = 28.dp, tint = cs.primary) },
-        title = { Text("Version ${s.info.version} disponible") },
+        title = { Text(S(R.string.version_available, s.info.version)) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 Text(
-                    "Vous avez la version ${BuildConfig.VERSION_NAME}." + (if (s.info.sizeBytes > 0) " Téléchargement de %.1f Mo, sans quitter l'application.".format(java.util.Locale.FRANCE, s.info.sizeBytes / 1e6) else ""),
+                    S(R.string.you_have_version, BuildConfig.VERSION_NAME) + (if (s.info.sizeBytes > 0) S(R.string.mb_download_without_leaving_the_app).format(java.util.Locale.getDefault(), s.info.sizeBytes / 1e6) else ""),
                     style = rf(14, 20), color = cs.onSurfaceVariant,
                 )
-                Text("Nouveautés", style = rf(14, 20, 600))
+                Text(S(R.string.what_s_new), style = rf(14, 20, 600))
                 Column(
                     Modifier.fillMaxWidth().heightIn(max = 320.dp).clip(RoundedCornerShape(16.dp)).background(cs.surfaceContainerHigh)
                         .verticalScroll(rememberScrollState()).padding(14.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     val items = changelogItems(s.info.notes)
-                    if (items.isEmpty()) Text("Pas de notes pour cette version.", style = rf(13, 18), color = cs.onSurfaceVariant)
+                    if (items.isEmpty()) Text(S(R.string.no_notes_for_this_version), style = rf(13, 18), color = cs.onSurfaceVariant)
                     items.forEach { line ->
                         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                             Text("•", style = rf(13, 18, 700), color = cs.primary)
@@ -77,8 +79,8 @@ fun UpdateDialog(vm: MainViewModel) {
                 }
             }
         },
-        confirmButton = { TextButton({ scope.launch { vm.updater.downloadAndInstall(s.info) } }) { Text("Installer") } },
-        dismissButton = { TextButton({ vm.updater.postpone() }) { Text("Plus tard") } },
+        confirmButton = { TextButton({ scope.launch { vm.updater.downloadAndInstall(s.info) } }) { Text(S(R.string.install)) } },
+        dismissButton = { TextButton({ vm.updater.postpone() }) { Text(S(R.string.later)) } },
     )
 }
 
@@ -125,8 +127,8 @@ fun UpdateBanner(vm: MainViewModel, modifier: Modifier = Modifier) {
                     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                         Symbol(Sym.Download, size = 24.dp, tint = fg)
                         Column(Modifier.weight(1f)) {
-                            Text("Mise à jour ${s.info.version}", style = rf(15, 20, 600), color = fg)
-                            Text("Téléchargement · ${(s.progress * 100).toInt()} %", style = rf(12, 16), color = fg)
+                            Text(S(R.string.updating_to, s.info.version), style = rf(15, 20, 600), color = fg)
+                            Text(S(R.string.downloading, (s.progress * 100).toInt()), style = rf(12, 16), color = fg)
                         }
                     }
                     ProgressBar(s.progress, track = fg.copy(alpha = 0.25f))
@@ -135,18 +137,18 @@ fun UpdateBanner(vm: MainViewModel, modifier: Modifier = Modifier) {
                     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                         Symbol(Sym.Shield, size = 24.dp, tint = fg)
                         Column(Modifier.weight(1f)) {
-                            Text("Autoriser l'installation", style = rf(15, 20, 600), color = fg)
-                            Text("Version ${s.info.version} téléchargée. Android demande d'autoriser All Radio Tools à installer des mises à jour.", style = rf(12, 16), color = fg)
+                            Text(S(R.string.allow_installation), style = rf(15, 20, 600), color = fg)
+                            Text(S(R.string.version_downloaded_android_asks_to_allow, s.info.version), style = rf(12, 16), color = fg)
                         }
                     }
-                    PillButton("Ouvrir le réglage", { vm.updater.openInstallPermissionSettings() }, Modifier.fillMaxWidth(), height = 44.dp, bg = cs.inversePrimary, fg = cs.onSurface)
+                    PillButton(S(R.string.open_the_setting), { vm.updater.openInstallPermissionSettings() }, Modifier.fillMaxWidth(), height = 44.dp, bg = cs.inversePrimary, fg = cs.onSurface)
                 }
                 is UpdateState.Installing -> {
                     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                         Symbol(Sym.Update, size = 24.dp, tint = fg)
                         Column(Modifier.weight(1f)) {
-                            Text("Installation de la version ${s.info.version}", style = rf(15, 20, 600), color = fg)
-                            Text("Confirmez dans la fenêtre Android si elle apparaît.", style = rf(12, 16), color = fg)
+                            Text(S(R.string.installing_version, s.info.version), style = rf(15, 20, 600), color = fg)
+                            Text(S(R.string.confirm_in_the_android_window_if), style = rf(12, 16), color = fg)
                         }
                     }
                 }
@@ -156,8 +158,8 @@ fun UpdateBanner(vm: MainViewModel, modifier: Modifier = Modifier) {
                         Text(s.message, Modifier.weight(1f), style = rf(13, 18), color = fg)
                     }
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        if (s.info != null) PillButton("Réessayer", { scope.launch { vm.updater.downloadAndInstall(s.info) } }, Modifier.weight(1f), height = 40.dp, bg = cs.inversePrimary, fg = cs.onSurface)
-                        PillButton("Fermer", { vm.updater.dismiss() }, Modifier.weight(1f), height = 40.dp, outlined = true, bg = fg)
+                        if (s.info != null) PillButton(S(R.string.retry), { scope.launch { vm.updater.downloadAndInstall(s.info) } }, Modifier.weight(1f), height = 40.dp, bg = cs.inversePrimary, fg = cs.onSurface)
+                        PillButton(S(R.string.close), { vm.updater.dismiss() }, Modifier.weight(1f), height = 40.dp, outlined = true, bg = fg)
                     }
                 }
                 else -> Unit

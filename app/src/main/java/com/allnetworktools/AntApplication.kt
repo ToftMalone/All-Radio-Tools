@@ -11,6 +11,11 @@ import com.allnetworktools.data.SettingsRepository
 import com.allnetworktools.data.WifiRepository
 
 open class AntApplication : Application() {
+    override fun onCreate() {
+        super.onCreate()
+        com.allnetworktools.util.Res.context = this
+    }
+
     open val settings by lazy { SettingsRepository(this) }
     open val permissions by lazy { PermissionsRepository(this) }
     open val radios by lazy { RadiosRepository(this) }

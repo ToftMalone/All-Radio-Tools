@@ -92,6 +92,9 @@ import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Overlay
+import com.allnetworktools.R
+import com.allnetworktools.util.S
+import com.allnetworktools.util.P
 
 /** Immutable copy of a sonde for the UI. */
 data class SondeInfo(
@@ -145,8 +148,8 @@ class SondeController(private val repo: SdrRepository, private val scope: Corout
 
     /** The frequency in Hz, or why it cannot be used. */
     fun parsedHz(): Pair<Long?, String?> {
-        val mhz = frequencyMhz.trim().replace(',', '.').toDoubleOrNull() ?: return null to "Fréquence invalide"
-        if (mhz !in 1.0..6000.0) return null to "Le HackRF reçoit de 1 à 6000 MHz"
+        val mhz = frequencyMhz.trim().replace(',', '.').toDoubleOrNull() ?: return null to S(R.string.invalid_frequency)
+        if (mhz !in 1.0..6000.0) return null to S(R.string.the_hackrf_receives_from_1_to)
         return (mhz * 1e6).roundToInt().toLong() to null
     }
 
@@ -159,8 +162,8 @@ class SondeController(private val repo: SdrRepository, private val scope: Corout
         starting = true
         scope.launch {
             try {
-                if (!repo.hasPermission(device) && !repo.requestPermission(device)) { error = "Accès USB au HackRF refusé"; return@launch }
-                val r = withContext(Dispatchers.IO) { repo.open(device) } ?: run { error = "Impossible d'ouvrir le HackRF"; return@launch }
+                if (!repo.hasPermission(device) && !repo.requestPermission(device)) { error = S(R.string.usb_access_to_the_hackrf_refused); return@launch }
+                val r = withContext(Dispatchers.IO) { repo.open(device) } ?: run { error = S(R.string.could_not_open_the_hackrf); return@launch }
                 val lna = lnaGain
                 val vga = vgaGain
                 val withAmp = amp
@@ -169,7 +172,7 @@ class SondeController(private val repo: SdrRepository, private val scope: Corout
                     r.setSampleRate(SAMPLE_RATE, 1_750_000) && r.setFrequency(hz - SAMPLE_RATE / 4) &&
                         r.setLnaGain(lna) && r.setVgaGain(vga) && r.setAmp(withAmp)
                 }
-                if (!ok) { r.close(); error = "Le HackRF n'a pas accepté la configuration"; return@launch }
+                if (!ok) { r.close(); error = S(R.string.the_hackrf_did_not_accept_the); return@launch }
                 radio = r
                 listeningHz = hz
                 startPipeline(r)
@@ -266,10 +269,10 @@ private fun landingOf(s: com.allnetworktools.data.sdr.Sonde): Landing? {
     return SondeLanding.predict(lat, lon, alt, climb, s.winds.values.toList())
 }
 
-private fun meters(v: Double) = "%,d m".format(Locale.FRANCE, v.roundToInt()).replace(' ', ' ')
+private fun meters(v: Double) = "%,d m".format(Locale.getDefault(), v.roundToInt()).replace(' ', ' ')
 private fun climb(v: Double) = when {
-    v > 0.5 -> "↑ %.1f m/s".format(Locale.FRANCE, v)
-    v < -0.5 -> "↓ %.1f m/s".format(Locale.FRANCE, -v)
+    v > 0.5 -> "↑ %.1f m/s".format(Locale.getDefault(), v)
+    v < -0.5 -> "↓ %.1f m/s".format(Locale.getDefault(), -v)
     else -> "stable"
 }
 
@@ -280,7 +283,7 @@ fun SondeTool(vm: MainViewModel) {
     if (c.sondes.isNotEmpty()) TopBarAction(Sym.Download) {
         val snapshot = c.sondes
         val now = System.currentTimeMillis()
-        actions.saveFile("ballons-sondes-${Export.stamp(now)}.csv", "text/csv") { Export.sondes(snapshot, now).toByteArray() }
+        actions.saveFile(S(R.string.radiosondes_csv, Export.stamp(now)), "text/csv") { Export.sondes(snapshot, now).toByteArray() }
     }
     val device by vm.sdrDevice.collectAsStateWithLifecycle()
     val positions by vm.positions.collectAsStateWithLifecycle()
@@ -293,25 +296,25 @@ fun SondeTool(vm: MainViewModel) {
         HeroCard {
             Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                 Text("${c.sondes.size}", style = gs(56, 60, 500, -1.5f, tnum = true))
-                Text(plural(c.sondes.size, "sonde", "sondes"), Modifier.padding(bottom = 8.dp), style = rf(18, 24, 500))
+                Text(P(R.plurals.p_sondes, c.sondes.size), Modifier.padding(bottom = 8.dp), style = rf(18, 24, 500))
             }
             Text(
-                "RS41, M10 et M20 · ${c.listeningHz?.let { "%.3f".format(Locale.FRANCE, it / 1e6) } ?: c.frequencyMhz.replace('.', ',')} MHz",
+                S(R.string.rs41_m10_and_m20_mhz, c.listeningHz?.let { "%.3f".format(Locale.getDefault(), it / 1e6) } ?: c.frequencyMhz.replace('.', ',')),
                 style = rf(14, 20),
             )
             Row(Modifier.padding(top = 12.dp)) {
                 when {
                     c.error != null -> HeroChip(c.error!!, AntTheme.net.poor)
-                    c.starting -> HeroChip("Démarrage du HackRF…", AntTheme.net.fair, blink = true)
-                    c.running -> HeroChip("${c.totalFrames} ${plural(c.totalFrames, "trame", "trames")} reçues", AntTheme.net.good, blink = true)
-                    device == null -> HeroChip("Aucun HackRF branché", AntTheme.net.poor)
-                    else -> HeroChip("${device!!.name} prêt", AntTheme.net.good)
+                    c.starting -> HeroChip(S(R.string.starting_the_hackrf), AntTheme.net.fair, blink = true)
+                    c.running -> HeroChip(S(R.string.received_3, c.totalFrames, P(R.plurals.p_frames, c.totalFrames)), AntTheme.net.good, blink = true)
+                    device == null -> HeroChip(S(R.string.no_hackrf_plugged_in), AntTheme.net.poor)
+                    else -> HeroChip(S(R.string.ready, device!!.name), AntTheme.net.good)
                 }
             }
         }
         val d = device
-        if (c.running || c.starting) StartButton("Arrêter", Sym.Stop) { c.stop() }
-        else StartButton("Lancer la réception", Sym.PlayArrow, enabled = d != null && freqError == null) { d?.let(c::start) }
+        if (c.running || c.starting) StartButton(S(R.string.stop), Sym.Stop) { c.stop() }
+        else StartButton(S(R.string.start_receiving), Sym.PlayArrow, enabled = d != null && freqError == null) { d?.let(c::start) }
         SondeMap(c, withPos, me, Modifier.fillMaxWidth().aspectRatio(1f).clip(RoundedCornerShape(24.dp)))
         if (c.sondes.isNotEmpty()) {
             SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)) {
@@ -327,12 +330,12 @@ fun SondeTool(vm: MainViewModel) {
                 verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp),
             ) {
                 Symbol(Sym.Tune, size = 20.dp, tint = AntTheme.accent.accent)
-                Text("Réglages", Modifier.weight(1f), style = rf(14, 20, 600))
-                Text("LNA ${c.lnaGain} · VGA ${c.vgaGain}${if (c.amp) " · ampli" else ""}", style = rf(12, 16), color = cs.onSurfaceVariant, maxLines = 1)
+                Text(S(R.string.settings_2), Modifier.weight(1f), style = rf(14, 20, 600))
+                Text("LNA ${c.lnaGain} · VGA ${c.vgaGain}${if (c.amp) S(R.string.amp) else ""}", style = rf(12, 16), color = cs.onSurfaceVariant, maxLines = 1)
             }
             if (showSettings) {
                 Column(Modifier.padding(bottom = 10.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                    HostInputField(c.frequencyMhz, { c.frequencyMhz = it }, "Fréquence (MHz)", Sym.Stream, keyboardType = KeyboardType.Decimal)
+                    HostInputField(c.frequencyMhz, { c.frequencyMhz = it }, S(R.string.frequency_mhz), Sym.Stream, keyboardType = KeyboardType.Decimal)
                     if (freqError != null) Text(freqError, style = rf(13, 18), color = cs.error)
                     GainSettings(
                         c.lnaGain, listOf(16, 24, 32, 40), { c.lnaGain = it; c.applyGains() },
@@ -340,8 +343,8 @@ fun SondeTool(vm: MainViewModel) {
                         c.amp, { c.amp = !c.amp; c.applyGains() },
                     )
                     Text(
-                        "La fréquence s'applique au prochain lancement. Repérez les sondes avec l'analyseur de spectre (préréglage « Sondes météo ») : " +
-                            "une raie qui revient chaque seconde entre 400 et 406 MHz.",
+                        S(R.string.the_frequency_applies_at_the_next) +
+                            S(R.string.a_line_that_comes_back_every),
                         style = rf(12, 16), color = cs.onSurfaceVariant,
                     )
                 }
@@ -351,9 +354,9 @@ fun SondeTool(vm: MainViewModel) {
             Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 Symbol(Sym.Info, size = 22.dp, tint = AntTheme.accent.accent)
                 Text(
-                    "Les stations météo lâchent des ballons deux fois par jour (vers 11 h et 23 h UTC). Météo-France utilise surtout des sondes " +
-                        "Meteomodem M10 et M20, d'autres pays des Vaisala RS41 : les trois sont décodées en même temps. La sonde diffuse en clair sa " +
-                        "position GPS chaque seconde jusqu'à ~35 km d'altitude, puis redescend en parachute. Réception seule.",
+                    S(R.string.weather_stations_launch_balloons_twice_a) +
+                        S(R.string.meteomodem_m10_and_m20_sondes_other) +
+                        S(R.string.gps_position_in_clear_every_second),
                     style = rf(13, 18), color = cs.onSurfaceVariant,
                 )
             }
@@ -376,28 +379,28 @@ private fun SondeRow(s: SondeInfo, me: Pair<Double, Double>?, selected: Boolean,
         Column(Modifier.weight(1f)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text("${s.model} · ${s.serial}", Modifier.weight(1f), style = rf(15, 20, 600), maxLines = 1)
-                Text(if (s.ageS <= 1) "à l'instant" else "il y a ${s.ageS} s", style = rf(12, 16, tnum = true), color = cs.onSurfaceVariant)
+                Text(if (s.ageS <= 1) S(R.string.just_now) else S(R.string.s_ago, s.ageS), style = rf(12, 16, tnum = true), color = cs.onSurfaceVariant)
             }
             Text(
                 listOfNotNull(s.altitudeM?.let(::meters), s.climbMs?.let(::climb), s.speedMs?.let { "${(it * 3.6).roundToInt()} km/h" })
-                    .joinToString(" · ").ifEmpty { "En attente du GPS" },
+                    .joinToString(" · ").ifEmpty { S(R.string.waiting_for_gps) },
                 style = rf(13, 18, tnum = true), maxLines = 1, overflow = TextOverflow.Ellipsis,
             )
             s.landing?.let { l ->
-                val dist = me?.let { "%.1f km de toi".format(Locale.FRANCE, AdsbTracker.haversineKm(it.first, it.second, l.lat, l.lon)) }
+                val dist = me?.let { S(R.string.km_from_you).format(Locale.getDefault(), AdsbTracker.haversineKm(it.first, it.second, l.lat, l.lon)) }
                 val where = "%.4f, %.4f".format(Locale.ROOT, l.lat, l.lon)
                 Text(
-                    listOfNotNull("Chute prévue dans ${(l.inSeconds / 60).roundToInt().coerceAtLeast(1)} min", dist, where).joinToString(" · "),
+                    listOfNotNull(S(R.string.landing_expected_in_min, (l.inSeconds / 60).roundToInt().coerceAtLeast(1)), dist, where).joinToString(" · "),
                     style = rf(13, 18, 600, tnum = true), color = AntTheme.accent.accent, maxLines = 2,
                 )
             }
             Text(
                 listOfNotNull(
-                    s.maxAltitudeM?.takeIf { s.climbMs != null && s.climbMs < -0.5 }?.let { "éclaté à ${meters(it)}" },
-                    s.batteryV?.let { "%.1f V".format(Locale.FRANCE, it) },
+                    s.maxAltitudeM?.takeIf { s.climbMs != null && s.climbMs < -0.5 }?.let { S(R.string.burst_at, meters(it)) },
+                    s.batteryV?.let { "%.1f V".format(Locale.getDefault(), it) },
                     s.satellites?.let { "$it sat." },
-                    if (me != null && s.lat != null && s.lon != null) "%.0f km".format(Locale.FRANCE, AdsbTracker.haversineKm(me.first, me.second, s.lat, s.lon)) else null,
-                    "${s.frames} ${plural(s.frames, "trame", "trames")}",
+                    if (me != null && s.lat != null && s.lon != null) "%.0f km".format(Locale.getDefault(), AdsbTracker.haversineKm(me.first, me.second, s.lat, s.lon)) else null,
+                    "${s.frames} ${P(R.plurals.p_frames, s.frames)}",
                 ).joinToString(" · "),
                 style = rf(12, 16, tnum = true), color = cs.onSurfaceVariant, maxLines = 1, overflow = TextOverflow.Ellipsis,
             )
@@ -547,7 +550,7 @@ private fun SondeMap(c: SondeController, sondes: List<SondeInfo>, me: Pair<Doubl
             if (sel != null) IconCircleButton(Sym.Cloud, { map.controller.animateTo(GeoPoint(sel.lat!!, sel.lon!!), 11.0, 600L) }, size = 36.dp, bg = bg, tint = AntTheme.accent.accent)
         }
         Text(
-            "© les contributeurs d'OpenStreetMap",
+            S(R.string.openstreetmap_contributors),
             Modifier.align(Alignment.BottomStart).padding(6.dp).clip(RoundedCornerShape(6.dp)).background(cs.surface.copy(alpha = 0.85f)).padding(horizontal = 6.dp, vertical = 2.dp),
             style = rf(10, 12), color = cs.onSurfaceVariant,
         )

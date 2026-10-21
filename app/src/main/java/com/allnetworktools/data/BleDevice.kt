@@ -10,6 +10,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import org.json.JSONArray
 import org.json.JSONObject
+import com.allnetworktools.R
+import com.allnetworktools.util.S
 
 enum class BleVendor(val label: String) {
     Apple("Apple"), Microsoft("Microsoft"), Samsung("Samsung"), Google("Google"), Mesh("Bluetooth Mesh"), Beacon("Tag"),
@@ -67,7 +69,7 @@ data class BleDevice(
 
     /** Best available name: the advertised one, else what we identified, else the maker. */
     val title: String
-        get() = name ?: model?.takeIf { confidence >= 50 } ?: maker?.let { "Appareil $it" } ?: "Appareil inconnu"
+        get() = name ?: model?.takeIf { confidence >= 50 } ?: maker?.let { S(R.string.device, it) } ?: S(R.string.unknown_device)
 
     val displayName: String get() = title
 
@@ -89,10 +91,10 @@ data class BleDevice(
     /** What can be said about the address: private addresses change every ~15 minutes. */
     val addressNote: String
         get() = when ((address.take(2).toIntOrNull(16) ?: 0) shr 6) {
-            3 -> "Aléatoire statique (fixe jusqu'au redémarrage de l'appareil)"
-            1 -> "Privée résolvable : change toutes les ~15 min"
-            2 -> "Publique"
-            else -> "Publique ou privée non résolvable"
+            3 -> S(R.string.static_random_fixed_until_the_device)
+            1 -> S(R.string.resolvable_private_changes_every_15_min)
+            2 -> S(R.string.public_text)
+            else -> S(R.string.public_or_non_resolvable_private)
         }
 
     companion object {

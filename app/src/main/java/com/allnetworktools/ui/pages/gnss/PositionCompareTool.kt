@@ -65,6 +65,9 @@ import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Overlay
 import org.osmdroid.views.overlay.Polygon
+import com.allnetworktools.R
+import com.allnetworktools.util.S
+import com.allnetworktools.util.P
 
 /** Distance history between the satellite and network positions, kept while the app is open. */
 class PositionCompareController {
@@ -81,8 +84,8 @@ class PositionCompareController {
 
 private enum class Source(val label: String, val icon: String) {
     Gnss("Satellites (GNSS)", Sym.SatelliteAlt),
-    Network("Réseau (Wi-Fi + antennes)", Sym.Wifi),
-    Fused("Fusionnée (Google)", Sym.MyLocation),
+    Network(S(R.string.network_wi_fi_towers), Sym.Wifi),
+    Fused(S(R.string.fused_google), Sym.MyLocation),
 }
 
 private fun PositionSet.of(s: Source): Location? = when (s) { Source.Gnss -> gnss; Source.Network -> network; Source.Fused -> fused }
@@ -94,7 +97,7 @@ private fun dist(a: Location?, b: Location?) = if (a == null || b == null) null 
 private fun meters(m: Float) = if (m >= 1000) "${fmt(m / 1000, 1)} km" else "${fmt(m)} m"
 
 private fun compass(bearing: Float): String {
-    val dirs = listOf("nord", "nord-est", "est", "sud-est", "sud", "sud-ouest", "ouest", "nord-ouest")
+    val dirs = listOf("nord", S(R.string.north_east), "est", S(R.string.south_east), "sud", S(R.string.south_west), "ouest", S(R.string.north_west))
     return dirs[(((bearing % 360 + 360) % 360) / 45f).roundToInt() % 8]
 }
 
@@ -113,19 +116,19 @@ fun PositionCompareTool(vm: MainViewModel) {
         val acc = AntTheme.accent
         HeroCard {
             if (gn == null) {
-                Text("Comparaison des positions", style = gs(24, 30, 500))
+                Text(S(R.string.position_comparison), style = gs(24, 30, 500))
                 Text(
                     when {
-                        set.gnss == null && set.network == null -> "En attente des premières positions…"
-                        set.gnss == null -> "Position réseau reçue : le GNSS cherche encore les satellites."
-                        else -> "Position GNSS reçue : aucune position réseau (Wi-Fi et données mobiles désactivés ?)."
+                        set.gnss == null && set.network == null -> S(R.string.waiting_for_the_first_positions)
+                        set.gnss == null -> S(R.string.network_position_received_gnss_is_still)
+                        else -> S(R.string.gnss_position_received_no_network_position)
                     },
                     Modifier.padding(top = 4.dp), style = rf(14, 20),
                 )
             } else {
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     BlinkDot(net.good, 8.dp, 1200)
-                    Text("Écart GNSS ↔ réseau", style = rf(13, 18, 600))
+                    Text(S(R.string.gnss_network_offset), style = rf(13, 18, 600))
                 }
                 Row(Modifier.padding(top = 6.dp), verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                     Text(if (gn >= 1000) fmt(gn / 1000, 1) else fmt(gn), style = gs(56, 60, 500, -1.5f, tnum = true))
@@ -136,8 +139,8 @@ fun PositionCompareTool(vm: MainViewModel) {
                 val tol = (g.accuracy.takeIf { g.hasAccuracy() } ?: 0f) + (n.accuracy.takeIf { n.hasAccuracy() } ?: 0f)
                 Text(
                     buildString {
-                        append("La position réseau est à ${meters(gn)} au ${compass(g.bearingTo(n))} de la position satellites. ")
-                        append(if (gn <= tol) "C'est dans la marge d'erreur cumulée (±${fmt(tol)} m) : les deux sont cohérentes." else "C'est au-delà de la marge d'erreur cumulée (±${fmt(tol)} m).")
+                        append(S(R.string.the_network_position_is_to_the, meters(gn), compass(g.bearingTo(n))))
+                        append(if (gn <= tol) S(R.string.that_is_within_the_combined_error, fmt(tol)) else S(R.string.that_is_beyond_the_combined_error, fmt(tol)))
                     },
                     Modifier.padding(top = 4.dp), style = rf(14, 20),
                 )
@@ -155,7 +158,7 @@ fun PositionCompareTool(vm: MainViewModel) {
                         }
                     }
                 }
-                Text("Les cercles indiquent la précision annoncée par chaque source.", Modifier.padding(horizontal = 8.dp), style = rf(12, 16), color = cs.onSurfaceVariant)
+                Text(S(R.string.the_circles_show_the_accuracy_each), Modifier.padding(horizontal = 8.dp), style = rf(12, 16), color = cs.onSurfaceVariant)
             }
         }
         Source.entries.forEach { s -> SourceCard(s, set.of(s), colors.getValue(s), s == Source.Network, scan?.size, cell.state?.serving?.let { "${it.tech.short} ${it.band ?: ""}".trim() }) }
@@ -165,18 +168,18 @@ fun PositionCompareTool(vm: MainViewModel) {
             val f = set.fused
             TileGrid(
                 listOfNotNull(
-                    dist(g, f)?.let { Triple("GNSS ↔ fusionnée", meters(it), "") },
-                    dist(n, f)?.let { Triple("Réseau ↔ fusionnée", meters(it), "") },
-                    if (g != null && n != null && g.hasAltitude() && n.hasAltitude()) Triple("Écart d'altitude", "${fmt(kotlin.math.abs(g.altitude - n.altitude))} m", "") else null,
-                    if (g != null && n != null && g.hasAccuracy() && n.hasAccuracy()) Triple("Précision GNSS / réseau", "±${fmt(g.accuracy)} / ±${fmt(n.accuracy)}", "m") else null,
+                    dist(g, f)?.let { Triple(S(R.string.gnss_fused), meters(it), "") },
+                    dist(n, f)?.let { Triple(S(R.string.network_fused), meters(it), "") },
+                    if (g != null && n != null && g.hasAltitude() && n.hasAltitude()) Triple(S(R.string.altitude_difference), "${fmt(kotlin.math.abs(g.altitude - n.altitude))} m", "") else null,
+                    if (g != null && n != null && g.hasAccuracy() && n.hasAccuracy()) Triple(S(R.string.gnss_network_accuracy), "±${fmt(g.accuracy)} / ±${fmt(n.accuracy)}", "m") else null,
                 ),
             ) { (k, v, u), m -> MetricTile(k, v, u, modifier = m) }
         }
         if (c.gnssToNetwork.size >= 3) {
             SectionCard {
                 Row(verticalAlignment = Alignment.Bottom) {
-                    Text("Écart GNSS ↔ réseau", Modifier.weight(1f), style = rf(16, 22, 600))
-                    Text("moy. ${fmt(c.gnssToNetwork.average())} m · max ${fmt(c.gnssToNetwork.max())} m", style = rf(12, 16, tnum = true), color = cs.onSurfaceVariant)
+                    Text(S(R.string.gnss_network_offset), Modifier.weight(1f), style = rf(16, 22, 600))
+                    Text(S(R.string.avg_m_max_m, fmt(c.gnssToNetwork.average()), fmt(c.gnssToNetwork.max())), style = rf(12, 16, tnum = true), color = cs.onSurfaceVariant)
                 }
                 val hi = (kotlin.math.ceil((c.gnssToNetwork.max() + 5f) / 10f) * 10f).coerceAtLeast(20f)
                 LiveChart(c.gnssToNetwork.toList(), 0f, hi, hi / 4f, acc.accent, Modifier.padding(top = 10.dp), capacity = 90, morphMs = 400)
@@ -186,8 +189,8 @@ fun PositionCompareTool(vm: MainViewModel) {
             Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 Symbol(Sym.Info, size = 22.dp, tint = acc.accent)
                 Text(
-                    "La position « réseau » est calculée par Android à partir des points d'accès Wi-Fi visibles et des antennes mobiles ; " +
-                        "elle est souvent précise à 20–50 m. Le Bluetooth n'est pas une source de position que le système donne aux applications.",
+                    S(R.string.the_network_position_is_computed_by) +
+                        S(R.string.it_is_often_accurate_to_2050),
                     style = rf(13, 18), color = cs.onSurfaceVariant,
                 )
             }
@@ -206,11 +209,11 @@ private fun SourceCard(s: Source, l: Location?, color: Color, network: Boolean, 
             Column(Modifier.weight(1f)) {
                 Text(s.label, style = rf(15, 20, 600))
                 Text(
-                    l?.let { "%.5f° %s · %.5f° %s".format(java.util.Locale.FRANCE, kotlin.math.abs(it.latitude), if (it.latitude >= 0) "N" else "S", kotlin.math.abs(it.longitude), if (it.longitude >= 0) "E" else "O") } ?: "Aucune position reçue",
+                    l?.let { "%.5f° %s · %.5f° %s".format(java.util.Locale.getDefault(), kotlin.math.abs(it.latitude), if (it.latitude >= 0) "N" else "S", kotlin.math.abs(it.longitude), if (it.longitude >= 0) "E" else "O") } ?: S(R.string.no_position_received),
                     style = rf(13, 18, tnum = true), color = cs.onSurfaceVariant,
                 )
             }
-            if (l != null) Text("il y a ${ageS(l)} s", style = rf(12, 16, tnum = true), color = cs.onSurfaceVariant)
+            if (l != null) Text(S(R.string.s_ago, ageS(l)), style = rf(12, 16, tnum = true), color = cs.onSurfaceVariant)
         }
         if (l != null) {
             Row(Modifier.padding(top = 10.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -221,12 +224,12 @@ private fun SourceCard(s: Source, l: Location?, color: Color, network: Boolean, 
                 if (l.hasAltitude()) chip("${fmt(l.altitude)} m alt.")()
                 if (l.hasSpeed() && l.speed > 0.3f) chip("${fmt(l.speed * 3.6f)} km/h")()
                 val sats = l.extras?.getInt("satellites", -1) ?: -1
-                if (s == Source.Gnss && sats >= 0) chip("$sats ${plural(sats, "satellite")}")()
+                if (s == Source.Gnss && sats >= 0) chip("$sats ${P(R.plurals.p_satellites, sats)}")()
             }
         }
         if (network) {
             Text(
-                listOfNotNull(wifiCount?.let { "$it ${plural(it, "réseau Wi-Fi visible", "réseaux Wi-Fi visibles")}" }, cellLabel?.let { "cellule $it" }).joinToString(" · ").ifEmpty { "Calculée à partir du Wi-Fi et des antennes" },
+                listOfNotNull(wifiCount?.let { "$it ${P(R.plurals.p_visible_wi_fi_networks, it)}" }, cellLabel?.let { S(R.string.cell_3, it) }).joinToString(" · ").ifEmpty { S(R.string.computed_from_wi_fi_and_cell) },
                 Modifier.padding(top = 8.dp), style = rf(12, 16), color = cs.onSurfaceVariant,
             )
         }
@@ -325,7 +328,7 @@ private fun PositionMap(sources: List<Triple<GeoPoint, Float, Int>>) {
             IconCircleButton(Sym.MyLocation, { fit() }, size = 36.dp, bg = bg, tint = AntTheme.accent.accent)
         }
         Text(
-            "© les contributeurs d'OpenStreetMap",
+            S(R.string.openstreetmap_contributors),
             Modifier.align(Alignment.BottomStart).padding(6.dp).clip(RoundedCornerShape(6.dp)).background(cs.surface.copy(alpha = 0.85f))
                 .clickable { LocalActionsHolder.openCopyright(context) }.padding(horizontal = 6.dp, vertical = 2.dp),
             style = rf(10, 13, 500), color = cs.onSurface,

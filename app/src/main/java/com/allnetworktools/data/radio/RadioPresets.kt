@@ -1,6 +1,8 @@
 package com.allnetworktools.data.radio
 
 import kotlin.math.roundToLong
+import com.allnetworktools.R
+import com.allnetworktools.util.S
 
 /** One frequency of a preset list; the transmit side is derived from [shiftHz] and the "listen only" choice. */
 data class PresetChannel(
@@ -41,20 +43,20 @@ object RadioPresets {
     private fun mhz(v: Double) = (v * 1_000_000).roundToLong()
 
     private val pmr = RadioPreset(
-        "pmr446", "PMR446", "16 canaux, 446,00625 à 446,19375 MHz", alwaysListenOnly = false,
-        note = "Émettre en PMR446 demande un appareil homologué, à antenne fixe et de 0,5 W au plus : un talkie programmable ne l'est pas.",
+        "pmr446", "PMR446", S(R.string.n_16_channels_446_00625_to_446), alwaysListenOnly = false,
+        note = S(R.string.transmitting_on_pmr446_needs_a_type),
         channels = (0 until 16).map { PresetChannel("PMR ${it + 1}", mhz(446.00625) + it * 12_500L, wide = false) },
     )
 
     private val lpd = RadioPreset(
-        "lpd433", "LPD433", "69 canaux, 433,075 à 434,775 MHz", alwaysListenOnly = false,
-        note = "Bande libre à 10 mW au plus : un talkie de plusieurs watts n'a pas le droit d'y émettre.",
+        "lpd433", "LPD433", S(R.string.n_69_channels_433_075_to_434), alwaysListenOnly = false,
+        note = S(R.string.licence_free_band_at_10_mw),
         channels = (0 until 69).map { PresetChannel("LPD ${it + 1}", mhz(433.075) + it * 25_000L) },
     )
 
     private val marine = RadioPreset(
-        "marine", "VHF marine", "Canaux simplex, 156,3 à 156,875 MHz", alwaysListenOnly = true,
-        note = "Écoute seule : émettre en marine exige un appareil et un certificat dédiés.",
+        "marine", S(R.string.marine_vhf), S(R.string.simplex_channels_156_3_to_156), alwaysListenOnly = true,
+        note = S(R.string.listen_only_transmitting_on_marine_bands),
         channels = listOf(
             6 to 156.300, 8 to 156.400, 9 to 156.450, 10 to 156.500, 11 to 156.550, 12 to 156.600, 13 to 156.650, 14 to 156.700,
             15 to 156.750, 16 to 156.800, 17 to 156.850, 67 to 156.375, 68 to 156.425, 69 to 156.475, 71 to 156.575, 72 to 156.625,
@@ -63,14 +65,14 @@ object RadioPresets {
     )
 
     private val relays2m = RadioPreset(
-        "relais2m", "Relais radioamateur 2 m", "RV48 à RV63, sorties 145,600 à 145,7875 MHz, décalage −600 kHz", alwaysListenOnly = false,
-        note = "Émettre demande une licence radioamateur. Beaucoup de relais exigent une tonalité d'accès (souvent 88,5 Hz) : à régler canal par canal.",
+        "relais2m", S(R.string.n_2_m_amateur_repeaters), S(R.string.rv48_to_rv63_outputs_145_600), alwaysListenOnly = false,
+        note = S(R.string.transmitting_needs_an_amateur_radio_licence),
         channels = (0 until 16).map { PresetChannel("RV${48 + it}", mhz(145.600) + it * 12_500L, shiftHz = -600_000L, wide = false) },
     )
 
     private val amateur = RadioPreset(
-        "radioamateur", "Radioamateur : appels et spéciaux", "Appel 2 m et 70 cm, APRS, ISS", alwaysListenOnly = false,
-        note = "Émettre demande une licence radioamateur. L'ISS ne s'écoute qu'en réception.",
+        "radioamateur", S(R.string.amateur_radio_calling_and_specials), S(R.string.n_2_m_and_70_cm_calling), alwaysListenOnly = false,
+        note = S(R.string.transmitting_needs_an_amateur_radio_licence_2),
         channels = listOf(
             PresetChannel("APPEL2M", mhz(145.500), wide = false),
             PresetChannel("APPEL70", mhz(433.500), wide = false),

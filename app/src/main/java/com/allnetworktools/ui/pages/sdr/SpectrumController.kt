@@ -16,20 +16,22 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import com.allnetworktools.R
+import com.allnetworktools.util.S
 
 /** A one-tap starting point on the band plan. */
 enum class SpectrumPreset(val label: String, val centerMhz: Double, val spanMhz: Int) {
-    Fm("Radio FM", 98.0, 20),
-    Air("Aviation", 127.5, 20),
-    Ham2m("Radioamateurs 2 m", 145.0, 5),
+    Fm(S(R.string.fm_radio), 98.0, 20),
+    Air(S(R.string.aviation), 127.5, 20),
+    Ham2m(S(R.string.n_2_m_amateur_radio), 145.0, 5),
     Meteor("Meteor-M 137 MHz", 137.5, 2),
     Aprs("APRS 144,800", 144.8, 2),
-    Marine("AIS marine", 162.0, 2),
-    Sondes("Sondes météo", 403.0, 5),
+    Marine(S(R.string.marine_ais), 162.0, 2),
+    Sondes(S(R.string.weather_sondes), 403.0, 5),
     Ism433("433 MHz", 433.92, 2),
     Ism868("868 MHz", 868.3, 2),
     Adsb("ADS-B 1090", 1090.0, 2),
-    Wifi("Wi-Fi 2,4 GHz", 2442.0, 20),
+    Wifi(S(R.string.wi_fi_2_4_ghz), 2442.0, 20),
 }
 
 /**
@@ -70,14 +72,14 @@ class SpectrumController(private val repo: SdrRepository, private val scope: Cor
 
     fun start(device: SdrDevice) {
         if (running || starting) return
-        val hz = parsedCenterHz() ?: run { error = "Fréquence invalide (1 à 6000 MHz)"; return }
+        val hz = parsedCenterHz() ?: run { error = S(R.string.invalid_frequency_1_to_6000_mhz); return }
         onAcquire()
         error = null
         starting = true
         scope.launch {
             try {
-                if (!repo.hasPermission(device) && !repo.requestPermission(device)) { error = "Accès USB au HackRF refusé"; return@launch }
-                val r = withContext(Dispatchers.IO) { repo.open(device) } ?: run { error = "Impossible d'ouvrir le HackRF"; return@launch }
+                if (!repo.hasPermission(device) && !repo.requestPermission(device)) { error = S(R.string.usb_access_to_the_hackrf_refused); return@launch }
+                val r = withContext(Dispatchers.IO) { repo.open(device) } ?: run { error = S(R.string.could_not_open_the_hackrf); return@launch }
                 val rate = spanMhz * 1_000_000
                 val lna = lnaGain
                 val vga = vgaGain
@@ -85,7 +87,7 @@ class SpectrumController(private val repo: SdrRepository, private val scope: Cor
                 val ok = withContext(Dispatchers.IO) {
                     r.setSampleRate(rate, HackRf.filterFor(rate)) && r.setFrequency(hz) && r.setLnaGain(lna) && r.setVgaGain(vga) && r.setAmp(withAmp)
                 }
-                if (!ok) { r.close(); error = "Le HackRF n'a pas accepté la configuration"; return@launch }
+                if (!ok) { r.close(); error = S(R.string.the_hackrf_did_not_accept_the); return@launch }
                 radio = r
                 tunedHz = hz
                 hold = null
@@ -103,7 +105,7 @@ class SpectrumController(private val repo: SdrRepository, private val scope: Cor
         centerMhz = "%.3f".format(java.util.Locale.US, hz / 1e6)
         hold = null
         scope.launch {
-            if (withContext(Dispatchers.IO) { r.setFrequency(hz) }) tunedHz = hz else error = "Fréquence refusée par le HackRF"
+            if (withContext(Dispatchers.IO) { r.setFrequency(hz) }) tunedHz = hz else error = S(R.string.frequency_refused_by_the_hackrf)
         }
     }
 

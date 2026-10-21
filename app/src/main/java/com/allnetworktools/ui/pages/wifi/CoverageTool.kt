@@ -94,6 +94,8 @@ import com.google.ar.core.Session
 import com.google.ar.core.TrackingFailureReason
 import com.google.ar.core.TrackingState
 import kotlin.math.max
+import com.allnetworktools.R
+import com.allnetworktools.util.S
 
 enum class CoverageMode { Ar, Steps }
 
@@ -180,7 +182,7 @@ fun CoverageTool(c: CoverageController, conn: WifiConnection?) {
     if (c.samples.isNotEmpty() && !c.running) {
         TopBarAction(Sym.Download) {
             val snapshot = c.samples.toList()
-            actions.saveFile("couverture-wifi-${System.currentTimeMillis() / 1000}.csv", "text/csv") { CoverageMap.csv(snapshot).toByteArray() }
+            actions.saveFile(S(R.string.wifi_coverage_csv, System.currentTimeMillis() / 1000), "text/csv") { CoverageMap.csv(snapshot).toByteArray() }
         }
     }
     var cameraOk by remember { mutableStateOf(ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) }
@@ -190,7 +192,7 @@ fun CoverageTool(c: CoverageController, conn: WifiConnection?) {
     }
     PageColumn {
         if (conn == null) {
-            ToolEmpty(Sym.WifiOff, "Pas de Wi-Fi", "Connectez-vous au réseau Wi-Fi dont vous voulez cartographier la couverture.", null)
+            ToolEmpty(Sym.WifiOff, S(R.string.no_wi_fi), S(R.string.connect_to_the_wi_fi_network), null)
             return@PageColumn
         }
         val arPossible = support.possible
@@ -201,18 +203,18 @@ fun CoverageTool(c: CoverageController, conn: WifiConnection?) {
         if (c.samples.isNotEmpty()) StatsTiles(c.samples)
         if (!c.running) {
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                if (arPossible) AntFilterChip("Réalité augmentée", c.mode == CoverageMode.Ar, onClick = { c.mode = CoverageMode.Ar })
-                AntFilterChip("Podomètre", c.mode == CoverageMode.Steps || !arPossible, onClick = { c.mode = CoverageMode.Steps })
+                if (arPossible) AntFilterChip(S(R.string.augmented_reality), c.mode == CoverageMode.Ar, onClick = { c.mode = CoverageMode.Ar })
+                AntFilterChip(S(R.string.step_counter), c.mode == CoverageMode.Steps || !arPossible, onClick = { c.mode = CoverageMode.Steps })
             }
         }
         val mode = if (arPossible) c.mode else CoverageMode.Steps
         when {
             c.running -> ToolButtons(
-                ToolButton("Terminer", Sym.Check, BtnKind.Fill) { c.stop() },
-                ToolButton("Effacer", Sym.Delete, BtnKind.OutlineOnSurface) { c.clear() },
+                ToolButton(S(R.string.finish), Sym.Check, BtnKind.Fill) { c.stop() },
+                ToolButton(S(R.string.clear), Sym.Delete, BtnKind.OutlineOnSurface) { c.clear() },
             )
             else -> ToolButtons(
-                ToolButton(if (c.samples.isEmpty()) "Commencer à marcher" else "Nouvelle carte", Sym.PlayArrow, BtnKind.Big) {
+                ToolButton(if (c.samples.isEmpty()) S(R.string.start_walking) else S(R.string.new_map), Sym.PlayArrow, BtnKind.Big) {
                     if (mode == CoverageMode.Ar) {
                         val activity = context.activity()
                         val install = runCatching { activity?.let { ArCoreApk.getInstance().requestInstall(it, true) } }.getOrNull()
@@ -236,19 +238,19 @@ private fun SignalHero(c: CoverageController, conn: WifiConnection) {
     HeroCard {
         Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
             Text(conn.rssi.toString(), style = gs(56, 60, 500, -1.5f, tnum = true))
-            Text("dBm ici", Modifier.padding(bottom = 8.dp), style = rf(18, 24, 500))
+            Text(S(R.string.dbm_here), Modifier.padding(bottom = 8.dp), style = rf(18, 24, 500))
         }
         Text(
-            if (c.running) "Marchez normalement, téléphone tenu devant vous" else "${conn.ssid ?: "Réseau masqué"} · déplacez-vous pour cartographier",
+            if (c.running) S(R.string.walk_normally_holding_the_phone_in) else S(R.string.move_around_to_map_it, conn.ssid ?: S(R.string.hidden_network)),
             style = rf(14, 20),
         )
         Row(Modifier.padding(top = 12.dp)) {
             HeroChip(
                 when {
-                    conn.rssi >= -60 -> "Excellent signal"
-                    conn.rssi >= -70 -> "Bon signal"
-                    conn.rssi >= -80 -> "Signal faible"
-                    else -> "Signal très faible"
+                    conn.rssi >= -60 -> S(R.string.excellent_signal)
+                    conn.rssi >= -70 -> S(R.string.good_signal)
+                    conn.rssi >= -80 -> S(R.string.weak_signal)
+                    else -> S(R.string.very_weak_signal)
                 },
                 when {
                     conn.rssi >= -60 -> net.good
@@ -276,15 +278,15 @@ private fun ArScreen(c: CoverageController, conn: WifiConnection) {
             val insets = androidx.compose.foundation.layout.WindowInsets.safeDrawing
             Box(Modifier.fillMaxWidth().align(Alignment.TopCenter).windowInsetsPadding(insets).padding(horizontal = 8.dp, vertical = 4.dp).height(48.dp)) {
                 IconCircleButton(Sym.Close, { c.stop() }, Modifier.align(Alignment.CenterStart), tint = Color.White, size = 44.dp)
-                Text("Force du signal", Modifier.align(Alignment.Center), style = rf(17, 22, 600), color = Color.White)
+                Text(S(R.string.signal_strength), Modifier.align(Alignment.Center), style = rf(17, 22, 600), color = Color.White)
             }
             val hint = when {
-                c.tracking == TrackingState.TRACKING -> if (c.floor.size == 0) "Marchez : le sol se colore sous vos pas" else null
-                c.failure == TrackingFailureReason.INSUFFICIENT_LIGHT -> "Trop sombre : allumez la lumière"
-                c.failure == TrackingFailureReason.EXCESSIVE_MOTION -> "Bougez plus lentement"
-                c.failure == TrackingFailureReason.INSUFFICIENT_FEATURES -> "Visez le sol ou des objets texturés"
-                c.failure == TrackingFailureReason.CAMERA_UNAVAILABLE -> "Caméra utilisée par une autre application"
-                else -> "Balayez lentement le sol avec la caméra…"
+                c.tracking == TrackingState.TRACKING -> if (c.floor.size == 0) S(R.string.walk_the_floor_colours_under_your) else null
+                c.failure == TrackingFailureReason.INSUFFICIENT_LIGHT -> S(R.string.too_dark_turn_the_light_on)
+                c.failure == TrackingFailureReason.EXCESSIVE_MOTION -> S(R.string.move_more_slowly)
+                c.failure == TrackingFailureReason.INSUFFICIENT_FEATURES -> S(R.string.point_at_the_floor_or_textured)
+                c.failure == TrackingFailureReason.CAMERA_UNAVAILABLE -> S(R.string.camera_used_by_another_app)
+                else -> S(R.string.sweep_the_floor_slowly_with_the)
             }
             hint?.let {
                 Text(
@@ -328,7 +330,7 @@ private fun NetworkBar(conn: WifiConnection) {
             com.allnetworktools.ui.components.Symbol(Sym.Wifi, size = 20.dp, filled = true, tint = Color.White)
         }
         Column(Modifier.weight(1f)) {
-            Text(conn.ssid ?: "Réseau masqué", style = rf(15, 20, 600), color = Color.White, maxLines = 1)
+            Text(conn.ssid ?: S(R.string.hidden_network), style = rf(15, 20, 600), color = Color.White, maxLines = 1)
             Text(
                 listOfNotNull(conn.bssid?.uppercase(), bandOf(conn.frequency)).joinToString(" · "),
                 style = rf(12, 16), color = Color.White.copy(alpha = 0.6f), maxLines = 1,
@@ -342,7 +344,7 @@ private fun NetworkBar(conn: WifiConnection) {
 }
 
 private fun bandOf(mhz: Int) = when {
-    mhz in 2400..2500 -> "2,4 GHz"
+    mhz in 2400..2500 -> S(R.string.n_2_4_ghz)
     mhz in 4900..5900 -> "5 GHz"
     mhz in 5925..7125 -> "6 GHz"
     else -> null
@@ -357,7 +359,7 @@ private fun ArCamera(c: CoverageController) {
     val session = created.getOrNull()
     if (session == null) {
         LaunchedEffect(Unit) {
-            c.arError = "Réalité augmentée indisponible : ${created.exceptionOrNull()?.message ?: "ARCore n'a pas démarré"}"
+            c.arError = S(R.string.augmented_reality_unavailable, created.exceptionOrNull()?.message ?: S(R.string.arcore_did_not_start))
             c.stop()
         }
         return
@@ -368,7 +370,7 @@ private fun ArCamera(c: CoverageController) {
     LaunchedEffect(c.floorVersion) { renderer.tiles = c.floor.vertices() }
     var view by remember { mutableStateOf<GLSurfaceView?>(null) }
     DisposableEffect(lifecycle) {
-        fun resume() { runCatching { arSession.resume() }.onFailure { c.arError = "Caméra indisponible : ${it.message}" }; view?.onResume() }
+        fun resume() { runCatching { arSession.resume() }.onFailure { c.arError = S(R.string.camera_unavailable, it.message) }; view?.onResume() }
         fun pause() { view?.onPause(); arSession.pause() }
         val obs = LifecycleEventObserver { _, e ->
             when (e) {
@@ -496,7 +498,7 @@ private fun CoverageMapCard(c: CoverageController) {
             Text("1 m", Modifier.align(Alignment.BottomStart).padding(start = 14.dp, bottom = 20.dp), style = rf(11, 14, 600), color = cs.onSurfaceVariant)
             if (samples.isEmpty()) {
                 Text(
-                    if (c.mode == CoverageMode.Ar) "Visez le sol puis marchez" else "Marchez pour tracer la carte",
+                    if (c.mode == CoverageMode.Ar) S(R.string.point_at_the_floor_then_walk) else S(R.string.walk_to_draw_the_map),
                     Modifier.align(Alignment.Center), style = rf(14, 20, 600), color = cs.onSurfaceVariant,
                 )
             }
@@ -509,45 +511,45 @@ private fun StatsTiles(samples: List<CoverageSample>) {
     val s = remember(samples.size) { CoverageMap.stats(samples) }
     TileGrid(
         listOf(
-            Triple(Sym.GridOn, "Surface", fmt(s.areaM2, 1)) to "m²",
-            Triple(Sym.CheckCircle, "Bon signal", fmt(s.goodShare * 100, 0)) to "%",
-            Triple(Sym.Wifi, "Moyenne", s.meanRssi?.let { fmt(it, 0) } ?: "—") to "dBm",
-            Triple(Sym.Route, "Parcouru", fmt(s.distanceM, 1)) to "m",
+            Triple(Sym.GridOn, S(R.string.area), fmt(s.areaM2, 1)) to "m²",
+            Triple(Sym.CheckCircle, S(R.string.good_signal), fmt(s.goodShare * 100, 0)) to "%",
+            Triple(Sym.Wifi, S(R.string.medium), s.meanRssi?.let { fmt(it, 0) } ?: "—") to "dBm",
+            Triple(Sym.Route, S(R.string.walked), fmt(s.distanceM, 1)) to "m",
         ),
     ) { (t, u), mod -> MetricTile(t.second, t.third, u, t.first, mod) }
-    InfoList("Détail") {
-        InfoRow("Mesures", s.samples.toString())
-        InfoRow("Plus faible / plus fort", "${s.minRssi} / ${s.maxRssi} dBm")
-        if (s.accessPoints > 1) InfoRow("Points d'accès traversés", s.accessPoints.toString())
+    InfoList(S(R.string.detail)) {
+        InfoRow(S(R.string.measurements), s.samples.toString())
+        InfoRow(S(R.string.weakest_strongest), "${s.minRssi} / ${s.maxRssi} dBm")
+        if (s.accessPoints > 1) InfoRow(S(R.string.access_points_crossed), s.accessPoints.toString())
     }
 }
 
 @Composable
 private fun DevicePanel(support: ArSupport, c: CoverageController) {
-    InfoList("Capteurs utilisés") {
+    InfoList(S(R.string.sensors_used)) {
         InfoRow(
-            "Réalité augmentée (ARCore)",
+            S(R.string.augmented_reality_arcore),
             when {
-                support.arcore == ArCoreApk.Availability.SUPPORTED_INSTALLED -> "Disponible"
-                support.arcore == ArCoreApk.Availability.SUPPORTED_APK_TOO_OLD || support.arcore == ArCoreApk.Availability.SUPPORTED_NOT_INSTALLED -> "À installer depuis le Play Store"
-                support.arcore?.isUnknown == true -> "Vérification…"
-                else -> "Non compatible : podomètre"
+                support.arcore == ArCoreApk.Availability.SUPPORTED_INSTALLED -> S(R.string.available)
+                support.arcore == ArCoreApk.Availability.SUPPORTED_APK_TOO_OLD || support.arcore == ArCoreApk.Availability.SUPPORTED_NOT_INSTALLED -> S(R.string.to_install_from_the_play_store)
+                support.arcore?.isUnknown == true -> S(R.string.verifying)
+                else -> S(R.string.not_supported_step_counter)
             },
         )
         InfoRow(
-            "Capteur de profondeur",
+            S(R.string.depth_sensor),
             when {
-                c.tof -> "Infrarouge (ToF) utilisé"
-                support.tofCamera -> "Infrarouge (ToF) présent"
-                else -> "Estimée par la caméra"
+                c.tof -> S(R.string.infrared_tof_in_use)
+                support.tofCamera -> S(R.string.infrared_tof_present)
+                else -> S(R.string.estimated_by_the_camera)
             },
         )
-        InfoRow("Mouvements", "Gyroscope, accéléromètre, boussole")
+        InfoRow(S(R.string.motion), S(R.string.gyroscope_accelerometer_compass))
     }
     Text(
-        "En réalité augmentée, la caméra suit vos déplacements au centimètre près : marchez simplement, téléphone tenu devant vous, " +
-            "et des pastilles de couleur se posent au sol. Sans ARCore, les pas et la boussole tracent le parcours (moins précis). " +
-            "Rien n'est enregistré : la carte disparaît quand vous quittez l'outil, sauf si vous l'exportez.",
+        S(R.string.in_augmented_reality_the_camera_follows) +
+            S(R.string.and_coloured_tiles_settle_on_the) +
+            S(R.string.nothing_is_saved_the_map_disappears),
         Modifier.padding(horizontal = 4.dp), style = rf(12, 16), color = cs.onSurfaceVariant,
     )
 }
@@ -556,6 +558,6 @@ private fun DevicePanel(support: ArSupport, c: CoverageController) {
 private fun Legend() {
     SectionCard {
         ScaleBar(Modifier)
-        Text("Au-dessus de -67 dBm : appels vidéo et streaming confortables", Modifier.padding(top = 8.dp), style = rf(12, 16), color = cs.onSurfaceVariant)
+        Text(S(R.string.above_67_dbm_comfortable_video_calls), Modifier.padding(top = 8.dp), style = rf(12, 16), color = cs.onSurfaceVariant)
     }
 }

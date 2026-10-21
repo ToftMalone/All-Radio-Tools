@@ -56,13 +56,16 @@ import com.allnetworktools.ui.theme.gs
 import com.allnetworktools.ui.theme.rf
 import com.allnetworktools.util.plural
 import kotlinx.coroutines.launch
+import com.allnetworktools.R
+import com.allnetworktools.util.S
+import com.allnetworktools.util.P
 
 private data class ObPerm(val group: PermGroup, val icon: String, val title: String, val subtitle: String, val network: Network, val doneIcon: String)
 
 private val ObPerms = listOf(
-    ObPerm(PermGroup.Location, Sym.LocationOn, "Position précise", "Wi-Fi (SSID, scans) et GNSS", Network.Wifi, Sym.Wifi),
-    ObPerm(PermGroup.Nearby, Sym.BluetoothSearching, "Appareils à proximité", "Scan et connexion Bluetooth", Network.Bluetooth, Sym.Bluetooth),
-    ObPerm(PermGroup.Phone, Sym.SimCard, "Téléphone", "Opérateur, cellules, double SIM", Network.Cellular, Sym.CellBars3),
+    ObPerm(PermGroup.Location, Sym.LocationOn, S(R.string.precise_location), S(R.string.wi_fi_ssid_scans_and_gnss), Network.Wifi, Sym.Wifi),
+    ObPerm(PermGroup.Nearby, Sym.BluetoothSearching, S(R.string.nearby_devices), S(R.string.bluetooth_scan_and_connection), Network.Bluetooth, Sym.Bluetooth),
+    ObPerm(PermGroup.Phone, Sym.SimCard, S(R.string.phone), S(R.string.carrier_cells_dual_sim), Network.Cellular, Sym.CellBars3),
 )
 
 @Composable
@@ -77,7 +80,7 @@ fun Onboarding(vm: MainViewModel, onDone: () -> Unit) {
         Row(Modifier.fillMaxWidth().height(40.dp), horizontalArrangement = Arrangement.End) {
             if (step < 2) {
                 Box(Modifier.clip(RoundedCornerShape(20.dp)).clickable(onClick = onDone).padding(horizontal = 16.dp, vertical = 10.dp)) {
-                    Text("Passer", style = rf(15, 20, 600), color = cs.primary)
+                    Text(S(R.string.skip), style = rf(15, 20, 600), color = cs.primary)
                 }
             }
         }
@@ -102,7 +105,7 @@ fun Onboarding(vm: MainViewModel, onDone: () -> Unit) {
                     .padding(horizontal = 28.dp),
                 verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                Text(listOf("Commencer", "Continuer", "Ouvrir l'app")[step], style = rf(16, 20, 600), color = cs.onPrimary)
+                Text(listOf(S(R.string.start), S(R.string.continue_text), S(R.string.open_the_app))[step], style = rf(16, 20, 600), color = cs.onPrimary)
                 Symbol(Sym.ArrowForward, size = 22.dp, tint = cs.onPrimary)
             }
         }
@@ -129,9 +132,9 @@ private fun Welcome() {
             }
         }
         Spacer(Modifier.weight(1f))
-        Text("Tous vos réseaux, mesurés en direct", style = gs(36, 44, 500, -0.5f))
+        Text(S(R.string.all_your_networks_measured_live), style = gs(36, 44, 500, -0.5f))
         Text(
-            "Wi-Fi, Bluetooth, réseau mobile et GNSS dans une seule application, avec des outils de diagnostic pour chacun.",
+            S(R.string.wi_fi_bluetooth_mobile_network_and),
             Modifier.padding(top = 12.dp), style = rf(16, 24), color = cs.onSurfaceVariant,
         )
     }
@@ -143,9 +146,9 @@ private fun Permissions(vm: MainViewModel) {
     val actions = LocalActions.current
     val haptics = AntTheme.haptics
     Column(Modifier.fillMaxSize()) {
-        Text("Autorisations", Modifier.padding(top = 8.dp), style = gs(32, 40, 500))
+        Text(S(R.string.permissions), Modifier.padding(top = 8.dp), style = gs(32, 40, 500))
         Text(
-            "Chaque réseau a besoin d'un accès précis. Vous pouvez en refuser : seules les cartes concernées seront désactivées.",
+            S(R.string.each_network_needs_a_specific_access),
             Modifier.padding(top = 8.dp), style = rf(15, 22), color = cs.onSurfaceVariant,
         )
         Column(Modifier.padding(top = 22.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
@@ -173,7 +176,7 @@ private fun Permissions(vm: MainViewModel) {
                         verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp),
                     ) {
                         if (granted) Box(Modifier.pop(key = true)) { Symbol(Sym.Check, size = 18.dp, tint = AntTheme.net.good) }
-                        Text(if (granted) "Accordée" else "Autoriser", style = rf(13, 18, 700), color = if (granted) AntTheme.net.good else roles.onAccent)
+                        Text(if (granted) S(R.string.granted) else S(R.string.allow), style = rf(13, 18, 700), color = if (granted) AntTheme.net.good else roles.onAccent)
                     }
                 }
             }
@@ -187,10 +190,10 @@ private fun Done(vm: MainViewModel) {
     val granted = ObPerms.count { it.group in perms }
     Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
         ShapeBadge(Sym.Check, cookieShape(), 160.dp, cs.primary, cs.onPrimary, 72.dp, Modifier.pop(), spinMs = 30_000)
-        Text("C'est prêt", Modifier.padding(top = 28.dp), style = gs(32, 40, 500))
+        Text(S(R.string.all_set), Modifier.padding(top = 28.dp), style = gs(32, 40, 500))
         Text(
-            if (granted == 4) "Les 4 réseaux sont disponibles. Touchez une carte pour commencer."
-            else "$granted ${plural(granted, "autorisation")} sur 4 ${plural(granted, "accordée")}. Les réseaux restants pourront être activés depuis leur carte ou les Paramètres.",
+            if (granted == 4) S(R.string.all_4_networks_are_available_tap)
+            else S(R.string.of_4_the_remaining_networks_can, granted, P(R.plurals.p_permissions, granted), P(R.plurals.p_granted, granted)),
             Modifier.padding(top = 8.dp).widthIn(max = 320.dp), style = rf(15, 22), color = cs.onSurfaceVariant, textAlign = TextAlign.Center,
         )
         Row(Modifier.padding(top = 20.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {

@@ -53,6 +53,9 @@ import com.allnetworktools.util.fmt
 import com.allnetworktools.util.plural
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import com.allnetworktools.R
+import com.allnetworktools.util.S
+import com.allnetworktools.util.P
 
 /** A tag seen during the session, with where and when. */
 class TrackerCandidate(val address: String, signal: TrackerSignal) {
@@ -208,20 +211,20 @@ class UnknownTrackersController(private val context: android.content.Context?, p
         val address = t.device?.address ?: return
         t.probeTries++
         t.lastProbeMs = now
-        t.probeState = "Connexion au tag…"
+        t.probeState = S(R.string.connecting_to_the_tag)
         probeJob = scope?.launch {
             val r = probeFindMy(ctx, address)
             if (r.error != null) {
-                t.probeState = "Échec : ${r.error}" + if (t.probeTries < 3) " (nouvel essai dans 1 min)" else ""
+                t.probeState = S(R.string.failed_2, r.error) + if (t.probeTries < 3) S(R.string.retrying_in_1_min) else ""
                 return@launch
             }
             t.probed = true
             // Prefer the model the accessory gives ("AirPods Pro"), then its name; "left"/"right" name one AirPod.
             t.gattName = r.findMyModel ?: r.model ?: r.name?.takeUnless { it == "left" || it == "right" }
             t.gattKind = TrackerDetect.kindFromProbe(r.name, r.airTagService, r.model, r.findMyModel)
-            t.probeState = "Connecté : nom « ${r.name ?: "—"} », modèle « ${r.findMyModel ?: r.model ?: "—"} »" +
-                (r.findMyMaker?.let { ", fabricant « $it »" } ?: "") + ", ${r.services} services" +
-                if (r.airTagService) ", service AirTag présent" else ""
+            t.probeState = S(R.string.connected_name_model, r.name ?: "—", r.findMyModel ?: r.model ?: "—") +
+                (r.findMyMaker?.let { S(R.string.manufacturer_3, it) } ?: "") + S(R.string.services, r.services) +
+                if (r.airTagService) S(R.string.airtag_service_present) else ""
         }
     }
 
@@ -269,22 +272,22 @@ fun UnknownTrackersTool(
         HeroCard {
             Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                 Text(following.toString(), style = gs(56, 60, 500, -1.5f, tnum = true))
-                Text(plural(following, "traqueur vous suit", "traqueurs vous suivent"), Modifier.padding(bottom = 8.dp), style = rf(18, 24, 500))
+                Text(P(R.plurals.p_trackers_are_following_you, following), Modifier.padding(bottom = 8.dp), style = rf(18, 24, 500))
             }
             Text(
-                "${list.size} ${plural(list.size, "traqueur détecté", "traqueurs détectés")} · $watch à surveiller · analyse depuis ${minutes(now - c.sessionStart)}, ${dist(c.travelledM)} parcourus",
+                S(R.string.to_watch_scanning_since_travelled, list.size, P(R.plurals.p_trackers_detected, list.size), watch, minutes(now - c.sessionStart), dist(c.travelledM)),
                 style = rf(14, 20),
             )
             Row(Modifier.padding(top = 12.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                HeroChip("Écoute Bluetooth en cours", AntTheme.net.good, blink = true)
-                if (awake) HeroChip("Écran maintenu allumé", AntTheme.accent.accent)
+                HeroChip(S(R.string.bluetooth_listening_in_progress), AntTheme.net.good, blink = true)
+                if (awake) HeroChip(S(R.string.screen_kept_on), AntTheme.accent.accent)
             }
         }
         if (list.isEmpty()) {
             ToolEmpty(
-                Sym.GppMaybe, "Aucun traqueur à proximité",
-                "L'outil écoute les AirTag, SmartTag, Tile et tags des réseaux Localiser d'Apple et de Google. Gardez-le ouvert pendant vos déplacements : " +
-                    "un traqueur qui reste avec vous plus de 10 minutes sur plus de 300 m est signalé.",
+                Sym.GppMaybe, S(R.string.no_tracker_nearby),
+                S(R.string.the_tool_listens_for_airtags_smarttags) +
+                    S(R.string.a_tracker_that_stays_with_you),
                 null,
             )
         }
@@ -295,7 +298,7 @@ fun UnknownTrackersTool(
         if (list.isNotEmpty()) {
             val roles = AntTheme.accent
             Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                AntFilterChip("Tous", filter == null, { c.kindFilter = null }, roles.container, roles.onContainer, trailing = list.size.toString())
+                AntFilterChip(S(R.string.all), filter == null, { c.kindFilter = null }, roles.container, roles.onContainer, trailing = list.size.toString())
                 kinds.forEach { k ->
                     AntFilterChip(k.label, filter == k, { c.kindFilter = k }, roles.container, roles.onContainer, trailing = counts[k].toString())
                 }
@@ -305,7 +308,7 @@ fun UnknownTrackersTool(
         val shown = if (filter == null) list else list.filter { it.kind == filter }
         // Just the tags: name and status. Everything else is one tap away.
         if (list.isNotEmpty() && shown.isEmpty()) {
-            SectionCard { Text("Aucun appareil de ce type pour l'instant.", style = rf(14, 20), color = cs.onSurfaceVariant) }
+            SectionCard { Text(S(R.string.no_device_of_this_kind_yet), style = rf(14, 20), color = cs.onSurfaceVariant) }
         }
         if (shown.isNotEmpty()) {
             SectionCard(padding = androidx.compose.foundation.layout.PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)) {
@@ -319,10 +322,10 @@ fun UnknownTrackersTool(
             Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 Symbol(Sym.Info, size = 22.dp, tint = AntTheme.accent.accent)
                 Text(
-                    "Un AirTag, un tag Google ou un Galaxy SmartTag éloigné de son propriétaire l'annonce dans ses trames : c'est l'état « séparé » affiché ici. " +
-                        "Un tag séparé qui reste avec vous dans le temps et sur la distance est suspect. Tile ne dit pas s'il est séparé. " +
-                        "« Faire sonner » utilise les protocoles publics DULT (IETF) et Localiser d'Apple ; un tag ne sonne pour un inconnu que s'il est séparé de son propriétaire. " +
-                        "Android propose aussi, dans Paramètres › Sécurité et urgences, des alertes de traqueurs inconnus qui fonctionnent en arrière-plan.",
+                    S(R.string.an_airtag_a_google_tag_or) +
+                        S(R.string.a_separated_tag_that_stays_with) +
+                        S(R.string.make_it_ring_uses_the_public) +
+                        S(R.string.android_also_offers_in_settings_safety),
                     style = rf(13, 18), color = cs.onSurfaceVariant,
                 )
             }
@@ -331,7 +334,7 @@ fun UnknownTrackersTool(
 }
 
 
-private val clock = java.text.SimpleDateFormat("HH:mm", java.util.Locale.FRANCE)
+private val clock = java.text.SimpleDateFormat("HH:mm", java.util.Locale.getDefault())
 
 @Composable
 private fun TrackerRow(t: TrackerCandidate, onClick: () -> Unit) {
@@ -345,7 +348,7 @@ private fun TrackerRow(t: TrackerCandidate, onClick: () -> Unit) {
         Column(Modifier.weight(1f)) {
             Text(t.title, style = rf(16, 22, 600), maxLines = 1, overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis)
             Text(
-                t.assessment.level.label + (if (t.firstHeardMs > 0) " · vu à ${clock.format(java.util.Date(t.firstHeardMs))}" else ""),
+                t.assessment.level.label + (if (t.firstHeardMs > 0) S(R.string.seen_at, clock.format(java.util.Date(t.firstHeardMs))) else ""),
                 style = rf(13, 18, 500), color = col, maxLines = 1,
             )
         }
@@ -393,7 +396,7 @@ fun TrackerDetailTool(
     val t = key?.let { k -> c.candidates[k] ?: c.candidates.values.firstOrNull { k in it.addresses } }
     PageColumn {
         if (t == null) {
-            ToolEmpty(Sym.GppMaybe, "Traqueur introuvable", "Il n'a plus été entendu depuis la réinitialisation de l'analyse.", null)
+            ToolEmpty(Sym.GppMaybe, S(R.string.tracker_not_found), S(R.string.it_has_not_been_heard_since), null)
             return@PageColumn
         }
         TrackerHero(t, now, onLocate, c::ring, c::stopSound)
@@ -428,9 +431,9 @@ private fun TrackerHero(t: TrackerCandidate, now: Long, onLocate: (BleDevice) ->
             HeroChip(a.level.label, col, blink = a.level == FollowLevel.Following)
             HeroChip(
                 t.signal.state ?: when (t.signal.separated) {
-                    true -> "Séparé de son propriétaire"
-                    false -> "Propriétaire à proximité"
-                    null -> "État non annoncé"
+                    true -> S(R.string.separated_from_its_owner)
+                    false -> S(R.string.owner_nearby)
+                    null -> S(R.string.state_not_advertised)
                 },
                 cs.outline,
             )
@@ -441,28 +444,28 @@ private fun TrackerHero(t: TrackerCandidate, now: Long, onLocate: (BleDevice) ->
                 Text(v, style = rf(15, 20, 600, tnum = true), maxLines = 1)
                 Text(k, style = rf(11, 14), color = cs.onSurfaceVariant, maxLines = 1)
             }
-            stat(minutes(a.durationMs), "avec vous", Modifier.weight(1f))
+            stat(minutes(a.durationMs), S(R.string.with_you), Modifier.weight(1f))
             stat(a.spreadM?.let { dist(it) } ?: "—", "distance", Modifier.weight(1f))
-            stat("${a.places}", plural(a.places, "lieu", "lieux"), Modifier.weight(1f))
-            stat("${a.sightings}", plural(a.sightings, "relevé", "relevés"), Modifier.weight(1f))
+            stat("${a.places}", P(R.plurals.p_places, a.places), Modifier.weight(1f))
+            stat("${a.sightings}", P(R.plurals.p_readings, a.sightings), Modifier.weight(1f))
         }
         val lastSeen = t.sightings.lastOrNull()?.timeMs
         Text(
-            (t.device?.address ?: t.address) + (if (t.addresses.size > 1) " · ${t.addresses.size} adresses successives" else "") +
-                (lastSeen?.let { " · entendu il y a ${((now - it) / 1000).coerceAtLeast(0)} s" } ?: ""),
+            (t.device?.address ?: t.address) + (if (t.addresses.size > 1) S(R.string.successive_addresses, t.addresses.size) else "") +
+                (lastSeen?.let { S(R.string.heard_s_ago, ((now - it) / 1000).coerceAtLeast(0)) } ?: ""),
             Modifier.padding(top = 10.dp), style = rf(12, 16, tnum = true),
         )
         val snd = t.sound
         Row(Modifier.fillMaxWidth().padding(top = 16.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             PillButton(
-                "Chaud/Froid", { t.device?.let(onLocate) }, Modifier.weight(1f), icon = Sym.MyLocation, height = 48.dp,
+                S(R.string.hot_cold), { t.device?.let(onLocate) }, Modifier.weight(1f), icon = Sym.MyLocation, height = 48.dp,
                 bg = acc.accent, fg = acc.onAccent, enabled = t.device != null,
             )
             PillButton(
                 when (snd) {
-                    SoundUi.Connecting -> "Connexion…"
-                    is SoundUi.Playing -> "Arrêter"
-                    else -> "Faire sonner"
+                    SoundUi.Connecting -> S(R.string.connecting)
+                    is SoundUi.Playing -> S(R.string.stop)
+                    else -> S(R.string.make_it_ring)
                 },
                 { if (snd is SoundUi.Playing) onStopSound(t) else onRing(t) },
                 Modifier.weight(1f), icon = Sym.VolumeUp, height = 48.dp, bg = cs.surface, fg = acc.accent,
@@ -470,7 +473,7 @@ private fun TrackerHero(t: TrackerCandidate, now: Long, onLocate: (BleDevice) ->
             )
         }
         when (snd) {
-            is SoundUi.Playing -> Text("Sonnerie demandée via le ${snd.via}.", Modifier.padding(top = 8.dp), style = rf(12, 16, 600), color = AntTheme.net.good)
+            is SoundUi.Playing -> Text(S(R.string.ringing_requested_through_the, snd.via), Modifier.padding(top = 8.dp), style = rf(12, 16, 600), color = AntTheme.net.good)
             is SoundUi.Message -> Text(snd.text, Modifier.padding(top = 8.dp), style = rf(12, 16), color = if (snd.error) cs.error else cs.onSurfaceVariant)
             else -> Unit
         }
@@ -483,15 +486,15 @@ private fun ProbeCard(t: TrackerCandidate, onIdentify: () -> Unit) {
     SectionCard {
         Text("Identification", style = rf(14, 20, 600), color = AntTheme.accent.accent)
         Text(
-            "Octet d'état Localiser : " + (t.signal.appleStatus?.let { "0x%02X".format(it) } ?: "—") + " → " + t.signal.kind.label,
+            S(R.string.find_my_status_byte) + (t.signal.appleStatus?.let { "0x%02X".format(it) } ?: "—") + " → " + t.signal.kind.label,
             Modifier.padding(top = 8.dp), style = rf(13, 18, tnum = true),
         )
         Text(
-            t.probeState ?: "Pas encore de connexion au tag.",
+            t.probeState ?: S(R.string.not_connected_to_the_tag_yet),
             Modifier.padding(top = 4.dp), style = rf(13, 18), color = cs.onSurfaceVariant,
         )
         PillButton(
-            "Identifier", onIdentify, Modifier.fillMaxWidth().padding(top = 12.dp), icon = Sym.Search, height = 44.dp,
+            S(R.string.identify), onIdentify, Modifier.fillMaxWidth().padding(top = 12.dp), icon = Sym.Search, height = 44.dp,
             bg = cs.surface, fg = AntTheme.accent.accent, enabled = t.device != null && t.probeState != "Connexion au tag…",
         )
     }
@@ -511,9 +514,9 @@ private fun SignalCard(t: TrackerCandidate) {
                 pts, -100f, -30f, levelColor(t.assessment.level),
                 Modifier.fillMaxWidth().padding(top = 10.dp).height(72.dp),
             )
-            Text("Un relevé toutes les 15 s tant que le tag est entendu.", Modifier.padding(top = 6.dp), style = rf(12, 16), color = cs.onSurfaceVariant)
+            Text(S(R.string.one_reading_every_15_s_while), Modifier.padding(top = 6.dp), style = rf(12, 16), color = cs.onSurfaceVariant)
         } else {
-            Text("La courbe apparaît dès le deuxième relevé (un toutes les 15 s).", Modifier.padding(top = 8.dp), style = rf(13, 18), color = cs.onSurfaceVariant)
+            Text(S(R.string.the_curve_appears_from_the_second), Modifier.padding(top = 8.dp), style = rf(13, 18), color = cs.onSurfaceVariant)
         }
     }
 }

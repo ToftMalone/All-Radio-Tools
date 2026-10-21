@@ -62,6 +62,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import com.allnetworktools.R
+import com.allnetworktools.util.S
 
 class LanDeviceController(private val scope: CoroutineScope, private val scanner: LanScanner) {
     var ip by mutableStateOf<String?>(null)
@@ -118,10 +120,10 @@ fun LanDeviceTool(c: LanDeviceController, ip: String?, device: LanDevice?, prefi
     val target = c.ip ?: ip ?: return
     val d = device ?: LanDevice(target)
     val (icon, type, _) = d.kind
-    TopBarAction(Sym.ContentCopy) { actions.copy("Adresse IP", target) }
+    TopBarAction(Sym.ContentCopy) { actions.copy(S(R.string.ip_address), target) }
     PageColumn {
         if (c.phase == Phase.Error) {
-            ToolError(Sym.WifiOffPortable, "Appareil hors ligne", "Aucune réponse ICMP ni TCP. Il est peut-être en veille ou a changé d'adresse IP.", "Réessayer") { c.identify() }
+            ToolError(Sym.WifiOffPortable, S(R.string.device_offline), S(R.string.no_icmp_or_tcp_answer_it), S(R.string.retry)) { c.identify() }
         }
         HeroCard {
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(16.dp)) {
@@ -138,7 +140,7 @@ fun LanDeviceTool(c: LanDeviceController, ip: String?, device: LanDevice?, prefi
                 ) {
                     if (c.online) BlinkDot(net.good, 8.dp) else Box(Modifier.size(8.dp).clip(CircleShape).background(cs.error))
                     Text(
-                        if (c.online) "En ligne${c.latency?.let { " · ${fmt(it)} ms" } ?: ""}" else "Hors ligne",
+                        if (c.online) S(R.string.online, c.latency?.let { " · ${fmt(it)} ms" } ?: "") else S(R.string.offline_2),
                         style = rf(12, 16, 600), color = cs.onSurface,
                     )
                 }
@@ -152,8 +154,8 @@ fun LanDeviceTool(c: LanDeviceController, ip: String?, device: LanDevice?, prefi
                 listOf(
                     Triple(Sym.NetworkPing, "Ping") { onPing(target) },
                     Triple(Sym.Lan, "Ports") { onPorts(target) },
-                    Triple(Sym.PowerSettings, "Réveiller") { wolOpen = true },
-                    Triple(Sym.ContentCopy, "Copier") { actions.copy("Adresse IP", target) },
+                    Triple(Sym.PowerSettings, S(R.string.wake)) { wolOpen = true },
+                    Triple(Sym.ContentCopy, S(R.string.copy)) { actions.copy(S(R.string.ip_address), target) },
                 ).forEach { (ic, label, onClick) ->
                     Column(Modifier.weight(1f).clip(RoundedCornerShape(16.dp)).clickable(onClick = onClick).padding(vertical = 4.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(6.dp)) {
                         Box(Modifier.size(56.dp, 40.dp).clip(RoundedCornerShape(20.dp)).background(cs.surface), contentAlignment = Alignment.Center) {
@@ -166,20 +168,20 @@ fun LanDeviceTool(c: LanDeviceController, ip: String?, device: LanDevice?, prefi
         }
         if (c.phase == Phase.Running) {
             SectionCard {
-                Text("Identification des services…", style = rf(14, 20, 500))
+                Text(S(R.string.identifying_services), style = rf(14, 20, 500))
                 IndeterminateBar(Modifier.padding(top = 12.dp))
             }
         }
-        InfoList("Identité", acc.accent) {
-            InfoRow("IPv4", target) { actions.copy("Adresse IP", target) }
-            InfoRow("Nom d'hôte", d.hostname ?: "—")
-            d.mdnsName?.let { InfoRow("Nom mDNS", it) }
+        InfoList(S(R.string.identity), acc.accent) {
+            InfoRow("IPv4", target) { actions.copy(S(R.string.ip_address), target) }
+            InfoRow(S(R.string.host_name), d.hostname ?: "—")
+            d.mdnsName?.let { InfoRow(S(R.string.mdns_name), it) }
             InfoRow("Type", type)
-            if (d.services.isNotEmpty()) InfoRow("Services annoncés", d.services.joinToString(", ") { it.substringBefore("._").removePrefix("_") })
-            InfoRow("Adresse MAC", "Non exposée par Android")
+            if (d.services.isNotEmpty()) InfoRow(S(R.string.advertised_services), d.services.joinToString(", ") { it.substringBefore("._").removePrefix("_") })
+            InfoRow(S(R.string.mac_address), S(R.string.not_exposed_by_android))
         }
         if (c.phase == Phase.Results) {
-            InfoList("Services détectés", acc.accent) {
+            InfoList(S(R.string.services_detected), acc.accent) {
                 c.services.forEach { (port, banner) ->
                     Hairline()
                     Row(Modifier.fillMaxWidth().heightIn(min = 56.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -196,7 +198,7 @@ fun LanDeviceTool(c: LanDeviceController, ip: String?, device: LanDevice?, prefi
             }
         }
         if (c.phase == Phase.Empty) {
-            ToolEmpty(Sym.Services, "Aucun service courant", "L'appareil répond mais n'expose aucun des ${Services.Fingerprint.size} ports courants testés.", "Scanner tous les ports") { onPorts(target) }
+            ToolEmpty(Sym.Services, S(R.string.no_common_service), S(R.string.the_device_answers_but_exposes_none, Services.Fingerprint.size), S(R.string.scan_all_ports)) { onPorts(target) }
         }
     }
     if (wolOpen) {
@@ -208,8 +210,8 @@ fun LanDeviceTool(c: LanDeviceController, ip: String?, device: LanDevice?, prefi
             title = { Text("Wake-on-LAN") },
             text = {
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    Text("Android ne révèle plus l'adresse MAC des autres appareils. Saisissez celle de ${d.name} (visible dans l'interface de votre box).", style = rf(14, 20))
-                    OutlinedTextField(mac, { mac = it }, label = { Text("Adresse MAC") }, placeholder = { Text("a4:3e:51:7c:2a:9f") }, singleLine = true, isError = mac.isNotEmpty() && !valid)
+                    Text(S(R.string.android_no_longer_reveals_other_devices, d.name), style = rf(14, 20))
+                    OutlinedTextField(mac, { mac = it }, label = { Text(S(R.string.mac_address)) }, placeholder = { Text("a4:3e:51:7c:2a:9f") }, singleLine = true, isError = mac.isNotEmpty() && !valid)
                 }
             },
             confirmButton = {
@@ -218,13 +220,13 @@ fun LanDeviceTool(c: LanDeviceController, ip: String?, device: LanDevice?, prefi
                         wolOpen = false
                         scope.launch {
                             val ok = WakeOnLan.send(mac, target, prefix ?: 24)
-                            actions.toast(if (ok) "Paquet magique envoyé à ${WakeOnLan.parseMac(mac)?.let(WakeOnLan::format)}" else "Envoi impossible")
+                            actions.toast(if (ok) S(R.string.magic_packet_sent_to, WakeOnLan.parseMac(mac)?.let(WakeOnLan::format)) else S(R.string.sending_failed))
                         }
                     },
                     enabled = valid,
-                ) { Text("Envoyer") }
+                ) { Text(S(R.string.send)) }
             },
-            dismissButton = { TextButton({ wolOpen = false }) { Text("Annuler") } },
+            dismissButton = { TextButton({ wolOpen = false }) { Text(S(R.string.cancel)) } },
         )
     }
 }

@@ -39,8 +39,10 @@ import com.allnetworktools.ui.theme.cs
 import com.allnetworktools.ui.theme.gs
 import com.allnetworktools.ui.theme.rf
 import java.util.Locale
+import com.allnetworktools.R
+import com.allnetworktools.util.S
 
-internal fun snr(db: Double) = "%+.1f dB".format(Locale.FRANCE, db)
+internal fun snr(db: Double) = "%+.1f dB".format(Locale.getDefault(), db)
 
 @Composable
 fun SdrDashboard(vm: MainViewModel) {
@@ -55,27 +57,27 @@ fun SdrDashboard(vm: MainViewModel) {
         ) {
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.Top) {
                 ShapeBadge(Sym.BarChart, cookieShape(), 64.dp, roles.accent, roles.onAccent, 30.dp, spinMs = 20_000)
-                if (c.running) TechChip("En écoute", roles.accent, roles.onAccent)
+                if (c.running) TechChip(S(R.string.listening_3), roles.accent, roles.onAccent)
             }
-            Text("Analyseur de spectre", Modifier.padding(top = 16.dp), style = gs(24, 30, 500), color = roles.onContainer)
+            Text(S(R.string.spectrum_analyser), Modifier.padding(top = 16.dp), style = gs(24, 30, 500), color = roles.onContainer)
             Text(
-                "Spectre et chute d'eau, de 1 MHz à 6 GHz, avec préréglages de bandes.",
+                S(R.string.spectrum_and_waterfall_1_mhz_to_2),
                 Modifier.padding(top = 4.dp).graphicsLayer { alpha = 0.85f }, style = rf(14, 20), color = roles.onContainer,
             )
             Row(Modifier.fillMaxWidth().padding(top = 14.dp), horizontalArrangement = Arrangement.End) {
-                PillButton("Ouvrir", { open(Tool.Spectrum) }, icon = Sym.PlayArrow, height = 48.dp)
+                PillButton(S(R.string.open_2), { open(Tool.Spectrum) }, icon = Sym.PlayArrow, height = 48.dp)
             }
         }
-        InfoList("Récepteur") {
-            InfoRow("Matériel", device?.name ?: "—")
-            InfoRow("Mode", "Réception uniquement")
+        InfoList(S(R.string.receiver)) {
+            InfoRow(S(R.string.hardware), device?.name ?: "—")
+            InfoRow("Mode", S(R.string.receive_only_3))
         }
         SectionCard {
             Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 Symbol(Sym.Info, size = 22.dp, tint = AntTheme.accent.accent)
                 Text(
-                    "Le HackRF ne reçoit que lorsqu'un outil est lancé, et s'arrête quand vous quittez l'onglet SDR. " +
-                        "L'application n'émet jamais. Le décodage est fait par l'application, sur le téléphone.",
+                    S(R.string.the_hackrf_only_receives_while_a) +
+                        S(R.string.the_app_never_transmits_decoding_is),
                     style = rf(13, 18), color = cs.onSurfaceVariant,
                 )
             }
@@ -104,11 +106,11 @@ internal fun GainSettings(
     amp: Boolean? = null, onAmp: () -> Unit = {},
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        GainLine("Gain LNA (dB)", lna, lnaSteps, onLna)
-        GainLine("Gain VGA (dB)", vga, vgaSteps, onVga)
+        GainLine(S(R.string.lna_gain_db), lna, lnaSteps, onLna)
+        GainLine(S(R.string.vga_gain_db), vga, vgaSteps, onVga)
         if (amp != null) {
-            Text("Préamplificateur", style = rf(13, 18, 600), color = cs.onSurfaceVariant)
-            AntFilterChip("Ampli +14 dB", amp, onAmp)
+            Text(S(R.string.preamplifier), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
+            AntFilterChip(S(R.string.amp_14_db), amp, onAmp)
         }
     }
 }

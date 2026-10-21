@@ -6,6 +6,8 @@ import java.net.HttpURLConnection
 import java.net.URL
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import com.allnetworktools.R
+import com.allnetworktools.util.S
 
 /** A Russian weather satellite that broadcasts LRPT images in the 137 MHz band. */
 data class MeteorSat(val name: String, val catalog: Int, val freqMhz: Double)
@@ -50,9 +52,9 @@ open class WeatherTleRepository(context: Context?) {
         c.readTimeout = 20_000
         c.setRequestProperty("User-Agent", "AllRadioTools")
         try {
-            if (c.responseCode != 200) throw java.io.IOException("CelesTrak a répondu ${c.responseCode}")
+            if (c.responseCode != 200) throw java.io.IOException(S(R.string.celestrak_answered, c.responseCode))
             val text = c.inputStream.bufferedReader().readText()
-            if (Tle.parseAll(text).isEmpty()) throw java.io.IOException("Réponse de CelesTrak illisible")
+            if (Tle.parseAll(text).isEmpty()) throw java.io.IOException(S(R.string.unreadable_answer_from_celestrak))
             return text
         } finally {
             c.disconnect()

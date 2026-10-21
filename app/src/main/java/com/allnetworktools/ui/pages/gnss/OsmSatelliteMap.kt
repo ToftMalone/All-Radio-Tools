@@ -48,6 +48,8 @@ import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Overlay
+import com.allnetworktools.R
+import com.allnetworktools.util.S
 
 /** OpenStreetMap tiles need an identifying User-Agent; the tile cache stays in app storage. */
 internal fun configureOsm(context: Context) {
@@ -212,7 +214,7 @@ fun OsmSatelliteMap(
             IconCircleButton(Sym.Public, { map.controller.animateTo(GeoPoint(here.latitude.coerceIn(-50.0, 50.0), here.longitude), 0.5, 600L) }, size = 36.dp, bg = bg, tint = cs.onSurface)
         }
         Text(
-            "© les contributeurs d'OpenStreetMap",
+            S(R.string.openstreetmap_contributors),
             Modifier.align(Alignment.BottomStart).windowInsetsPadding(WindowInsets.safeDrawing).padding(6.dp).clip(RoundedCornerShape(6.dp)).background(cs.surface.copy(alpha = 0.85f))
                 .clickable { actions.openUrl("https://www.openstreetmap.org/copyright") }.padding(horizontal = 6.dp, vertical = 2.dp),
             style = rf(10, 13, 500), color = cs.onSurface,

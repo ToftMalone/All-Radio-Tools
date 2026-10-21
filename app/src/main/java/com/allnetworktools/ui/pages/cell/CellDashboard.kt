@@ -51,6 +51,8 @@ import com.allnetworktools.util.of
 import com.allnetworktools.util.quality
 import kotlin.math.ceil
 import kotlin.math.floor
+import com.allnetworktools.R
+import com.allnetworktools.util.S
 
 data class QualitySpec(val key: String, val unit: String, val min: Float, val max: Float, val good: Float, val fair: Float)
 
@@ -80,7 +82,7 @@ fun CellDashboard(vm: MainViewModel) {
             Row(verticalAlignment = Alignment.Top) {
                 Column(Modifier.weight(1f)) {
                     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Text(s?.operator ?: "Opérateur", style = gs(28, 34, 500), color = roles.onContainer, maxLines = 1)
+                        Text(s?.operator ?: S(R.string.carrier), style = gs(28, 34, 500), color = roles.onContainer, maxLines = 1)
                         s?.simSlot?.let {
                             Box(Modifier.height(24.dp).clip(RoundedCornerShape(8.dp)).background(cs.surface).padding(horizontal = 8.dp), contentAlignment = Alignment.Center) {
                                 Text("SIM $it", style = rf(12, 16, 600), color = cs.onSurface)
@@ -88,7 +90,7 @@ fun CellDashboard(vm: MainViewModel) {
                         }
                     }
                     Text(
-                        "${if (s?.voiceAndData != false) "Données + appels" else "Données"} · ${if (s?.roaming == true) "en itinérance" else "pas d'itinérance"}",
+                        "${if (s?.voiceAndData != false) S(R.string.data_calls) else S(R.string.data)} · ${if (s?.roaming == true) S(R.string.roaming) else S(R.string.not_roaming)}",
                         Modifier.padding(top = 2.dp).graphicsLayer { alpha = 0.85f }, style = rf(13, 18), color = roles.onContainer,
                     )
                 }
@@ -104,10 +106,10 @@ fun CellDashboard(vm: MainViewModel) {
                 Column {
                     val band = serving?.band
                     val freq = serving?.downlinkMhz?.let { " · ${fmt(it)} MHz" } ?: ""
-                    DetailLine("Bande", band?.let { it + freq } ?: "—")
+                    DetailLine(S(R.string.band), band?.let { it + freq } ?: "—")
                     DetailLine(serving?.arfcnLabel ?: "ARFCN", serving?.arfcn?.let { fmt(it) } ?: "—")
                     val width = serving?.bandwidthKhz ?: s?.servingBandwidthsKhz?.firstOrNull()
-                    DetailLine("Largeur", width?.let { "${fmt(it / 1000)} MHz" } ?: "—")
+                    DetailLine(S(R.string.width), width?.let { "${fmt(it / 1000)} MHz" } ?: "—")
                 }
             }
         }
@@ -115,7 +117,7 @@ fun CellDashboard(vm: MainViewModel) {
         TileGrid(rings) { (spec, v), mod -> QualityTile(spec, v, mod, estimated = spec === RssiSpec && serving?.rssiEstimated == true && v != null) }
         SectionCard {
             val windowMin = (300 * settings.refreshSeconds / 60).let { if (it >= 1) "${fmt(it)} min" else "${fmt(it * 60)} s" }
-            CardHeader("Historique RSRP") { Text(windowMin, style = rf(12, 16), color = cs.onSurfaceVariant) }
+            CardHeader(S(R.string.rsrp_history)) { Text(windowMin, style = rf(12, 16), color = cs.onSurfaceVariant) }
             val h = ui.history
             val lo = floor(minOf(-120f, (h.minOrNull() ?: -120f) - 5f) / 10f) * 10f
             val hi = ceil(maxOf(-80f, (h.maxOrNull() ?: -80f) + 5f) / 10f) * 10f
@@ -126,19 +128,19 @@ fun CellDashboard(vm: MainViewModel) {
             )
         }
         InfoList(
-            "Identité de la cellule", roles.accent,
-            trailing = { TextAction("Détail", { vm.navigate { it.copy(page = Page.ToolPage(Tool.CellDetail, "serving")) } }, color = roles.accent) },
+            S(R.string.cell_identity), roles.accent,
+            trailing = { TextAction(S(R.string.detail), { vm.navigate { it.copy(page = Page.ToolPage(Tool.CellDetail, "serving")) } }, color = roles.accent) },
         ) {
             if (serving?.cellId == null && !perms.location) {
                 Hairline()
-                TextAction("Autoriser la position pour lire les identifiants", { actions.request(PermGroup.Location) }, color = roles.accent, trailingIcon = null)
+                TextAction(S(R.string.allow_location_to_read_the_identifiers), { actions.request(PermGroup.Location) }, color = roles.accent, trailingIcon = null)
             }
             CellIdentityRows(serving)
-            InfoRow("Itinérance", if (s?.roaming == true) "Oui" else "Non")
+            InfoRow(S(R.string.roaming_2), if (s?.roaming == true) "Oui" else "Non")
         }
         if (sims.isNotEmpty()) {
             SectionCard(padding = androidx.compose.foundation.layout.PaddingValues(start = 16.dp, end = 16.dp, top = 6.dp, bottom = 8.dp)) {
-                Text(if (sims.size > 1) "Double SIM" else "SIM", Modifier.padding(top = 6.dp, bottom = 4.dp), style = rf(14, 20, 600), color = roles.accent)
+                Text(if (sims.size > 1) S(R.string.dual_sim) else "SIM", Modifier.padding(top = 6.dp, bottom = 4.dp), style = rf(14, 20, 600), color = roles.accent)
                 sims.forEach { sim ->
                     Hairline()
                     Row(Modifier.fillMaxWidth().heightIn(min = 60.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -148,7 +150,7 @@ fun CellDashboard(vm: MainViewModel) {
                         ) { Text(sim.slot.toString(), style = rf(14, 20, 700), color = if (sim.isDefaultData) roles.onAccent else cs.onSurface) }
                         Column(Modifier.weight(1f)) {
                             Text(sim.operator, style = rf(15, 20, 600), maxLines = 1)
-                            val role = (sim.roles.ifEmpty { listOf("En veille") } + listOfNotNull(if (sim.embedded) "eSIM" else null)).joinToString(" · ")
+                            val role = (sim.roles.ifEmpty { listOf(S(R.string.idle)) } + listOfNotNull(if (sim.embedded) "eSIM" else null)).joinToString(" · ")
                             Text(role, style = rf(12, 16), color = cs.onSurfaceVariant)
                         }
                         Text(sim.tech, style = rf(13, 18, 600))
@@ -188,12 +190,12 @@ private fun QualityTile(spec: QualitySpec, v: Int?, modifier: Modifier, estimate
     ) {
         QualityRing(frac, color)
         Column {
-            Text(if (estimated) "${spec.key} (estimé)" else spec.key, style = rf(12, 16, 600), color = cs.onSurfaceVariant)
+            Text(if (estimated) S(R.string.estimated, spec.key) else spec.key, style = rf(12, 16, 600), color = cs.onSurfaceVariant)
             Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(3.dp)) {
                 Text(v?.let { (if (estimated) "≈ " else "") + fmt(it) } ?: "—", style = gs(24, 28, 500, tnum = true))
                 Text(spec.unit, Modifier.padding(bottom = 3.dp), style = rf(11, 14), color = cs.onSurfaceVariant)
             }
-            Text(v?.let { quality(it.toFloat(), spec.good, spec.fair).label } ?: "Indisponible", style = rf(12, 16, 700), color = color)
+            Text(v?.let { quality(it.toFloat(), spec.good, spec.fair).label } ?: S(R.string.unavailable), style = rf(12, 16, 700), color = color)
         }
     }
 }

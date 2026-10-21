@@ -4,11 +4,13 @@ import kotlin.math.asin
 import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.math.sqrt
+import com.allnetworktools.R
+import com.allnetworktools.util.S
 
 /** Networks whose tags can be used to follow someone. */
 enum class TrackerNet(val label: String, val maker: String) {
-    AppleFindMy("Localiser (Apple)", "AirTag ou accessoire Localiser"),
-    GoogleFindHub("Localiser (Google)", "Tag du réseau Google"),
+    AppleFindMy(S(R.string.find_my_apple), S(R.string.airtag_or_find_my_accessory)),
+    GoogleFindHub(S(R.string.find_hub_google), S(R.string.google_network_tag)),
     SamsungFind("SmartThings Find", "Galaxy SmartTag"),
     Tile("Tile", "Tile"),
 }
@@ -21,9 +23,9 @@ enum class TrackerNet(val label: String, val maker: String) {
 /** What kind of object sends the frames, as far as the frames tell. */
 enum class TrackerKind(val label: String) {
     AirTag("AirTag"),
-    AppleDevice("Appareil Apple"),
+    AppleDevice(S(R.string.apple_device)),
     AirPods("AirPods"),
-    GoogleTag("Tag Google Localiser"),
+    GoogleTag(S(R.string.google_find_hub_tag)),
     SmartTag("Galaxy SmartTag"),
     Tile("Tile"),
 }
@@ -51,10 +53,10 @@ data class TrackerSignal(
 data class Sighting(val timeMs: Long, val lat: Double?, val lon: Double?, val rssi: Int)
 
 enum class FollowLevel(val label: String) {
-    Following("Vous suit"),
-    Watch("À surveiller"),
-    Nearby("À proximité"),
-    WithOwner("Avec son propriétaire"),
+    Following(S(R.string.following_you)),
+    Watch(S(R.string.watch_2)),
+    Nearby(S(R.string.nearby)),
+    WithOwner(S(R.string.with_its_owner)),
 }
 
 data class FollowAssessment(
@@ -142,15 +144,15 @@ object TrackerDetect {
         if (d.isEmpty()) return TrackerSignal(TrackerNet.SamsungFind, null)
         val status = d.u8(0)
         val (separated, state) = when (status) {
-            0x15 -> false to "Connecté au téléphone du propriétaire"
-            0x11 -> true to "Déconnecté du propriétaire depuis moins de 15 min"
-            0x12 -> true to "Déconnecté du propriétaire depuis 15 min ou plus"
+            0x15 -> false to S(R.string.connected_to_the_owner_s_phone)
+            0x11 -> true to S(R.string.disconnected_from_the_owner_for_less)
+            0x12 -> true to S(R.string.disconnected_from_the_owner_for_15)
             else -> when (status and 0x07) {
-                5 -> false to "Connecté au propriétaire (0x%02X)".format(status)
-                1 -> true to "Déconnecté depuis moins de 15 min (0x%02X)".format(status)
-                2 -> true to "Déconnecté depuis 15 min ou plus (0x%02X)".format(status)
-                3 -> true to "Déconnecté depuis longtemps (0x%02X)".format(status)
-                else -> null to "État inconnu (0x%02X)".format(status)
+                5 -> false to S(R.string.connected_to_the_owner_0x).format(status)
+                1 -> true to S(R.string.disconnected_for_less_than_15_min).format(status)
+                2 -> true to S(R.string.disconnected_for_15_min_or_more).format(status)
+                3 -> true to S(R.string.disconnected_for_a_long_time_0x).format(status)
+                else -> null to S(R.string.unknown_state_0x).format(status)
             }
         }
         val key = if (d.size >= 12) "%02X:".format(d.u8(1)) + d.hex(4, 12).replace(" ", "") else null

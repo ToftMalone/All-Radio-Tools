@@ -1,6 +1,8 @@
 package com.allnetworktools.data.sdr
 
 import kotlin.math.floor
+import com.allnetworktools.R
+import com.allnetworktools.util.S
 
 /**
  * Meshtastic modem presets (firmware RadioInterface.cpp): LoRa spreading factor and bandwidth. The coding rate is read
@@ -25,21 +27,21 @@ enum class MeshPreset(val channelName: String, val sf: Int, val bandwidthHz: Int
 enum class MeshRegion(val label: String, val startMhz: Double, val endMhz: Double) {
     Eu868("Europe 868", 869.4, 869.65),
     Eu433("Europe 433", 433.0, 434.0),
-    Us("Amérique du Nord", 902.0, 928.0),
-    Anz("Australie / NZ", 915.0, 928.0),
-    Nz865("Nouvelle-Zélande 865", 864.0, 868.0),
-    Ru("Russie", 868.7, 869.2),
+    Us(S(R.string.north_america), 902.0, 928.0),
+    Anz(S(R.string.australia_nz), 915.0, 928.0),
+    Nz865(S(R.string.new_zealand_865), 864.0, 868.0),
+    Ru(S(R.string.russia), 868.7, 869.2),
     Ua868("Ukraine 868", 868.0, 868.6),
     Ua433("Ukraine 433", 433.0, 434.7),
-    In("Inde", 865.0, 867.0),
-    Jp("Japon", 920.5, 923.5),
-    Kr("Corée", 920.0, 923.0),
-    Tw("Taïwan", 920.0, 925.0),
-    Cn("Chine", 470.0, 510.0),
-    Th("Thaïlande", 920.0, 925.0),
-    My919("Malaisie 919", 919.0, 924.0),
-    Sg923("Singapour", 917.0, 925.0),
-    Br902("Brésil", 902.0, 907.5),
+    In(S(R.string.india), 865.0, 867.0),
+    Jp(S(R.string.japan), 920.5, 923.5),
+    Kr(S(R.string.korea), 920.0, 923.0),
+    Tw(S(R.string.taiwan), 920.0, 925.0),
+    Cn(S(R.string.china), 470.0, 510.0),
+    Th(S(R.string.thailand), 920.0, 925.0),
+    My919(S(R.string.malaysia_919), 919.0, 924.0),
+    Sg923(S(R.string.singapore), 917.0, 925.0),
+    Br902(S(R.string.brazil), 902.0, 907.5),
 }
 
 /** The channel plan a node derives from its region, preset and primary channel name when no frequency is set by hand. */

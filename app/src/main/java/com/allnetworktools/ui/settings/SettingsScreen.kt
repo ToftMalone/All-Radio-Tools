@@ -50,17 +50,19 @@ import com.allnetworktools.ui.theme.AntTheme
 import com.allnetworktools.ui.theme.Sym
 import com.allnetworktools.ui.theme.cs
 import com.allnetworktools.ui.theme.rf
+import com.allnetworktools.R
+import com.allnetworktools.util.S
 
 private data class PermRow(val group: PermGroup, val icon: String, val title: String, val subtitle: String)
 
 private val PermRows get() = AllPermRows.filter { it.group.permissions.isNotEmpty() }
 
 private val AllPermRows = listOf(
-    PermRow(PermGroup.Location, Sym.LocationOn, "Position précise", "Wi-Fi (SSID, scans), cellules et GNSS"),
-    PermRow(PermGroup.Nearby, Sym.BluetoothSearching, "Appareils à proximité", "Scan et connexion Bluetooth"),
-    PermRow(PermGroup.Phone, Sym.SimCard, "Téléphone", "Opérateur, cellules, double SIM"),
-    PermRow(PermGroup.LocalNetwork, Sym.Lan, "Réseau local", "Appareils du LAN, ping, scan de ports"),
-    PermRow(PermGroup.Notifications, Sym.Notifications, "Notifications", "Journal de handover en arrière-plan"),
+    PermRow(PermGroup.Location, Sym.LocationOn, S(R.string.precise_location), S(R.string.wi_fi_ssid_scans_cells_and)),
+    PermRow(PermGroup.Nearby, Sym.BluetoothSearching, S(R.string.nearby_devices), S(R.string.bluetooth_scan_and_connection)),
+    PermRow(PermGroup.Phone, Sym.SimCard, S(R.string.phone), S(R.string.carrier_cells_dual_sim)),
+    PermRow(PermGroup.LocalNetwork, Sym.Lan, S(R.string.local_network), S(R.string.lan_devices_ping_port_scan)),
+    PermRow(PermGroup.Notifications, Sym.Notifications, "Notifications", S(R.string.background_handover_log)),
 )
 
 private val Licenses = listOf(
@@ -81,27 +83,27 @@ fun SettingsScreen(vm: MainViewModel) {
     TopBarAction(Sym.Help) { dialog = "help" }
     PageColumn {
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            Section("Apparence") {
-                Item(0, 1, Sym.Contrast, "Thème", "Suit le réglage Android par défaut") {
+            Section(S(R.string.appearance)) {
+                Item(0, 1, Sym.Contrast, S(R.string.theme), S(R.string.follows_the_android_setting_by_default)) {
                     SegmentedRow(
-                        listOf(ThemeMode.System to "Système", ThemeMode.Light to "Clair", ThemeMode.Dark to "Sombre"), s.theme,
+                        listOf(ThemeMode.System to S(R.string.system), ThemeMode.Light to S(R.string.light), ThemeMode.Dark to S(R.string.dark)), s.theme,
                         { vm.updateSettings { setTheme(it) } }, Modifier.fillMaxWidth(),
                         selectedColor = cs.primary, onSelectedColor = cs.onPrimary,
                         icons = mapOf(ThemeMode.System to Sym.BrightnessAuto, ThemeMode.Light to Sym.LightMode, ThemeMode.Dark to Sym.DarkMode),
                     )
                 }
             }
-            Section("Mesures") {
-                Item(0, 4, Sym.Straighten, "Unités", "Distances, vitesses et altitudes") {
-                    SegmentedRow(listOf(Units.Metric to "Métrique", Units.Imperial to "Impérial"), s.units, { vm.updateSettings { setUnits(it) } }, Modifier.fillMaxWidth(), selectedColor = cs.primary, onSelectedColor = cs.onPrimary)
+            Section(S(R.string.measurements)) {
+                Item(0, 4, Sym.Straighten, S(R.string.units), S(R.string.distances_speeds_and_altitudes)) {
+                    SegmentedRow(listOf(Units.Metric to S(R.string.metric), Units.Imperial to S(R.string.imperial)), s.units, { vm.updateSettings { setUnits(it) } }, Modifier.fillMaxWidth(), selectedColor = cs.primary, onSelectedColor = cs.onPrimary)
                 }
-                Item(1, 4, Sym.CellBars3, "Affichage du signal", "Valeur brute ou pourcentage") {
+                Item(1, 4, Sym.CellBars3, S(R.string.signal_display), S(R.string.raw_value_or_percentage)) {
                     SegmentedRow(listOf(SignalDisplay.Dbm to "dBm", SignalDisplay.Percent to "%"), s.signal, { vm.updateSettings { setSignal(it) } }, Modifier.fillMaxWidth(), selectedColor = cs.primary, onSelectedColor = cs.onPrimary)
                 }
-                Item(2, 4, Sym.Vibration, "Retour haptique", "Vibrations sur les actions importantes", trailing = { AntSwitch(s.haptics) }, onClick = { vm.updateSettings { setHaptics(!s.haptics) } })
-                Item(3, 4, Sym.ScreenLock, "Écran toujours allumé", "Pendant une mesure ou un enregistrement", trailing = { AntSwitch(s.keepAwake) }, onClick = { vm.updateSettings { setKeepAwake(!s.keepAwake) } })
+                Item(2, 4, Sym.Vibration, S(R.string.haptic_feedback), S(R.string.vibrations_on_important_actions), trailing = { AntSwitch(s.haptics) }, onClick = { vm.updateSettings { setHaptics(!s.haptics) } })
+                Item(3, 4, Sym.ScreenLock, S(R.string.screen_always_on), S(R.string.during_a_measurement_or_a_recording), trailing = { AntSwitch(s.keepAwake) }, onClick = { vm.updateSettings { setKeepAwake(!s.keepAwake) } })
             }
-            Section("Autorisations") {
+            Section(S(R.string.permissions)) {
                 PermRows.forEachIndexed { i, p ->
                     val granted = p.group in perms
                     Item(
@@ -109,7 +111,7 @@ fun SettingsScreen(vm: MainViewModel) {
                         trailing = { PermPill(granted) },
                         onClick = {
                             if (granted) {
-                                actions.toast("Géré dans Paramètres Android › Applications")
+                                actions.toast(S(R.string.managed_in_android_settings_apps))
                                 actions.openAppSettings()
                             } else {
                                 actions.request(p.group)
@@ -118,29 +120,29 @@ fun SettingsScreen(vm: MainViewModel) {
                     )
                 }
             }
-            Section("Application") {
+            Section(S(R.string.app)) {
                 val us by vm.updater.state.collectAsStateWithLifecycle()
                 val latest by vm.updater.latest.collectAsStateWithLifecycle()
                 // Checked at every launch: this only says what was found.
                 Item(
-                    0, 3, Sym.SystemUpdate, "Mise à jour",
+                    0, 3, Sym.SystemUpdate, S(R.string.updated_2),
                     when (val u = us) {
-                        is com.allnetworktools.update.UpdateState.Downloading -> "Téléchargement de la version ${u.info.version}…"
-                        is com.allnetworktools.update.UpdateState.Installing -> "Installation…"
-                        else -> latest?.let { "Version ${it.version} disponible" } ?: "Version installée : ${BuildConfig.VERSION_NAME}"
+                        is com.allnetworktools.update.UpdateState.Downloading -> S(R.string.downloading_version, u.info.version)
+                        is com.allnetworktools.update.UpdateState.Installing -> S(R.string.installing)
+                        else -> latest?.let { S(R.string.version_available, it.version) } ?: S(R.string.installed_version, BuildConfig.VERSION_NAME)
                     },
                     trailing = latest?.let { { LinkIcon(Sym.ChevronRight) } },
                     onClick = latest?.let { { vm.updater.reoffer() } },
                 )
                 Item(
-                    1, 3, Sym.NewReleases, "Journal des nouveautés",
+                    1, 3, Sym.NewReleases, S(R.string.changelog),
                     trailing = { LinkIcon(Sym.ChevronRight) },
                     onClick = { vm.navigate { it.copy(network = null, page = com.allnetworktools.Page.Changelog) } },
                 )
-                Item(2, 3, Sym.Info, "À propos", trailing = { LinkIcon(Sym.ChevronRight) }, onClick = { dialog = "about" })
+                Item(2, 3, Sym.Info, S(R.string.about), trailing = { LinkIcon(Sym.ChevronRight) }, onClick = { dialog = "about" })
             }
             Text(
-                "All Radio Tools ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE}) · Aucune mesure n'est conservée.",
+                S(R.string.all_radio_tools_no_measurement_is, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE),
                 Modifier.fillMaxWidth().padding(start = 24.dp, end = 24.dp, top = 20.dp), style = rf(12, 18), color = cs.onSurfaceVariant, textAlign = TextAlign.Center,
             )
         }
@@ -149,14 +151,14 @@ fun SettingsScreen(vm: MainViewModel) {
         "about" -> InfoDialog(
             "All Radio Tools ${BuildConfig.VERSION_NAME}",
             "Version ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE}).\n\n" +
-                "Confidentialité : les mesures sont traitées en mémoire, sur cet appareil, le temps de la session. Rien n'est enregistré ni envoyé à un serveur, " +
-                "et l'application ne contient aucun traceur. Seuls vos réglages sont mémorisés.\n\n" +
-                "Licences open source :\n" + Licenses.joinToString("\n") { (lib, lic) -> "$lib · $lic" },
+                S(R.string.privacy_measurements_are_processed_in_memory) +
+                S(R.string.and_the_app_contains_no_tracker) +
+                S(R.string.open_source_licences_n) + Licenses.joinToString("\n") { (lib, lic) -> "$lib · $lic" },
         ) { dialog = null }
         "help" -> InfoDialog(
-            "Aide",
-            "Touchez une carte de l'accueil pour la sélectionner, puis touchez-la à nouveau ou utilisez le dock pour ouvrir le dashboard, " +
-                "les outils ou l'outil phare du réseau. Le bouton de gauche du dock change de réseau.",
+            S(R.string.help),
+            S(R.string.tap_a_home_card_to_select) +
+                S(R.string.tools_or_main_tool_the_dock),
         ) { dialog = null }
     }
 }
@@ -217,7 +219,7 @@ private fun PermPill(granted: Boolean) {
         verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp),
     ) {
         if (granted) Symbol(Sym.CheckCircle, size = 16.dp, filled = true, tint = good)
-        Text(if (granted) "Accordée" else "Autoriser", style = rf(12, 16, 700), color = if (granted) good else cs.onPrimary)
+        Text(if (granted) S(R.string.granted) else S(R.string.allow), style = rf(12, 16, 700), color = if (granted) good else cs.onPrimary)
         if (!granted) Symbol(Sym.ArrowForward, size = 16.dp, tint = cs.onPrimary)
     }
 }
@@ -240,7 +242,7 @@ private fun <T> ChoiceDialog(title: String, options: List<Pair<T, String>>, sele
                 }
             }
         },
-        confirmButton = { TextButton(onDismiss) { Text("Fermer") } },
+        confirmButton = { TextButton(onDismiss) { Text(S(R.string.close)) } },
     )
 }
 

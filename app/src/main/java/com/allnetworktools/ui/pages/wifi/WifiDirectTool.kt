@@ -38,17 +38,20 @@ import com.allnetworktools.ui.tools.HeroChip
 import com.allnetworktools.ui.tools.ToolError
 import com.allnetworktools.util.plural
 import kotlinx.coroutines.flow.catch
+import com.allnetworktools.R
+import com.allnetworktools.util.S
+import com.allnetworktools.util.P
 
 /** Peers list while the screen is open; null until the first answer. Discovery stops when the screen leaves. */
 @Composable
 fun WifiDirectTool(repo: WifiDirectRepository, permitted: Boolean, permissionText: String, onFix: () -> Unit) {
     PageColumn {
         if (!repo.supported) {
-            ToolError(Sym.WifiOff, "Wi-Fi Direct indisponible", "Ce téléphone ne prend pas en charge le Wi-Fi Direct.", "OK") {}
+            ToolError(Sym.WifiOff, S(R.string.wi_fi_direct_unavailable), S(R.string.this_phone_does_not_support_wi), "OK") {}
             return@PageColumn
         }
         if (!permitted) {
-            ToolError(Sym.Lock, "Autorisation requise", permissionText, "Autoriser", onFix)
+            ToolError(Sym.Lock, S(R.string.permission_needed), permissionText, S(R.string.allow), onFix)
             return@PageColumn
         }
         val flow = remember { repo.peers().catch { emit(emptyList()) } }
@@ -57,27 +60,27 @@ fun WifiDirectTool(repo: WifiDirectRepository, permitted: Boolean, permissionTex
         HeroCard {
             Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                 Text(list.size.toString(), style = gs(56, 60, 500, -1.5f, tnum = true))
-                Text(plural(list.size, "appareil", "appareils"), Modifier.padding(bottom = 8.dp), style = rf(18, 24, 500))
+                Text(P(R.plurals.p_devices, list.size), Modifier.padding(bottom = 8.dp), style = rf(18, 24, 500))
             }
             Text(
-                "Imprimantes, téléviseurs, projecteurs et téléphones qui acceptent une connexion directe, sans box.",
+                S(R.string.printers_tvs_projectors_and_phones_that),
                 style = rf(14, 20),
             )
-            Row(Modifier.padding(top = 12.dp)) { HeroChip("Recherche Wi-Fi Direct active", AntTheme.net.good, blink = true) }
+            Row(Modifier.padding(top = 12.dp)) { HeroChip(S(R.string.wi_fi_direct_search_active), AntTheme.net.good, blink = true) }
         }
         if (peers != null && list.isEmpty()) {
             SectionCard {
-                Text("Aucun appareil pour l'instant", style = rf(16, 22, 600))
+                Text(S(R.string.no_device_yet), style = rf(16, 22, 600))
                 Text(
-                    "Les appareils n'apparaissent que si leur Wi-Fi Direct est allumé et visible (menu « Wi-Fi Direct » d'une imprimante ou d'un téléviseur, " +
-                        "ou réglages Wi-Fi Direct d'un autre téléphone ouverts).",
+                    S(R.string.devices_only_appear_if_their_wi) +
+                        S(R.string.or_wi_fi_direct_settings_of),
                     Modifier.padding(top = 4.dp), style = rf(13, 18), color = cs.onSurfaceVariant,
                 )
             }
         }
         if (list.isNotEmpty()) {
             SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 12.dp, bottom = 4.dp)) {
-                Text("À proximité", Modifier.padding(bottom = 4.dp), style = rf(14, 20, 600), color = AntTheme.accent.accent)
+                Text(S(R.string.nearby), Modifier.padding(bottom = 4.dp), style = rf(14, 20, 600), color = AntTheme.accent.accent)
                 list.forEach { p ->
                     Hairline()
                     PeerRow(p)
@@ -88,8 +91,8 @@ fun WifiDirectTool(repo: WifiDirectRepository, permitted: Boolean, permissionTex
             Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 Symbol(Sym.Info, size = 22.dp, tint = AntTheme.accent.accent)
                 Text(
-                    "Pendant la recherche, votre téléphone est lui aussi visible en Wi-Fi Direct sous son nom d'appareil. " +
-                        "Aucune connexion n'est établie. Les adresses MAC peuvent être aléatoires.",
+                    S(R.string.while_searching_your_phone_is_also) +
+                        S(R.string.no_connection_is_made_mac_addresses),
                     style = rf(13, 18), color = cs.onSurfaceVariant,
                 )
             }
@@ -107,7 +110,7 @@ private fun PeerRow(p: P2pPeer) {
         Column(Modifier.weight(1f)) {
             Text(p.name, style = rf(15, 20, 600), maxLines = 1)
             Text(
-                listOfNotNull(cat?.label, p.address, if (p.groupOwner) "propriétaire de groupe" else null).joinToString(" · "),
+                listOfNotNull(cat?.label, p.address, if (p.groupOwner) S(R.string.group_owner) else null).joinToString(" · "),
                 style = rf(12, 16), color = cs.onSurfaceVariant, maxLines = 2,
             )
         }

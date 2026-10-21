@@ -56,6 +56,8 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import com.allnetworktools.R
+import com.allnetworktools.util.S
 
 @Composable
 internal fun levelColor(l: CheckLevel): Color = when (l) {
@@ -140,14 +142,14 @@ fun AuditTool(c: AuditController, conn: WifiConnection?, scan: List<WifiAp>?) {
     if (conn != null) TopBarAction(Sym.Refresh) { c.run(conn, scan) }
     PageColumn {
         if (conn == null) {
-            ToolEmpty(Sym.WifiOff, "Pas de Wi-Fi", "Connectez-vous à un réseau Wi-Fi pour l'auditer.", null)
+            ToolEmpty(Sym.WifiOff, S(R.string.no_wi_fi), S(R.string.connect_to_a_wi_fi_network_3), null)
             return@PageColumn
         }
         val checks = c.checks
         HeroCard {
             if (checks == null) {
-                Text("Audit de ${conn.ssid ?: "votre réseau"}", style = gs(24, 30, 500))
-                Text("Analyse du chiffrement, du point d'accès et de la box…", Modifier.padding(top = 4.dp), style = rf(14, 20))
+                Text(S(R.string.audit_of, conn.ssid ?: S(R.string.your_network_3)), style = gs(24, 30, 500))
+                Text(S(R.string.analysing_the_encryption_the_access_point), Modifier.padding(top = 4.dp), style = rf(14, 20))
                 IndeterminateBar(Modifier.padding(top = 16.dp))
             } else {
                 val score = NetworkAudit.score(checks)
@@ -160,16 +162,16 @@ fun AuditTool(c: AuditController, conn: WifiConnection?, scan: List<WifiAp>?) {
                     }
                 }
                 Row(Modifier.padding(top = 12.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    HeroChip(if (bad == 0) "Aucun risque" else "$bad ${if (bad > 1) "risques" else "risque"}", if (bad == 0) AntTheme.net.good else cs.error)
-                    if (warn > 0) HeroChip("$warn à améliorer", AntTheme.net.fair)
-                    if (c.running) HeroChip("Nouvelle analyse…", AntTheme.net.fair, blink = true)
+                    HeroChip(if (bad == 0) S(R.string.no_risk) else "$bad ${if (bad > 1) "risques" else "risque"}", if (bad == 0) AntTheme.net.good else cs.error)
+                    if (warn > 0) HeroChip(S(R.string.to_improve_2, warn), AntTheme.net.fair)
+                    if (c.running) HeroChip(S(R.string.analysing_again), AntTheme.net.fair, blink = true)
                 }
             }
         }
-        if (checks != null) CheckList("Points vérifiés", checks)
+        if (checks != null) CheckList(S(R.string.points_checked), checks)
         Note(
-            "Le chiffrement vient d'Android, WPS, PMF et TKIP des annonces du point d'accès (dernier scan), et les ports 23, 80 et 443 sont testés sur la box. " +
-                "Pour corriger, ouvrez l'interface d'administration de votre box (souvent http://${conn.gateway ?: "192.168.1.1"}).",
+            S(R.string.encryption_comes_from_android_wps_pmf) +
+                S(R.string.to_fix_them_open_your_router, conn.gateway ?: "192.168.1.1"),
         )
     }
 }
@@ -240,38 +242,38 @@ fun MitmTool(c: MitmController, conn: WifiConnection?) {
         HeroCard {
             Text(
                 when {
-                    s == null -> "Analyse du chemin réseau…"
-                    bad > 0 -> "Interception possible"
-                    else -> "Aucun intermédiaire détecté"
+                    s == null -> S(R.string.analysing_the_network_path)
+                    bad > 0 -> S(R.string.interception_possible)
+                    else -> S(R.string.no_intermediary_detected)
                 },
                 style = gs(28, 34, 500),
             )
             Text(
-                (conn?.ssid?.let { "Réseau $it · " } ?: "") + "contrôle toutes les 15 s · ${c.rounds} ${if (c.rounds > 1) "contrôles" else "contrôle"}",
+                (conn?.ssid?.let { S(R.string.network_2, it) } ?: "") + S(R.string.check_every_15_s, c.rounds, if (c.rounds > 1) S(R.string.checks) else S(R.string.check)),
                 Modifier.padding(top = 4.dp), style = rf(14, 20),
             )
             Row(Modifier.padding(top = 12.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                HeroChip("Surveillance active", AntTheme.net.good, blink = true)
+                HeroChip(S(R.string.monitoring), AntTheme.net.good, blink = true)
                 if (c.events.isNotEmpty()) HeroChip("${c.events.size} ${if (c.events.size > 1) "changements" else "changement"}", AntTheme.net.fair)
             }
             if (s == null) IndeterminateBar(Modifier.padding(top = 16.dp))
         }
         if (s != null) {
-            CheckList("État actuel", checks)
+            CheckList(S(R.string.current_state), checks)
             SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 12.dp, bottom = 4.dp)) {
-                Text("Chemin observé", Modifier.padding(bottom = 4.dp), style = rf(14, 20, 600), color = AntTheme.accent.accent)
+                Text(S(R.string.observed_path), Modifier.padding(bottom = 4.dp), style = rf(14, 20, 600), color = AntTheme.accent.accent)
                 listOf(
-                    "Passerelle" to (s.gateway ?: "—"),
-                    "Premier routeur" to (s.firstHop ?: "sans réponse"),
-                    "Serveur DHCP" to (s.dhcpServer ?: "—"),
+                    S(R.string.gateway) to (s.gateway ?: "—"),
+                    S(R.string.first_router) to (s.firstHop ?: S(R.string.no_answer_2)),
+                    S(R.string.dhcp_server) to (s.dhcpServer ?: "—"),
                     "DNS" to s.dns.joinToString().ifEmpty { "—" },
-                    "Routeurs IPv6" to s.ipv6Routers.joinToString().ifEmpty { "aucun" },
+                    S(R.string.ipv6_routers) to s.ipv6Routers.joinToString().ifEmpty { "aucun" },
                 ).forEach { (k, v) -> com.allnetworktools.ui.components.InfoRow(k, v) }
             }
         }
         SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 12.dp, bottom = 4.dp)) {
-            Text("Changements pendant la surveillance", Modifier.padding(bottom = 4.dp), style = rf(14, 20, 600), color = AntTheme.accent.accent)
-            if (c.events.isEmpty()) Text("Aucun changement depuis le début de la surveillance.", Modifier.padding(vertical = 10.dp), style = rf(13, 18), color = cs.onSurfaceVariant)
+            Text(S(R.string.changes_during_monitoring), Modifier.padding(bottom = 4.dp), style = rf(14, 20, 600), color = AntTheme.accent.accent)
+            if (c.events.isEmpty()) Text(S(R.string.no_change_since_monitoring_began), Modifier.padding(vertical = 10.dp), style = rf(13, 18), color = cs.onSurfaceVariant)
             c.events.take(30).forEach { e ->
                 Hairline()
                 Row(Modifier.fillMaxWidth().padding(vertical = 10.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
@@ -282,9 +284,9 @@ fun MitmTool(c: MitmController, conn: WifiConnection?) {
             }
         }
         Note(
-            "Un attaquant qui usurpe la box (ARP spoofing) doit relayer vos paquets : il apparaît alors comme premier routeur à la place de la passerelle. " +
-                "L'outil surveille aussi le serveur DHCP, les DNS et les routeurs IPv6 annoncés. Android interdit aux applications de lire la table ARP : " +
-                "une usurpation qui ne relaie pas le trafic ne se voit pas ainsi.",
+            S(R.string.an_attacker_spoofing_the_router_arp) +
+                S(R.string.the_tool_also_watches_the_dhcp) +
+                S(R.string.a_spoof_that_does_not_relay),
         )
     }
 }

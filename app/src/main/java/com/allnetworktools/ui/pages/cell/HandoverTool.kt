@@ -37,8 +37,11 @@ import com.allnetworktools.util.Export
 import com.allnetworktools.util.plural
 import java.text.SimpleDateFormat
 import java.util.Locale
+import com.allnetworktools.R
+import com.allnetworktools.util.S
+import com.allnetworktools.util.P
 
-private val clock = SimpleDateFormat("HH:mm:ss", Locale.FRANCE)
+private val clock = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
 
 @Composable
 fun HandoverTool(notificationsGranted: Boolean) {
@@ -51,26 +54,26 @@ fun HandoverTool(notificationsGranted: Boolean) {
         HeroCard {
             Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                 Text(changes.toString(), style = gs(56, 60, 500, -1.5f, tnum = true))
-                Text(plural(changes, "changement de cellule", "changements de cellule"), Modifier.padding(bottom = 8.dp), style = rf(18, 24, 500))
+                Text(P(R.plurals.p_cell_changes, changes), Modifier.padding(bottom = 8.dp), style = rf(18, 24, 500))
             }
             Text(
                 when {
-                    running -> "Depuis ${clock.format(HandoverLog.startedAt)} · continue même application fermée"
-                    events.isNotEmpty() -> "Session arrêtée · ${events.size} ${plural(events.size, "ligne", "lignes")} à exporter"
-                    else -> "Chaque passage d'une cellule à une autre, ou de la 4G à la 5G, avec l'heure et le lieu"
+                    running -> S(R.string.since_keeps_going_with_the_app, clock.format(HandoverLog.startedAt))
+                    events.isNotEmpty() -> S(R.string.session_stopped_to_export, events.size, P(R.plurals.p_lines, events.size))
+                    else -> S(R.string.every_switch_from_one_cell_to)
                 },
                 style = rf(14, 20),
             )
             Row(Modifier.padding(top = 12.dp)) {
-                if (running) HeroChip("Enregistrement en cours", AntTheme.net.good, blink = true)
-                else HeroChip("À l'arrêt", cs.outline)
+                if (running) HeroChip(S(R.string.recording), AntTheme.net.good, blink = true)
+                else HeroChip(S(R.string.stopped), cs.outline)
             }
         }
         if (running) {
-            ToolButtons(ToolButton("Arrêter", Sym.Stop, BtnKind.Big) { HandoverLog.stop(context) })
+            ToolButtons(ToolButton(S(R.string.stop), Sym.Stop, BtnKind.Big) { HandoverLog.stop(context) })
         } else {
             ToolButtons(
-                ToolButton(if (events.isEmpty()) "Démarrer" else "Nouvelle session", Sym.PlayArrow, BtnKind.Big) {
+                ToolButton(if (events.isEmpty()) S(R.string.start_2) else S(R.string.new_session), Sym.PlayArrow, BtnKind.Big) {
                     if (!notificationsGranted) actions.request(PermGroup.Notifications)
                     HandoverLog.start(context)
                 },
@@ -78,7 +81,7 @@ fun HandoverTool(notificationsGranted: Boolean) {
         }
         if (events.isNotEmpty()) {
             ToolButtons(
-                ToolButton("Exporter en CSV", Sym.Download, BtnKind.Outline) {
+                ToolButton(S(R.string.export_to_csv), Sym.Download, BtnKind.Outline) {
                     val snapshot = HandoverLog.csv(events)
                     actions.saveFile("handover_${Export.stamp(System.currentTimeMillis())}.csv", "text/csv") { snapshot.toByteArray() }
                 },
@@ -90,13 +93,13 @@ fun HandoverTool(notificationsGranted: Boolean) {
                 }
             }
             if (events.size > 200) {
-                Text("Les 200 derniers changements sont affichés ; l'export contient toute la session.", Modifier.padding(horizontal = 4.dp), style = rf(12, 16), color = cs.onSurfaceVariant)
+                Text(S(R.string.the_last_200_changes_are_shown), Modifier.padding(horizontal = 4.dp), style = rf(12, 16), color = cs.onSurfaceVariant)
             }
         }
         SectionCard {
             Text(
-                "Le journal tourne en arrière-plan avec une notification, jusqu'à ce que vous l'arrêtiez ici ou depuis la notification. " +
-                    "Une nouvelle session efface la précédente : rien n'est conservé sur le téléphone, exportez-la avant si besoin.",
+                S(R.string.the_log_runs_in_the_background) +
+                    S(R.string.a_new_session_erases_the_previous),
                 style = rf(13, 18), color = cs.onSurfaceVariant,
             )
         }
@@ -110,7 +113,7 @@ private fun EventRow(e: HandoverEvent) {
         LeadingIcon(if (e.isStart) Sym.PlayArrow else Sym.SwapCalls, acc.container, acc.onContainer, 40.dp, RoundedCornerShape(12.dp), 22.dp)
         Column(Modifier.weight(1f)) {
             Text(
-                if (e.isStart) "Début · ${e.toTech} · ${e.toCell ?: "?"}" else "${e.fromCell ?: "?"} → ${e.toCell ?: "?"}",
+                if (e.isStart) S(R.string.start_3, e.toTech, e.toCell ?: "?") else "${e.fromCell ?: "?"} → ${e.toCell ?: "?"}",
                 style = rf(14, 20, 600), maxLines = 1,
             )
             Text(

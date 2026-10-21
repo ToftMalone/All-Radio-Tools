@@ -77,6 +77,8 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import com.allnetworktools.R
+import com.allnetworktools.util.S
 
 fun mbps(v: Float) = if (v >= 100) fmt(v) else fmt(v, 1)
 
@@ -85,9 +87,9 @@ private fun msOf(v: Double?) = v?.let { if (it >= 100) fmt(it.toFloat()) else fm
 private fun pctOf(v: Double?) = v?.let { if (it == 0.0) "0" else fmt((it * 100).toFloat(), 1) } ?: "—"
 
 /** 100 ko, 1 Mo, 250 Mo: the transfer sizes the way the site labels them, in French units. */
-fun sizeLabel(bytes: Long) = if (bytes >= 1_000_000) "${bytes / 1_000_000} Mo" else "${bytes / 1_000} ko"
+fun sizeLabel(bytes: Long) = if (bytes >= 1_000_000) S(R.string.mb, bytes / 1_000_000) else S(R.string.kb, bytes / 1_000)
 
-val levelNames = listOf("Mauvais", "Médiocre", "Moyen", "Bon", "Excellent")
+val levelNames = listOf(S(R.string.bad), S(R.string.poor), S(R.string.fair), "Bon", S(R.string.excellent))
 
 class SpeedController(private val scope: CoroutineScope) {
     var phase by mutableStateOf(Phase.Idle)
@@ -164,27 +166,27 @@ fun SpeedTool(c: SpeedController, networkLabel: String, networkIcon: String) {
     if (c.phase == Phase.Results) TopBarAction(Sym.Download, export)
     val start = { haptics.confirm(); c.start() }
     PageColumn {
-        SectionTitle("Votre vitesse Internet")
+        SectionTitle(S(R.string.your_internet_speed))
         SpeedCards(s)
         LatencyCards(s)
         if (c.phase == Phase.Error) {
-            ToolError(Sym.SignalDisconnected, "Test interrompu", "La connexion au serveur Cloudflare a échoué pendant la mesure.", "Réessayer") { c.resume() }
+            ToolError(Sym.SignalDisconnected, S(R.string.test_interrupted), S(R.string.the_connection_to_the_cloudflare_server), S(R.string.retry)) { c.resume() }
         }
         ProgressCard(c, start)
         AimCard(s)
         ServerCard(c.meta, networkLabel)
         if (s.stepIndex >= 0) {
-            SectionTitle("Mesures")
-            BandwidthMeasurements("Mesures de téléchargement", "Test de téléchargement", s.downBuckets, AntTheme.accent.accent, s.download)
-            BandwidthMeasurements("Mesures d'envoi", "Test d'envoi", s.upBuckets, AntTheme.net.galileo, s.upload)
+            SectionTitle(S(R.string.measurements))
+            BandwidthMeasurements(S(R.string.download_measurements), S(R.string.download_test), s.downBuckets, AntTheme.accent.accent, s.download)
+            BandwidthMeasurements(S(R.string.upload_measurements), S(R.string.upload_test), s.upBuckets, AntTheme.net.galileo, s.upload)
             LatencyMeasurements(s)
             PacketLossMeasurements(s)
         }
         if (c.phase == Phase.Results) {
-            val at = SimpleDateFormat("d MMM yyyy 'à' HH:mm", Locale.FRANCE).format(Date(c.measuredAt))
+            val at = SimpleDateFormat("d MMM yyyy 'à' HH:mm", Locale.getDefault()).format(Date(c.measuredAt))
             Row(Modifier.fillMaxWidth().padding(horizontal = 4.dp), verticalAlignment = Alignment.CenterVertically) {
-                Text("Mesuré le $at · ${s.durationMs / 1000} s", Modifier.weight(1f), style = rf(12, 16), color = cs.onSurfaceVariant)
-                TextAction("Exporter en CSV", export, trailingIcon = Sym.Download)
+                Text(S(R.string.measured_on_s, at, s.durationMs / 1000), Modifier.weight(1f), style = rf(12, 16), color = cs.onSurfaceVariant)
+                TextAction(S(R.string.export_to_csv), export, trailingIcon = Sym.Download)
             }
         }
     }
@@ -196,7 +198,7 @@ private fun SpeedCards(s: CfSnapshot) {
     val down = AntTheme.accent.accent
     val up = AntTheme.net.galileo
     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-        listOf(Triple("Téléchargement", Sym.Download, down) to (s.download to s.downPoints), Triple("Envoi", Sym.Upload, up) to (s.upload to s.upPoints))
+        listOf(Triple(S(R.string.download), Sym.Download, down) to (s.download to s.downPoints), Triple(S(R.string.upload), Sym.Upload, up) to (s.upload to s.upPoints))
             .forEach { (head, data) ->
                 val (label, icon, color) = head
                 val (bps, points) = data
@@ -207,7 +209,7 @@ private fun SpeedCards(s: CfSnapshot) {
                     }
                     Row(Modifier.padding(top = 6.dp), verticalAlignment = Alignment.Bottom) {
                         Text(mbpsOf(bps), style = gs(36, 40, 500, -1f, tnum = true))
-                        Text(" Mb/s", Modifier.padding(bottom = 4.dp), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
+                        Text(S(R.string.mbps), Modifier.padding(bottom = 4.dp), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
                     }
                     OverTime(points.mapNotNull { p -> p.bps?.let { p.atMs to it } }, bps, color, Modifier.fillMaxWidth().height(48.dp).padding(top = 8.dp))
                 }
@@ -240,12 +242,12 @@ private fun OverTime(points: List<Pair<Long, Double>>, p90: Double?, color: Colo
 @Composable
 private fun LatencyCards(s: CfSnapshot) {
     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-        LoadedMetric("Latence", Sym.NetworkPing, s.latency, s.downLoadedLatency, s.upLoadedLatency, Modifier.weight(1f))
-        LoadedMetric("Gigue", Sym.SwapVert, s.jitter, s.downLoadedJitter, s.upLoadedJitter, Modifier.weight(1f))
+        LoadedMetric(S(R.string.latency), Sym.NetworkPing, s.latency, s.downLoadedLatency, s.upLoadedLatency, Modifier.weight(1f))
+        LoadedMetric(S(R.string.jitter), Sym.SwapVert, s.jitter, s.downLoadedJitter, s.upLoadedJitter, Modifier.weight(1f))
     }
     SectionCard(padding = PaddingValues(horizontal = 14.dp, vertical = 12.dp)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Box(Modifier.weight(1f)) { MetricHead("Perte de paquets", Sym.SignalDisconnected) }
+            Box(Modifier.weight(1f)) { MetricHead(S(R.string.packet_loss), Sym.SignalDisconnected) }
             Text(if (s.packetLossError != null) "—" else pctOf(s.packetLoss?.ratio), style = gs(26, 32, 500, -0.5f, tnum = true))
             Text(" %", style = rf(12, 16, 600), color = cs.onSurfaceVariant)
         }
@@ -278,9 +280,9 @@ private fun LoadedMetric(label: String, icon: String, idle: Double?, down: Doubl
 }
 
 private fun stepText(step: CfStep?, done: Int, s: CfSnapshot): String = when (step) {
-    is CfStep.Latency -> "Latence · $done/${step.packets} requêtes"
-    is CfStep.Transfer -> "${if (step.down) "Téléchargement" else "Envoi"} ${sizeLabel(step.bytes)} · $done/${step.count} requêtes"
-    is CfStep.PacketLoss -> s.packetLossLive?.let { "Perte de paquets · ${it.sent}/${step.packets} paquets" } ?: "Perte de paquets · connexion…"
+    is CfStep.Latency -> S(R.string.latency_requests, done, step.packets)
+    is CfStep.Transfer -> S(R.string.requests, if (step.down) S(R.string.download) else S(R.string.upload), sizeLabel(step.bytes), done, step.count)
+    is CfStep.PacketLoss -> s.packetLossLive?.let { S(R.string.packet_loss_packets, it.sent, step.packets) } ?: S(R.string.packet_loss_connecting)
     null -> ""
 }
 
@@ -299,7 +301,7 @@ private fun ProgressCard(c: SpeedController, start: () -> Unit) {
             }
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
-                    if (c.paused) "En pause" else "Étape ${(s.stepIndex + 1).coerceIn(1, total)} sur $total",
+                    if (c.paused) S(R.string.paused) else S(R.string.step_of, (s.stepIndex + 1).coerceIn(1, total), total),
                     Modifier.weight(1f), style = rf(14, 20, 600), color = AntTheme.accent.accent,
                 )
                 Text(fmt(((s.stepIndex.coerceAtLeast(0) + within) / total * 100), 0) + " %", style = rf(13, 18, 600, tnum = true), color = cs.onSurfaceVariant)
@@ -311,18 +313,18 @@ private fun ProgressCard(c: SpeedController, start: () -> Unit) {
     when {
         c.phase == Phase.Running -> ToolButtons(
             ToolButton("Pause", Sym.Pause, BtnKind.OutlineOnSurface) { c.pause() },
-            ToolButton("Annuler", Sym.Close, BtnKind.OutlineOnSurface) { c.cancel() },
+            ToolButton(S(R.string.cancel), Sym.Close, BtnKind.OutlineOnSurface) { c.cancel() },
         )
         c.paused -> ToolButtons(
-            ToolButton("Reprendre", Sym.PlayArrow, BtnKind.Fill) { c.resume() },
-            ToolButton("Annuler", Sym.Close, BtnKind.OutlineOnSurface) { c.cancel() },
+            ToolButton(S(R.string.resume), Sym.PlayArrow, BtnKind.Fill) { c.resume() },
+            ToolButton(S(R.string.cancel), Sym.Close, BtnKind.OutlineOnSurface) { c.cancel() },
         )
-        c.phase == Phase.Results -> ToolButtons(ToolButton("Relancer le test", Sym.Refresh, BtnKind.Big, start))
+        c.phase == Phase.Results -> ToolButtons(ToolButton(S(R.string.run_the_test_again), Sym.Refresh, BtnKind.Big, start))
         c.phase == Phase.Idle -> {
-            ToolButtons(ToolButton("Démarrer", Sym.PlayArrow, BtnKind.Big, start))
+            ToolButtons(ToolButton(S(R.string.start_2), Sym.PlayArrow, BtnKind.Big, start))
             Text(
-                "Lorsque vous lancez le test de vitesse, votre adresse IP est partagée avec Cloudflare et traitée conformément à sa politique de confidentialité. " +
-                    "Remarque : un test de vitesse peut consommer jusqu'à 200 Mo de données.",
+                S(R.string.when_you_start_the_speed_test) +
+                    S(R.string.note_a_speed_test_can_use),
                 Modifier.padding(horizontal = 4.dp), style = rf(12, 16), color = cs.onSurfaceVariant,
             )
         }
@@ -333,11 +335,11 @@ private fun ProgressCard(c: SpeedController, start: () -> Unit) {
 /** Network quality score: streaming, gaming and video calls, one to five stars as on the site. */
 @Composable
 private fun AimCard(s: CfSnapshot) {
-    InfoList("Score de qualité réseau") {
+    InfoList(S(R.string.network_quality_score)) {
         listOf(
-            Triple(CfExperience.Streaming, "Streaming vidéo", Sym.Tv),
-            Triple(CfExperience.Gaming, "Jeux en ligne", Sym.Gamepad),
-            Triple(CfExperience.Rtc, "Appels vidéo", Sym.Videocam),
+            Triple(CfExperience.Streaming, S(R.string.video_streaming), Sym.Tv),
+            Triple(CfExperience.Gaming, S(R.string.online_gaming), Sym.Gamepad),
+            Triple(CfExperience.Rtc, S(R.string.video_calls), Sym.Videocam),
         ).forEach { (e, label, icon) ->
             val score = s.scores?.get(e)
             val bad = score?.level == 0
@@ -350,8 +352,8 @@ private fun AimCard(s: CfSnapshot) {
                     Text(
                         when {
                             score != null -> levelNames[score.level]
-                            s.scores != null -> "Indisponible"
-                            else -> "En attente"
+                            s.scores != null -> S(R.string.unavailable)
+                            else -> S(R.string.pending)
                         },
                         style = rf(12, 16), color = if (score != null) color else cs.onSurfaceVariant,
                     )
@@ -388,14 +390,14 @@ private fun ServerCard(meta: CfMeta?, networkLabel: String) {
     val actions = LocalActions.current
     val context = LocalContext.current
     val countries by produceState<List<Country>>(emptyList()) { value = WorldMap.load(context) }
-    InfoList("Emplacement du serveur") {
+    InfoList(S(R.string.server_location)) {
         if (meta?.coloLat != null && meta.coloLon != null) {
             MiniMap(countries, meta.coloLat to meta.coloLon, meta.lat?.let { la -> meta.lon?.let { la to it } })
         }
-        InfoRow("Serveur", listOfNotNull(meta?.coloCity, meta?.colo?.let { "($it)" }).joinToString(" ").ifEmpty { "Cloudflare" })
-        InfoRow("Votre réseau", listOfNotNull(meta?.asOrganization, meta?.asn?.let { "AS$it" }).joinToString(" · ").ifEmpty { networkLabel })
-        meta?.clientIp?.let { ip -> InfoRow("Votre adresse IP", ip) { actions.copy("Adresse IP", ip) } }
-        listOfNotNull(meta?.city, meta?.region, meta?.country).takeIf { it.isNotEmpty() }?.let { InfoRow("Votre position estimée", it.joinToString(", ")) }
+        InfoRow(S(R.string.server), listOfNotNull(meta?.coloCity, meta?.colo?.let { "($it)" }).joinToString(" ").ifEmpty { "Cloudflare" })
+        InfoRow(S(R.string.your_network_4), listOfNotNull(meta?.asOrganization, meta?.asn?.let { "AS$it" }).joinToString(" · ").ifEmpty { networkLabel })
+        meta?.clientIp?.let { ip -> InfoRow(S(R.string.your_ip_address), ip) { actions.copy(S(R.string.ip_address), ip) } }
+        listOfNotNull(meta?.city, meta?.region, meta?.country).takeIf { it.isNotEmpty() }?.let { InfoRow(S(R.string.your_estimated_location), it.joinToString(", ")) }
     }
 }
 
@@ -447,7 +449,7 @@ private fun MiniMap(countries: List<Country>, server: Pair<Double, Double>, clie
 private fun BandwidthMeasurements(title: String, test: String, buckets: List<CfBucketView>, color: Color, p90: Double?) {
     if (buckets.isEmpty()) return
     val all = buckets.flatMap { b -> b.timings.mapNotNull { it.bps } }.filter { it > 0 }
-    InfoList(title, trailing = { Text("90ᵉ centile ${mbpsOf(p90)} Mb/s", style = rf(12, 16, 600, tnum = true), color = cs.onSurfaceVariant) }) {
+    InfoList(title, trailing = { Text(S(R.string.n_90th_percentile_mbps, mbpsOf(p90)), style = rf(12, 16, 600, tnum = true), color = cs.onSurfaceVariant) }) {
         val lo = all.minOrNull()?.let { log10(it) - 0.1 } ?: 0.0
         val hi = all.maxOrNull()?.let { log10(it) + 0.1 } ?: 1.0
         buckets.forEach { b ->
@@ -461,7 +463,7 @@ private fun BandwidthMeasurements(title: String, test: String, buckets: List<CfB
                 if (v.isNotEmpty()) {
                     BoxPlot(v.map(::log10), lo, hi, color, Modifier.padding(top = 6.dp).fillMaxWidth().height(18.dp))
                     Text(
-                        "min ${mbpsOf(v.min())} · médiane ${mbpsOf(CfMath.percentile(v, 0.5))} · max ${mbpsOf(v.max())} Mb/s",
+                        S(R.string.min_median_max_mbps, mbpsOf(v.min()), mbpsOf(CfMath.percentile(v, 0.5)), mbpsOf(v.max())),
                         Modifier.padding(top = 4.dp), style = rf(11, 14, tnum = true), color = cs.onSurfaceVariant,
                     )
                 }
@@ -490,21 +492,21 @@ private fun BoxPlot(values: List<Double>, lo: Double, hi: Double, color: Color, 
 
 @Composable
 private fun LatencyMeasurements(s: CfSnapshot) {
-    val rows = listOf("Inactif" to s.latencyPoints, "Pendant le téléchargement" to s.downLoadedPoints, "Pendant l'envoi" to s.upLoadedPoints).filter { it.second.isNotEmpty() }
+    val rows = listOf(S(R.string.idle_2) to s.latencyPoints, S(R.string.during_download) to s.downLoadedPoints, S(R.string.during_upload) to s.upLoadedPoints).filter { it.second.isNotEmpty() }
     if (rows.isEmpty()) return
     val all = rows.flatMap { it.second }
     val hi = all.max() * 1.05 + 1
-    InfoList("Mesures de latence") {
+    InfoList(S(R.string.latency_measurements)) {
         rows.forEach { (label, v) ->
             androidx.compose.material3.HorizontalDivider(color = cs.outlineVariant, thickness = 1.dp)
             Column(Modifier.fillMaxWidth().padding(vertical = 10.dp)) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(label, Modifier.weight(1f), style = rf(13, 18, 600))
-                    Text("médiane ${msOf(CfMath.percentile(v, 0.5))} ms", style = rf(12, 16, 600, tnum = true), color = cs.onSurfaceVariant)
+                    Text(S(R.string.median_ms, msOf(CfMath.percentile(v, 0.5))), style = rf(12, 16, 600, tnum = true), color = cs.onSurfaceVariant)
                 }
                 BoxPlot(v, 0.0, hi, AntTheme.accent.accent, Modifier.padding(top = 6.dp).fillMaxWidth().height(18.dp))
                 Text(
-                    "${v.size} mesures · min ${msOf(v.min())} · max ${msOf(v.max())} ms · gigue ${msOf(CfMath.jitter(v))} ms",
+                    S(R.string.measurements_min_max_ms_jitter_ms, v.size, msOf(v.min()), msOf(v.max()), msOf(CfMath.jitter(v))),
                     Modifier.padding(top = 4.dp), style = rf(11, 14, tnum = true), color = cs.onSurfaceVariant,
                 )
             }
@@ -516,11 +518,11 @@ private fun LatencyMeasurements(s: CfSnapshot) {
 private fun PacketLossMeasurements(s: CfSnapshot) {
     val live = s.packetLossLive
     if (live == null && s.packetLossError == null) return
-    InfoList("Mesures de perte de paquets") {
+    InfoList(S(R.string.packet_loss_measurements)) {
         androidx.compose.material3.HorizontalDivider(color = cs.outlineVariant, thickness = 1.dp)
         Column(Modifier.fillMaxWidth().padding(vertical = 12.dp)) {
             if (s.packetLossError != null || live == null) {
-                Text("Impossible de mesurer la perte de paquets : le relais TURN de Cloudflare (UDP 3478) ne répond pas depuis ce réseau.", style = rf(13, 18), color = cs.onSurfaceVariant)
+                Text(S(R.string.packet_loss_could_not_be_measured), style = rf(13, 18), color = cs.onSurfaceVariant)
                 s.packetLossError?.let { Text(it, Modifier.padding(top = 4.dp), style = rf(11, 14), color = cs.onSurfaceVariant) }
                 return@Column
             }
@@ -538,11 +540,11 @@ private fun PacketLossMeasurements(s: CfSnapshot) {
                 }
             }
             Row(Modifier.padding(top = 8.dp), horizontalArrangement = Arrangement.spacedBy(14.dp)) {
-                Legend(good, "Reçus ${live.received}")
-                Legend(bad, "Perdus $lost")
-                if (s.packetLoss == null) Legend(pending, "En transit ${waiting.coerceAtLeast(0)}")
+                Legend(good, S(R.string.received_4, live.received))
+                Legend(bad, S(R.string.lost_2, lost))
+                if (s.packetLoss == null) Legend(pending, S(R.string.in_transit, waiting.coerceAtLeast(0)))
             }
-            Text("${live.sent}/${live.total} paquets UDP envoyés via le relais TURN de Cloudflare", Modifier.padding(top = 6.dp), style = rf(11, 14), color = cs.onSurfaceVariant)
+            Text(S(R.string.udp_packets_sent_through_cloudflare_s, live.sent, live.total), Modifier.padding(top = 6.dp), style = rf(11, 14), color = cs.onSurfaceVariant)
         }
     }
 }

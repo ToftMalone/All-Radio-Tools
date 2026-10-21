@@ -32,6 +32,8 @@ import com.allnetworktools.data.PermGroup
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import com.allnetworktools.R
+import com.allnetworktools.util.S
 
 /** Snackbar message holder (inverse surface, bottom, 2.4 s). */
 class Toaster {
@@ -71,7 +73,7 @@ class AppActions(
 
     private fun launch(intent: Intent) {
         runCatching { context.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)) }
-            .onFailure { toast("Écran indisponible sur cet appareil") }
+            .onFailure { toast(S(R.string.screen_unavailable_on_this_device)) }
     }
 
     fun openAppSettings() = launch(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.fromParts("package", context.packageName, null)))
@@ -89,7 +91,7 @@ class AppActions(
             group.permissions.isEmpty() -> vm.refreshPermissions()
             isPermanentlyDenied(group) -> {
                 openAppSettings()
-                toast("Autorisez l'accès dans Paramètres Android › Autorisations")
+                toast(S(R.string.allow_access_in_android_settings_permissions))
             }
             else -> {
                 vm.markAsked(group)
@@ -124,7 +126,7 @@ class AppActions(
      */
     fun saveFile(fileName: String, mime: String, content: () -> ByteArray) {
         pendingSave = content
-        runCatching { createFile(SaveRequest(fileName, mime)) }.onFailure { pendingSave = null; toast("Enregistrement indisponible sur cet appareil") }
+        runCatching { createFile(SaveRequest(fileName, mime)) }.onFailure { pendingSave = null; toast(S(R.string.saving_unavailable_on_this_device)) }
     }
 
     internal fun onFileChosen(uri: Uri?) {
@@ -135,7 +137,7 @@ class AppActions(
             val ok = withContext(Dispatchers.IO) {
                 runCatching { context.contentResolver.openOutputStream(uri, "wt")!!.use { it.write(content()) } }.isSuccess
             }
-            toast(if (ok) "Fichier enregistré" else "Impossible d'écrire le fichier")
+            toast(if (ok) S(R.string.file_saved) else S(R.string.could_not_write_the_file))
         }
     }
 
@@ -143,7 +145,7 @@ class AppActions(
 
     fun copy(label: String, text: String) {
         context.getSystemService(ClipboardManager::class.java)?.setPrimaryClip(ClipData.newPlainText(label, text))
-        toast("$label copié")
+        toast(S(R.string.copied, label))
     }
 
     /** Primary action for a blocked network. */

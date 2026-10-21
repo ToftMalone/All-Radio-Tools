@@ -1,7 +1,10 @@
 package com.allnetworktools.data
 
+import com.allnetworktools.R
+import com.allnetworktools.util.S
+
 /** How worrying a network looks. */
-enum class TwinRisk(val label: String) { High("Risque élevé"), Medium("Suspect"), Low("À noter"), None("Normal") }
+enum class TwinRisk(val label: String) { High(S(R.string.high_risk)), Medium(S(R.string.suspicious)), Low(S(R.string.worth_noting)), None("Normal") }
 
 data class TwinFinding(val risk: TwinRisk, val title: String, val detail: String, val bssids: Set<String>)
 
@@ -43,7 +46,7 @@ object EvilTwin {
     fun prefix(bssid: String): String = bssid.uppercase().take(8)
 
     /** Networks broadcast by thousands of boxes of different generations: many makers is normal there. */
-    private val community = listOf("freewifi", "sfr wifi", "bouygues telecom wi-fi", "orange wi-fi", "eduroam", "fon", "wifi-public", "_sncf")
+    private val community = listOf("freewifi", S(R.string.sfr_wifi), "bouygues telecom wi-fi", "orange wi-fi", "eduroam", "fon", "wifi-public", "_sncf")
 
     private fun isCommunity(ssid: String) = ssid.lowercase().let { s -> community.any { s.startsWith(it) } }
 
@@ -63,9 +66,9 @@ object EvilTwin {
         val open = bySec[SecClass.Open].orEmpty()
         if (open.isNotEmpty() && protectedAps.isNotEmpty()) {
             findings += TwinFinding(
-                TwinRisk.High, "Même nom, sans mot de passe",
-                "${protectedAps.size} ${if (protectedAps.size > 1) "points d'accès protègent" else "point d'accès protège"} ce réseau, mais ${open.size} ${if (open.size > 1) "l'annoncent" else "l'annonce"} ouvert. " +
-                    "Un faux point d'accès ouvert peut voir tout le trafic non chiffré de ceux qui s'y connectent.",
+                TwinRisk.High, S(R.string.same_name_no_password),
+                S(R.string.this_network_but_open, protectedAps.size, if (protectedAps.size > 1) S(R.string.access_points_protect) else S(R.string.access_point_protects), open.size, if (open.size > 1) S(R.string.advertise_it) else S(R.string.advertises_it)) +
+                    S(R.string.a_fake_open_access_point_can),
                 open.map { it.bssid }.toSet(),
             )
         }
@@ -74,9 +77,9 @@ object EvilTwin {
         if (ent.isNotEmpty() && personal.isNotEmpty()) {
             val minority = if (ent.size <= personal.size) ent else personal
             findings += TwinFinding(
-                TwinRisk.High, "Entreprise et mot de passe mélangés",
-                "Ce réseau est annoncé à la fois en WPA-Entreprise (identifiant + mot de passe) et en WPA-Personnel. " +
-                    "Des points d'accès pirates imitent ainsi un réseau d'entreprise pour récupérer les identifiants.",
+                TwinRisk.High, S(R.string.enterprise_and_password_mixed),
+                S(R.string.this_network_is_advertised_both_as) +
+                    S(R.string.rogue_access_points_imitate_a_company),
                 minority.map { it.bssid }.toSet(),
             )
         }
@@ -84,17 +87,17 @@ object EvilTwin {
         val weaker = aps.filter { secClass(it.security) in setOf(SecClass.Wpa2, SecClass.Wpa, SecClass.Wep) }
         if (wpa3Only.isNotEmpty() && weaker.isNotEmpty()) {
             findings += TwinFinding(
-                TwinRisk.Medium, "Sécurité rétrogradée",
-                "${wpa3Only.size} ${if (wpa3Only.size > 1) "points d'accès exigent" else "point d'accès exige"} WPA3, ${weaker.size} ${if (weaker.size > 1) "acceptent" else "accepte"} un protocole plus ancien. " +
-                    "C'est le schéma d'une attaque par rétrogradation (« downgrade »), ou d'un vieux répéteur.",
+                TwinRisk.Medium, S(R.string.security_downgraded),
+                S(R.string.wpa3_an_older_protocol, wpa3Only.size, if (wpa3Only.size > 1) S(R.string.access_points_require) else S(R.string.access_point_requires), weaker.size, if (weaker.size > 1) "acceptent" else "accepte") +
+                    S(R.string.this_is_the_pattern_of_a),
                 weaker.map { it.bssid }.toSet(),
             )
         } else {
             val legacy = aps.filter { secClass(it.security) in setOf(SecClass.Wep, SecClass.Wpa) }
             if (legacy.isNotEmpty() && aps.any { secClass(it.security) in setOf(SecClass.Wpa2, SecClass.Wpa3) }) {
                 findings += TwinFinding(
-                    TwinRisk.Medium, "Chiffrement obsolète",
-                    "Une partie des points d'accès utilisent WEP ou WPA, cassables en quelques minutes, alors que les autres sont en WPA2 ou WPA3.",
+                    TwinRisk.Medium, S(R.string.obsolete_encryption),
+                    S(R.string.some_access_points_use_wep_or),
                     legacy.map { it.bssid }.toSet(),
                 )
             }
@@ -107,19 +110,19 @@ object EvilTwin {
                 val community = isCommunity(ssid) || (aps.size >= 4 && keys.size >= 3)
                 if (community) {
                     findings += TwinFinding(
-                        TwinRisk.Low, "Plusieurs constructeurs",
-                        "${keys.size} préfixes d'adresse différents. Normal pour un réseau public diffusé par de nombreuses box ; " +
-                            "ne vous y connectez qu'avec un chiffrement (WPA2/3 ou VPN).",
+                        TwinRisk.Low, S(R.string.several_manufacturers),
+                        S(R.string.different_address_prefixes_normal_for_a, keys.size) +
+                            S(R.string.only_connect_to_it_with_encryption),
                         emptySet(),
                     )
                 } else {
                     val stronger = others.filter { o -> main.value.all { o.rssi >= it.rssi + 10 } }
                     findings += TwinFinding(
                         if (stronger.isNotEmpty()) TwinRisk.High else TwinRisk.Medium,
-                        "Constructeur différent",
-                        "${others.size} ${if (others.size > 1) "points d'accès ont" else "point d'accès a"} un préfixe d'adresse (${others.map { prefix(it.bssid) }.distinct().joinToString(", ")}) " +
-                            "différent des ${main.value.size} autres (${prefix(main.value.first().bssid)}). Un même réseau est normalement diffusé par un seul fabricant" +
-                            (if (stronger.isNotEmpty()) ", et celui-ci capte nettement plus fort : c'est le comportement d'un faux point d'accès placé près de vous." else "."),
+                        S(R.string.different_manufacturer),
+                        S(R.string.an_address_prefix, others.size, if (others.size > 1) S(R.string.access_points_have) else S(R.string.access_point_has), others.map { prefix(it.bssid) }.distinct().joinToString(", ")) +
+                            S(R.string.different_from_the_others_one_network, main.value.size, prefix(main.value.first().bssid)) +
+                            (if (stronger.isNotEmpty()) S(R.string.and_this_one_is_received_much) else "."),
                         others.map { it.bssid }.toSet(),
                     )
                 }
@@ -127,9 +130,9 @@ object EvilTwin {
             val soft = aps.filter { a -> locallyAdministered(a.bssid) && aps.none { b -> b !== a && bytes(b.bssid)?.drop(1)?.take(3) == bytes(a.bssid)?.drop(1)?.take(3) } }
             if (soft.isNotEmpty() && soft.size < aps.size) {
                 findings += TwinFinding(
-                    TwinRisk.Medium, "Adresse générée par logiciel",
-                    "${soft.size} ${if (soft.size > 1) "adresses sont" else "adresse est"} « administrée${if (soft.size > 1) "s" else ""} localement » sans lien avec les autres : " +
-                        "typique d'un partage de connexion, d'un routeur de poche ou d'un outil d'attaque.",
+                    TwinRisk.Medium, S(R.string.software_generated_address),
+                    S(R.string.locally_administered_with_no_link_to, soft.size, if (soft.size > 1) S(R.string.addresses_are) else S(R.string.address_is), if (soft.size > 1) "s" else "") +
+                        S(R.string.typical_of_a_personal_hotspot_a),
                     soft.map { it.bssid }.toSet(),
                 )
             }
@@ -137,8 +140,8 @@ object EvilTwin {
             val late = aps.filter { a -> known != null && (firstSeen[a.bssid] ?: known) - known > 60_000L && now - (firstSeen[a.bssid] ?: now) < 15 * 60_000L }
             if (late.isNotEmpty()) {
                 findings += TwinFinding(
-                    TwinRisk.Low, "Apparu pendant l'analyse",
-                    "${late.size} ${if (late.size > 1) "nouveaux points d'accès sont apparus" else "nouveau point d'accès est apparu"} alors que le réseau était déjà visible.",
+                    TwinRisk.Low, S(R.string.appeared_during_the_scan),
+                    S(R.string.while_the_network_was_already_visible, late.size, if (late.size > 1) S(R.string.new_access_points_appeared) else S(R.string.new_access_point_appeared)),
                     late.map { it.bssid }.toSet(),
                 )
             }

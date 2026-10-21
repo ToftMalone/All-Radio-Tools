@@ -66,6 +66,9 @@ import com.allnetworktools.util.fmt
 import com.allnetworktools.util.plural
 import kotlin.math.cos
 import kotlin.math.sin
+import com.allnetworktools.R
+import com.allnetworktools.util.S
+import com.allnetworktools.util.P
 
 private const val ALL = "Tous"
 
@@ -94,16 +97,16 @@ fun BleScanner(vm: MainViewModel) {
                     if (!paused) BlinkDot(roles.accent, 8.dp, 1200) else Box(Modifier.size(8.dp).clip(CircleShape).background(cs.outline))
                     Text(
                         when {
-                            paused -> "Scan en pause · ${shown.size} ${plural(shown.size, "appareil")}"
-                            devices.isEmpty() -> "Recherche… aucun appareil détecté"
-                            else -> "Scan actif · ${shown.size} ${plural(shown.size, "appareil")}" +
-                                devices.count { it.isUnknown }.let { u -> if (u > 0) " · $u ${plural(u, "inconnu")}" else "" }
+                            paused -> S(R.string.scan_paused, shown.size, P(R.plurals.p_devices, shown.size))
+                            devices.isEmpty() -> S(R.string.searching_no_device_found)
+                            else -> S(R.string.scanning, shown.size, P(R.plurals.p_devices, shown.size)) +
+                                devices.count { it.isUnknown }.let { u -> if (u > 0) " · $u ${P(R.plurals.p_unknown, u)}" else "" }
                         },
                         style = rf(14, 20, 500),
                     )
                 }
                 Text(
-                    "Distance estimée d'après la force du signal. La direction n'est pas mesurable par un téléphone : chaque appareil garde sa place sur le cercle.",
+                    S(R.string.distance_estimated_from_signal_strength_a),
                     Modifier.padding(top = 6.dp, start = 8.dp, end = 8.dp), style = rf(11, 15), color = cs.onSurfaceVariant, textAlign = TextAlign.Center,
                 )
             }
@@ -123,21 +126,21 @@ fun BleScanner(vm: MainViewModel) {
         val unknownCount = devices.count { it.isUnknown }
         IdentifyCard(ident, unknownCount, ident.candidates(devices).size) { ident.start(devices) }
         Row(Modifier.fillMaxWidth().padding(horizontal = 4.dp), verticalAlignment = Alignment.CenterVertically) {
-            Text("${shown.size} ${plural(shown.size, "résultat")}", Modifier.weight(1f), style = rf(13, 18), color = cs.onSurfaceVariant)
+            Text("${shown.size} ${P(R.plurals.p_results, shown.size)}", Modifier.weight(1f), style = rf(13, 18), color = cs.onSurfaceVariant)
             Symbol(Sym.SwapVert, size = 18.dp, tint = roles.accent)
-            Text("RSSI décroissant", Modifier.padding(start = 4.dp), style = rf(13, 18, 600), color = roles.accent)
+            Text(S(R.string.rssi_descending), Modifier.padding(start = 4.dp), style = rf(13, 18, 600), color = roles.accent)
         }
         if (shown.isEmpty()) {
             SectionCard(padding = androidx.compose.foundation.layout.PaddingValues(horizontal = 20.dp, vertical = 28.dp)) {
                 Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(if (devices.isEmpty()) "Aucun appareil à proximité" else "Aucun appareil ne correspond", style = gs(20, 26, 500), textAlign = TextAlign.Center)
+                    Text(if (devices.isEmpty()) S(R.string.no_device_nearby) else S(R.string.no_device_matches), style = gs(20, 26, 500), textAlign = TextAlign.Center)
                     Text(
-                        if (devices.isEmpty()) "Le scan continue. Vérifiez que les appareils sont allumés et en mode visible."
-                        else "${devices.size} ${plural(devices.size, "appareil")} masqués par les filtres.",
+                        if (devices.isEmpty()) S(R.string.the_scan_goes_on_check_that)
+                        else S(R.string.hidden_by_the_filters, devices.size, P(R.plurals.p_devices, devices.size)),
                         Modifier.padding(top = 6.dp), style = rf(14, 20), color = cs.onSurfaceVariant, textAlign = TextAlign.Center,
                     )
                     PillButton(
-                        if (devices.isEmpty()) "Relancer le scan" else "Réinitialiser les filtres",
+                        if (devices.isEmpty()) S(R.string.restart_the_scan) else S(R.string.reset_the_filters),
                         {
                             if (devices.isEmpty()) {
                                 paused = false
@@ -222,7 +225,7 @@ private fun radarRadius(m: Double): Float = (40 + 104 * (Math.log10(m.coerceIn(0
 
 internal fun distanceLabel(m: Double): String = when {
     m < 1 -> "< 1 m"
-    m < 10 -> "≈ ${"%.1f".format(java.util.Locale.FRANCE, m)} m"
+    m < 10 -> "≈ ${"%.1f".format(java.util.Locale.getDefault(), m)} m"
     else -> "≈ ${m.toInt()} m"
 }
 
@@ -275,25 +278,25 @@ private fun IdentifyCard(c: BleIdentifyController, unknown: Int, candidates: Int
             Column(Modifier.weight(1f)) {
                 Text(
                     when {
-                        c.running -> "Identification ${c.done + 1} / ${c.total}"
-                        c.finished -> "${c.found} ${plural(c.found, "appareil identifié", "appareils identifiés")} sur ${c.total}"
-                        else -> "$unknown ${plural(unknown, "appareil non identifié", "appareils non identifiés")}"
+                        c.running -> S(R.string.identifying, c.done + 1, c.total)
+                        c.finished -> S(R.string.of, c.found, P(R.plurals.p_devices_identified, c.found), c.total)
+                        else -> "$unknown ${P(R.plurals.p_devices_not_identified, unknown)}"
                     },
                     style = rf(15, 20, 600), color = roles.onContainer,
                 )
                 Text(
                     when {
-                        c.running -> c.current ?: "Connexion…"
-                        candidates > 0 -> "Connexion brève en lecture seule à $candidates ${plural(candidates, "appareil")} proche${if (candidates > 1) "s" else ""} pour lire nom, modèle et fabricant."
-                        c.finished -> "Les identités lues sont conservées pour les prochains scans."
-                        else -> "Ces appareils ne sont pas connectables ou trop éloignés pour être interrogés."
+                        c.running -> c.current ?: S(R.string.connecting)
+                        candidates > 0 -> S(R.string.brief_read_only_connection_to_nearby, candidates, P(R.plurals.p_devices, candidates), if (candidates > 1) "s" else "")
+                        c.finished -> S(R.string.identities_read_are_kept_for_the)
+                        else -> S(R.string.these_devices_are_not_connectable_or)
                     },
                     style = rf(12, 16), color = roles.onContainer,
                 )
             }
             when {
-                c.running -> PillButton("Arrêter", { haptics.segment(); c.stop() }, icon = Sym.Stop, height = 40.dp, bg = cs.surface, fg = roles.accent)
-                candidates > 0 -> PillButton("Identifier", { haptics.confirm(); onStart() }, height = 40.dp, bg = roles.accent, fg = roles.onAccent)
+                c.running -> PillButton(S(R.string.stop), { haptics.segment(); c.stop() }, icon = Sym.Stop, height = 40.dp, bg = cs.surface, fg = roles.accent)
+                candidates > 0 -> PillButton(S(R.string.identify), { haptics.confirm(); onStart() }, height = 40.dp, bg = roles.accent, fg = roles.onAccent)
             }
         }
         if (c.running) com.allnetworktools.ui.tools.ProgressBar(c.done.toFloat() / c.total.coerceAtLeast(1), track = cs.surface)

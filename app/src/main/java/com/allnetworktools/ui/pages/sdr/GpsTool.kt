@@ -61,6 +61,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import com.allnetworktools.R
+import com.allnetworktools.util.S
 
 /**
  * GPS with the HackRF alone and its stock telescopic antenna: 2.048 MS/s at 1575.42 MHz, full gain, and the software
@@ -96,8 +98,8 @@ class GpsController(private val repo: SdrRepository, private val scope: Coroutin
         starting = true
         scope.launch {
             try {
-                if (!repo.hasPermission(device) && !repo.requestPermission(device)) { error = "Accès USB au HackRF refusé"; return@launch }
-                val r = withContext(Dispatchers.IO) { repo.open(device) } ?: run { error = "Impossible d'ouvrir le HackRF"; return@launch }
+                if (!repo.hasPermission(device) && !repo.requestPermission(device)) { error = S(R.string.usb_access_to_the_hackrf_refused); return@launch }
+                val r = withContext(Dispatchers.IO) { repo.open(device) } ?: run { error = S(R.string.could_not_open_the_hackrf); return@launch }
                 val lna = lnaGain
                 val vga = vgaGain
                 val withAmp = amp
@@ -105,7 +107,7 @@ class GpsController(private val repo: SdrRepository, private val scope: Coroutin
                     r.setSampleRate(GpsReceiver.FS.toInt(), 1_750_000) && r.setFrequency(Gps.L1_HZ.toLong()) &&
                         r.setLnaGain(lna) && r.setVgaGain(vga) && r.setAmp(withAmp) && r.setAntennaPower(false)
                 }
-                if (!ok) { r.close(); error = "Le HackRF n'a pas accepté la configuration"; return@launch }
+                if (!ok) { r.close(); error = S(R.string.the_hackrf_did_not_accept_the); return@launch }
                 radio = r
                 status = null
                 firstFixSeconds = null
@@ -174,11 +176,11 @@ class GpsController(private val repo: SdrRepository, private val scope: Coroutin
 }
 
 private fun stageText(s: GpsStage) = when (s) {
-    GpsStage.PullIn -> "Accrochage"
-    GpsStage.Tracking -> "Poursuite"
-    GpsStage.BitSync -> "Lecture des bits"
-    GpsStage.Frame -> "Lecture du message"
-    GpsStage.Ephemeris -> "Orbite connue"
+    GpsStage.PullIn -> S(R.string.acquisition)
+    GpsStage.Tracking -> S(R.string.tracking)
+    GpsStage.BitSync -> S(R.string.reading_bits)
+    GpsStage.Frame -> S(R.string.reading_the_message)
+    GpsStage.Ephemeris -> S(R.string.orbit_known)
 }
 
 @Composable
@@ -194,46 +196,46 @@ fun GpsTool(vm: MainViewModel) {
             Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                 Text("${fix?.used?.size ?: tracked}", style = gs(56, 60, 500, -1.5f, tnum = true))
                 Text(
-                    if (fix != null) "satellites dans le calcul" else "satellites suivis",
+                    if (fix != null) S(R.string.satellites_in_the_solution) else S(R.string.satellites_tracked),
                     Modifier.padding(bottom = 8.dp), style = rf(18, 24, 500),
                 )
             }
             Text(
                 when {
                     fix != null -> "%.6f, %.6f · %.0f m".format(Locale.ROOT, fix.lat, fix.lon, fix.height)
-                    c.running -> "GPS L1 · 1575,42 MHz · première position en une à quelques minutes"
-                    else -> "GPS L1 · 1575,42 MHz, reçu et calculé par l'application"
+                    c.running -> S(R.string.gps_l1_1575_42_mhz_first)
+                    else -> S(R.string.gps_l1_1575_42_mhz_received)
                 },
                 style = rf(14, 20, tnum = true),
             )
             Row(Modifier.padding(top = 12.dp)) {
                 when {
                     c.error != null -> HeroChip(c.error!!, AntTheme.net.poor)
-                    c.starting -> HeroChip("Démarrage du HackRF…", AntTheme.net.fair, blink = true)
-                    fix != null -> HeroChip("Position calculée", AntTheme.net.good, blink = true)
-                    c.running && (s?.channels?.any { it.stage == GpsStage.Ephemeris } == true) -> HeroChip("Il faut 4 satellites avec leur orbite", AntTheme.net.fair, blink = true)
-                    c.running && tracked > 0 -> HeroChip("Lecture des orbites (30 s)", AntTheme.net.fair, blink = true)
-                    c.running -> HeroChip("Recherche des satellites…", AntTheme.net.fair, blink = true)
-                    device == null -> HeroChip("Aucun HackRF branché", AntTheme.net.poor)
-                    else -> HeroChip("${device!!.name} prêt", AntTheme.net.good)
+                    c.starting -> HeroChip(S(R.string.starting_the_hackrf), AntTheme.net.fair, blink = true)
+                    fix != null -> HeroChip(S(R.string.computed_position), AntTheme.net.good, blink = true)
+                    c.running && (s?.channels?.any { it.stage == GpsStage.Ephemeris } == true) -> HeroChip(S(R.string.n_4_satellites_with_their_orbit_are), AntTheme.net.fair, blink = true)
+                    c.running && tracked > 0 -> HeroChip(S(R.string.reading_the_orbits_30_s), AntTheme.net.fair, blink = true)
+                    c.running -> HeroChip(S(R.string.searching_for_satellites_2), AntTheme.net.fair, blink = true)
+                    device == null -> HeroChip(S(R.string.no_hackrf_plugged_in), AntTheme.net.poor)
+                    else -> HeroChip(S(R.string.ready, device!!.name), AntTheme.net.good)
                 }
             }
         }
         val d = device
-        if (c.running || c.starting) StartButton("Arrêter", Sym.Stop) { c.stop() }
-        else StartButton("Lancer la réception", Sym.PlayArrow, enabled = d != null) { d?.let(c::start) }
+        if (c.running || c.starting) StartButton(S(R.string.stop), Sym.Stop) { c.stop() }
+        else StartButton(S(R.string.start_receiving), Sym.PlayArrow, enabled = d != null) { d?.let(c::start) }
         if (fix != null && s != null) {
             InfoList("Position") {
                 val coords = "%.6f, %.6f".format(Locale.ROOT, fix.lat, fix.lon)
-                InfoRow("Coordonnées", coords) { actions.copy("Coordonnées", coords) }
-                InfoRow("Altitude (ellipsoïde)", "%.0f m".format(Locale.FRANCE, fix.height))
-                InfoRow("Précision géométrique (PDOP)", "%.1f".format(Locale.FRANCE, fix.pdop))
+                InfoRow(S(R.string.coordinates), coords) { actions.copy(S(R.string.coordinates), coords) }
+                InfoRow(S(R.string.altitude_ellipsoid), "%.0f m".format(Locale.getDefault(), fix.height))
+                InfoRow(S(R.string.geometric_precision_pdop), "%.1f".format(Locale.getDefault(), fix.pdop))
                 s.week?.let { w ->
-                    val utc = SimpleDateFormat("dd/MM/yyyy HH:mm:ss 'UTC'", Locale.FRANCE).apply { timeZone = TimeZone.getTimeZone("UTC") }
-                    InfoRow("Heure GPS", utc.format(Date(((315_964_800.0 + w * Gps.SECONDS_PER_WEEK + fix.tow - 18) * 1000).toLong())))
+                    val utc = SimpleDateFormat("dd/MM/yyyy HH:mm:ss 'UTC'", Locale.getDefault()).apply { timeZone = TimeZone.getTimeZone("UTC") }
+                    InfoRow(S(R.string.gps_time_2), utc.format(Date(((315_964_800.0 + w * Gps.SECONDS_PER_WEEK + fix.tow - 18) * 1000).toLong())))
                 }
-                c.firstFixSeconds?.let { InfoRow("Premier fix", "après $it s") }
-                s.clockPpm?.let { InfoRow("Erreur du quartz du HackRF", "%+.1f ppm".format(Locale.FRANCE, it)) }
+                c.firstFixSeconds?.let { InfoRow(S(R.string.first_fix), S(R.string.after_s, it)) }
+                s.clockPpm?.let { InfoRow(S(R.string.hackrf_crystal_error), "%+.1f ppm".format(Locale.getDefault(), it)) }
             }
         }
         if (s != null && s.channels.isNotEmpty()) {
@@ -257,21 +259,21 @@ fun GpsTool(vm: MainViewModel) {
                             Text("G%02d · %s".format(Locale.ROOT, ch.prn, stageText(ch.stage)), style = rf(15, 20, 600), maxLines = 1)
                             Text(
                                 listOfNotNull(
-                                    "Doppler %+.0f Hz".format(Locale.FRANCE, ch.dopplerHz),
-                                    ch.elevation?.let { "élévation %.0f°".format(Locale.FRANCE, it) },
-                                    ch.azimuth?.let { "azimut %.0f°".format(Locale.FRANCE, it) },
+                                    "Doppler %+.0f Hz".format(Locale.getDefault(), ch.dopplerHz),
+                                    ch.elevation?.let { S(R.string.elevation_2).format(Locale.getDefault(), it) },
+                                    ch.azimuth?.let { S(R.string.azimuth).format(Locale.getDefault(), it) },
                                 ).joinToString(" · "),
                                 style = rf(12, 16, tnum = true), color = cs.onSurfaceVariant, maxLines = 1,
                             )
                             LevelBar(((ch.cn0 - 25) / 25).toFloat(), if (ch.cn0 >= 38) AntTheme.net.good else if (ch.cn0 >= 32) AntTheme.net.fair else AntTheme.net.poor, Modifier.padding(top = 6.dp), height = 6.dp)
                         }
-                        Text("%.0f dB-Hz".format(Locale.FRANCE, ch.cn0), Modifier.width(72.dp), style = rf(13, 18, 600, tnum = true))
+                        Text("%.0f dB-Hz".format(Locale.getDefault(), ch.cn0), Modifier.width(72.dp), style = rf(13, 18, 600, tnum = true))
                     }
                 }
             }
         } else if (c.running) {
             Text(
-                "Recherche des 32 satellites GPS sur toute la plage de décalage du quartz : la première passe prend quelques secondes.",
+                S(R.string.searching_for_the_32_gps_satellites),
                 Modifier.padding(horizontal = 4.dp), style = rf(12, 16), color = cs.onSurfaceVariant,
             )
         }
@@ -288,11 +290,11 @@ fun GpsTool(vm: MainViewModel) {
             Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 Symbol(Sym.Info, size = 22.dp, tint = AntTheme.accent.accent)
                 Text(
-                    "Le HackRF reçoit lui-même les signaux GPS, bien en dessous du bruit, et l'application fait tout le travail d'un récepteur : " +
-                        "recherche des satellites, poursuite de leurs codes, lecture de leurs orbites puis calcul de la position, sans la puce GNSS du téléphone. " +
-                        "Avec l'antenne télescopique d'origine : repliez-la presque entièrement (le GPS veut un brin court, 5 cm environ), " +
-                        "tenez-la verticale, dehors, ciel bien dégagé, loin des murs. Les signaux arrivent faibles : comptez une à quelques minutes avant la première position, " +
-                        "dont 30 s de lecture sans interruption pour connaître l'orbite de chaque satellite.",
+                    S(R.string.the_hackrf_receives_the_gps_signals) +
+                        S(R.string.searching_for_satellites_tracking_their_codes) +
+                        S(R.string.with_the_stock_telescopic_antenna_collapse) +
+                        S(R.string.hold_it_vertical_outside_under_an) +
+                        S(R.string.including_30_s_of_uninterrupted_reading),
                     style = rf(13, 18), color = cs.onSurfaceVariant,
                 )
             }

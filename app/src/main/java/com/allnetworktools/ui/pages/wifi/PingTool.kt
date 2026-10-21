@@ -70,6 +70,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import com.allnetworktools.R
+import com.allnetworktools.util.S
 
 /** Keeps recently used hosts for the session (nothing is written to disk). */
 class Recents(vararg initial: String) {
@@ -135,9 +137,9 @@ class PingController(private val scope: CoroutineScope) {
     val lossPct get() = if (results.isEmpty()) 0 else Math.round((results.size - ok.size) * 100f / results.size)
 
     fun report(): String = buildString {
-        appendLine("Ping $host (${resolved ?: ""}) · ${size} octets")
-        results.forEachIndexed { i, v -> appendLine("seq=${i + 1} " + (v?.let { "${fmt(it, 1)} ms" } ?: "délai dépassé")) }
-        appendLine("min ${fmt(ok.minOrNull() ?: 0f, 1)} / moy ${fmt(avg, 1)} / max ${fmt(ok.maxOrNull() ?: 0f, 1)} ms · gigue ${fmt(jitter, 1)} ms · perte $lossPct %")
+        appendLine(S(R.string.ping_bytes, host, resolved ?: "", size))
+        results.forEachIndexed { i, v -> appendLine("seq=${i + 1} " + (v?.let { "${fmt(it, 1)} ms" } ?: S(R.string.timed_out_2))) }
+        appendLine(S(R.string.min_avg_max_ms_jitter_ms, fmt(ok.minOrNull() ?: 0f, 1), fmt(avg, 1), fmt(ok.maxOrNull() ?: 0f, 1), fmt(jitter, 1), lossPct))
     }
 }
 
@@ -152,33 +154,33 @@ fun PingTool(c: PingController, prefill: String?) {
     val start = { haptics.confirm(); c.start() }
     PageColumn {
         if (c.phase == Phase.Error) {
-            ToolError(Sym.Dns, "Hôte introuvable", "Impossible de résoudre « ${c.host} ». Vérifiez l'orthographe ou saisissez une adresse IP.", "Modifier") { c.phase = Phase.Idle }
+            ToolError(Sym.Dns, S(R.string.host_not_found), S(R.string.could_not_resolve_check_the_spelling, c.host), S(R.string.edit)) { c.phase = Phase.Idle }
         }
         if (c.phase.form) {
-            HostInputField(c.host, { c.host = it }, "Hôte ou adresse IP", recent = c.recent.items, onDone = start)
+            HostInputField(c.host, { c.host = it }, S(R.string.host_or_ip_address), recent = c.recent.items, onDone = start)
             ParamCard {
-                ParamRow("Paquets", "0 = illimité, un par seconde", first = true) {
+                ParamRow(S(R.string.packets_2), S(R.string.n_0_unlimited_one_per_second), first = true) {
                     Stepper(c.count, { c.count = (c.count - 5).coerceAtLeast(0) }, { c.count = (c.count + 5).coerceAtMost(100) })
                 }
             }
-            StartButton("Lancer le ping", enabled = c.host.isNotBlank(), onClick = start)
+            StartButton(S(R.string.start_the_ping), enabled = c.host.isNotBlank(), onClick = start)
         }
         if (c.phase.active || c.phase == Phase.Empty) {
             val n = c.results.size
             val quality = when {
-                c.avg < 20 -> "Excellent" to net.good
-                c.avg < 60 -> "Correct" to net.fair
-                else -> "Lent" to net.poor
+                c.avg < 20 -> S(R.string.excellent) to net.good
+                c.avg < 60 -> S(R.string.fine) to net.fair
+                else -> S(R.string.slow) to net.poor
             }
             HeroCard {
                 Row(verticalAlignment = Alignment.Top) {
                     Column(Modifier.weight(1f)) {
                         Text(c.host, style = gs(22, 28, 500), maxLines = 1)
-                        Text(c.resolved ?: "Résolution…", style = rf(13, 18), maxLines = 1)
+                        Text(c.resolved ?: S(R.string.resolving), style = rf(13, 18), maxLines = 1)
                     }
                     when (c.phase) {
                         Phase.Running -> HeroChip(if (c.count == 0) "$n" else "$n / ${c.count}", AntTheme.accent.accent, blink = true)
-                        Phase.Empty -> HeroChip("100 % perdus", cs.error)
+                        Phase.Empty -> HeroChip(S(R.string.n_100_lost), cs.error)
                         else -> HeroChip(quality.first, quality.second)
                     }
                 }
@@ -193,18 +195,18 @@ fun PingTool(c: PingController, prefill: String?) {
                 )
                 Text(
                     when (c.phase) {
-                        Phase.Running -> "Dernière réponse"
-                        Phase.Empty -> "0 réponse sur $n"
-                        else -> "Moyenne sur ${c.ok.size} réponses · ${c.size} octets"
+                        Phase.Running -> S(R.string.last_reply)
+                        Phase.Empty -> S(R.string.n_0_replies_out_of, n)
+                        else -> S(R.string.average_over_replies_bytes, c.ok.size, c.size)
                     },
                     style = rf(13, 18),
                 )
                 if (c.phase == Phase.Running) {
-                    ToolButtons(ToolButton("Arrêter", Sym.Stop, BtnKind.Outline) { c.stop() }, modifier = Modifier.padding(top = 16.dp))
+                    ToolButtons(ToolButton(S(R.string.stop), Sym.Stop, BtnKind.Outline) { c.stop() }, modifier = Modifier.padding(top = 16.dp))
                 } else {
                     ToolButtons(
-                        ToolButton("Relancer", Sym.Refresh, BtnKind.Fill, start),
-                        ToolButton("Modifier", Sym.Tune, BtnKind.Outline) { c.phase = Phase.Idle },
+                        ToolButton(S(R.string.run_again), Sym.Refresh, BtnKind.Fill, start),
+                        ToolButton(S(R.string.edit), Sym.Tune, BtnKind.Outline) { c.phase = Phase.Idle },
                         modifier = Modifier.padding(top = 16.dp),
                     )
                 }
@@ -212,27 +214,27 @@ fun PingTool(c: PingController, prefill: String?) {
         }
         if (c.phase.active) {
             SectionCard {
-                CardHeader("Latence par paquet") { Legend(listOf("RTT" to AntTheme.accent.accent, "Perdu" to cs.error)) }
+                CardHeader(S(R.string.latency_per_packet)) { Legend(listOf("RTT" to AntTheme.accent.accent, S(R.string.lost) to cs.error)) }
                 LatencyBarChart(if (c.count == 0) c.results.takeLast(30) else c.results, if (c.count == 0) 30 else maxOf(c.count, 10), c.avg, running = c.phase == Phase.Running, modifier = Modifier.padding(top = 14.dp))
             }
             TileGrid(
                 listOf(
                     Triple("Min", fmt(c.ok.minOrNull() ?: 0f, 1), "ms"),
                     Triple("Max", fmt(c.ok.maxOrNull() ?: 0f, 1), "ms"),
-                    Triple("Gigue", fmt(c.jitter, 1), "ms"),
-                    Triple("Perte", c.lossPct.toString(), "% · ${c.results.size - c.ok.size}/${c.results.size}"),
+                    Triple(S(R.string.jitter), fmt(c.jitter, 1), "ms"),
+                    Triple(S(R.string.loss), c.lossPct.toString(), "% · ${c.results.size - c.ok.size}/${c.results.size}"),
                 ),
             ) { (k, v, u), mod -> MetricTile(k, v, u, modifier = mod) }
             val addr = c.resolved ?: c.host
             LogCard(
-                "Journal",
+                S(R.string.log),
                 c.results.mapIndexed { i, v -> i to v }.takeLast(6).reversed().map { (i, v) ->
-                    (if (v == null) "icmp_seq=${i + 1}  délai dépassé" else "${c.size + 8} o de $addr : seq=${i + 1} ${fmt(v, 1)} ms") to (if (v == null) cs.error else null)
+                    (if (v == null) S(R.string.icmp_seq_timed_out, i + 1) else S(R.string.bytes_from_seq_ms, c.size + 8, addr, i + 1, fmt(v, 1))) to (if (v == null) cs.error else null)
                 },
             )
         }
         if (c.phase == Phase.Empty) {
-            ToolEmpty(Sym.TimerOff, "Aucune réponse", "Paquets envoyés, aucun reçu. L'hôte bloque peut-être l'ICMP : essayez le Traceroute ou un scan de ports.", "Relancer", start)
+            ToolEmpty(Sym.TimerOff, S(R.string.no_reply), S(R.string.packets_sent_none_received_the_host), S(R.string.run_again), start)
         }
     }
 }

@@ -8,26 +8,28 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
+import com.allnetworktools.R
+import com.allnetworktools.util.S
 
 /** Public "play sound" protocols that a tracker offers to people who do not own it. */
 enum class SoundProtocol(val label: String, val service: UUID, val characteristic: UUID, val start: ByteArray, val stop: ByteArray?) {
     /** IETF DULT accessory protocol (Apple and Google specification, adopted by tag makers). */
     Dult(
-        "norme DULT (IETF)",
+        S(R.string.dult_standard_ietf),
         UUID.fromString("15190001-12F4-C226-88ED-2AC5579F2A85"), UUID.fromString("8E0C0001-1D68-FB92-BF61-48377421680E"),
         byteArrayOf(0x00, 0x03), byteArrayOf(0x01, 0x03),
     ),
 
     /** Apple Find My network accessory specification, accessory non-owner service. */
     FindMy(
-        "protocole Localiser d'Apple",
+        S(R.string.apple_find_my_protocol),
         UUID.fromString("0000FD44-0000-1000-8000-00805F9B34FB"), UUID.fromString("4F860003-943B-49EF-BED4-2F730304427A"),
         byteArrayOf(0x01, 0x00, 0x03), byteArrayOf(0x01, 0x01, 0x03),
     ),
 
     /** First-generation AirTag firmware. */
     AirTag(
-        "protocole AirTag",
+        S(R.string.airtag_protocol),
         UUID.fromString("7DFC9000-7D1C-4951-86AA-8D9728F8D66C"), UUID.fromString("7DFC9001-7D1C-4951-86AA-8D9728F8D66C"),
         byteArrayOf(0xAF.toByte()), null,
     ),
@@ -64,7 +66,7 @@ class TagSound(private val context: Context) {
                 services.firstOrNull { it.uuid == p.service }?.getCharacteristic(p.characteristic)?.let { p to it }
             } ?: run {
                 close()
-                return SoundResult.Failed("Ce tag n'offre aucun protocole public de sonnerie (DULT ou Localiser). Seul son propriétaire peut le faire sonner.")
+                return SoundResult.Failed(S(R.string.this_tag_offers_no_public_ringing))
             }
             protocol = p
             if (p == SoundProtocol.AirTag) {
@@ -87,17 +89,17 @@ class TagSound(private val context: Context) {
                     null, 0 -> SoundResult.Playing(p)
                     1, 0xFFFF -> {
                         close()
-                        SoundResult.Refused(p, "Le tag refuse : il est près de son propriétaire. Les tags ne sonnent pour un inconnu que lorsqu'ils sont séparés de leur propriétaire.")
+                        SoundResult.Refused(p, S(R.string.the_tag_refuses_it_is_near))
                     }
                     else -> {
                         close()
-                        SoundResult.Refused(p, "Le tag a répondu avec l'erreur 0x%04X.".format(status))
+                        SoundResult.Refused(p, S(R.string.the_tag_answered_with_error_0x).format(status))
                     }
                 }
             }
         } catch (e: GattException) {
             close()
-            SoundResult.Failed(e.message ?: "Connexion impossible")
+            SoundResult.Failed(e.message ?: S(R.string.connection_failed))
         }
     }
 

@@ -37,89 +37,92 @@ import com.allnetworktools.ui.theme.cs
 import com.allnetworktools.ui.theme.gs
 import com.allnetworktools.ui.theme.rf
 import com.allnetworktools.util.plural
+import com.allnetworktools.R
+import com.allnetworktools.util.S
+import com.allnetworktools.util.P
 
 private data class ToolEntry(val tool: Tool, val title: String, val subtitle: String, val icon: String = tool.icon)
 private data class ToolGroup(val title: String, val items: List<ToolEntry>)
 
 private fun groups(net: Network, connectedDevice: String?, servingLabel: String?): List<ToolGroup> = when (net) {
     Network.Wifi -> listOf(
-        ToolGroup("Analyse", listOf(ToolEntry(Tool.Speed, "Test de débit", "Ping, download, upload"), ToolEntry(Tool.Coverage, "Carte de couverture", "Le signal pièce par pièce"))),
-        ToolGroup("Réseau local", listOf(ToolEntry(Tool.Lan, "Appareils du LAN", "Découverte des hôtes"), ToolEntry(Tool.Ports, "Scan de ports", "TCP, ports courants"))),
-        ToolGroup("Découverte", listOf(ToolEntry(Tool.WifiDirect, "Wi-Fi Direct", "Appareils en connexion directe"))),
+        ToolGroup(S(R.string.analysis), listOf(ToolEntry(Tool.Speed, S(R.string.speed_test), "Ping, download, upload"), ToolEntry(Tool.Coverage, S(R.string.coverage_map), S(R.string.the_signal_room_by_room)))),
+        ToolGroup(S(R.string.local_network), listOf(ToolEntry(Tool.Lan, S(R.string.lan_devices), S(R.string.host_discovery)), ToolEntry(Tool.Ports, S(R.string.port_scan), S(R.string.tcp_common_ports)))),
+        ToolGroup(S(R.string.discovery), listOf(ToolEntry(Tool.WifiDirect, "Wi-Fi Direct", S(R.string.devices_connected_directly)))),
         ToolGroup(
             "Diagnostic",
-            listOf(ToolEntry(Tool.Ping, "Ping", "Latence, gigue, pertes"), ToolEntry(Tool.Trace, "Traceroute", "Sauts jusqu'à l'hôte"), ToolEntry(Tool.Dns, "DNS Lookup", "A, AAAA, MX, TXT, NS"), ToolEntry(Tool.Whois, "Whois", "Domaine ou adresse IP")),
+            listOf(ToolEntry(Tool.Ping, "Ping", S(R.string.latency_jitter_loss)), ToolEntry(Tool.Trace, "Traceroute", S(R.string.hops_to_the_host)), ToolEntry(Tool.Dns, "DNS Lookup", "A, AAAA, MX, TXT, NS"), ToolEntry(Tool.Whois, "Whois", S(R.string.domain_or_ip_address))),
         ),
         ToolGroup(
-            "Sécurité",
+            S(R.string.security_2),
             listOf(
-                ToolEntry(Tool.Audit, "Audit du réseau", "Chiffrement, WPS, PMF, box"),
-                ToolEntry(Tool.EvilTwin, "Faux points d'accès", "SSID dupliqués, evil twin"),
-                ToolEntry(Tool.Mitm, "Homme du milieu", "ARP spoofing, DHCP pirate"),
+                ToolEntry(Tool.Audit, S(R.string.network_audit), S(R.string.encryption_wps_pmf_router)),
+                ToolEntry(Tool.EvilTwin, S(R.string.fake_access_points), S(R.string.duplicate_ssids_evil_twin)),
+                ToolEntry(Tool.Mitm, S(R.string.man_in_the_middle), S(R.string.arp_spoofing_rogue_dhcp)),
             ),
         ),
     )
     Network.Bluetooth -> listOf(
         ToolGroup(
-            "Appareils",
+            S(R.string.devices),
             listOf(
-                ToolEntry(Tool.Tracker, "Chaud/Froid", "Retrouver un appareil"),
-                ToolEntry(Tool.Earbuds, "Batterie des écouteurs", "AirPods et Beats : gauche, droite, boîtier"),
-                ToolEntry(Tool.Beacons, "Balises", "iBeacon, Eddystone, AltBeacon"),
+                ToolEntry(Tool.Tracker, S(R.string.hot_cold), S(R.string.find_a_device)),
+                ToolEntry(Tool.Earbuds, S(R.string.earbuds_battery), S(R.string.airpods_and_beats_left_right_case)),
+                ToolEntry(Tool.Beacons, S(R.string.beacons), "iBeacon, Eddystone, AltBeacon"),
             ),
         ),
-        ToolGroup("Sécurité", listOf(ToolEntry(Tool.UnknownTrackers, "Traqueurs inconnus", "AirTag, SmartTag, Tile qui vous suivent"))),
+        ToolGroup(S(R.string.security_2), listOf(ToolEntry(Tool.UnknownTrackers, S(R.string.unknown_trackers), S(R.string.airtag_smarttag_tile_following_you)))),
     )
     Network.Cellular -> listOf(
         ToolGroup(
-            "Cellules",
+            S(R.string.cells),
             listOf(
-                ToolEntry(Tool.Neighbors, "Cellules voisines", "Cellules NR et LTE détectées par le modem"),
-                ToolEntry(Tool.Handover, "Journal de handover", "Changements de cellule en trajet, export CSV"),
+                ToolEntry(Tool.Neighbors, S(R.string.neighbour_cells), S(R.string.nr_and_lte_cells_seen_by)),
+                ToolEntry(Tool.Handover, S(R.string.handover_log), S(R.string.cell_changes_on_the_move_csv)),
             ),
         ),
     )
     Network.Gnss -> listOf(
         ToolGroup(
-            "Outils",
+            S(R.string.tools),
             listOf(
-                ToolEntry(Tool.PositionCompare, "Comparer les positions", "GNSS, réseau et fusionnée"),
-                ToolEntry(Tool.GnssClock, "Horloge atomique", "Heure UTC des satellites, écart du téléphone"),
-                ToolEntry(Tool.CompassCheck, "Boussole et cap GNSS", "Vérifier la boussole en marchant"),
-                ToolEntry(Tool.SkyMask, "Masque du ciel", "Où le ciel est caché par les obstacles"),
+                ToolEntry(Tool.PositionCompare, S(R.string.compare_positions), S(R.string.gnss_network_and_fused)),
+                ToolEntry(Tool.GnssClock, S(R.string.atomic_clock), S(R.string.satellite_utc_time_phone_offset)),
+                ToolEntry(Tool.CompassCheck, S(R.string.compass_and_gnss_course), S(R.string.check_the_compass_while_walking)),
+                ToolEntry(Tool.SkyMask, S(R.string.sky_mask), S(R.string.where_obstacles_hide_the_sky)),
             ),
         ),
         ToolGroup(
             "Expert",
             listOf(
-                ToolEntry(Tool.GnssIntegrity, "Brouillage et leurrage", "Détecter un brouilleur ou de faux signaux"),
-                ToolEntry(Tool.GnssRaw, "Mesures brutes", "Bi-fréquence L1/L5, export RINEX"),
+                ToolEntry(Tool.GnssIntegrity, S(R.string.jamming_and_spoofing), S(R.string.detect_a_jammer_or_fake_signals)),
+                ToolEntry(Tool.GnssRaw, S(R.string.raw_measurements), S(R.string.dual_frequency_l1_l5_rinex_export)),
             ),
         ),
     )
     Network.Talkie -> emptyList()
     Network.Sdr -> listOf(
-        ToolGroup("Outils", listOf(ToolEntry(Tool.Adsb, "Avions (ADS-B)", "Carte des avions sur 1090 MHz"), ToolEntry(Tool.Sonde, "Ballons-sondes", "Sondes RS41, M10 et M20 vers 403 MHz"), ToolEntry(Tool.Fm, "Radio FM", "Écoute et RDS, 87,5 à 108 MHz"), ToolEntry(Tool.Ais, "Navires (AIS)", "Carte des navires sur 162 MHz"), ToolEntry(Tool.Meteor, "Satellites météo (Meteor-M)", "Images LRPT sur 137 MHz"), ToolEntry(Tool.Aprs, "Radioamateurs (APRS)", "Balises sur 144,800 MHz"), ToolEntry(Tool.Acars, "Messages d'avions (ACARS)", "Messagerie des avions de ligne, 131 MHz"), ToolEntry(Tool.Meshtastic, "Meshtastic", "Messages, positions et nœuds LoRa, 868 MHz"), ToolEntry(Tool.GpsSdr, "Récepteur GPS", "Position calculée par le HackRF, 1575 MHz"), ToolEntry(Tool.Fpv, "Drones", "FPV analogique, DJI et radiocommandes"))),
+        ToolGroup(S(R.string.tools), listOf(ToolEntry(Tool.Adsb, S(R.string.aircraft_ads_b), S(R.string.map_of_aircraft_on_1090_mhz)), ToolEntry(Tool.Sonde, S(R.string.radiosondes), S(R.string.rs41_m10_and_m20_sondes_around)), ToolEntry(Tool.Fm, S(R.string.fm_radio), S(R.string.listening_and_rds_87_5_to)), ToolEntry(Tool.Ais, S(R.string.ships_ais), S(R.string.map_of_ships_on_162_mhz)), ToolEntry(Tool.Meteor, S(R.string.weather_satellites_meteor_m), S(R.string.lrpt_images_on_137_mhz)), ToolEntry(Tool.Aprs, S(R.string.ham_radio_aprs), S(R.string.beacons_on_144_800_mhz)), ToolEntry(Tool.Acars, S(R.string.aircraft_messages_acars), S(R.string.airliner_messaging_131_mhz)), ToolEntry(Tool.Meshtastic, "Meshtastic", S(R.string.messages_positions_and_lora_nodes_868)), ToolEntry(Tool.GpsSdr, S(R.string.gps_receiver), S(R.string.position_computed_by_the_hackrf_1575)), ToolEntry(Tool.Fpv, "Drones", S(R.string.analog_fpv_dji_and_rc_links)))),
     )
 }
 
 private fun featuredSubtitle(net: Network, servingLabel: String?) = when (net) {
-    Network.Wifi -> "Réseaux alentour et occupation des canaux"
-    Network.Bluetooth -> "Appareils à proximité, en direct, avec filtres"
-    Network.Cellular -> servingLabel ?: "Identifiants et mesures de la cellule connectée"
-    Network.Gnss -> "Sky plot et carte du monde des satellites"
-    Network.Sdr -> "Spectre et chute d'eau, de 1 MHz à 6 GHz"
-    Network.Talkie -> "Lire, modifier et écrire les mémoires par câble USB"
+    Network.Wifi -> S(R.string.nearby_networks_and_channel_use)
+    Network.Bluetooth -> S(R.string.nearby_devices_live_with_filters)
+    Network.Cellular -> servingLabel ?: S(R.string.identifiers_and_measurements_of_the_connected)
+    Network.Gnss -> S(R.string.sky_plot_and_world_map_of)
+    Network.Sdr -> S(R.string.spectrum_and_waterfall_1_mhz_to)
+    Network.Talkie -> S(R.string.read_edit_and_write_memories_over)
 }
 
 @Composable
 private fun featuredBadge(net: Network, vm: MainViewModel): String? = when (net) {
-    Network.Wifi -> vm.wifiScan.collectAsStateWithLifecycle().value?.let { "${it.size} ${plural(it.size, "réseau", "réseaux")}" }
-    Network.Bluetooth -> vm.ble.collectAsStateWithLifecycle().value.size.let { "$it ${plural(it, "appareil")}" }
+    Network.Wifi -> vm.wifiScan.collectAsStateWithLifecycle().value?.let { "${it.size} ${P(R.plurals.p_networks, it.size)}" }
+    Network.Bluetooth -> vm.ble.collectAsStateWithLifecycle().value.size.let { "$it ${P(R.plurals.p_devices, it)}" }
     Network.Cellular -> vm.cell.collectAsStateWithLifecycle().value.state?.serving?.tech?.short
     Network.Gnss -> vm.gnss.collectAsStateWithLifecycle().value.let { "${it.used.size}/${it.visible.size} satellites" }
-    Network.Talkie -> vm.tools.radioChannels.let { c -> c.count.takeIf { it > 0 }?.let { "$it ${plural(it, "canal", "canaux")}" } }
-    Network.Sdr -> vm.tools.spectrum.let { if (it.running && it.tunedHz > 0) "%.1f MHz".format(java.util.Locale.FRANCE, it.tunedHz / 1e6) else null }
+    Network.Talkie -> vm.tools.radioChannels.let { c -> c.count.takeIf { it > 0 }?.let { "$it ${P(R.plurals.p_channels, it)}" } }
+    Network.Sdr -> vm.tools.spectrum.let { if (it.running && it.tunedHz > 0) "%.1f MHz".format(java.util.Locale.getDefault(), it.tunedHz / 1e6) else null }
 }
 
 @Composable
@@ -147,7 +150,7 @@ fun ToolsPage(net: Network, vm: MainViewModel) {
             Text(net.featured.title, Modifier.padding(top = 16.dp), style = gs(26, 32, 500), color = acc.onContainer)
             Text(featuredSubtitle(net, servingLabel), Modifier.padding(top = 2.dp).graphicsLayer { alpha = 0.85f }, style = rf(14, 20), color = acc.onContainer)
             Row(Modifier.fillMaxWidth().padding(top = 14.dp), horizontalArrangement = Arrangement.End) {
-                PillButton("Lancer", { open(net.featured) }, icon = Sym.PlayArrow, height = 48.dp)
+                PillButton(S(R.string.launch), { open(net.featured) }, icon = Sym.PlayArrow, height = 48.dp)
             }
         }
         groups(net, connected, servingLabel).forEach { g ->

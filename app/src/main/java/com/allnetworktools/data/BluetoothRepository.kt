@@ -19,6 +19,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.launch
+import com.allnetworktools.R
+import com.allnetworktools.util.S
 
 data class AdapterInfo(
     val name: String?,
@@ -33,7 +35,7 @@ data class BondedDevice(
     val connected: Boolean,
     val profiles: List<String>,
     /** Classique, LE or Double mode. */
-    val transport: String = "Classique",
+    val transport: String = S(R.string.classic),
     /** Battery reported over HFP/BAS, when the system exposes it. */
     val battery: Int? = null,
 )
@@ -66,7 +68,7 @@ open class BluetoothRepository(private val context: Context) {
                 if (a.isLeAudioSupported == BluetoothStatusCodes.FEATURE_SUPPORTED) add("LE Audio")
                 if (a.isLeAudioBroadcastSourceSupported == BluetoothStatusCodes.FEATURE_SUPPORTED) add("Auracast")
             }
-            if (a.isLeCodedPhySupported) add("Longue portée")
+            if (a.isLeCodedPhySupported) add(S(R.string.long_range))
         }
         return AdapterInfo(runCatching { a.name }.getOrNull(), features)
     }
@@ -100,8 +102,8 @@ open class BluetoothRepository(private val context: Context) {
                     profiles = profiles + if (d.address in gatt) listOf("GATT") else emptyList(),
                     transport = when (runCatching { d.type }.getOrDefault(0)) {
                         BluetoothDevice.DEVICE_TYPE_LE -> "Bluetooth LE"
-                        BluetoothDevice.DEVICE_TYPE_DUAL -> "Double mode"
-                        else -> "Classique (BR/EDR)"
+                        BluetoothDevice.DEVICE_TYPE_DUAL -> S(R.string.dual_mode)
+                        else -> S(R.string.classic_br_edr)
                     },
                     battery = if (isConnected) batteryLevel(d) else null,
                 )
@@ -150,24 +152,24 @@ open class BluetoothRepository(private val context: Context) {
         runCatching { d.javaClass.getMethod("isConnected").invoke(d) as Boolean }.getOrDefault(false)
 
     private fun describeClass(d: BluetoothDevice): Pair<String, String> {
-        val cls = runCatching { d.bluetoothClass }.getOrNull() ?: return Sym.Bluetooth to "Appareil"
+        val cls = runCatching { d.bluetoothClass }.getOrNull() ?: return Sym.Bluetooth to S(R.string.device_2)
         return when (cls.majorDeviceClass) {
             BluetoothClass.Device.Major.AUDIO_VIDEO -> when (cls.deviceClass) {
-                BluetoothClass.Device.AUDIO_VIDEO_LOUDSPEAKER, BluetoothClass.Device.AUDIO_VIDEO_PORTABLE_AUDIO, BluetoothClass.Device.AUDIO_VIDEO_HIFI_AUDIO -> Sym.Speaker to "Enceinte"
-                BluetoothClass.Device.AUDIO_VIDEO_CAR_AUDIO, BluetoothClass.Device.AUDIO_VIDEO_HANDSFREE -> Sym.DirectionsCar to "Voiture"
-                BluetoothClass.Device.AUDIO_VIDEO_VIDEO_DISPLAY_AND_LOUDSPEAKER, BluetoothClass.Device.AUDIO_VIDEO_VIDEO_MONITOR -> Sym.Tv to "Écran"
+                BluetoothClass.Device.AUDIO_VIDEO_LOUDSPEAKER, BluetoothClass.Device.AUDIO_VIDEO_PORTABLE_AUDIO, BluetoothClass.Device.AUDIO_VIDEO_HIFI_AUDIO -> Sym.Speaker to S(R.string.speaker)
+                BluetoothClass.Device.AUDIO_VIDEO_CAR_AUDIO, BluetoothClass.Device.AUDIO_VIDEO_HANDSFREE -> Sym.DirectionsCar to S(R.string.car)
+                BluetoothClass.Device.AUDIO_VIDEO_VIDEO_DISPLAY_AND_LOUDSPEAKER, BluetoothClass.Device.AUDIO_VIDEO_VIDEO_MONITOR -> Sym.Tv to S(R.string.display)
                 else -> Sym.Headphones to "Audio"
             }
-            BluetoothClass.Device.Major.WEARABLE, BluetoothClass.Device.Major.HEALTH -> Sym.Watch to "Montre"
+            BluetoothClass.Device.Major.WEARABLE, BluetoothClass.Device.Major.HEALTH -> Sym.Watch to S(R.string.watch)
             BluetoothClass.Device.Major.PERIPHERAL -> when {
-                cls.deviceClass and 0x40 != 0 -> Sym.Keyboard to "Clavier"
-                cls.deviceClass and 0x80 != 0 -> Sym.Mouse to "Souris"
-                else -> Sym.Gamepad to "Périphérique"
+                cls.deviceClass and 0x40 != 0 -> Sym.Keyboard to S(R.string.keyboard)
+                cls.deviceClass and 0x80 != 0 -> Sym.Mouse to S(R.string.mouse)
+                else -> Sym.Gamepad to S(R.string.peripheral)
             }
-            BluetoothClass.Device.Major.COMPUTER -> Sym.Laptop to "Ordinateur"
-            BluetoothClass.Device.Major.PHONE -> Sym.Smartphone to "Téléphone"
-            BluetoothClass.Device.Major.IMAGING -> Sym.Print to "Imprimante"
-            else -> Sym.Bluetooth to "Appareil"
+            BluetoothClass.Device.Major.COMPUTER -> Sym.Laptop to S(R.string.computer)
+            BluetoothClass.Device.Major.PHONE -> Sym.Smartphone to S(R.string.phone)
+            BluetoothClass.Device.Major.IMAGING -> Sym.Print to S(R.string.printer)
+            else -> Sym.Bluetooth to S(R.string.device_2)
         }
     }
 

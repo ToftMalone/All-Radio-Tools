@@ -6,6 +6,8 @@ import kotlin.math.cos
 import kotlin.math.pow
 import kotlin.math.roundToInt
 import kotlin.math.sin
+import com.allnetworktools.R
+import com.allnetworktools.util.S
 
 /** An AX.25 UI frame: who sent it, to whom, via which repeaters, and the payload. */
 class Ax25Frame(val src: String, val dst: String, val path: List<String>, val info: ByteArray)
@@ -219,10 +221,10 @@ object Aprs {
         if (sym == null || sym.length < 2) return null
         val alt = sym[0] != '/'
         return when (sym[1]) {
-            '>' -> "Voiture"; 'k' -> "Camion"; 'u' -> "Bus"; '<' -> "Moto"; 'b' -> "Vélo"; '[' -> "Piéton"; 'R' -> "Camping-car"
-            '-' -> "Domicile"; '_' -> "Station météo"; 'O' -> "Ballon"; '^' -> "Avion"; 'X' -> "Hélicoptère"; 's', 'Y' -> "Bateau"
-            '#' -> "Relais (digipeater)"; '&' -> "Passerelle internet"; 'r' -> "Relais VHF"; 'a' -> "Ambulance"; 'f' -> "Pompiers"
-            'j' -> "Jeep"; 'v' -> "Camionnette"; 'y' -> "Maison avec antenne"; '$' -> "Téléphone"; 'W' -> "Station météo (NWS)"
+            '>' -> S(R.string.car); 'k' -> S(R.string.truck); 'u' -> "Bus"; '<' -> S(R.string.motorbike); 'b' -> S(R.string.bicycle); '[' -> S(R.string.pedestrian); 'R' -> S(R.string.motorhome)
+            '-' -> S(R.string.home_2); '_' -> S(R.string.weather_station); 'O' -> S(R.string.balloon); '^' -> S(R.string.aircraft); 'X' -> S(R.string.helicopter); 's', 'Y' -> S(R.string.boat)
+            '#' -> S(R.string.digipeater); '&' -> S(R.string.internet_gateway); 'r' -> S(R.string.vhf_repeater); 'a' -> "Ambulance"; 'f' -> S(R.string.fire_brigade)
+            'j' -> "Jeep"; 'v' -> S(R.string.van); 'y' -> S(R.string.house_with_antenna); '$' -> S(R.string.phone); 'W' -> S(R.string.weather_station_nws)
             else -> if (alt) null else null
         }
     }

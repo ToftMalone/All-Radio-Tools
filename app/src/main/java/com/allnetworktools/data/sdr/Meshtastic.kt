@@ -5,6 +5,8 @@ import java.util.Locale
 import javax.crypto.Cipher
 import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.SecretKeySpec
+import com.allnetworktools.R
+import com.allnetworktools.util.S
 
 /**
  * Meshtastic over-the-air format (firmware src/mesh/RadioInterface.h, CryptoEngine.cpp, Channels.cpp and the
@@ -219,72 +221,72 @@ object Meshtastic {
     }
 
     fun portName(port: Int): String = when (port) {
-        0 -> "Inconnu"
+        0 -> S(R.string.unknown)
         1 -> "Message"
-        2 -> "Matériel distant"
+        2 -> S(R.string.remote_hardware)
         3 -> "Position"
-        4 -> "Infos du nœud"
-        5 -> "Routage / accusé"
-        6 -> "Administration"
-        7 -> "Message compressé"
-        8 -> "Point de passage"
+        4 -> S(R.string.node_info)
+        5 -> S(R.string.routing_ack)
+        6 -> S(R.string.admin)
+        7 -> S(R.string.compressed_message)
+        8 -> S(R.string.waypoint)
         9 -> "Audio"
-        10 -> "Détecteur"
-        11 -> "Alerte"
-        12 -> "Vérification de clé"
-        32 -> "Réponse"
-        33 -> "Tunnel IP"
-        34 -> "Compteur de passants"
-        64 -> "Série"
-        65 -> "Stockage et relais"
-        66 -> "Test de portée"
-        67 -> "Télémétrie"
+        10 -> S(R.string.detection_sensor)
+        11 -> S(R.string.alert)
+        12 -> S(R.string.key_verification)
+        32 -> S(R.string.reply)
+        33 -> S(R.string.ip_tunnel)
+        34 -> S(R.string.paxcounter)
+        64 -> S(R.string.serial)
+        65 -> S(R.string.store_and_forward)
+        66 -> S(R.string.range_test)
+        67 -> S(R.string.telemetry)
         68 -> "ZPS"
-        69 -> "Simulateur"
+        69 -> S(R.string.simulator)
         70 -> "Traceroute"
-        71 -> "Voisins"
+        71 -> S(R.string.neighbours)
         72 -> "ATAK"
-        73 -> "Rapport de carte"
-        74 -> "Test d'alimentation"
+        73 -> S(R.string.map_report)
+        74 -> S(R.string.power_stress_test)
         76 -> "Reticulum"
-        256 -> "Privé"
+        256 -> S(R.string.private_text)
         257 -> "ATAK"
         else -> "Port $port"
     }
 
     fun routingError(code: Int): String = when (code) {
-        0 -> "Accusé de réception"
-        1 -> "Pas de route"
-        2 -> "Refusé (NAK)"
-        3 -> "Délai dépassé"
-        4 -> "Pas d'interface"
-        5 -> "Trop de réessais"
-        6 -> "Canal inconnu"
-        7 -> "Trop gros"
-        8 -> "Pas de réponse"
-        9 -> "Limite de temps d'émission"
-        32 -> "Requête invalide"
-        33 -> "Non autorisé"
-        34, 35, 39 -> "Échec du chiffrement à clé publique"
-        38 -> "Trop de requêtes"
-        else -> "Erreur $code"
+        0 -> S(R.string.acknowledged)
+        1 -> S(R.string.no_route)
+        2 -> S(R.string.refused_nak)
+        3 -> S(R.string.timed_out)
+        4 -> S(R.string.no_interface)
+        5 -> S(R.string.max_retransmissions)
+        6 -> S(R.string.unknown_channel)
+        7 -> S(R.string.too_large)
+        8 -> S(R.string.no_response)
+        9 -> S(R.string.duty_cycle_limit)
+        32 -> S(R.string.bad_request)
+        33 -> S(R.string.not_authorised)
+        34, 35, 39 -> S(R.string.public_key_encryption_failed)
+        38 -> S(R.string.rate_limit_exceeded)
+        else -> S(R.string.error, code)
     }
 
     fun role(code: Int): String = when (code) {
         0 -> "Client"
-        1 -> "Client muet"
-        2 -> "Routeur"
-        3 -> "Routeur client"
-        4 -> "Répéteur"
-        5 -> "Traceur"
-        6 -> "Capteur"
+        1 -> S(R.string.client_mute)
+        2 -> S(R.string.router)
+        3 -> S(R.string.router_client)
+        4 -> S(R.string.repeater)
+        5 -> S(R.string.tracker)
+        6 -> S(R.string.sensor)
         7 -> "TAK"
-        8 -> "Client caché"
-        9 -> "Objets perdus"
-        10 -> "Traceur TAK"
-        11 -> "Routeur tardif"
-        12 -> "Client de base"
-        else -> "Rôle $code"
+        8 -> S(R.string.client_hidden)
+        9 -> S(R.string.lost_and_found)
+        10 -> S(R.string.tak_tracker)
+        11 -> S(R.string.router_late)
+        12 -> S(R.string.client_base)
+        else -> S(R.string.role, code)
     }
 
     fun nodeId(num: Long) = "!%08x".format(Locale.ROOT, num)
@@ -296,8 +298,8 @@ object Meshtastic {
 
     /** A hardware model's enum name made readable: HELTEC_V3 → Heltec V3, T_ECHO → T-Echo. */
     fun hwModel(v: Int): String {
-        val raw = hwModels[v] ?: return "Modèle $v"
-        if (v == 255) return "Matériel privé"
+        val raw = hwModels[v] ?: return S(R.string.model_2, v)
+        if (v == 255) return S(R.string.private_hardware)
         val words = raw.split('_')
         return buildString {
             words.forEachIndexed { i, w ->

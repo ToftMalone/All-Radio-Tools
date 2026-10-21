@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lint>
+    <!-- A language change recreates the activity, so reading the locale once per composition is enough. -->
+    <issue id="NonObservableLocale" severity="ignore" />
+    <issue id="ConstantLocale" severity="ignore" />
+    <!-- French "one" covers 0 and 1 on purpose: "0 appareil", "1 appareil". -->
+    <issue id="ImpliedQuantity" severity="ignore" />
+</lint>

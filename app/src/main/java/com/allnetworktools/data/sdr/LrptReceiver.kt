@@ -1,5 +1,8 @@
 package com.allnetworktools.data.sdr
 
+import com.allnetworktools.R
+import com.allnetworktools.util.S
+
 /**
  * Soft QPSK symbols in, 1020-byte frames out. The carrier phase is only known up to a quarter turn, and an I/Q swap is
  * possible too, so eight combinations are decoded side by side until one of them finds the frame marker twice one frame
@@ -18,7 +21,7 @@ class LrptLink(private val onFrame: (ByteArray) -> Unit) {
         }
 
         fun reset() { viterbi.reset(); sync.reset() }
-        val label: String get() = "${rotation * 90}°" + if (swap) " + I/Q inversés" else ""
+        val label: String get() = "${rotation * 90}°" + if (swap) S(R.string.i_q_swapped) else ""
     }
 
     private val branches = (0 until 8).map { Branch(it >= 4, it % 4) }
@@ -144,7 +147,7 @@ class LrptReceiver(private val onStrip: (apid: Int, row: Int, strip: ByteArray) 
     fun status() = LrptStatus(
         carrier = qpsk.confirmed, lineRatio = qpsk.lineRatio, symbolLineRatio = qpsk.symbolLineRatio, snrDb = qpsk.snrDb, cfoHz = qpsk.cfoHz, locked = link.locked, hypothesis = link.hypothesis,
         frames = frames, rsOk = rsOk, rsFail = rsFail, corrected = frameDecoder.corrected,
-        basis = frameDecoder.dualBasis?.let { if (it) "base duale" else "base conventionnelle" },
+        basis = frameDecoder.dualBasis?.let { if (it) S(R.string.dual_basis) else S(R.string.conventional_basis) },
         zoneStart = zoneStart, packets = packets, segmentsOk = segments.good, segmentsBad = segments.bad, layout = segments.layout,
         apids = apidCounts.toMap(), strips = images.mapValues { (_, v) -> v.strips.count { it != null } },
     )

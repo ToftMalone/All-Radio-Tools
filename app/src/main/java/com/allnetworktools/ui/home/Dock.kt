@@ -43,6 +43,8 @@ import com.allnetworktools.ui.theme.Motion
 import com.allnetworktools.ui.theme.Sym
 import com.allnetworktools.ui.theme.rf
 import kotlinx.coroutines.launch
+import com.allnetworktools.R
+import com.allnetworktools.util.S
 
 enum class DockTab { Dashboard, Featured, Tools }
 
@@ -98,7 +100,7 @@ fun FloatingDock(
             val (icon, label) = when (tab) {
                 DockTab.Dashboard -> Sym.SpaceDashboard to "Dashboard"
                 DockTab.Featured -> network.dockShortcut!!.icon to network.featuredShort
-                DockTab.Tools -> Sym.Handyman to "Outils"
+                DockTab.Tools -> Sym.Handyman to S(R.string.tools)
             }
             TabButton(icon, label, tab == active) { onTab(tab) }
         }

@@ -54,6 +54,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import com.allnetworktools.R
+import com.allnetworktools.util.S
 
 /**
  * Broadcast FM (87,5–108 MHz) with RDS. The HackRF runs at 1,9 MS/s, an integer multiple of the RDS bit rate, tuned
@@ -114,14 +116,14 @@ class FmController(private val repo: SdrRepository, private val scope: Coroutine
 
     fun start(device: SdrDevice) {
         if (running || starting) return
-        val hz = parsedHz() ?: run { error = "Fréquence invalide (87,5 à 108 MHz)"; return }
+        val hz = parsedHz() ?: run { error = S(R.string.invalid_frequency_87_5_to_108); return }
         onAcquire()
         error = null
         starting = true
         scope.launch {
             try {
-                if (!repo.hasPermission(device) && !repo.requestPermission(device)) { error = "Accès USB au HackRF refusé"; return@launch }
-                val r = withContext(Dispatchers.IO) { repo.open(device) } ?: run { error = "Impossible d'ouvrir le HackRF"; return@launch }
+                if (!repo.hasPermission(device) && !repo.requestPermission(device)) { error = S(R.string.usb_access_to_the_hackrf_refused); return@launch }
+                val r = withContext(Dispatchers.IO) { repo.open(device) } ?: run { error = S(R.string.could_not_open_the_hackrf); return@launch }
                 val lna = lnaGain
                 val vga = vgaGain
                 val withAmp = amp
@@ -129,7 +131,7 @@ class FmController(private val repo: SdrRepository, private val scope: Coroutine
                     r.setSampleRate(SAMPLE_RATE, HackRf.filterFor(SAMPLE_RATE)) && r.setFrequency(hz - SAMPLE_RATE / 4) &&
                         r.setLnaGain(lna) && r.setVgaGain(vga) && r.setAmp(withAmp)
                 }
-                if (!ok) { r.close(); error = "Le HackRF n'a pas accepté la configuration"; return@launch }
+                if (!ok) { r.close(); error = S(R.string.the_hackrf_did_not_accept_the); return@launch }
                 radio = r
                 tunedHz = hz
                 rds = RdsInfo()
@@ -222,7 +224,7 @@ class FmController(private val repo: SdrRepository, private val scope: Coroutine
     }
 }
 
-private fun mhz(hz: Long) = "%.1f".format(Locale.FRANCE, hz / 1e6)
+private fun mhz(hz: Long) = "%.1f".format(Locale.getDefault(), hz / 1e6)
 
 @Composable
 fun FmTool(vm: MainViewModel) {
@@ -232,7 +234,7 @@ fun FmTool(vm: MainViewModel) {
     val shown = c.tunedHz ?: c.parsedHz()
     PageColumn {
         HeroCard {
-            Text(info.ps ?: if (c.running) "Recherche RDS…" else "Radio FM", style = gs(40, 46, 500, -0.5f), maxLines = 1, overflow = TextOverflow.Ellipsis)
+            Text(info.ps ?: if (c.running) S(R.string.searching_for_rds) else S(R.string.fm_radio), style = gs(40, 46, 500, -0.5f), maxLines = 1, overflow = TextOverflow.Ellipsis)
             Text(
                 listOfNotNull(shown?.let { "${mhz(it)} MHz" }, info.pty?.takeIf { it > 0 }?.let { Rds.PTY.getOrNull(it) }, info.pi?.let { "PI %04X".format(it) }).joinToString(" · "),
                 Modifier.padding(top = 2.dp), style = rf(14, 20, tnum = true),
@@ -241,30 +243,30 @@ fun FmTool(vm: MainViewModel) {
             Row(Modifier.padding(top = 12.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 when {
                     c.error != null -> HeroChip(c.error!!, AntTheme.net.poor)
-                    c.starting -> HeroChip("Démarrage du HackRF…", AntTheme.net.fair, blink = true)
+                    c.starting -> HeroChip(S(R.string.starting_the_hackrf), AntTheme.net.fair, blink = true)
                     c.running -> {
-                        HeroChip("Signal %.0f dBFS".format(Locale.FRANCE, c.levelDb), if (c.levelDb > -45) AntTheme.net.good else AntTheme.net.fair, blink = true)
+                        HeroChip("Signal %.0f dBFS".format(Locale.getDefault(), c.levelDb), if (c.levelDb > -45) AntTheme.net.good else AntTheme.net.fair, blink = true)
                         if (info.tp) HeroChip("TP", AntTheme.net.good)
                         if (info.ta) HeroChip("TA", AntTheme.net.fair)
                     }
-                    device == null -> HeroChip("Aucun HackRF branché", AntTheme.net.poor)
-                    else -> HeroChip("${device!!.name} prêt", AntTheme.net.good)
+                    device == null -> HeroChip(S(R.string.no_hackrf_plugged_in), AntTheme.net.poor)
+                    else -> HeroChip(S(R.string.ready, device!!.name), AntTheme.net.good)
                 }
             }
         }
         val d = device
-        if (c.running || c.starting) StartButton("Arrêter", Sym.Stop) { c.stop() }
-        else StartButton("Écouter", Sym.PlayArrow, enabled = d != null && c.parsedHz() != null) { d?.let(c::start) }
+        if (c.running || c.starting) StartButton(S(R.string.stop), Sym.Stop) { c.stop() }
+        else StartButton(S(R.string.listen), Sym.PlayArrow, enabled = d != null && c.parsedHz() != null) { d?.let(c::start) }
         ToolButtons(
             ToolButton("− 0,1", Sym.ChevronLeft, BtnKind.OutlineOnSurface) { c.step(-0.1) },
             ToolButton("+ 0,1", Sym.ChevronRight, BtnKind.OutlineOnSurface) { c.step(0.1) },
         )
         SectionCard {
             Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                HostInputField(c.frequencyMhz, { c.frequencyMhz = it }, "Fréquence (MHz)", Sym.Stream, keyboardType = KeyboardType.Decimal) { c.retune() }
+                HostInputField(c.frequencyMhz, { c.frequencyMhz = it }, S(R.string.frequency_mhz), Sym.Stream, keyboardType = KeyboardType.Decimal) { c.retune() }
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    AntFilterChip(if (c.sound) "Son activé" else "Son coupé", c.sound, { c.toggleSound() })
-                    AntFilterChip("Ampli +14 dB", c.amp, { c.amp = !c.amp; c.applyGains() })
+                    AntFilterChip(if (c.sound) S(R.string.sound_on) else S(R.string.sound_off), c.sound, { c.toggleSound() })
+                    AntFilterChip(S(R.string.amp_14_db), c.amp, { c.amp = !c.amp; c.applyGains() })
                 }
                 GainSettings(
                     c.lnaGain, listOf(0, 8, 16, 24, 32, 40), { c.lnaGain = it; c.applyGains() },
@@ -276,9 +278,9 @@ fun FmTool(vm: MainViewModel) {
             Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 Symbol(Sym.Info, size = 22.dp, tint = AntTheme.accent.accent)
                 Text(
-                    "Radio FM publique en mono (désaccentuation 50 µs). Le nom de la station (PS) et le texte (RT) du RDS arrivent en quelques secondes " +
-                        "si le signal est assez fort ; sinon montez le gain. Pour trouver les stations, utilisez le préréglage « Radio FM » de l'analyseur de spectre. " +
-                        "Réception seule.",
+                    S(R.string.public_fm_radio_in_mono_50) +
+                        S(R.string.if_the_signal_is_strong_enough) +
+                        S(R.string.receive_only),
                     style = rf(13, 18), color = cs.onSurfaceVariant,
                 )
             }

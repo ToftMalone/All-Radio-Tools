@@ -15,7 +15,7 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 
 @RunWith(RobolectricTestRunner::class)
-@Config(sdk = [35], application = FakeApp::class)
+@Config(sdk = [35], qualifiers = "fr", application = FakeApp::class)
 class NavAndDirectionTest {
     @Test fun backReturnsToThePreviousScreen() {
         val vm = MainViewModel(ApplicationProvider.getApplicationContext<FakeApp>())

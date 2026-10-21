@@ -51,6 +51,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import com.allnetworktools.R
+import com.allnetworktools.util.S
+import com.allnetworktools.util.P
 
 /**
  * ACARS messages from airliners on the three European channels at once (131.525, 131.725 and 131.825 MHz), from one
@@ -79,8 +82,8 @@ class AcarsController(private val repo: SdrRepository, private val scope: Corout
         starting = true
         scope.launch {
             try {
-                if (!repo.hasPermission(device) && !repo.requestPermission(device)) { error = "Accès USB au HackRF refusé"; return@launch }
-                val r = withContext(Dispatchers.IO) { repo.open(device) } ?: run { error = "Impossible d'ouvrir le HackRF"; return@launch }
+                if (!repo.hasPermission(device) && !repo.requestPermission(device)) { error = S(R.string.usb_access_to_the_hackrf_refused); return@launch }
+                val r = withContext(Dispatchers.IO) { repo.open(device) } ?: run { error = S(R.string.could_not_open_the_hackrf); return@launch }
                 val lna = lnaGain
                 val vga = vgaGain
                 val withAmp = amp
@@ -89,7 +92,7 @@ class AcarsController(private val repo: SdrRepository, private val scope: Corout
                     r.setSampleRate(rate, HackRf.filterFor(rate)) && r.setFrequency(Acars.CenterHz) &&
                         r.setLnaGain(lna) && r.setVgaGain(vga) && r.setAmp(withAmp)
                 }
-                if (!ok) { r.close(); error = "Le HackRF n'a pas accepté la configuration"; return@launch }
+                if (!ok) { r.close(); error = S(R.string.the_hackrf_did_not_accept_the); return@launch }
                 radio = r
                 startPipeline(r)
                 running = true
@@ -143,7 +146,7 @@ class AcarsController(private val repo: SdrRepository, private val scope: Corout
         fun cell(v: Any?): String { val s = v?.toString() ?: ""; return if (s.any { it == ',' || it == '"' || it == '\n' }) "\"" + s.replace("\"", "\"\"") + "\"" else s }
         append("heure_utc,frequence_mhz,immatriculation,vol,label,bloc,numero,sens,texte\r\n")
         messages.reversed().forEach { m ->
-            append(listOf(fmt.format(Date(m.timeMs)), m.freqMhz, m.registration, m.flight, m.label, m.blockId, m.msgNo, if (m.downlink) "avion→sol" else "sol→avion", m.text).joinToString(",") { cell(it) })
+            append(listOf(fmt.format(Date(m.timeMs)), m.freqMhz, m.registration, m.flight, m.label, m.blockId, m.msgNo, if (m.downlink) S(R.string.aircraftground) else S(R.string.groundaircraft), m.text).joinToString(",") { cell(it) })
             append("\r\n")
         }
     }
@@ -154,7 +157,7 @@ class AcarsController(private val repo: SdrRepository, private val scope: Corout
     }
 }
 
-private val clock = SimpleDateFormat("HH:mm:ss", Locale.FRANCE)
+private val clock = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
 
 @Composable
 fun AcarsTool(vm: MainViewModel) {
@@ -170,22 +173,22 @@ fun AcarsTool(vm: MainViewModel) {
         HeroCard {
             Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                 Text("${c.messages.size}", style = gs(56, 60, 500, -1.5f, tnum = true))
-                Text(plural(c.messages.size, "message", "messages"), Modifier.padding(bottom = 8.dp), style = rf(18, 24, 500))
+                Text(P(R.plurals.p_messages, c.messages.size), Modifier.padding(bottom = 8.dp), style = rf(18, 24, 500))
             }
-            Text("$aircraft ${plural(aircraft, "avion", "avions")} · 131,525 / 131,725 / 131,825 MHz", style = rf(14, 20))
+            Text(S(R.string.n_131_525_131_725_131_825, aircraft, P(R.plurals.p_aircraft, aircraft)), style = rf(14, 20))
             Row(Modifier.padding(top = 12.dp)) {
                 when {
                     c.error != null -> HeroChip(c.error!!, AntTheme.net.poor)
-                    c.starting -> HeroChip("Démarrage du HackRF…", AntTheme.net.fair, blink = true)
-                    c.running -> HeroChip("Écoute des 3 canaux", AntTheme.net.good, blink = true)
-                    device == null -> HeroChip("Aucun HackRF branché", AntTheme.net.poor)
-                    else -> HeroChip("${device!!.name} prêt", AntTheme.net.good)
+                    c.starting -> HeroChip(S(R.string.starting_the_hackrf), AntTheme.net.fair, blink = true)
+                    c.running -> HeroChip(S(R.string.listening_on_the_3_channels), AntTheme.net.good, blink = true)
+                    device == null -> HeroChip(S(R.string.no_hackrf_plugged_in), AntTheme.net.poor)
+                    else -> HeroChip(S(R.string.ready, device!!.name), AntTheme.net.good)
                 }
             }
         }
         val d = device
-        if (c.running || c.starting) StartButton("Arrêter", Sym.Stop) { c.stop() }
-        else StartButton("Lancer la réception", Sym.PlayArrow, enabled = d != null) { d?.let(c::start) }
+        if (c.running || c.starting) StartButton(S(R.string.stop), Sym.Stop) { c.stop() }
+        else StartButton(S(R.string.start_receiving), Sym.PlayArrow, enabled = d != null) { d?.let(c::start) }
         if (c.messages.isNotEmpty()) {
             SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)) {
                 c.messages.take(200).forEachIndexed { i, m ->
@@ -205,9 +208,9 @@ fun AcarsTool(vm: MainViewModel) {
             Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 Symbol(Sym.Info, size = 22.dp, tint = AntTheme.accent.accent)
                 Text(
-                    "L'ACARS est la messagerie texte des avions de ligne avec leur compagnie : heures de départ et d'arrivée, positions, météo, maintenance. " +
-                        "Les messages sont courts et espacés : laissez tourner, de préférence près d'un aéroport ou sous un couloir aérien, antenne verticale dégagée. " +
-                        "Les 3 canaux européens sont écoutés en même temps. Réception seule.",
+                    S(R.string.acars_is_the_text_messaging_between) +
+                        S(R.string.messages_are_short_and_spread_out) +
+                        S(R.string.the_3_european_channels_are_monitored),
                     style = rf(13, 18), color = cs.onSurfaceVariant,
                 )
             }
@@ -222,12 +225,12 @@ private fun MessageRow(m: AcarsMessage) {
         LeadingIcon(if (m.downlink) Sym.Flight else Sym.CellTower, acc.container, acc.onContainer, 40.dp, RoundedCornerShape(12.dp), 22.dp)
         Column(Modifier.weight(1f)) {
             Text(
-                listOfNotNull(m.flight, m.registration.ifBlank { null }).joinToString(" · ").ifEmpty { "Station sol" },
+                listOfNotNull(m.flight, m.registration.ifBlank { null }).joinToString(" · ").ifEmpty { S(R.string.ground_station) },
                 style = rf(15, 20, 600), maxLines = 1,
             )
             Text(
-                "${clock.format(Date(m.timeMs))} · ${"%.3f".format(Locale.FRANCE, m.freqMhz)} · ${m.label}" + (Acars.Labels[m.label]?.let { " $it" } ?: "") +
-                    if (m.downlink) " · avion → sol" else " · sol → avion",
+                "${clock.format(Date(m.timeMs))} · ${"%.3f".format(Locale.getDefault(), m.freqMhz)} · ${m.label}" + (Acars.Labels[m.label]?.let { " $it" } ?: "") +
+                    if (m.downlink) S(R.string.aircraft_ground) else S(R.string.ground_aircraft),
                 style = rf(12, 16, tnum = true), color = cs.onSurfaceVariant,
             )
             if (m.text.isNotBlank()) Text(m.text, Modifier.padding(top = 4.dp), style = rf(13, 18), maxLines = 6)

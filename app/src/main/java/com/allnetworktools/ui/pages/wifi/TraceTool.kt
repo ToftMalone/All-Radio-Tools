@@ -74,6 +74,8 @@ import java.net.UnknownHostException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import com.allnetworktools.R
+import com.allnetworktools.util.S
 
 data class Hop(
     val n: Int,
@@ -126,7 +128,7 @@ class TraceController(private val scope: CoroutineScope) {
                 val reply = Net.ping(addr, 56, 1, ttl)
                 val from = reply.from
                 if (from == null) {
-                    hops += Hop(ttl, null, null, listOf(null, null, null), "ICMP filtré par ce routeur", false)
+                    hops += Hop(ttl, null, null, listOf(null, null, null), S(R.string.icmp_filtered_by_this_router), false)
                     if (++silent >= 6) break
                     continue
                 }
@@ -140,10 +142,10 @@ class TraceController(private val scope: CoroutineScope) {
                 val name = Net.reverse(hopAddr, 1200)
                 val tag = when {
                     dest -> "Destination"
-                    ttl == 1 && isPrivate(from) -> "Passerelle · réseau local"
-                    isPrivate(from) -> "Réseau privé / opérateur"
-                    IxHints.any { name?.lowercase()?.contains(it) == true } -> "Point d'échange Internet"
-                    else -> "Routeur opérateur"
+                    ttl == 1 && isPrivate(from) -> S(R.string.gateway_local_network)
+                    isPrivate(from) -> S(R.string.private_carrier_network)
+                    IxHints.any { name?.lowercase()?.contains(it) == true } -> S(R.string.internet_exchange_point)
+                    else -> S(R.string.carrier_router)
                 }
                 hops += Hop(ttl, from, name, rtts, tag, dest)
                 if (dest) break
@@ -160,7 +162,7 @@ class TraceController(private val scope: CoroutineScope) {
     }
 
     fun report() = buildString {
-        appendLine("Traceroute vers $host (${target ?: ""})")
+        appendLine(S(R.string.traceroute_to, host, target ?: ""))
         hops.forEach { h -> appendLine("${h.n}  ${h.host ?: h.ip ?: "* * *"}  ${h.ip ?: ""}  ${h.rtts.joinToString(" ") { it?.let { v -> fmt(v, 1) + " ms" } ?: "*" }}") }
     }
 }
@@ -174,36 +176,36 @@ fun TraceTool(c: TraceController) {
     val start = { haptics.confirm(); c.start() }
     PageColumn {
         if (c.phase == Phase.Error) {
-            ToolError(Sym.CloudOff, "Hôte introuvable", "Impossible de résoudre « ${c.host} ». Vérifiez la connexion et l'orthographe.", "Modifier") { c.phase = Phase.Idle }
+            ToolError(Sym.CloudOff, S(R.string.host_not_found), S(R.string.could_not_resolve_check_the_connection, c.host), S(R.string.edit)) { c.phase = Phase.Idle }
         }
         if (c.phase.form) {
             HostInputField(c.host, { c.host = it }, "Destination", recent = c.recent.items, onDone = start)
             ParamCard {
-                ParamRow("Protocole", "ICMP · sans privilège root", first = true) {}
+                ParamRow(S(R.string.protocol), S(R.string.icmp_without_root), first = true) {}
             }
-            StartButton("Lancer le traceroute", Sym.Route, enabled = c.host.isNotBlank(), onClick = start)
+            StartButton(S(R.string.start_the_traceroute), Sym.Route, enabled = c.host.isNotBlank(), onClick = start)
         }
         if (c.phase.active || c.phase == Phase.Empty) {
             HeroCard {
                 Text(c.host, style = gs(22, 28, 500), maxLines = 1)
-                Text("${c.target ?: "…"} · ICMP · ${c.maxHops} sauts max.", style = rf(13, 18))
+                Text(S(R.string.icmp_hops_max, c.target ?: "…", c.maxHops), style = rf(13, 18))
                 PathStrip(c)
                 val last = c.hops.lastOrNull { it.destination }
                 Text(
                     when {
-                        c.phase == Phase.Running -> "Sonde TTL ${c.probingTtl} sur ${c.maxHops}…"
-                        c.phase == Phase.Empty -> "Aucun saut atteint"
-                        last != null -> "Destination atteinte · ${last.n} sauts · ${fmt(last.avg ?: 0f, 1)} ms"
-                        else -> "Destination non atteinte · ${c.hops.size} sauts"
+                        c.phase == Phase.Running -> S(R.string.ttl_probe_of, c.probingTtl, c.maxHops)
+                        c.phase == Phase.Empty -> S(R.string.no_hop_reached)
+                        last != null -> S(R.string.destination_reached_hops_ms, last.n, fmt(last.avg ?: 0f, 1))
+                        else -> S(R.string.destination_not_reached_hops, c.hops.size)
                     },
                     Modifier.padding(top = 14.dp), style = rf(14, 20, 600),
                 )
                 if (c.phase == Phase.Running) {
-                    ToolButtons(ToolButton("Arrêter", Sym.Stop, BtnKind.Outline) { c.stop() }, modifier = Modifier.padding(top = 14.dp))
+                    ToolButtons(ToolButton(S(R.string.stop), Sym.Stop, BtnKind.Outline) { c.stop() }, modifier = Modifier.padding(top = 14.dp))
                 } else {
                     ToolButtons(
-                        ToolButton("Relancer", Sym.Refresh, BtnKind.Fill, start),
-                        ToolButton("Modifier", Sym.Tune, BtnKind.Outline) { c.phase = Phase.Idle },
+                        ToolButton(S(R.string.run_again), Sym.Refresh, BtnKind.Fill, start),
+                        ToolButton(S(R.string.edit), Sym.Tune, BtnKind.Outline) { c.phase = Phase.Idle },
                         modifier = Modifier.padding(top = 14.dp),
                     )
                 }
@@ -214,11 +216,11 @@ fun TraceTool(c: TraceController) {
                 val rows = c.hops.toList()
                 val probing = c.phase == Phase.Running
                 rows.forEachIndexed { i, h -> HopRow(h, i == 0, i == rows.lastIndex && !probing, i) }
-                if (probing) HopRow(Hop(c.probingTtl, null, "Sonde TTL ${c.probingTtl}…", emptyList(), "", false), rows.isEmpty(), true, 0, probing = true)
+                if (probing) HopRow(Hop(c.probingTtl, null, S(R.string.ttl_probe, c.probingTtl), emptyList(), "", false), rows.isEmpty(), true, 0, probing = true)
             }
         }
         if (c.phase == Phase.Empty) {
-            ToolEmpty(Sym.Route, "Aucun saut n'a répondu", "Les routeurs intermédiaires filtrent les paquets ICMP, ou le réseau bloque les sondes à TTL limité.", "Relancer", start)
+            ToolEmpty(Sym.Route, S(R.string.no_hop_answered), S(R.string.the_intermediate_routers_filter_icmp_packets), S(R.string.run_again), start)
         }
     }
 }
@@ -231,11 +233,11 @@ private fun PathStrip(c: TraceController) {
     )
     val answered = c.hops.filter { !it.timedOut }
     val steps = listOf(
-        Triple(Sym.Smartphone, "Vous", true),
+        Triple(Sym.Smartphone, S(R.string.you), true),
         Triple(Sym.Router, "Box", answered.any { it.n == 1 }),
         Triple(Sym.Cloud, "FAI", answered.any { it.n >= 2 && it.ip?.let(::isPrivate) == false }),
         Triple(Sym.Hub, "IX", answered.any { it.tag.startsWith("Point") } || answered.count { it.ip?.let(::isPrivate) == false } >= 3 || c.reached),
-        Triple(Sym.Flag, "Cible", c.reached),
+        Triple(Sym.Flag, S(R.string.target), c.reached),
     )
     Row(Modifier.fillMaxWidth().padding(top = 18.dp), verticalAlignment = Alignment.Top) {
         steps.forEachIndexed { i, (icon, label, on) ->
@@ -295,7 +297,7 @@ private fun HopRow(h: Hop, first: Boolean, last: Boolean, index: Int, probing: B
                 color = if (muted) cs.onSurfaceVariant else cs.onSurface, maxLines = 1, overflow = TextOverflow.Ellipsis,
             )
             if (!probing) {
-                Text(if (h.timedOut) "Pas de réponse" else h.ip.orEmpty(), style = mono(12, 16), color = cs.onSurfaceVariant)
+                Text(if (h.timedOut) S(R.string.no_response) else h.ip.orEmpty(), style = mono(12, 16), color = cs.onSurfaceVariant)
                 Text(h.tag, style = rf(11, 16), color = cs.onSurfaceVariant)
             }
         }

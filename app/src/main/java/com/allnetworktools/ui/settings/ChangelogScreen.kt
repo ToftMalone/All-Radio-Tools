@@ -35,6 +35,8 @@ import com.allnetworktools.update.isNewerVersion
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
+import com.allnetworktools.R
+import com.allnetworktools.util.S
 
 private sealed interface ChangelogUi {
     data object Loading : ChangelogUi
@@ -42,7 +44,7 @@ private sealed interface ChangelogUi {
     data class Failed(val message: String) : ChangelogUi
 }
 
-private val DateFmt = DateTimeFormatter.ofPattern("d MMMM yyyy", Locale.FRENCH)
+private val DateFmt = DateTimeFormatter.ofPattern("d MMMM yyyy", Locale.getDefault())
 
 internal fun releaseDate(iso: String): String? = runCatching { OffsetDateTime.parse(iso).format(DateFmt) }.getOrNull()
 
@@ -55,7 +57,7 @@ fun ChangelogScreen(vm: MainViewModel) {
         ui = ChangelogUi.Loading
         ui = runCatching { vm.updater.releases() }.fold(
             { ChangelogUi.Loaded(it) },
-            { ChangelogUi.Failed(it.message ?: "réseau indisponible") },
+            { ChangelogUi.Failed(it.message ?: S(R.string.network_unavailable)) },
         )
     }
     TopBarAction(Sym.Refresh) { attempt++ }
@@ -66,11 +68,11 @@ fun ChangelogScreen(vm: MainViewModel) {
                 verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp),
             ) {
                 Spinner()
-                Text("Lecture des versions sur GitHub…", style = rf(14, 20), color = cs.onSurfaceVariant)
+                Text(S(R.string.reading_the_versions_on_github), style = rf(14, 20), color = cs.onSurfaceVariant)
             }
-            is ChangelogUi.Failed -> ToolError(Sym.CloudOff, "Journal indisponible", "Impossible de joindre GitHub (${u.message}).", "Réessayer") { attempt++ }
+            is ChangelogUi.Failed -> ToolError(Sym.CloudOff, S(R.string.changelog_unavailable), S(R.string.could_not_reach_github, u.message), S(R.string.retry)) { attempt++ }
             is ChangelogUi.Loaded -> if (u.releases.isEmpty()) {
-                ToolError(Sym.NewspaperNotes, "Aucune version publiée", "Les notes apparaîtront ici dès la première release.", "Actualiser") { attempt++ }
+                ToolError(Sym.NewspaperNotes, S(R.string.no_version_published), S(R.string.notes_will_appear_here_from_the), S(R.string.refresh)) { attempt++ }
             } else {
                 u.releases.forEachIndexed { i, r -> ReleaseCard(r, Modifier.rise(i)) }
             }
@@ -90,12 +92,12 @@ private fun ReleaseCard(r: ReleaseNote, modifier: Modifier) {
                 releaseDate(r.publishedAt)?.let { Text(it, style = rf(13, 18), color = cs.onSurfaceVariant) }
             }
             when {
-                installed -> TechChip("Installée", cs.primary, cs.onPrimary)
-                newer -> TechChip("Nouvelle", AntTheme.net.good, cs.surface)
+                installed -> TechChip(S(R.string.installed), cs.primary, cs.onPrimary)
+                newer -> TechChip(S(R.string.new_text), AntTheme.net.good, cs.surface)
             }
         }
         if (items.isEmpty()) {
-            Text("Pas de notes pour cette version.", Modifier.padding(top = 10.dp), style = rf(14, 20), color = cs.onSurfaceVariant)
+            Text(S(R.string.no_notes_for_this_version), Modifier.padding(top = 10.dp), style = rf(14, 20), color = cs.onSurfaceVariant)
         } else {
             Column(Modifier.padding(top = 10.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 items.forEach { line ->

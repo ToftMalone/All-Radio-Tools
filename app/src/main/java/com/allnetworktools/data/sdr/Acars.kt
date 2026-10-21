@@ -4,6 +4,8 @@ import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.math.sqrt
+import com.allnetworktools.R
+import com.allnetworktools.util.S
 
 /**
  * ACARS, the text datalink of airliners (ARINC 618): AM on 131 MHz carrying MSK audio at 2400 bit/s (1200 and 2400 Hz),
@@ -56,13 +58,13 @@ object Acars {
 
     /** Common labels, for the list (ARINC 620 and usual airline use). */
     val Labels = mapOf(
-        "_d" to "Lien sans message", "Q0" to "Test de liaison", "H1" to "Message équipage / compagnie", "5Z" to "Message compagnie",
-        "SA" to "État de la liaison", "SQ" to "Balise de station sol", "QA" to "Départ (OUT)", "QB" to "Décollage (OFF)",
-        "QC" to "Atterrissage (ON)", "QD" to "Arrivée (IN)", "QE" to "Heures OOOI", "QF" to "Décollage", "QG" to "Retour au parking",
-        "10" to "Statut", "12" to "Position", "15" to "Position / météo", "16" to "Position", "20" to "Rapport de retard",
-        "2Z" to "Destination", "44" to "Position (FMS)", "80" to "Message libre", "83" to "Demande météo", "A9" to "ATIS",
-        "B6" to "Clairance (ADS-C)", "BA" to "Demande de clairance", "C1" to "Message cockpit", "RA" to "Message texte (imprimante)",
-        "SG" to "Message de service",
+        "_d" to S(R.string.link_without_message), "Q0" to S(R.string.link_test), "H1" to S(R.string.crew_company_message), "5Z" to S(R.string.company_message),
+        "SA" to S(R.string.link_status), "SQ" to S(R.string.ground_station_beacon), "QA" to S(R.string.departure_out), "QB" to S(R.string.take_off_off),
+        "QC" to S(R.string.landing_on), "QD" to S(R.string.arrival_in), "QE" to S(R.string.oooi_times), "QF" to S(R.string.take_off), "QG" to S(R.string.return_to_gate),
+        "10" to S(R.string.status), "12" to "Position", "15" to S(R.string.position_weather), "16" to "Position", "20" to S(R.string.delay_report),
+        "2Z" to "Destination", "44" to "Position (FMS)", "80" to S(R.string.free_text), "83" to S(R.string.weather_request), "A9" to "ATIS",
+        "B6" to S(R.string.clearance_ads_c), "BA" to S(R.string.clearance_request), "C1" to S(R.string.cockpit_message), "RA" to S(R.string.text_message_printer),
+        "SG" to S(R.string.service_message),
     )
 
     /** Decodes a frame body (from the mode character to the suffix, parity bits included) once its BCS is checked. */

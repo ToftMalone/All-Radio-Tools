@@ -14,6 +14,8 @@ import android.location.OnNmeaMessageListener
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import com.allnetworktools.R
+import com.allnetworktools.util.S
 
 enum class Constellation(val label: String, val short: String, val prefix: String) {
     GPS("GPS", "GPS", "G"),
@@ -21,7 +23,7 @@ enum class Constellation(val label: String, val short: String, val prefix: Strin
     Glonass("GLONASS", "GLO", "R"),
     BeiDou("BeiDou", "BDS", "C"),
     QZSS("QZSS", "QZS", "J"),
-    Other("Autre", "AUT", "S"),
+    Other(S(R.string.other), "AUT", "S"),
 }
 
 private fun constellationOf(type: Int) = when (type) {
@@ -45,7 +47,7 @@ data class Satellite(
     val id: String get() = constellation.prefix + svid
 }
 
-enum class FixType(val label: String) { None("Pas de fix"), Fix2D("Fix 2D"), Fix3D("Fix 3D") }
+enum class FixType(val label: String) { None(S(R.string.no_fix)), Fix2D("Fix 2D"), Fix3D("Fix 3D") }
 
 data class GnssState(
     val satellites: List<Satellite> = emptyList(),

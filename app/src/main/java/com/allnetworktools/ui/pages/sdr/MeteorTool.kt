@@ -82,6 +82,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import com.allnetworktools.R
+import com.allnetworktools.util.S
+import com.allnetworktools.util.P
 
 /** One received channel as a growing bitmap (784 pixels wide, 4 per strip of 8 lines). */
 class ChannelView(val apid: Int) {
@@ -107,7 +110,7 @@ class ChannelView(val apid: Int) {
         version++
     }
 
-    val label: String get() = if (apid in 64..69) "Canal ${apid - 63}" else "APID $apid"
+    val label: String get() = if (apid in 64..69) S(R.string.channel, apid - 63) else "APID $apid"
 }
 
 /**
@@ -155,14 +158,14 @@ class MeteorController(
 
     fun start(device: SdrDevice) {
         if (running || starting) return
-        val hz = parsedHz() ?: run { error = "Fréquence invalide (Meteor-M : 137,100 ou 137,900 MHz)"; return }
+        val hz = parsedHz() ?: run { error = S(R.string.invalid_frequency_meteor_m_137_100); return }
         onAcquire()
         error = null
         starting = true
         scope.launch {
             try {
-                if (!repo.hasPermission(device) && !repo.requestPermission(device)) { error = "Accès USB au HackRF refusé"; return@launch }
-                val r = withContext(Dispatchers.IO) { repo.open(device) } ?: run { error = "Impossible d'ouvrir le HackRF"; return@launch }
+                if (!repo.hasPermission(device) && !repo.requestPermission(device)) { error = S(R.string.usb_access_to_the_hackrf_refused); return@launch }
+                val r = withContext(Dispatchers.IO) { repo.open(device) } ?: run { error = S(R.string.could_not_open_the_hackrf); return@launch }
                 val lna = lnaGain
                 val vga = vgaGain
                 val withAmp = amp
@@ -170,7 +173,7 @@ class MeteorController(
                     r.setSampleRate(SAMPLE_RATE, HackRf.filterFor(SAMPLE_RATE)) && r.setFrequency(hz - SAMPLE_RATE / 4) &&
                         r.setLnaGain(lna) && r.setVgaGain(vga) && r.setAmp(withAmp)
                 }
-                if (!ok) { r.close(); error = "Le HackRF n'a pas accepté la configuration"; return@launch }
+                if (!ok) { r.close(); error = S(R.string.the_hackrf_did_not_accept_the); return@launch }
                 radio = r
                 listeningHz = hz
                 startedAtMs = System.currentTimeMillis()
@@ -257,9 +260,9 @@ class MeteorController(
                     }.filter { it.setMs > now }.sortedBy { it.riseMs }
                 }
                 passes = list
-                if (list.isEmpty() && all.none { t -> MeteorSats.all.any { it.catalog == t.catalog } }) passesError = "Éléments orbitaux de Meteor-M introuvables"
+                if (list.isEmpty() && all.none { t -> MeteorSats.all.any { it.catalog == t.catalog } }) passesError = S(R.string.meteor_m_orbital_elements_not_found)
             } catch (e: Exception) {
-                passesError = "Éléments orbitaux indisponibles : ${e.message ?: "hors ligne"}"
+                passesError = S(R.string.orbital_elements_unavailable, e.message ?: S(R.string.offline))
             } finally {
                 passesLoading = false
             }
@@ -278,10 +281,10 @@ class MeteorController(
     }
 }
 
-private val timeFmt = SimpleDateFormat("EEE HH:mm", Locale.FRANCE)
-private val clockFmt = SimpleDateFormat("HH:mm", Locale.FRANCE)
+private val timeFmt = SimpleDateFormat("EEE HH:mm", Locale.getDefault())
+private val clockFmt = SimpleDateFormat("HH:mm", Locale.getDefault())
 
-private fun mhz(hz: Double) = "%.3f".format(Locale.FRANCE, hz)
+private fun mhz(hz: Double) = "%.3f".format(Locale.getDefault(), hz)
 
 private fun countdown(ms: Long): String {
     val m = (ms / 60_000).coerceAtLeast(0)
@@ -315,9 +318,9 @@ fun MeteorTool(vm: MainViewModel) {
         HeroCard {
             val head = when {
                 !c.running -> "Meteor-M"
-                st.locked -> "Accroché au satellite"
-                st.carrier -> "Signal détecté"
-                else -> "À l'écoute"
+                st.locked -> S(R.string.locked_on_the_satellite)
+                st.carrier -> S(R.string.signal_detected)
+                else -> S(R.string.listening_2)
             }
             Text(head, style = gs(30, 36, 500))
             Text(
@@ -327,18 +330,18 @@ fun MeteorTool(vm: MainViewModel) {
             Row(Modifier.padding(top = 12.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 when {
                     c.error != null -> HeroChip(c.error!!, AntTheme.net.poor)
-                    c.starting -> HeroChip("Démarrage du HackRF…", AntTheme.net.fair, blink = true)
-                    c.running && st.locked -> HeroChip("${st.rsOk} ${plural(st.rsOk, "trame valide", "trames valides")}", AntTheme.net.good, blink = true)
-                    c.running && st.carrier -> HeroChip("Signal à %.0f dB".format(Locale.FRANCE, st.snrDb), AntTheme.net.fair, blink = true)
-                    c.running -> HeroChip("Aucun satellite audible", AntTheme.net.fair, blink = true)
-                    device == null -> HeroChip("Aucun HackRF branché", AntTheme.net.poor)
-                    else -> HeroChip("${device!!.name} prêt", AntTheme.net.good)
+                    c.starting -> HeroChip(S(R.string.starting_the_hackrf), AntTheme.net.fair, blink = true)
+                    c.running && st.locked -> HeroChip("${st.rsOk} ${P(R.plurals.p_valid_frames, st.rsOk)}", AntTheme.net.good, blink = true)
+                    c.running && st.carrier -> HeroChip(S(R.string.signal_at_db).format(Locale.getDefault(), st.snrDb), AntTheme.net.fair, blink = true)
+                    c.running -> HeroChip(S(R.string.no_satellite_audible), AntTheme.net.fair, blink = true)
+                    device == null -> HeroChip(S(R.string.no_hackrf_plugged_in), AntTheme.net.poor)
+                    else -> HeroChip(S(R.string.ready, device!!.name), AntTheme.net.good)
                 }
             }
         }
         val d = device
-        if (c.running || c.starting) StartButton("Arrêter", Sym.Stop) { c.stop() }
-        else StartButton("Lancer la réception", Sym.PlayArrow, enabled = d != null && c.parsedHz() != null) { d?.let(c::start) }
+        if (c.running || c.starting) StartButton(S(R.string.stop), Sym.Stop) { c.stop() }
+        else StartButton(S(R.string.start_receiving), Sym.PlayArrow, enabled = d != null && c.parsedHz() != null) { d?.let(c::start) }
 
         if (c.channels.isNotEmpty()) ImageCard(c)
         StagesCard(st, c.running)
@@ -353,7 +356,7 @@ fun MeteorTool(vm: MainViewModel) {
                         AntFilterChip("${s.name} · ${mhz(s.freqMhz)}", c.frequencyMhz == f, { if (c.frequencyMhz != f && !c.starting) { if (c.running) c.stop(); c.frequencyMhz = f } })
                     }
                 }
-                if (!c.running) HostInputField(c.frequencyMhz, { c.frequencyMhz = it }, "Fréquence (MHz)", Sym.Stream, keyboardType = KeyboardType.Decimal)
+                if (!c.running) HostInputField(c.frequencyMhz, { c.frequencyMhz = it }, S(R.string.frequency_mhz), Sym.Stream, keyboardType = KeyboardType.Decimal)
                 GainSettings(
                     c.lnaGain, listOf(16, 24, 32, 40), { c.lnaGain = it; c.applyGains() },
                     c.vgaGain, listOf(20, 30, 40, 50), { c.vgaGain = it; c.applyGains() },
@@ -365,10 +368,10 @@ fun MeteorTool(vm: MainViewModel) {
             Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 Symbol(Sym.Info, size = 22.dp, tint = AntTheme.accent.accent)
                 Text(
-                    "Les satellites Meteor-M diffusent en continu leurs images (canaux visibles et infrarouges) en clair. Il faut un satellite " +
-                        "au-dessus de l'horizon : un passage dure 10 à 15 minutes et seuls ceux qui montent à plus de 20° donnent de bonnes images. " +
-                        "Antenne VHF dégagée (dipôle en V ou QFH), et un amplificateur faible bruit près de l'antenne aide beaucoup. " +
-                        "Ce décodage est expérimental : si aucune image n'apparaît, la chaîne ci-dessus montre l'étape qui bloque. Réception seule.",
+                    S(R.string.meteor_m_satellites_broadcast_their_images) +
+                        S(R.string.above_the_horizon_a_pass_lasts) +
+                        S(R.string.a_vhf_antenna_in_the_clear) +
+                        S(R.string.this_decoding_is_experimental_if_no),
                     style = rf(13, 18), color = cs.onSurfaceVariant,
                 )
             }
@@ -399,10 +402,10 @@ private fun ImageCard(c: MeteorController) {
                 }
             }
             Text(
-                "${ch.label} · ${ch.rows} ${plural(ch.rows, "bande", "bandes")} de 8 lignes (moitié de la résolution). Le haut est le début du passage.",
+                S(R.string.of_8_lines_half_resolution_the, ch.label, ch.rows, P(R.plurals.p_strips, ch.rows)),
                 style = rf(12, 16), color = cs.onSurfaceVariant,
             )
-            ToolButtons(ToolButton("Effacer", Sym.Delete, BtnKind.OutlineOnSurface) { c.clearImages() })
+            ToolButtons(ToolButton(S(R.string.clear), Sym.Delete, BtnKind.OutlineOnSurface) { c.clearImages() })
         }
     }
 }
@@ -416,29 +419,29 @@ private fun StagesCard(st: LrptStatus, running: Boolean) {
         val strips = st.strips.values.sum()
         val rows = listOf(
             Stage(
-                "Signal QPSK", st.carrier,
-                if (st.carrier) "décalage %+.1f kHz · rapport signal/bruit %.0f dB".format(Locale.FRANCE, st.cfoHz / 1000, st.snrDb)
-                else if (running) "en attente d'une émission à 72 ksymboles/s · raie ×%.0f (20 requis), rythme ×%.0f".format(Locale.FRANCE, st.lineRatio, st.symbolLineRatio)
-                else "à l'arrêt",
+                S(R.string.qpsk_signal), st.carrier,
+                if (st.carrier) S(R.string.offset_khz_signal_to_noise_ratio).format(Locale.getDefault(), st.cfoHz / 1000, st.snrDb)
+                else if (running) S(R.string.waiting_for_a_72_ksymbol_s).format(Locale.getDefault(), st.lineRatio, st.symbolLineRatio)
+                else S(R.string.stopped_2),
             ),
             Stage(
-                "Synchronisation des trames", st.locked,
-                if (st.locked) "marqueur trouvé · phase ${st.hypothesis}" else if (st.carrier) "recherche du marqueur de trame…" else "—",
+                S(R.string.frame_synchronisation), st.locked,
+                if (st.locked) S(R.string.marker_found_phase, st.hypothesis) else if (st.carrier) S(R.string.looking_for_the_frame_marker) else "—",
             ),
             Stage(
-                "Correction d'erreurs", st.rsOk > 0,
-                if (st.frames > 0) "${st.rsOk} ${plural(st.rsOk, "trame valide", "trames valides")}, ${st.rsFail} ${plural(st.rsFail, "perdue", "perdues")} · ${st.corrected} octets corrigés" +
+                S(R.string.error_correction), st.rsOk > 0,
+                if (st.frames > 0) S(R.string.bytes_corrected, st.rsOk, P(R.plurals.p_valid_frames, st.rsOk), st.rsFail, P(R.plurals.p_lost, st.rsFail), st.corrected) +
                     (st.basis?.let { " · $it" } ?: "")
                 else "—",
             ),
             Stage(
-                "Paquets", st.packets > 0,
-                if (st.packets > 0) "${st.packets} · " + (if (apids.isEmpty()) "pas encore de paquet d'image" else apids.keys.sorted().joinToString { "canal ${it - 63}" }) else "—",
+                S(R.string.packets_2), st.packets > 0,
+                if (st.packets > 0) "${st.packets} · " + (if (apids.isEmpty()) S(R.string.no_image_packet_yet) else apids.keys.sorted().joinToString { S(R.string.channel_2, it - 63) }) else "—",
             ),
             Stage(
-                "Images", strips > 0,
-                if (st.segmentsOk + st.segmentsBad > 0) "${st.segmentsOk} segments · $strips ${plural(strips, "bande", "bandes")}" +
-                    (if (st.segmentsBad > 0) " · ${st.segmentsBad} illisibles" else "") else "—",
+                S(R.string.images), strips > 0,
+                if (st.segmentsOk + st.segmentsBad > 0) S(R.string.segments, st.segmentsOk, strips, P(R.plurals.p_strips, strips)) +
+                    (if (st.segmentsBad > 0) S(R.string.unreadable, st.segmentsBad) else "") else "—",
             ),
         )
         rows.forEachIndexed { i, s ->
@@ -460,16 +463,16 @@ private class Stage(val title: String, val done: Boolean, val detail: String)
 private fun PassesCard(c: MeteorController, now: Long, obs: Observer?) {
     SectionCard(padding = androidx.compose.foundation.layout.PaddingValues(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp)) {
         Row(Modifier.fillMaxWidth().padding(vertical = 6.dp), verticalAlignment = Alignment.CenterVertically) {
-            Text("Prochains passages", Modifier.weight(1f), style = rf(14, 20, 600))
+            Text(S(R.string.next_passes), Modifier.weight(1f), style = rf(14, 20, 600))
             if (obs != null) Text(
-                if (c.passesLoading) "calcul…" else "Actualiser", style = rf(13, 18, 600), color = AntTheme.accent.accent,
+                if (c.passesLoading) S(R.string.computing) else S(R.string.refresh), style = rf(13, 18, 600), color = AntTheme.accent.accent,
                 modifier = Modifier.clickableNoRipple { c.loadPasses(obs, force = true) },
             )
         }
         when {
-            obs == null -> Text("La position du téléphone est nécessaire pour calculer les passages (autorisez la localisation).", Modifier.padding(bottom = 8.dp), style = rf(13, 18), color = cs.onSurfaceVariant)
+            obs == null -> Text(S(R.string.the_phone_s_location_is_needed), Modifier.padding(bottom = 8.dp), style = rf(13, 18), color = cs.onSurfaceVariant)
             c.passesError != null -> Text(c.passesError!!, Modifier.padding(bottom = 8.dp), style = rf(13, 18), color = cs.error)
-            c.passes.isEmpty() -> Text(if (c.passesLoading) "Téléchargement des éléments orbitaux…" else "Aucun bon passage (plus de 15° d'élévation) dans les 24 prochaines heures.", Modifier.padding(bottom = 8.dp), style = rf(13, 18), color = cs.onSurfaceVariant)
+            c.passes.isEmpty() -> Text(if (c.passesLoading) S(R.string.downloading_orbital_elements) else S(R.string.no_good_pass_above_15_elevation), Modifier.padding(bottom = 8.dp), style = rf(13, 18), color = cs.onSurfaceVariant)
             else -> c.passes.take(6).forEachIndexed { i, p ->
                 if (i > 0) Hairline()
                 Row(Modifier.fillMaxWidth().padding(vertical = 8.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -481,7 +484,7 @@ private fun PassesCard(c: MeteorController, now: Long, obs: Observer?) {
                             style = rf(12, 16, tnum = true), color = cs.onSurfaceVariant,
                         )
                     }
-                    Text(if (now in p.riseMs..p.setMs) "en cours" else "dans " + countdown(p.riseMs - now), style = rf(12, 16, 600, tnum = true), color = if (now in p.riseMs..p.setMs) AntTheme.net.good else cs.onSurfaceVariant)
+                    Text(if (now in p.riseMs..p.setMs) S(R.string.in_progress) else S(R.string.in_text) + countdown(p.riseMs - now), style = rf(12, 16, 600, tnum = true), color = if (now in p.riseMs..p.setMs) AntTheme.net.good else cs.onSurfaceVariant)
                 }
             }
         }

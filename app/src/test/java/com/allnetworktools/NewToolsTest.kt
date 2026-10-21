@@ -24,7 +24,7 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 
 @RunWith(RobolectricTestRunner::class)
-@Config(sdk = [35])
+@Config(sdk = [35], qualifiers = "fr")
 class NewToolsTest {
     private fun ap(ssid: String, bssid: String, rssi: Int, sec: String) = WifiAp(ssid, bssid, rssi, 5180, 80, sec, ScanResult.WIFI_STANDARD_11AX, 5210)
 

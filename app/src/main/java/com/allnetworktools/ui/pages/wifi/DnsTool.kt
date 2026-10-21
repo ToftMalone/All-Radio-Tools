@@ -67,6 +67,8 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
+import com.allnetworktools.R
+import com.allnetworktools.util.S
 
 class DnsController(private val scope: CoroutineScope) {
     var host by mutableStateOf("android.com")
@@ -81,7 +83,7 @@ class DnsController(private val scope: CoroutineScope) {
     var systemDns by mutableStateOf("192.168.1.254")
     private var job: Job? = null
 
-    val servers: List<DnsServer> get() = listOf(DnsServer("Système", systemDns, null)) + DnsClient.Public
+    val servers: List<DnsServer> get() = listOf(DnsServer(S(R.string.system), systemDns, null)) + DnsClient.Public
     val server get() = servers[serverIndex]
 
     fun start() {
@@ -93,7 +95,7 @@ class DnsController(private val scope: CoroutineScope) {
         job = scope.launch {
             val a = runCatching { DnsClient.resolve(name, type, server, doh) }
             a.onFailure {
-                failure = "Aucune réponse de ${server.name} (${server.ip}). Vérifiez la connexion ou essayez un autre serveur."
+                failure = S(R.string.no_answer_from_check_the_connection, server.name, server.ip)
                 phase = Phase.Error
                 return@launch
             }
@@ -102,7 +104,7 @@ class DnsController(private val scope: CoroutineScope) {
             recent.push(name)
             phase = when {
                 ans.rcode == 3 -> Phase.Error
-                ans.rcode != 0 -> { failure = "Le serveur a répondu ${ans.rcodeName}."; Phase.Error }
+                ans.rcode != 0 -> { failure = S(R.string.the_server_answered, ans.rcodeName); Phase.Error }
                 ans.records.isEmpty() -> Phase.Empty
                 else -> Phase.Results
             }
@@ -133,12 +135,12 @@ fun DnsTool(c: DnsController, systemDns: String?) {
     PageColumn {
         if (c.phase == Phase.Error) {
             if (c.answer?.rcode == 3) {
-                ToolError(Sym.TravelExplore, "Domaine inexistant (NXDOMAIN)", "« ${c.host} » n'existe pas selon ${c.server.name} (${c.server.ip}). Vérifiez l'orthographe.", "Modifier") { c.phase = Phase.Idle }
+                ToolError(Sym.TravelExplore, S(R.string.non_existent_domain_nxdomain), S(R.string.does_not_exist_according_to_check, c.host, c.server.name, c.server.ip), S(R.string.edit)) { c.phase = Phase.Idle }
             } else {
-                ToolError(Sym.CloudOff, "Résolution impossible", c.failure ?: "", "Réessayer", start)
+                ToolError(Sym.CloudOff, S(R.string.resolution_failed), c.failure ?: "", S(R.string.retry), start)
             }
         }
-        HostInputField(c.host, { c.host = it }, "Nom de domaine", Sym.Language, c.recent.items, onDone = start)
+        HostInputField(c.host, { c.host = it }, S(R.string.domain_name), Sym.Language, c.recent.items, onDone = start)
         FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             DnsType.entries.forEach { t -> AntFilterChip(t.name, c.type == t, { c.type = t }) }
         }
@@ -157,7 +159,7 @@ fun DnsTool(c: DnsController, systemDns: String?) {
         ) {
             Column(Modifier.weight(1f)) {
                 Text("DNS over HTTPS", style = rf(15, 20, 500))
-                Text(if (c.serverIndex == 0 && c.doh) "Non proposé par le serveur système : UDP" else "Requête chiffrée (RFC 8484)", style = rf(12, 16), color = cs.onSurfaceVariant)
+                Text(if (c.serverIndex == 0 && c.doh) S(R.string.not_offered_by_the_system_server) else S(R.string.encrypted_query_rfc_8484), style = rf(12, 16), color = cs.onSurfaceVariant)
             }
             Switch(
                 c.doh, null,
@@ -165,7 +167,7 @@ fun DnsTool(c: DnsController, systemDns: String?) {
                 colors = SwitchDefaults.colors(checkedTrackColor = acc.accent, checkedThumbColor = acc.onAccent),
             )
         }
-        StartButton("Résoudre", Sym.Search, enabled = c.host.isNotBlank() && c.phase != Phase.Running, onClick = start)
+        StartButton(S(R.string.resolve), Sym.Search, enabled = c.host.isNotBlank() && c.phase != Phase.Running, onClick = start)
         if (c.phase == Phase.Running) {
             Row(
                 Modifier.fillMaxWidth().clip(RoundedCornerShape(24.dp)).background(cs.surfaceContainerLow).padding(16.dp),
@@ -182,10 +184,10 @@ fun DnsTool(c: DnsController, systemDns: String?) {
                     Box(Modifier.height(26.dp).clip(RoundedCornerShape(13.dp)).background(AntTheme.net.good).padding(horizontal = 10.dp), contentAlignment = Alignment.Center) {
                         Text(ans.rcodeName, style = rf(12, 16, 700), color = cs.surface)
                     }
-                    Text("${ans.records.size} enregistrement${if (ans.records.size > 1) "s" else ""} · ${c.type.name}", style = rf(13, 18, 500))
+                    Text(S(R.string.record_2, ans.records.size, if (ans.records.size > 1) "s" else "", c.type.name), style = rf(13, 18, 500))
                 }
                 HeroMetric(fmt(ans.ms), "ms", 48, Modifier.padding(top = 10.dp))
-                Text("Temps de réponse · via ${c.server.name} (${c.server.ip})", Modifier.graphicsLayer { alpha = 0.85f }, style = rf(13, 18))
+                Text(S(R.string.response_time_via, c.server.name, c.server.ip), Modifier.graphicsLayer { alpha = 0.85f }, style = rf(13, 18))
             }
             Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                 ans.records.forEachIndexed { i, r ->
@@ -203,7 +205,7 @@ fun DnsTool(c: DnsController, systemDns: String?) {
                 }
             }
             SectionCard {
-                Text("Comparaison des serveurs", style = rf(14, 20, 600))
+                Text(S(R.string.server_comparison), style = rf(14, 20, 600))
                 val maxMs = maxOf(30f, c.compare.values.filterNotNull().maxOrNull() ?: 0f)
                 Column(Modifier.padding(top = 12.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                     c.servers.forEachIndexed { i, s ->
@@ -217,7 +219,7 @@ fun DnsTool(c: DnsController, systemDns: String?) {
                             Text(
                                 when {
                                     s.name !in c.compare -> "…"
-                                    v == null -> "échec"
+                                    v == null -> S(R.string.failed_3)
                                     else -> "${fmt(v)} ms"
                                 },
                                 Modifier.width(56.dp), style = rf(13, 18, 600, tnum = true), textAlign = androidx.compose.ui.text.style.TextAlign.End,
@@ -228,7 +230,7 @@ fun DnsTool(c: DnsController, systemDns: String?) {
             }
         }
         if (c.phase == Phase.Empty) {
-            ToolEmpty(Sym.SearchOff, "Aucun enregistrement ${c.type.name}", "Le serveur a répondu NOERROR sans donnée pour ce type. Essayez A ou AAAA.", "Chercher le type A") {
+            ToolEmpty(Sym.SearchOff, S(R.string.no_record_2, c.type.name), S(R.string.the_server_answered_noerror_with_no), S(R.string.look_up_type_a)) {
                 c.type = DnsType.A; start()
             }
         }

@@ -71,6 +71,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import com.allnetworktools.R
+import com.allnetworktools.util.S
+import com.allnetworktools.util.P
 
 /** A packet as shown: the first copy heard, and how many relayed copies followed. */
 class MeshEntry(
@@ -201,15 +204,15 @@ class MeshtasticController(private val repo: SdrRepository, private val scope: C
 
     fun start(device: SdrDevice) {
         if (running || starting) return
-        val hz = frequencyMhz?.let { (it * 1e6).toLong() } ?: run { error = "Ce préréglage ne tient pas dans cette région"; return }
+        val hz = frequencyMhz?.let { (it * 1e6).toLong() } ?: run { error = S(R.string.this_preset_does_not_fit_in); return }
         onAcquire()
         this.device = device
         error = null
         starting = true
         scope.launch {
             try {
-                if (!repo.hasPermission(device) && !repo.requestPermission(device)) { error = "Accès USB au HackRF refusé"; return@launch }
-                val r = withContext(Dispatchers.IO) { repo.open(device) } ?: run { error = "Impossible d'ouvrir le HackRF"; return@launch }
+                if (!repo.hasPermission(device) && !repo.requestPermission(device)) { error = S(R.string.usb_access_to_the_hackrf_refused); return@launch }
+                val r = withContext(Dispatchers.IO) { repo.open(device) } ?: run { error = S(R.string.could_not_open_the_hackrf); return@launch }
                 val lna = lnaGain
                 val vga = vgaGain
                 val withAmp = amp
@@ -217,7 +220,7 @@ class MeshtasticController(private val repo: SdrRepository, private val scope: C
                     r.setSampleRate(SAMPLE_RATE, HackRf.filterFor(SAMPLE_RATE)) && r.setFrequency(hz - SAMPLE_RATE / 4) &&
                         r.setLnaGain(lna) && r.setVgaGain(vga) && r.setAmp(withAmp)
                 }
-                if (!ok) { r.close(); error = "Le HackRF n'a pas accepté la configuration"; return@launch }
+                if (!ok) { r.close(); error = S(R.string.the_hackrf_did_not_accept_the); return@launch }
                 radio = r
                 startPipeline(r, hz.toDouble(), preset)
                 running = true
@@ -324,7 +327,7 @@ class MeshtasticController(private val repo: SdrRepository, private val scope: C
     fun csv(): String = buildString {
         val fmt = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ROOT).apply { timeZone = TimeZone.getTimeZone("UTC") }
         fun cell(v: Any?): String { val s = v?.toString() ?: ""; return if (s.any { it == ',' || it == '"' || it == '\n' }) "\"" + s.replace("\"", "\"\"") + "\"" else s }
-        append("heure_utc,de,nom,vers,canal,type,contenu,snr_db,sauts,copies\r\n")
+        append(S(R.string.time_utc_from_name_to_channel))
         packets.reversed().forEach { e ->
             val h = e.packet.header
             append(
@@ -347,13 +350,13 @@ class MeshtasticController(private val repo: SdrRepository, private val scope: C
 }
 
 internal fun statusText(s: Meshtastic.Status): String = when (s) {
-    Meshtastic.Status.Decoded -> "Déchiffré"
-    Meshtastic.Status.Private -> "Message privé chiffré"
-    Meshtastic.Status.OtherChannel -> "Autre canal"
-    Meshtastic.Status.WrongKey -> "Clé différente"
+    Meshtastic.Status.Decoded -> S(R.string.decrypted)
+    Meshtastic.Status.Private -> S(R.string.encrypted_private_message)
+    Meshtastic.Status.OtherChannel -> S(R.string.other_channel)
+    Meshtastic.Status.WrongKey -> S(R.string.different_key)
 }
 
-private fun f1(v: Float) = "%.1f".format(Locale.FRANCE, v)
+private fun f1(v: Float) = "%.1f".format(Locale.getDefault(), v)
 
 private fun coords(lat: Double, lon: Double) = "%.5f, %.5f".format(Locale.ROOT, lat, lon)
 
@@ -361,36 +364,36 @@ private fun coords(lat: Double, lon: Double) = "%.5f, %.5f".format(Locale.ROOT, 
 internal fun describe(p: Meshtastic.Packet, nodes: Map<Long, MeshNode>): String {
     fun name(num: Long) = nodes[num]?.label ?: Meshtastic.nodeId(num)
     val d = p.data ?: return when (p.status) {
-        Meshtastic.Status.Private -> "Message direct chiffré avec la clé publique du destinataire : lui seul peut le lire."
-        Meshtastic.Status.WrongKey -> "Le canal correspond à l'un des vôtres mais pas la clé : vérifiez-la."
-        else -> "Canal inconnu (empreinte ${p.header.channel}) : ajoutez son nom et sa clé pour le lire."
+        Meshtastic.Status.Private -> S(R.string.direct_message_encrypted_with_the_recipient)
+        Meshtastic.Status.WrongKey -> S(R.string.the_channel_matches_one_of_yours)
+        else -> S(R.string.unknown_channel_hash_add_its_name, p.header.channel)
     }
     return when (val c = d.content) {
         is Meshtastic.Content.Text -> c.text
         is Meshtastic.Content.Position -> listOfNotNull(
-            if (c.lat != null && c.lon != null) coords(c.lat, c.lon) else "Position masquée",
+            if (c.lat != null && c.lon != null) coords(c.lat, c.lon) else S(R.string.hidden_position),
             c.altitude?.let { "$it m" }, c.speedKmh?.let { "$it km/h" }, c.sats?.let { "$it satellites" },
         ).joinToString(" · ")
         is Meshtastic.Content.NodeInfo -> listOfNotNull(
             listOfNotNull(c.longName, c.shortName?.let { "($it)" }).joinToString(" ").ifBlank { null },
             c.hwModel?.let(Meshtastic::hwModel), c.role?.takeIf { it != 0 }?.let(Meshtastic::role),
-            if (c.hasPublicKey) "clé publique" else null,
+            if (c.hasPublicKey) S(R.string.public_key) else null,
         ).joinToString(" · ")
         is Meshtastic.Content.Telemetry -> listOfNotNull(
-            c.battery?.let { if (it > 100) "secteur" else "batterie $it %" }, c.voltage?.let { "${f1(it)} V" },
-            c.chUtil?.let { "canal occupé ${f1(it)} %" }, c.airUtil?.let { "émission ${f1(it)} %" },
-            c.temperature?.let { "${f1(it)} °C" }, c.humidity?.let { "humidité ${f1(it)} %" }, c.pressure?.let { "${f1(it)} hPa" },
-        ).joinToString(" · ").ifEmpty { "Mesures" }
-        is Meshtastic.Content.Routing -> c.error?.let(Meshtastic::routingError) ?: "Routage"
+            c.battery?.let { if (it > 100) "secteur" else S(R.string.battery_2, it) }, c.voltage?.let { "${f1(it)} V" },
+            c.chUtil?.let { S(R.string.channel_busy, f1(it)) }, c.airUtil?.let { S(R.string.airtime, f1(it)) },
+            c.temperature?.let { "${f1(it)} °C" }, c.humidity?.let { S(R.string.humidity_2, f1(it)) }, c.pressure?.let { "${f1(it)} hPa" },
+        ).joinToString(" · ").ifEmpty { S(R.string.measurements) }
+        is Meshtastic.Content.Routing -> c.error?.let(Meshtastic::routingError) ?: S(R.string.routing)
         is Meshtastic.Content.Traceroute -> {
             val to = (listOf(p.header.from) + c.route + listOf(p.header.to)).map(::name)
-            "Route : " + to.joinToString(" → ") + if (c.back.isNotEmpty()) " · retour par " + c.back.joinToString(" → ", transform = ::name) else ""
+            S(R.string.route) + to.joinToString(" → ") + if (c.back.isNotEmpty()) S(R.string.back_via) + c.back.joinToString(" → ", transform = ::name) else ""
         }
-        is Meshtastic.Content.Neighbors -> if (c.neighbors.isEmpty()) "Aucun voisin" else
+        is Meshtastic.Content.Neighbors -> if (c.neighbors.isEmpty()) S(R.string.no_neighbour) else
             c.neighbors.joinToString(" · ") { (n, snr) -> name(n) + (snr?.let { " (${f1(it)} dB)" } ?: "") }
         is Meshtastic.Content.Waypoint -> listOfNotNull(c.name, c.description?.ifBlank { null }, if (c.lat != null && c.lon != null) coords(c.lat, c.lon) else null).joinToString(" · ")
         is Meshtastic.Content.MapReport -> listOfNotNull(c.longName, c.hwModel?.let(Meshtastic::hwModel), c.firmware?.let { "firmware $it" }).joinToString(" · ")
-        is Meshtastic.Content.Other -> "${c.size} octets"
+        is Meshtastic.Content.Other -> S(R.string.bytes, c.size)
     }
 }
 
@@ -406,7 +409,7 @@ private fun icon(p: Meshtastic.Packet): String = when (p.data?.port) {
     else -> Sym.DataObject
 }
 
-private val clock = SimpleDateFormat("HH:mm:ss", Locale.FRANCE)
+private val clock = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
 
 @Composable
 fun MeshtasticTool(vm: MainViewModel) {
@@ -422,31 +425,31 @@ fun MeshtasticTool(vm: MainViewModel) {
         HeroCard {
             Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                 Text("${c.packets.size}", style = gs(56, 60, 500, -1.5f, tnum = true))
-                Text(plural(c.packets.size, "paquet", "paquets"), Modifier.padding(bottom = 8.dp), style = rf(18, 24, 500))
+                Text(P(R.plurals.p_packets, c.packets.size), Modifier.padding(bottom = 8.dp), style = rf(18, 24, 500))
             }
             Text(
-                "${c.nodes.size} ${plural(c.nodes.size, "nœud", "nœuds")} · " +
-                    (freq?.let { "%.3f MHz".format(Locale.FRANCE, it) } ?: "fréquence hors bande") + " · ${c.preset.channelName}",
+                "${c.nodes.size} ${P(R.plurals.p_nodes, c.nodes.size)} · " +
+                    (freq?.let { "%.3f MHz".format(Locale.getDefault(), it) } ?: S(R.string.frequency_out_of_band)) + " · ${c.preset.channelName}",
                 style = rf(14, 20),
             )
             Row(Modifier.padding(top = 12.dp)) {
                 when {
                     c.error != null -> HeroChip(c.error!!, AntTheme.net.poor)
-                    c.starting -> HeroChip("Démarrage du HackRF…", AntTheme.net.fair, blink = true)
-                    c.running -> HeroChip("Écoute en cours", AntTheme.net.good, blink = true)
-                    device == null -> HeroChip("Aucun HackRF branché", AntTheme.net.poor)
-                    else -> HeroChip("${device!!.name} prêt", AntTheme.net.good)
+                    c.starting -> HeroChip(S(R.string.starting_the_hackrf), AntTheme.net.fair, blink = true)
+                    c.running -> HeroChip(S(R.string.listening), AntTheme.net.good, blink = true)
+                    device == null -> HeroChip(S(R.string.no_hackrf_plugged_in), AntTheme.net.poor)
+                    else -> HeroChip(S(R.string.ready, device!!.name), AntTheme.net.good)
                 }
             }
         }
         val d = device
-        if (c.running || c.starting) StartButton("Arrêter", Sym.Stop) { c.stop() }
-        else StartButton("Lancer la réception", Sym.PlayArrow, enabled = d != null && freq != null) { d?.let(c::start) }
+        if (c.running || c.starting) StartButton(S(R.string.stop), Sym.Stop) { c.stop() }
+        else StartButton(S(R.string.start_receiving), Sym.PlayArrow, enabled = d != null && freq != null) { d?.let(c::start) }
         if (c.running) Diagnosis(c)
         if (c.packets.isNotEmpty()) {
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                AntFilterChip("Paquets (${c.packets.size})", !c.showNodes, { c.showNodes = false })
-                AntFilterChip("Nœuds (${c.nodes.size})", c.showNodes, { c.showNodes = true })
+                AntFilterChip(S(R.string.packets, c.packets.size), !c.showNodes, { c.showNodes = false })
+                AntFilterChip(S(R.string.nodes, c.nodes.size), c.showNodes, { c.showNodes = true })
             }
             SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)) {
                 if (c.showNodes) {
@@ -461,7 +464,7 @@ fun MeshtasticTool(vm: MainViewModel) {
                     }
                 }
             }
-            ToolButtons(ToolButton("Effacer", Sym.Delete, BtnKind.OutlineOnSurface) { c.clear() })
+            ToolButtons(ToolButton(S(R.string.clear), Sym.Delete, BtnKind.OutlineOnSurface) { c.clear() })
         }
         FrequencyCard(c)
         ChannelsCard(c)
@@ -476,9 +479,9 @@ fun MeshtasticTool(vm: MainViewModel) {
             Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 Symbol(Sym.Info, size = 22.dp, tint = AntTheme.accent.accent)
                 Text(
-                    "Meshtastic est un réseau maillé de petits émetteurs LoRa qui relaient messages, positions et mesures. " +
-                        "Le canal public (LongFast, clé AQ==) est lu d'office ; ajoutez les canaux privés dont vous avez la clé. " +
-                        "Les nœuds n'émettent que de temps en temps : laissez écouter plusieurs minutes, antenne 868 MHz dégagée. Réception seule.",
+                    S(R.string.meshtastic_is_a_mesh_network_of) +
+                        S(R.string.the_public_channel_longfast_key_aq) +
+                        S(R.string.nodes_only_transmit_now_and_then),
                     style = rf(13, 18), color = cs.onSurfaceVariant,
                 )
             }
@@ -488,14 +491,14 @@ fun MeshtasticTool(vm: MainViewModel) {
 
 @Composable
 private fun Diagnosis(c: MeshtasticController) {
-    val sync = c.lastSyncWord.takeIf { it >= 0 }?.let { " · dernier mot de synchro 0x%02X".format(Locale.ROOT, it) } ?: ""
+    val sync = c.lastSyncWord.takeIf { it >= 0 }?.let { S(R.string.last_sync_word_0x).format(Locale.ROOT, it) } ?: ""
     val text = when {
-        c.usbMBps in 0.0..0.5 -> "Le HackRF n'envoie presque rien (%.1f Mo/s au lieu de 4) : rebranchez-le ou changez de câble OTG.".format(Locale.FRANCE, c.usbMBps)
-        c.preambles == 0 -> "Aucune trame LoRa pour l'instant. Les nœuds émettent toutes les quelques minutes."
-        else -> "${c.preambles} ${plural(c.preambles, "début de trame", "débuts de trame")} · " +
-            "${c.headerErrors} ${plural(c.headerErrors, "en-tête illisible", "en-têtes illisibles")} · " +
-            "${c.framesBad} ${plural(c.framesBad, "trame abîmée", "trames abîmées")}" +
-            (if (c.otherLora > 0) " · ${c.otherLora} hors Meshtastic" else "") + sync
+        c.usbMBps in 0.0..0.5 -> S(R.string.the_hackrf_sends_almost_nothing_mb).format(Locale.getDefault(), c.usbMBps)
+        c.preambles == 0 -> S(R.string.no_lora_frame_yet_nodes_transmit)
+        else -> "${c.preambles} ${P(R.plurals.p_frame_starts, c.preambles)} · " +
+            "${c.headerErrors} ${P(R.plurals.p_unreadable_headers, c.headerErrors)} · " +
+            "${c.framesBad} ${P(R.plurals.p_damaged_frames, c.framesBad)}" +
+            (if (c.otherLora > 0) S(R.string.not_meshtastic, c.otherLora) else "") + sync
     }
     Text(text, Modifier.padding(horizontal = 4.dp), style = rf(12, 16, tnum = true), color = cs.onSurfaceVariant)
 }
@@ -515,8 +518,8 @@ private fun PacketRow(e: MeshEntry, nodes: Map<Long, MeshNode>) {
                     clock.format(Date(e.timeMs)),
                     e.packet.data?.let { Meshtastic.portName(it.port) } ?: statusText(e.packet.status),
                     e.packet.channel,
-                    "SNR %.1f dB".format(Locale.FRANCE, e.snrDb),
-                    h.hops?.let { if (it == 0) "direct" else "$it ${plural(it, "saut", "sauts")}" },
+                    "SNR %.1f dB".format(Locale.getDefault(), e.snrDb),
+                    h.hops?.let { if (it == 0) "direct" else "$it ${P(R.plurals.p_hops, it)}" },
                     if (e.copies > 1) "×${e.copies}" else null,
                 ).joinToString(" · "),
                 style = rf(12, 16, tnum = true), color = cs.onSurfaceVariant,
@@ -541,11 +544,11 @@ private fun NodeRow(n: MeshNode) {
             )
             Text(
                 listOfNotNull(
-                    "vu à ${clock.format(Date(n.lastHeardMs))}",
-                    n.snrDb?.let { "SNR %.1f dB".format(Locale.FRANCE, it) },
-                    n.hops?.let { if (it == 0) "direct" else "$it ${plural(it, "saut", "sauts")}" },
-                    n.battery?.let { if (it > 100) "secteur" else "batterie $it %" },
-                    "${n.packets} ${plural(n.packets, "paquet", "paquets")}",
+                    S(R.string.seen_at_2, clock.format(Date(n.lastHeardMs))),
+                    n.snrDb?.let { "SNR %.1f dB".format(Locale.getDefault(), it) },
+                    n.hops?.let { if (it == 0) "direct" else "$it ${P(R.plurals.p_hops, it)}" },
+                    n.battery?.let { if (it > 100) "secteur" else S(R.string.battery_2, it) },
+                    "${n.packets} ${P(R.plurals.p_packets, n.packets)}",
                 ).joinToString(" · "),
                 style = rf(12, 16, tnum = true), color = cs.onSurfaceVariant,
             )
@@ -560,11 +563,11 @@ private fun NodeRow(n: MeshNode) {
 private fun FrequencyCard(c: MeshtasticController) {
     SectionCard {
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            Text("Région", style = rf(13, 18, 600), color = cs.onSurfaceVariant)
+            Text(S(R.string.region), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 MeshRegion.entries.forEach { r -> AntFilterChip(r.label, c.region == r, { c.pickRegion(r) }) }
             }
-            Text("Préréglage du réseau", Modifier.padding(top = 4.dp), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
+            Text(S(R.string.network_preset), Modifier.padding(top = 4.dp), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 MeshPreset.entries.forEach { p -> AntFilterChip(p.channelName, c.preset == p, { c.pickPreset(p) }) }
             }
@@ -573,21 +576,21 @@ private fun FrequencyCard(c: MeshtasticController) {
                 val s = c.slot ?: c.autoSlot ?: 0
                 Row(Modifier.fillMaxWidth().padding(top = 4.dp), verticalAlignment = Alignment.CenterVertically) {
                     Column(Modifier.weight(1f)) {
-                        Text("Créneau de fréquence (sur ${c.slots})", style = rf(15, 20, 500))
-                        Text(if (c.slot == null) "Celui du canal principal, comme les nœuds" else "Choisi à la main", style = rf(12, 16), color = cs.onSurfaceVariant)
+                        Text(S(R.string.frequency_slot_of, c.slots), style = rf(15, 20, 500))
+                        Text(if (c.slot == null) S(R.string.the_primary_channel_s_like_the) else S(R.string.chosen_by_hand), style = rf(12, 16), color = cs.onSurfaceVariant)
                     }
                     Stepper(s + 1, { c.stepSlot(-1) }, { c.stepSlot(1) })
                 }
             }
             Box(Modifier.padding(top = 4.dp)) {
                 HostInputField(
-                    c.manualMhz, c::typeFrequency, "Fréquence manuelle (MHz)", icon = Sym.Antenna,
+                    c.manualMhz, c::typeFrequency, S(R.string.manual_frequency_mhz), icon = Sym.Antenna,
                     keyboardType = KeyboardType.Decimal, onDone = { c.applyFrequency() },
                 )
             }
             Text(
-                if (c.manualMhz.isBlank()) "Vide : la fréquence du plan Meshtastic, ${c.frequencyMhz?.let { "%.3f MHz".format(Locale.FRANCE, it) } ?: "aucune ici"}."
-                else "Validez avec la touche Entrée du clavier pour l'appliquer pendant l'écoute.",
+                if (c.manualMhz.isBlank()) S(R.string.empty_the_meshtastic_band_plan_frequency, c.frequencyMhz?.let { "%.3f MHz".format(Locale.getDefault(), it) } ?: S(R.string.none_here))
+                else S(R.string.confirm_with_the_keyboard_s_enter),
                 style = rf(12, 16), color = cs.onSurfaceVariant,
             )
         }
@@ -601,14 +604,14 @@ private fun ChannelsCard(c: MeshtasticController) {
     var bad by remember { mutableStateOf(false) }
     SectionCard {
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            Text("Canaux déchiffrés", style = rf(13, 18, 600), color = cs.onSurfaceVariant)
+            Text(S(R.string.decrypted_channels), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
             c.channels.forEachIndexed { i, ch ->
                 if (i > 0) Hairline()
                 Row(Modifier.fillMaxWidth().padding(vertical = 6.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                     Symbol(if (ch.key == "AQ==") Sym.LockOpen else Sym.Lock, size = 22.dp, tint = cs.onSurfaceVariant)
                     Column(Modifier.weight(1f)) {
                         Text(ch.name.ifBlank { "Public (${c.preset.channelName})" }, style = rf(15, 20, 500), maxLines = 1)
-                        Text("Clé ${ch.key.ifBlank { "aucune" }}", style = rf(12, 16), color = cs.onSurfaceVariant, maxLines = 1)
+                        Text(S(R.string.key, ch.key.ifBlank { "aucune" }), style = rf(12, 16), color = cs.onSurfaceVariant, maxLines = 1)
                     }
                     if (c.channels.size > 1) {
                         Box(Modifier.size(40.dp).clip(CircleShape).clickable { c.removeChannel(ch) }, contentAlignment = Alignment.Center) {
@@ -617,12 +620,12 @@ private fun ChannelsCard(c: MeshtasticController) {
                     }
                 }
             }
-            Text("Ajouter un canal", Modifier.padding(top = 8.dp), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
-            HostInputField(name, { name = it.take(11) }, "Nom du canal (vide = celui du préréglage)", icon = Sym.Tag, keyboardType = KeyboardType.Text)
-            HostInputField(key, { key = it.trim(); bad = false }, "Clé en Base64 (AQ== pour la clé par défaut)", icon = Sym.Key, keyboardType = KeyboardType.Ascii)
-            if (bad) Text("Clé invalide : 1, 16 ou 32 octets en Base64, comme dans l'application Meshtastic.", style = rf(12, 16), color = cs.error)
+            Text(S(R.string.add_a_channel), Modifier.padding(top = 8.dp), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
+            HostInputField(name, { name = it.take(11) }, S(R.string.channel_name_empty_the_preset_s), icon = Sym.Tag, keyboardType = KeyboardType.Text)
+            HostInputField(key, { key = it.trim(); bad = false }, S(R.string.base64_key_aq_for_the_default), icon = Sym.Key, keyboardType = KeyboardType.Ascii)
+            if (bad) Text(S(R.string.invalid_key_1_16_or_32), style = rf(12, 16), color = cs.error)
             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                AntFilterChip("Ajouter", false, {
+                AntFilterChip(S(R.string.add), false, {
                     if (c.addChannel(name, key.ifBlank { "AQ==" })) { name = ""; key = "" } else bad = true
                 })
             }

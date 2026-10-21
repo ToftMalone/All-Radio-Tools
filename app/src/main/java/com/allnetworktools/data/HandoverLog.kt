@@ -29,6 +29,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
+import com.allnetworktools.util.S
 
 /** A change of serving cell (or of technology) during a session, with where it happened. */
 data class HandoverEvent(
@@ -155,16 +156,16 @@ class HandoverService : Service() {
     @SuppressLint("LaunchActivityFromNotification")
     private fun notification(handovers: Int): Notification {
         val nm = getSystemService(NotificationManager::class.java)
-        nm?.createNotificationChannel(NotificationChannel(CHANNEL, "Journal de handover", NotificationManager.IMPORTANCE_LOW))
+        nm?.createNotificationChannel(NotificationChannel(CHANNEL, S(R.string.handover_log), NotificationManager.IMPORTANCE_LOW))
         val open = PendingIntent.getActivity(this, 0, Intent(this, MainActivity::class.java), PendingIntent.FLAG_IMMUTABLE)
         val stop = PendingIntent.getService(this, 1, Intent(this, HandoverService::class.java).setAction(ACTION_STOP), PendingIntent.FLAG_IMMUTABLE)
         return Notification.Builder(this, CHANNEL)
             .setSmallIcon(R.drawable.ic_notification)
-            .setContentTitle("Journal de handover en cours")
-            .setContentText("$handovers ${if (handovers > 1) "changements" else "changement"} de cellule")
+            .setContentTitle(S(R.string.handover_log_running))
+            .setContentText(S(R.string.cell, handovers, if (handovers > 1) "changements" else "changement"))
             .setOngoing(true)
             .setContentIntent(open)
-            .addAction(Notification.Action.Builder(null, "Arrêter", stop).build())
+            .addAction(Notification.Action.Builder(null, S(R.string.stop), stop).build())
             .build()
     }
 

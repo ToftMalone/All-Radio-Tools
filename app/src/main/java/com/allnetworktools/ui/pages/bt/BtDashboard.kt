@@ -45,6 +45,9 @@ import com.allnetworktools.ui.theme.gs
 import com.allnetworktools.ui.theme.rf
 import com.allnetworktools.util.fmt
 import com.allnetworktools.util.plural
+import com.allnetworktools.R
+import com.allnetworktools.util.S
+import com.allnetworktools.util.P
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -59,7 +62,7 @@ fun BtDashboard(vm: MainViewModel) {
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(14.dp)) {
                 LeadingIcon(Sym.Bluetooth, roles.accent, roles.onAccent, 56.dp, RoundedCornerShape(20.dp), 28.dp)
                 Column(Modifier.weight(1f)) {
-                    Text(bt.adapter.name ?: "Cet appareil", style = gs(24, 30, 500), color = roles.onContainer, maxLines = 1)
+                    Text(bt.adapter.name ?: S(R.string.this_device), style = gs(24, 30, 500), color = roles.onContainer, maxLines = 1)
                     Text(
                         bt.adapter.features.joinToString(" · ").ifEmpty { "Bluetooth" },
                         Modifier.graphicsLayer { alpha = 0.85f }, style = rf(13, 18), color = roles.onContainer,
@@ -73,9 +76,9 @@ fun BtDashboard(vm: MainViewModel) {
             }
             Row(Modifier.padding(top = 18.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 listOf(
-                    bt.connected.size to plural(bt.connected.size, "connecté"),
-                    bt.bonded.size to plural(bt.bonded.size, "appairé"),
-                    ble.size to "à proximité",
+                    bt.connected.size to P(R.plurals.p_connected, bt.connected.size),
+                    bt.bonded.size to P(R.plurals.p_paired, bt.bonded.size),
+                    ble.size to S(R.string.nearby_2),
                 ).forEach { (v, k) ->
                     Column(Modifier.weight(1f).clip(RoundedCornerShape(18.dp)).background(cs.surface).padding(12.dp)) {
                         Text(v.toString(), style = gs(30, 34, 500, tnum = true))
@@ -84,9 +87,9 @@ fun BtDashboard(vm: MainViewModel) {
                 }
             }
         }
-        SectionTitle("Connectés", roles.accent)
+        SectionTitle(S(R.string.connected_2), roles.accent)
         if (bt.connected.isEmpty()) {
-            SectionCard { Text("Aucun appareil connecté pour le moment.", style = rf(14, 20), color = cs.onSurfaceVariant) }
+            SectionCard { Text(S(R.string.no_device_connected_at_the_moment), style = rf(14, 20), color = cs.onSurfaceVariant) }
         }
         bt.connected.forEachIndexed { i, d ->
             val rssi = ble.firstOrNull { it.address == d.address }?.rssi
@@ -106,11 +109,11 @@ fun BtDashboard(vm: MainViewModel) {
                 }
             }
         }
-        SectionTitle("Appairés", roles.accent)
+        SectionTitle(S(R.string.paired), roles.accent)
         val others = bt.bonded.filter { !it.connected }
         SectionCard(padding = androidx.compose.foundation.layout.PaddingValues(vertical = 4.dp)) {
             if (others.isEmpty()) {
-                Text("Aucun autre appareil appairé.", Modifier.padding(16.dp), style = rf(14, 20), color = cs.onSurfaceVariant)
+                Text(S(R.string.no_other_paired_device), Modifier.padding(16.dp), style = rf(14, 20), color = cs.onSurfaceVariant)
             }
             others.forEach { d ->
                 Row(
@@ -120,7 +123,7 @@ fun BtDashboard(vm: MainViewModel) {
                     Symbol(d.icon, size = 24.dp, tint = cs.onSurfaceVariant)
                     Column(Modifier.weight(1f)) {
                         Text(d.name, style = rf(15, 20, 500), maxLines = 1)
-                        Text("${d.kind} · Déconnecté", style = rf(12, 16), color = cs.onSurfaceVariant)
+                        Text(S(R.string.disconnected, d.kind), style = rf(12, 16), color = cs.onSurfaceVariant)
                     }
                     Box(Modifier.size(24.dp), contentAlignment = Alignment.Center) { Symbol(Sym.Settings, size = 22.dp, tint = cs.onSurfaceVariant) }
                 }

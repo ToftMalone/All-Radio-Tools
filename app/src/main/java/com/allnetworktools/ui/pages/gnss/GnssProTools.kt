@@ -86,6 +86,8 @@ import java.util.TimeZone
 import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.sin
+import com.allnetworktools.R
+import com.allnetworktools.util.S
 
 @Composable
 private fun verdictColor(v: Verdict) = when (v) {
@@ -144,29 +146,29 @@ fun IntegrityTool(vm: MainViewModel) {
             val worst = maxOf(jam, spoof)
             Text(
                 when {
-                    r == null -> "Analyse en cours…"
-                    worst == Verdict.Alert && jam == Verdict.Alert -> "Brouillage probable"
-                    worst == Verdict.Alert -> "Leurrage possible"
-                    worst == Verdict.Warn -> "Anomalie à surveiller"
-                    worst == Verdict.Ok -> "Aucune anomalie"
-                    else -> "En attente des satellites"
+                    r == null -> S(R.string.analysing)
+                    worst == Verdict.Alert && jam == Verdict.Alert -> S(R.string.jamming_likely)
+                    worst == Verdict.Alert -> S(R.string.spoofing_possible)
+                    worst == Verdict.Warn -> S(R.string.anomaly_to_watch)
+                    worst == Verdict.Ok -> S(R.string.no_anomaly)
+                    else -> S(R.string.waiting_for_satellites)
                 },
                 style = gs(30, 36, 500),
             )
-            Text("Le récepteur GNSS est surveillé en continu, sans rien enregistrer.", Modifier.padding(top = 4.dp), style = rf(14, 20))
+            Text(S(R.string.the_gnss_receiver_is_watched_continuously), Modifier.padding(top = 4.dp), style = rf(14, 20))
             Row(Modifier.padding(top = 12.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                HeroChip("Brouillage : " + label(jam), verdictColor(jam))
-                HeroChip("Leurrage : " + label(spoof), verdictColor(spoof))
+                HeroChip(S(R.string.jamming) + label(jam), verdictColor(jam))
+                HeroChip(S(R.string.spoofing) + label(spoof), verdictColor(spoof))
             }
         }
         if (c.cn0.size > 1) {
             SectionCard {
-                Text("Force des 4 meilleurs satellites", style = rf(14, 20, 600), color = AntTheme.accent.accent)
+                Text(S(R.string.strength_of_the_4_best_satellites), style = rf(14, 20, 600), color = AntTheme.accent.accent)
                 LiveChart(c.cn0.toList(), 0f, 55f, 10f, AntTheme.accent.accent, Modifier.padding(top = 8.dp), capacity = 120, height = 120.dp)
-                Text("dB-Hz sur les 2 dernières minutes : une chute brutale et générale trahit un brouilleur", style = rf(12, 16), color = cs.onSurfaceVariant)
+                Text(S(R.string.db_hz_over_the_last_2), style = rf(12, 16), color = cs.onSurfaceVariant)
             }
         }
-        InfoList("Indices") {
+        InfoList(S(R.string.clues)) {
             (r?.checks ?: emptyList()).forEach { k ->
                 HorizontalDivider(color = cs.outlineVariant, thickness = 1.dp)
                 Row(Modifier.fillMaxWidth().padding(vertical = 10.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -179,9 +181,9 @@ fun IntegrityTool(vm: MainViewModel) {
             }
         }
         Text(
-            "Brouillage : un émetteur couvre les satellites, les signaux chutent tous ensemble et le gain d'entrée baisse. " +
-                "Leurrage : de faux signaux font croire à une autre position ou une autre heure ; ils se trahissent par des forces trop égales, " +
-                "un saut impossible ou un désaccord avec la position réseau. Les trois premiers indices concernent le brouillage, les autres le leurrage.",
+            S(R.string.jamming_a_transmitter_drowns_the_satellites) +
+                S(R.string.spoofing_fake_signals_fake_another_position) +
+                S(R.string.an_impossible_jump_or_a_disagreement),
             Modifier.padding(horizontal = 4.dp), style = rf(12, 16), color = cs.onSurfaceVariant,
         )
     }
@@ -223,17 +225,17 @@ fun RawTool(vm: MainViewModel) {
         HeroCard {
             Text(
                 when {
-                    e == null && waited >= 10 -> "Aucune mesure brute"
-                    e == null -> "En attente des mesures…"
-                    dual -> "Bi-fréquence"
-                    else -> "Mono-fréquence"
+                    e == null && waited >= 10 -> S(R.string.no_raw_measurements)
+                    e == null -> S(R.string.waiting_for_measurements)
+                    dual -> S(R.string.dual_frequency)
+                    else -> S(R.string.single_frequency)
                 },
                 style = gs(30, 36, 500),
             )
             Text(
                 when {
-                    e == null && waited >= 10 -> "Ce téléphone ne transmet pas les mesures brutes à Android, ou le GNSS est éteint."
-                    e == null -> "Allez dehors : la puce publie ses mesures une fois par seconde."
+                    e == null && waited >= 10 -> S(R.string.this_phone_does_not_give_raw)
+                    e == null -> S(R.string.go_outside_the_chip_publishes_its)
                     else -> bands.keys.sortedBy { it.ordinal }.joinToString(" + ") { it.label } + " · ${e.measurements.distinctBy { it.constellation to it.svid }.size} satellites"
                 },
                 Modifier.padding(top = 4.dp), style = rf(14, 20),
@@ -251,31 +253,31 @@ fun RawTool(vm: MainViewModel) {
             }
         }
         if (e != null) SignalTable(e)
-        InfoList("Capacités de la puce") {
-            fun yes(v: Boolean?) = when (v) { true -> "Oui"; false -> "Non"; null -> "Inconnu" }
-            InfoRow("Mesures brutes", yes(caps?.measurements ?: (e != null)))
-            InfoRow("Messages de navigation", yes(caps?.navigationMessages))
-            InfoRow("Suivi multi-bande", yes(caps?.multibandTracking))
-            InfoRow("Corrections de mesure", yes(caps?.measurementCorrections))
-            InfoRow("Infos d'antenne (centre de phase)", yes(caps?.antennaInfo))
-            InfoRow("Position calculée par satellite (PVT)", yes(caps?.satellitePvt))
-            InfoRow("Phase porteuse (ADR)", if (e == null) "—" else yes(e.measurements.any { it.adrState and GnssRaw.ADR_STATE_VALID != 0 }))
+        InfoList(S(R.string.chip_capabilities)) {
+            fun yes(v: Boolean?) = when (v) { true -> "Oui"; false -> "Non"; null -> S(R.string.unknown) }
+            InfoRow(S(R.string.raw_measurements), yes(caps?.measurements ?: (e != null)))
+            InfoRow(S(R.string.navigation_messages), yes(caps?.navigationMessages))
+            InfoRow(S(R.string.multi_band_tracking), yes(caps?.multibandTracking))
+            InfoRow(S(R.string.measurement_corrections), yes(caps?.measurementCorrections))
+            InfoRow(S(R.string.antenna_info_phase_centre), yes(caps?.antennaInfo))
+            InfoRow(S(R.string.satellite_position_pvt), yes(caps?.satellitePvt))
+            InfoRow(S(R.string.carrier_phase_adr), if (e == null) "—" else yes(e.measurements.any { it.adrState and GnssRaw.ADR_STATE_VALID != 0 }))
         }
         SectionCard {
-            Text("Enregistrement RINEX", style = rf(14, 20, 600), color = AntTheme.accent.accent)
+            Text(S(R.string.rinex_recording), style = rf(14, 20, 600), color = AntTheme.accent.accent)
             Text(
-                if (c.recording) "${c.recordedCount} époques en mémoire (${c.recordedCount / 60} min ${c.recordedCount % 60} s)"
-                else "Pseudodistances, phase, Doppler et C/N0 au format RINEX 3.04, pour RTKLIB, CSRS-PPP ou Emlid Studio. Restez immobile, dehors, téléphone à plat.",
+                if (c.recording) S(R.string.epochs_in_memory_min_s, c.recordedCount, c.recordedCount / 60, c.recordedCount % 60)
+                else S(R.string.pseudoranges_phase_doppler_and_c_n0),
                 Modifier.padding(top = 4.dp, bottom = 10.dp), style = rf(13, 18), color = cs.onSurfaceVariant,
             )
             if (c.recording) {
-                ToolButtons(ToolButton("Arrêter", Sym.Stop, BtnKind.Fill) { c.stop() })
+                ToolButtons(ToolButton(S(R.string.stop), Sym.Stop, BtnKind.Fill) { c.stop() })
             } else {
-                ToolButtons(ToolButton("Enregistrer", Sym.PlayArrow, BtnKind.Outline) { c.start() })
+                ToolButtons(ToolButton(S(R.string.record), Sym.PlayArrow, BtnKind.Outline) { c.start() })
             }
             if (!c.recording && c.recordedCount > 0) {
                 ToolButtons(
-                    ToolButton("Exporter (${c.recordedCount} époques)", Sym.Download, BtnKind.Fill) {
+                    ToolButton(S(R.string.export_epochs, c.recordedCount), Sym.Download, BtnKind.Fill) {
                         val epochs = c.recorded.toList()
                         val stamp = SimpleDateFormat("yyyyMMdd_HHmm", Locale.ROOT).format(Date())
                         actions.saveFile("android_$stamp.obs", "text/plain") { Rinex.format(epochs).toByteArray() }
@@ -290,7 +292,7 @@ fun RawTool(vm: MainViewModel) {
 @Composable
 private fun SignalTable(e: RawEpoch) {
     val bySat = e.measurements.groupBy { it.constellation to it.svid }.entries.sortedWith(compareBy({ it.key.first.ordinal }, { it.key.second }))
-    InfoList("Signaux par satellite") {
+    InfoList(S(R.string.signals_per_satellite)) {
         bySat.forEach { (key, ms) ->
             HorizontalDivider(color = cs.outlineVariant, thickness = 1.dp)
             Row(Modifier.fillMaxWidth().padding(vertical = 8.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
@@ -299,7 +301,7 @@ private fun SignalTable(e: RawEpoch) {
                     ms.sortedBy { GnssRaw.band(it.constellation, it.carrierHz).ordinal }.forEach { m ->
                         val b = GnssRaw.band(m.constellation, m.carrierHz)
                         val flags = listOfNotNull(
-                            if (GnssRaw.timeKnown(m)) null else "heure non décodée",
+                            if (GnssRaw.timeKnown(m)) null else S(R.string.time_not_decoded),
                             if (m.multipath == 1) "multitrajet" else null,
                             if (m.adrState and GnssRaw.ADR_STATE_VALID != 0) "phase" else null,
                         )
@@ -358,38 +360,38 @@ fun CompassCheckTool(vm: MainViewModel) {
         HeroCard {
             Text(
                 when {
-                    off == null -> "Marchez tout droit"
-                    abs(off.first) <= 5 -> "Boussole fiable"
-                    abs(off.first) <= 15 -> "Boussole correcte"
-                    else -> "Boussole à recalibrer"
+                    off == null -> S(R.string.walk_straight_ahead)
+                    abs(off.first) <= 5 -> S(R.string.compass_reliable)
+                    abs(off.first) <= 15 -> S(R.string.compass_fair)
+                    else -> S(R.string.compass_needs_recalibrating)
                 },
                 style = gs(30, 36, 500),
             )
             Text(
-                if (off == null) "Téléphone pointé dans le sens de la marche, au moins 5 km/h pendant une minute : le cap des satellites sert de référence."
-                else "Écart moyen ${fmt(off.first, 1)}° (dispersion ±${fmt(off.second, 0)}°) sur ${c.count} mesures. " +
-                    if (abs(off.first) > 15) "Faites des 8 dans l'air avec le téléphone, loin des objets métalliques." else "",
+                if (off == null) S(R.string.phone_pointing_in_the_walking_direction)
+                else S(R.string.mean_offset_spread_over_measurements, fmt(off.first, 1), fmt(off.second, 0), c.count) +
+                    if (abs(off.first) > 15) S(R.string.draw_figure_eights_in_the_air) else "",
                 Modifier.padding(top = 4.dp), style = rf(14, 20),
             )
         }
         SectionCard {
             CompassDial(compassTrue, if (moving) loc.bearing else null, Modifier.fillMaxWidth().aspectRatio(1f).padding(16.dp))
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
-                Legend(AntTheme.net.wifi.accent, "Boussole")
-                Legend(AntTheme.net.gnss.accent, "Cap GNSS")
+                Legend(AntTheme.net.wifi.accent, S(R.string.compass))
+                Legend(AntTheme.net.gnss.accent, S(R.string.gnss_course))
             }
         }
         TileGrid(
             listOf(
-                Triple(Sym.Explore, "Boussole (vrai)", compassTrue?.let { fmt(it, 0) } ?: "—") to "°",
-                Triple(Sym.Navigation, "Cap GNSS", if (moving) fmt(loc.bearing, 0) else "—") to "°",
-                Triple(Sym.Speed, "Vitesse", loc?.takeIf { it.hasSpeed() }?.let { fmt(it.speed * 3.6f, 1) } ?: "—") to "km/h",
-                Triple(Sym.SwapHoriz, "Déclinaison", declination?.let { fmt(it, 1) } ?: "—") to "°",
+                Triple(Sym.Explore, S(R.string.compass_true), compassTrue?.let { fmt(it, 0) } ?: "—") to "°",
+                Triple(Sym.Navigation, S(R.string.gnss_course), if (moving) fmt(loc.bearing, 0) else "—") to "°",
+                Triple(Sym.Speed, S(R.string.speed), loc?.takeIf { it.hasSpeed() }?.let { fmt(it.speed * 3.6f, 1) } ?: "—") to "km/h",
+                Triple(Sym.SwapHoriz, S(R.string.declination), declination?.let { fmt(it, 1) } ?: "—") to "°",
             ),
         ) { (t, u), mod -> MetricTile(t.second, t.third, u, t.first, mod) }
         Text(
-            "La boussole indique le nord magnétique ; on lui ajoute la déclinaison locale (modèle WMM) pour la comparer au cap des satellites, " +
-                "qui est vrai et ne dépend d'aucun aimant. Le cap GNSS n'existe qu'en mouvement.",
+            S(R.string.the_compass_shows_magnetic_north_the) +
+                S(R.string.which_is_true_and_depends_on),
             Modifier.padding(horizontal = 4.dp), style = rf(12, 16), color = cs.onSurfaceVariant,
         )
     }
@@ -453,18 +455,18 @@ fun GnssClockTool(vm: MainViewModel) {
     val phoneOffset = utcNow?.let { System.currentTimeMillis() - it }
     PageColumn {
         HeroCard {
-            Text(if (rawUtc != null) "Horloge des satellites" else if (fix != null) "Heure du dernier fix" else "En attente des satellites…", style = rf(14, 20, 600))
-            val utcFmt = SimpleDateFormat("HH:mm:ss.SSS", Locale.FRANCE).apply { timeZone = TimeZone.getTimeZone("UTC") }
-            val local = SimpleDateFormat("HH:mm:ss", Locale.FRANCE)
+            Text(if (rawUtc != null) S(R.string.satellite_clock) else if (fix != null) S(R.string.time_of_the_last_fix) else S(R.string.waiting_for_satellites_2), style = rf(14, 20, 600))
+            val utcFmt = SimpleDateFormat("HH:mm:ss.SSS", Locale.getDefault()).apply { timeZone = TimeZone.getTimeZone("UTC") }
+            val local = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
             Text(utcNow?.let { utcFmt.format(Date(it.toLong())) } ?: "--:--:--.---", Modifier.padding(top = 4.dp), style = gs(46, 52, 500, -1f, tnum = true))
-            Text(utcNow?.let { "UTC · heure locale ${local.format(Date(it.toLong()))}" } ?: "UTC", style = rf(14, 20))
+            Text(utcNow?.let { S(R.string.utc_local_time, local.format(Date(it.toLong()))) } ?: "UTC", style = rf(14, 20))
             if (phoneOffset != null) {
                 Row(Modifier.padding(top = 12.dp)) {
                     HeroChip(
                         when {
-                            abs(phoneOffset) < 50 -> "Téléphone à l'heure (${fmt(phoneOffset.toFloat(), 0)} ms)"
-                            phoneOffset > 0 -> "Téléphone en avance de ${offsetText(phoneOffset)}"
-                            else -> "Téléphone en retard de ${offsetText(-phoneOffset)}"
+                            abs(phoneOffset) < 50 -> S(R.string.phone_on_time_ms, fmt(phoneOffset.toFloat(), 0))
+                            phoneOffset > 0 -> S(R.string.phone_ahead_by, offsetText(phoneOffset))
+                            else -> S(R.string.phone_behind_by, offsetText(-phoneOffset))
                         },
                         if (abs(phoneOffset) < 500) AntTheme.net.good else AntTheme.net.fair,
                     )
@@ -472,23 +474,23 @@ fun GnssClockTool(vm: MainViewModel) {
             }
         }
         val e = raw
-        InfoList("Temps GPS") {
+        InfoList(S(R.string.gps_time)) {
             val gpsNs = e?.let { GnssRaw.gpsNanos(it.clock) }
-            InfoRow("Semaine GPS", gpsNs?.let { (it / GnssRaw.WEEK_NS).toString() } ?: "—")
-            InfoRow("Seconde de la semaine", gpsNs?.let { fmt(((it % GnssRaw.WEEK_NS) / 1e9).toFloat(), 3) } ?: "—")
-            InfoRow("Secondes intercalaires", e?.let { "${GnssRaw.leap(it.clock)} s" + if (it.clock.leapSecond == null) " (valeur par défaut)" else "" } ?: "18 s")
-            InfoRow("Source", if (rawUtc != null) "Horloge GNSS (mesures brutes)" else if (fix != null) "Heure du fix (± quelques ms)" else "—")
+            InfoRow(S(R.string.gps_week), gpsNs?.let { (it / GnssRaw.WEEK_NS).toString() } ?: "—")
+            InfoRow(S(R.string.second_of_the_week), gpsNs?.let { fmt(((it % GnssRaw.WEEK_NS) / 1e9).toFloat(), 3) } ?: "—")
+            InfoRow(S(R.string.leap_seconds), e?.let { "${GnssRaw.leap(it.clock)} s" + if (it.clock.leapSecond == null) S(R.string.default_value) else "" } ?: "18 s")
+            InfoRow("Source", if (rawUtc != null) S(R.string.gnss_clock_raw_measurements) else if (fix != null) S(R.string.fix_time_a_few_ms) else "—")
         }
         if (e != null) {
-            InfoList("Oscillateur du téléphone") {
-                InfoRow("Incertitude de l'heure", e.clock.biasUncertaintyNanos?.let { "${fmt(it.toFloat(), 0)} ns" } ?: "—")
-                InfoRow("Dérive du quartz", e.clock.driftNanosPerSecond?.let { "${fmt((it / 1000).toFloat(), 3)} ppm (${fmt(it.toFloat(), 0)} ns/s)" } ?: "—")
-                InfoRow("Discontinuités matérielles", e.clock.hardwareDiscontinuityCount.toString())
+            InfoList(S(R.string.phone_oscillator)) {
+                InfoRow(S(R.string.time_uncertainty), e.clock.biasUncertaintyNanos?.let { "${fmt(it.toFloat(), 0)} ns" } ?: "—")
+                InfoRow(S(R.string.crystal_drift), e.clock.driftNanosPerSecond?.let { "${fmt((it / 1000).toFloat(), 3)} ppm (${fmt(it.toFloat(), 0)} ns/s)" } ?: "—")
+                InfoRow(S(R.string.hardware_discontinuities), e.clock.hardwareDiscontinuityCount.toString())
             }
         }
         Text(
-            "Chaque satellite embarque des horloges atomiques ; la puce GNSS en déduit l'heure à quelques dizaines de nanosecondes près. " +
-                "L'affichage, lui, dépend de l'écran : comptez quelques millisecondes. L'écart du téléphone compare son horloge système (réglée par le réseau) à celle des satellites.",
+            S(R.string.every_satellite_carries_atomic_clocks_the) +
+                S(R.string.the_display_depends_on_the_screen),
             Modifier.padding(horizontal = 4.dp), style = rf(12, 16), color = cs.onSurfaceVariant,
         )
     }
@@ -523,32 +525,32 @@ fun SkyMaskTool(vm: MainViewModel) {
         HeroCard {
             Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                 Text(open?.let { fmt(it * 100, 0) } ?: "—", style = gs(56, 60, 500, -1.5f, tnum = true))
-                Text("% de ciel dégagé", Modifier.padding(bottom = 8.dp), style = rf(18, 24, 500))
+                Text(S(R.string.open_sky), Modifier.padding(bottom = 8.dp), style = rf(18, 24, 500))
             }
             val dirs = listOf("N", "NNE", "ENE", "E", "ESE", "SSE", "S", "SSO", "OSO", "O", "ONO", "NNO")
             Text(
-                if (clear.isEmpty()) "Restez immobile dehors quelques minutes : les satellites défilent et dessinent les obstacles."
-                else "Ciel dégagé vers ${clear.joinToString(", ") { dirs[it] }}",
+                if (clear.isEmpty()) S(R.string.stay_still_outside_for_a_few)
+                else S(R.string.open_sky_towards, clear.joinToString(", ") { dirs[it] }),
                 Modifier.padding(top = 4.dp), style = rf(14, 20),
             )
         }
         SectionCard {
             MaskPlot(c.mask, c.version, gnss.satellites.filter { it.elevation > 0f }, Modifier.fillMaxWidth().aspectRatio(1f).padding(8.dp))
             Row(Modifier.fillMaxWidth().padding(top = 8.dp), horizontalArrangement = Arrangement.SpaceEvenly) {
-                Legend(AntTheme.net.good, "Dégagé")
-                Legend(AntTheme.net.fair, "Partiel")
-                Legend(cs.error, "Masqué")
-                Legend(cs.surfaceContainerHighest, "Pas encore vu")
+                Legend(AntTheme.net.good, S(R.string.open_3))
+                Legend(AntTheme.net.fair, S(R.string.partial))
+                Legend(cs.error, S(R.string.blocked))
+                Legend(cs.surfaceContainerHighest, S(R.string.not_seen_yet))
             }
         }
         InfoList("Observations") {
-            InfoRow("Mesures de satellites", c.mask.observations.toString())
-            InfoRow("Satellites visibles", gnss.satellites.count { it.elevation > 0f }.toString())
-            InfoRow("Captés", gnss.satellites.count { it.cn0 > 0f }.toString())
+            InfoRow(S(R.string.satellite_measurements), c.mask.observations.toString())
+            InfoRow(S(R.string.visible_satellites), gnss.satellites.count { it.elevation > 0f }.toString())
+            InfoRow(S(R.string.received), gnss.satellites.count { it.cn0 > 0f }.toString())
         }
         Text(
-            "Android connaît la position de chaque satellite, même de ceux qu'il ne capte pas. Un satellite haut mais muet ou très faible signale un obstacle " +
-                "(immeuble, arbre, toit) dans sa direction. Utile pour choisir où poser une antenne, un récepteur GNSS ou un téléphone qui doit enregistrer.",
+            S(R.string.android_knows_where_every_satellite_is) +
+                S(R.string.building_tree_roof_in_its_direction),
             Modifier.padding(horizontal = 4.dp), style = rf(12, 16), color = cs.onSurfaceVariant,
         )
     }

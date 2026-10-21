@@ -48,8 +48,10 @@ import com.allnetworktools.ui.tools.BtnKind
 import com.allnetworktools.ui.tools.ToolButton
 import com.allnetworktools.ui.tools.ToolButtons
 import java.util.Locale
+import com.allnetworktools.R
+import com.allnetworktools.util.S
 
-internal fun mhzLabel(hz: Double) = "%.3f".format(Locale.FRANCE, hz / 1e6)
+internal fun mhzLabel(hz: Double) = "%.3f".format(Locale.getDefault(), hz / 1e6)
 
 @Composable
 fun SpectrumTool(vm: MainViewModel) {
@@ -63,14 +65,14 @@ fun SpectrumTool(vm: MainViewModel) {
     PageColumn {
         HeroCard {
             Text("${mhzLabel(center)} MHz", style = gs(30, 36, 500, tnum = true))
-            Text("Largeur ${c.spanMhz} MHz · de ${mhzLabel(center - span / 2)} à ${mhzLabel(center + span / 2)} MHz", Modifier.padding(top = 2.dp), style = rf(14, 20))
+            Text(S(R.string.width_mhz_from_to_mhz, c.spanMhz, mhzLabel(center - span / 2), mhzLabel(center + span / 2)), Modifier.padding(top = 2.dp), style = rf(14, 20))
             Row(Modifier.padding(top = 12.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 when {
                     c.error != null -> HeroChip(c.error!!, AntTheme.net.poor)
-                    c.starting -> HeroChip("Démarrage du HackRF…", AntTheme.net.fair, blink = true)
-                    c.running && peakHz != null && db != null -> HeroChip("Pic ${mhzLabel(peakHz)} MHz · %.0f dBFS".format(Locale.FRANCE, db[peakIdx!!]), AntTheme.net.good, blink = true)
-                    device == null -> HeroChip("Aucun HackRF branché", AntTheme.net.poor)
-                    else -> HeroChip("${device!!.name} prêt", AntTheme.net.good)
+                    c.starting -> HeroChip(S(R.string.starting_the_hackrf), AntTheme.net.fair, blink = true)
+                    c.running && peakHz != null && db != null -> HeroChip(S(R.string.peak_mhz_dbfs, mhzLabel(peakHz)).format(Locale.getDefault(), db[peakIdx!!]), AntTheme.net.good, blink = true)
+                    device == null -> HeroChip(S(R.string.no_hackrf_plugged_in), AntTheme.net.poor)
+                    else -> HeroChip(S(R.string.ready, device!!.name), AntTheme.net.good)
                 }
             }
         }
@@ -80,14 +82,14 @@ fun SpectrumTool(vm: MainViewModel) {
             ToolButton("− ${c.spanMhz / 2} MHz", Sym.ChevronLeft, BtnKind.OutlineOnSurface) { c.retune((center - span / 2).toLong()) },
             ToolButton("+ ${c.spanMhz / 2} MHz", Sym.ChevronRight, BtnKind.OutlineOnSurface) { c.retune((center + span / 2).toLong()) },
         )
-        if (c.running || c.starting) StartButton("Arrêter", Sym.Stop) { c.stop() }
-        else StartButton("Lancer l'analyse", Sym.PlayArrow, enabled = device != null && c.parsedCenterHz() != null) { device?.let(c::start) }
+        if (c.running || c.starting) StartButton(S(R.string.stop), Sym.Stop) { c.stop() }
+        else StartButton(S(R.string.start_the_analysis), Sym.PlayArrow, enabled = device != null && c.parsedCenterHz() != null) { device?.let(c::start) }
         SectionCard {
             Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                HostInputField(c.centerMhz, { c.centerMhz = it }, "Fréquence centrale (MHz)", Sym.Stream, keyboardType = KeyboardType.Decimal) {
+                HostInputField(c.centerMhz, { c.centerMhz = it }, S(R.string.centre_frequency_mhz), Sym.Stream, keyboardType = KeyboardType.Decimal) {
                     c.parsedCenterHz()?.let(c::retune)
                 }
-                Text("Bandes", style = rf(13, 18, 600), color = cs.onSurfaceVariant)
+                Text(S(R.string.bands), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     SpectrumPreset.entries.forEach { p ->
                         AntFilterChip(p.label, false, {
@@ -96,7 +98,7 @@ fun SpectrumTool(vm: MainViewModel) {
                         })
                     }
                 }
-                Text("Largeur affichée (au prochain lancement)", style = rf(13, 18, 600), color = cs.onSurfaceVariant)
+                Text(S(R.string.displayed_width_at_next_start), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     listOf(2, 5, 10, 20).forEach { s -> AntFilterChip("$s MHz", c.spanMhz == s, { if (c.spanMhz != s && !c.starting) { if (c.running) c.stop(); c.spanMhz = s } }) }
                 }
@@ -105,16 +107,16 @@ fun SpectrumTool(vm: MainViewModel) {
                     c.vgaGain, listOf(10, 20, 30, 40), { c.vgaGain = it; c.applyGains() },
                     c.amp, { c.amp = !c.amp; c.applyGains() },
                 )
-                Text("Affichage", style = rf(13, 18, 600), color = cs.onSurfaceVariant)
-                AntFilterChip("Maintien des pics", c.peakHold, { c.peakHold = !c.peakHold })
+                Text(S(R.string.display_2), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
+                AntFilterChip(S(R.string.peak_hold), c.peakHold, { c.peakHold = !c.peakHold })
             }
         }
         SectionCard {
             Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 Symbol(Sym.Info, size = 22.dp, tint = AntTheme.accent.accent)
                 Text(
-                    "Réception seule. Le niveau est en dBFS (0 = pleine échelle du convertisseur), pas en dBm. " +
-                        "La raie au centre est le résidu continu du HackRF, pas un signal. Évitez l'ampli près d'émetteurs puissants.",
+                    S(R.string.receive_only_the_level_is_in) +
+                        S(R.string.the_line_in_the_middle_is),
                     style = rf(13, 18), color = cs.onSurfaceVariant,
                 )
             }
@@ -146,7 +148,7 @@ internal fun SpectrumView(db: FloatArray?, hold: FloatArray?, peakIdx: Int?) {
                 peakIdx?.let { drawCircle(line, 5f, Offset(size.width * it / (db.size - 1), y(db[it]))) }
             }
         }
-        if (db == null) Text("Le spectre s'affiche ici pendant l'analyse", Modifier.align(Alignment.Center), style = rf(13, 18), color = cs.onSurfaceVariant)
+        if (db == null) Text(S(R.string.the_spectrum_shows_here_during_the), Modifier.align(Alignment.Center), style = rf(13, 18), color = cs.onSurfaceVariant)
     }
 }
 
@@ -163,6 +165,6 @@ private fun WaterfallView(c: SpectrumController) {
                 )
             }
         }
-        Text("Chute d'eau · plus récent en haut", Modifier.align(Alignment.BottomStart).padding(10.dp), style = rf(11, 14), color = Color.White.copy(alpha = 0.7f))
+        Text(S(R.string.waterfall_newest_at_the_top), Modifier.align(Alignment.BottomStart).padding(10.dp), style = rf(11, 14), color = Color.White.copy(alpha = 0.7f))
     }
 }

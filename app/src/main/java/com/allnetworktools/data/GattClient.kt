@@ -19,6 +19,8 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withTimeout
+import com.allnetworktools.R
+import com.allnetworktools.util.S
 
 /** A GATT failure with the stack's status code (133 = GATT_ERROR, 8 = supervision timeout…). */
 class GattException(val status: Int, message: String = GattNames.status(status)) : Exception(message)
@@ -100,7 +102,7 @@ class GattClient(private val context: Context, val address: String) {
     }
 
     suspend fun connect(timeoutMs: Long = 15_000) {
-        val adapter = context.getSystemService(BluetoothManager::class.java)?.adapter ?: throw GattException(-1, "Bluetooth indisponible")
+        val adapter = context.getSystemService(BluetoothManager::class.java)?.adapter ?: throw GattException(-1, S(R.string.bluetooth_unavailable))
         val done = CompletableDeferred<Unit>()
         connecting = done
         val device = adapter.getRemoteDevice(address)
@@ -108,7 +110,7 @@ class GattClient(private val context: Context, val address: String) {
         try {
             withTimeout(timeoutMs) { done.await() }
         } catch (e: kotlinx.coroutines.TimeoutCancellationException) {
-            close(); throw GattException(-2, "L'appareil n'a pas répondu (délai de ${timeoutMs / 1000} s)")
+            close(); throw GattException(-2, S(R.string.the_device_did_not_answer_s, timeoutMs / 1000))
         }
     }
 
@@ -119,13 +121,13 @@ class GattClient(private val context: Context, val address: String) {
         pending = d
         if (!start(g)) {
             pending = null
-            throw GattException(-3, "Opération refusée par la pile Bluetooth")
+            throw GattException(-3, S(R.string.operation_refused_by_the_bluetooth_stack))
         }
         try {
             withTimeout(timeoutMs) { d.await() } as T
         } catch (e: kotlinx.coroutines.TimeoutCancellationException) {
             pending = null
-            throw GattException(-2, "Pas de réponse de l'appareil")
+            throw GattException(-2, S(R.string.no_answer_from_the_device))
         }
     }
 
@@ -157,7 +159,7 @@ class GattClient(private val context: Context, val address: String) {
     /** Subscribes through the CCCD (0x2902); indications are used when notifications are not offered. */
     suspend fun setNotify(c: BluetoothGattCharacteristic, enable: Boolean) {
         val g = gatt ?: throw GattException(19)
-        if (!g.setCharacteristicNotification(c, enable)) throw GattException(-3, "Abonnement refusé")
+        if (!g.setCharacteristicNotification(c, enable)) throw GattException(-3, S(R.string.subscription_refused))
         val cccd = c.getDescriptor(GattNames.CCCD) ?: return
         val value = when {
             !enable -> BluetoothGattDescriptor.DISABLE_NOTIFICATION_VALUE
@@ -198,29 +200,29 @@ object GattNames {
     fun short(u: UUID): String = uuid16(u)?.let { "0x%04X".format(it) } ?: u.toString().substring(0, 8).uppercase() + "…"
 
     private val services = mapOf(
-        0x1800 to "Accès générique", 0x1801 to "Attributs génériques", 0x1802 to "Alerte immédiate", 0x1803 to "Perte de lien",
-        0x1804 to "Puissance d'émission", 0x1805 to "Heure courante", 0x180A to "Informations sur l'appareil", 0x180D to "Fréquence cardiaque",
-        0x180F to "Batterie", 0x1810 to "Tension artérielle", 0x1812 to "Périphérique HID", 0x1814 to "Course à pied",
-        0x1816 to "Vélo (vitesse, cadence)", 0x1818 to "Puissance vélo", 0x181A to "Données environnementales", 0x181C to "Données utilisateur",
-        0x181D to "Balance", 0x1822 to "Oxymètre de pouls", 0x1826 to "Machine de fitness", 0x183B to "Binaire (Mesh)",
-        0x184E to "Audio Stream Control", 0x1850 to "Audio publié", 0xFE2C to "Google Fast Pair", 0xFEAA to "Eddystone",
-        0xFD6F to "Notification d'exposition", 0xFE59 to "Nordic DFU", 0xFEE0 to "Mi Band",
+        0x1800 to S(R.string.generic_access), 0x1801 to S(R.string.generic_attribute), 0x1802 to S(R.string.immediate_alert), 0x1803 to S(R.string.link_loss),
+        0x1804 to S(R.string.tx_power_2), 0x1805 to S(R.string.current_time), 0x180A to S(R.string.device_information), 0x180D to S(R.string.heart_rate),
+        0x180F to S(R.string.battery), 0x1810 to S(R.string.blood_pressure), 0x1812 to S(R.string.hid_device), 0x1814 to S(R.string.running),
+        0x1816 to S(R.string.cycling_speed_cadence), 0x1818 to S(R.string.cycling_power), 0x181A to S(R.string.environmental_sensing), 0x181C to S(R.string.user_data),
+        0x181D to S(R.string.weight_scale), 0x1822 to S(R.string.pulse_oximeter), 0x1826 to S(R.string.fitness_machine), 0x183B to S(R.string.binary_mesh),
+        0x184E to "Audio Stream Control", 0x1850 to S(R.string.published_audio), 0xFE2C to "Google Fast Pair", 0xFEAA to "Eddystone",
+        0xFD6F to S(R.string.exposure_notification), 0xFE59 to "Nordic DFU", 0xFEE0 to "Mi Band",
     )
 
     private val characteristics = mapOf(
-        0x2A00 to "Nom de l'appareil", 0x2A01 to "Apparence", 0x2A04 to "Paramètres de connexion préférés", 0x2A05 to "Service modifié",
-        0x2A06 to "Niveau d'alerte", 0x2A07 to "Puissance d'émission", 0x2A19 to "Niveau de batterie", 0x2A23 to "Identifiant système",
-        0x2A24 to "Modèle", 0x2A25 to "Numéro de série", 0x2A26 to "Version du firmware", 0x2A27 to "Version matérielle",
-        0x2A28 to "Version logicielle", 0x2A29 to "Fabricant", 0x2A2B to "Heure courante", 0x2A37 to "Mesure de fréquence cardiaque",
-        0x2A38 to "Position du capteur", 0x2A39 to "Point de contrôle FC", 0x2A4D to "Rapport HID", 0x2A50 to "Identifiant PnP",
-        0x2A53 to "Mesure course à pied", 0x2A5B to "Mesure vitesse / cadence", 0x2A6D to "Pression", 0x2A6E to "Température",
-        0x2A6F to "Humidité", 0x2AA6 to "Résolution d'adresse centrale", 0x2B29 to "Fonctions client prises en charge", 0x2B2A to "Hash de la base",
-        0x2B3A to "Fonctions serveur prises en charge",
+        0x2A00 to S(R.string.device_name), 0x2A01 to S(R.string.appearance), 0x2A04 to S(R.string.preferred_connection_parameters), 0x2A05 to S(R.string.service_changed),
+        0x2A06 to S(R.string.alert_level), 0x2A07 to S(R.string.tx_power_2), 0x2A19 to S(R.string.battery_level), 0x2A23 to S(R.string.system_id),
+        0x2A24 to S(R.string.model), 0x2A25 to S(R.string.serial_number), 0x2A26 to S(R.string.firmware_revision), 0x2A27 to S(R.string.hardware_revision),
+        0x2A28 to S(R.string.software_revision), 0x2A29 to S(R.string.manufacturer), 0x2A2B to S(R.string.current_time), 0x2A37 to S(R.string.heart_rate_measurement),
+        0x2A38 to S(R.string.sensor_location), 0x2A39 to S(R.string.hr_control_point), 0x2A4D to S(R.string.hid_report), 0x2A50 to S(R.string.pnp_id),
+        0x2A53 to S(R.string.running_measurement), 0x2A5B to S(R.string.speed_cadence_measurement), 0x2A6D to S(R.string.pressure), 0x2A6E to S(R.string.temperature),
+        0x2A6F to S(R.string.humidity), 0x2AA6 to S(R.string.central_address_resolution), 0x2B29 to S(R.string.client_supported_features), 0x2B2A to S(R.string.database_hash),
+        0x2B3A to S(R.string.server_supported_features),
     )
 
-    fun serviceName(u: UUID): String = uuid16(u)?.let { services[it] } ?: "Service propriétaire"
+    fun serviceName(u: UUID): String = uuid16(u)?.let { services[it] } ?: S(R.string.proprietary_service)
 
-    fun charName(u: UUID): String = uuid16(u)?.let { characteristics[it] } ?: "Caractéristique propriétaire"
+    fun charName(u: UUID): String = uuid16(u)?.let { characteristics[it] } ?: S(R.string.proprietary_characteristic)
 
     fun serviceIcon(u: UUID): String = when (uuid16(u)) {
         0x180F -> com.allnetworktools.ui.theme.Sym.Battery
@@ -233,7 +235,7 @@ object GattNames {
         else -> com.allnetworktools.ui.theme.Sym.AccountTree
     }
 
-    fun hex(b: ByteArray): String = if (b.isEmpty()) "(vide)" else b.joinToString(" ") { "%02X".format(it) }
+    fun hex(b: ByteArray): String = if (b.isEmpty()) S(R.string.empty) else b.joinToString(" ") { "%02X".format(it) }
 
     private fun u16(b: ByteArray, i: Int) = (b[i].toInt() and 0xFF) or ((b[i + 1].toInt() and 0xFF) shl 8)
 
@@ -247,14 +249,14 @@ object GattNames {
                     val wide = b[0].toInt() and 1 != 0
                     "${if (wide) u16(b, 1) else b[1].toInt() and 0xFF} bpm"
                 }
-                0x2A38 -> listOf("Autre", "Torse", "Poignet", "Doigt", "Main", "Lobe d'oreille", "Pied").getOrElse(b[0].toInt()) { "Réservé" }
-                0x2A06 -> listOf("Aucune alerte", "Alerte moyenne", "Alerte forte").getOrElse(b[0].toInt()) { "Réservé" }
+                0x2A38 -> listOf(S(R.string.other), S(R.string.chest), S(R.string.wrist), S(R.string.finger), S(R.string.hand), S(R.string.ear_lobe), S(R.string.foot)).getOrElse(b[0].toInt()) { S(R.string.reserved) }
+                0x2A06 -> listOf(S(R.string.no_alert), S(R.string.mild_alert), S(R.string.high_alert)).getOrElse(b[0].toInt()) { S(R.string.reserved) }
                 0x2A07 -> "${b[0]} dBm"
-                0x2A01 -> "Apparence 0x%04X".format(u16(b, 0))
-                0x2A6E -> "%.2f °C".format(java.util.Locale.FRANCE, (u16(b, 0).toShort()) / 100f)
-                0x2A6F -> "%.2f %%".format(java.util.Locale.FRANCE, u16(b, 0) / 100f)
-                0x2A04 -> "Intervalle ${u16(b, 0) * 1.25f}–${u16(b, 2) * 1.25f} ms · latence ${u16(b, 4)}"
-                0x2A50 -> "Vendeur 0x%04X · produit 0x%04X · v%d".format(u16(b, 1), u16(b, 3), u16(b, 5))
+                0x2A01 -> S(R.string.appearance_0x).format(u16(b, 0))
+                0x2A6E -> "%.2f °C".format(java.util.Locale.getDefault(), (u16(b, 0).toShort()) / 100f)
+                0x2A6F -> "%.2f %%".format(java.util.Locale.getDefault(), u16(b, 0) / 100f)
+                0x2A04 -> S(R.string.interval_ms_latency, u16(b, 0) * 1.25f, u16(b, 2) * 1.25f, u16(b, 4))
+                0x2A50 -> S(R.string.vendor_0x_product_0x_v).format(u16(b, 1), u16(b, 3), u16(b, 5))
                 else -> null
             } ?: text(b)
         }.getOrNull()
@@ -268,15 +270,15 @@ object GattNames {
     }
 
     fun status(code: Int): String = when (code) {
-        133 -> "GATT_ERROR (133) : l'appareil a refusé ou interrompu la connexion"
-        8 -> "Délai de supervision dépassé (8) : l'appareil s'est éloigné"
-        19 -> "Déconnecté par l'appareil (19)"
-        22 -> "Connexion fermée par ce téléphone (22)"
-        62 -> "Échec d'établissement du lien (62)"
-        5, 15 -> "Authentification requise ($code) : appairez l'appareil d'abord"
-        3 -> "Écriture non autorisée (3)"
-        2 -> "Lecture non autorisée (2)"
-        else -> "Erreur GATT ($code)"
+        133 -> S(R.string.gatt_error_133_the_device_refused)
+        8 -> S(R.string.supervision_timeout_8_the_device_moved)
+        19 -> S(R.string.disconnected_by_the_device_19)
+        22 -> S(R.string.connection_closed_by_this_phone_22)
+        62 -> S(R.string.link_establishment_failed_62)
+        5, 15 -> S(R.string.authentication_required_pair_the_device_first, code)
+        3 -> S(R.string.write_not_permitted_3)
+        2 -> S(R.string.read_not_permitted_2)
+        else -> S(R.string.gatt_error, code)
     }
 }
 

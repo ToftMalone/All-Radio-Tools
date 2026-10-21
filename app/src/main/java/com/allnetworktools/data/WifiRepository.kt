@@ -20,6 +20,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.callbackFlow
+import com.allnetworktools.R
+import com.allnetworktools.util.S
 
 enum class WifiBand(val label: String) { B24("2.4"), B5("5"), B6("6") }
 
@@ -115,16 +117,16 @@ private fun securityOfCapabilities(caps: String): String = when {
     "WPA2" in caps || "RSN" in caps -> "WPA2"
     "WPA" in caps -> "WPA"
     "WEP" in caps -> "WEP"
-    else -> "Ouvert"
+    else -> S(R.string.open)
 }
 
 private fun securityOfType(type: Int): String? = when (type) {
-    WifiInfo.SECURITY_TYPE_OPEN -> "Ouvert"
+    WifiInfo.SECURITY_TYPE_OPEN -> S(R.string.open)
     WifiInfo.SECURITY_TYPE_WEP -> "WEP"
-    WifiInfo.SECURITY_TYPE_PSK -> "WPA2-Personnel (PSK)"
-    WifiInfo.SECURITY_TYPE_EAP, WifiInfo.SECURITY_TYPE_EAP_WPA3_ENTERPRISE -> "WPA2/3-Entreprise (EAP)"
-    WifiInfo.SECURITY_TYPE_SAE -> "WPA3-Personnel (SAE)"
-    WifiInfo.SECURITY_TYPE_EAP_WPA3_ENTERPRISE_192_BIT -> "WPA3-Entreprise 192 bits"
+    WifiInfo.SECURITY_TYPE_PSK -> S(R.string.wpa2_personal_psk)
+    WifiInfo.SECURITY_TYPE_EAP, WifiInfo.SECURITY_TYPE_EAP_WPA3_ENTERPRISE -> S(R.string.wpa2_3_enterprise_eap)
+    WifiInfo.SECURITY_TYPE_SAE -> S(R.string.wpa3_personal_sae)
+    WifiInfo.SECURITY_TYPE_EAP_WPA3_ENTERPRISE_192_BIT -> S(R.string.wpa3_enterprise_192_bit)
     WifiInfo.SECURITY_TYPE_OWE -> "Enhanced Open (OWE)"
     WifiInfo.SECURITY_TYPE_WAPI_PSK, WifiInfo.SECURITY_TYPE_WAPI_CERT -> "WAPI"
     else -> null
@@ -238,7 +240,7 @@ open class WifiRepository(context: Context) {
         fun read(): List<WifiAp> = runCatching { mgr.scanResults }.getOrDefault(emptyList()).map { r ->
             val ssid = if (Build.VERSION.SDK_INT >= 33) r.wifiSsid?.toString()?.removeSurrounding("\"") else @Suppress("DEPRECATION") r.SSID
             WifiAp(
-                ssid = ssid?.takeIf { it.isNotBlank() } ?: "Réseau masqué",
+                ssid = ssid?.takeIf { it.isNotBlank() } ?: S(R.string.hidden_network),
                 bssid = r.BSSID ?: "",
                 rssi = r.level,
                 frequency = r.frequency,

@@ -22,13 +22,16 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import com.allnetworktools.util.plural
+import com.allnetworktools.R
+import com.allnetworktools.util.S
+import com.allnetworktools.util.P
 
 enum class ProgPhase(val label: String) {
     Idle(""),
-    Detecting("Recherche du talkie…"),
-    Reading("Lecture du talkie…"),
-    Writing("Écriture dans le talkie…"),
-    Verifying("Vérification…"),
+    Detecting(S(R.string.looking_for_the_radio)),
+    Reading(S(R.string.reading_the_radio)),
+    Writing(S(R.string.writing_to_the_radio)),
+    Verifying(S(R.string.verifying)),
 }
 
 class ProgMessage(val text: String, val kind: Kind) {
@@ -129,9 +132,9 @@ class ChannelsController(
     // ---- cable ----------------------------------------------------------------------------------
 
     private suspend fun <T> withLink(cable: RadioCable, spec: RadioSpec, block: (SerialLink) -> T): T {
-        if (!cables.hasPermission(cable) && !cables.requestPermission(cable)) throw RadioException("Accès USB au câble refusé.")
+        if (!cables.hasPermission(cable) && !cables.requestPermission(cable)) throw RadioException(S(R.string.usb_access_to_the_cable_refused))
         return withContext(Dispatchers.IO) {
-            val link = cables.open(cable, spec.baud) ?: throw RadioException("Impossible d'ouvrir le câble USB.")
+            val link = cables.open(cable, spec.baud) ?: throw RadioException(S(R.string.could_not_open_the_usb_cable))
             link.use(block)
         }
     }
@@ -149,13 +152,13 @@ class ChannelsController(
             }
         }
         throw RadioException(
-            "Aucun talkie reconnu (" + specs.joinToString(" ou ") { it.label } + "). Vérifiez que le câble est enfoncé à fond dans la prise du talkie, " +
-                "que celui-ci est allumé et que son volume n'est pas à zéro.",
+            S(R.string.no_radio_recognised) + specs.joinToString(S(R.string.or)) { it.label } + S(R.string.check_that_the_cable_is_pushed) +
+                S(R.string.that_the_radio_is_on_and),
         )
     }
 
     private fun fail(e: Exception) {
-        message = ProgMessage(if (e is RadioException) e.message ?: "Erreur de communication." else "Erreur : ${e.message ?: e.javaClass.simpleName}", ProgMessage.Kind.Error)
+        message = ProgMessage(if (e is RadioException) e.message ?: S(R.string.communication_error) else S(R.string.error_2, e.message ?: e.javaClass.simpleName), ProgMessage.Kind.Error)
     }
 
     private fun onFirstBlock(p: Float): Float {
@@ -176,8 +179,8 @@ class ChannelsController(
                 ident = d.second.ident
                 canRestore = false
                 message = ProgMessage(
-                    "${s.label} reconnu : ${list.count { it != null }} canaux lus." +
-                        if (d.second.known) "" else " Firmware non reconnu : lecture seule, l'écriture sera refusée.",
+                    S(R.string.recognised_channels_read, s.label, list.count { it != null }) +
+                        if (d.second.known) "" else S(R.string.unrecognised_firmware_read_only_writing_will),
                     if (d.second.known) ProgMessage.Kind.Success else ProgMessage.Kind.Info,
                 )
             } catch (e: Exception) {
@@ -203,12 +206,12 @@ class ChannelsController(
                 // The list now shows what this radio will hold.
                 channels.clear(); channels.addAll(wanted)
                 val notes = buildList {
-                    if (fitted.outOfBand > 0) add("${fitted.outOfBand} ${plural(fitted.outOfBand, "canal hors des bandes", "canaux hors des bandes")} du ${s.label} non écrit")
-                    if (fitted.overflow > 0) add("${fitted.overflow} ${plural(fitted.overflow, "canal", "canaux")} en trop pour ses ${s.slots} mémoires non écrit")
+                    if (fitted.outOfBand > 0) add(S(R.string.for_the_not_written, fitted.outOfBand, P(R.plurals.p_channels_outside_the_bands, fitted.outOfBand), s.label))
+                    if (fitted.overflow > 0) add(S(R.string.beyond_its_memories_not_written, fitted.overflow, P(R.plurals.p_channels, fitted.overflow), s.slots))
                 }.joinToString(" · ").let { if (it.isEmpty()) "" else " ($it)" }
                 if (slots.isEmpty()) {
                     baseline = wanted
-                    message = ProgMessage("Le ${s.label} contient déjà exactement ces canaux : rien à écrire.$notes", ProgMessage.Kind.Info)
+                    message = ProgMessage(S(R.string.the_already_holds_exactly_these_channels, s.label, notes), ProgMessage.Kind.Info)
                     return@launch
                 }
                 phase = ProgPhase.Writing
@@ -236,14 +239,14 @@ class ChannelsController(
             try {
                 val d = withLink(cable, s) { s.download(it) { p -> progress = 0.9f + p * 0.1f } }
                 val bad = slots.count { s.decode(d.image, it) != wanted[it] }
-                return if (bad == 0) ProgMessage("${slots.size} canaux écrits dans le ${s.label} et vérifiés par relecture.", ProgMessage.Kind.Success)
-                else ProgMessage("$bad canaux sur ${slots.size} relus différemment : relisez le talkie pour voir ce qu'il contient.", ProgMessage.Kind.Error)
+                return if (bad == 0) ProgMessage(S(R.string.channels_written_to_the_and_verified, slots.size, s.label), ProgMessage.Kind.Success)
+                else ProgMessage(S(R.string.of_channels_read_back_differently_read, bad, slots.size), ProgMessage.Kind.Error)
             } catch (_: Exception) {
                 // Try once more.
             }
         }
         return ProgMessage(
-            "${slots.size} canaux écrits. Vérification impossible : éteignez puis rallumez le talkie avant de le relire.",
+            S(R.string.channels_written_verification_impossible_turn_the, slots.size),
             ProgMessage.Kind.Info,
         )
     }
@@ -261,7 +264,7 @@ class ChannelsController(
                 channels.clear(); channels.addAll(restored)
                 baseline = restored
                 canRestore = false
-                message = ProgMessage("État précédent du ${s.label} rétabli (${backupSlots.size} canaux).", ProgMessage.Kind.Success)
+                message = ProgMessage(S(R.string.previous_state_of_the_restored_channels, s.label, backupSlots.size), ProgMessage.Kind.Success)
             } catch (e: Exception) {
                 fail(e)
             } finally {

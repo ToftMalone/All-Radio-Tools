@@ -7,6 +7,8 @@ import java.time.LocalDate
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
+import com.allnetworktools.R
+import com.allnetworktools.util.S
 
 /** The four French mobile network operators, with their name in the ANFR database. */
 enum class FrOperator(val label: String, val anfr: String, val mncs: Set<String>) {
@@ -124,7 +126,7 @@ open class TowerRepository {
         c.readTimeout = 30_000
         c.setRequestProperty("User-Agent", "AllRadioTools")
         try {
-            if (c.responseCode != 200) throw java.io.IOException("L'ANFR a répondu ${c.responseCode}")
+            if (c.responseCode != 200) throw java.io.IOException(S(R.string.anfr_answered, c.responseCode))
             parse(q, c.inputStream.bufferedReader().readText(), System.currentTimeMillis())
         } finally {
             c.disconnect()
@@ -168,7 +170,7 @@ open class TowerRepository {
                     lat = coords[0],
                     lon = coords[1],
                     heightM = f0.optString("sup_nm_haut").replace(',', '.').toDoubleOrNull(),
-                    address = listOfNotNull(address.ifEmpty { null }, cp).joinToString(" · ").ifEmpty { "Adresse non renseignée" },
+                    address = listOfNotNull(address.ifEmpty { null }, cp).joinToString(" · ").ifEmpty { S(R.string.no_address_given) },
                     stations = list.mapNotNull { it.f.optString("sta_nm_anfr").takeIf { s -> s.isNotBlank() } }.distinct(),
                     emitters = list.map { r ->
                         Emitter(

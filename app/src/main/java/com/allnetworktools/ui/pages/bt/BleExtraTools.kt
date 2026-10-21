@@ -40,6 +40,9 @@ import com.allnetworktools.ui.tools.HeroChip
 import com.allnetworktools.ui.tools.ToolEmpty
 import com.allnetworktools.util.fmt
 import com.allnetworktools.util.plural
+import com.allnetworktools.R
+import com.allnetworktools.util.S
+import com.allnetworktools.util.P
 
 /** Keeps the order devices were first listed in, so rows do not move while their signal changes. */
 private class FirstSeen {
@@ -62,19 +65,19 @@ fun BeaconsTool(devices: List<BleDevice>) {
         HeroCard {
             Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                 Text(found.size.toString(), style = gs(56, 60, 500, -1.5f, tnum = true))
-                Text(plural(found.size, "balise détectée", "balises détectées"), Modifier.padding(bottom = 8.dp), style = rf(18, 24, 500))
+                Text(P(R.plurals.p_beacons_detected, found.size), Modifier.padding(bottom = 8.dp), style = rf(18, 24, 500))
             }
-            Text("iBeacon, Eddystone et AltBeacon : magasins, musées, salles, objets connectés", style = rf(14, 20))
-            Row(Modifier.padding(top = 12.dp)) { HeroChip("Écoute Bluetooth en cours", AntTheme.net.good, blink = true) }
+            Text(S(R.string.ibeacon_eddystone_and_altbeacon_shops_museums), style = rf(14, 20))
+            Row(Modifier.padding(top = 12.dp)) { HeroChip(S(R.string.bluetooth_listening_in_progress), AntTheme.net.good, blink = true) }
         }
         if (found.isEmpty()) {
-            ToolEmpty(Sym.Sensors, "Aucune balise", "Les balises s'annoncent toutes les 100 ms à 1 s. Approchez-vous d'un lieu équipé (magasin, musée, gare…).", null)
+            ToolEmpty(Sym.Sensors, S(R.string.no_beacon), S(R.string.beacons_advertise_every_100_ms_to), null)
         }
         found.forEach { (d, b) -> BeaconCard(d, b) { url -> actions.openUrl(url) } }
         SectionCard {
             Text(
-                "Une balise émet un identifiant en continu ; une application du lieu le reconnaît pour afficher une information ou compter les visiteurs. " +
-                    "La distance est estimée à partir de la puissance annoncée à 1 m : ce n'est qu'un ordre de grandeur.",
+                S(R.string.a_beacon_broadcasts_an_identifier_continuously) +
+                    S(R.string.the_distance_is_estimated_from_the),
                 style = rf(13, 18), color = cs.onSurfaceVariant,
             )
         }
@@ -105,7 +108,7 @@ private fun BeaconCard(d: BleDevice, b: Beacon, onUrl: (String) -> Unit) {
         }
         if (b.kind == com.allnetworktools.data.BeaconKind.EddystoneUrl) {
             Text(
-                "Ouvrir le lien",
+                S(R.string.open_the_link),
                 Modifier.padding(top = 8.dp).clip(RoundedCornerShape(10.dp)).background(acc.container).clickable { onUrl(b.id) }
                     .padding(horizontal = 12.dp, vertical = 6.dp),
                 style = rf(13, 18, 600), color = acc.onContainer,
@@ -115,9 +118,9 @@ private fun BeaconCard(d: BleDevice, b: Beacon, onUrl: (String) -> Unit) {
             Hairline(Modifier.padding(top = 8.dp))
             Text(
                 listOfNotNull(
-                    tlm.batteryMv?.let { "Pile ${fmt(it / 1000.0, 2)} V" },
+                    tlm.batteryMv?.let { S(R.string.battery_v, fmt(it / 1000.0, 2)) },
                     tlm.temperatureC?.let { "${fmt(it, 1)} °C" },
-                    "${fmt(tlm.uptimeS / 3600.0, 0)} h de fonctionnement",
+                    S(R.string.h_of_operation, fmt(tlm.uptimeS / 3600.0, 0)),
                 ).joinToString(" · "),
                 Modifier.padding(top = 8.dp), style = rf(12, 16), color = cs.onSurfaceVariant,
             )
@@ -135,22 +138,22 @@ fun EarbudsTool(devices: List<BleDevice>) {
         HeroCard {
             Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                 Text(found.size.toString(), style = gs(56, 60, 500, -1.5f, tnum = true))
-                Text(plural(found.size, "paire d'écouteurs", "paires d'écouteurs"), Modifier.padding(bottom = 8.dp), style = rf(18, 24, 500))
+                Text(P(R.plurals.p_pairs_of_earbuds, found.size), Modifier.padding(bottom = 8.dp), style = rf(18, 24, 500))
             }
-            Text("AirPods et Beats : batterie de chaque écouteur et du boîtier", style = rf(14, 20))
-            Row(Modifier.padding(top = 12.dp)) { HeroChip("Écoute Bluetooth en cours", AntTheme.net.good, blink = true) }
+            Text(S(R.string.airpods_and_beats_battery_of_each), style = rf(14, 20))
+            Row(Modifier.padding(top = 12.dp)) { HeroChip(S(R.string.bluetooth_listening_in_progress), AntTheme.net.good, blink = true) }
         }
         if (found.isEmpty()) {
             ToolEmpty(
-                Sym.Headphones, "Aucun écouteur",
-                "Ouvrez le boîtier de vos AirPods ou Beats près du téléphone : c'est à ce moment qu'ils annoncent leur batterie.", null,
+                Sym.Headphones, S(R.string.no_earbuds),
+                S(R.string.open_your_airpods_or_beats_case), null,
             )
         }
         found.forEach { (d, e) -> EarbudsCard(d, e) }
         SectionCard {
             Text(
-                "Les écouteurs Apple et Beats annoncent leur batterie par paliers de 10 %, couvercle ouvert ou hors du boîtier. " +
-                    "Les autres marques ne la diffusent pas sans connexion.",
+                S(R.string.apple_and_beats_earbuds_advertise_their) +
+                    S(R.string.other_brands_don_t_broadcast_it),
                 style = rf(13, 18), color = cs.onSurfaceVariant,
             )
         }
@@ -170,11 +173,11 @@ private fun EarbudsCard(d: BleDevice, e: EarbudsStatus) {
         }
         Row(Modifier.fillMaxWidth().padding(top = 14.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             if (e.single != null) {
-                BatteryTile("Casque", e.single, Modifier.weight(1f))
+                BatteryTile(S(R.string.headphones_2), e.single, Modifier.weight(1f))
             } else {
-                BatteryTile("Gauche", e.left, Modifier.weight(1f))
-                BatteryTile("Droite", e.right, Modifier.weight(1f))
-                BatteryTile("Boîtier", e.case, Modifier.weight(1f))
+                BatteryTile(S(R.string.left), e.left, Modifier.weight(1f))
+                BatteryTile(S(R.string.right), e.right, Modifier.weight(1f))
+                BatteryTile(S(R.string.case_text), e.case, Modifier.weight(1f))
             }
         }
     }

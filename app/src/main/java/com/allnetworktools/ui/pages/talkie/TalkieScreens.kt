@@ -66,6 +66,8 @@ import com.allnetworktools.util.plural
 import java.util.Locale
 import kotlin.math.roundToInt
 import kotlinx.coroutines.delay
+import com.allnetworktools.R
+import com.allnetworktools.util.S
 
 @Composable
 fun TalkieDashboard(vm: MainViewModel) {
@@ -80,28 +82,28 @@ fun TalkieDashboard(vm: MainViewModel) {
         ) {
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.Top) {
                 ShapeBadge(Sym.Radio, cookieShape(), 64.dp, roles.accent, roles.onAccent, 30.dp, spinMs = 24_000)
-                if (cable != null) TechChip("Câble détecté", roles.accent, roles.onAccent)
+                if (cable != null) TechChip(S(R.string.cable_detected), roles.accent, roles.onAccent)
             }
-            Text("Canaux du talkie", Modifier.padding(top = 16.dp), style = gs(24, 30, 500), color = roles.onContainer)
+            Text(S(R.string.radio_channels), Modifier.padding(top = 16.dp), style = gs(24, 30, 500), color = roles.onContainer)
             Text(
-                "Lisez la mémoire d'un Baofeng UV-5R, d'un Radtel RT-470X ou d'un Quansheng UV-K5 / UV-K6, modifiez les canaux, ajoutez des préréglages et réécrivez-les.",
+                S(R.string.read_the_memory_of_a_baofeng),
                 Modifier.padding(top = 4.dp).graphicsLayer { alpha = 0.85f }, style = rf(14, 20), color = roles.onContainer,
             )
             Row(Modifier.fillMaxWidth().padding(top = 14.dp), horizontalArrangement = Arrangement.End) {
-                PillButton("Ouvrir", { open(Tool.RadioChannels) }, icon = Sym.PlayArrow, height = 48.dp)
+                PillButton(S(R.string.open_2), { open(Tool.RadioChannels) }, icon = Sym.PlayArrow, height = 48.dp)
             }
         }
-        InfoList("Matériel") {
-            InfoRow("Câble de programmation", cable?.name ?: "—")
-            InfoRow("Talkie", channels.detected?.label ?: "Reconnu à la lecture")
-            InfoRow("Émission", "Jamais : lecture et écriture de la mémoire seulement")
+        InfoList(S(R.string.hardware)) {
+            InfoRow(S(R.string.programming_cable), cable?.name ?: "—")
+            InfoRow(S(R.string.radio), channels.detected?.label ?: S(R.string.recognised_when_reading))
+            InfoRow(S(R.string.transmit), S(R.string.never_memory_read_and_write_only))
         }
         SectionCard {
             Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 Symbol(Sym.Info, size = 22.dp, tint = AntTheme.accent.accent)
                 Text(
-                    "Pour programmer : un câble USB à puce FTDI, CH340, CP210x ou PL2303 sur la prise casque-micro du talkie. " +
-                        "Rien n'est enregistré ni conservé.",
+                    S(R.string.to_program_a_usb_cable_with) +
+                        S(R.string.nothing_is_saved_or_kept),
                     style = rf(13, 18), color = cs.onSurfaceVariant,
                 )
             }

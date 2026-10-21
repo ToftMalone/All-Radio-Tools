@@ -285,7 +285,7 @@ private class SimCables(context: android.content.Context, private val link: Seri
 }
 
 @RunWith(RobolectricTestRunner::class)
-@Config(sdk = [35])
+@Config(sdk = [35], qualifiers = "fr")
 class ChannelsControllerTest {
     private val cable = com.allnetworktools.data.radio.RadioCable("FTDI", null)
 

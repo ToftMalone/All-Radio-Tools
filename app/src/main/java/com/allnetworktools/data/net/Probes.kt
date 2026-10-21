@@ -13,6 +13,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runInterruptible
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
+import com.allnetworktools.R
+import com.allnetworktools.util.S
 
 data class PingReply(
     /** Address that answered: the target, or a router reporting "time to live exceeded". */
@@ -136,14 +138,14 @@ object Services {
     fun name(port: Int) = names[port] ?: "inconnu"
 
     fun warning(port: Int): String? = when (port) {
-        139, 445 -> "Partage de fichiers exposé sur le réseau"
-        23 -> "Telnet : identifiants transmis en clair"
-        21 -> "FTP : identifiants transmis en clair"
-        3389 -> "Bureau à distance exposé"
-        5900 -> "VNC exposé : vérifiez le mot de passe"
-        5555 -> "Débogage ADB ouvert : prise de contrôle possible"
-        2375 -> "API Docker sans TLS"
-        6379, 11211, 27017 -> "Base de données accessible sans authentification ?"
+        139, 445 -> S(R.string.file_sharing_exposed_on_the_network)
+        23 -> S(R.string.telnet_credentials_sent_in_clear)
+        21 -> S(R.string.ftp_credentials_sent_in_clear)
+        3389 -> S(R.string.remote_desktop_exposed)
+        5900 -> S(R.string.vnc_exposed_check_the_password)
+        5555 -> S(R.string.adb_debugging_open_takeover_possible)
+        2375 -> S(R.string.docker_api_without_tls)
+        6379, 11211, 27017 -> S(R.string.database_reachable_without_authentication)
         else -> null
     }
 

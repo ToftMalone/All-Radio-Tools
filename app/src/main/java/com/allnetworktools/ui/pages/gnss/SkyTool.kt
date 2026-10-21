@@ -71,11 +71,13 @@ import com.allnetworktools.ui.theme.gs
 import com.allnetworktools.ui.theme.rf
 import com.allnetworktools.ui.tools.HeroCard
 import com.allnetworktools.util.fmt
+import com.allnetworktools.R
+import com.allnetworktools.util.S
 
 /** A satellite with the point of Earth it currently flies over. */
 data class SatOverhead(val sat: Satellite, val lat: Double, val lon: Double, val place: String)
 
-enum class SkyView(val label: String) { Sky("Ciel"), Map("Carte du monde") }
+enum class SkyView(val label: String) { Sky(S(R.string.sky)), Map(S(R.string.world_map)) }
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -97,7 +99,7 @@ fun SkyTool(vm: MainViewModel) {
         com.allnetworktools.ui.components.FullscreenDialog(backToSky) {
             OsmSatelliteMap(observer, overhead, Modifier.fillMaxSize())
             com.allnetworktools.ui.components.PillButton(
-                "Ciel classique", backToSky,
+                S(R.string.classic_sky), backToSky,
                 Modifier.align(Alignment.BottomCenter).windowInsetsPadding(androidx.compose.foundation.layout.WindowInsets.safeDrawing).padding(bottom = 32.dp),
                 icon = Sym.Radar, height = 48.dp,
             )
@@ -117,13 +119,13 @@ fun SkyTool(vm: MainViewModel) {
                 Text(g.used.size.toString(), style = gs(48, 52, 500, -1.5f, tnum = true))
                 Text("/ ${g.visible.size}", Modifier.padding(bottom = 6.dp), style = rf(18, 24, 500))
                 Box(Modifier.weight(1f))
-                Text(if (g.fix == FixType.None) "Recherche…" else g.fix.label, Modifier.padding(bottom = 8.dp), style = rf(14, 20, 600))
+                Text(if (g.fix == FixType.None) S(R.string.searching) else g.fix.label, Modifier.padding(bottom = 8.dp), style = rf(14, 20, 600))
             }
-            Text("satellites utilisés / visibles · ${g.constellationCount} constellations", style = rf(13, 18))
+            Text(S(R.string.satellites_used_visible_constellations, g.constellationCount), style = rf(13, 18))
         }
         SegmentedRow(SkyView.entries.map { it to it.label }, view, { view = it; fullMap = it == SkyView.Map }, Modifier.fillMaxWidth(), icons = mapOf(SkyView.Sky to Sym.Radar, SkyView.Map to Sym.Public))
         if (g.visible.isEmpty()) {
-            EmptyStateCard(Sym.SatelliteAlt, "Recherche de satellites…", "Placez-vous à l'extérieur, ciel dégagé. Les premiers satellites apparaissent en quelques secondes.")
+            EmptyStateCard(Sym.SatelliteAlt, S(R.string.searching_for_satellites), S(R.string.go_outside_under_an_open_sky))
             return@PageColumn
         }
         when (view) {
@@ -148,24 +150,24 @@ fun SkyTool(vm: MainViewModel) {
                     }
                 }
                 Text(
-                    "Centre : zénith · bord : horizon. Les satellites pleins servent au calcul de la position.",
+                    S(R.string.centre_zenith_edge_horizon_filled_satellites),
                     Modifier.padding(top = 10.dp), style = rf(12, 16), color = cs.onSurfaceVariant,
                 )
             }
             SkyView.Map -> {
                 if (observer == null) {
-                    EmptyStateCard(Sym.LocationSearching, "Position inconnue", "La carte a besoin de votre position pour situer les satellites. Attendez le premier fix.")
+                    EmptyStateCard(Sym.LocationSearching, S(R.string.unknown_position), S(R.string.the_map_needs_your_position_to))
                     return@PageColumn
                 }
                 SectionCard(shape = RoundedCornerShape(28.dp), padding = androidx.compose.foundation.layout.PaddingValues(8.dp)) {
                     OsmSatelliteMap(observer, overhead, onFullscreen = { fullMap = true })
                     Text(
-                        "Point sous chaque satellite, calculé depuis sa direction et son orbite · fond de carte OpenStreetMap.",
+                        S(R.string.point_below_each_satellite_computed_from),
                         Modifier.padding(start = 8.dp, end = 8.dp, top = 8.dp, bottom = 4.dp), style = rf(12, 16), color = cs.onSurfaceVariant,
                     )
                 }
                 SectionCard(padding = androidx.compose.foundation.layout.PaddingValues(start = 16.dp, end = 16.dp, top = 12.dp, bottom = 4.dp)) {
-                    Text("Au-dessus de…", Modifier.padding(bottom = 4.dp), style = rf(14, 20, 600), color = AntTheme.accent.accent)
+                    Text(S(R.string.above), Modifier.padding(bottom = 4.dp), style = rf(14, 20, 600), color = AntTheme.accent.accent)
                     overhead.sortedWith(compareByDescending<SatOverhead> { it.sat.used }.thenByDescending { it.sat.elevation }).forEach { o ->
                         Hairline()
                         Row(Modifier.fillMaxWidth().padding(vertical = 10.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -183,7 +185,7 @@ fun SkyTool(vm: MainViewModel) {
                             }
                             Column(horizontalAlignment = Alignment.End) {
                                 Text("${fmt(o.sat.elevation)}°", style = rf(14, 20, 600, tnum = true))
-                                Text("élévation", style = rf(11, 14), color = cs.onSurfaceVariant)
+                                Text(S(R.string.elevation), style = rf(11, 14), color = cs.onSurfaceVariant)
                             }
                         }
                     }

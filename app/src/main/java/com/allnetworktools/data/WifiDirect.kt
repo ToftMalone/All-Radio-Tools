@@ -13,8 +13,10 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.launch
+import com.allnetworktools.R
+import com.allnetworktools.util.S
 
-enum class P2pStatus(val label: String) { Available("Disponible"), Invited("Invité"), Connected("Connecté"), Failed("Échec"), Unavailable("Indisponible") }
+enum class P2pStatus(val label: String) { Available(S(R.string.available)), Invited(S(R.string.invited)), Connected(S(R.string.connected)), Failed(S(R.string.failed)), Unavailable(S(R.string.unavailable)) }
 
 data class P2pPeer(
     val name: String,
@@ -40,17 +42,17 @@ object WifiDirect {
         val sub = parts[2].toIntOrNull() ?: 0
         val s = com.allnetworktools.ui.theme.Sym
         return when (cat) {
-            1 -> P2pCategory(if (sub == 5) "Ordinateur portable" else "Ordinateur", s.Devices)
-            2 -> P2pCategory("Périphérique d'entrée", s.Keyboard)
-            3 -> P2pCategory(if (sub == 2) "Scanner" else "Imprimante", s.Print)
-            4 -> P2pCategory("Appareil photo", s.PhotoCamera)
-            5 -> P2pCategory("Stockage (NAS)", s.Devices)
-            6 -> P2pCategory("Équipement réseau", s.Router)
-            7 -> P2pCategory(if (sub == 1) "Téléviseur" else "Écran", s.ConnectedTv)
-            8 -> P2pCategory("Appareil multimédia", s.Cast)
-            9 -> P2pCategory("Console de jeu", s.Devices)
-            10 -> P2pCategory(if (sub == 5) "Smartphone" else "Téléphone", s.Smartphone)
-            11 -> P2pCategory("Appareil audio", s.VolumeUp)
+            1 -> P2pCategory(if (sub == 5) S(R.string.laptop) else S(R.string.computer), s.Devices)
+            2 -> P2pCategory(S(R.string.input_device), s.Keyboard)
+            3 -> P2pCategory(if (sub == 2) "Scanner" else S(R.string.printer), s.Print)
+            4 -> P2pCategory(S(R.string.camera), s.PhotoCamera)
+            5 -> P2pCategory(S(R.string.storage_nas), s.Devices)
+            6 -> P2pCategory(S(R.string.network_equipment), s.Router)
+            7 -> P2pCategory(if (sub == 1) S(R.string.television) else S(R.string.display), s.ConnectedTv)
+            8 -> P2pCategory(S(R.string.multimedia_device), s.Cast)
+            9 -> P2pCategory(S(R.string.game_console), s.Devices)
+            10 -> P2pCategory(if (sub == 5) "Smartphone" else S(R.string.phone), s.Smartphone)
+            11 -> P2pCategory(S(R.string.audio_device), s.VolumeUp)
             else -> null
         }
     }
@@ -79,7 +81,7 @@ open class WifiDirectRepository(private val context: Context) {
             trySend(
                 list.deviceList.map { d ->
                     P2pPeer(
-                        name = d.deviceName?.takeIf { it.isNotBlank() } ?: "Sans nom",
+                        name = d.deviceName?.takeIf { it.isNotBlank() } ?: S(R.string.unnamed),
                         address = d.deviceAddress ?: "—",
                         deviceType = d.primaryDeviceType,
                         status = WifiDirect.status(d.status),
