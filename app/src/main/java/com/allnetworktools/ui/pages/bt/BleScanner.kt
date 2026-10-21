@@ -287,7 +287,7 @@ private fun IdentifyCard(c: BleIdentifyController, unknown: Int, candidates: Int
                 Text(
                     when {
                         c.running -> c.current ?: S(R.string.connecting)
-                        candidates > 0 -> S(R.string.brief_read_only_connection_to_nearby, candidates, P(R.plurals.p_devices, candidates), if (candidates > 1) "s" else "")
+                        candidates > 0 -> P(R.plurals.p_brief_connection, candidates, candidates)
                         c.finished -> S(R.string.identities_read_are_kept_for_the)
                         else -> S(R.string.these_devices_are_not_connectable_or)
                     },

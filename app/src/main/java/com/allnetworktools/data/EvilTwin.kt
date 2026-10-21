@@ -2,6 +2,7 @@ package com.allnetworktools.data
 
 import com.allnetworktools.R
 import com.allnetworktools.util.S
+import com.allnetworktools.util.P
 
 /** How worrying a network looks. */
 enum class TwinRisk(val label: String) { High(S(R.string.high_risk)), Medium(S(R.string.suspicious)), Low(S(R.string.worth_noting)), None("Normal") }
@@ -131,7 +132,7 @@ object EvilTwin {
             if (soft.isNotEmpty() && soft.size < aps.size) {
                 findings += TwinFinding(
                     TwinRisk.Medium, S(R.string.software_generated_address),
-                    S(R.string.locally_administered_with_no_link_to, soft.size, if (soft.size > 1) S(R.string.addresses_are) else S(R.string.address_is), if (soft.size > 1) "s" else "") +
+                    P(R.plurals.p_locally_administered, soft.size, soft.size) +
                         S(R.string.typical_of_a_personal_hotspot_a),
                     soft.map { it.bssid }.toSet(),
                 )

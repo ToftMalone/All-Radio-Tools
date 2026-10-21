@@ -3,6 +3,7 @@ package com.allnetworktools.data
 import com.allnetworktools.ui.theme.Sym
 import com.allnetworktools.R
 import com.allnetworktools.util.S
+import com.allnetworktools.util.P
 
 enum class BleKind(val label: String, val filter: String, val icon: String) {
     Audio("Audio", "Audio", Sym.Headphones),
@@ -108,7 +109,7 @@ object BleIdentify {
         val makerFromGatt = ctx.cands.firstOrNull { it.kind == BleKind.Unknown && it.maker != null }?.maker
         if (best == null) {
             val ev = buildList {
-                if (ads.isEmpty()) add(S(R.string.no_advertising_packet_received)) else add(S(R.string.no_identity_clue_in_the_advertisement, ads.size, if (ads.size > 1) "s" else ""))
+                if (ads.isEmpty()) add(S(R.string.no_advertising_packet_received)) else add(P(R.plurals.p_no_identity_clue, ads.size, ads.size))
                 if (makerFromCompany != null) add(S(R.string.manufacturer_2, makerFromCompany))
             }
             return BleIdentity(BleKind.Unknown, makerFromGatt ?: makerFromCompany, null, null, 0, ev, ctx.details)

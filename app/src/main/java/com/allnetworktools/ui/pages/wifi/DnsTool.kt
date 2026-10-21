@@ -69,6 +69,7 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 import com.allnetworktools.R
 import com.allnetworktools.util.S
+import com.allnetworktools.util.P
 
 class DnsController(private val scope: CoroutineScope) {
     var host by mutableStateOf("android.com")
@@ -184,7 +185,7 @@ fun DnsTool(c: DnsController, systemDns: String?) {
                     Box(Modifier.height(26.dp).clip(RoundedCornerShape(13.dp)).background(AntTheme.net.good).padding(horizontal = 10.dp), contentAlignment = Alignment.Center) {
                         Text(ans.rcodeName, style = rf(12, 16, 700), color = cs.surface)
                     }
-                    Text(S(R.string.record_2, ans.records.size, if (ans.records.size > 1) "s" else "", c.type.name), style = rf(13, 18, 500))
+                    Text(P(R.plurals.p_records, ans.records.size, ans.records.size, c.type.name), style = rf(13, 18, 500))
                 }
                 HeroMetric(fmt(ans.ms), "ms", 48, Modifier.padding(top = 10.dp))
                 Text(S(R.string.response_time_via, c.server.name, c.server.ip), Modifier.graphicsLayer { alpha = 0.85f }, style = rf(13, 18))

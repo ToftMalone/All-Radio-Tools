@@ -62,7 +62,6 @@
     <string name="gatt_manufacturer_2">"GATT manufacturer: %1$s"</string>
     <string name="manufacturer_0x" formatted="false">"Manufacturer 0x%04X"</string>
     <string name="no_advertising_packet_received">"No advertising packet received"</string>
-    <string name="no_identity_clue_in_the_advertisement">"No identity clue in the advertisement (%1$s structure%2$s)"</string>
     <string name="airplay_target">"AirPlay (target)"</string>
     <string name="airplay_source">"AirPlay (source)"</string>
     <string name="personal_hotspot_target">"Personal hotspot (target)"</string>
@@ -402,9 +401,6 @@
     <string name="different_from_the_others_one_network">"different from the %1$s others (%2$s). One network is normally broadcast by a single manufacturer"</string>
     <string name="and_this_one_is_received_much">", and this one is received much more strongly: the behaviour of a fake access point placed near you."</string>
     <string name="software_generated_address">"Software-generated address"</string>
-    <string name="addresses_are">"addresses are"</string>
-    <string name="address_is">"address is"</string>
-    <string name="locally_administered_with_no_link_to">"%1$s %2$s “locally administered%3$s” with no link to the others: "</string>
     <string name="typical_of_a_personal_hotspot_a">"typical of a personal hotspot, a pocket router or an attack tool."</string>
     <string name="appeared_during_the_scan">"Appeared during the scan"</string>
     <string name="new_access_points_appeared">"new access points appeared"</string>
@@ -1151,7 +1147,6 @@
     <string name="identifying">"Identifying %1$s / %2$s"</string>
     <string name="of">"%1$s %2$s of %3$s"</string>
     <string name="connecting">"Connecting…"</string>
-    <string name="brief_read_only_connection_to_nearby">"Brief read-only connection to %1$s nearby %2$s%3$s to read name, model and manufacturer."</string>
     <string name="identities_read_are_kept_for_the">"Identities read are kept for the next scans."</string>
     <string name="these_devices_are_not_connectable_or">"These devices are not connectable or too far away to be queried."</string>
     <string name="identify">"Identify"</string>
@@ -1929,7 +1924,6 @@
     <string name="not_offered_by_the_system_server">"Not offered by the system server: UDP"</string>
     <string name="encrypted_query_rfc_8484">"Encrypted query (RFC 8484)"</string>
     <string name="resolve">"Resolve"</string>
-    <string name="record_2">"%1$s record%2$s · %3$s"</string>
     <string name="response_time_via">"Response time · via %1$s (%2$s)"</string>
     <string name="server_comparison">"Server comparison"</string>
     <string name="failed_3">"failed"</string>
@@ -2435,5 +2429,21 @@
     <plurals name="p_messages_heard_ignored">
         <item quantity="one">" (%1$d message heard, ignored)"</item>
         <item quantity="other">" (%1$d messages heard, ignored)"</item>
+    </plurals>
+    <plurals name="p_no_identity_clue">
+        <item quantity="one">"No identity clue in the advertisement (%1$d structure)"</item>
+        <item quantity="other">"No identity clue in the advertisement (%1$d structures)"</item>
+    </plurals>
+    <plurals name="p_locally_administered">
+        <item quantity="one">"%1$d address is “locally administered” with no link to the others: "</item>
+        <item quantity="other">"%1$d addresses are “locally administered” with no link to the others: "</item>
+    </plurals>
+    <plurals name="p_records">
+        <item quantity="one">"%1$d record · %2$s"</item>
+        <item quantity="other">"%1$d records · %2$s"</item>
+    </plurals>
+    <plurals name="p_brief_connection">
+        <item quantity="one">"Brief read-only connection to %1$d nearby device to read name, model and manufacturer."</item>
+        <item quantity="other">"Brief read-only connection to %1$d nearby devices to read name, model and manufacturer."</item>
     </plurals>
 </resources>
