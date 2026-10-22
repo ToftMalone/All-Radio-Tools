@@ -45,6 +45,14 @@ class BitchatStore(context: Context) {
         prefs.edit().remove("noise").remove("sign").apply()
     }
 
+    /** Favourite peers: id to the last nickname seen, so they stay listed while out of range. */
+    fun favorites(): Map<String, String> = prefs.getStringSet("favorites", emptySet()).orEmpty()
+        .mapNotNull { e -> e.split("|", limit = 2).takeIf { it.size == 2 }?.let { it[0] to it[1] } }.toMap()
+
+    fun setFavorites(m: Map<String, String>) {
+        prefs.edit().putStringSet("favorites", m.map { (k, v) -> "$k|$v" }.toSet()).apply()
+    }
+
     var nickname: String
         get() = prefs.getString("nick", null) ?: ("anon" + (1000 + SecureRandom().nextInt(9000))).also { prefs.edit().putString("nick", it).apply() }
         set(v) { prefs.edit().putString("nick", v).apply() }
@@ -60,6 +68,18 @@ object BitchatHub {
 
     private val _ble = MutableStateFlow(BleStatus.Idle)
     val ble: StateFlow<BleStatus> = _ble.asStateFlow()
+
+    private val _favorites = MutableStateFlow<Map<String, String>>(emptyMap())
+    val favorites: StateFlow<Map<String, String>> = _favorites.asStateFlow()
+
+    fun loadFavorites(context: Context) { _favorites.value = BitchatStore(context).favorites() }
+
+    fun toggleFavorite(context: Context, id: String, nickname: String) {
+        val m = _favorites.value.toMutableMap()
+        if (m.remove(id) == null) m[id] = nickname
+        BitchatStore(context).setFavorites(m)
+        _favorites.value = m
+    }
 
     @Volatile
     internal var mesh: BitchatMesh? = null

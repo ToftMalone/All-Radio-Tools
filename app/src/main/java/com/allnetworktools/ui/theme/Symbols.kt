@@ -211,4 +211,5 @@ object Sym {
     const val DoneAll = "done_all"
     const val Person = "person"
     const val Group = "group"
+    const val Star = "star"
 }

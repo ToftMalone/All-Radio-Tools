@@ -91,6 +91,8 @@ fun BitchatTool(
     var chatWith by rememberSaveable { mutableStateOf<String?>(null) }
     var nickname by remember { mutableStateOf(BitchatHub.nickname(context)) }
     val running = state.running
+    val favorites by BitchatHub.favorites.collectAsStateWithLifecycle()
+    DisposableEffect(Unit) { BitchatHub.loadFavorites(context); onDispose { } }
 
     // The chat on screen counts as read, and the sender is told.
     DisposableEffect(chatWith) {
@@ -167,7 +169,7 @@ fun BitchatTool(
                     messages = state.privateChats[chatWith].orEmpty(),
                     onBack = { chatWith = null },
                 )
-                tab == TAB_PEERS -> Peers(state.peers, state.unread) { chatWith = it }
+                tab == TAB_PEERS -> Peers(state.peers, state.unread, favorites, { id, nick -> BitchatHub.toggleFavorite(context, id, nick) }) { chatWith = it }
             }
         }
         if (!running || tab == TAB_ME) {
@@ -208,29 +210,40 @@ private fun PublicChat(messages: List<ChatMessage>, me: String) {
 // ---- peers ----------------------------------------------------------------------------------------------------
 
 @Composable
-private fun Peers(peers: List<MeshPeer>, unread: Set<String>, onOpen: (String) -> Unit) {
-    if (peers.isEmpty()) {
+private fun Peers(
+    peers: List<MeshPeer>, unread: Set<String>, favorites: Map<String, String>,
+    onFavorite: (String, String) -> Unit, onOpen: (String) -> Unit,
+) {
+    // Favourites first, including those out of range; then everyone else.
+    val live = peers.associateBy { it.id }
+    val rows = (favorites.map { (id, nick) -> live[id] ?: MeshPeer(id, nick, false, 0, false) } +
+        peers.filter { it.id !in favorites }).map { it to (it.id in favorites) }
+    if (rows.isEmpty()) {
         ToolEmpty(Sym.Group, S(R.string.nobody_nearby), S(R.string.peers_appear_here), null)
         return
     }
     SectionCard(padding = androidx.compose.foundation.layout.PaddingValues(vertical = 4.dp)) {
-        peers.forEachIndexed { i, p ->
+        rows.forEachIndexed { i, (p, fav) ->
             if (i > 0) Hairline(Modifier.padding(horizontal = 16.dp))
+            val away = p.id !in live
             Row(
-                Modifier.fillMaxWidth().clickable { onOpen(p.id) }.padding(horizontal = 16.dp, vertical = 12.dp),
+                Modifier.fillMaxWidth().clickable { onOpen(p.id) }.padding(start = 16.dp, end = 4.dp, top = 8.dp, bottom = 8.dp),
                 verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(14.dp),
             ) {
                 LeadingIcon(Sym.Person, cs.surfaceContainerHighest, nameColor(p.id))
                 Column(Modifier.weight(1f)) {
                     Text(p.nickname, style = rf(16, 22, 600), color = nameColor(p.id), maxLines = 1)
                     Text(
-                        (if (p.direct) S(R.string.direct_link) else S(R.string.through_the_mesh)) + " · " + p.id.take(8),
+                        (if (away) S(R.string.out_of_range) else if (p.direct) S(R.string.direct_link) else S(R.string.through_the_mesh)) + " · " + p.id.take(8),
                         style = rf(12, 16), color = cs.onSurfaceVariant, maxLines = 1,
                     )
                 }
                 if (p.encrypted) Symbol(Sym.Lock, size = 18.dp, tint = AntTheme.net.good)
                 if (p.id in unread) Box(Modifier.size(10.dp).clip(CircleShape).background(AntTheme.accent.accent))
-                Symbol(Sym.ChevronRight, size = 22.dp, tint = cs.onSurfaceVariant)
+                IconCircleButton(
+                    Sym.Star, { onFavorite(p.id, p.nickname) }, size = 44.dp, filled = fav,
+                    tint = if (fav) AntTheme.accent.accent else cs.onSurfaceVariant,
+                )
             }
         }
     }
