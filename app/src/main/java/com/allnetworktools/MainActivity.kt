@@ -6,6 +6,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import com.allnetworktools.model.Network
+import com.allnetworktools.model.Tool
 import com.allnetworktools.ui.AntApp
 
 class MainActivity : ComponentActivity() {
@@ -23,6 +25,25 @@ class MainActivity : ComponentActivity() {
         }
         enableEdgeToEdge()
         setContent { AntApp(vm) }
+        if (savedInstanceState == null) open(intent)
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        open(intent)
+    }
+
+    /** A notification can ask for a tool directly. */
+    private fun open(intent: Intent?) {
+        if (intent?.getStringExtra(EXTRA_OPEN) == OPEN_BITCHAT) {
+            vm.navigate { it.copy(network = Network.Bluetooth, page = Page.ToolPage(Tool.BitChat)) }
+        }
+    }
+
+    companion object {
+        const val EXTRA_OPEN = "open"
+        const val OPEN_BITCHAT = "bitchat"
     }
 
     override fun onResume() {

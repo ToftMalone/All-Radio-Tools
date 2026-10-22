@@ -162,10 +162,17 @@ class BitchatService : Service() {
         return START_NOT_STICKY
     }
 
+    @Volatile
+    private var closing = false
+
     override fun onDestroy() {
+        // Stop the collectors first: one still running could post the notification again after the service is gone.
+        closing = true
+        scope?.cancel(); scope = null
         mesh?.stop()
         transport?.stop()
-        scope?.cancel(); scope = null
+        stopForeground(STOP_FOREGROUND_REMOVE)
+        getSystemService(NotificationManager::class.java)?.cancel(NOTIFICATION_ID)
         BitchatHub.mesh = null
         BitchatHub.publish(BitchatHub.state.value.copy(running = false, links = 0, peers = emptyList()))
         BitchatHub.bleStatus(BleStatus.Idle)
@@ -176,6 +183,7 @@ class BitchatService : Service() {
     private var lastNotified = ""
 
     private fun notify(s: MeshState) {
+        if (closing) return
         val key = "${s.peers.size}/${s.links}"
         if (key == lastNotified) return
         lastNotified = key
@@ -186,7 +194,10 @@ class BitchatService : Service() {
     private fun notification(s: MeshState): Notification {
         val nm = getSystemService(NotificationManager::class.java)
         nm?.createNotificationChannel(NotificationChannel(CHANNEL, S(R.string.bitchat), NotificationManager.IMPORTANCE_LOW))
-        val open = PendingIntent.getActivity(this, 0, Intent(this, MainActivity::class.java), PendingIntent.FLAG_IMMUTABLE)
+        val open = PendingIntent.getActivity(
+            this, 3, Intent(this, MainActivity::class.java).putExtra(MainActivity.EXTRA_OPEN, MainActivity.OPEN_BITCHAT),
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT,
+        )
         val stop = PendingIntent.getService(this, 2, Intent(this, BitchatService::class.java).setAction(ACTION_STOP), PendingIntent.FLAG_IMMUTABLE)
         return Notification.Builder(this, CHANNEL)
             .setSmallIcon(R.drawable.ic_notification)
