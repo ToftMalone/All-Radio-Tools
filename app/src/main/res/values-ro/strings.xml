@@ -2585,4 +2585,25 @@
     <string name="peer_id">"ID peer"</string>
     <string name="new_identity">"Identitate nouă"</string>
     <string name="new_identity_body">"Uită cheile tale și dă acestui telefon un ID peer nou. Oprește rețeaua mesh."</string>
+    <string name="note_favorited_you">"%1$s te-a adăugat la favorite"</string>
+    <string name="note_favorited_mutual">"%1$s te-a adăugat la favorite — reciproc!"</string>
+    <string name="note_unfavorited_you">"%1$s te-a eliminat din favorite"</string>
+    <string name="cmd_unknown">"comandă necunoscută: %1$s. Scrie / pentru a vedea comenzile."</string>
+    <string name="cmd_user_not_found">"utilizatorul „%1$s” nu a fost găsit"</string>
+    <string name="cmd_usage">"utilizare: %1$s"</string>
+    <string name="cmd_nobody">"nu mai este nimeni în jur acum."</string>
+    <string name="cmd_online">"online: %1$s"</string>
+    <string name="cmd_blocked">"%1$s blocat"</string>
+    <string name="cmd_unblocked">"%1$s deblocat"</string>
+    <string name="cmd_not_blocked">"%1$s nu este blocat"</string>
+    <string name="cmd_no_blocked">"niciun utilizator blocat"</string>
+    <string name="cmd_blocked_list">"blocați: %1$s"</string>
+    <string name="cmd_desc_block">"blochează sau listează peer-ii blocați"</string>
+    <string name="cmd_desc_clear">"șterge mesajele din chat"</string>
+    <string name="cmd_desc_hug">"dă cuiva o îmbrățișare"</string>
+    <string name="cmd_desc_msg">"trimite un mesaj privat"</string>
+    <string name="cmd_desc_slap">"palmuiește pe cineva cu o păstrăv"</string>
+    <string name="cmd_desc_unblock">"deblochează un peer"</string>
+    <string name="cmd_desc_who">"vezi cine este online"</string>
+    <string name="mutual_favorite">"Reciproc"</string>
 </resources>

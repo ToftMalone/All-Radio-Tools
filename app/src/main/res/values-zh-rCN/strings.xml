@@ -2461,4 +2461,25 @@
     <string name="peer_id">"节点 ID"</string>
     <string name="new_identity">"新身份"</string>
     <string name="new_identity_body">"清除你的密钥并为此手机分配新的节点 ID，同时停止 Mesh。"</string>
+    <string name="note_favorited_you">"%1$s 将你加为收藏"</string>
+    <string name="note_favorited_mutual">"%1$s 将你加为收藏 — 互相收藏！"</string>
+    <string name="note_unfavorited_you">"%1$s 取消了对你的收藏"</string>
+    <string name="cmd_unknown">"未知命令：%1$s。输入 / 查看命令。"</string>
+    <string name="cmd_user_not_found">"未找到用户“%1$s”"</string>
+    <string name="cmd_usage">"用法：%1$s"</string>
+    <string name="cmd_nobody">"目前附近没有其他人。"</string>
+    <string name="cmd_online">"在线：%1$s"</string>
+    <string name="cmd_blocked">"已屏蔽 %1$s"</string>
+    <string name="cmd_unblocked">"已取消屏蔽 %1$s"</string>
+    <string name="cmd_not_blocked">"%1$s 未被屏蔽"</string>
+    <string name="cmd_no_blocked">"没有被屏蔽的用户"</string>
+    <string name="cmd_blocked_list">"已屏蔽：%1$s"</string>
+    <string name="cmd_desc_block">"屏蔽节点或列出已屏蔽节点"</string>
+    <string name="cmd_desc_clear">"清除聊天消息"</string>
+    <string name="cmd_desc_hug">"给某人一个温暖的拥抱"</string>
+    <string name="cmd_desc_msg">"发送私密消息"</string>
+    <string name="cmd_desc_slap">"用鳟鱼拍某人"</string>
+    <string name="cmd_desc_unblock">"取消屏蔽节点"</string>
+    <string name="cmd_desc_who">"查看谁在线"</string>
+    <string name="mutual_favorite">"互相收藏"</string>
 </resources>

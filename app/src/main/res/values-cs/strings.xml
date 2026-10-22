@@ -2647,4 +2647,25 @@
     <string name="peer_id">"ID peeru"</string>
     <string name="new_identity">"Nová identita"</string>
     <string name="new_identity_body">"Zapomene vaše klíče a přidělí telefonu nové ID peeru. Zastaví síť mesh."</string>
+    <string name="note_favorited_you">"%1$s vás přidal(a) do oblíbených"</string>
+    <string name="note_favorited_mutual">"%1$s vás přidal(a) do oblíbených — vzájemně!"</string>
+    <string name="note_unfavorited_you">"%1$s vás odebral(a) z oblíbených"</string>
+    <string name="cmd_unknown">"neznámý příkaz: %1$s. Zadejte / pro zobrazení příkazů."</string>
+    <string name="cmd_user_not_found">"uživatel „%1$s“ nenalezen"</string>
+    <string name="cmd_usage">"použití: %1$s"</string>
+    <string name="cmd_nobody">"nikdo další tu teď není."</string>
+    <string name="cmd_online">"online: %1$s"</string>
+    <string name="cmd_blocked">"%1$s zablokován"</string>
+    <string name="cmd_unblocked">"%1$s odblokován"</string>
+    <string name="cmd_not_blocked">"%1$s není zablokován"</string>
+    <string name="cmd_no_blocked">"žádní zablokovaní uživatelé"</string>
+    <string name="cmd_blocked_list">"zablokovaní: %1$s"</string>
+    <string name="cmd_desc_block">"zablokovat nebo vypsat zablokované"</string>
+    <string name="cmd_desc_clear">"vymazat zprávy v chatu"</string>
+    <string name="cmd_desc_hug">"pořádně někoho obejmout"</string>
+    <string name="cmd_desc_msg">"poslat soukromou zprávu"</string>
+    <string name="cmd_desc_slap">"uhodit někoho pstruhem"</string>
+    <string name="cmd_desc_unblock">"odblokovat peera"</string>
+    <string name="cmd_desc_who">"zobrazit, kdo je online"</string>
+    <string name="mutual_favorite">"Vzájemně"</string>
 </resources>

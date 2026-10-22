@@ -2647,4 +2647,25 @@
     <string name="peer_id">"ID узла"</string>
     <string name="new_identity">"Новая личность"</string>
     <string name="new_identity_body">"Забывает ваши ключи и выдаёт этому телефону новый ID узла. Останавливает mesh-сеть."</string>
+    <string name="note_favorited_you">"%1$s добавил(а) вас в избранное"</string>
+    <string name="note_favorited_mutual">"%1$s добавил(а) вас в избранное — взаимно!"</string>
+    <string name="note_unfavorited_you">"%1$s убрал(а) вас из избранного"</string>
+    <string name="cmd_unknown">"неизвестная команда: %1$s. Введите /, чтобы увидеть команды."</string>
+    <string name="cmd_user_not_found">"пользователь «%1$s» не найден"</string>
+    <string name="cmd_usage">"использование: %1$s"</string>
+    <string name="cmd_nobody">"сейчас рядом никого нет."</string>
+    <string name="cmd_online">"в сети: %1$s"</string>
+    <string name="cmd_blocked">"%1$s заблокирован"</string>
+    <string name="cmd_unblocked">"%1$s разблокирован"</string>
+    <string name="cmd_not_blocked">"%1$s не заблокирован"</string>
+    <string name="cmd_no_blocked">"нет заблокированных пользователей"</string>
+    <string name="cmd_blocked_list">"заблокированы: %1$s"</string>
+    <string name="cmd_desc_block">"заблокировать или показать заблокированных"</string>
+    <string name="cmd_desc_clear">"очистить сообщения чата"</string>
+    <string name="cmd_desc_hug">"крепко обнять кого-нибудь"</string>
+    <string name="cmd_desc_msg">"отправить личное сообщение"</string>
+    <string name="cmd_desc_slap">"шлёпнуть кого-нибудь форелью"</string>
+    <string name="cmd_desc_unblock">"разблокировать узел"</string>
+    <string name="cmd_desc_who">"посмотреть, кто в сети"</string>
+    <string name="mutual_favorite">"Взаимно"</string>
 </resources>

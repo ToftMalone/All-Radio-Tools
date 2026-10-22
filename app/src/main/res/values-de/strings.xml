@@ -2523,4 +2523,25 @@
     <string name="peer_id">"Peer-ID"</string>
     <string name="new_identity">"Neue Identität"</string>
     <string name="new_identity_body">"Vergisst deine Schlüssel und gibt diesem Telefon eine neue Peer-ID. Stoppt das Mesh."</string>
+    <string name="note_favorited_you">"%1$s hat dich als Favorit markiert"</string>
+    <string name="note_favorited_mutual">"%1$s hat dich als Favorit markiert — gegenseitig!"</string>
+    <string name="note_unfavorited_you">"%1$s hat dich aus den Favoriten entfernt"</string>
+    <string name="cmd_unknown">"Unbekannter Befehl: %1$s. Tippe /, um die Befehle zu sehen."</string>
+    <string name="cmd_user_not_found">"Nutzer „%1$s“ nicht gefunden"</string>
+    <string name="cmd_usage">"Verwendung: %1$s"</string>
+    <string name="cmd_nobody">"gerade ist sonst niemand da."</string>
+    <string name="cmd_online">"online: %1$s"</string>
+    <string name="cmd_blocked">"%1$s blockiert"</string>
+    <string name="cmd_unblocked">"%1$s entblockt"</string>
+    <string name="cmd_not_blocked">"%1$s ist nicht blockiert"</string>
+    <string name="cmd_no_blocked">"keine blockierten Nutzer"</string>
+    <string name="cmd_blocked_list">"blockiert: %1$s"</string>
+    <string name="cmd_desc_block">"Peers blockieren oder blockierte auflisten"</string>
+    <string name="cmd_desc_clear">"Chatnachrichten löschen"</string>
+    <string name="cmd_desc_hug">"jemanden fest umarmen"</string>
+    <string name="cmd_desc_msg">"private Nachricht senden"</string>
+    <string name="cmd_desc_slap">"jemanden mit einer Forelle ohrfeigen"</string>
+    <string name="cmd_desc_unblock">"einen Peer entblocken"</string>
+    <string name="cmd_desc_who">"sehen, wer online ist"</string>
+    <string name="mutual_favorite">"Gegenseitig"</string>
 </resources>

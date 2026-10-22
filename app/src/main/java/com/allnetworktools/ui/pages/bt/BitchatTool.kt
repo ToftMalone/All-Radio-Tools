@@ -44,6 +44,7 @@ import com.allnetworktools.data.bitchat.BleStatus
 import com.allnetworktools.data.bitchat.ChatMessage
 import com.allnetworktools.data.bitchat.Delivery
 import com.allnetworktools.data.bitchat.MeshPeer
+import com.allnetworktools.data.bitchat.NoteKind
 import com.allnetworktools.ui.LocalActions
 import com.allnetworktools.ui.components.Hairline
 import com.allnetworktools.ui.components.IconCircleButton
@@ -98,6 +99,57 @@ fun BitchatTool(
     DisposableEffect(chatWith) {
         BitchatHub.openChat(chatWith)
         onDispose { BitchatHub.openChat(null) }
+    }
+
+    val blockedIds = state.blocked
+    fun idOf(name: String): String? {
+        val n = name.removePrefix("@")
+        return state.peers.firstOrNull { it.nickname.equals(n, true) }?.id
+            ?: favorites.entries.firstOrNull { it.value.equals(n, true) }?.key
+    }
+    fun nameOf(id: String) = state.peers.firstOrNull { it.id == id }?.nickname ?: favorites[id] ?: id.take(8)
+
+    /** One line typed in the public channel (`chat` null) or in a private chat: a message or a /command. */
+    fun submit(chat: String?, raw: String) {
+        val text = raw.trim()
+        fun say(s: String) = BitchatHub.note(chat, s)
+        fun send(s: String) = if (chat == null) BitchatHub.sendPublic(s) else BitchatHub.sendPrivate(chat, s)
+        if (!text.startsWith("/")) { send(text); return }
+        val parts = text.split(Regex("\\s+"))
+        val target = parts.getOrNull(1)
+        when (val cmd = parts[0].lowercase()) {
+            "/clear" -> BitchatHub.clear(chat)
+            "/w" -> say(if (state.peers.isEmpty()) S(R.string.cmd_nobody) else S(R.string.cmd_online, state.peers.joinToString(", ") { it.nickname }))
+            "/m", "/msg" -> when {
+                target == null -> say(S(R.string.cmd_usage, "/msg <nickname> [message]"))
+                else -> {
+                    val id = idOf(target)
+                    if (id == null) say(S(R.string.cmd_user_not_found, target.removePrefix("@"))) else {
+                        tab = TAB_PEERS; chatWith = id
+                        if (parts.size > 2) BitchatHub.sendPrivate(id, parts.drop(2).joinToString(" "))
+                    }
+                }
+            }
+            "/hug", "/slap" -> {
+                if (target == null) say(S(R.string.cmd_usage, "$cmd <nickname>")) else {
+                    val what = if (cmd == "/hug") "gives ${target.removePrefix("@")} a warm hug \uD83E\uDEC2" else "slaps ${target.removePrefix("@")} around a bit with a large trout \uD83D\uDC1F"
+                    send("* ${state.nickname} $what *")
+                }
+            }
+            "/block" -> if (target == null) {
+                say(if (blockedIds.isEmpty()) S(R.string.cmd_no_blocked) else S(R.string.cmd_blocked_list, blockedIds.joinToString(", ") { nameOf(it) }))
+            } else {
+                val id = idOf(target)
+                if (id == null) say(S(R.string.cmd_user_not_found, target.removePrefix("@"))) else { BitchatHub.block(context, id, true); say(S(R.string.cmd_blocked, nameOf(id))) }
+            }
+            "/unblock" -> if (target == null) say(S(R.string.cmd_usage, "/unblock <nickname>")) else {
+                val id = idOf(target) ?: blockedIds.firstOrNull { nameOf(it).equals(target.removePrefix("@"), true) }
+                if (id == null) say(S(R.string.cmd_user_not_found, target.removePrefix("@")))
+                else if (id !in blockedIds) say(S(R.string.cmd_not_blocked, nameOf(id)))
+                else { BitchatHub.block(context, id, false); say(S(R.string.cmd_unblocked, nameOf(id))) }
+            }
+            else -> say(S(R.string.cmd_unknown, cmd))
+        }
     }
 
     fun toggle(on: Boolean) {
@@ -162,14 +214,15 @@ fun BitchatTool(
                 tab, { tab = it; chatWith = null }, Modifier.fillMaxWidth(),
             )
             when {
-                tab == TAB_CHAT -> PublicChat(state.publicChat, state.peerId)
+                tab == TAB_CHAT -> PublicChat(state.publicChat) { submit(null, it) }
                 tab == TAB_PEERS && chatWith != null -> PrivateChat(
                     peer = state.peers.firstOrNull { it.id == chatWith },
                     peerId = chatWith!!,
                     messages = state.privateChats[chatWith].orEmpty(),
                     onBack = { chatWith = null },
+                    onSubmit = { submit(chatWith, it) },
                 )
-                tab == TAB_PEERS -> Peers(state.peers, state.unread, favorites, { id, nick -> BitchatHub.toggleFavorite(context, id, nick) }) { chatWith = it }
+                tab == TAB_PEERS -> Peers(state.peers, state.unread, favorites, state.favoritedUs, { id, nick -> BitchatHub.toggleFavorite(context, id, nick) }) { chatWith = it }
             }
         }
         if (!running || tab == TAB_ME) {
@@ -198,8 +251,8 @@ fun BitchatTool(
 // ---- public channel -------------------------------------------------------------------------------------------
 
 @Composable
-private fun PublicChat(messages: List<ChatMessage>, me: String) {
-    MessageInput(S(R.string.message_everyone_in_the_mesh)) { BitchatHub.sendPublic(it) }
+private fun PublicChat(messages: List<ChatMessage>, onSubmit: (String) -> Unit) {
+    MessageInput(S(R.string.message_everyone_in_the_mesh), onSend = onSubmit)
     if (messages.isEmpty()) {
         ToolEmpty(Sym.Forum, S(R.string.no_message_yet), S(R.string.messages_appear_here), null)
     } else {
@@ -211,7 +264,7 @@ private fun PublicChat(messages: List<ChatMessage>, me: String) {
 
 @Composable
 private fun Peers(
-    peers: List<MeshPeer>, unread: Set<String>, favorites: Map<String, String>,
+    peers: List<MeshPeer>, unread: Set<String>, favorites: Map<String, String>, favoritedUs: Set<String>,
     onFavorite: (String, String) -> Unit, onOpen: (String) -> Unit,
 ) {
     // Favourites first, including those out of range; then everyone else.
@@ -234,7 +287,8 @@ private fun Peers(
                 Column(Modifier.weight(1f)) {
                     Text(p.nickname, style = rf(16, 22, 600), color = nameColor(p.id), maxLines = 1)
                     Text(
-                        (if (away) S(R.string.out_of_range) else if (p.direct) S(R.string.direct_link) else S(R.string.through_the_mesh)) + " · " + p.id.take(8),
+                        (if (away) S(R.string.out_of_range) else if (p.direct) S(R.string.direct_link) else S(R.string.through_the_mesh)) + " · " + p.id.take(8) +
+                            if (fav && p.id in favoritedUs) " · " + S(R.string.mutual_favorite) else "",
                         style = rf(12, 16), color = cs.onSurfaceVariant, maxLines = 1,
                     )
                 }
@@ -250,7 +304,7 @@ private fun Peers(
 }
 
 @Composable
-private fun PrivateChat(peer: MeshPeer?, peerId: String, messages: List<ChatMessage>, onBack: () -> Unit) {
+private fun PrivateChat(peer: MeshPeer?, peerId: String, messages: List<ChatMessage>, onBack: () -> Unit, onSubmit: (String) -> Unit) {
     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
         IconCircleButton(Sym.ArrowBack, onBack, size = 44.dp)
         Column(Modifier.weight(1f)) {
@@ -262,7 +316,7 @@ private fun PrivateChat(peer: MeshPeer?, peerId: String, messages: List<ChatMess
         }
         Symbol(Sym.Lock, size = 20.dp, tint = if (peer?.encrypted == true) AntTheme.net.good else cs.onSurfaceVariant)
     }
-    MessageInput(S(R.string.private_message), enabled = peer != null) { BitchatHub.sendPrivate(peerId, it) }
+    MessageInput(S(R.string.private_message), enabled = peer != null, onSend = onSubmit)
     if (messages.isEmpty()) {
         ToolEmpty(Sym.Lock, S(R.string.private_chat), S(R.string.only_you_can_read), null)
     } else {
@@ -316,6 +370,7 @@ private fun Identity(
 @Composable
 private fun MessageInput(hint: String, enabled: Boolean = true, onSend: (String) -> Unit) {
     var text by rememberSaveable { mutableStateOf("") }
+    Suggestions(text) { text = it }
     fun send() {
         if (text.isNotBlank() && enabled) { onSend(text); text = "" }
     }
@@ -338,6 +393,16 @@ private fun MessageInput(hint: String, enabled: Boolean = true, onSend: (String)
 
 @Composable
 private fun Bubble(m: ChatMessage, showName: Boolean, ticks: Boolean) {
+    if (m.system) {
+        val line = when (m.note) {
+            NoteKind.FavoritedYou -> S(R.string.note_favorited_you, m.text)
+            NoteKind.FavoritedYouMutual -> S(R.string.note_favorited_mutual, m.text)
+            NoteKind.UnfavoritedYou -> S(R.string.note_unfavorited_you, m.text)
+            null -> m.text
+        }
+        Text(line, Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 2.dp), style = rf(12, 16), color = cs.onSurfaceVariant, textAlign = androidx.compose.ui.text.style.TextAlign.Center)
+        return
+    }
     val time = remember(m.time) { SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date(m.time)) }
     val acc = AntTheme.accent
     Row(Modifier.fillMaxWidth(), horizontalArrangement = if (m.mine) Arrangement.End else Arrangement.Start) {
@@ -366,4 +431,35 @@ private fun Bubble(m: ChatMessage, showName: Boolean, ticks: Boolean) {
 private fun nameColor(id: String): Color {
     val hue = ((id.hashCode().toLong() and 0x7fffffff) % 360).toFloat()
     return Color.hsv(hue, 0.55f, if (isSystemInDarkTheme()) 0.92f else 0.58f)
+}
+
+// ---- slash commands -------------------------------------------------------------------------------------------
+
+/** The commands of the official app that make sense on the mesh alone (no channels, no Cashu). */
+private class Command(val name: String, val alias: String?, val args: String?, val desc: Int)
+
+private val COMMANDS = listOf(
+    Command("/block", null, "[nickname]", R.string.cmd_desc_block),
+    Command("/clear", null, null, R.string.cmd_desc_clear),
+    Command("/hug", null, "<nickname>", R.string.cmd_desc_hug),
+    Command("/m", "/msg", "<nickname> [message]", R.string.cmd_desc_msg),
+    Command("/slap", null, "<nickname>", R.string.cmd_desc_slap),
+    Command("/unblock", null, "<nickname>", R.string.cmd_desc_unblock),
+    Command("/w", null, null, R.string.cmd_desc_who),
+)
+
+@Composable
+private fun Suggestions(input: String, onPick: (String) -> Unit) {
+    if (!input.startsWith("/") || ' ' in input) return
+    val hits = COMMANDS.filter { it.name.startsWith(input.lowercase()) || it.alias?.startsWith(input.lowercase()) == true }
+    if (hits.isEmpty()) return
+    SectionCard(padding = androidx.compose.foundation.layout.PaddingValues(vertical = 4.dp)) {
+        hits.forEachIndexed { i, c ->
+            if (i > 0) Hairline(Modifier.padding(horizontal = 16.dp))
+            Column(Modifier.fillMaxWidth().clickable { onPick(c.name + if (c.args != null) " " else "") }.padding(horizontal = 16.dp, vertical = 10.dp)) {
+                Text(listOfNotNull(c.name, c.alias?.let { "($it)" }, c.args).joinToString(" "), style = mono(14, 20), color = AntTheme.accent.accent)
+                Text(S(c.desc), style = rf(12, 16), color = cs.onSurfaceVariant)
+            }
+        }
+    }
 }

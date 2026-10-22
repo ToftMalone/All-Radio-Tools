@@ -2523,4 +2523,25 @@
     <string name="peer_id">"Peer-ID"</string>
     <string name="new_identity">"Nieuwe identiteit"</string>
     <string name="new_identity_body">"Vergeet je sleutels en geeft deze telefoon een nieuwe peer-ID. Stopt het mesh."</string>
+    <string name="note_favorited_you">"%1$s heeft je als favoriet gemarkeerd"</string>
+    <string name="note_favorited_mutual">"%1$s heeft je als favoriet gemarkeerd — wederzijds!"</string>
+    <string name="note_unfavorited_you">"%1$s heeft je uit de favorieten gehaald"</string>
+    <string name="cmd_unknown">"onbekende opdracht: %1$s. Typ / om de opdrachten te zien."</string>
+    <string name="cmd_user_not_found">"gebruiker '%1$s' niet gevonden"</string>
+    <string name="cmd_usage">"gebruik: %1$s"</string>
+    <string name="cmd_nobody">"er is nu verder niemand in de buurt."</string>
+    <string name="cmd_online">"online: %1$s"</string>
+    <string name="cmd_blocked">"%1$s geblokkeerd"</string>
+    <string name="cmd_unblocked">"%1$s gedeblokkeerd"</string>
+    <string name="cmd_not_blocked">"%1$s is niet geblokkeerd"</string>
+    <string name="cmd_no_blocked">"geen geblokkeerde gebruikers"</string>
+    <string name="cmd_blocked_list">"geblokkeerd: %1$s"</string>
+    <string name="cmd_desc_block">"peers blokkeren of geblokkeerde tonen"</string>
+    <string name="cmd_desc_clear">"chatberichten wissen"</string>
+    <string name="cmd_desc_hug">"iemand een dikke knuffel geven"</string>
+    <string name="cmd_desc_msg">"een privébericht sturen"</string>
+    <string name="cmd_desc_slap">"iemand een klap geven met een forel"</string>
+    <string name="cmd_desc_unblock">"een peer deblokkeren"</string>
+    <string name="cmd_desc_who">"zien wie er online is"</string>
+    <string name="mutual_favorite">"Wederzijds"</string>
 </resources>

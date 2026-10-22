@@ -53,6 +53,9 @@ class BitchatStore(context: Context) {
         prefs.edit().putStringSet("favorites", m.map { (k, v) -> "$k|$v" }.toSet()).apply()
     }
 
+    fun idSet(key: String): Set<String> = prefs.getStringSet(key, emptySet())?.toSet().orEmpty()
+    fun setIdSet(key: String, ids: Set<String>) { prefs.edit().putStringSet(key, ids).apply() }
+
     var nickname: String
         get() = prefs.getString("nick", null) ?: ("anon" + (1000 + SecureRandom().nextInt(9000))).also { prefs.edit().putString("nick", it).apply() }
         set(v) { prefs.edit().putString("nick", v).apply() }
@@ -79,7 +82,20 @@ object BitchatHub {
         if (m.remove(id) == null) m[id] = nickname
         BitchatStore(context).setFavorites(m)
         _favorites.value = m
+        mesh?.setFavorite(id, id in m, m.keys)
     }
+
+    fun block(context: Context, id: String, on: Boolean) {
+        val s = BitchatStore(context)
+        val ids = if (on) s.idSet("blocked") + id else s.idSet("blocked") - id
+        s.setIdSet("blocked", ids)
+        mesh?.setBlocked(ids)
+    }
+
+    fun blocked(context: Context): Set<String> = BitchatStore(context).idSet("blocked")
+
+    fun note(chat: String?, text: String) { mesh?.note(chat, text) }
+    fun clear(chat: String?) { mesh?.clear(chat) }
 
     @Volatile
     internal var mesh: BitchatMesh? = null
@@ -131,6 +147,8 @@ class BitchatService : Service() {
             val t = BleMeshTransport(this, identity.peerId)
             val m = BitchatMesh(identity, store.nickname, t)
             t.mesh = m
+            m.restore(store.favorites().keys, store.idSet("favoritedUs"), store.idSet("blocked"))
+            m.onFavoritedUsChanged = { store.setIdSet("favoritedUs", it) }
             transport = t; mesh = m
             BitchatHub.mesh = m
             val sc = CoroutineScope(SupervisorJob() + Dispatchers.Default)

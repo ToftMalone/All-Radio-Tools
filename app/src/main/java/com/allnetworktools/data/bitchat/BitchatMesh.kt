@@ -14,6 +14,9 @@ interface MeshLink {
 
 enum class Delivery { Sending, Sent, Delivered, Read }
 
+/** Notices the engine itself raises in a chat; the screen words them in the user's language. */
+enum class NoteKind { FavoritedYou, FavoritedYouMutual, UnfavoritedYou }
+
 data class ChatMessage(
     val id: String,
     val from: String,
@@ -22,6 +25,8 @@ data class ChatMessage(
     val time: Long,
     val mine: Boolean,
     val delivery: Delivery = Delivery.Sent,
+    val system: Boolean = false,
+    val note: NoteKind? = null,
 )
 
 data class MeshPeer(val id: String, val nickname: String, val direct: Boolean, val lastSeen: Long, val encrypted: Boolean)
@@ -35,6 +40,8 @@ data class MeshState(
     val publicChat: List<ChatMessage> = emptyList(),
     val privateChats: Map<String, List<ChatMessage>> = emptyMap(),
     val unread: Set<String> = emptySet(),
+    val favoritedUs: Set<String> = emptySet(),
+    val blocked: Set<String> = emptySet(),
     val relayed: Long = 0,
     val received: Long = 0,
     val sent: Long = 0,
@@ -59,7 +66,7 @@ class BitchatMesh(
         var neighbors: List<String>? = null,
     )
 
-    private class Pending(val id: String, val text: String)
+    private class Pending(val id: String, val text: String, val hidden: Boolean = false)
 
     private val me = identity.peerId
     private val rng = SecureRandom()
@@ -84,6 +91,12 @@ class BitchatMesh(
     private val privateChats = HashMap<String, MutableList<ChatMessage>>()
     private val unread = HashSet<String>()
     private var openChat: String? = null
+    private var myFavorites = emptySet<String>()
+    private var favoritedUs = emptySet<String>()
+    private var blocked = emptySet<String>()
+
+    /** Called when a peer favourites or unfavourites us, so the set can be saved. */
+    var onFavoritedUsChanged: (Set<String>) -> Unit = {}
 
     private val _state = MutableStateFlow(MeshState(peerId = me, nickname = nickname))
     val state: StateFlow<MeshState> = _state.asStateFlow()
@@ -162,7 +175,7 @@ class BitchatMesh(
     }
 
     @Synchronized
-    fun sendPrivate(peer: String, text: String) {
+    fun sendPrivate(peer: String, text: String, hidden: Boolean = false) {
         if (!running || peer == me) return
         val t = text.trim()
         if (t.isEmpty()) return
@@ -170,8 +183,8 @@ class BitchatMesh(
         chunks(t).forEach { part ->
             val id = UUID.randomUUID().toString()
             val ready = sessions[peer]?.established == true
-            list += ChatMessage(id, me, nick, part, now(), true, if (ready) Delivery.Sent else Delivery.Sending)
-            if (ready) sendNoise(peer, NoisePayload.privateMessage(id, part)) else outbox.getOrPut(peer) { ArrayList() } += Pending(id, part)
+            if (!hidden) list += ChatMessage(id, me, nick, part, now(), true, if (ready) Delivery.Sent else Delivery.Sending)
+            if (ready) sendNoise(peer, NoisePayload.privateMessage(id, part)) else outbox.getOrPut(peer) { ArrayList() } += Pending(id, part, hidden)
         }
         if (sessions[peer]?.established != true) handshake(peer)
         publish()
@@ -188,6 +201,40 @@ class BitchatMesh(
                 mark(peer, m.id, Delivery.Read, incoming = true)
             }
         }
+        publish()
+    }
+
+    @Synchronized
+    fun restore(favorites: Set<String>, favoritedUs: Set<String>, blocked: Set<String>) {
+        myFavorites = favorites; this.favoritedUs = favoritedUs; this.blocked = blocked
+        publish()
+    }
+
+    /** Favouriting tells the other phone with the same private control message the official app sends. */
+    @Synchronized
+    fun setFavorite(peer: String, on: Boolean, favorites: Set<String>) {
+        myFavorites = favorites
+        if (running && peer != me) sendPrivate(peer, if (on) "[FAVORITED]:" else "[UNFAVORITED]:", hidden = true)
+        publish()
+    }
+
+    @Synchronized
+    fun setBlocked(ids: Set<String>) {
+        blocked = ids
+        publish()
+    }
+
+    /** A local line in a chat (command results); `chat` is a peer ID, or null for the public channel. */
+    @Synchronized
+    fun note(chat: String?, text: String) {
+        val m = ChatMessage(UUID.randomUUID().toString(), "", "", text, now(), false, system = true)
+        if (chat == null) publicChat += m else privateChats.getOrPut(chat) { ArrayList() } += m
+        publish()
+    }
+
+    @Synchronized
+    fun clear(chat: String?) {
+        if (chat == null) publicChat.clear() else privateChats[chat]?.clear()
         publish()
     }
 
@@ -269,6 +316,7 @@ class BitchatMesh(
     private fun onMessage(p: Packet) {
         if (!p.isBroadcast) return
         val text = String(p.payload, Charsets.UTF_8)
+        if (p.senderId in blocked) return
         val from = peers[p.senderId] ?: return
         from.lastSeen = now()
         publicChat += ChatMessage(p.id().uppercase(), p.senderId, from.nickname, text, p.timestamp, false)
@@ -356,7 +404,14 @@ class BitchatMesh(
         val body = plain.copyOfRange(1, plain.size)
         when (plain[0].toInt() and 0xFF) {
             NoisePayload.PRIVATE_MESSAGE -> {
+                if (peer in blocked) return
                 val (id, text) = NoisePayload.parsePrivate(body) ?: return
+                val control = text.trim().let { if (it.startsWith("[FAVORITED]")) true else if (it.startsWith("[UNFAVORITED]")) false else null }
+                if (control != null) {
+                    onFavoriteNotice(peer, control)
+                    sendNoise(peer, NoisePayload.ack(NoisePayload.DELIVERED, id))
+                    return
+                }
                 val list = privateChats.getOrPut(peer) { ArrayList() }
                 if (list.any { it.id == id }) return
                 val nickname = peers[peer]?.nickname ?: peer
@@ -371,6 +426,14 @@ class BitchatMesh(
         }
     }
 
+    private fun onFavoriteNotice(peer: String, favorited: Boolean) {
+        favoritedUs = if (favorited) favoritedUs + peer else favoritedUs - peer
+        onFavoritedUsChanged(favoritedUs)
+        val nickname = peers[peer]?.nickname ?: peer
+        val kind = if (!favorited) NoteKind.UnfavoritedYou else if (peer in myFavorites) NoteKind.FavoritedYouMutual else NoteKind.FavoritedYou
+        privateChats.getOrPut(peer) { ArrayList() } += ChatMessage(UUID.randomUUID().toString(), peer, nickname, nickname, now(), false, system = true, note = kind)
+    }
+
     private fun mark(peer: String, id: String, to: Delivery, incoming: Boolean = false) {
         val list = privateChats[peer] ?: return
         val i = list.indexOfFirst { it.id == id && it.mine != incoming }
@@ -381,7 +444,7 @@ class BitchatMesh(
         val queued = outbox.remove(peer) ?: return
         queued.forEach { q ->
             sendNoise(peer, NoisePayload.privateMessage(q.id, q.text))
-            mark(peer, q.id, Delivery.Sent)
+            if (!q.hidden) mark(peer, q.id, Delivery.Sent)
         }
     }
 
@@ -445,6 +508,8 @@ class BitchatMesh(
             publicChat = publicChat.toList(),
             privateChats = privateChats.mapValues { it.value.toList() },
             unread = unread.toSet(),
+            favoritedUs = favoritedUs,
+            blocked = blocked,
             relayed = relayed,
             received = received,
             sent = sentCount,

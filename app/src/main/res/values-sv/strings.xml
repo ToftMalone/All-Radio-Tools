@@ -2523,4 +2523,25 @@
     <string name="peer_id">"Peer-ID"</string>
     <string name="new_identity">"Ny identitet"</string>
     <string name="new_identity_body">"Glömmer dina nycklar och ger telefonen ett nytt peer-ID. Stoppar meshen."</string>
+    <string name="note_favorited_you">"%1$s har lagt till dig som favorit"</string>
+    <string name="note_favorited_mutual">"%1$s har lagt till dig som favorit — ömsesidigt!"</string>
+    <string name="note_unfavorited_you">"%1$s har tagit bort dig från favoriter"</string>
+    <string name="cmd_unknown">"okänt kommando: %1$s. Skriv / för att se kommandona."</string>
+    <string name="cmd_user_not_found">"användaren ”%1$s” hittades inte"</string>
+    <string name="cmd_usage">"användning: %1$s"</string>
+    <string name="cmd_nobody">"ingen annan är här just nu."</string>
+    <string name="cmd_online">"online: %1$s"</string>
+    <string name="cmd_blocked">"%1$s blockerad"</string>
+    <string name="cmd_unblocked">"%1$s avblockerad"</string>
+    <string name="cmd_not_blocked">"%1$s är inte blockerad"</string>
+    <string name="cmd_no_blocked">"inga blockerade användare"</string>
+    <string name="cmd_blocked_list">"blockerade: %1$s"</string>
+    <string name="cmd_desc_block">"blockera eller visa blockerade peers"</string>
+    <string name="cmd_desc_clear">"rensa chattmeddelanden"</string>
+    <string name="cmd_desc_hug">"ge någon en stor kram"</string>
+    <string name="cmd_desc_msg">"skicka ett privat meddelande"</string>
+    <string name="cmd_desc_slap">"slå någon med en forell"</string>
+    <string name="cmd_desc_unblock">"avblockera en peer"</string>
+    <string name="cmd_desc_who">"se vem som är online"</string>
+    <string name="mutual_favorite">"Ömsesidig"</string>
 </resources>

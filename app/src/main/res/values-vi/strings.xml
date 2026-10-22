@@ -2461,4 +2461,25 @@
     <string name="peer_id">"ID ngang hàng"</string>
     <string name="new_identity">"Danh tính mới"</string>
     <string name="new_identity_body">"Xóa khóa của bạn và cấp cho điện thoại này một ID ngang hàng mới. Dừng mạng lưới."</string>
+    <string name="note_favorited_you">"%1$s đã thêm bạn vào mục yêu thích"</string>
+    <string name="note_favorited_mutual">"%1$s đã thêm bạn vào mục yêu thích — hai chiều!"</string>
+    <string name="note_unfavorited_you">"%1$s đã bỏ bạn khỏi mục yêu thích"</string>
+    <string name="cmd_unknown">"lệnh không xác định: %1$s. Gõ / để xem các lệnh."</string>
+    <string name="cmd_user_not_found">"không tìm thấy người dùng '%1$s'"</string>
+    <string name="cmd_usage">"cách dùng: %1$s"</string>
+    <string name="cmd_nobody">"hiện không còn ai ở gần."</string>
+    <string name="cmd_online">"trực tuyến: %1$s"</string>
+    <string name="cmd_blocked">"đã chặn %1$s"</string>
+    <string name="cmd_unblocked">"đã bỏ chặn %1$s"</string>
+    <string name="cmd_not_blocked">"%1$s không bị chặn"</string>
+    <string name="cmd_no_blocked">"không có người dùng bị chặn"</string>
+    <string name="cmd_blocked_list">"đã chặn: %1$s"</string>
+    <string name="cmd_desc_block">"chặn hoặc liệt kê các máy bị chặn"</string>
+    <string name="cmd_desc_clear">"xóa tin nhắn trò chuyện"</string>
+    <string name="cmd_desc_hug">"ôm ai đó thật ấm áp"</string>
+    <string name="cmd_desc_msg">"gửi tin nhắn riêng tư"</string>
+    <string name="cmd_desc_slap">"tát ai đó bằng một con cá hồi"</string>
+    <string name="cmd_desc_unblock">"bỏ chặn một máy"</string>
+    <string name="cmd_desc_who">"xem ai đang trực tuyến"</string>
+    <string name="mutual_favorite">"Hai chiều"</string>
 </resources>

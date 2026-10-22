@@ -2461,4 +2461,25 @@
     <string name="peer_id">"ID peer"</string>
     <string name="new_identity">"Identitas baru"</string>
     <string name="new_identity_body">"Melupakan kunci Anda dan memberi ponsel ini ID peer baru. Menghentikan mesh."</string>
+    <string name="note_favorited_you">"%1$s menambahkan Anda ke favorit"</string>
+    <string name="note_favorited_mutual">"%1$s menambahkan Anda ke favorit — saling!"</string>
+    <string name="note_unfavorited_you">"%1$s menghapus Anda dari favorit"</string>
+    <string name="cmd_unknown">"perintah tidak dikenal: %1$s. Ketik / untuk melihat perintah."</string>
+    <string name="cmd_user_not_found">"pengguna '%1$s' tidak ditemukan"</string>
+    <string name="cmd_usage">"penggunaan: %1$s"</string>
+    <string name="cmd_nobody">"tidak ada orang lain di sekitar saat ini."</string>
+    <string name="cmd_online">"online: %1$s"</string>
+    <string name="cmd_blocked">"%1$s diblokir"</string>
+    <string name="cmd_unblocked">"%1$s dibuka blokirnya"</string>
+    <string name="cmd_not_blocked">"%1$s tidak diblokir"</string>
+    <string name="cmd_no_blocked">"tidak ada pengguna yang diblokir"</string>
+    <string name="cmd_blocked_list">"diblokir: %1$s"</string>
+    <string name="cmd_desc_block">"blokir atau tampilkan peer yang diblokir"</string>
+    <string name="cmd_desc_clear">"hapus pesan obrolan"</string>
+    <string name="cmd_desc_hug">"beri seseorang pelukan hangat"</string>
+    <string name="cmd_desc_msg">"kirim pesan pribadi"</string>
+    <string name="cmd_desc_slap">"tampar seseorang dengan ikan trout"</string>
+    <string name="cmd_desc_unblock">"buka blokir peer"</string>
+    <string name="cmd_desc_who">"lihat siapa yang online"</string>
+    <string name="mutual_favorite">"Saling"</string>
 </resources>

@@ -2524,4 +2524,25 @@
     <string name="peer_id">"Peer ID"</string>
     <string name="new_identity">"New identity"</string>
     <string name="new_identity_body">"Forgets your keys and gives this phone a new peer ID. Stops the mesh."</string>
+    <string name="note_favorited_you">"%1$s favorited you"</string>
+    <string name="note_favorited_mutual">"%1$s favorited you — mutual!"</string>
+    <string name="note_unfavorited_you">"%1$s unfavorited you"</string>
+    <string name="cmd_unknown">"unknown command: %1$s. Type / to see the commands."</string>
+    <string name="cmd_user_not_found">"user '%1$s' not found"</string>
+    <string name="cmd_usage">"usage: %1$s"</string>
+    <string name="cmd_nobody">"no one else is around right now."</string>
+    <string name="cmd_online">"online: %1$s"</string>
+    <string name="cmd_blocked">"blocked %1$s"</string>
+    <string name="cmd_unblocked">"unblocked %1$s"</string>
+    <string name="cmd_not_blocked">"%1$s is not blocked"</string>
+    <string name="cmd_no_blocked">"no blocked users"</string>
+    <string name="cmd_blocked_list">"blocked: %1$s"</string>
+    <string name="cmd_desc_block">"block or list blocked peers"</string>
+    <string name="cmd_desc_clear">"clear chat messages"</string>
+    <string name="cmd_desc_hug">"send someone a warm hug"</string>
+    <string name="cmd_desc_msg">"send a private message"</string>
+    <string name="cmd_desc_slap">"slap someone with a trout"</string>
+    <string name="cmd_desc_unblock">"unblock a peer"</string>
+    <string name="cmd_desc_who">"see who's online"</string>
+    <string name="mutual_favorite">"Mutual"</string>
 </resources>

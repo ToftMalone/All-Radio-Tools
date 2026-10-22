@@ -216,6 +216,43 @@ class BitchatTest {
     }
 
     @Test
+    fun favouriteNoticeIsHiddenAndMutualIsDetected() {
+        val net = Net()
+        val a = net.node("a", "alice")
+        val b = net.node("b", "bob")
+        net.connect(a, b)
+        a.mesh.announce(); b.mesh.announce(); net.pump()
+        val bob = a.mesh.state.value.peers.single().id
+        val alice = b.mesh.state.value.peers.single().id
+        a.mesh.setFavorite(bob, true, setOf(bob)); net.pump()
+        val seen = b.mesh.state.value.privateChats[alice]!!.single()
+        assertEquals(com.allnetworktools.data.bitchat.NoteKind.FavoritedYou, seen.note)
+        assertTrue(seen.system)
+        assertTrue(b.mesh.state.value.favoritedUs.contains(alice))
+        assertTrue(a.mesh.state.value.privateChats[bob].isNullOrEmpty())
+        b.mesh.setFavorite(alice, true, setOf(alice)); net.pump()
+        assertEquals(com.allnetworktools.data.bitchat.NoteKind.FavoritedYouMutual, a.mesh.state.value.privateChats[bob]!!.single().note)
+    }
+
+    @Test
+    fun blockedPeerIsIgnoredAndClearWorks() {
+        val net = Net()
+        val a = net.node("a", "alice")
+        val b = net.node("b", "bob")
+        net.connect(a, b)
+        a.mesh.announce(); b.mesh.announce(); net.pump()
+        val bob = a.mesh.state.value.peers.single().id
+        a.mesh.setBlocked(setOf(bob))
+        b.mesh.sendPublic("hi"); net.pump()
+        assertTrue(a.mesh.state.value.publicChat.isEmpty())
+        a.mesh.setBlocked(emptySet())
+        b.mesh.sendPublic("again"); net.pump()
+        assertEquals(1, a.mesh.state.value.publicChat.size)
+        a.mesh.clear(null)
+        assertTrue(a.mesh.state.value.publicChat.isEmpty())
+    }
+
+    @Test
     fun forgedAnnouncementIsRejected() {
         val net = Net()
         val a = net.node("a", "alice")

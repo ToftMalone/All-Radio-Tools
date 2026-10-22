@@ -2523,4 +2523,25 @@
     <string name="peer_id">"ID de par"</string>
     <string name="new_identity">"Nueva identidad"</string>
     <string name="new_identity_body">"Olvida tus claves y da a este teléfono un nuevo ID de par. Detiene la malla."</string>
+    <string name="note_favorited_you">"%1$s te marcó como favorito"</string>
+    <string name="note_favorited_mutual">"%1$s te marcó como favorito — ¡mutuo!"</string>
+    <string name="note_unfavorited_you">"%1$s te quitó de favoritos"</string>
+    <string name="cmd_unknown">"comando desconocido: %1$s. Escribe / para ver los comandos."</string>
+    <string name="cmd_user_not_found">"usuario «%1$s» no encontrado"</string>
+    <string name="cmd_usage">"uso: %1$s"</string>
+    <string name="cmd_nobody">"no hay nadie más por aquí ahora mismo."</string>
+    <string name="cmd_online">"en línea: %1$s"</string>
+    <string name="cmd_blocked">"%1$s bloqueado"</string>
+    <string name="cmd_unblocked">"%1$s desbloqueado"</string>
+    <string name="cmd_not_blocked">"%1$s no está bloqueado"</string>
+    <string name="cmd_no_blocked">"no hay usuarios bloqueados"</string>
+    <string name="cmd_blocked_list">"bloqueados: %1$s"</string>
+    <string name="cmd_desc_block">"bloquear o listar pares bloqueados"</string>
+    <string name="cmd_desc_clear">"borrar los mensajes del chat"</string>
+    <string name="cmd_desc_hug">"dar un abrazo a alguien"</string>
+    <string name="cmd_desc_msg">"enviar un mensaje privado"</string>
+    <string name="cmd_desc_slap">"abofetear a alguien con una trucha"</string>
+    <string name="cmd_desc_unblock">"desbloquear a un par"</string>
+    <string name="cmd_desc_who">"ver quién está en línea"</string>
+    <string name="mutual_favorite">"Mutuo"</string>
 </resources>

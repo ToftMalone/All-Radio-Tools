@@ -2523,4 +2523,25 @@
     <string name="peer_id">"Eş kimliği"</string>
     <string name="new_identity">"Yeni kimlik"</string>
     <string name="new_identity_body">"Anahtarlarınızı unutur ve bu telefona yeni bir eş kimliği verir. Mesh ağını durdurur."</string>
+    <string name="note_favorited_you">"%1$s sizi favorilere ekledi"</string>
+    <string name="note_favorited_mutual">"%1$s sizi favorilere ekledi — karşılıklı!"</string>
+    <string name="note_unfavorited_you">"%1$s sizi favorilerden çıkardı"</string>
+    <string name="cmd_unknown">"bilinmeyen komut: %1$s. Komutları görmek için / yazın."</string>
+    <string name="cmd_user_not_found">"'%1$s' kullanıcısı bulunamadı"</string>
+    <string name="cmd_usage">"kullanım: %1$s"</string>
+    <string name="cmd_nobody">"şu anda çevrede başka kimse yok."</string>
+    <string name="cmd_online">"çevrimiçi: %1$s"</string>
+    <string name="cmd_blocked">"%1$s engellendi"</string>
+    <string name="cmd_unblocked">"%1$s engeli kaldırıldı"</string>
+    <string name="cmd_not_blocked">"%1$s engellenmemiş"</string>
+    <string name="cmd_no_blocked">"engellenmiş kullanıcı yok"</string>
+    <string name="cmd_blocked_list">"engellenenler: %1$s"</string>
+    <string name="cmd_desc_block">"eşleri engelle veya engellenenleri listele"</string>
+    <string name="cmd_desc_clear">"sohbet mesajlarını temizle"</string>
+    <string name="cmd_desc_hug">"birine sıcak bir sarılma gönder"</string>
+    <string name="cmd_desc_msg">"özel mesaj gönder"</string>
+    <string name="cmd_desc_slap">"birine alabalıkla tokat at"</string>
+    <string name="cmd_desc_unblock">"bir eşin engelini kaldır"</string>
+    <string name="cmd_desc_who">"kimlerin çevrimiçi olduğunu gör"</string>
+    <string name="mutual_favorite">"Karşılıklı"</string>
 </resources>

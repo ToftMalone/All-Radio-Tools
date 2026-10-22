@@ -2461,4 +2461,25 @@
     <string name="peer_id">"รหัสเพียร์"</string>
     <string name="new_identity">"ตัวตนใหม่"</string>
     <string name="new_identity_body">"ลืมกุญแจของคุณและมอบรหัสเพียร์ใหม่ให้โทรศัพท์เครื่องนี้ หยุดเมช"</string>
+    <string name="note_favorited_you">"%1$s เพิ่มคุณเป็นรายการโปรด"</string>
+    <string name="note_favorited_mutual">"%1$s เพิ่มคุณเป็นรายการโปรด — ต่างฝ่ายต่างเพิ่ม!"</string>
+    <string name="note_unfavorited_you">"%1$s นำคุณออกจากรายการโปรด"</string>
+    <string name="cmd_unknown">"ไม่รู้จักคำสั่ง: %1$s พิมพ์ / เพื่อดูคำสั่ง"</string>
+    <string name="cmd_user_not_found">"ไม่พบผู้ใช้ '%1$s'"</string>
+    <string name="cmd_usage">"วิธีใช้: %1$s"</string>
+    <string name="cmd_nobody">"ตอนนี้ไม่มีใครอยู่ใกล้เคียงอีก"</string>
+    <string name="cmd_online">"ออนไลน์: %1$s"</string>
+    <string name="cmd_blocked">"บล็อก %1$s แล้ว"</string>
+    <string name="cmd_unblocked">"เลิกบล็อก %1$s แล้ว"</string>
+    <string name="cmd_not_blocked">"%1$s ไม่ได้ถูกบล็อก"</string>
+    <string name="cmd_no_blocked">"ไม่มีผู้ใช้ที่ถูกบล็อก"</string>
+    <string name="cmd_blocked_list">"ที่ถูกบล็อก: %1$s"</string>
+    <string name="cmd_desc_block">"บล็อกเพียร์หรือดูรายการที่ถูกบล็อก"</string>
+    <string name="cmd_desc_clear">"ล้างข้อความแชท"</string>
+    <string name="cmd_desc_hug">"กอดใครสักคนอย่างอบอุ่น"</string>
+    <string name="cmd_desc_msg">"ส่งข้อความส่วนตัว"</string>
+    <string name="cmd_desc_slap">"ตบใครสักคนด้วยปลาเทราต์"</string>
+    <string name="cmd_desc_unblock">"เลิกบล็อกเพียร์"</string>
+    <string name="cmd_desc_who">"ดูว่าใครออนไลน์"</string>
+    <string name="mutual_favorite">"ต่างฝ่ายต่างเพิ่ม"</string>
 </resources>

@@ -2523,4 +2523,25 @@
     <string name="peer_id">"पीयर आईडी"</string>
     <string name="new_identity">"नई पहचान"</string>
     <string name="new_identity_body">"आपकी कुंजियाँ भुला देता है और इस फ़ोन को नई पीयर आईडी देता है। मेश बंद हो जाता है।"</string>
+    <string name="note_favorited_you">"%1$s ने आपको पसंदीदा में जोड़ा"</string>
+    <string name="note_favorited_mutual">"%1$s ने आपको पसंदीदा में जोड़ा — आपसी!"</string>
+    <string name="note_unfavorited_you">"%1$s ने आपको पसंदीदा से हटाया"</string>
+    <string name="cmd_unknown">"अज्ञात कमांड: %1$s। कमांड देखने के लिए / लिखें।"</string>
+    <string name="cmd_user_not_found">"उपयोगकर्ता '%1$s' नहीं मिला"</string>
+    <string name="cmd_usage">"उपयोग: %1$s"</string>
+    <string name="cmd_nobody">"अभी आसपास कोई और नहीं है।"</string>
+    <string name="cmd_online">"ऑनलाइन: %1$s"</string>
+    <string name="cmd_blocked">"%1$s ब्लॉक किया गया"</string>
+    <string name="cmd_unblocked">"%1$s अनब्लॉक किया गया"</string>
+    <string name="cmd_not_blocked">"%1$s ब्लॉक नहीं है"</string>
+    <string name="cmd_no_blocked">"कोई ब्लॉक किया हुआ उपयोगकर्ता नहीं"</string>
+    <string name="cmd_blocked_list">"ब्लॉक किए गए: %1$s"</string>
+    <string name="cmd_desc_block">"पीयर ब्लॉक करें या ब्लॉक सूची देखें"</string>
+    <string name="cmd_desc_clear">"चैट संदेश साफ़ करें"</string>
+    <string name="cmd_desc_hug">"किसी को प्यार भरी झप्पी दें"</string>
+    <string name="cmd_desc_msg">"निजी संदेश भेजें"</string>
+    <string name="cmd_desc_slap">"किसी को ट्राउट मछली से थप्पड़ मारें"</string>
+    <string name="cmd_desc_unblock">"पीयर को अनब्लॉक करें"</string>
+    <string name="cmd_desc_who">"देखें कौन ऑनलाइन है"</string>
+    <string name="mutual_favorite">"आपसी"</string>
 </resources>

@@ -2461,4 +2461,25 @@
     <string name="peer_id">"피어 ID"</string>
     <string name="new_identity">"새 ID"</string>
     <string name="new_identity_body">"키를 삭제하고 이 휴대폰에 새 피어 ID를 부여합니다. 메시가 중지됩니다."</string>
+    <string name="note_favorited_you">"%1$s 님이 나를 즐겨찾기에 추가했습니다"</string>
+    <string name="note_favorited_mutual">"%1$s 님이 나를 즐겨찾기에 추가했습니다 — 서로 즐겨찾기!"</string>
+    <string name="note_unfavorited_you">"%1$s 님이 나를 즐겨찾기에서 해제했습니다"</string>
+    <string name="cmd_unknown">"알 수 없는 명령: %1$s. /를 입력하면 명령 목록이 표시됩니다."</string>
+    <string name="cmd_user_not_found">"사용자 '%1$s'을(를) 찾을 수 없습니다"</string>
+    <string name="cmd_usage">"사용법: %1$s"</string>
+    <string name="cmd_nobody">"지금은 주변에 아무도 없습니다."</string>
+    <string name="cmd_online">"온라인: %1$s"</string>
+    <string name="cmd_blocked">"%1$s 차단됨"</string>
+    <string name="cmd_unblocked">"%1$s 차단 해제됨"</string>
+    <string name="cmd_not_blocked">"%1$s은(는) 차단되어 있지 않습니다"</string>
+    <string name="cmd_no_blocked">"차단한 사용자가 없습니다"</string>
+    <string name="cmd_blocked_list">"차단됨: %1$s"</string>
+    <string name="cmd_desc_block">"피어 차단 또는 차단 목록 보기"</string>
+    <string name="cmd_desc_clear">"채팅 메시지 지우기"</string>
+    <string name="cmd_desc_hug">"누군가를 따뜻하게 안아주기"</string>
+    <string name="cmd_desc_msg">"비공개 메시지 보내기"</string>
+    <string name="cmd_desc_slap">"누군가를 송어로 때리기"</string>
+    <string name="cmd_desc_unblock">"피어 차단 해제"</string>
+    <string name="cmd_desc_who">"누가 온라인인지 보기"</string>
+    <string name="mutual_favorite">"상호"</string>
 </resources>
