@@ -158,7 +158,7 @@ fun ToolsPage(net: Network, vm: MainViewModel) {
             TileGrid(g.items) { e, mod ->
                 Column(
                     mod.fadeUp(60).clip(RoundedCornerShape(24.dp)).background(cs.surfaceContainerLow)
-                        .clickable { open(e.tool) }.heightIn(min = 132.dp).padding(16.dp),
+                        .clickable { open(e.tool) }.heightIn(min = 172.dp).padding(16.dp),
                 ) {
                     LeadingIcon(e.icon, cs.surfaceContainerHighest, acc.accent, shape = RoundedCornerShape(14.dp))
                     Spacer(Modifier.weight(1f, fill = false).heightIn(min = 12.dp))

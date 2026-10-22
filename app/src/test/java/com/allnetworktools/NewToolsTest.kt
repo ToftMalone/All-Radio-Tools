@@ -93,6 +93,8 @@ class NewToolsTest {
         assertEquals(com.allnetworktools.data.TrackerKind.AirPods, TrackerDetect.classify(Ad.parseHex("07FF4C0012023100"))!!.kind)
         assertEquals(com.allnetworktools.data.TrackerKind.AppleDevice, TrackerDetect.classify(Ad.parseHex("07FF4C0012020000"))!!.kind)
         assertEquals(com.allnetworktools.data.TrackerKind.SmartTag, TrackerDetect.classify(Ad.parseHex("07165AFD10223344"))!!.kind)
+        assertEquals(com.allnetworktools.data.TrackerKind.GalaxyBuds, TrackerDetect.classify(Ad.parseHex("07165AFD10223344" + "110947616C6178792042756473322050726F"))!!.kind)
+        assertEquals(com.allnetworktools.data.TrackerKind.GalaxyBuds, TrackerDetect.classify(Ad.parseHex("110947616C6178792042756473322050726F" + "05FF750001FF"))!!.kind)
         // Recent AirTags announce themselves as accessories: the name read once connected tells.
         assertEquals(com.allnetworktools.data.TrackerKind.AirTag, TrackerDetect.kindFromProbe("AirTag", false))
         assertEquals(com.allnetworktools.data.TrackerKind.AirTag, TrackerDetect.kindFromProbe(null, true))

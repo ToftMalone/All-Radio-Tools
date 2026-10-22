@@ -27,6 +27,7 @@ enum class TrackerKind(val label: String) {
     AirPods("AirPods"),
     GoogleTag(S(R.string.google_find_hub_tag)),
     SmartTag("Galaxy SmartTag"),
+    GalaxyBuds("Galaxy Buds"),
     Tile("Tile"),
 }
 
@@ -97,12 +98,20 @@ object TrackerDetect {
                 0x41 -> return TrackerSignal(TrackerNet.GoogleFindHub, true)
             }
         }
-        sd[0xFD5A]?.let { return smartTag(it) }
+        val buds = isGalaxyBuds(Ad.name(ads))
+        sd[0xFD5A]?.let { return smartTag(it).let { s -> if (buds) s.copy(kind = TrackerKind.GalaxyBuds) else s } }
         val uuids = Ad.uuids16(ads)
-        if (0xFD5A in uuids) return TrackerSignal(TrackerNet.SamsungFind, null)
+        if (0xFD5A in uuids) return TrackerSignal(TrackerNet.SamsungFind, null, kind = if (buds) TrackerKind.GalaxyBuds else TrackerKind.SmartTag)
+        // Galaxy Buds out of their case also advertise under their own name with Samsung's manufacturer data.
+        if (buds && 0x0075 in Ad.manufacturer(ads)) return TrackerSignal(TrackerNet.SamsungFind, null, kind = TrackerKind.GalaxyBuds)
         if (uuids.any { it == 0xFEED || it == 0xFEEC || it == 0xFD84 }) return TrackerSignal(TrackerNet.Tile, null)
         return null
     }
+
+    private val BudsName = Regex("galaxy\\s*buds|\\bbuds\\s*(\\d|pro|live|fe|core)", RegexOption.IGNORE_CASE)
+
+    /** Samsung earbuds, by the name they advertise ("Galaxy Buds2 Pro (1A2B)"). */
+    fun isGalaxyBuds(name: String?) = name != null && BudsName.containsMatchIn(name)
 
     /**
      * Find My status byte, bits 4–5: the kind of Apple object (as read by the open-source AirGuard app):

@@ -44,6 +44,7 @@ fun TrackerArt(kind: TrackerKind, modifier: Modifier) {
                 TrackerKind.AppleDevice -> iPhone()
                 TrackerKind.AirPods -> airPods()
                 TrackerKind.SmartTag -> smartTag()
+                TrackerKind.GalaxyBuds -> galaxyBuds()
                 TrackerKind.Tile -> tileMate()
                 TrackerKind.GoogleTag -> findHubTag()
             }
@@ -191,6 +192,24 @@ private fun DrawScope.smartTag() {
     // The button, a soft dot in the lower half.
     drawCircle(Color(0xFF34373D), 6.5f, Offset(50f, 72f))
     drawCircle(Color(0xFF666B74), 6.5f, Offset(50f, 72f), style = Stroke(1f))
+}
+
+/** A pair of Galaxy Buds: two graphite earbuds with a stem and a metallic ring, one tilted each way. */
+private fun DrawScope.galaxyBuds() {
+    fun bud(cx: Float, deg: Float) = withTransform({ rotate(deg, Offset(cx, 50f)) }) {
+        val body = rounded(cx - 15f, 14f, cx + 15f, 56f, 15f)
+        val stem = rounded(cx - 6f, 44f, cx + 6f, 88f, 6f)
+        val shape = Path().apply { op(body, stem, PathOperation.Union) }
+        shadowed(shape) { p ->
+            drawPath(p, Brush.linearGradient(listOf(Color(0xFF5A5D66), Color(0xFF1E2024)), Offset(cx - 15f, 14f), Offset(cx + 15f, 88f)))
+            drawPath(p, Color(0xFF6E727B), style = Stroke(1.1f))
+        }
+        drawCircle(Brush.linearGradient(listOf(Color(0xFFE2E5EA), Color(0xFF8E939B)), Offset(cx - 8f, 24f), Offset(cx + 8f, 40f)), 8.5f, Offset(cx, 32f), style = Stroke(2.4f))
+        drawCircle(Color(0xFF34373D), 4f, Offset(cx, 32f))
+        drawCircle(Color(0xFF9BA0A9), 1.5f, Offset(cx, 76f))
+    }
+    bud(30f, -12f)
+    bud(70f, 12f)
 }
 
 /**

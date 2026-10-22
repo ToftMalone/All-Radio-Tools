@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -156,8 +158,9 @@ fun ValueTile(label: String, value: String, modifier: Modifier = Modifier) {
 fun <T> TileGrid(items: List<T>, gap: Dp = 8.dp, tile: @Composable (T, Modifier) -> Unit) {
     Column(verticalArrangement = Arrangement.spacedBy(gap)) {
         items.chunked(2).forEach { row ->
-            Row(horizontalArrangement = Arrangement.spacedBy(gap)) {
-                row.forEach { tile(it, Modifier.weight(1f)) }
+            // Same height for both tiles of a row, whatever their text.
+            Row(Modifier.height(IntrinsicSize.Min), horizontalArrangement = Arrangement.spacedBy(gap)) {
+                row.forEach { tile(it, Modifier.weight(1f).fillMaxHeight()) }
                 if (row.size == 1) Spacer(Modifier.weight(1f))
             }
         }

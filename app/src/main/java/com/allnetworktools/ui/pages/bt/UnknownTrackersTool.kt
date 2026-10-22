@@ -76,7 +76,8 @@ class TrackerCandidate(val address: String, signal: TrackerSignal) {
     var probeState by mutableStateOf<String?>(null)
     var probeTries = 0
     var lastProbeMs = 0L
-    val kind: TrackerKind get() = gattKind ?: signal.kind
+    val kind: TrackerKind get() = gattKind
+        ?: if (signal.net == TrackerNet.SamsungFind && TrackerDetect.isGalaxyBuds(device?.name)) TrackerKind.GalaxyBuds else signal.kind
     /** True once a connection read what the tag tells about itself. */
     var probed = false
     val title: String get() = device?.name ?: gattName ?: kind.label
