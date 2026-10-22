@@ -72,6 +72,7 @@ private fun groups(net: Network, connectedDevice: String?, servingLabel: String?
             ),
         ),
         ToolGroup(S(R.string.security_2), listOf(ToolEntry(Tool.UnknownTrackers, S(R.string.unknown_trackers), S(R.string.airtag_smarttag_tile_following_you)))),
+        ToolGroup(S(R.string.messaging), listOf(ToolEntry(Tool.BitChat, S(R.string.bitchat), S(R.string.bluetooth_mesh_chat_and_relay)))),
     )
     Network.Cellular -> listOf(
         ToolGroup(

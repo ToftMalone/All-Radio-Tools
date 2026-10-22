@@ -88,6 +88,7 @@ dependencies {
     implementation(libs.osmdroid)
     implementation(libs.usb.serial)
     implementation(libs.arcore)
+    implementation(libs.bouncycastle)
     debugImplementation(libs.compose.ui.tooling)
     debugImplementation(libs.compose.ui.test.manifest)
 
