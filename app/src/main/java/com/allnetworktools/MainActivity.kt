@@ -36,14 +36,18 @@ class MainActivity : ComponentActivity() {
 
     /** A notification can ask for a tool directly. */
     private fun open(intent: Intent?) {
-        if (intent?.getStringExtra(EXTRA_OPEN) == OPEN_BITCHAT) {
-            vm.navigate { it.copy(network = Network.Bluetooth, page = Page.ToolPage(Tool.BitChat)) }
+        val tool = when (intent?.getStringExtra(EXTRA_OPEN)) {
+            OPEN_BITCHAT -> Tool.BitChat
+            OPEN_REMOTE_ID -> Tool.RemoteId
+            else -> return
         }
+        vm.navigate { it.copy(network = Network.Bluetooth, page = Page.ToolPage(tool)) }
     }
 
     companion object {
         const val EXTRA_OPEN = "open"
         const val OPEN_BITCHAT = "bitchat"
+        const val OPEN_REMOTE_ID = "remoteid"
     }
 
     override fun onResume() {
