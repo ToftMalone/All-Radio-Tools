@@ -219,7 +219,6 @@ private fun PageBody(vm: MainViewModel, net: Network, page: Page) {
             Tool.Spectrum -> com.allnetworktools.ui.pages.sdr.SpectrumTool(vm)
             Tool.Adsb -> com.allnetworktools.ui.pages.sdr.AdsbTool(vm)
             Tool.Sonde -> com.allnetworktools.ui.pages.sdr.SondeTool(vm)
-            Tool.Fm -> com.allnetworktools.ui.pages.sdr.FmTool(vm)
             Tool.Ais -> com.allnetworktools.ui.pages.sdr.AisTool(vm)
             Tool.Fpv -> com.allnetworktools.ui.pages.sdr.FpvTool(vm)
             Tool.Aprs -> com.allnetworktools.ui.pages.sdr.AprsTool(vm)

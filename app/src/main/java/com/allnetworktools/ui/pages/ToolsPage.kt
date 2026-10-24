@@ -103,7 +103,19 @@ private fun groups(net: Network, connectedDevice: String?, servingLabel: String?
     )
     Network.Talkie -> emptyList()
     Network.Sdr -> listOf(
-        ToolGroup(S(R.string.tools), listOf(ToolEntry(Tool.Adsb, S(R.string.aircraft_ads_b), S(R.string.map_of_aircraft_on_1090_mhz)), ToolEntry(Tool.Sonde, S(R.string.radiosondes), S(R.string.rs41_m10_and_m20_sondes_around)), ToolEntry(Tool.Fm, S(R.string.fm_radio), S(R.string.listening_and_rds_87_5_to)), ToolEntry(Tool.Ais, S(R.string.ships_ais), S(R.string.map_of_ships_on_162_mhz)), ToolEntry(Tool.Meteor, S(R.string.weather_satellites_meteor_m), S(R.string.lrpt_images_on_137_mhz)), ToolEntry(Tool.Aprs, S(R.string.ham_radio_aprs), S(R.string.beacons_on_144_800_mhz)), ToolEntry(Tool.Acars, S(R.string.aircraft_messages_acars), S(R.string.airliner_messaging_131_mhz)), ToolEntry(Tool.Fpv, S(R.string.drones), S(R.string.analog_fpv_dji_and_rc_links)))),
+        // Named after the protocol they decode, in alphabetical order (in the phone's language).
+        ToolGroup(
+            S(R.string.tools),
+            listOf(
+                ToolEntry(Tool.Adsb, "ADS-B", S(R.string.map_of_aircraft_on_1090_mhz)),
+                ToolEntry(Tool.Sonde, S(R.string.radiosondes), S(R.string.rs41_m10_and_m20_sondes_around)),
+                ToolEntry(Tool.Ais, "AIS", S(R.string.map_of_ships_on_162_mhz)),
+                ToolEntry(Tool.Meteor, "Meteor-M", S(R.string.lrpt_images_on_137_mhz)),
+                ToolEntry(Tool.Aprs, "APRS", S(R.string.beacons_on_144_800_mhz)),
+                ToolEntry(Tool.Acars, "ACARS", S(R.string.airliner_messaging_131_mhz)),
+                ToolEntry(Tool.Fpv, S(R.string.drones), S(R.string.analog_fpv_dji_and_rc_links)),
+            ).sortedWith(compareBy(java.text.Collator.getInstance()) { it.title }),
+        ),
     )
 }
 

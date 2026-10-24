@@ -89,13 +89,12 @@ enum class Tool(
     SkyMask(Network.Gnss, S(R.string.sky_mask), Sym.Radar, Sym.RestartAlt),
 
     Spectrum(Network.Sdr, S(R.string.spectrum_analyser), Sym.BarChart),
-    Adsb(Network.Sdr, S(R.string.aircraft_ads_b), Sym.Flight),
+    Adsb(Network.Sdr, "ADS-B", Sym.Flight),
     Sonde(Network.Sdr, S(R.string.radiosondes), Sym.Cloud),
-    Fm(Network.Sdr, S(R.string.fm_radio), Sym.Radio),
-    Ais(Network.Sdr, S(R.string.ships_ais), Sym.Boat),
-    Aprs(Network.Sdr, S(R.string.ham_radio_aprs), Sym.Radio),
-    Acars(Network.Sdr, S(R.string.aircraft_messages_acars), Sym.Flight),
-    Meteor(Network.Sdr, S(R.string.weather_satellites_meteor_m), Sym.SatelliteAlt),
+    Ais(Network.Sdr, "AIS", Sym.Boat),
+    Aprs(Network.Sdr, "APRS", Sym.Radio),
+    Acars(Network.Sdr, "ACARS", Sym.Flight),
+    Meteor(Network.Sdr, "Meteor-M", Sym.SatelliteAlt),
     Fpv(Network.Sdr, "Drones", Sym.Videocam),
 
     RadioChannels(Network.Talkie, S(R.string.radio_channels), Sym.Radio, implemented = true),

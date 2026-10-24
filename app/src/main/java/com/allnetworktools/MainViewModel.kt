@@ -342,7 +342,6 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         tools.spectrum.stop()
         tools.adsb.stop()
         tools.sonde.stop()
-        tools.fm.stop()
         tools.ais.stop()
         tools.aprs.stop()
         tools.meteor.stop()
