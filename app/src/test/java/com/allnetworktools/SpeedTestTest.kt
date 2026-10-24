@@ -97,7 +97,7 @@ class SpeedTestTest {
         // Download: 25 MB at 100 Mb/s takes 2 s, so 100 MB and 250 MB never run; upload stops after 10 MB (1.6 s).
         assertEquals(listOf("d100000", "d1000000", "u100000", "u1000000", "d10000000", "u10000000", "d25000000"), transfers)
         assertEquals(1 + 9 + 8 + 6 + 4, line.requests.count { it.startsWith("d") && it != "d0" })
-        assertEquals(2 + 20 + 2 * 10, s.latencyPoints.size)
+        assertEquals(2 + 20 + 2 * 12, s.latencyPoints.size)
         assertEquals(10.0, s.latency!!, 1e-9)
         assertEquals(100e6, s.download!!, 1e6)
         assertEquals(50e6 * 1.005, s.upload!!, 1e6)
@@ -106,6 +106,25 @@ class SpeedTestTest {
         assertNotNull(s.scores)
         assertEquals(listOf(100_000L, 1_000_000L, 10_000_000L, 25_000_000L), s.downBuckets.map { it.bytes })
         assertEquals(10, s.downBuckets[0].planned)
+    }
+
+    /** A fast line ends on a 500 MB then a 1 GB download; a slower one or a metered network skips them. */
+    @Test fun fastLineFinishesOnBigFiles() = runBlocking {
+        val fast = FakeLine(downMbps = 900.0, upMbps = 300.0)
+        CfEngine(fast, { step, _ -> CfPacketLoss(step.packets, step.packets, step.packets, emptyList()) }).run { }
+        assertEquals(1, fast.requests.count { it == "d500000000" })
+        assertEquals(1, fast.requests.count { it == "d1000000000" })
+        assertEquals("d1000000000", fast.requests.last { it != "d0" })
+
+        val metered = FakeLine(downMbps = 900.0, upMbps = 300.0)
+        CfEngine(metered, { step, _ -> CfPacketLoss(step.packets, step.packets, step.packets, emptyList()) }, bigFiles = false).run { }
+        assertTrue(metered.requests.none { it == "d500000000" || it == "d1000000000" })
+
+        // 1 GB at 150 Mbit/s would take 53 s: only the 500 MB file runs.
+        val mid = FakeLine(downMbps = 150.0, upMbps = 50.0)
+        CfEngine(mid, { step, _ -> CfPacketLoss(step.packets, step.packets, step.packets, emptyList()) }).run { }
+        assertEquals(1, mid.requests.count { it == "d500000000" })
+        assertTrue(mid.requests.none { it == "d1000000000" })
     }
 
     @Test fun packetLossThroughTurnRelays() = runBlocking {

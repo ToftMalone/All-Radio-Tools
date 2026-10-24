@@ -39,7 +39,11 @@ import org.json.JSONObject
 
 sealed interface CfStep {
     data class Latency(val packets: Int) : CfStep
-    data class Transfer(val down: Boolean, val bytes: Long, val count: Int, val bypassMinDuration: Boolean = false) : CfStep
+    /**
+     * [final]: a big download that runs even after the ladder stopped, so a fast line can show its full speed; skipped
+     * when big files are off (metered network) or when it would take more than [CfConfig.FINAL_MAX_SECONDS].
+     */
+    data class Transfer(val down: Boolean, val bytes: Long, val count: Int, val bypassMinDuration: Boolean = false, val final: Boolean = false) : CfStep
     data class PacketLoss(val packets: Int, val batchSize: Int, val batchWaitMs: Long, val responsesWaitMs: Long, val connectionTimeoutMs: Long = 5000) : CfStep
 }
 
@@ -74,7 +78,15 @@ object CfConfig {
         CfStep.Transfer(false, 50_000_000, 3),
         CfStep.Latency(2),
         CfStep.Transfer(true, 250_000_000, 2),
+        // Beyond the site: 100 MB files end too fast above ~600 Mbit/s to measure the line, so finish on bigger ones.
+        CfStep.Latency(2),
+        CfStep.Transfer(true, 500_000_000, 1, final = true),
+        CfStep.Latency(2),
+        CfStep.Transfer(true, 1_000_000_000, 1, final = true),
     )
+
+    /** A final file that would take longer than this at the speed measured so far is skipped: it would add nothing. */
+    const val FINAL_MAX_SECONDS = 40.0
 
     // The site's own overrides of the engine defaults (400 ms, 250 ms, 20 points).
     const val LOADED_LATENCY_THROTTLE_MS = 100L
@@ -317,6 +329,8 @@ class CfEngine(
     private val transport: CfTransport,
     private val packetLoss: suspend (CfStep.PacketLoss, (CfPacketLoss) -> Unit) -> CfPacketLoss,
     private val now: () -> Long = System::currentTimeMillis,
+    /** The 500 MB and 1 GB final downloads; off on a metered network so a test never eats a data plan. */
+    private val bigFiles: Boolean = true,
 ) {
     private val lock = Any()
     private val latency = mutableListOf<CfTiming>()
@@ -351,7 +365,7 @@ class CfEngine(
                         counter++
                         emit()
                     }
-                    is CfStep.Transfer -> if (!(if (step.down) downDone else upDone)) transfer(step, emit)
+                    is CfStep.Transfer -> if (if (step.final) runFinal(step) else !(if (step.down) downDone else upDone)) transfer(step, emit)
                     is CfStep.PacketLoss -> {
                         synchronized(lock) { lossLive = CfPacketLoss(step.packets, 0, 0, emptyList()); lossError = null }
                         emit()
@@ -374,6 +388,12 @@ class CfEngine(
             runMs += now() - started
         }
         onUpdate(snapshot(runMs))
+    }
+
+    private fun runFinal(step: CfStep.Transfer): Boolean {
+        if (!bigFiles || !step.down) return false
+        val bps = synchronized(lock) { if (down.isEmpty()) 0.0 else CfMath.bandwidth(down.values) }
+        return bps > 0 && step.bytes * 8.0 / bps < CfConfig.FINAL_MAX_SECONDS
     }
 
     private suspend fun transfer(step: CfStep.Transfer, emit: () -> Unit) = coroutineScope {

@@ -108,7 +108,11 @@ class SpeedController(private val scope: CoroutineScope) {
         job?.cancel()
         http?.close()
         val h = CfHttp().also { http = it }
-        engine = CfEngine(h, CfHttp::packetLoss)
+        // Big final files only off metered networks (mobile data, metered Wi-Fi).
+        val metered = runCatching {
+            com.allnetworktools.util.Res.context?.getSystemService(android.net.ConnectivityManager::class.java)?.isActiveNetworkMetered
+        }.getOrNull() ?: true
+        engine = CfEngine(h, CfHttp::packetLoss, bigFiles = !metered)
         snap = CfSnapshot.Empty
         measuredAt = 0L
         loadMeta()
