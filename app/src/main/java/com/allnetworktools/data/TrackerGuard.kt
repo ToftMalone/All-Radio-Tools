@@ -63,14 +63,15 @@ object TrackerGuard {
 
     /**
      * Only the advertisements tracker networks use, so Android keeps delivering results with the screen off:
-     * Find My (Apple, offline finding), Find Hub (Google), SmartThings Find (Samsung) and Tile.
+     * Find My (Apple, offline finding), Find Hub (Google), SmartThings Find (Samsung), Tile, Chipolo and Pebblebee.
      */
     val filters: List<ScanFilter> = buildList {
         add(ScanFilter.Builder().setManufacturerData(0x004C, byteArrayOf(0x12), byteArrayOf(0xFF.toByte())).build())
         fun uuid(u: Int) = ParcelUuid.fromString("0000%04x-0000-1000-8000-00805f9b34fb".format(u))
         add(ScanFilter.Builder().setServiceData(uuid(0xFEAA), byteArrayOf(0x40), byteArrayOf(0xFE.toByte())).build())
         add(ScanFilter.Builder().setServiceData(uuid(0xFD5A), byteArrayOf()).build())
-        listOf(0xFD5A, 0xFEED, 0xFEEC, 0xFD84).forEach { add(ScanFilter.Builder().setServiceUuid(uuid(it)).build()) }
+        add(ScanFilter.Builder().setServiceData(uuid(0xFE33), byteArrayOf()).build())
+        listOf(0xFD5A, 0xFEED, 0xFEEC, 0xFD84, 0xFE33, 0xFA25).forEach { add(ScanFilter.Builder().setServiceUuid(uuid(it)).build()) }
     }
 }
 

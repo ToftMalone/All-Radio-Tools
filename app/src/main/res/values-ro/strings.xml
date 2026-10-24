@@ -531,7 +531,6 @@
     <string name="disconnected_for_less_than_15_min" formatted="false">"Deconectat de mai puțin de 15 min (0x%02X)"</string>
     <string name="disconnected_for_15_min_or_more" formatted="false">"Deconectat de 15 min sau mai mult (0x%02X)"</string>
     <string name="disconnected_for_a_long_time_0x" formatted="false">"Deconectat de mult timp (0x%02X)"</string>
-    <string name="unknown_state_0x" formatted="false">"Stare necunoscută (0x%02X)"</string>
     <string name="no_answer_within_s">"niciun răspuns în %1$s s"</string>
     <string name="gatt_error_2">"Eroare GATT %1$s"</string>
     <string name="bluetooth_permission_missing">"Lipsește permisiunea Bluetooth"</string>
@@ -2606,48 +2605,6 @@
     <string name="cmd_desc_unblock">"deblochează un peer"</string>
     <string name="cmd_desc_who">"vezi cine este online"</string>
     <string name="mutual_favorite">"Reciproc"</string>
-    <string name="drone_detector">"Detector de drone"</string>
-    <string name="remote_id_subtitle">"Remote ID: drone care zboară în apropiere"</string>
-    <string name="drone_detection_running">"Detectarea dronelor este activă"</string>
-    <string name="drones_in_range_n">"%1$d în rază"</string>
-    <string name="drone_alerts">"Alerte drone"</string>
-    <string name="drone_detected">"Dronă detectată"</string>
-    <string name="detection_engine">"Motor de detectare"</string>
-    <string name="detection_on">"Ascultă Remote ID, chiar și cu aplicația închisă"</string>
-    <string name="detection_off">"Oprit: nicio detectare de drone"</string>
-    <string name="in_range">"În rază"</string>
-    <string name="seen">"Văzute"</string>
-    <string name="closest">"Cea mai apropiată"</string>
-    <string name="detection_stopped">"Detectare oprită"</string>
-    <string name="listening_remote_id">"Se ascultă dronele"</string>
-    <string name="long_range_supported">"Bluetooth cu rază lungă"</string>
-    <string name="remote_id_permission_body">"Detectorul trebuie să caute dispozitive Bluetooth din apropiere pentru a auzi dronele."</string>
-    <string name="no_drone_body">"Dronele care transmit Remote ID prin Bluetooth apar aici, de obicei la câteva sute de metri."</string>
-    <string name="remote_id_how_it_works">"Majoritatea dronelor de 250 g sau mai mult trebuie să își transmită identitatea și poziția în zbor: acesta este Remote ID, obligatoriu în Europa și SUA din 2024. Acest instrument îl ascultă prin Bluetooth (câteva sute de metri, aproximativ un kilometru cu Bluetooth 5 cu rază lungă), în baliza Wi-Fi și prin Wi-Fi Aware. Android permite o scanare Wi-Fi doar la 30 de secunde, așa că dronele Wi-Fi apar mai rar. Detectorul funcționează și cu aplicația închisă și te anunță când apare o dronă nouă."</string>
-    <string name="ua_aeroplane">"Aripă fixă"</string>
-    <string name="ua_multirotor">"Multirotor"</string>
-    <string name="ua_vtol">"VTOL"</string>
-    <string name="ua_balloon">"Balon sau dirijabil"</string>
-    <string name="ua_other">"Aeronavă"</string>
-    <string name="status_ground">"La sol"</string>
-    <string name="status_airborne">"În zbor"</string>
-    <string name="status_emergency">"Urgență"</string>
-    <string name="status_failure">"Defecțiune Remote ID"</string>
-    <string name="id_serial">"Număr de serie"</string>
-    <string name="id_registration">"Înmatriculare"</string>
-    <string name="id_utm">"ID UTM"</string>
-    <string name="id_session">"ID de sesiune"</string>
-    <string name="type">"Tip"</string>
-    <string name="altitude">"Altitudine"</string>
-    <string name="height_above_ground">"Înălțime față de sol"</string>
-    <string name="height_above_takeoff">"Înălțime de la decolare"</string>
-    <string name="vertical_speed">"Viteză verticală"</string>
-    <string name="distance">"Distanță"</string>
-    <string name="from_you">"la %1$s de tine"</string>
-    <string name="from_the_drone">"la %1$s de dronă"</string>
-    <string name="operator_id">"ID operator"</string>
-    <string name="flight_description">"Descrierea zborului"</string>
-    <string name="eu_class">"Clasă UE"</string>
     <string name="tracker_guard">"Pază în fundal"</string>
     <string name="tracker_guard_on">"Supraveghează cu aplicația închisă: alertă dacă te urmărește un tracker"</string>
     <string name="tracker_guard_off">"Oprită: doar cât timp acest ecran este deschis"</string>

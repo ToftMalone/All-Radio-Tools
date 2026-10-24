@@ -529,7 +529,6 @@
     <string name="disconnected_for_less_than_15_min" formatted="false">"切断されて15分未満（0x%02X）"</string>
     <string name="disconnected_for_15_min_or_more" formatted="false">"切断されて15分以上（0x%02X）"</string>
     <string name="disconnected_for_a_long_time_0x" formatted="false">"長時間切断（0x%02X）"</string>
-    <string name="unknown_state_0x" formatted="false">"不明な状態（0x%02X）"</string>
     <string name="no_answer_within_s">"%1$s 秒以内に応答なし"</string>
     <string name="gatt_error_2">"GATTエラー %1$s"</string>
     <string name="bluetooth_permission_missing">"Bluetooth権限がありません"</string>
@@ -2482,48 +2481,6 @@
     <string name="cmd_desc_unblock">"ピアのブロックを解除"</string>
     <string name="cmd_desc_who">"オンラインの人を確認"</string>
     <string name="mutual_favorite">"相互"</string>
-    <string name="drone_detector">"ドローン検知"</string>
-    <string name="remote_id_subtitle">"リモートID：付近を飛ぶドローン"</string>
-    <string name="drone_detection_running">"ドローン検知が有効"</string>
-    <string name="drones_in_range_n">"範囲内 %1$d"</string>
-    <string name="drone_alerts">"ドローン通知"</string>
-    <string name="drone_detected">"ドローンを検知"</string>
-    <string name="detection_engine">"検知エンジン"</string>
-    <string name="detection_on">"アプリを閉じていてもリモートIDを受信します"</string>
-    <string name="detection_off">"オフ：ドローンを検知しません"</string>
-    <string name="in_range">"範囲内"</string>
-    <string name="seen">"検知済み"</string>
-    <string name="closest">"最寄り"</string>
-    <string name="detection_stopped">"検知停止中"</string>
-    <string name="listening_remote_id">"ドローンを受信中"</string>
-    <string name="long_range_supported">"Bluetooth長距離"</string>
-    <string name="remote_id_permission_body">"ドローンを受信するには、付近のBluetoothデバイスを検索する必要があります。"</string>
-    <string name="no_drone_body">"BluetoothでリモートIDを発信するドローンがここに表示されます。通常は数百メートル以内です。"</string>
-    <string name="remote_id_how_it_works">"250 g以上のほとんどのドローンは、飛行中に機体の識別情報と位置を発信する必要があります。これがリモートIDで、2024年から欧州と米国で義務化されています。このツールはBluetooth（数百メートル、Bluetooth 5長距離なら約1 km）、Wi-Fiビーコン、Wi-Fi Awareで受信します。AndroidのWi-Fiスキャンは30秒に1回に制限されているため、Wi-Fiのドローンは表示される頻度が下がります。検知はアプリを閉じても続き、新しいドローンが現れると通知します。"</string>
-    <string name="ua_aeroplane">"固定翼"</string>
-    <string name="ua_multirotor">"マルチコプター"</string>
-    <string name="ua_vtol">"VTOL"</string>
-    <string name="ua_balloon">"気球・飛行船"</string>
-    <string name="ua_other">"航空機"</string>
-    <string name="status_ground">"地上"</string>
-    <string name="status_airborne">"飛行中"</string>
-    <string name="status_emergency">"緊急"</string>
-    <string name="status_failure">"リモートID障害"</string>
-    <string name="id_serial">"シリアル番号"</string>
-    <string name="id_registration">"登録記号"</string>
-    <string name="id_utm">"UTM ID"</string>
-    <string name="id_session">"セッションID"</string>
-    <string name="type">"種類"</string>
-    <string name="altitude">"高度"</string>
-    <string name="height_above_ground">"対地高度"</string>
-    <string name="height_above_takeoff">"離陸地点からの高さ"</string>
-    <string name="vertical_speed">"垂直速度"</string>
-    <string name="distance">"距離"</string>
-    <string name="from_you">"あなたから %1$s"</string>
-    <string name="from_the_drone">"ドローンから %1$s"</string>
-    <string name="operator_id">"運航者ID"</string>
-    <string name="flight_description">"飛行の説明"</string>
-    <string name="eu_class">"EUクラス"</string>
     <string name="tracker_guard">"バックグラウンド監視"</string>
     <string name="tracker_guard_on">"アプリを閉じても監視：追跡タグがついてくると通知"</string>
     <string name="tracker_guard_off">"オフ：この画面を開いているときのみ"</string>

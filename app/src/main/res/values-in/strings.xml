@@ -529,7 +529,6 @@
     <string name="disconnected_for_less_than_15_min" formatted="false">"Terputus kurang dari 15 menit (0x%02X)"</string>
     <string name="disconnected_for_15_min_or_more" formatted="false">"Terputus 15 menit atau lebih (0x%02X)"</string>
     <string name="disconnected_for_a_long_time_0x" formatted="false">"Terputus sejak lama (0x%02X)"</string>
-    <string name="unknown_state_0x" formatted="false">"Status tidak dikenal (0x%02X)"</string>
     <string name="no_answer_within_s">"tidak ada jawaban dalam %1$s dtk"</string>
     <string name="gatt_error_2">"Kesalahan GATT %1$s"</string>
     <string name="bluetooth_permission_missing">"Izin Bluetooth tidak ada"</string>
@@ -2482,48 +2481,6 @@
     <string name="cmd_desc_unblock">"buka blokir peer"</string>
     <string name="cmd_desc_who">"lihat siapa yang online"</string>
     <string name="mutual_favorite">"Saling"</string>
-    <string name="drone_detector">"Detektor drone"</string>
-    <string name="remote_id_subtitle">"Remote ID: drone yang terbang di dekat"</string>
-    <string name="drone_detection_running">"Deteksi drone aktif"</string>
-    <string name="drones_in_range_n">"%1$d dalam jangkauan"</string>
-    <string name="drone_alerts">"Peringatan drone"</string>
-    <string name="drone_detected">"Drone terdeteksi"</string>
-    <string name="detection_engine">"Mesin deteksi"</string>
-    <string name="detection_on">"Mendengarkan Remote ID, bahkan saat aplikasi ditutup"</string>
-    <string name="detection_off">"Mati: tidak ada deteksi drone"</string>
-    <string name="in_range">"Dalam jangkauan"</string>
-    <string name="seen">"Terlihat"</string>
-    <string name="closest">"Terdekat"</string>
-    <string name="detection_stopped">"Deteksi berhenti"</string>
-    <string name="listening_remote_id">"Mendengarkan drone"</string>
-    <string name="long_range_supported">"Bluetooth jarak jauh"</string>
-    <string name="remote_id_permission_body">"Detektor perlu memindai perangkat Bluetooth di sekitar untuk mendengar drone."</string>
-    <string name="no_drone_body">"Drone yang menyiarkan Remote ID lewat Bluetooth muncul di sini, biasanya dalam beberapa ratus meter."</string>
-    <string name="remote_id_how_it_works">"Sebagian besar drone 250 g atau lebih wajib menyiarkan identitas dan posisinya saat terbang: inilah Remote ID, wajib di Eropa dan AS sejak 2024. Alat ini mendengarkannya lewat Bluetooth (beberapa ratus meter, sekitar satu kilometer dengan Bluetooth 5 jarak jauh), di beacon Wi-Fi, dan lewat Wi-Fi Aware. Android hanya mengizinkan pemindaian Wi-Fi setiap 30 detik, jadi drone Wi-Fi lebih jarang muncul. Detektor tetap berjalan saat aplikasi ditutup dan memberi tahu Anda saat drone baru muncul."</string>
-    <string name="ua_aeroplane">"Sayap tetap"</string>
-    <string name="ua_multirotor">"Multirotor"</string>
-    <string name="ua_vtol">"VTOL"</string>
-    <string name="ua_balloon">"Balon atau kapal udara"</string>
-    <string name="ua_other">"Pesawat"</string>
-    <string name="status_ground">"Di darat"</string>
-    <string name="status_airborne">"Terbang"</string>
-    <string name="status_emergency">"Darurat"</string>
-    <string name="status_failure">"Gangguan Remote ID"</string>
-    <string name="id_serial">"Nomor seri"</string>
-    <string name="id_registration">"Registrasi"</string>
-    <string name="id_utm">"ID UTM"</string>
-    <string name="id_session">"ID sesi"</string>
-    <string name="type">"Jenis"</string>
-    <string name="altitude">"Ketinggian"</string>
-    <string name="height_above_ground">"Tinggi di atas tanah"</string>
-    <string name="height_above_takeoff">"Tinggi dari lepas landas"</string>
-    <string name="vertical_speed">"Kecepatan vertikal"</string>
-    <string name="distance">"Jarak"</string>
-    <string name="from_you">"%1$s dari Anda"</string>
-    <string name="from_the_drone">"%1$s dari drone"</string>
-    <string name="operator_id">"ID operator"</string>
-    <string name="flight_description">"Deskripsi penerbangan"</string>
-    <string name="eu_class">"Kelas UE"</string>
     <string name="tracker_guard">"Penjaga latar belakang"</string>
     <string name="tracker_guard_on">"Mengawasi saat aplikasi ditutup: peringatan jika pelacak mengikuti Anda"</string>
     <string name="tracker_guard_off">"Mati: hanya saat layar ini terbuka"</string>

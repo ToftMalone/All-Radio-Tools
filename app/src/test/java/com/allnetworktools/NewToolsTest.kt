@@ -172,15 +172,52 @@ class NewToolsTest {
     private fun smartTagFrame(status: String) = Ad.parseHex("02010403025AFD17165AFD${status}C24A037F21348D05197CC6BE000000ED90DFA7")
 
     @Test fun readsSmartTagStates() {
+        // Just lost its owner (premature offline): safe, as in AirGuard.
         val lost = TrackerDetect.classify(smartTagFrame("11"))!!
         assertEquals(TrackerNet.SamsungFind, lost.net)
-        assertEquals(true, lost.separated)
+        assertEquals(false, lost.separated)
         assertEquals("Déconnecté du propriétaire depuis moins de 15 min", lost.state)
         assertEquals("C2:7F21348D05197CC6", lost.linkKey)
         assertEquals(true, TrackerDetect.classify(smartTagFrame("12"))!!.separated)
+        assertEquals(true, TrackerDetect.classify(smartTagFrame("13"))!!.separated)
         val home = TrackerDetect.classify(smartTagFrame("15"))!!
         assertEquals(false, home.separated)
         assertEquals(FollowLevel.WithOwner, TrackerDetect.assess(home, listOf(Sighting(0, null, null, -50))).level)
+    }
+
+    /** Every state with bit 2 set means the tag is connected to its owner: never a tracker following you. */
+    @Test fun smartTagConnectedToItsOwnerNeverFollows() {
+        listOf("14", "16", "17", "34", "35", "10").forEach { s ->
+            val sig = TrackerDetect.classify(smartTagFrame(s))!!
+            assertEquals(s, false, sig.separated)
+            val walk = (0 until 60).map { Sighting(it * 60_000L, 48.85 + it * 0.001, 2.35, -60) }
+            assertEquals(s, FollowLevel.WithOwner, TrackerDetect.assess(sig, walk).level)
+        }
+    }
+
+    @Test fun chipoloStateDependsOnFirmware() {
+        val away = Ad.parseHex("030233FE" + "0616" + "33FE" + "000100")
+        val near = Ad.parseHex("030233FE" + "0616" + "33FE" + "000000")
+        assertEquals(TrackerNet.Chipolo, TrackerDetect.classify(away, "D8:11:22:33:44:55")!!.net)
+        assertEquals(true, TrackerDetect.classify(away, "D8:11:22:33:44:55")!!.separated)
+        assertEquals(false, TrackerDetect.classify(near, "C1:11:22:33:44:55")!!.separated)
+        // From firmware D9 the bit is gone: unknown, followed like any tag.
+        assertNull(TrackerDetect.classify(near, "D9:11:22:33:44:55")!!.separated)
+        assertEquals(TrackerNet.Pebblebee, TrackerDetect.classify(Ad.parseHex("030325FA"))!!.net)
+    }
+
+    /** AirGuard's 15 minute algorithm: an offline SmartTag changes everything but its counter goes up by one. */
+    @Test fun linksAnOfflineSmartTagAcrossItsQuarterHourChanges() {
+        fun frame(aging: String, id: String) = Ad.parseHex("02010403025AFD17165AFD12${aging}${id}000000ED90DFA7")
+        val c = com.allnetworktools.ui.pages.bt.UnknownTrackersController(null, null)
+        fun dev(addr: String, f: List<com.allnetworktools.data.AdStructure>) = com.allnetworktools.data.BleDevice.from(addr, null, -60, null, false, 0, f)
+        val pos = com.allnetworktools.data.PositionSet()
+        c.feed(listOf(dev("4E:00:00:00:00:01", frame("C24A03", "7F21348D05197CC6BE"))), pos, 0)
+        c.feed(listOf(dev("4E:00:00:00:00:02", frame("C34A03", "1122334455667788BE"))), pos, 15 * 60_000L)
+        assertEquals(1, c.candidates.size)
+        // A different properties byte is another tag.
+        c.feed(listOf(dev("4E:00:00:00:00:03", frame("C44A03", "99AABBCCDDEEFF00BF"))), pos, 30 * 60_000L)
+        assertEquals(2, c.candidates.size)
     }
 
     @Test fun followsASmartTagAcrossAddressRotations() {

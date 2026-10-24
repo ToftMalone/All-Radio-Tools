@@ -77,11 +77,6 @@
             android:foregroundServiceType="connectedDevice" />
 
         <service
-            android:name=".data.remoteid.RemoteIdService"
-            android:exported="false"
-            android:foregroundServiceType="connectedDevice" />
-
-        <service
             android:name=".data.TrackerGuardService"
             android:exported="false"
             android:foregroundServiceType="connectedDevice|location" />

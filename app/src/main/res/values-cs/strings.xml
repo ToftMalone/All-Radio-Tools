@@ -531,7 +531,6 @@
     <string name="disconnected_for_less_than_15_min" formatted="false">"Odpojeno méně než 15 min (0x%02X)"</string>
     <string name="disconnected_for_15_min_or_more" formatted="false">"Odpojeno 15 min nebo déle (0x%02X)"</string>
     <string name="disconnected_for_a_long_time_0x" formatted="false">"Odpojeno dlouho (0x%02X)"</string>
-    <string name="unknown_state_0x" formatted="false">"Neznámý stav (0x%02X)"</string>
     <string name="no_answer_within_s">"žádná odpověď do %1$s s"</string>
     <string name="gatt_error_2">"Chyba GATT %1$s"</string>
     <string name="bluetooth_permission_missing">"Chybí oprávnění Bluetooth"</string>
@@ -2668,48 +2667,6 @@
     <string name="cmd_desc_unblock">"odblokovat peera"</string>
     <string name="cmd_desc_who">"zobrazit, kdo je online"</string>
     <string name="mutual_favorite">"Vzájemně"</string>
-    <string name="drone_detector">"Detektor dronů"</string>
-    <string name="remote_id_subtitle">"Remote ID: drony létající poblíž"</string>
-    <string name="drone_detection_running">"Detekce dronů je aktivní"</string>
-    <string name="drones_in_range_n">"%1$d v dosahu"</string>
-    <string name="drone_alerts">"Upozornění na drony"</string>
-    <string name="drone_detected">"Detekován dron"</string>
-    <string name="detection_engine">"Modul detekce"</string>
-    <string name="detection_on">"Poslouchá Remote ID i při zavřené aplikaci"</string>
-    <string name="detection_off">"Vypnuto: žádná detekce dronů"</string>
-    <string name="in_range">"V dosahu"</string>
-    <string name="seen">"Viděno"</string>
-    <string name="closest">"Nejbližší"</string>
-    <string name="detection_stopped">"Detekce zastavena"</string>
-    <string name="listening_remote_id">"Poslouchám drony"</string>
-    <string name="long_range_supported">"Bluetooth dlouhého dosahu"</string>
-    <string name="remote_id_permission_body">"Detektor musí hledat zařízení Bluetooth poblíž, aby slyšel drony."</string>
-    <string name="no_drone_body">"Drony vysílající Remote ID přes Bluetooth se zobrazí zde, obvykle do několika set metrů."</string>
-    <string name="remote_id_how_it_works">"Většina dronů od 250 g musí za letu vysílat svou identitu a polohu: to je Remote ID, povinné v Evropě a USA od roku 2024. Tento nástroj jej přijímá přes Bluetooth (několik set metrů, asi kilometr s Bluetooth 5 dlouhého dosahu), ve Wi-Fi beaconech a přes Wi-Fi Aware. Android povoluje sken Wi-Fi jen jednou za 30 sekund, takže Wi-Fi drony se objevují méně často. Detektor běží i při zavřené aplikaci a upozorní vás, když se objeví nový dron."</string>
-    <string name="ua_aeroplane">"Pevné křídlo"</string>
-    <string name="ua_multirotor">"Multikoptéra"</string>
-    <string name="ua_vtol">"VTOL"</string>
-    <string name="ua_balloon">"Balón nebo vzducholoď"</string>
-    <string name="ua_other">"Letadlo"</string>
-    <string name="status_ground">"Na zemi"</string>
-    <string name="status_airborne">"Ve vzduchu"</string>
-    <string name="status_emergency">"Nouze"</string>
-    <string name="status_failure">"Porucha Remote ID"</string>
-    <string name="id_serial">"Sériové číslo"</string>
-    <string name="id_registration">"Registrace"</string>
-    <string name="id_utm">"UTM ID"</string>
-    <string name="id_session">"ID relace"</string>
-    <string name="type">"Typ"</string>
-    <string name="altitude">"Nadmořská výška"</string>
-    <string name="height_above_ground">"Výška nad terénem"</string>
-    <string name="height_above_takeoff">"Výška od vzletu"</string>
-    <string name="vertical_speed">"Vertikální rychlost"</string>
-    <string name="distance">"Vzdálenost"</string>
-    <string name="from_you">"%1$s od vás"</string>
-    <string name="from_the_drone">"%1$s od dronu"</string>
-    <string name="operator_id">"ID provozovatele"</string>
-    <string name="flight_description">"Popis letu"</string>
-    <string name="eu_class">"Třída EU"</string>
     <string name="tracker_guard">"Hlídání na pozadí"</string>
     <string name="tracker_guard_on">"Hlídá i při zavřené aplikaci: upozorní, když vás sleduje lokátor"</string>
     <string name="tracker_guard_off">"Vypnuto: jen když je tato obrazovka otevřená"</string>

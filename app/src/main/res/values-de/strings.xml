@@ -531,7 +531,6 @@
     <string name="disconnected_for_less_than_15_min" formatted="false">"Seit weniger als 15 min getrennt (0x%02X)"</string>
     <string name="disconnected_for_15_min_or_more" formatted="false">"Seit 15 min oder länger getrennt (0x%02X)"</string>
     <string name="disconnected_for_a_long_time_0x" formatted="false">"Seit Langem getrennt (0x%02X)"</string>
-    <string name="unknown_state_0x" formatted="false">"Unbekannter Zustand (0x%02X)"</string>
     <string name="no_answer_within_s">"keine Antwort innerhalb von %1$s s"</string>
     <string name="gatt_error_2">"GATT-Fehler %1$s"</string>
     <string name="bluetooth_permission_missing">"Bluetooth-Berechtigung fehlt"</string>
@@ -2544,48 +2543,6 @@
     <string name="cmd_desc_unblock">"einen Peer entblocken"</string>
     <string name="cmd_desc_who">"sehen, wer online ist"</string>
     <string name="mutual_favorite">"Gegenseitig"</string>
-    <string name="drone_detector">"Drohnendetektor"</string>
-    <string name="remote_id_subtitle">"Remote ID: Drohnen in der Nähe"</string>
-    <string name="drone_detection_running">"Drohnenerkennung aktiv"</string>
-    <string name="drones_in_range_n">"%1$d in Reichweite"</string>
-    <string name="drone_alerts">"Drohnenwarnungen"</string>
-    <string name="drone_detected">"Drohne erkannt"</string>
-    <string name="detection_engine">"Erkennungsmodul"</string>
-    <string name="detection_on">"Hört auf Remote ID, auch bei geschlossener App"</string>
-    <string name="detection_off">"Aus: keine Drohnenerkennung"</string>
-    <string name="in_range">"In Reichweite"</string>
-    <string name="seen">"Gesehen"</string>
-    <string name="closest">"Am nächsten"</string>
-    <string name="detection_stopped">"Erkennung gestoppt"</string>
-    <string name="listening_remote_id">"Lausche nach Drohnen"</string>
-    <string name="long_range_supported">"Bluetooth Long Range"</string>
-    <string name="remote_id_permission_body">"Der Detektor muss nach Bluetooth-Geräten in der Nähe suchen, um Drohnen zu hören."</string>
-    <string name="no_drone_body">"Drohnen, die Remote ID per Bluetooth senden, erscheinen hier, meist im Umkreis einiger hundert Meter."</string>
-    <string name="remote_id_how_it_works">"Die meisten Drohnen ab 250 g müssen im Flug ihre Identität und Position senden: Das ist Remote ID, seit 2024 in Europa und den USA vorgeschrieben. Dieses Werkzeug empfängt sie per Bluetooth (einige hundert Meter, etwa ein Kilometer mit Bluetooth 5 Long Range), in WLAN-Beacons und über Wi-Fi Aware. Android erlaubt nur alle 30 Sekunden einen WLAN-Scan, daher erscheinen WLAN-Drohnen seltener. Der Detektor läuft auch bei geschlossener App weiter und benachrichtigt dich, wenn eine neue Drohne auftaucht."</string>
-    <string name="ua_aeroplane">"Starrflügler"</string>
-    <string name="ua_multirotor">"Multikopter"</string>
-    <string name="ua_vtol">"VTOL"</string>
-    <string name="ua_balloon">"Ballon oder Luftschiff"</string>
-    <string name="ua_other">"Luftfahrzeug"</string>
-    <string name="status_ground">"Am Boden"</string>
-    <string name="status_airborne">"In der Luft"</string>
-    <string name="status_emergency">"Notfall"</string>
-    <string name="status_failure">"Remote-ID-Störung"</string>
-    <string name="id_serial">"Seriennummer"</string>
-    <string name="id_registration">"Registrierung"</string>
-    <string name="id_utm">"UTM-ID"</string>
-    <string name="id_session">"Sitzungs-ID"</string>
-    <string name="type">"Typ"</string>
-    <string name="altitude">"Höhe"</string>
-    <string name="height_above_ground">"Höhe über Grund"</string>
-    <string name="height_above_takeoff">"Höhe über Startpunkt"</string>
-    <string name="vertical_speed">"Vertikalgeschwindigkeit"</string>
-    <string name="distance">"Entfernung"</string>
-    <string name="from_you">"%1$s von dir"</string>
-    <string name="from_the_drone">"%1$s von der Drohne"</string>
-    <string name="operator_id">"Betreiber-ID"</string>
-    <string name="flight_description">"Flugbeschreibung"</string>
-    <string name="eu_class">"EU-Klasse"</string>
     <string name="tracker_guard">"Hintergrundwache"</string>
     <string name="tracker_guard_on">"Wacht bei geschlossener App: Warnung, wenn dir ein Tracker folgt"</string>
     <string name="tracker_guard_off">"Aus: nur solange dieser Bildschirm offen ist"</string>

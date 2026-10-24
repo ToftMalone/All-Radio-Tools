@@ -13,6 +13,8 @@ enum class TrackerNet(val label: String, val maker: String) {
     GoogleFindHub(S(R.string.find_hub_google), S(R.string.google_network_tag)),
     SamsungFind("SmartThings Find", "Galaxy SmartTag"),
     Tile("Tile", "Tile"),
+    Chipolo("Chipolo", "Chipolo"),
+    Pebblebee("Pebblebee", "Pebblebee"),
 }
 
 /**
@@ -29,6 +31,8 @@ enum class TrackerKind(val label: String) {
     SmartTag("Galaxy SmartTag"),
     GalaxyBuds("Galaxy Buds"),
     Tile("Tile"),
+    Chipolo("Chipolo"),
+    Pebblebee("Pebblebee"),
 }
 
 data class TrackerSignal(
@@ -43,11 +47,19 @@ data class TrackerSignal(
     val linkKey: String? = null,
     /** Apple Find My status byte, shown to help tell what the tag is. */
     val appleStatus: Int? = null,
+    /**
+     * SmartTag aging counter and properties byte: an offline tag changes identity every 15 minutes, the counter
+     * going up by one each time (AirGuard's "15 minute algorithm" links the two on this).
+     */
+    val agingCounter: Int? = null,
+    val props: Int? = null,
     val kind: TrackerKind = when (net) {
         TrackerNet.AppleFindMy -> TrackerKind.AppleDevice
         TrackerNet.GoogleFindHub -> TrackerKind.GoogleTag
         TrackerNet.SamsungFind -> TrackerKind.SmartTag
         TrackerNet.Tile -> TrackerKind.Tile
+        TrackerNet.Chipolo -> TrackerKind.Chipolo
+        TrackerNet.Pebblebee -> TrackerKind.Pebblebee
     },
 )
 
@@ -77,7 +89,7 @@ object TrackerDetect {
     const val WatchSpreadM = 100.0
     const val PlaceRadiusM = 150.0
 
-    fun classify(ads: List<AdStructure>): TrackerSignal? {
+    fun classify(ads: List<AdStructure>, address: String? = null): TrackerSignal? {
         Ad.manufacturer(ads)[0x004C]?.let { d ->
             // Continuity TLV: type 0x12 is Find My. A 25-byte payload carries the full rotating key, which
             // accessories only broadcast in "offline finding" mode, i.e. away from their owner's devices.
@@ -105,6 +117,8 @@ object TrackerDetect {
         // Galaxy Buds out of their case also advertise under their own name with Samsung's manufacturer data.
         if (buds && 0x0075 in Ad.manufacturer(ads)) return TrackerSignal(TrackerNet.SamsungFind, null, kind = TrackerKind.GalaxyBuds)
         if (uuids.any { it == 0xFEED || it == 0xFEEC || it == 0xFD84 }) return TrackerSignal(TrackerNet.Tile, null)
+        if (0xFE33 in uuids || sd.containsKey(0xFE33)) return chipolo(sd[0xFE33], address)
+        if (0xFA25 in uuids || sd.containsKey(0xFA25)) return TrackerSignal(TrackerNet.Pebblebee, null)
         return null
     }
 
@@ -149,23 +163,40 @@ object TrackerDetect {
      * the epoch, bytes 16-19 = check value. The address rotates on its own 15 min timer, shifted by
      * about 7 min from the epoch, and on every state change: epoch + identifier bridge each rotation.
      */
+    /**
+     * SmartTag state, read as AirGuard (seemoo-lab, Apache 2.0) does from the 3 low bits of the first byte:
+     * 011 overmature offline (away from its owner for long) and 010 offline are the only states a tracking tag
+     * can be in; 001 premature offline (just lost its owner) and every value with bit 2 set (connected) are safe.
+     */
     fun smartTag(d: ByteArray): TrackerSignal {
         if (d.isEmpty()) return TrackerSignal(TrackerNet.SamsungFind, null)
         val status = d.u8(0)
         val (separated, state) = when (status) {
             0x15 -> false to S(R.string.connected_to_the_owner_s_phone)
-            0x11 -> true to S(R.string.disconnected_from_the_owner_for_less)
+            0x11 -> false to S(R.string.disconnected_from_the_owner_for_less)
             0x12 -> true to S(R.string.disconnected_from_the_owner_for_15)
             else -> when (status and 0x07) {
-                5 -> false to S(R.string.connected_to_the_owner_0x).format(status)
-                1 -> true to S(R.string.disconnected_for_less_than_15_min).format(status)
-                2 -> true to S(R.string.disconnected_for_15_min_or_more).format(status)
                 3 -> true to S(R.string.disconnected_for_a_long_time_0x).format(status)
-                else -> null to S(R.string.unknown_state_0x).format(status)
+                2 -> true to S(R.string.disconnected_for_15_min_or_more).format(status)
+                1 -> false to S(R.string.disconnected_for_less_than_15_min).format(status)
+                else -> false to S(R.string.connected_to_the_owner_0x).format(status)
             }
         }
         val key = if (d.size >= 12) "%02X:".format(d.u8(1)) + d.hex(4, 12).replace(" ", "") else null
-        return TrackerSignal(TrackerNet.SamsungFind, separated, state, key)
+        val aging = if (d.size >= 4) (d.u8(3) shl 16) or (d.u8(2) shl 8) or d.u8(1) else null
+        val props = if (d.size >= 13) d.u8(12) else null
+        return TrackerSignal(TrackerNet.SamsungFind, separated, state, key, agingCounter = aging, props = props)
+    }
+
+    /**
+     * Chipolo (AirGuard): bit 0 of the second service-data byte is set once the tag has not seen its owner for
+     * 30 minutes. Firmware is told by the first byte of the address; from D9 on the bit is gone, the state unknown.
+     */
+    private fun chipolo(d: ByteArray?, address: String?): TrackerSignal {
+        val firmware = address?.take(2)?.uppercase()
+        if (d == null || d.size < 2 || firmware == null || firmware > "D8") return TrackerSignal(TrackerNet.Chipolo, null)
+        val away = d.u8(1) and 1 == 1
+        return TrackerSignal(TrackerNet.Chipolo, away)
     }
 
     fun distanceM(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Double {

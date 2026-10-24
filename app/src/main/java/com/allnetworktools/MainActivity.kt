@@ -38,7 +38,6 @@ class MainActivity : ComponentActivity() {
     private fun open(intent: Intent?) {
         val tool = when (intent?.getStringExtra(EXTRA_OPEN)) {
             OPEN_BITCHAT -> Tool.BitChat
-            OPEN_REMOTE_ID -> Tool.RemoteId
             OPEN_TRACKERS -> Tool.UnknownTrackers
             OPEN_FAKE_CELLS -> Tool.FakeCells
             else -> return
@@ -49,7 +48,6 @@ class MainActivity : ComponentActivity() {
     companion object {
         const val EXTRA_OPEN = "open"
         const val OPEN_BITCHAT = "bitchat"
-        const val OPEN_REMOTE_ID = "remoteid"
         const val OPEN_TRACKERS = "trackers"
         const val OPEN_FAKE_CELLS = "fakecells"
     }

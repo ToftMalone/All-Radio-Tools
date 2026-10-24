@@ -161,10 +161,18 @@ class UnknownTrackersController(private val context: android.content.Context?, p
             }
         }
         devices.forEach { d ->
-            val sig = TrackerDetect.classify(d.ads) ?: return@forEach
+            val sig = TrackerDetect.classify(d.ads, d.address) ?: return@forEach
             val c = candidates.values.firstOrNull { d.address in it.addresses }
                 ?: sig.linkKey?.let { k -> candidates.values.firstOrNull { it.lastLinkKey == k && it.signal.net == sig.net && now - it.lastHeardMs < 20 * 60_000L } }
                     ?.also { it.addresses += d.address }
+                // AirGuard's 15 minute algorithm: an offline SmartTag takes a new identity every 15 minutes, its aging
+                // counter one higher and its properties byte unchanged.
+                ?: sig.agingCounter?.takeIf { sig.net == TrackerNet.SamsungFind && sig.separated == true }?.let { ac ->
+                    candidates.values.firstOrNull {
+                        it.signal.net == TrackerNet.SamsungFind && it.signal.agingCounter == ac - 1 && it.signal.props == sig.props &&
+                            now - it.lastHeardMs in 0L..35 * 60_000L
+                    }
+                }?.also { it.addresses += d.address }
                 ?: TrackerCandidate(d.address, sig).also { it.firstHeardMs = now; candidates[d.address] = it }
             c.device = d
             c.signal = sig

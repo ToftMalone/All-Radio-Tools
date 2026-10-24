@@ -239,7 +239,7 @@ private fun PageBody(vm: MainViewModel, net: Network, page: Page) {
                     else S(R.string.android_needs_the_location_permission_to),
                 ) { actions.request(if (modern) PermGroup.Nearby else PermGroup.Location) }
             }
-            Tool.Gatt, Tool.Paired, Tool.Tracker, Tool.UnknownTrackers, Tool.TrackerDetail, Tool.Beacons, Tool.Earbuds, Tool.BitChat, Tool.RemoteId -> BtToolRoute(vm, page)
+            Tool.Gatt, Tool.Paired, Tool.Tracker, Tool.UnknownTrackers, Tool.TrackerDetail, Tool.Beacons, Tool.Earbuds, Tool.BitChat -> BtToolRoute(vm, page)
             Tool.CellDetail -> CellDetailTool(vm.cell.collectAsStateWithLifecycle().value.state, page.arg) {
                 vm.navigate { it.copy(page = Page.ToolPage(Tool.Neighbors)) }
             }
@@ -338,18 +338,6 @@ private fun BtToolRoute(vm: MainViewModel, page: Page.ToolPage) {
         }
         Tool.Beacons -> com.allnetworktools.ui.pages.bt.BeaconsTool(ble)
         Tool.Earbuds -> com.allnetworktools.ui.pages.bt.EarbudsTool(ble)
-        Tool.RemoteId -> {
-            val perms by vm.permissions.collectAsStateWithLifecycle()
-            val positions by vm.positions.collectAsStateWithLifecycle()
-            val actions = LocalActions.current
-            val loc = positions.fused ?: positions.gnss ?: positions.network
-            com.allnetworktools.ui.pages.bt.RemoteIdTool(
-                permitted = perms.nearby,
-                me = loc?.let { it.latitude to it.longitude },
-                onGrant = { actions.request(PermGroup.Nearby) },
-                onNotifications = { if (PermGroup.Notifications !in perms) actions.request(PermGroup.Notifications) },
-            )
-        }
         Tool.BitChat -> {
             val perms by vm.permissions.collectAsStateWithLifecycle()
             val actions = LocalActions.current

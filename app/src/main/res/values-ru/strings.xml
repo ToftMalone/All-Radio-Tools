@@ -531,7 +531,6 @@
     <string name="disconnected_for_less_than_15_min" formatted="false">"Отключена менее 15 мин (0x%02X)"</string>
     <string name="disconnected_for_15_min_or_more" formatted="false">"Отключена 15 мин или дольше (0x%02X)"</string>
     <string name="disconnected_for_a_long_time_0x" formatted="false">"Отключена давно (0x%02X)"</string>
-    <string name="unknown_state_0x" formatted="false">"Неизвестное состояние (0x%02X)"</string>
     <string name="no_answer_within_s">"нет ответа в течение %1$s с"</string>
     <string name="gatt_error_2">"Ошибка GATT %1$s"</string>
     <string name="bluetooth_permission_missing">"Нет разрешения Bluetooth"</string>
@@ -2668,48 +2667,6 @@
     <string name="cmd_desc_unblock">"разблокировать узел"</string>
     <string name="cmd_desc_who">"посмотреть, кто в сети"</string>
     <string name="mutual_favorite">"Взаимно"</string>
-    <string name="drone_detector">"Детектор дронов"</string>
-    <string name="remote_id_subtitle">"Remote ID: дроны, летающие рядом"</string>
-    <string name="drone_detection_running">"Обнаружение дронов включено"</string>
-    <string name="drones_in_range_n">"%1$d в зоне"</string>
-    <string name="drone_alerts">"Оповещения о дронах"</string>
-    <string name="drone_detected">"Обнаружен дрон"</string>
-    <string name="detection_engine">"Модуль обнаружения"</string>
-    <string name="detection_on">"Слушает Remote ID, даже когда приложение закрыто"</string>
-    <string name="detection_off">"Выключено: дроны не отслеживаются"</string>
-    <string name="in_range">"В зоне"</string>
-    <string name="seen">"Замечено"</string>
-    <string name="closest">"Ближайший"</string>
-    <string name="detection_stopped">"Обнаружение остановлено"</string>
-    <string name="listening_remote_id">"Слушаю дроны"</string>
-    <string name="long_range_supported">"Bluetooth дальнего действия"</string>
-    <string name="remote_id_permission_body">"Детектору нужно искать устройства Bluetooth рядом, чтобы слышать дроны."</string>
-    <string name="no_drone_body">"Дроны, передающие Remote ID по Bluetooth, появятся здесь, обычно в пределах нескольких сотен метров."</string>
-    <string name="remote_id_how_it_works">"Большинство дронов массой от 250 г обязаны в полёте передавать свою идентификацию и координаты: это Remote ID, обязательный в Европе и США с 2024 года. Этот инструмент принимает его по Bluetooth (несколько сотен метров, около километра с Bluetooth 5 дальнего действия), в маяках Wi-Fi и через Wi-Fi Aware. Android разрешает сканирование Wi-Fi лишь раз в 30 секунд, поэтому дроны с Wi-Fi появляются реже. Детектор работает и при закрытом приложении и сообщает о появлении нового дрона."</string>
-    <string name="ua_aeroplane">"Самолётного типа"</string>
-    <string name="ua_multirotor">"Мультикоптер"</string>
-    <string name="ua_vtol">"VTOL"</string>
-    <string name="ua_balloon">"Аэростат или дирижабль"</string>
-    <string name="ua_other">"Летательный аппарат"</string>
-    <string name="status_ground">"На земле"</string>
-    <string name="status_airborne">"В полёте"</string>
-    <string name="status_emergency">"Авария"</string>
-    <string name="status_failure">"Сбой Remote ID"</string>
-    <string name="id_serial">"Серийный номер"</string>
-    <string name="id_registration">"Регистрация"</string>
-    <string name="id_utm">"UTM ID"</string>
-    <string name="id_session">"ID сеанса"</string>
-    <string name="type">"Тип"</string>
-    <string name="altitude">"Высота над уровнем моря"</string>
-    <string name="height_above_ground">"Высота над землёй"</string>
-    <string name="height_above_takeoff">"Высота от точки взлёта"</string>
-    <string name="vertical_speed">"Вертикальная скорость"</string>
-    <string name="distance">"Расстояние"</string>
-    <string name="from_you">"%1$s от вас"</string>
-    <string name="from_the_drone">"%1$s от дрона"</string>
-    <string name="operator_id">"ID оператора"</string>
-    <string name="flight_description">"Описание полёта"</string>
-    <string name="eu_class">"Класс ЕС"</string>
     <string name="tracker_guard">"Фоновая охрана"</string>
     <string name="tracker_guard_on">"Следит при закрытом приложении: оповестит, если за вами следует трекер"</string>
     <string name="tracker_guard_off">"Выключено: только пока открыт этот экран"</string>

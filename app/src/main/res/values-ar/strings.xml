@@ -529,7 +529,6 @@
     <string name="disconnected_for_less_than_15_min" formatted="false">"منفصل منذ أقل من 15 دقيقة (0x%02X)"</string>
     <string name="disconnected_for_15_min_or_more" formatted="false">"منفصل منذ 15 دقيقة أو أكثر (0x%02X)"</string>
     <string name="disconnected_for_a_long_time_0x" formatted="false">"منفصل منذ وقت طويل (0x%02X)"</string>
-    <string name="unknown_state_0x" formatted="false">"حالة غير معروفة (0x%02X)"</string>
     <string name="no_answer_within_s">"لا استجابة خلال %1$s ث"</string>
     <string name="gatt_error_2">"خطأ GATT ‏%1$s"</string>
     <string name="bluetooth_permission_missing">"إذن Bluetooth مفقود"</string>
@@ -2792,48 +2791,6 @@
     <string name="cmd_desc_unblock">"إلغاء حظر نظير"</string>
     <string name="cmd_desc_who">"اعرف من هو متصل"</string>
     <string name="mutual_favorite">"متبادل"</string>
-    <string name="drone_detector">"كاشف الطائرات المسيّرة"</string>
-    <string name="remote_id_subtitle">"التعريف عن بُعد: مسيّرات تحلّق بالقرب"</string>
-    <string name="drone_detection_running">"كشف المسيّرات نشط"</string>
-    <string name="drones_in_range_n">"%1$d ضمن النطاق"</string>
-    <string name="drone_alerts">"تنبيهات المسيّرات"</string>
-    <string name="drone_detected">"تم رصد طائرة مسيّرة"</string>
-    <string name="detection_engine">"محرك الكشف"</string>
-    <string name="detection_on">"يستمع إلى التعريف عن بُعد حتى مع إغلاق التطبيق"</string>
-    <string name="detection_off">"متوقف: لا كشف للمسيّرات"</string>
-    <string name="in_range">"ضمن النطاق"</string>
-    <string name="seen">"تم رصدها"</string>
-    <string name="closest">"الأقرب"</string>
-    <string name="detection_stopped">"الكشف متوقف"</string>
-    <string name="listening_remote_id">"جارٍ الاستماع للمسيّرات"</string>
-    <string name="long_range_supported">"بلوتوث بعيد المدى"</string>
-    <string name="remote_id_permission_body">"يحتاج الكاشف إلى البحث عن أجهزة بلوتوث قريبة لسماع المسيّرات."</string>
-    <string name="no_drone_body">"تظهر هنا المسيّرات التي تبث التعريف عن بُعد عبر البلوتوث، عادةً ضمن بضع مئات من الأمتار."</string>
-    <string name="remote_id_how_it_works">"يجب على معظم المسيّرات التي يبلغ وزنها 250 غ أو أكثر أن تبث هويتها وموقعها أثناء الطيران: هذا هو التعريف عن بُعد (Remote ID)، وهو إلزامي في أوروبا والولايات المتحدة منذ 2024. تستمع هذه الأداة إليه عبر البلوتوث (بضع مئات من الأمتار، ونحو كيلومتر مع بلوتوث 5 بعيد المدى) وفي إشارات Wi-Fi وعبر Wi-Fi Aware. لا يسمح أندرويد بمسح Wi-Fi إلا كل 30 ثانية، لذا تظهر مسيّرات Wi-Fi بوتيرة أقل. يواصل الكاشف العمل مع إغلاق التطبيق وينبهك عند ظهور مسيّرة جديدة."</string>
-    <string name="ua_aeroplane">"جناح ثابت"</string>
-    <string name="ua_multirotor">"متعددة المراوح"</string>
-    <string name="ua_vtol">"إقلاع عمودي"</string>
-    <string name="ua_balloon">"منطاد أو بالون"</string>
-    <string name="ua_other">"طائرة"</string>
-    <string name="status_ground">"على الأرض"</string>
-    <string name="status_airborne">"في الجو"</string>
-    <string name="status_emergency">"طوارئ"</string>
-    <string name="status_failure">"عطل في التعريف عن بُعد"</string>
-    <string name="id_serial">"الرقم التسلسلي"</string>
-    <string name="id_registration">"التسجيل"</string>
-    <string name="id_utm">"معرّف UTM"</string>
-    <string name="id_session">"معرّف الجلسة"</string>
-    <string name="type">"النوع"</string>
-    <string name="altitude">"الارتفاع"</string>
-    <string name="height_above_ground">"الارتفاع فوق الأرض"</string>
-    <string name="height_above_takeoff">"الارتفاع عن نقطة الإقلاع"</string>
-    <string name="vertical_speed">"السرعة العمودية"</string>
-    <string name="distance">"المسافة"</string>
-    <string name="from_you">"على بُعد %1$s منك"</string>
-    <string name="from_the_drone">"على بُعد %1$s من المسيّرة"</string>
-    <string name="operator_id">"معرّف المشغّل"</string>
-    <string name="flight_description">"وصف الرحلة"</string>
-    <string name="eu_class">"فئة الاتحاد الأوروبي"</string>
     <string name="tracker_guard">"الحماية في الخلفية"</string>
     <string name="tracker_guard_on">"تراقب والتطبيق مغلق: تنبيه إذا كان متعقّب يلاحقك"</string>
     <string name="tracker_guard_off">"متوقفة: فقط عندما تكون هذه الشاشة مفتوحة"</string>

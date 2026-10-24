@@ -212,6 +212,4 @@ object Sym {
     const val Person = "person"
     const val Group = "group"
     const val Star = "star"
-    const val Drone = "drone"
-    const val PersonPin = "person_pin_circle"
 }

@@ -531,7 +531,6 @@
     <string name="disconnected_for_less_than_15_min" formatted="false">"Minder dan 15 min verbroken (0x%02X)"</string>
     <string name="disconnected_for_15_min_or_more" formatted="false">"15 min of langer verbroken (0x%02X)"</string>
     <string name="disconnected_for_a_long_time_0x" formatted="false">"Lang verbroken (0x%02X)"</string>
-    <string name="unknown_state_0x" formatted="false">"Onbekende status (0x%02X)"</string>
     <string name="no_answer_within_s">"geen antwoord binnen %1$s s"</string>
     <string name="gatt_error_2">"GATT-fout %1$s"</string>
     <string name="bluetooth_permission_missing">"Bluetooth-toestemming ontbreekt"</string>
@@ -2544,48 +2543,6 @@
     <string name="cmd_desc_unblock">"een peer deblokkeren"</string>
     <string name="cmd_desc_who">"zien wie er online is"</string>
     <string name="mutual_favorite">"Wederzijds"</string>
-    <string name="drone_detector">"Dronedetector"</string>
-    <string name="remote_id_subtitle">"Remote ID: drones die in de buurt vliegen"</string>
-    <string name="drone_detection_running">"Dronedetectie actief"</string>
-    <string name="drones_in_range_n">"%1$d binnen bereik"</string>
-    <string name="drone_alerts">"Dronemeldingen"</string>
-    <string name="drone_detected">"Drone gedetecteerd"</string>
-    <string name="detection_engine">"Detectie-engine"</string>
-    <string name="detection_on">"Luistert naar Remote ID, ook met de app gesloten"</string>
-    <string name="detection_off">"Uit: geen dronedetectie"</string>
-    <string name="in_range">"Binnen bereik"</string>
-    <string name="seen">"Gezien"</string>
-    <string name="closest">"Dichtstbij"</string>
-    <string name="detection_stopped">"Detectie gestopt"</string>
-    <string name="listening_remote_id">"Luisteren naar drones"</string>
-    <string name="long_range_supported">"Bluetooth long range"</string>
-    <string name="remote_id_permission_body">"De detector moet zoeken naar Bluetooth-apparaten in de buurt om drones te horen."</string>
-    <string name="no_drone_body">"Drones die Remote ID via Bluetooth uitzenden verschijnen hier, meestal binnen een paar honderd meter."</string>
-    <string name="remote_id_how_it_works">"De meeste drones van 250 g of meer moeten tijdens de vlucht hun identiteit en positie uitzenden: dat is Remote ID, sinds 2024 verplicht in Europa en de VS. Deze tool luistert ernaar via Bluetooth (een paar honderd meter, ongeveer een kilometer met Bluetooth 5 long range), in wifi-beacons en via Wi-Fi Aware. Android staat maar elke 30 seconden een wifi-scan toe, dus wifi-drones verschijnen minder vaak. De detector blijft werken met de app gesloten en waarschuwt je als er een nieuwe drone verschijnt."</string>
-    <string name="ua_aeroplane">"Vaste vleugel"</string>
-    <string name="ua_multirotor">"Multirotor"</string>
-    <string name="ua_vtol">"VTOL"</string>
-    <string name="ua_balloon">"Ballon of luchtschip"</string>
-    <string name="ua_other">"Luchtvaartuig"</string>
-    <string name="status_ground">"Op de grond"</string>
-    <string name="status_airborne">"In de lucht"</string>
-    <string name="status_emergency">"Noodgeval"</string>
-    <string name="status_failure">"Remote ID-storing"</string>
-    <string name="id_serial">"Serienummer"</string>
-    <string name="id_registration">"Registratie"</string>
-    <string name="id_utm">"UTM-ID"</string>
-    <string name="id_session">"Sessie-ID"</string>
-    <string name="type">"Type"</string>
-    <string name="altitude">"Hoogte"</string>
-    <string name="height_above_ground">"Hoogte boven de grond"</string>
-    <string name="height_above_takeoff">"Hoogte boven startpunt"</string>
-    <string name="vertical_speed">"Verticale snelheid"</string>
-    <string name="distance">"Afstand"</string>
-    <string name="from_you">"%1$s van jou"</string>
-    <string name="from_the_drone">"%1$s van de drone"</string>
-    <string name="operator_id">"Exploitant-ID"</string>
-    <string name="flight_description">"Vluchtbeschrijving"</string>
-    <string name="eu_class">"EU-klasse"</string>
     <string name="tracker_guard">"Achtergrondbewaking"</string>
     <string name="tracker_guard_on">"Bewaakt met de app gesloten: waarschuwt als een tracker je volgt"</string>
     <string name="tracker_guard_off">"Uit: alleen als dit scherm open is"</string>

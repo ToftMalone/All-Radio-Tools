@@ -529,7 +529,6 @@
     <string name="disconnected_for_less_than_15_min" formatted="false">"Ngắt dưới 15 phút (0x%02X)"</string>
     <string name="disconnected_for_15_min_or_more" formatted="false">"Ngắt từ 15 phút trở lên (0x%02X)"</string>
     <string name="disconnected_for_a_long_time_0x" formatted="false">"Ngắt từ lâu (0x%02X)"</string>
-    <string name="unknown_state_0x" formatted="false">"Trạng thái không xác định (0x%02X)"</string>
     <string name="no_answer_within_s">"không có phản hồi trong %1$s giây"</string>
     <string name="gatt_error_2">"Lỗi GATT %1$s"</string>
     <string name="bluetooth_permission_missing">"Thiếu quyền Bluetooth"</string>
@@ -2482,48 +2481,6 @@
     <string name="cmd_desc_unblock">"bỏ chặn một máy"</string>
     <string name="cmd_desc_who">"xem ai đang trực tuyến"</string>
     <string name="mutual_favorite">"Hai chiều"</string>
-    <string name="drone_detector">"Bộ phát hiện drone"</string>
-    <string name="remote_id_subtitle">"Remote ID: drone đang bay gần đây"</string>
-    <string name="drone_detection_running">"Đang phát hiện drone"</string>
-    <string name="drones_in_range_n">"%1$d trong tầm"</string>
-    <string name="drone_alerts">"Cảnh báo drone"</string>
-    <string name="drone_detected">"Phát hiện drone"</string>
-    <string name="detection_engine">"Bộ máy phát hiện"</string>
-    <string name="detection_on">"Đang nghe Remote ID, kể cả khi đóng ứng dụng"</string>
-    <string name="detection_off">"Tắt: không phát hiện drone"</string>
-    <string name="in_range">"Trong tầm"</string>
-    <string name="seen">"Đã thấy"</string>
-    <string name="closest">"Gần nhất"</string>
-    <string name="detection_stopped">"Đã dừng phát hiện"</string>
-    <string name="listening_remote_id">"Đang nghe drone"</string>
-    <string name="long_range_supported">"Bluetooth tầm xa"</string>
-    <string name="remote_id_permission_body">"Bộ phát hiện cần quét thiết bị Bluetooth ở gần để nghe được drone."</string>
-    <string name="no_drone_body">"Các drone phát Remote ID qua Bluetooth sẽ hiện ở đây, thường trong phạm vi vài trăm mét."</string>
-    <string name="remote_id_how_it_works">"Hầu hết drone từ 250 g trở lên phải phát danh tính và vị trí khi bay: đó là Remote ID, bắt buộc ở châu Âu và Mỹ từ năm 2024. Công cụ này nghe nó qua Bluetooth (vài trăm mét, khoảng một kilômét với Bluetooth 5 tầm xa), trong beacon Wi-Fi và qua Wi-Fi Aware. Android chỉ cho phép quét Wi-Fi mỗi 30 giây nên drone Wi-Fi hiện ít thường xuyên hơn. Bộ phát hiện vẫn chạy khi đóng ứng dụng và báo cho bạn khi có drone mới."</string>
-    <string name="ua_aeroplane">"Cánh cố định"</string>
-    <string name="ua_multirotor">"Nhiều cánh quạt"</string>
-    <string name="ua_vtol">"VTOL"</string>
-    <string name="ua_balloon">"Khí cầu hoặc khinh khí cầu"</string>
-    <string name="ua_other">"Tàu bay"</string>
-    <string name="status_ground">"Trên mặt đất"</string>
-    <string name="status_airborne">"Đang bay"</string>
-    <string name="status_emergency">"Khẩn cấp"</string>
-    <string name="status_failure">"Lỗi Remote ID"</string>
-    <string name="id_serial">"Số sê-ri"</string>
-    <string name="id_registration">"Số đăng ký"</string>
-    <string name="id_utm">"ID UTM"</string>
-    <string name="id_session">"ID phiên"</string>
-    <string name="type">"Loại"</string>
-    <string name="altitude">"Độ cao"</string>
-    <string name="height_above_ground">"Độ cao so với mặt đất"</string>
-    <string name="height_above_takeoff">"Độ cao so với điểm cất cánh"</string>
-    <string name="vertical_speed">"Tốc độ thẳng đứng"</string>
-    <string name="distance">"Khoảng cách"</string>
-    <string name="from_you">"cách bạn %1$s"</string>
-    <string name="from_the_drone">"cách drone %1$s"</string>
-    <string name="operator_id">"ID người khai thác"</string>
-    <string name="flight_description">"Mô tả chuyến bay"</string>
-    <string name="eu_class">"Hạng EU"</string>
     <string name="tracker_guard">"Bảo vệ chạy nền"</string>
     <string name="tracker_guard_on">"Giám sát khi đóng ứng dụng: cảnh báo nếu thiết bị theo dõi bám theo bạn"</string>
     <string name="tracker_guard_off">"Tắt: chỉ khi màn hình này đang mở"</string>

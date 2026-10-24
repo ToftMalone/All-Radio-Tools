@@ -529,7 +529,6 @@
     <string name="disconnected_for_less_than_15_min" formatted="false">"断开不到 15 分钟（0x%02X）"</string>
     <string name="disconnected_for_15_min_or_more" formatted="false">"断开 15 分钟或更久（0x%02X）"</string>
     <string name="disconnected_for_a_long_time_0x" formatted="false">"长时间断开（0x%02X）"</string>
-    <string name="unknown_state_0x" formatted="false">"未知状态（0x%02X）"</string>
     <string name="no_answer_within_s">"%1$s 秒内无响应"</string>
     <string name="gatt_error_2">"GATT 错误 %1$s"</string>
     <string name="bluetooth_permission_missing">"缺少蓝牙权限"</string>
@@ -2482,48 +2481,6 @@
     <string name="cmd_desc_unblock">"取消屏蔽节点"</string>
     <string name="cmd_desc_who">"查看谁在线"</string>
     <string name="mutual_favorite">"互相收藏"</string>
-    <string name="drone_detector">"无人机探测器"</string>
-    <string name="remote_id_subtitle">"远程识别：附近飞行的无人机"</string>
-    <string name="drone_detection_running">"无人机探测已开启"</string>
-    <string name="drones_in_range_n">"范围内 %1$d 架"</string>
-    <string name="drone_alerts">"无人机提醒"</string>
-    <string name="drone_detected">"发现无人机"</string>
-    <string name="detection_engine">"探测引擎"</string>
-    <string name="detection_on">"即使关闭应用也在监听远程识别"</string>
-    <string name="detection_off">"已关闭：不探测无人机"</string>
-    <string name="in_range">"范围内"</string>
-    <string name="seen">"已发现"</string>
-    <string name="closest">"最近"</string>
-    <string name="detection_stopped">"探测已停止"</string>
-    <string name="listening_remote_id">"正在监听无人机"</string>
-    <string name="long_range_supported">"蓝牙远距离"</string>
-    <string name="remote_id_permission_body">"探测器需要扫描附近的蓝牙设备才能接收无人机信号。"</string>
-    <string name="no_drone_body">"通过蓝牙广播远程识别的无人机会显示在这里，通常在几百米范围内。"</string>
-    <string name="remote_id_how_it_works">"大多数 250 克及以上的无人机在飞行时必须广播其身份和位置：这就是远程识别（Remote ID），欧洲和美国自 2024 年起强制要求。此工具通过蓝牙（几百米，蓝牙 5 远距离模式约 1 公里）、Wi-Fi 信标和 Wi-Fi Aware 接收。Android 每 30 秒只允许一次 Wi-Fi 扫描，因此 Wi-Fi 无人机出现得较少。关闭应用后探测器仍会运行，并在出现新无人机时通知你。"</string>
-    <string name="ua_aeroplane">"固定翼"</string>
-    <string name="ua_multirotor">"多旋翼"</string>
-    <string name="ua_vtol">"垂直起降"</string>
-    <string name="ua_balloon">"气球或飞艇"</string>
-    <string name="ua_other">"航空器"</string>
-    <string name="status_ground">"在地面"</string>
-    <string name="status_airborne">"飞行中"</string>
-    <string name="status_emergency">"紧急"</string>
-    <string name="status_failure">"远程识别故障"</string>
-    <string name="id_serial">"序列号"</string>
-    <string name="id_registration">"注册号"</string>
-    <string name="id_utm">"UTM ID"</string>
-    <string name="id_session">"会话 ID"</string>
-    <string name="type">"类型"</string>
-    <string name="altitude">"海拔高度"</string>
-    <string name="height_above_ground">"离地高度"</string>
-    <string name="height_above_takeoff">"相对起飞点高度"</string>
-    <string name="vertical_speed">"垂直速度"</string>
-    <string name="distance">"距离"</string>
-    <string name="from_you">"距你 %1$s"</string>
-    <string name="from_the_drone">"距无人机 %1$s"</string>
-    <string name="operator_id">"运营人 ID"</string>
-    <string name="flight_description">"飞行说明"</string>
-    <string name="eu_class">"欧盟等级"</string>
     <string name="tracker_guard">"后台守护"</string>
     <string name="tracker_guard_on">"关闭应用也在监视：有追踪器跟随你时提醒"</string>
     <string name="tracker_guard_off">"已关闭：仅在打开此页面时"</string>

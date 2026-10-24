@@ -47,6 +47,8 @@ fun TrackerArt(kind: TrackerKind, modifier: Modifier) {
                 TrackerKind.GalaxyBuds -> galaxyBuds()
                 TrackerKind.Tile -> tileMate()
                 TrackerKind.GoogleTag -> findHubTag()
+                TrackerKind.Chipolo -> chipolo()
+                TrackerKind.Pebblebee -> pebblebee()
             }
         }
     }
@@ -250,6 +252,26 @@ private fun DrawScope.tileMate() {
 }
 
 /** Find Hub tag (Moto Tag, Chipolo, Pebblebee…): a dark disc on a key-ring tab, its button ringed in Google's colours. */
+/** Chipolo ONE: a round tag with a keyring hole near the edge and the logo dot. */
+private fun DrawScope.chipolo() {
+    val shape = circle(50f, 50f, 40f).minus(circle(50f, 20f, 6f))
+    shadowed(shape) { p ->
+        drawPath(p, Brush.linearGradient(listOf(Color(0xFFFFD54F), Color(0xFFF9A825)), Offset(10f, 10f), Offset(90f, 90f)))
+        drawPath(p, Color(0xFFE09A00), style = Stroke(1.4f))
+    }
+    drawCircle(Color(0xFF3E2723).copy(alpha = 0.85f), 7f, Offset(50f, 58f))
+}
+
+/** Pebblebee Clip: a rounded square with a ring for the keys and a light in the middle. */
+private fun DrawScope.pebblebee() {
+    val body = rounded(16f, 16f, 84f, 84f, 20f).minus(circle(30f, 30f, 6f))
+    shadowed(body) { p ->
+        drawPath(p, Brush.linearGradient(listOf(Color(0xFF4A4F57), Color(0xFF1F2226)), Offset(16f, 16f), Offset(84f, 84f)))
+        drawPath(p, Color(0xFF666B73), style = Stroke(1.4f))
+    }
+    drawCircle(Brush.radialGradient(listOf(Color(0xFFB3E5FC), Color(0xFF29B6F6)), Offset(54f, 54f), 12f), 10f, Offset(54f, 54f))
+}
+
 private fun DrawScope.findHubTag() {
     val tab = rounded(40f, 4f, 60f, 26f, 8f).minus(circle(50f, 13f, 4.5f))
     val disc = circle(50f, 57f, 37f)
