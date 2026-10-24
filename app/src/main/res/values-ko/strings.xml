@@ -804,66 +804,8 @@
     <string name="i_q_swapped">" + I/Q 반전"</string>
     <string name="dual_basis">"이중 기저"</string>
     <string name="conventional_basis">"일반 기저"</string>
-    <string name="remote_hardware">"원격 하드웨어"</string>
-    <string name="node_info">"노드 정보"</string>
-    <string name="routing_ack">"라우팅 / 확인"</string>
-    <string name="admin">"관리"</string>
-    <string name="compressed_message">"압축 메시지"</string>
-    <string name="waypoint">"웨이포인트"</string>
-    <string name="detection_sensor">"감지 센서"</string>
-    <string name="alert">"경고"</string>
-    <string name="key_verification">"키 확인"</string>
-    <string name="reply">"답장"</string>
-    <string name="ip_tunnel">"IP 터널"</string>
-    <string name="paxcounter">"Paxcounter"</string>
-    <string name="serial">"시리얼"</string>
-    <string name="store_and_forward">"저장 후 전달"</string>
-    <string name="range_test">"거리 테스트"</string>
-    <string name="telemetry">"원격 측정"</string>
-    <string name="simulator">"시뮬레이터"</string>
-    <string name="neighbours">"이웃"</string>
-    <string name="map_report">"지도 보고"</string>
-    <string name="power_stress_test">"전원 스트레스 테스트"</string>
-    <string name="private_text">"비공개"</string>
-    <string name="acknowledged">"확인됨"</string>
-    <string name="no_route">"경로 없음"</string>
-    <string name="refused_nak">"거부됨 (NAK)"</string>
-    <string name="timed_out">"시간 초과"</string>
-    <string name="no_interface">"인터페이스 없음"</string>
-    <string name="max_retransmissions">"최대 재전송"</string>
-    <string name="unknown_channel">"알 수 없는 채널"</string>
-    <string name="too_large">"너무 큼"</string>
     <string name="no_response">"응답 없음"</string>
-    <string name="duty_cycle_limit">"듀티 사이클 제한"</string>
-    <string name="bad_request">"잘못된 요청"</string>
-    <string name="not_authorised">"권한 없음"</string>
-    <string name="public_key_encryption_failed">"공개 키 암호화 실패"</string>
-    <string name="rate_limit_exceeded">"속도 제한 초과"</string>
-    <string name="error">"오류 %1$s"</string>
-    <string name="client_mute">"음소거 클라이언트"</string>
-    <string name="router">"라우터"</string>
-    <string name="router_client">"라우터 클라이언트"</string>
-    <string name="repeater">"리피터"</string>
-    <string name="tracker">"트래커"</string>
-    <string name="client_hidden">"숨김 클라이언트"</string>
-    <string name="lost_and_found">"분실물"</string>
-    <string name="tak_tracker">"TAK 트래커"</string>
-    <string name="router_late">"지연 라우터"</string>
-    <string name="client_base">"클라이언트 베이스"</string>
-    <string name="role">"역할 %1$s"</string>
-    <string name="model_2">"모델 %1$s"</string>
-    <string name="private_hardware">"비공개 하드웨어"</string>
     <string name="north_america">"북미"</string>
-    <string name="australia_nz">"호주 / 뉴질랜드"</string>
-    <string name="new_zealand_865">"뉴질랜드 865"</string>
-    <string name="india">"인도"</string>
-    <string name="japan">"일본"</string>
-    <string name="korea">"한국"</string>
-    <string name="taiwan">"대만"</string>
-    <string name="thailand">"태국"</string>
-    <string name="malaysia_919">"말레이시아 919"</string>
-    <string name="singapore">"싱가포르"</string>
-    <string name="brazil">"브라질"</string>
     <string name="spread_spectrum_dsss">"확산 스펙트럼 (DSSS)"</string>
     <string name="n_2_4_ghz">"2.4 GHz"</string>
     <string name="expresslrs_2_4_ghz">"ExpressLRS 2.4 GHz"</string>
@@ -915,7 +857,6 @@
     <string name="ships_ais">"선박 (AIS)"</string>
     <string name="ham_radio_aprs">"아마추어 무선 (APRS)"</string>
     <string name="aircraft_messages_acars">"항공기 메시지 (ACARS)"</string>
-    <string name="gps_receiver">"GPS 수신기"</string>
     <string name="weather_satellites_meteor_m">"기상 위성 (Meteor-M)"</string>
     <string name="radio_channels">"무전 채널"</string>
     <string name="screen_unavailable_on_this_device">"이 기기에서는 화면을 사용할 수 없습니다"</string>
@@ -1086,8 +1027,6 @@
     <string name="lrpt_images_on_137_mhz">"137 MHz LRPT 이미지"</string>
     <string name="beacons_on_144_800_mhz">"144.800 MHz 비콘"</string>
     <string name="airliner_messaging_131_mhz">"여객기 메시지, 131 MHz"</string>
-    <string name="messages_positions_and_lora_nodes_868">"메시지, 위치, LoRa 노드, 868 MHz"</string>
-    <string name="position_computed_by_the_hackrf_1575">"HackRF가 계산한 위치, 1575 MHz"</string>
     <string name="analog_fpv_dji_and_rc_links">"아날로그 FPV, DJI, RC 링크"</string>
     <string name="nearby_networks_and_channel_use">"주변 네트워크와 채널 사용 현황"</string>
     <string name="nearby_devices_live_with_filters">"주변 기기, 실시간, 필터 포함"</string>
@@ -1606,82 +1545,7 @@
     <string name="packet_duration">"패킷 길이"</string>
     <string name="frequency_hopping">"%1$s (주파수 호핑)"</string>
     <string name="packets_received">"수신 패킷"</string>
-    <string name="acquisition">"포착"</string>
-    <string name="tracking">"추적"</string>
-    <string name="reading_bits">"비트 읽는 중"</string>
-    <string name="reading_the_message">"메시지 읽는 중"</string>
-    <string name="orbit_known">"궤도 확인됨"</string>
-    <string name="satellites_in_the_solution">"해에 사용된 위성"</string>
-    <string name="satellites_tracked">"추적 중인 위성"</string>
-    <string name="gps_l1_1575_42_mhz_first">"GPS L1 · 1575.42 MHz · 첫 위치까지 1분~몇 분"</string>
-    <string name="gps_l1_1575_42_mhz_received">"GPS L1 · 1575.42 MHz, 앱이 수신하고 계산"</string>
-    <string name="computed_position">"계산된 위치"</string>
-    <string name="n_4_satellites_with_their_orbit_are">"궤도를 아는 위성 4개가 필요합니다"</string>
-    <string name="reading_the_orbits_30_s">"궤도 읽는 중 (30초)"</string>
-    <string name="searching_for_satellites_2">"위성 검색 중…"</string>
-    <string name="coordinates">"좌표"</string>
-    <string name="altitude_ellipsoid">"고도 (타원체)"</string>
-    <string name="geometric_precision_pdop">"기하학적 정밀도 (PDOP)"</string>
-    <string name="gps_time_2">"GPS 시간"</string>
-    <string name="first_fix">"첫 측위"</string>
-    <string name="after_s">"%1$s초 후"</string>
-    <string name="hackrf_crystal_error">"HackRF 크리스털 오차"</string>
-    <string name="elevation_2" formatted="false">"고도각 %.0f°"</string>
-    <string name="azimuth" formatted="false">"방위각 %.0f°"</string>
-    <string name="searching_for_the_32_gps_satellites">"크리스털 오프셋 전체 범위에서 GPS 위성 32개를 검색 중: 첫 번째 패스는 몇 초 걸립니다."</string>
-    <string name="the_hackrf_receives_the_gps_signals">"HackRF가 잡음보다 훨씬 약한 GPS 신호를 직접 수신하고, 앱이 수신기의 모든 작업을 합니다: "</string>
-    <string name="searching_for_satellites_tracking_their_codes">"위성 검색, 코드 추적, 궤도 읽기, 위치 계산을 휴대폰의 GNSS 칩 없이 수행합니다. "</string>
-    <string name="with_the_stock_telescopic_antenna_collapse">"기본 텔레스코픽 안테나의 경우: 거의 완전히 접으세요(GPS는 약 5 cm의 짧은 소자를 원합니다). "</string>
-    <string name="hold_it_vertical_outside_under_an">"수직으로 들고, 야외의 트인 하늘 아래에서 벽과 떨어지세요. 신호가 약하므로 첫 위치까지 1분~몇 분이 걸립니다, "</string>
-    <string name="including_30_s_of_uninterrupted_reading">"각 위성의 궤도를 알기 위한 30초간의 끊김 없는 수신을 포함합니다."</string>
-    <string name="this_preset_does_not_fit_in">"이 프리셋은 이 지역에 맞지 않습니다"</string>
-    <string name="time_utc_from_name_to_channel">"time_utc,from,name,to,channel,type,content,snr_db,hops,copies\\r\\n"</string>
-    <string name="decrypted">"복호화됨"</string>
-    <string name="encrypted_private_message">"암호화된 개인 메시지"</string>
-    <string name="other_channel">"다른 채널"</string>
-    <string name="different_key">"다른 키"</string>
-    <string name="direct_message_encrypted_with_the_recipient">"수신자의 공개 키로 암호화된 다이렉트 메시지: 수신자만 읽을 수 있습니다."</string>
-    <string name="the_channel_matches_one_of_yours">"채널은 내 채널과 일치하지만 키가 다릅니다: 확인하세요."</string>
-    <string name="unknown_channel_hash_add_its_name">"알 수 없는 채널 (해시 %1$s): 읽으려면 이름과 키를 추가하세요."</string>
-    <string name="hidden_position">"숨겨진 위치"</string>
-    <string name="public_key">"공개 키"</string>
-    <string name="battery_2">"배터리 %1$s %%"</string>
-    <string name="channel_busy">"채널 사용률 %1$s %%"</string>
-    <string name="airtime">"송신 시간 %1$s %%"</string>
-    <string name="humidity_2">"습도 %1$s %%"</string>
     <string name="measurements">"측정값"</string>
-    <string name="routing">"라우팅"</string>
-    <string name="route">"경로: "</string>
-    <string name="back_via">" · 돌아오는 경로: "</string>
-    <string name="no_neighbour">"이웃 없음"</string>
-    <string name="frequency_out_of_band">"주파수가 대역 밖"</string>
-    <string name="listening">"수신 중"</string>
-    <string name="packets">"패킷 (%1$s)"</string>
-    <string name="nodes">"노드 (%1$s)"</string>
-    <string name="meshtastic_is_a_mesh_network_of">"Meshtastic은 메시지, 위치, 측정값을 중계하는 소형 LoRa 송신기의 메시 네트워크입니다. "</string>
-    <string name="the_public_channel_longfast_key_aq">"공개 채널(LongFast, 키 AQ==)은 자동으로 읽습니다. 키가 있는 비공개 채널을 추가하세요. "</string>
-    <string name="nodes_only_transmit_now_and_then">"노드는 가끔씩만 송신합니다: 트인 곳에 868 MHz 안테나를 두고 몇 분간 수신하세요. 수신 전용."</string>
-    <string name="last_sync_word_0x" formatted="false">" · 마지막 동기 워드 0x%02X"</string>
-    <string name="the_hackrf_sends_almost_nothing_mb" formatted="false">"HackRF가 거의 아무것도 보내지 않습니다 (4 대신 %.1f MB/s): 다시 꽂거나 OTG 케이블을 바꾸세요."</string>
-    <string name="no_lora_frame_yet_nodes_transmit">"아직 LoRa 프레임 없음. 노드는 몇 분마다 송신합니다."</string>
-    <string name="not_meshtastic">" · Meshtastic 아님 %1$s"</string>
-    <string name="seen_at_2">"%1$s에 확인"</string>
-    <string name="region">"지역"</string>
-    <string name="network_preset">"네트워크 프리셋"</string>
-    <string name="frequency_slot_of">"주파수 슬롯 (%1$s개 중)"</string>
-    <string name="the_primary_channel_s_like_the">"기본 채널의 것, 노드와 동일"</string>
-    <string name="chosen_by_hand">"수동 선택"</string>
-    <string name="manual_frequency_mhz">"수동 주파수 (MHz)"</string>
-    <string name="none_here">"여기에는 없음"</string>
-    <string name="empty_the_meshtastic_band_plan_frequency">"비어 있음: Meshtastic 대역 계획 주파수, %1$s."</string>
-    <string name="confirm_with_the_keyboard_s_enter">"수신 중에 적용하려면 키보드의 Enter 키로 확인하세요."</string>
-    <string name="decrypted_channels">"복호화할 채널"</string>
-    <string name="key">"키 %1$s"</string>
-    <string name="add_a_channel">"채널 추가"</string>
-    <string name="channel_name_empty_the_preset_s">"채널 이름 (비어 있음 = 프리셋 이름)"</string>
-    <string name="base64_key_aq_for_the_default">"Base64 키 (기본 키는 AQ==)"</string>
-    <string name="invalid_key_1_16_or_32">"잘못된 키: Meshtastic 앱처럼 Base64로 1, 16 또는 32바이트."</string>
-    <string name="add">"추가"</string>
     <string name="channel">"채널 %1$s"</string>
     <string name="invalid_frequency_meteor_m_137_100">"잘못된 주파수 (Meteor-M: 137.100 또는 137.900 MHz)"</string>
     <string name="meteor_m_orbital_elements_not_found">"Meteor-M 궤도 요소를 찾을 수 없음"</string>
@@ -2340,21 +2204,6 @@
     </plurals>
     <plurals name="p_bursts">
         <item quantity="other">"회 버스트"</item>
-    </plurals>
-    <plurals name="p_nodes">
-        <item quantity="other">"노드"</item>
-    </plurals>
-    <plurals name="p_frame_starts">
-        <item quantity="other">"프레임 시작"</item>
-    </plurals>
-    <plurals name="p_unreadable_headers">
-        <item quantity="other">"읽을 수 없는 헤더"</item>
-    </plurals>
-    <plurals name="p_damaged_frames">
-        <item quantity="other">"손상된 프레임"</item>
-    </plurals>
-    <plurals name="p_hops">
-        <item quantity="other">"홉"</item>
     </plurals>
     <plurals name="p_valid_frames">
         <item quantity="other">"유효 프레임"</item>

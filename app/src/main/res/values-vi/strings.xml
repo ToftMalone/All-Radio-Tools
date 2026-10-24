@@ -804,66 +804,8 @@
     <string name="i_q_swapped">" + đảo I/Q"</string>
     <string name="dual_basis">"cơ sở kép"</string>
     <string name="conventional_basis">"cơ sở thông thường"</string>
-    <string name="remote_hardware">"Phần cứng từ xa"</string>
-    <string name="node_info">"Thông tin nút"</string>
-    <string name="routing_ack">"Định tuyến / xác nhận"</string>
-    <string name="admin">"Quản trị"</string>
-    <string name="compressed_message">"Tin nhắn nén"</string>
-    <string name="waypoint">"Điểm mốc"</string>
-    <string name="detection_sensor">"Cảm biến phát hiện"</string>
-    <string name="alert">"Cảnh báo"</string>
-    <string name="key_verification">"Xác minh khóa"</string>
-    <string name="reply">"Trả lời"</string>
-    <string name="ip_tunnel">"Đường hầm IP"</string>
-    <string name="paxcounter">"Paxcounter"</string>
-    <string name="serial">"Nối tiếp"</string>
-    <string name="store_and_forward">"Lưu và chuyển tiếp"</string>
-    <string name="range_test">"Kiểm tra tầm phủ"</string>
-    <string name="telemetry">"Đo từ xa"</string>
-    <string name="simulator">"Trình mô phỏng"</string>
-    <string name="neighbours">"Hàng xóm"</string>
-    <string name="map_report">"Báo cáo bản đồ"</string>
-    <string name="power_stress_test">"Kiểm tra tải nguồn"</string>
-    <string name="private_text">"Riêng tư"</string>
-    <string name="acknowledged">"Đã xác nhận"</string>
-    <string name="no_route">"Không có tuyến"</string>
-    <string name="refused_nak">"Bị từ chối (NAK)"</string>
-    <string name="timed_out">"Hết thời gian"</string>
-    <string name="no_interface">"Không có giao diện"</string>
-    <string name="max_retransmissions">"Đạt số lần gửi lại tối đa"</string>
-    <string name="unknown_channel">"Kênh không xác định"</string>
-    <string name="too_large">"Quá lớn"</string>
     <string name="no_response">"Không có phản hồi"</string>
-    <string name="duty_cycle_limit">"Giới hạn chu kỳ hoạt động"</string>
-    <string name="bad_request">"Yêu cầu không hợp lệ"</string>
-    <string name="not_authorised">"Không được phép"</string>
-    <string name="public_key_encryption_failed">"Mã hóa khóa công khai thất bại"</string>
-    <string name="rate_limit_exceeded">"Vượt giới hạn tốc độ"</string>
-    <string name="error">"Lỗi %1$s"</string>
-    <string name="client_mute">"Máy khách im lặng"</string>
-    <string name="router">"Bộ định tuyến"</string>
-    <string name="router_client">"Máy khách định tuyến"</string>
-    <string name="repeater">"Trạm lặp"</string>
-    <string name="tracker">"Thiết bị theo dõi"</string>
-    <string name="client_hidden">"Máy khách ẩn"</string>
-    <string name="lost_and_found">"Đồ thất lạc"</string>
-    <string name="tak_tracker">"Thiết bị theo dõi TAK"</string>
-    <string name="router_late">"Bộ định tuyến trễ"</string>
-    <string name="client_base">"Trạm gốc máy khách"</string>
-    <string name="role">"Vai trò %1$s"</string>
-    <string name="model_2">"Model %1$s"</string>
-    <string name="private_hardware">"Phần cứng riêng"</string>
     <string name="north_america">"Bắc Mỹ"</string>
-    <string name="australia_nz">"Úc / NZ"</string>
-    <string name="new_zealand_865">"New Zealand 865"</string>
-    <string name="india">"Ấn Độ"</string>
-    <string name="japan">"Nhật Bản"</string>
-    <string name="korea">"Hàn Quốc"</string>
-    <string name="taiwan">"Đài Loan"</string>
-    <string name="thailand">"Thái Lan"</string>
-    <string name="malaysia_919">"Malaysia 919"</string>
-    <string name="singapore">"Singapore"</string>
-    <string name="brazil">"Brazil"</string>
     <string name="spread_spectrum_dsss">"Trải phổ (DSSS)"</string>
     <string name="n_2_4_ghz">"2,4 GHz"</string>
     <string name="expresslrs_2_4_ghz">"ExpressLRS 2,4 GHz"</string>
@@ -915,7 +857,6 @@
     <string name="ships_ais">"Tàu thuyền (AIS)"</string>
     <string name="ham_radio_aprs">"Vô tuyến nghiệp dư (APRS)"</string>
     <string name="aircraft_messages_acars">"Tin nhắn máy bay (ACARS)"</string>
-    <string name="gps_receiver">"Bộ thu GPS"</string>
     <string name="weather_satellites_meteor_m">"Vệ tinh thời tiết (Meteor-M)"</string>
     <string name="radio_channels">"Kênh bộ đàm"</string>
     <string name="screen_unavailable_on_this_device">"Màn hình không khả dụng trên thiết bị này"</string>
@@ -1086,8 +1027,6 @@
     <string name="lrpt_images_on_137_mhz">"Ảnh LRPT trên 137 MHz"</string>
     <string name="beacons_on_144_800_mhz">"Beacon trên 144,800 MHz"</string>
     <string name="airliner_messaging_131_mhz">"Tin nhắn máy bay chở khách, 131 MHz"</string>
-    <string name="messages_positions_and_lora_nodes_868">"Tin nhắn, vị trí và nút LoRa, 868 MHz"</string>
-    <string name="position_computed_by_the_hackrf_1575">"Vị trí do HackRF tính, 1575 MHz"</string>
     <string name="analog_fpv_dji_and_rc_links">"FPV analog, DJI và liên kết RC"</string>
     <string name="nearby_networks_and_channel_use">"Mạng lân cận và mức sử dụng kênh"</string>
     <string name="nearby_devices_live_with_filters">"Thiết bị lân cận, trực tiếp, có bộ lọc"</string>
@@ -1606,82 +1545,7 @@
     <string name="packet_duration">"Thời lượng gói"</string>
     <string name="frequency_hopping">"%1$s (nhảy tần)"</string>
     <string name="packets_received">"Gói đã nhận"</string>
-    <string name="acquisition">"Thu bắt"</string>
-    <string name="tracking">"Theo dõi"</string>
-    <string name="reading_bits">"Đang đọc bit"</string>
-    <string name="reading_the_message">"Đang đọc bản tin"</string>
-    <string name="orbit_known">"Đã biết quỹ đạo"</string>
-    <string name="satellites_in_the_solution">"vệ tinh trong lời giải"</string>
-    <string name="satellites_tracked">"vệ tinh đang theo dõi"</string>
-    <string name="gps_l1_1575_42_mhz_first">"GPS L1 · 1575,42 MHz · vị trí đầu tiên sau một đến vài phút"</string>
-    <string name="gps_l1_1575_42_mhz_received">"GPS L1 · 1575,42 MHz, do ứng dụng thu và tính"</string>
-    <string name="computed_position">"Vị trí đã tính"</string>
-    <string name="n_4_satellites_with_their_orbit_are">"Cần 4 vệ tinh đã biết quỹ đạo"</string>
-    <string name="reading_the_orbits_30_s">"Đang đọc quỹ đạo (30 giây)"</string>
-    <string name="searching_for_satellites_2">"Đang tìm vệ tinh…"</string>
-    <string name="coordinates">"Tọa độ"</string>
-    <string name="altitude_ellipsoid">"Độ cao (ellipsoid)"</string>
-    <string name="geometric_precision_pdop">"Độ chính xác hình học (PDOP)"</string>
-    <string name="gps_time_2">"Giờ GPS"</string>
-    <string name="first_fix">"Định vị đầu tiên"</string>
-    <string name="after_s">"sau %1$s giây"</string>
-    <string name="hackrf_crystal_error">"Sai số tinh thể HackRF"</string>
-    <string name="elevation_2" formatted="false">"góc ngẩng %.0f°"</string>
-    <string name="azimuth" formatted="false">"phương vị %.0f°"</string>
-    <string name="searching_for_the_32_gps_satellites">"Đang tìm 32 vệ tinh GPS trên toàn dải lệch của tinh thể: lượt đầu mất vài giây."</string>
-    <string name="the_hackrf_receives_the_gps_signals">"HackRF tự thu tín hiệu GPS, thấp hơn nền nhiễu rất nhiều, và ứng dụng làm toàn bộ việc của một bộ thu: "</string>
-    <string name="searching_for_satellites_tracking_their_codes">"tìm vệ tinh, theo dõi mã, đọc quỹ đạo và tính vị trí, mà không cần chip GNSS của điện thoại. "</string>
-    <string name="with_the_stock_telescopic_antenna_collapse">"Với ăng-ten ống lồng đi kèm: thu gần hết lại (GPS cần phần tử ngắn, khoảng 5 cm), "</string>
-    <string name="hold_it_vertical_outside_under_an">"giữ thẳng đứng, ngoài trời, dưới bầu trời thoáng, xa tường. Tín hiệu yếu: hãy chờ một đến vài phút cho vị trí đầu tiên, "</string>
-    <string name="including_30_s_of_uninterrupted_reading">"bao gồm 30 giây đọc liên tục để biết quỹ đạo của từng vệ tinh."</string>
-    <string name="this_preset_does_not_fit_in">"Thiết lập sẵn này không phù hợp với khu vực này"</string>
-    <string name="time_utc_from_name_to_channel">"time_utc,from,name,to,channel,type,content,snr_db,hops,copies\\r\\n"</string>
-    <string name="decrypted">"Đã giải mã"</string>
-    <string name="encrypted_private_message">"Tin nhắn riêng đã mã hóa"</string>
-    <string name="other_channel">"Kênh khác"</string>
-    <string name="different_key">"Khóa khác"</string>
-    <string name="direct_message_encrypted_with_the_recipient">"Tin nhắn trực tiếp mã hóa bằng khóa công khai của người nhận: chỉ họ đọc được."</string>
-    <string name="the_channel_matches_one_of_yours">"Kênh khớp với một kênh của bạn nhưng khóa thì không: hãy kiểm tra."</string>
-    <string name="unknown_channel_hash_add_its_name">"Kênh không xác định (hash %1$s): thêm tên và khóa để đọc."</string>
-    <string name="hidden_position">"Vị trí bị ẩn"</string>
-    <string name="public_key">"khóa công khai"</string>
-    <string name="battery_2">"pin %1$s %%"</string>
-    <string name="channel_busy">"kênh bận %1$s %%"</string>
-    <string name="airtime">"thời gian phát %1$s %%"</string>
-    <string name="humidity_2">"độ ẩm %1$s %%"</string>
     <string name="measurements">"Phép đo"</string>
-    <string name="routing">"Định tuyến"</string>
-    <string name="route">"Tuyến: "</string>
-    <string name="back_via">" · quay lại qua "</string>
-    <string name="no_neighbour">"Không có hàng xóm"</string>
-    <string name="frequency_out_of_band">"tần số ngoài băng"</string>
-    <string name="listening">"Đang nghe"</string>
-    <string name="packets">"Gói (%1$s)"</string>
-    <string name="nodes">"Nút (%1$s)"</string>
-    <string name="meshtastic_is_a_mesh_network_of">"Meshtastic là mạng lưới các máy phát LoRa nhỏ chuyển tiếp tin nhắn, vị trí và số đo. "</string>
-    <string name="the_public_channel_longfast_key_aq">"Kênh công khai (LongFast, khóa AQ==) được đọc tự động; hãy thêm các kênh riêng mà bạn có khóa. "</string>
-    <string name="nodes_only_transmit_now_and_then">"Các nút chỉ thỉnh thoảng phát: hãy để nghe vài phút, với ăng-ten 868 MHz ở nơi thoáng. Chỉ thu."</string>
-    <string name="last_sync_word_0x" formatted="false">" · sync word cuối 0x%02X"</string>
-    <string name="the_hackrf_sends_almost_nothing_mb" formatted="false">"HackRF gần như không gửi gì (%.1f MB/s thay vì 4): cắm lại hoặc đổi cáp OTG."</string>
-    <string name="no_lora_frame_yet_nodes_transmit">"Chưa có khung LoRa. Các nút phát vài phút một lần."</string>
-    <string name="not_meshtastic">" · %1$s không phải Meshtastic"</string>
-    <string name="seen_at_2">"thấy lúc %1$s"</string>
-    <string name="region">"Khu vực"</string>
-    <string name="network_preset">"Thiết lập mạng sẵn"</string>
-    <string name="frequency_slot_of">"Khe tần số (trên %1$s)"</string>
-    <string name="the_primary_channel_s_like_the">"Của kênh chính, như các nút"</string>
-    <string name="chosen_by_hand">"Chọn thủ công"</string>
-    <string name="manual_frequency_mhz">"Tần số thủ công (MHz)"</string>
-    <string name="none_here">"không có ở đây"</string>
-    <string name="empty_the_meshtastic_band_plan_frequency">"Trống: tần số theo kế hoạch băng Meshtastic, %1$s."</string>
-    <string name="confirm_with_the_keyboard_s_enter">"Xác nhận bằng phím Enter trên bàn phím để áp dụng khi đang nghe."</string>
-    <string name="decrypted_channels">"Kênh đã giải mã"</string>
-    <string name="key">"Khóa %1$s"</string>
-    <string name="add_a_channel">"Thêm kênh"</string>
-    <string name="channel_name_empty_the_preset_s">"Tên kênh (trống = của thiết lập sẵn)"</string>
-    <string name="base64_key_aq_for_the_default">"Khóa Base64 (AQ== cho khóa mặc định)"</string>
-    <string name="invalid_key_1_16_or_32">"Khóa không hợp lệ: 1, 16 hoặc 32 byte ở dạng Base64, như trong ứng dụng Meshtastic."</string>
-    <string name="add">"Thêm"</string>
     <string name="channel">"Kênh %1$s"</string>
     <string name="invalid_frequency_meteor_m_137_100">"Tần số không hợp lệ (Meteor-M: 137,100 hoặc 137,900 MHz)"</string>
     <string name="meteor_m_orbital_elements_not_found">"Không tìm thấy tham số quỹ đạo Meteor-M"</string>
@@ -2340,21 +2204,6 @@
     </plurals>
     <plurals name="p_bursts">
         <item quantity="other">"xung"</item>
-    </plurals>
-    <plurals name="p_nodes">
-        <item quantity="other">"nút"</item>
-    </plurals>
-    <plurals name="p_frame_starts">
-        <item quantity="other">"đầu khung"</item>
-    </plurals>
-    <plurals name="p_unreadable_headers">
-        <item quantity="other">"tiêu đề không đọc được"</item>
-    </plurals>
-    <plurals name="p_damaged_frames">
-        <item quantity="other">"khung hỏng"</item>
-    </plurals>
-    <plurals name="p_hops">
-        <item quantity="other">"bước nhảy"</item>
     </plurals>
     <plurals name="p_valid_frames">
         <item quantity="other">"khung hợp lệ"</item>

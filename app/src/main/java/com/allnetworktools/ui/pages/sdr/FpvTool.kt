@@ -84,14 +84,14 @@ import com.allnetworktools.R
 import com.allnetworktools.util.S
 import com.allnetworktools.util.P
 
-enum class FpvTab(val label: String) { Analog(S(R.string.analog)), Dji("DJI"), Rc(S(R.string.rc_link)) }
+enum class FpvTab(val label: String) { Dji("DJI"), Analog(S(R.string.analog)), Rc(S(R.string.rc_link)) }
 
 /**
  * Drones, with the HackRF only: analogue FPV video (5.8 and 2.4 GHz, a drone is a channel carrying real video sync) and
  * DJI (the DroneID burst). Only drones are shown, never raw signals. Receive only; nothing is recorded.
  */
 class FpvController(private val repo: SdrRepository, private val scope: CoroutineScope, private val onAcquire: () -> Unit = {}) {
-    var tab by mutableStateOf(FpvTab.Analog)
+    var tab by mutableStateOf(FpvTab.Dji)
     var lnaGain by mutableIntStateOf(24)
     var vgaGain by mutableIntStateOf(24)
     var amp by mutableStateOf(false)

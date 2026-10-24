@@ -804,66 +804,8 @@
     <string name="i_q_swapped">" + I/Q tertukar"</string>
     <string name="dual_basis">"basis ganda"</string>
     <string name="conventional_basis">"basis konvensional"</string>
-    <string name="remote_hardware">"Perangkat keras jarak jauh"</string>
-    <string name="node_info">"Info node"</string>
-    <string name="routing_ack">"Routing / ack"</string>
-    <string name="admin">"Admin"</string>
-    <string name="compressed_message">"Pesan terkompresi"</string>
-    <string name="waypoint">"Titik jalan"</string>
-    <string name="detection_sensor">"Sensor deteksi"</string>
-    <string name="alert">"Peringatan"</string>
-    <string name="key_verification">"Verifikasi kunci"</string>
-    <string name="reply">"Balasan"</string>
-    <string name="ip_tunnel">"Terowongan IP"</string>
-    <string name="paxcounter">"Paxcounter"</string>
-    <string name="serial">"Serial"</string>
-    <string name="store_and_forward">"Simpan dan teruskan"</string>
-    <string name="range_test">"Uji jangkauan"</string>
-    <string name="telemetry">"Telemetri"</string>
-    <string name="simulator">"Simulator"</string>
-    <string name="neighbours">"Tetangga"</string>
-    <string name="map_report">"Laporan peta"</string>
-    <string name="power_stress_test">"Uji stres daya"</string>
-    <string name="private_text">"Privat"</string>
-    <string name="acknowledged">"Diakui"</string>
-    <string name="no_route">"Tidak ada rute"</string>
-    <string name="refused_nak">"Ditolak (NAK)"</string>
-    <string name="timed_out">"Habis waktu"</string>
-    <string name="no_interface">"Tidak ada antarmuka"</string>
-    <string name="max_retransmissions">"Pengiriman ulang maksimum"</string>
-    <string name="unknown_channel">"Kanal tidak dikenal"</string>
-    <string name="too_large">"Terlalu besar"</string>
     <string name="no_response">"Tidak ada respons"</string>
-    <string name="duty_cycle_limit">"Batas duty cycle"</string>
-    <string name="bad_request">"Permintaan tidak valid"</string>
-    <string name="not_authorised">"Tidak diizinkan"</string>
-    <string name="public_key_encryption_failed">"Enkripsi kunci publik gagal"</string>
-    <string name="rate_limit_exceeded">"Batas laju terlampaui"</string>
-    <string name="error">"Kesalahan %1$s"</string>
-    <string name="client_mute">"Klien senyap"</string>
-    <string name="router">"Router"</string>
-    <string name="router_client">"Router klien"</string>
-    <string name="repeater">"Repeater"</string>
-    <string name="tracker">"Pelacak"</string>
-    <string name="client_hidden">"Klien tersembunyi"</string>
-    <string name="lost_and_found">"Barang hilang"</string>
-    <string name="tak_tracker">"Pelacak TAK"</string>
-    <string name="router_late">"Router tertunda"</string>
-    <string name="client_base">"Basis klien"</string>
-    <string name="role">"Peran %1$s"</string>
-    <string name="model_2">"Model %1$s"</string>
-    <string name="private_hardware">"Perangkat keras privat"</string>
     <string name="north_america">"Amerika Utara"</string>
-    <string name="australia_nz">"Australia / NZ"</string>
-    <string name="new_zealand_865">"Selandia Baru 865"</string>
-    <string name="india">"India"</string>
-    <string name="japan">"Jepang"</string>
-    <string name="korea">"Korea"</string>
-    <string name="taiwan">"Taiwan"</string>
-    <string name="thailand">"Thailand"</string>
-    <string name="malaysia_919">"Malaysia 919"</string>
-    <string name="singapore">"Singapura"</string>
-    <string name="brazil">"Brasil"</string>
     <string name="spread_spectrum_dsss">"Spektrum tersebar (DSSS)"</string>
     <string name="n_2_4_ghz">"2,4 GHz"</string>
     <string name="expresslrs_2_4_ghz">"ExpressLRS 2,4 GHz"</string>
@@ -915,7 +857,6 @@
     <string name="ships_ais">"Kapal (AIS)"</string>
     <string name="ham_radio_aprs">"Radio amatir (APRS)"</string>
     <string name="aircraft_messages_acars">"Pesan pesawat (ACARS)"</string>
-    <string name="gps_receiver">"Penerima GPS"</string>
     <string name="weather_satellites_meteor_m">"Satelit cuaca (Meteor-M)"</string>
     <string name="radio_channels">"Kanal radio"</string>
     <string name="screen_unavailable_on_this_device">"Layar tidak tersedia di perangkat ini"</string>
@@ -1086,8 +1027,6 @@
     <string name="lrpt_images_on_137_mhz">"Gambar LRPT di 137 MHz"</string>
     <string name="beacons_on_144_800_mhz">"Beacon di 144,800 MHz"</string>
     <string name="airliner_messaging_131_mhz">"Pesan pesawat penumpang, 131 MHz"</string>
-    <string name="messages_positions_and_lora_nodes_868">"Pesan, posisi, dan node LoRa, 868 MHz"</string>
-    <string name="position_computed_by_the_hackrf_1575">"Posisi dihitung oleh HackRF, 1575 MHz"</string>
     <string name="analog_fpv_dji_and_rc_links">"FPV analog, DJI, dan tautan RC"</string>
     <string name="nearby_networks_and_channel_use">"Jaringan sekitar dan penggunaan kanal"</string>
     <string name="nearby_devices_live_with_filters">"Perangkat sekitar, langsung, dengan filter"</string>
@@ -1606,82 +1545,7 @@
     <string name="packet_duration">"Durasi paket"</string>
     <string name="frequency_hopping">"%1$s (lompatan frekuensi)"</string>
     <string name="packets_received">"Paket diterima"</string>
-    <string name="acquisition">"Akuisisi"</string>
-    <string name="tracking">"Pelacakan"</string>
-    <string name="reading_bits">"Membaca bit"</string>
-    <string name="reading_the_message">"Membaca pesan"</string>
-    <string name="orbit_known">"Orbit diketahui"</string>
-    <string name="satellites_in_the_solution">"satelit dalam solusi"</string>
-    <string name="satellites_tracked">"satelit dilacak"</string>
-    <string name="gps_l1_1575_42_mhz_first">"GPS L1 · 1575,42 MHz · posisi pertama dalam satu hingga beberapa menit"</string>
-    <string name="gps_l1_1575_42_mhz_received">"GPS L1 · 1575,42 MHz, diterima dan dihitung oleh aplikasi"</string>
-    <string name="computed_position">"Posisi terhitung"</string>
-    <string name="n_4_satellites_with_their_orbit_are">"Diperlukan 4 satelit dengan orbitnya"</string>
-    <string name="reading_the_orbits_30_s">"Membaca orbit (30 dtk)"</string>
-    <string name="searching_for_satellites_2">"Mencari satelit…"</string>
-    <string name="coordinates">"Koordinat"</string>
-    <string name="altitude_ellipsoid">"Ketinggian (elipsoid)"</string>
-    <string name="geometric_precision_pdop">"Presisi geometris (PDOP)"</string>
-    <string name="gps_time_2">"Waktu GPS"</string>
-    <string name="first_fix">"Fix pertama"</string>
-    <string name="after_s">"setelah %1$s dtk"</string>
-    <string name="hackrf_crystal_error">"Galat kristal HackRF"</string>
-    <string name="elevation_2" formatted="false">"elevasi %.0f°"</string>
-    <string name="azimuth" formatted="false">"azimut %.0f°"</string>
-    <string name="searching_for_the_32_gps_satellites">"Mencari 32 satelit GPS di seluruh rentang offset kristal: putaran pertama memerlukan beberapa detik."</string>
-    <string name="the_hackrf_receives_the_gps_signals">"HackRF menerima sendiri sinyal GPS, jauh di bawah derau, dan aplikasi melakukan semua pekerjaan penerima: "</string>
-    <string name="searching_for_satellites_tracking_their_codes">"mencari satelit, melacak kodenya, membaca orbitnya, dan menghitung posisi, tanpa chip GNSS ponsel. "</string>
-    <string name="with_the_stock_telescopic_antenna_collapse">"Dengan antena teleskopik bawaan: ciutkan hampir sepenuhnya (GPS menginginkan elemen pendek, sekitar 5 cm), "</string>
-    <string name="hold_it_vertical_outside_under_an">"pegang tegak, di luar, di bawah langit terbuka, jauh dari tembok. Sinyalnya lemah: beri waktu satu hingga beberapa menit sebelum posisi pertama, "</string>
-    <string name="including_30_s_of_uninterrupted_reading">"termasuk 30 dtk pembacaan tanpa henti untuk mempelajari orbit setiap satelit."</string>
-    <string name="this_preset_does_not_fit_in">"Preset ini tidak cocok untuk wilayah ini"</string>
-    <string name="time_utc_from_name_to_channel">"time_utc,from,name,to,channel,type,content,snr_db,hops,copies\\r\\n"</string>
-    <string name="decrypted">"Didekripsi"</string>
-    <string name="encrypted_private_message">"Pesan pribadi terenkripsi"</string>
-    <string name="other_channel">"Kanal lain"</string>
-    <string name="different_key">"Kunci berbeda"</string>
-    <string name="direct_message_encrypted_with_the_recipient">"Pesan langsung yang dienkripsi dengan kunci publik penerima: hanya ia yang dapat membacanya."</string>
-    <string name="the_channel_matches_one_of_yours">"Kanal cocok dengan salah satu milik Anda tetapi kuncinya tidak: periksa."</string>
-    <string name="unknown_channel_hash_add_its_name">"Kanal tidak dikenal (hash %1$s): tambahkan nama dan kuncinya untuk membacanya."</string>
-    <string name="hidden_position">"Posisi tersembunyi"</string>
-    <string name="public_key">"kunci publik"</string>
-    <string name="battery_2">"baterai %1$s %%"</string>
-    <string name="channel_busy">"kanal sibuk %1$s %%"</string>
-    <string name="airtime">"waktu siar %1$s %%"</string>
-    <string name="humidity_2">"kelembapan %1$s %%"</string>
     <string name="measurements">"Pengukuran"</string>
-    <string name="routing">"Routing"</string>
-    <string name="route">"Rute: "</string>
-    <string name="back_via">" · kembali melalui "</string>
-    <string name="no_neighbour">"Tidak ada tetangga"</string>
-    <string name="frequency_out_of_band">"frekuensi di luar pita"</string>
-    <string name="listening">"Mendengarkan"</string>
-    <string name="packets">"Paket (%1$s)"</string>
-    <string name="nodes">"Node (%1$s)"</string>
-    <string name="meshtastic_is_a_mesh_network_of">"Meshtastic adalah jaringan mesh pemancar LoRa kecil yang meneruskan pesan, posisi, dan pembacaan. "</string>
-    <string name="the_public_channel_longfast_key_aq">"Kanal publik (LongFast, kunci AQ==) dibaca otomatis; tambahkan kanal privat yang kuncinya Anda miliki. "</string>
-    <string name="nodes_only_transmit_now_and_then">"Node hanya memancar sesekali: biarkan mendengarkan beberapa menit, dengan antena 868 MHz di tempat terbuka. Hanya menerima."</string>
-    <string name="last_sync_word_0x" formatted="false">" · sync word terakhir 0x%02X"</string>
-    <string name="the_hackrf_sends_almost_nothing_mb" formatted="false">"HackRF hampir tidak mengirim apa pun (%.1f MB/dtk, bukan 4): colokkan ulang atau ganti kabel OTG."</string>
-    <string name="no_lora_frame_yet_nodes_transmit">"Belum ada frame LoRa. Node memancar setiap beberapa menit."</string>
-    <string name="not_meshtastic">" · %1$s bukan Meshtastic"</string>
-    <string name="seen_at_2">"terlihat pukul %1$s"</string>
-    <string name="region">"Wilayah"</string>
-    <string name="network_preset">"Preset jaringan"</string>
-    <string name="frequency_slot_of">"Slot frekuensi (dari %1$s)"</string>
-    <string name="the_primary_channel_s_like_the">"Milik kanal utama, seperti node"</string>
-    <string name="chosen_by_hand">"Dipilih manual"</string>
-    <string name="manual_frequency_mhz">"Frekuensi manual (MHz)"</string>
-    <string name="none_here">"tidak ada di sini"</string>
-    <string name="empty_the_meshtastic_band_plan_frequency">"Kosong: frekuensi rencana pita Meshtastic, %1$s."</string>
-    <string name="confirm_with_the_keyboard_s_enter">"Konfirmasi dengan tombol Enter keyboard untuk menerapkannya saat mendengarkan."</string>
-    <string name="decrypted_channels">"Kanal yang didekripsi"</string>
-    <string name="key">"Kunci %1$s"</string>
-    <string name="add_a_channel">"Tambah kanal"</string>
-    <string name="channel_name_empty_the_preset_s">"Nama kanal (kosong = milik preset)"</string>
-    <string name="base64_key_aq_for_the_default">"Kunci Base64 (AQ== untuk kunci bawaan)"</string>
-    <string name="invalid_key_1_16_or_32">"Kunci tidak valid: 1, 16, atau 32 byte dalam Base64, seperti di aplikasi Meshtastic."</string>
-    <string name="add">"Tambah"</string>
     <string name="channel">"Kanal %1$s"</string>
     <string name="invalid_frequency_meteor_m_137_100">"Frekuensi tidak valid (Meteor-M: 137,100 atau 137,900 MHz)"</string>
     <string name="meteor_m_orbital_elements_not_found">"Elemen orbit Meteor-M tidak ditemukan"</string>
@@ -2340,21 +2204,6 @@
     </plurals>
     <plurals name="p_bursts">
         <item quantity="other">"ledakan"</item>
-    </plurals>
-    <plurals name="p_nodes">
-        <item quantity="other">"node"</item>
-    </plurals>
-    <plurals name="p_frame_starts">
-        <item quantity="other">"awal frame"</item>
-    </plurals>
-    <plurals name="p_unreadable_headers">
-        <item quantity="other">"header tidak terbaca"</item>
-    </plurals>
-    <plurals name="p_damaged_frames">
-        <item quantity="other">"frame rusak"</item>
-    </plurals>
-    <plurals name="p_hops">
-        <item quantity="other">"hop"</item>
     </plurals>
     <plurals name="p_valid_frames">
         <item quantity="other">"frame valid"</item>

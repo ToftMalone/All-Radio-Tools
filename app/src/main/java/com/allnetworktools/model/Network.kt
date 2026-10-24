@@ -95,8 +95,6 @@ enum class Tool(
     Ais(Network.Sdr, S(R.string.ships_ais), Sym.Boat),
     Aprs(Network.Sdr, S(R.string.ham_radio_aprs), Sym.Radio),
     Acars(Network.Sdr, S(R.string.aircraft_messages_acars), Sym.Flight),
-    Meshtastic(Network.Sdr, "Meshtastic", Sym.Hub),
-    GpsSdr(Network.Sdr, S(R.string.gps_receiver), Sym.SatelliteAlt),
     Meteor(Network.Sdr, S(R.string.weather_satellites_meteor_m), Sym.SatelliteAlt),
     Fpv(Network.Sdr, "Drones", Sym.Videocam),
 
