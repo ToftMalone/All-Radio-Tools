@@ -23,14 +23,13 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
-    <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <!-- Handover journal: keeps watching the serving cell while the app is closed, until stopped. -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
-    <!-- BitChat mesh: relays and receives messages while the app is closed, until stopped. -->
+    <!-- Tracker guard: keeps listening for tracker tags while the app is closed, until stopped. -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CONNECTED_DEVICE" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-feature android:name="android.hardware.microphone" android:required="false" />
@@ -70,11 +69,6 @@
             android:name=".data.HandoverService"
             android:exported="false"
             android:foregroundServiceType="location" />
-
-        <service
-            android:name=".data.bitchat.BitchatService"
-            android:exported="false"
-            android:foregroundServiceType="connectedDevice" />
 
         <service
             android:name=".data.TrackerGuardService"

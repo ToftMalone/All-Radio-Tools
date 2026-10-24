@@ -207,9 +207,4 @@ object Sym {
     const val Forum = "forum"
     const val Stream = "stream"
     const val NewspaperNotes = "newspaper"
-    const val Send = "send"
-    const val DoneAll = "done_all"
-    const val Person = "person"
-    const val Group = "group"
-    const val Star = "star"
 }

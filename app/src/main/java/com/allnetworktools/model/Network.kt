@@ -74,7 +74,6 @@ enum class Tool(
     TrackerDetail(Network.Bluetooth, S(R.string.tracker_2), Sym.Sell, parent = ToolParent.Other(UnknownTrackers)),
     Beacons(Network.Bluetooth, S(R.string.beacons), Sym.Sensors),
     Earbuds(Network.Bluetooth, S(R.string.earbuds_battery), Sym.Headphones),
-    BitChat(Network.Bluetooth, S(R.string.bitchat), Sym.Hub),
 
     CellDetail(Network.Cellular, S(R.string.serving_cell), Sym.CellTower, Sym.ContentCopy, implemented = true),
     Neighbors(Network.Cellular, S(R.string.neighbour_cells), Sym.CellTower, implemented = true),

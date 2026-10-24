@@ -20,9 +20,6 @@ enum class PermGroup(val permissions: List<String>) {
     ),
     Phone(listOf(Manifest.permission.READ_PHONE_STATE)),
 
-    /** BitChat mesh: scan for, connect to and advertise to the phones around. */
-    Mesh(listOf(Manifest.permission.BLUETOOTH_SCAN, Manifest.permission.BLUETOOTH_CONNECT, Manifest.permission.BLUETOOTH_ADVERTISE)),
-
     /** Android 17 blocks the local network (LAN scan, ping, ports…) without it, and shows a device picker instead. */
     LocalNetwork(if (Build.VERSION.SDK_INT >= 37) listOf(Manifest.permission.ACCESS_LOCAL_NETWORK) else emptyList()),
 
@@ -35,7 +32,6 @@ data class PermissionSnapshot(val granted: Set<PermGroup>) {
     val location get() = PermGroup.Location in granted
     val nearby get() = PermGroup.Nearby in granted
     val phone get() = PermGroup.Phone in granted
-    val mesh get() = PermGroup.Mesh in granted
 }
 
 open class PermissionsRepository(private val context: Context) {

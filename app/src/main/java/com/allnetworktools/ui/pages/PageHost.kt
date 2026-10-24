@@ -239,7 +239,7 @@ private fun PageBody(vm: MainViewModel, net: Network, page: Page) {
                     else S(R.string.android_needs_the_location_permission_to),
                 ) { actions.request(if (modern) PermGroup.Nearby else PermGroup.Location) }
             }
-            Tool.Gatt, Tool.Paired, Tool.Tracker, Tool.UnknownTrackers, Tool.TrackerDetail, Tool.Beacons, Tool.Earbuds, Tool.BitChat -> BtToolRoute(vm, page)
+            Tool.Gatt, Tool.Paired, Tool.Tracker, Tool.UnknownTrackers, Tool.TrackerDetail, Tool.Beacons, Tool.Earbuds -> BtToolRoute(vm, page)
             Tool.CellDetail -> CellDetailTool(vm.cell.collectAsStateWithLifecycle().value.state, page.arg) {
                 vm.navigate { it.copy(page = Page.ToolPage(Tool.Neighbors)) }
             }
@@ -338,16 +338,6 @@ private fun BtToolRoute(vm: MainViewModel, page: Page.ToolPage) {
         }
         Tool.Beacons -> com.allnetworktools.ui.pages.bt.BeaconsTool(ble)
         Tool.Earbuds -> com.allnetworktools.ui.pages.bt.EarbudsTool(ble)
-        Tool.BitChat -> {
-            val perms by vm.permissions.collectAsStateWithLifecycle()
-            val actions = LocalActions.current
-            com.allnetworktools.ui.pages.bt.BitchatTool(
-                permitted = PermGroup.Mesh in perms,
-                bluetoothOn = true, // the Bluetooth page is blocked while the adapter is off
-                onGrant = { actions.request(PermGroup.Mesh) },
-                onEnableBluetooth = { actions.enableBluetooth() },
-            )
-        }
         Tool.TrackerDetail -> {
             val positions by vm.positions.collectAsStateWithLifecycle()
             com.allnetworktools.ui.pages.bt.TrackerDetailTool(

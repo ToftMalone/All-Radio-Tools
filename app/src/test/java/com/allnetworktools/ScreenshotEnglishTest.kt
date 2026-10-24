@@ -50,8 +50,6 @@ class ScreenshotEnglishTest {
     @Test fun wifiTools() = shot("11_wifi_tools", NavState(Network.Wifi, Page.Tools))
     @Test fun btDashboard() = shot("20_bt_dashboard", NavState(Network.Bluetooth, Page.Dashboard))
     @Test fun btTools() = shot("21_bt_tools", NavState(Network.Bluetooth, Page.Tools))
-    @Test fun bitchatOff() = shot("22_bitchat_off", NavState(Network.Bluetooth, Page.ToolPage(Tool.BitChat)))
-    @Test fun bitchatChat() = shot("23_bitchat_chat", NavState(Network.Bluetooth, Page.ToolPage(Tool.BitChat))) { fakeMesh() }
     @Test fun fakeCells() = shot("25_fake_cells", NavState(Network.Cellular, Page.ToolPage(Tool.FakeCells))) {
         val hub = com.allnetworktools.data.CellWatchHub
         hub.setRunning(true)
@@ -73,25 +71,5 @@ class ScreenshotEnglishTest {
         c.phase = Phase.Results
     }
 
-    private fun fakeMesh() {
-        val now = 1_792_485_000_000
-        fun m(id: String, from: String, nick: String, text: String, mine: Boolean, dt: Long) =
-            com.allnetworktools.data.bitchat.ChatMessage(id, from, nick, text, now + dt, mine)
-        com.allnetworktools.data.bitchat.BitchatHub.publish(
-            com.allnetworktools.data.bitchat.MeshState(
-                running = true, peerId = "a1b2c3d4e5f60708", nickname = "anon4242", links = 2,
-                peers = listOf(
-                    com.allnetworktools.data.bitchat.MeshPeer("1111222233334444", "marie", true, now, true),
-                    com.allnetworktools.data.bitchat.MeshPeer("5555666677778888", "paul", false, now, false),
-                ),
-                publicChat = listOf(
-                    m("1", "1111222233334444", "marie", "Anyone near the station?", false, 0),
-                    m("2", "a1b2c3d4e5f60708", "anon4242", "Yes, 200 m away", true, 60_000),
-                    m("3", "5555666677778888", "paul", "Relaying from the market", false, 120_000),
-                ),
-                relayed = 37, received = 120, sent = 15,
-            ),
-        )
-    }
 
 }
