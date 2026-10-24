@@ -48,7 +48,13 @@ private fun groups(net: Network, connectedDevice: String?, servingLabel: String?
     Network.Wifi -> listOf(
         ToolGroup(S(R.string.analysis), listOf(ToolEntry(Tool.Speed, S(R.string.speed_test), S(R.string.ping_download_upload)), ToolEntry(Tool.Coverage, S(R.string.coverage_map), S(R.string.the_signal_room_by_room)))),
         ToolGroup(S(R.string.local_network), listOf(ToolEntry(Tool.Lan, S(R.string.lan_devices), S(R.string.host_discovery)), ToolEntry(Tool.Ports, S(R.string.port_scan), S(R.string.tcp_common_ports)))),
-        ToolGroup(S(R.string.discovery), listOf(ToolEntry(Tool.WifiDirect, "Wi-Fi Direct", S(R.string.devices_connected_directly)))),
+        ToolGroup(
+            S(R.string.discovery),
+            listOf(
+                ToolEntry(Tool.WifiDirect, "Wi-Fi Direct", S(R.string.devices_connected_directly)),
+                ToolEntry(Tool.WifiAware, "Wi-Fi Aware", S(R.string.wi_fi_aware_subtitle)),
+            ),
+        ),
         ToolGroup(
             S(R.string.diagnostics),
             listOf(ToolEntry(Tool.Ping, "Ping", S(R.string.latency_jitter_loss)), ToolEntry(Tool.Trace, "Traceroute", S(R.string.hops_to_the_host)), ToolEntry(Tool.Dns, "DNS Lookup", "A, AAAA, MX, TXT, NS"), ToolEntry(Tool.Whois, "Whois", S(R.string.domain_or_ip_address))),

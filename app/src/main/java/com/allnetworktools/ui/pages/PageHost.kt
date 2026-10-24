@@ -236,6 +236,19 @@ private fun PageBody(vm: MainViewModel, net: Network, page: Page) {
                     else S(R.string.android_needs_the_location_permission_to),
                 ) { actions.request(if (modern) PermGroup.Nearby else PermGroup.Location) }
             }
+            Tool.WifiAware -> {
+                val perms by vm.permissions.collectAsStateWithLifecycle()
+                val actions = LocalActions.current
+                // Android 13+ gates Wi-Fi Aware behind "Appareils à proximité"; earlier versions behind precise location.
+                val modern = android.os.Build.VERSION.SDK_INT >= 33
+                com.allnetworktools.ui.pages.wifi.WifiAwareTool(
+                    permitted = if (modern) perms.nearby else perms.location,
+                    permissionText = if (modern) S(R.string.android_needs_the_nearby_devices_permission) else S(R.string.android_needs_the_location_permission_to),
+                    onFix = { actions.request(if (modern) PermGroup.Nearby else PermGroup.Location) },
+                    located = perms.location,
+                    onLocate = { actions.request(PermGroup.Location) },
+                )
+            }
             Tool.Gatt, Tool.Paired, Tool.Tracker, Tool.UnknownTrackers, Tool.TrackerDetail, Tool.Beacons, Tool.Earbuds -> BtToolRoute(vm, page)
             Tool.CellDetail -> CellDetailTool(vm.cell.collectAsStateWithLifecycle().value.state, page.arg) {
                 vm.navigate { it.copy(page = Page.ToolPage(Tool.Neighbors)) }

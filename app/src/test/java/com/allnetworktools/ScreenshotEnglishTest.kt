@@ -58,6 +58,7 @@ class ScreenshotEnglishTest {
         hub.add(com.allnetworktools.data.CellAnomaly(com.allnetworktools.data.CellAnomalyKind.Downgrade2G, now - 60_000, "2G · 208-01 · TAC 2201 · ID 4411", "LTE → 2G"))
     }
     @Test fun trackers() = shot("26_trackers", NavState(Network.Bluetooth, Page.ToolPage(Tool.UnknownTrackers)))
+    @Test fun wifiAware() = shot("27_wifi_aware", NavState(Network.Wifi, Page.ToolPage(Tool.WifiAware)))
     @Test fun gnssTools() = shot("40_gnss_tools", NavState(Network.Gnss, Page.Tools))
     @Test fun gnssIntegrity() = shot("75_gnss_integrity", NavState(Network.Gnss, Page.ToolPage(Tool.GnssIntegrity)))
     @Test fun gnssClock() = shot("78_gnss_clock", NavState(Network.Gnss, Page.ToolPage(Tool.GnssClock)))

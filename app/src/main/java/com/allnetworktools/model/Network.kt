@@ -64,6 +64,7 @@ enum class Tool(
     Audit(Network.Wifi, S(R.string.network_audit), Sym.Shield, Sym.Refresh),
     Mitm(Network.Wifi, S(R.string.man_in_the_middle), Sym.SwapHoriz, Sym.RestartAlt),
     WifiDirect(Network.Wifi, "Wi-Fi Direct", Sym.WifiTethering),
+    WifiAware(Network.Wifi, "Wi-Fi Aware", Sym.Smartphone),
     Coverage(Network.Wifi, S(R.string.coverage_map), Sym.GridOn),
 
     BleScan(Network.Bluetooth, S(R.string.ble_scanner), Sym.BluetoothSearching, implemented = true),
