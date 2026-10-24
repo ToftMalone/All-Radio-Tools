@@ -198,15 +198,19 @@ private fun NetworkCard(
     val shape = RoundedCornerShape(28.dp)
     Box(
         modifier
-            .graphicsLayer { scaleX = scale; scaleY = scale; this.alpha = alpha }
+            .graphicsLayer { scaleX = scale; scaleY = scale }
+            // The outline and the shadow sit outside the card, so they must stay out of the faded layer below:
+            // a layer with alpha is drawn offscreen at the card's bounds, which would cut them down to their corners.
             .drawBehind {
                 val inset = 3.dp.toPx() + 1.5.dp.toPx()
                 drawRoundRect(
-                    outline, Offset(-inset, -inset), Size(size.width + inset * 2, size.height + inset * 2),
+                    outline.copy(alpha = outline.alpha * alpha), Offset(-inset, -inset), Size(size.width + inset * 2, size.height + inset * 2),
                     CornerRadius(28.dp.toPx() + inset), style = Stroke(3.dp.toPx()),
                 )
             }
-            .shadow(elevation, shape, ambientColor = shadowColor, spotColor = shadowColor)
+            // Fade the shadow with the card, or it shows through the card while it is half transparent.
+            .shadow(elevation * ((alpha - 0.5f) * 2f).coerceIn(0f, 1f), shape, ambientColor = shadowColor, spotColor = shadowColor)
+            .graphicsLayer { this.alpha = alpha }
             .clip(shape)
             .background(bg)
             .clickable(onClick = onClick),
