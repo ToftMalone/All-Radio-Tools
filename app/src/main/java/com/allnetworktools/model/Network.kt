@@ -80,6 +80,7 @@ enum class Tool(
     CellDetail(Network.Cellular, S(R.string.serving_cell), Sym.CellTower, Sym.ContentCopy, implemented = true),
     Neighbors(Network.Cellular, S(R.string.neighbour_cells), Sym.CellTower, implemented = true),
     Handover(Network.Cellular, S(R.string.handover_log), Sym.SwapCalls),
+    FakeCells(Network.Cellular, S(R.string.fake_cell_detector), Sym.Shield),
 
     Sky(Network.Gnss, S(R.string.gnss_sky), Sym.SatelliteAlt, implemented = true),
     PositionCompare(Network.Gnss, S(R.string.compare_positions), Sym.ShareLocation, Sym.Refresh),

@@ -87,6 +87,16 @@ class RemoteIdTest {
         assertTrue(msgs[0] is Message.BasicId && msgs[1] is Message.Location && msgs[2] is Message.System && msgs[3] is Message.OperatorId)
     }
 
+    @Test fun decodesWifiBeaconVendorElementAndNan() {
+        val pack = byteArrayOf(0xF2.toByte(), 25, 2) + basic + location
+        val ie = byteArrayOf(0xFA.toByte(), 0x0B, 0xBC.toByte(), 0x0D, 42) + pack
+        val msgs = RemoteId.parseWifiVendorIe(ie)
+        assertEquals(2, msgs.size)
+        assertEquals("1581F5FKD229001234", (msgs[0] as Message.BasicId).id)
+        assertTrue(RemoteId.parseWifiVendorIe(byteArrayOf(0x00, 0x50, 0xF2.toByte(), 0x0D, 42) + pack).isEmpty())
+        assertEquals(2, RemoteId.parseNan(byteArrayOf(7) + pack).size)
+    }
+
     @Test fun ignoresOtherServiceData() {
         assertTrue(RemoteId.parseServiceData(byteArrayOf(0x0C, 1) + basic).isEmpty())
         assertTrue(RemoteId.parseServiceData(byteArrayOf(0x0D, 1, 2, 3)).isEmpty())

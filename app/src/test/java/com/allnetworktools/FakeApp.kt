@@ -152,7 +152,7 @@ private fun Context.fakeBluetooth() = object : BluetoothRepository(this@fakeBlue
         ),
     )
 
-    override fun bleScan(lowPower: Boolean, staleMs: Long): Flow<List<BleDevice>> =
+    override fun bleScan(lowPower: Boolean, staleMs: Long, filters: List<android.bluetooth.le.ScanFilter>?): Flow<List<BleDevice>> =
         flowOf(if (Scenario.bleEmpty) emptyList() else bleDevices).onStart { Scenario.bleStarted = true }
 }
 

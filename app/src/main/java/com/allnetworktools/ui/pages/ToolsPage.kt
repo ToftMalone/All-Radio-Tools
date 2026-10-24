@@ -88,6 +88,7 @@ private fun groups(net: Network, connectedDevice: String?, servingLabel: String?
                 ToolEntry(Tool.Handover, S(R.string.handover_log), S(R.string.cell_changes_on_the_move_csv)),
             ),
         ),
+        ToolGroup(S(R.string.security_2), listOf(ToolEntry(Tool.FakeCells, S(R.string.fake_cell_detector), S(R.string.fake_cell_subtitle)))),
     )
     Network.Gnss -> listOf(
         ToolGroup(

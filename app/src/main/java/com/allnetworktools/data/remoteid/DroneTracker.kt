@@ -27,6 +27,8 @@ data class Drone(
     val lastSeen: Long = 0,
     val messages: Int = 0,
     val track: List<Pair<Double, Double>> = emptyList(),
+    /** How it was heard: Bluetooth, Wi-Fi beacon or Wi-Fi Aware. */
+    val via: Via = Via.Bluetooth,
 ) {
     val title: String get() = id ?: key
     val located: Boolean get() = lat != null && lon != null
@@ -38,16 +40,18 @@ data class Drone(
     }
 }
 
+enum class Via(val label: String) { Bluetooth("Bluetooth"), WifiBeacon("Wi-Fi"), WifiNan("Wi-Fi Aware") }
+
 /** Folds Remote ID messages into drones. Bluetooth addresses identify a transmitter for the flight. */
 class DroneTracker {
     private val drones = LinkedHashMap<String, Drone>()
 
     /** Returns true when this transmitter was not known yet (first time it is heard). */
     @Synchronized
-    fun add(address: String, msgs: List<Message>, rssi: Int?, now: Long): Boolean {
+    fun add(address: String, msgs: List<Message>, rssi: Int?, now: Long, via: Via = Via.Bluetooth): Boolean {
         if (msgs.isEmpty()) return false
         val fresh = address !in drones
-        var d = drones[address] ?: Drone(address, firstSeen = now)
+        var d = drones[address] ?: Drone(address, firstSeen = now, via = via)
         for (m in msgs) d = when (m) {
             is Message.BasicId -> d.copy(
                 id = if (d.id == null || m.idType == IdType.Serial || d.idType != IdType.Serial) m.id else d.id,

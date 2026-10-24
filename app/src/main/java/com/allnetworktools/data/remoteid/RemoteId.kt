@@ -20,6 +20,23 @@ object RemoteId {
         return parseMessage(d.copyOfRange(2, d.size))
     }
 
+    /**
+     * A Wi-Fi beacon's vendor-specific element (id 221), body only: OUI FA:0B:BC, type 0x0D, a counter, then a message
+     * pack. The same counter + pack is what Wi-Fi Aware (NAN) carries as service information.
+     */
+    fun parseWifiVendorIe(body: ByteArray): List<Message> {
+        if (body.size < 5 + 3 + MSG) return emptyList()
+        if ((body[0].toInt() and 0xFF) != 0xFA || (body[1].toInt() and 0xFF) != 0x0B || (body[2].toInt() and 0xFF) != 0xBC) return emptyList()
+        if ((body[3].toInt() and 0xFF) != APP_CODE) return emptyList()
+        return parseMessage(body.copyOfRange(5, body.size))
+    }
+
+    /** Wi-Fi Aware service information: message counter, then a message pack. */
+    fun parseNan(info: ByteArray): List<Message> =
+        if (info.size < 1 + 3 + MSG) emptyList() else parseMessage(info.copyOfRange(1, info.size))
+
+    const val NAN_SERVICE = "org.opendroneid.remoteid"
+
     fun parseMessage(m: ByteArray): List<Message> {
         if (m.size < MSG) return emptyList()
         return when ((m[0].toInt() and 0xFF) shr 4) {

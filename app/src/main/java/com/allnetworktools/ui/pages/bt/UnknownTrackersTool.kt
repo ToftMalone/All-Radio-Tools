@@ -258,8 +258,14 @@ fun UnknownTrackersTool(
     devices: List<BleDevice>,
     positions: PositionSet,
     onOpen: (String) -> Unit,
+    guardRunning: Boolean = false,
+    onGuard: (Boolean) -> Unit = {},
 ) {
     LaunchedEffect(devices) { c.feed(devices, positions) }
+    androidx.compose.runtime.DisposableEffect(Unit) {
+        com.allnetworktools.data.TrackerGuard.watching = true
+        onDispose { com.allnetworktools.data.TrackerGuard.watching = false }
+    }
     TopBarAction(Sym.RestartAlt) { c.reset() }
     // Detection only runs while the tool is open; the app keeps the screen on when "Écran toujours allumé" is set.
     val awake = AntTheme.settings.keepAwake
@@ -281,7 +287,24 @@ fun UnknownTrackersTool(
             )
             Row(Modifier.padding(top = 12.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 HeroChip(S(R.string.bluetooth_listening_in_progress), AntTheme.net.good, blink = true)
-                if (awake) HeroChip(S(R.string.screen_kept_on), AntTheme.accent.accent)
+                if (awake && !guardRunning) HeroChip(S(R.string.screen_kept_on), AntTheme.accent.accent)
+            }
+            // The guard keeps this session going with the app closed and alerts when a tag follows you.
+            Row(
+                Modifier.padding(top = 14.dp).fillMaxWidth().clip(RoundedCornerShape(18.dp)).background(cs.surface.copy(alpha = 0.7f))
+                    .clickable { onGuard(!guardRunning) }.padding(start = 14.dp, end = 10.dp, top = 10.dp, bottom = 10.dp),
+                verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp),
+            ) {
+                Symbol(Sym.Shield, size = 22.dp, filled = guardRunning, tint = if (guardRunning) AntTheme.net.good else cs.onSurfaceVariant)
+                Column(Modifier.weight(1f)) {
+                    Text(S(R.string.tracker_guard), style = rf(15, 20, 600))
+                    Text(if (guardRunning) S(R.string.tracker_guard_on) else S(R.string.tracker_guard_off), style = rf(12, 16), color = cs.onSurfaceVariant)
+                }
+                androidx.compose.material3.Switch(
+                    checked = guardRunning, onCheckedChange = onGuard,
+                    thumbContent = if (guardRunning) ({ Symbol(Sym.Check, size = 16.dp, tint = cs.primary) }) else null,
+                    colors = androidx.compose.material3.SwitchDefaults.colors(checkedTrackColor = cs.primary, checkedThumbColor = cs.onPrimary),
+                )
             }
         }
         if (list.isEmpty()) {

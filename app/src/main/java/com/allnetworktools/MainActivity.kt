@@ -39,15 +39,19 @@ class MainActivity : ComponentActivity() {
         val tool = when (intent?.getStringExtra(EXTRA_OPEN)) {
             OPEN_BITCHAT -> Tool.BitChat
             OPEN_REMOTE_ID -> Tool.RemoteId
+            OPEN_TRACKERS -> Tool.UnknownTrackers
+            OPEN_FAKE_CELLS -> Tool.FakeCells
             else -> return
         }
-        vm.navigate { it.copy(network = Network.Bluetooth, page = Page.ToolPage(tool)) }
+        vm.navigate { it.copy(network = tool.network, page = Page.ToolPage(tool)) }
     }
 
     companion object {
         const val EXTRA_OPEN = "open"
         const val OPEN_BITCHAT = "bitchat"
         const val OPEN_REMOTE_ID = "remoteid"
+        const val OPEN_TRACKERS = "trackers"
+        const val OPEN_FAKE_CELLS = "fakecells"
     }
 
     override fun onResume() {

@@ -200,7 +200,7 @@ open class BluetoothRepository(private val context: Context) {
      * packets are merged so identification sees advertising data and scan responses together.
      * Emits a snapshot at least every second so RSSI and staleness stay current.
      */
-    open fun bleScan(lowPower: Boolean, staleMs: Long = 15_000): Flow<List<BleDevice>> = callbackFlow {
+    open fun bleScan(lowPower: Boolean, staleMs: Long = 15_000, filters: List<android.bluetooth.le.ScanFilter>? = null): Flow<List<BleDevice>> = callbackFlow {
         val scanner = adapter?.bluetoothLeScanner
         if (scanner == null || !adapter.isEnabled) {
             trySend(emptyList()); awaitClose { }; return@callbackFlow
@@ -258,7 +258,7 @@ open class BluetoothRepository(private val context: Context) {
             .setLegacy(false)
             .setPhy(ScanSettings.PHY_LE_ALL_SUPPORTED)
             .build()
-        runCatching { scanner.startScan(null, settings, callback) }.onFailure { close(it) }
+        runCatching { scanner.startScan(filters, settings, callback) }.onFailure { close(it) }
         val ticker = launch {
             while (true) {
                 trySend(snapshot())

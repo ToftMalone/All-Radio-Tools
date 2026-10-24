@@ -37,6 +37,9 @@ data class RemoteIdState(
     val drones: List<Drone> = emptyList(),
     val longRange: Boolean = false,
     val bluetoothOff: Boolean = false,
+    /** Wi-Fi beacons are being scanned, and Wi-Fi Aware is listened to. */
+    val wifi: Boolean = false,
+    val nan: Boolean = false,
 )
 
 /** Bridge between the background detector and the screen. */
@@ -100,6 +103,7 @@ class RemoteIdService : Service() {
             val sc = CoroutineScope(SupervisorJob() + Dispatchers.Default)
             scope = sc
             startScan()
+            startWifi(sc)
             RemoteIdHub.onWatching = { if (RemoteIdHub.watching != lowLatency) { stopScan(); startScan() } }
             sc.launch {
                 while (true) {
@@ -116,6 +120,7 @@ class RemoteIdService : Service() {
         scope?.cancel(); scope = null
         RemoteIdHub.onWatching = null
         stopScan()
+        stopWifi()
         stopForeground(STOP_FOREGROUND_REMOVE)
         getSystemService(NotificationManager::class.java)?.cancel(NOTIFICATION_ID)
         RemoteIdHub.publish(RemoteIdHub.state.value.copy(running = false))
@@ -160,6 +165,79 @@ class RemoteIdService : Service() {
         val data = r.scanRecord?.getServiceData(ParcelUuid.fromString(RemoteId.SERVICE_UUID)) ?: return
         val msgs = RemoteId.parseServiceData(data)
         RemoteIdHub.tracker.add(r.device.address, msgs, r.rssi, System.currentTimeMillis())
+    }
+
+    // ---- Wi-Fi: beacons and Wi-Fi Aware ---------------------------------------------------------------
+
+    private val wifi get() = applicationContext.getSystemService(android.net.wifi.WifiManager::class.java)
+    private var wifiReceiver: android.content.BroadcastReceiver? = null
+    private var aware: android.net.wifi.aware.WifiAwareSession? = null
+
+    private fun startWifi(sc: CoroutineScope) {
+        val wm = wifi ?: return
+        // Every scan result, ours or the system's, is searched for the Remote ID vendor element.
+        val r = object : android.content.BroadcastReceiver() {
+            override fun onReceive(c: Context, i: Intent) = readWifi()
+        }
+        wifiReceiver = r
+        ContextCompat.registerReceiver(this, r, android.content.IntentFilter(android.net.wifi.WifiManager.SCAN_RESULTS_AVAILABLE_ACTION), ContextCompat.RECEIVER_NOT_EXPORTED)
+        RemoteIdHub.publish(RemoteIdHub.state.value.copy(wifi = true))
+        // Android allows a foreground service four scans every two minutes.
+        sc.launch {
+            while (true) {
+                @Suppress("DEPRECATION")
+                runCatching { wm.startScan() }
+                delay(30_000)
+            }
+        }
+        startAware()
+    }
+
+    private fun readWifi() {
+        val list = runCatching { wifi?.scanResults }.getOrNull() ?: return
+        val now = System.currentTimeMillis()
+        list.forEach { s ->
+            s.informationElements.forEach { ie ->
+                if (ie.id == 221) {
+                    val body = ByteArray(ie.bytes.remaining()).also { ie.bytes.duplicate().get(it) }
+                    val msgs = RemoteId.parseWifiVendorIe(body)
+                    if (msgs.isNotEmpty()) RemoteIdHub.tracker.add("wifi:" + s.BSSID, msgs, s.level, now, Via.WifiBeacon)
+                }
+            }
+        }
+    }
+
+    /** Wi-Fi Aware (NAN): some Remote ID modules broadcast there instead of in beacons. */
+    private fun startAware() {
+        if (!packageManager.hasSystemFeature(PackageManager.FEATURE_WIFI_AWARE)) return
+        val am = getSystemService(android.net.wifi.aware.WifiAwareManager::class.java) ?: return
+        if (!am.isAvailable) return
+        runCatching {
+            am.attach(object : android.net.wifi.aware.AttachCallback() {
+                override fun onAttached(session: android.net.wifi.aware.WifiAwareSession) {
+                    if (closing) { session.close(); return }
+                    aware = session
+                    val cfg = android.net.wifi.aware.SubscribeConfig.Builder()
+                        .setServiceName(RemoteId.NAN_SERVICE)
+                        .setSubscribeType(android.net.wifi.aware.SubscribeConfig.SUBSCRIBE_TYPE_PASSIVE)
+                        .build()
+                    session.subscribe(cfg, object : android.net.wifi.aware.DiscoverySessionCallback() {
+                        override fun onServiceDiscovered(peer: android.net.wifi.aware.PeerHandle, info: ByteArray?, filter: MutableList<ByteArray>?) {
+                            val msgs = info?.let(RemoteId::parseNan).orEmpty()
+                            if (msgs.isNotEmpty()) RemoteIdHub.tracker.add("nan:" + peer.hashCode(), msgs, null, System.currentTimeMillis(), Via.WifiNan)
+                        }
+                    }, null)
+                    RemoteIdHub.publish(RemoteIdHub.state.value.copy(nan = true))
+                }
+            }, null)
+        }
+    }
+
+    private fun stopWifi() {
+        wifiReceiver?.let { runCatching { unregisterReceiver(it) } }
+        wifiReceiver = null
+        aware?.close(); aware = null
+        RemoteIdHub.publish(RemoteIdHub.state.value.copy(wifi = false, nan = false))
     }
 
     // ---- state and notifications ----------------------------------------------------------------------

@@ -131,13 +131,14 @@ fun RemoteIdTool(
                 HeroTile(drones.size.toString(), S(R.string.seen), Modifier.weight(1f))
                 HeroTile(closest?.let(::distance) ?: "—", S(R.string.closest), Modifier.weight(1f))
             }
-            Row(Modifier.padding(top = 12.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            androidx.compose.foundation.layout.FlowRow(Modifier.padding(top = 12.dp), horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 when {
                     !state.running -> HeroChip(S(R.string.detection_stopped), AntTheme.net.poor)
                     state.bluetoothOff -> HeroChip(S(R.string.bluetooth_is_off), AntTheme.net.poor)
                     else -> HeroChip(S(R.string.listening_remote_id), AntTheme.net.good, blink = true)
                 }
                 if (state.running && state.longRange) HeroChip(S(R.string.long_range_supported), AntTheme.net.good)
+                if (state.running && state.wifi) HeroChip(if (state.nan) "Wi-Fi + Aware" else "Wi-Fi", AntTheme.net.good)
             }
         }
 
@@ -230,7 +231,7 @@ private fun DroneRow(d: Drone, me: Pair<Double, Double>?, now: Long, selected: B
             )
             val dist = if (me != null && d.lat != null) distance(RemoteId.distanceM(me.first, me.second, d.lat, d.lon!!)) else null
             Text(
-                listOfNotNull(dist, d.operatorId, d.rssi?.let { "$it dBm" }).joinToString(" · "),
+                listOfNotNull(dist, d.operatorId, d.rssi?.let { "$it dBm" }, d.via.label).joinToString(" · "),
                 style = rf(12, 16, tnum = true), color = cs.onSurfaceVariant, maxLines = 1, overflow = TextOverflow.Ellipsis,
             )
         }

@@ -200,6 +200,15 @@ private fun PageBody(vm: MainViewModel, net: Network, page: Page) {
                 val perms by vm.permissions.collectAsStateWithLifecycle()
                 com.allnetworktools.ui.pages.cell.HandoverTool(PermGroup.Notifications in perms)
             }
+            Tool.FakeCells -> {
+                val perms by vm.permissions.collectAsStateWithLifecycle()
+                val actions = LocalActions.current
+                com.allnetworktools.ui.pages.cell.FakeCellsTool(
+                    permitted = perms.location && perms.phone,
+                    onGrant = { actions.request(if (!perms.location) PermGroup.Location else PermGroup.Phone) },
+                    onNotifications = { if (PermGroup.Notifications !in perms) actions.request(PermGroup.Notifications) },
+                )
+            }
             Tool.Sky -> SkyTool(vm)
             Tool.PositionCompare -> com.allnetworktools.ui.pages.gnss.PositionCompareTool(vm)
             Tool.GnssIntegrity -> com.allnetworktools.ui.pages.gnss.IntegrityTool(vm)
@@ -310,9 +319,21 @@ private fun BtToolRoute(vm: MainViewModel, page: Page.ToolPage) {
         }
         Tool.UnknownTrackers -> {
             val positions by vm.positions.collectAsStateWithLifecycle()
+            val guard by com.allnetworktools.data.TrackerGuard.running.collectAsStateWithLifecycle()
+            val perms by vm.permissions.collectAsStateWithLifecycle()
+            val actions = LocalActions.current
+            val context = androidx.compose.ui.platform.LocalContext.current
             com.allnetworktools.ui.pages.bt.UnknownTrackersTool(
                 vm.tools.unknownTrackers, ble, positions,
                 onOpen = { key -> vm.navigate { it.copy(page = Page.ToolPage(Tool.TrackerDetail, key)) } },
+                guardRunning = guard,
+                onGuard = { on ->
+                    if (!on) com.allnetworktools.data.TrackerGuard.stop(context) else {
+                        if (PermGroup.Notifications !in perms) actions.request(PermGroup.Notifications)
+                        else if (!perms.location) actions.request(PermGroup.Location)
+                        com.allnetworktools.data.TrackerGuard.start(context)
+                    }
+                },
             )
         }
         Tool.Beacons -> com.allnetworktools.ui.pages.bt.BeaconsTool(ble)

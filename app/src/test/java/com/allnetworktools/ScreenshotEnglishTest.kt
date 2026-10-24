@@ -53,6 +53,14 @@ class ScreenshotEnglishTest {
     @Test fun bitchatOff() = shot("22_bitchat_off", NavState(Network.Bluetooth, Page.ToolPage(Tool.BitChat)))
     @Test fun bitchatChat() = shot("23_bitchat_chat", NavState(Network.Bluetooth, Page.ToolPage(Tool.BitChat))) { fakeMesh() }
     @Test fun remoteId() = shot("24_remote_id", NavState(Network.Bluetooth, Page.ToolPage(Tool.RemoteId))) { fakeDrones() }
+    @Test fun fakeCells() = shot("25_fake_cells", NavState(Network.Cellular, Page.ToolPage(Tool.FakeCells))) {
+        val hub = com.allnetworktools.data.CellWatchHub
+        hub.setRunning(true)
+        val now = System.currentTimeMillis()
+        hub.add(com.allnetworktools.data.CellAnomaly(com.allnetworktools.data.CellAnomalyKind.NoNeighbours, now - 600_000, "2G · 208-01 · TAC 2201 · ID 4411", "2G · 208-01 · TAC 2201 · ID 4411"))
+        hub.add(com.allnetworktools.data.CellAnomaly(com.allnetworktools.data.CellAnomalyKind.Downgrade2G, now - 60_000, "2G · 208-01 · TAC 2201 · ID 4411", "LTE → 2G"))
+    }
+    @Test fun trackers() = shot("26_trackers", NavState(Network.Bluetooth, Page.ToolPage(Tool.UnknownTrackers)))
     @Test fun gnssTools() = shot("40_gnss_tools", NavState(Network.Gnss, Page.Tools))
     @Test fun gnssIntegrity() = shot("75_gnss_integrity", NavState(Network.Gnss, Page.ToolPage(Tool.GnssIntegrity)))
     @Test fun gnssClock() = shot("78_gnss_clock", NavState(Network.Gnss, Page.ToolPage(Tool.GnssClock)))

@@ -81,6 +81,16 @@
             android:exported="false"
             android:foregroundServiceType="connectedDevice" />
 
+        <service
+            android:name=".data.TrackerGuardService"
+            android:exported="false"
+            android:foregroundServiceType="connectedDevice|location" />
+
+        <service
+            android:name=".data.CellWatchService"
+            android:exported="false"
+            android:foregroundServiceType="location" />
+
         <receiver
             android:name=".update.InstallResultReceiver"
             android:exported="false" />
