@@ -97,7 +97,7 @@ class SpeedTestTest {
         // Download: 25 MB at 100 Mb/s takes 2 s, so 100 MB and 250 MB never run; upload stops after 10 MB (1.6 s).
         assertEquals(listOf("d100000", "d1000000", "u100000", "u1000000", "d10000000", "u10000000", "d25000000"), transfers)
         assertEquals(1 + 9 + 8 + 6 + 4, line.requests.count { it.startsWith("d") && it != "d0" })
-        assertEquals(2 + 20 + 2 * 12, s.latencyPoints.size)
+        assertEquals(2 + 20 + 2 * 14, s.latencyPoints.size)
         assertEquals(10.0, s.latency!!, 1e-9)
         assertEquals(100e6, s.download!!, 1e6)
         assertEquals(50e6 * 1.005, s.upload!!, 1e6)
@@ -108,21 +108,24 @@ class SpeedTestTest {
         assertEquals(10, s.downBuckets[0].planned)
     }
 
-    /** A fast line ends on 500 MB then 1 GB, each over six connections at once; a slower one or a metered network skips them. */
+    /** A fast line ends on 500 MB then 1 GB each way, each over six connections at once; a slower one or a metered network skips them. */
     @Test fun fastLineFinishesOnBigFilesInParallel() = runBlocking {
         val fast = FakeLine(downMbps = 900.0, upMbps = 300.0)
         var last: CfSnapshot? = null
         CfEngine(fast, { step, _ -> CfPacketLoss(step.packets, step.packets, step.packets, emptyList()) }).run { last = it }
         assertEquals(6, fast.requests.count { it == "d83333333" })
         assertEquals(6, fast.requests.count { it == "d166666666" })
-        assertEquals("d166666666", fast.requests.last { it != "d0" })
+        assertEquals(6, fast.requests.count { it == "u83333333" })
+        assertEquals(6, fast.requests.count { it == "u166666666" })
+        assertEquals("u166666666", fast.requests.last { it != "d0" })
         // Six connections at 900 Mbit/s each, added up when the transport has no live byte count.
         assertEquals(5.4e9, last!!.download!!, 0.1e9)
         assertTrue(last!!.downBuckets.last().bytes == 1_000_000_000L)
+        assertEquals(1.8e9, last!!.upload!!, 0.1e9)
 
         val metered = FakeLine(downMbps = 900.0, upMbps = 300.0)
         CfEngine(metered, { step, _ -> CfPacketLoss(step.packets, step.packets, step.packets, emptyList()) }, bigFiles = false).run { }
-        assertTrue(metered.requests.none { it == "d83333333" || it == "d166666666" })
+        assertTrue(metered.requests.none { it.endsWith("83333333") || it.endsWith("166666666") })
 
         // 1 GB at 150 Mbit/s would take 53 s: only the 500 MB file runs, and then 1 GB at 900 Mbit/s fits.
         val mid = FakeLine(downMbps = 150.0, upMbps = 50.0)
@@ -131,7 +134,7 @@ class SpeedTestTest {
 
         val slow = FakeLine(downMbps = 50.0, upMbps = 20.0)
         CfEngine(slow, { step, _ -> CfPacketLoss(step.packets, step.packets, step.packets, emptyList()) }).run { }
-        assertTrue(slow.requests.none { it == "d83333333" || it == "d166666666" })
+        assertTrue(slow.requests.none { it.endsWith("83333333") || it.endsWith("166666666") })
     }
 
     /** Parallel speed: the bytes from 10 % to 90 % of the total, over that time. */

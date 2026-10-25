@@ -44,7 +44,7 @@ import org.json.JSONObject
 sealed interface CfStep {
     data class Latency(val packets: Int) : CfStep
     /**
-     * [final]: a big download that runs even after the ladder stopped, so a fast line can show its full speed; skipped
+     * [final]: a big transfer that runs even after the ladder stopped, so a fast line can show its full speed; skipped
      * when big files are off (metered network) or when it would take more than [CfConfig.FINAL_MAX_SECONDS]. It is
      * split over [streams] connections at once: one TCP connection alone tops out around 600 Mbit/s on a phone.
      */
@@ -95,11 +95,15 @@ object CfConfig {
         CfStep.Transfer(true, 500_000_000, 1, final = true, streams = CfConfig.FINAL_STREAMS),
         CfStep.Latency(2),
         CfStep.Transfer(true, 1_000_000_000, 1, final = true, streams = CfConfig.FINAL_STREAMS),
+        CfStep.Latency(2),
+        CfStep.Transfer(false, 500_000_000, 1, final = true, streams = CfConfig.FINAL_STREAMS),
+        CfStep.Latency(2),
+        CfStep.Transfer(false, 1_000_000_000, 1, final = true, streams = CfConfig.FINAL_STREAMS),
     )
 
     /** A final file that would take longer than this at the speed measured so far is skipped: it would add nothing. */
     const val FINAL_MAX_SECONDS = 40.0
-    /** Parallel connections of the final downloads, as many as Ookla's app opens on a fast line. */
+    /** Parallel connections of the final transfers, as many as Ookla's app opens on a fast line. */
     const val FINAL_STREAMS = 6
     /** Their speed: the bytes from 10 % to 90 % of the total over that time, if it lasted this long. */
     const val FINAL_MIN_WINDOW_MS = 1000.0
@@ -142,8 +146,8 @@ interface CfTransport {
     fun exchange(lane: Int, down: Boolean, bytes: Long, during: String?): CfRaw
     /** Aborts whatever [lane] is doing, from another thread. */
     fun abort(lane: Int)
-    /** Body bytes received so far on every lane, read live while requests run; 0 when the transport cannot tell. */
-    fun received(): Long = 0
+    /** Body bytes received ([down]) or sent so far on every lane, read live while requests run; 0 when the transport cannot tell. */
+    fun moved(down: Boolean): Long = 0
 }
 
 /** The engine's request timing, with its running estimate of the gap between the server's own time and what the client sees. */
@@ -282,8 +286,8 @@ object CfMath {
         CfConfig.BANDWIDTH_PERCENTILE,
     )
 
-    /** The site's 90th percentile, or the parallel final downloads' combined speed when they went faster. */
-    fun download(buckets: Collection<CfBucket>): Double =
+    /** The site's 90th percentile, or the parallel final transfers' combined speed when they went faster. */
+    fun speed(buckets: Collection<CfBucket>): Double =
         maxOf(bandwidth(buckets), buckets.filter { it.parallel }.flatMap { it.timings }.mapNotNull { it.bps }.maxOrNull() ?: 0.0)
 
     /**
@@ -433,8 +437,8 @@ class CfEngine(
     }
 
     private fun runFinal(step: CfStep.Transfer): Boolean {
-        if (!bigFiles || !step.down) return false
-        val bps = synchronized(lock) { if (down.isEmpty()) 0.0 else CfMath.download(down.values) }
+        if (!bigFiles) return false
+        val bps = synchronized(lock) { (if (step.down) down else up).let { if (it.isEmpty()) 0.0 else CfMath.speed(it.values) } }
         return bps > 0 && step.bytes * 8.0 / bps < CfConfig.FINAL_MAX_SECONDS
     }
 
@@ -479,23 +483,23 @@ class CfEngine(
     }
 
     /**
-     * A final download split over [CfStep.Transfer.streams] connections at once, measured as one: the bytes every
-     * connection received together over the time they all ran, sampled live. A failure only skips it.
+     * A final transfer split over [CfStep.Transfer.streams] connections at once, measured as one: the bytes every
+     * connection moved together, sampled live. A failure only skips it.
      */
     private suspend fun parallel(step: CfStep.Transfer, emit: () -> Unit) = coroutineScope {
         val bucket = synchronized(lock) {
-            downStarted = true
-            down.getOrPut(step.bytes) { CfBucket(step.bytes, parallel = true) }.also {
+            if (step.down) downStarted = true else upStarted = true
+            (if (step.down) down else up).getOrPut(step.bytes) { CfBucket(step.bytes, parallel = true) }.also {
                 if (plannedStep != stepIndex) { it.planned += 1; plannedStep = stepIndex }
             }
         }
-        val side = loadedPings(bucket, true, emit)
+        val side = loadedPings(bucket, step.down, emit)
         val per = step.bytes / step.streams
-        val base = transport.received()
+        val base = transport.moved(step.down)
         val samples = mutableListOf<Pair<Long, Long>>()
         val sampler = launch {
             while (isActive) {
-                synchronized(samples) { samples += System.nanoTime() to transport.received() - base }
+                synchronized(samples) { samples += System.nanoTime() to transport.moved(step.down) - base }
                 delay(100)
             }
         }
@@ -503,15 +507,15 @@ class CfEngine(
         try {
             val raws = (0 until step.streams).map { i ->
                 async {
-                    io(STREAM_LANE + i) { transport.exchange(STREAM_LANE + i, true, per, null) }
+                    io(STREAM_LANE + i) { transport.exchange(STREAM_LANE + i, step.down, per, null) }
                 }
             }.awaitAll()
             sampler.cancelAndJoin()
             val ms = (System.nanoTime() - started) / 1e6
             val bps = CfMath.windowRate(synchronized(samples) { samples.toList() }, per * step.streams)
                 // Too fast for the window: everything over the whole time. No live byte counts: each connection's speed added up.
-                ?: if (transport.received() > base) per * step.streams * 8.0 / (ms / 1000)
-                else raws.sumOf { clock.timing(it, true, per, now()).bps ?: 0.0 }
+                ?: if (transport.moved(step.down) > base) per * step.streams * 8.0 / (ms / 1000)
+                else raws.sumOf { clock.timing(it, step.down, per, now()).bps ?: 0.0 }
             if (bps > 0) synchronized(lock) {
                 bucket.timings += CfTiming(step.bytes, raws.minOf { it.ttfb }, ms, -1.0, raws.sumOf { it.transferSize }, raws.minOf { it.ttfb }, ms, bps, now())
             }
@@ -570,8 +574,8 @@ class CfEngine(
         val pings = latency.map { it.ping }
         val lat = if (pings.isEmpty()) null else CfMath.percentile(pings, CfConfig.LATENCY_PERCENTILE)
         val jit = CfMath.jitter(pings)
-        val dl = if (downStarted) CfMath.download(down.values) else null
-        val ul = if (upStarted) CfMath.bandwidth(up.values) else null
+        val dl = if (downStarted) CfMath.speed(down.values) else null
+        val ul = if (upStarted) CfMath.speed(up.values) else null
         val dPings = if (downStarted) CfMath.loadedPings(down.values) else null
         val uPings = if (upStarted) CfMath.loadedPings(up.values) else null
         val dLoaded = dPings?.let { CfMath.percentile(it, CfConfig.LATENCY_PERCENTILE) }
@@ -626,8 +630,9 @@ class CfHttp(private val host: String = CfConfig.HOST) : CfTransport {
 
     private val lanes = ConcurrentHashMap<Int, Lane>()
     private val live = AtomicLong()
+    private val sentLive = AtomicLong()
 
-    override fun received(): Long = live.get()
+    override fun moved(down: Boolean): Long = (if (down) live else sentLive).get()
 
     override fun exchange(lane: Int, down: Boolean, bytes: Long, during: String?): CfRaw =
         lanes.getOrPut(lane) { Lane() }.exchange(down, bytes, during)
@@ -707,6 +712,7 @@ class CfHttp(private val host: String = CfConfig.HOST) : CfTransport {
                 val n = minOf(left, ZEROS.size.toLong()).toInt()
                 out.write(ZEROS, 0, n)
                 left -= n
+                sentLive.addAndGet(n.toLong())
             }
             out.flush()
             val first = inp.read()
