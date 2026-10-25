@@ -2585,4 +2585,5 @@
     <string name="max_service_info">"حجم معلومات الخدمة"</string>
     <string name="instant_communication">"وضع الاتصال الفوري"</string>
     <string name="wi_fi_aware_how_it_works">"يتيح Wi-Fi Aware (شبكات الوعي بالجوار) للهواتف العثور على بعضها والتواصل مباشرة دون موجّه أو إنترنت. لا يجد أندرويد إلا الخدمات التي يعرف اسمها، لذا تجد هذه الأداة الهواتف الأخرى التي فتحتها. مع Wi-Fi RTT على الهاتفين تُقاس المسافة بينهما بدقة تقارب مترًا واحدًا. يرسل زر التلويح تحية لاختبار الاتصال في الاتجاهين."</string>
+    <string name="parallel_connections">"اتصالات متوازية: %1$d"</string>
 </resources>

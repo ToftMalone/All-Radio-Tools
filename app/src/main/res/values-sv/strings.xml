@@ -2357,4 +2357,5 @@
     <string name="max_service_info">"Storlek på tjänstinfo"</string>
     <string name="instant_communication">"Läge för direktkommunikation"</string>
     <string name="wi_fi_aware_how_it_works">"Wi-Fi Aware (Neighbor Awareness Networking) låter telefoner hitta varandra och kommunicera direkt, utan router eller internet. Android hittar bara tjänster vars namn det känner till, så verktyget hittar de andra telefonerna som har det öppet. Med Wi-Fi RTT på båda mäts avståndet mellan dem på ungefär en meter när. Vinka-knappen skickar en hälsning för att testa länken åt båda hållen."</string>
+    <string name="parallel_connections">"%1$d parallella anslutningar"</string>
 </resources>

@@ -2357,4 +2357,5 @@
     <string name="max_service_info">"Grootte service-info"</string>
     <string name="instant_communication">"Directe-communicatiemodus"</string>
     <string name="wi_fi_aware_how_it_works">"Wi-Fi Aware (Neighbor Awareness Networking) laat telefoons elkaar vinden en rechtstreeks communiceren, zonder router of internet. Android vindt alleen services waarvan het de naam kent, dus deze tool vindt de andere telefoons die hem open hebben. Met Wi-Fi RTT op beide telefoons wordt de afstand tot op ongeveer een meter gemeten. De zwaaiknop stuurt een groet om de verbinding in beide richtingen te testen."</string>
+    <string name="parallel_connections">"%1$d parallelle verbindingen"</string>
 </resources>

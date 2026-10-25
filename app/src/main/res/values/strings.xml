@@ -2358,4 +2358,5 @@
     <string name="max_service_info">"Service info size"</string>
     <string name="instant_communication">"Instant communication mode"</string>
     <string name="wi_fi_aware_how_it_works">"Wi-Fi Aware (Neighbor Awareness Networking) lets phones find each other and talk directly, without a router or Internet. Android only finds services whose name it knows, so this tool finds the other phones that have it open. With Wi-Fi RTT on both phones, the distance between them is measured to about a metre. The wave button sends a hello to test the link both ways."</string>
+    <string name="parallel_connections">"%1$d connections at once"</string>
 </resources>

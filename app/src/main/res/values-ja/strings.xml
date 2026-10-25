@@ -2300,4 +2300,5 @@
     <string name="max_service_info">"サービス情報のサイズ"</string>
     <string name="instant_communication">"インスタント通信モード"</string>
     <string name="wi_fi_aware_how_it_works">"Wi-Fi Aware（Neighbor Awareness Networking）を使うと、スマートフォン同士がルーターやインターネットなしで互いを見つけ、直接通信できます。Androidは名前を知っているサービスしか見つけられないため、このツールはこれを開いている他の端末を見つけます。両方の端末がWi-Fi RTTに対応していれば、距離を約1 mの精度で測定します。手を振るボタンで、双方向の通信を確認するあいさつを送れます。"</string>
+    <string name="parallel_connections">"%1$d 本の並列接続"</string>
 </resources>

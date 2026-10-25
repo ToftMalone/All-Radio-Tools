@@ -2357,4 +2357,5 @@
     <string name="max_service_info">"Hizmet bilgisi boyutu"</string>
     <string name="instant_communication">"Anlık iletişim modu"</string>
     <string name="wi_fi_aware_how_it_works">"Wi-Fi Aware (Neighbor Awareness Networking), telefonların birbirini bulmasını ve yönlendirici ya da internet olmadan doğrudan iletişim kurmasını sağlar. Android yalnızca adını bildiği hizmetleri bulur; bu yüzden bu araç, onu açmış olan diğer telefonları bulur. İki telefonda da Wi-Fi RTT varsa aralarındaki mesafe yaklaşık bir metre hassasiyetle ölçülür. El sallama düğmesi, bağlantıyı iki yönde test etmek için bir selam gönderir."</string>
+    <string name="parallel_connections">"%1$d paralel bağlantı"</string>
 </resources>

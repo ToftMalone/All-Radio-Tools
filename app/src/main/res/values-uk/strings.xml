@@ -2471,4 +2471,5 @@
     <string name="max_service_info">"Розмір даних служби"</string>
     <string name="instant_communication">"Режим миттєвого зв'язку"</string>
     <string name="wi_fi_aware_how_it_works">"Wi-Fi Aware (Neighbor Awareness Networking) дає телефонам змогу знаходити одне одного й спілкуватися напряму, без роутера та інтернету. Android знаходить лише служби з відомою йому назвою, тому цей інструмент знаходить інші телефони, на яких він відкритий. З Wi-Fi RTT на обох телефонах відстань між ними вимірюється з точністю близько метра. Кнопка «помахати» надсилає привітання, щоб перевірити зв'язок в обидва боки."</string>
+    <string name="parallel_connections">"Паралельних з\'єднань: %1$d"</string>
 </resources>

@@ -2300,4 +2300,5 @@
     <string name="max_service_info">"Kích thước thông tin dịch vụ"</string>
     <string name="instant_communication">"Chế độ giao tiếp tức thì"</string>
     <string name="wi_fi_aware_how_it_works">"Wi-Fi Aware (Neighbor Awareness Networking) cho phép các điện thoại tìm thấy nhau và giao tiếp trực tiếp, không cần bộ định tuyến hay Internet. Android chỉ tìm được dịch vụ mà nó biết tên, nên công cụ này tìm các điện thoại khác cũng đang mở nó. Khi cả hai máy có Wi-Fi RTT, khoảng cách giữa chúng được đo với độ chính xác khoảng một mét. Nút vẫy tay gửi lời chào để thử kết nối theo cả hai chiều."</string>
+    <string name="parallel_connections">"%1$d kết nối song song"</string>
 </resources>

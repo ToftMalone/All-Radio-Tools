@@ -77,7 +77,7 @@ class SpeedTestTest {
     private class FakeLine(val downMbps: Double, val upMbps: Double) : CfTransport {
         val requests = Collections.synchronizedList(mutableListOf<String>())
         override fun exchange(lane: Int, down: Boolean, bytes: Long, during: String?): CfRaw {
-            if (lane == 0) requests += (if (down) "d" else "u") + bytes
+            if (lane != 1) requests += (if (down) "d" else "u") + bytes
             val payload = if (down) bytes * 8 / (downMbps * 1e3) else 0.0
             val ttfb = 10.0 + if (down) 0.0 else bytes * 8 / (upMbps * 1e3)
             return CfRaw(ttfb, payload, bytes, 0.0, "cfSpeedWorker;dur=0")
@@ -108,23 +108,40 @@ class SpeedTestTest {
         assertEquals(10, s.downBuckets[0].planned)
     }
 
-    /** A fast line ends on a 500 MB then a 1 GB download; a slower one or a metered network skips them. */
-    @Test fun fastLineFinishesOnBigFiles() = runBlocking {
+    /** A fast line ends on 500 MB then 1 GB, each over six connections at once; a slower one or a metered network skips them. */
+    @Test fun fastLineFinishesOnBigFilesInParallel() = runBlocking {
         val fast = FakeLine(downMbps = 900.0, upMbps = 300.0)
-        CfEngine(fast, { step, _ -> CfPacketLoss(step.packets, step.packets, step.packets, emptyList()) }).run { }
-        assertEquals(1, fast.requests.count { it == "d500000000" })
-        assertEquals(1, fast.requests.count { it == "d1000000000" })
-        assertEquals("d1000000000", fast.requests.last { it != "d0" })
+        var last: CfSnapshot? = null
+        CfEngine(fast, { step, _ -> CfPacketLoss(step.packets, step.packets, step.packets, emptyList()) }).run { last = it }
+        assertEquals(6, fast.requests.count { it == "d83333333" })
+        assertEquals(6, fast.requests.count { it == "d166666666" })
+        assertEquals("d166666666", fast.requests.last { it != "d0" })
+        // Six connections at 900 Mbit/s each, added up when the transport has no live byte count.
+        assertEquals(5.4e9, last!!.download!!, 0.1e9)
+        assertTrue(last!!.downBuckets.last().bytes == 1_000_000_000L)
 
         val metered = FakeLine(downMbps = 900.0, upMbps = 300.0)
         CfEngine(metered, { step, _ -> CfPacketLoss(step.packets, step.packets, step.packets, emptyList()) }, bigFiles = false).run { }
-        assertTrue(metered.requests.none { it == "d500000000" || it == "d1000000000" })
+        assertTrue(metered.requests.none { it == "d83333333" || it == "d166666666" })
 
-        // 1 GB at 150 Mbit/s would take 53 s: only the 500 MB file runs.
+        // 1 GB at 150 Mbit/s would take 53 s: only the 500 MB file runs, and then 1 GB at 900 Mbit/s fits.
         val mid = FakeLine(downMbps = 150.0, upMbps = 50.0)
         CfEngine(mid, { step, _ -> CfPacketLoss(step.packets, step.packets, step.packets, emptyList()) }).run { }
-        assertEquals(1, mid.requests.count { it == "d500000000" })
-        assertTrue(mid.requests.none { it == "d1000000000" })
+        assertEquals(6, mid.requests.count { it == "d83333333" })
+
+        val slow = FakeLine(downMbps = 50.0, upMbps = 20.0)
+        CfEngine(slow, { step, _ -> CfPacketLoss(step.packets, step.packets, step.packets, emptyList()) }).run { }
+        assertTrue(slow.requests.none { it == "d83333333" || it == "d166666666" })
+    }
+
+    /** Parallel speed: the bytes from 10 % to 90 % of the total, over that time. */
+    @Test fun parallelWindowRate() {
+        val ms = 1_000_000L
+        // 100 MB/s for 4 s, then a slow tail of 10 MB/s that is left out.
+        val samples = (0..40).map { i -> i * 100 * ms to i * 10_000_000L } + (1..10).map { i -> (4000 + i * 100) * ms to 400_000_000L + i * 1_000_000L }
+        assertEquals(800e6, CfMath.windowRate(samples, 410_000_000)!!, 1e6)
+        assertNull(CfMath.windowRate(samples.take(12), 100_000_000))
+        assertNull(CfMath.windowRate(emptyList(), 400_000_000))
     }
 
     @Test fun packetLossThroughTurnRelays() = runBlocking {

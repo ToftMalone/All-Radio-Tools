@@ -284,7 +284,8 @@ private fun LoadedMetric(label: String, icon: String, idle: Double?, down: Doubl
 
 private fun stepText(step: CfStep?, done: Int, s: CfSnapshot): String = when (step) {
     is CfStep.Latency -> S(R.string.latency_requests, done, step.packets)
-    is CfStep.Transfer -> S(R.string.requests, if (step.down) S(R.string.download) else S(R.string.upload), sizeLabel(step.bytes), done, step.count)
+    is CfStep.Transfer -> if (step.streams > 1) "${S(R.string.download)} ${sizeLabel(step.bytes)} · ${S(R.string.parallel_connections, step.streams)}"
+        else S(R.string.requests, if (step.down) S(R.string.download) else S(R.string.upload), sizeLabel(step.bytes), done, step.count)
     is CfStep.PacketLoss -> s.packetLossLive?.let { S(R.string.packet_loss_packets, it.sent, step.packets) } ?: S(R.string.packet_loss_connecting)
     null -> ""
 }

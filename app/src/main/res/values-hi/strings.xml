@@ -2357,4 +2357,5 @@
     <string name="max_service_info">"सेवा जानकारी का आकार"</string>
     <string name="instant_communication">"तुरंत संचार मोड"</string>
     <string name="wi_fi_aware_how_it_works">"Wi-Fi Aware (Neighbor Awareness Networking) फ़ोनों को बिना राउटर या इंटरनेट के एक-दूसरे को खोजने और सीधे बात करने देता है। Android केवल उन्हीं सेवाओं को खोजता है जिनका नाम वह जानता है, इसलिए यह टूल उन दूसरे फ़ोनों को खोजता है जिन पर यह खुला है। दोनों फ़ोनों पर Wi-Fi RTT होने पर उनके बीच की दूरी लगभग एक मीटर की सटीकता से मापी जाती है। हाथ हिलाने वाला बटन दोनों दिशाओं में लिंक जाँचने के लिए अभिवादन भेजता है।"</string>
+    <string name="parallel_connections">"%1$d समानांतर कनेक्शन"</string>
 </resources>

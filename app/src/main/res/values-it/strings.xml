@@ -2357,4 +2357,5 @@
     <string name="max_service_info">"Dimensione delle info del servizio"</string>
     <string name="instant_communication">"Modalità di comunicazione istantanea"</string>
     <string name="wi_fi_aware_how_it_works">"Wi-Fi Aware (Neighbor Awareness Networking) permette ai telefoni di trovarsi e comunicare direttamente, senza router né Internet. Android trova solo i servizi di cui conosce il nome, quindi questo strumento trova gli altri telefoni che lo hanno aperto. Con il Wi-Fi RTT su entrambi, la distanza tra loro è misurata con una precisione di circa un metro. Il pulsante saluto invia un ciao per provare il collegamento nei due sensi."</string>
+    <string name="parallel_connections">"%1$d connessioni in parallelo"</string>
 </resources>

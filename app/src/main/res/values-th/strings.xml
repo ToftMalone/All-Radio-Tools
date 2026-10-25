@@ -2300,4 +2300,5 @@
     <string name="max_service_info">"ขนาดข้อมูลบริการ"</string>
     <string name="instant_communication">"โหมดสื่อสารทันที"</string>
     <string name="wi_fi_aware_how_it_works">"Wi-Fi Aware (Neighbor Awareness Networking) ช่วยให้โทรศัพท์ค้นหากันและสื่อสารกันโดยตรงได้ โดยไม่ต้องใช้เราเตอร์หรืออินเทอร์เน็ต Android ค้นหาได้เฉพาะบริการที่รู้ชื่อเท่านั้น เครื่องมือนี้จึงค้นหาโทรศัพท์เครื่องอื่นที่เปิดเครื่องมือนี้อยู่ หากทั้งสองเครื่องรองรับ Wi-Fi RTT จะวัดระยะห่างได้แม่นยำราวหนึ่งเมตร ปุ่มโบกมือจะส่งคำทักทายเพื่อทดสอบการเชื่อมต่อทั้งสองทาง"</string>
+    <string name="parallel_connections">"การเชื่อมต่อแบบขนาน %1$d รายการ"</string>
 </resources>

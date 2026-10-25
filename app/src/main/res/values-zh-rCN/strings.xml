@@ -2300,4 +2300,5 @@
     <string name="max_service_info">"服务信息大小"</string>
     <string name="instant_communication">"即时通信模式"</string>
     <string name="wi_fi_aware_how_it_works">"Wi-Fi Aware（邻近感知网络）让手机无需路由器或互联网即可互相发现并直接通信。Android 只能找到它知道名称的服务，因此此工具会找到同样打开它的其他手机。若两部手机都支持 Wi-Fi RTT，它们之间的距离可精确到约 1 米。招手按钮会发送问候，用来双向测试连接。"</string>
+    <string name="parallel_connections">"%1$d 个并行连接"</string>
 </resources>
