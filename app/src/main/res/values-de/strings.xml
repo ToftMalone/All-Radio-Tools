@@ -2277,4 +2277,21 @@
         <item quantity="one">"Zähler"</item>
         <item quantity="other">"Zähler"</item>
     </plurals>
+    <string name="dsc_subtitle">"Schiffsrufe auf Kanal 70"</string>
+    <string name="dsc_heard">"Kanal 70 · 156,525 MHz · %1$d Notfall"</string>
+    <string name="dsc_listening">"Kanal 70 wird abgehört"</string>
+    <string name="dsc_none_yet">"Noch keine Rufe"</string>
+    <string name="dsc_none_yet_body">"Kanal 70 ist meistens still: ein Ruf dauert eine halbe Sekunde. Nahe einem Hafen oder einer Küstenfunkstelle sind einige Rufe pro Stunde zu erwarten (Tests, Routinerufe, Positionsabfragen); Notalarme sind selten. Sicht aufs Meer hilft."</string>
+    <string name="dsc_how_it_works">"Digital Selective Calling (DSC, ITU-R M.493) ist das Verfahren, mit dem Schiffe und Küstenfunkstellen einander rufen und Notalarme auf UKW-Kanal 70 auslösen, bevor sie auf einem Sprechkanal reden. Die App dekodiert es mit dem Code von OnAir: Jedes Symbol wird zweimal gesendet und ein Prüfzeichen schließt den Ruf ab, beschädigte Symbole werden also repariert und ein Ruf erscheint nur, wenn die Prüfung stimmt. Positionen sind die von den Schiffen gesendeten. Nur Empfang."</string>
+    <string name="dsc_kinds">"Notalarm|Notbestätigung|Notweiterleitung|Bestätigung Notweiterleitung|Testruf|Testbestätigung|Positionsaktualisierung|Positionsabfrage|Positionsantwort|Rufbestätigung|Dringlichkeitsruf|Sicherheitsruf|Routineruf"</string>
+    <string name="dsc_natures">"Feuer, Explosion|Wassereinbruch|Kollision|Grundberührung|Schlagseite, Kentern|Sinken|Manövrierunfähig, treibend|Nicht näher bezeichnet|Schiff verlassen|Piraterie, Überfall|Mensch über Bord|—|Seenotfunkbake"</string>
+    <string name="dsc_coast_station">"Küstenfunkstelle"</string>
+    <string name="dsc_all_ships">"alle Schiffe"</string>
+    <string name="dsc_to">"an %1$s"</string>
+    <string name="dsc_in_distress">"in Not: %1$s"</string>
+    <string name="dsc_channel">"Arbeitskanal %1$s"</string>
+    <plurals name="p_calls">
+        <item quantity="one">"Ruf"</item>
+        <item quantity="other">"Rufe"</item>
+    </plurals>
 </resources>

@@ -121,6 +121,7 @@ private fun groups(net: Network, connectedDevice: String?, servingLabel: String?
                 ToolEntry(Tool.Fpv, S(R.string.drones), S(R.string.analog_fpv_dji_and_rc_links)),
                 ToolEntry(Tool.Tpms, "TPMS", S(R.string.tyre_pressure_sensors_433_mhz)),
                 ToolEntry(Tool.Pocsag, "POCSAG", S(R.string.pagers_e_message_dapnet)),
+                ToolEntry(Tool.Dsc, "DSC", S(R.string.dsc_subtitle)),
                 ToolEntry(Tool.Wmbus, "Wireless M-Bus", S(R.string.wmbus_subtitle)),
                 ToolEntry(Tool.Flarm, "FLARM", S(R.string.flarm_subtitle)),
                 ToolEntry(Tool.Ism, "ISM", S(R.string.ism_subtitle)),

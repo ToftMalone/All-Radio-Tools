@@ -2221,4 +2221,20 @@
     <plurals name="p_meters">
         <item quantity="other">"台のメーター"</item>
     </plurals>
+    <string name="dsc_subtitle">"70 チャンネルの船舶呼出し"</string>
+    <string name="dsc_heard">"70 チャンネル · 156.525 MHz · 遭難 %1$d"</string>
+    <string name="dsc_listening">"70 チャンネルを受信中"</string>
+    <string name="dsc_none_yet">"まだ呼出しはありません"</string>
+    <string name="dsc_none_yet_body">"70 チャンネルはほとんど無音で、1 回の呼出しは 0.5 秒です。港や海岸局の近くでは 1 時間に数回(試験、通常呼出し、位置要求)が見込めます。遭難警報はまれです。海が見える場所が有利です。"</string>
+    <string name="dsc_how_it_works">"デジタル選択呼出(DSC、ITU-R M.493)は、船舶や海岸局が音声チャンネルで話す前に VHF 70 チャンネルで互いを呼び出し、遭難警報を出す方式です。アプリは OnAir のコードで解読します。各シンボルは 2 回送られ、検査文字で呼出しが終わるため、損傷したシンボルは修復され、検査に合格した呼出しだけを表示します。位置は船舶が送ったものです。受信のみ。"</string>
+    <string name="dsc_kinds">"遭難警報|遭難応答|遭難中継|遭難中継応答|試験呼出し|試験応答|位置更新|位置要求|位置応答|呼出し応答|緊急呼出し|安全呼出し|通常呼出し"</string>
+    <string name="dsc_natures">"火災・爆発|浸水|衝突|座礁|傾斜・転覆|沈没|航行不能・漂流|内容不明の遭難|退船|海賊・武装攻撃|落水者|—|EPIRB"</string>
+    <string name="dsc_coast_station">"海岸局"</string>
+    <string name="dsc_all_ships">"全船"</string>
+    <string name="dsc_to">"宛先 %1$s"</string>
+    <string name="dsc_in_distress">"遭難中: %1$s"</string>
+    <string name="dsc_channel">"通話チャンネル %1$s"</string>
+    <plurals name="p_calls">
+        <item quantity="other">"件の呼出し"</item>
+    </plurals>
 </resources>

@@ -2277,4 +2277,21 @@
         <item quantity="one">"contador"</item>
         <item quantity="other">"contadores"</item>
     </plurals>
+    <string name="dsc_subtitle">"Llamadas de buques en el canal 70"</string>
+    <string name="dsc_heard">"Canal 70 · 156,525 MHz · %1$d socorro"</string>
+    <string name="dsc_listening">"Escuchando el canal 70"</string>
+    <string name="dsc_none_yet">"Aún no hay llamadas"</string>
+    <string name="dsc_none_yet_body">"El canal 70 está en silencio casi siempre: una llamada dura medio segundo. Cerca de un puerto o una estación costera, espera unas pocas llamadas por hora (pruebas, rutina, peticiones de posición); las alertas de socorro son raras. Ver el mar ayuda."</string>
+    <string name="dsc_how_it_works">"La llamada selectiva digital (LSD, ITU-R M.493) es como buques y estaciones costeras se llaman y lanzan alertas de socorro en el canal VHF 70, antes de hablar en un canal de voz. La app la decodifica con el código de OnAir: cada símbolo se envía dos veces y un carácter de control cierra la llamada, así que los símbolos dañados se reparan y una llamada solo se muestra si su control es correcto. Las posiciones son las que envían los buques. Solo recepción."</string>
+    <string name="dsc_kinds">"Alerta de socorro|Acuse de socorro|Retransmisión de socorro|Acuse de retransmisión|Llamada de prueba|Acuse de prueba|Actualización de posición|Petición de posición|Respuesta de posición|Acuse de llamada|Llamada de urgencia|Llamada de seguridad|Llamada de rutina"</string>
+    <string name="dsc_natures">"Incendio, explosión|Inundación|Abordaje|Varada|Escora, zozobra|Hundimiento|Sin gobierno, a la deriva|Socorro no especificado|Abandono del buque|Piratería, ataque armado|Hombre al agua|—|Radiobaliza"</string>
+    <string name="dsc_coast_station">"estación costera"</string>
+    <string name="dsc_all_ships">"todos los buques"</string>
+    <string name="dsc_to">"a %1$s"</string>
+    <string name="dsc_in_distress">"en peligro: %1$s"</string>
+    <string name="dsc_channel">"canal de trabajo %1$s"</string>
+    <plurals name="p_calls">
+        <item quantity="one">"llamada"</item>
+        <item quantity="other">"llamadas"</item>
+    </plurals>
 </resources>

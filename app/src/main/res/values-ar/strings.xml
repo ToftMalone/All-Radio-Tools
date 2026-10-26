@@ -2501,4 +2501,25 @@
         <item quantity="many">"عدادًا"</item>
         <item quantity="other">"عداد"</item>
     </plurals>
+    <string name="dsc_subtitle">"نداءات السفن على القناة 70"</string>
+    <string name="dsc_heard">"القناة 70 · 156.525 ميغاهرتز · %1$d استغاثة"</string>
+    <string name="dsc_listening">"الاستماع إلى القناة 70"</string>
+    <string name="dsc_none_yet">"لا نداءات بعد"</string>
+    <string name="dsc_none_yet_body">"القناة 70 صامتة معظم الوقت: يستغرق النداء نصف ثانية. قرب ميناء أو محطة ساحلية توقع بضعة نداءات في الساعة (اختبارات، نداءات روتينية، طلبات موقع)؛ تنبيهات الاستغاثة نادرة. رؤية البحر تساعد."</string>
+    <string name="dsc_how_it_works">"النداء الانتقائي الرقمي (DSC، ITU-R M.493) هو طريقة السفن والمحطات الساحلية في نداء بعضها وإطلاق تنبيهات الاستغاثة على قناة VHF رقم 70 قبل التحدث على قناة صوتية. يفكه التطبيق بشيفرة OnAir: يُرسل كل رمز مرتين ويُختم النداء برمز تحقق، فتُصلح الرموز التالفة ولا يُعرض النداء إلا إذا نجح التحقق. المواقع هي التي ترسلها السفن. استقبال فقط."</string>
+    <string name="dsc_kinds">"تنبيه استغاثة|إقرار استغاثة|ترحيل استغاثة|إقرار ترحيل الاستغاثة|نداء اختبار|إقرار اختبار|تحديث موقع|طلب موقع|رد بالموقع|إقرار نداء|نداء عاجل|نداء سلامة|نداء روتيني"</string>
+    <string name="dsc_natures">"حريق، انفجار|غمر بالمياه|تصادم|جنوح|ميلان، انقلاب|غرق|معطلة وتنجرف|استغاثة غير محددة|ترك السفينة|قرصنة، هجوم مسلح|رجل في البحر|—|منارة طوارئ"</string>
+    <string name="dsc_coast_station">"محطة ساحلية"</string>
+    <string name="dsc_all_ships">"جميع السفن"</string>
+    <string name="dsc_to">"إلى %1$s"</string>
+    <string name="dsc_in_distress">"في استغاثة: %1$s"</string>
+    <string name="dsc_channel">"قناة العمل %1$s"</string>
+    <plurals name="p_calls">
+        <item quantity="zero">"نداء"</item>
+        <item quantity="one">"نداء"</item>
+        <item quantity="two">"نداءان"</item>
+        <item quantity="few">"نداءات"</item>
+        <item quantity="many">"نداءً"</item>
+        <item quantity="other">"نداء"</item>
+    </plurals>
 </resources>

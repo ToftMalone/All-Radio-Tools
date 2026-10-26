@@ -2277,4 +2277,21 @@
         <item quantity="one">"contatore"</item>
         <item quantity="other">"contatori"</item>
     </plurals>
+    <string name="dsc_subtitle">"Chiamate delle navi sul canale 70"</string>
+    <string name="dsc_heard">"Canale 70 · 156,525 MHz · %1$d soccorso"</string>
+    <string name="dsc_listening">"In ascolto sul canale 70"</string>
+    <string name="dsc_none_yet">"Nessuna chiamata per ora"</string>
+    <string name="dsc_none_yet_body">"Il canale 70 è quasi sempre silenzioso: una chiamata dura mezzo secondo. Vicino a un porto o a una stazione costiera, attendi qualche chiamata all\'ora (test, routine, richieste di posizione); gli allarmi di soccorso sono rari. La vista sul mare aiuta."</string>
+    <string name="dsc_how_it_works">"La chiamata selettiva digitale (DSC, ITU-R M.493) è il modo in cui navi e stazioni costiere si chiamano e lanciano allarmi di soccorso sul canale VHF 70, prima di parlare su un canale fonia. L\'app la decodifica col codice di OnAir: ogni simbolo è inviato due volte e un carattere di controllo chiude la chiamata, quindi i simboli danneggiati vengono riparati e una chiamata appare solo se il controllo è giusto. Le posizioni sono quelle inviate dalle navi. Solo ricezione."</string>
+    <string name="dsc_kinds">"Allarme di soccorso|Conferma di soccorso|Ritrasmissione di soccorso|Conferma di ritrasmissione|Chiamata di prova|Conferma di prova|Aggiornamento di posizione|Richiesta di posizione|Risposta di posizione|Conferma di chiamata|Chiamata di urgenza|Chiamata di sicurezza|Chiamata di routine"</string>
+    <string name="dsc_natures">"Incendio, esplosione|Allagamento|Collisione|Incaglio|Sbandamento, capovolgimento|Affondamento|In avaria, alla deriva|Soccorso non precisato|Abbandono nave|Pirateria, attacco armato|Uomo in mare|—|Radioboa"</string>
+    <string name="dsc_coast_station">"stazione costiera"</string>
+    <string name="dsc_all_ships">"tutte le navi"</string>
+    <string name="dsc_to">"a %1$s"</string>
+    <string name="dsc_in_distress">"in pericolo: %1$s"</string>
+    <string name="dsc_channel">"canale di lavoro %1$s"</string>
+    <plurals name="p_calls">
+        <item quantity="one">"chiamata"</item>
+        <item quantity="other">"chiamate"</item>
+    </plurals>
 </resources>

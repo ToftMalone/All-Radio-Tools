@@ -2389,4 +2389,23 @@
         <item quantity="many">"liczników"</item>
         <item quantity="other">"licznika"</item>
     </plurals>
+    <string name="dsc_subtitle">"Wywołania statków na kanale 70"</string>
+    <string name="dsc_heard">"Kanał 70 · 156,525 MHz · niebezpieczeństwo: %1$d"</string>
+    <string name="dsc_listening">"Nasłuch kanału 70"</string>
+    <string name="dsc_none_yet">"Brak wywołań"</string>
+    <string name="dsc_none_yet_body">"Kanał 70 przez większość czasu milczy: wywołanie trwa pół sekundy. W pobliżu portu lub stacji brzegowej można spodziewać się kilku wywołań na godzinę (testy, rutyna, zapytania o pozycję); alarmy o niebezpieczeństwie są rzadkie. Widok na morze pomaga."</string>
+    <string name="dsc_how_it_works">"Cyfrowe wywołanie selektywne (DSC, ITU-R M.493) to sposób, w jaki statki i stacje brzegowe wywołują się i nadają alarmy o niebezpieczeństwie na kanale VHF 70, zanim przejdą na kanał głosowy. Aplikacja dekoduje je kodem OnAir: każdy symbol jest wysyłany dwa razy, a znak kontrolny zamyka wywołanie, więc uszkodzone symbole są naprawiane, a wywołanie pojawia się tylko po pozytywnej kontroli. Pozycje są tymi wysłanymi przez statki. Tylko odbiór."</string>
+    <string name="dsc_kinds">"Alarm o niebezpieczeństwie|Potwierdzenie niebezpieczeństwa|Retransmisja alarmu|Potwierdzenie retransmisji|Wywołanie testowe|Potwierdzenie testu|Aktualizacja pozycji|Zapytanie o pozycję|Odpowiedź z pozycją|Potwierdzenie wywołania|Wywołanie pilne|Wywołanie bezpieczeństwa|Wywołanie rutynowe"</string>
+    <string name="dsc_natures">"Pożar, wybuch|Zalewanie|Kolizja|Wejście na mieliznę|Przechył, wywrócenie|Tonięcie|Niesterowny, dryfuje|Nieokreślone niebezpieczeństwo|Opuszczanie statku|Piractwo, napaść|Człowiek za burtą|—|Radiopława"</string>
+    <string name="dsc_coast_station">"stacja brzegowa"</string>
+    <string name="dsc_all_ships">"wszystkie statki"</string>
+    <string name="dsc_to">"do %1$s"</string>
+    <string name="dsc_in_distress">"w niebezpieczeństwie: %1$s"</string>
+    <string name="dsc_channel">"kanał roboczy %1$s"</string>
+    <plurals name="p_calls">
+        <item quantity="one">"wywołanie"</item>
+        <item quantity="few">"wywołania"</item>
+        <item quantity="many">"wywołań"</item>
+        <item quantity="other">"wywołania"</item>
+    </plurals>
 </resources>

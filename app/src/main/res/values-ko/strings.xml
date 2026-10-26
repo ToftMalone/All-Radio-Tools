@@ -2221,4 +2221,20 @@
     <plurals name="p_meters">
         <item quantity="other">"대의 계량기"</item>
     </plurals>
+    <string name="dsc_subtitle">"70번 채널의 선박 호출"</string>
+    <string name="dsc_heard">"70번 채널 · 156.525MHz · 조난 %1$d"</string>
+    <string name="dsc_listening">"70번 채널 수신 중"</string>
+    <string name="dsc_none_yet">"아직 호출이 없습니다"</string>
+    <string name="dsc_none_yet_body">"70번 채널은 대부분 조용하며, 호출 한 번은 0.5초입니다. 항구나 해안국 근처에서는 시간당 몇 번(시험, 일반 호출, 위치 요청)을 기대할 수 있습니다. 조난 경보는 드뭅니다. 바다가 보이면 도움이 됩니다."</string>
+    <string name="dsc_how_it_works">"디지털 선택 호출(DSC, ITU-R M.493)은 선박과 해안국이 음성 채널로 대화하기 전에 VHF 70번 채널에서 서로 호출하고 조난 경보를 보내는 방식입니다. 앱은 OnAir의 코드로 해독합니다. 각 심볼은 두 번 전송되고 검사 문자가 호출을 끝내므로 손상된 심볼을 복구하며, 검사를 통과한 호출만 표시합니다. 위치는 선박이 보낸 값입니다. 수신 전용."</string>
+    <string name="dsc_kinds">"조난 경보|조난 수신 확인|조난 중계|조난 중계 확인|시험 호출|시험 확인|위치 갱신|위치 요청|위치 응답|호출 확인|긴급 호출|안전 호출|일반 호출"</string>
+    <string name="dsc_natures">"화재·폭발|침수|충돌|좌초|경사·전복|침몰|조종 불능·표류|불특정 조난|퇴선|해적·무장 공격|사람이 물에 빠짐|—|EPIRB"</string>
+    <string name="dsc_coast_station">"해안국"</string>
+    <string name="dsc_all_ships">"모든 선박"</string>
+    <string name="dsc_to">"수신 %1$s"</string>
+    <string name="dsc_in_distress">"조난 중: %1$s"</string>
+    <string name="dsc_channel">"작업 채널 %1$s"</string>
+    <plurals name="p_calls">
+        <item quantity="other">"건의 호출"</item>
+    </plurals>
 </resources>

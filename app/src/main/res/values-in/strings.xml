@@ -2221,4 +2221,20 @@
     <plurals name="p_meters">
         <item quantity="other">"meteran"</item>
     </plurals>
+    <string name="dsc_subtitle">"Panggilan kapal di kanal 70"</string>
+    <string name="dsc_heard">"Kanal 70 · 156,525 MHz · %1$d darurat"</string>
+    <string name="dsc_listening">"Mendengarkan kanal 70"</string>
+    <string name="dsc_none_yet">"Belum ada panggilan"</string>
+    <string name="dsc_none_yet_body">"Kanal 70 hampir selalu sunyi: satu panggilan berlangsung setengah detik. Dekat pelabuhan atau stasiun pantai, harapkan beberapa panggilan per jam (uji, rutin, permintaan posisi); peringatan darurat jarang. Pandangan ke laut membantu."</string>
+    <string name="dsc_how_it_works">"Digital Selective Calling (DSC, ITU-R M.493) adalah cara kapal dan stasiun pantai saling memanggil dan mengirim peringatan darurat di kanal VHF 70 sebelum berbicara di kanal suara. Aplikasi mendekodenya dengan kode OnAir: setiap simbol dikirim dua kali dan karakter pemeriksa menutup panggilan, sehingga simbol rusak diperbaiki dan panggilan hanya ditampilkan bila pemeriksaannya lolos. Posisi adalah yang dikirim kapal. Hanya menerima."</string>
+    <string name="dsc_kinds">"Peringatan darurat|Konfirmasi darurat|Relai darurat|Konfirmasi relai darurat|Panggilan uji|Konfirmasi uji|Pembaruan posisi|Permintaan posisi|Jawaban posisi|Konfirmasi panggilan|Panggilan mendesak|Panggilan keselamatan|Panggilan rutin"</string>
+    <string name="dsc_natures">"Kebakaran, ledakan|Kebocoran|Tabrakan|Kandas|Miring, terbalik|Tenggelam|Mati mesin, hanyut|Darurat tak disebut|Meninggalkan kapal|Perompakan, serangan|Orang jatuh ke laut|—|EPIRB"</string>
+    <string name="dsc_coast_station">"stasiun pantai"</string>
+    <string name="dsc_all_ships">"semua kapal"</string>
+    <string name="dsc_to">"ke %1$s"</string>
+    <string name="dsc_in_distress">"dalam bahaya: %1$s"</string>
+    <string name="dsc_channel">"kanal kerja %1$s"</string>
+    <plurals name="p_calls">
+        <item quantity="other">"panggilan"</item>
+    </plurals>
 </resources>

@@ -2333,4 +2333,22 @@
         <item quantity="few">"contoare"</item>
         <item quantity="other">"de contoare"</item>
     </plurals>
+    <string name="dsc_subtitle">"Apeluri ale navelor pe canalul 70"</string>
+    <string name="dsc_heard">"Canal 70 · 156,525 MHz · %1$d pericol"</string>
+    <string name="dsc_listening">"Ascultă canalul 70"</string>
+    <string name="dsc_none_yet">"Încă niciun apel"</string>
+    <string name="dsc_none_yet_body">"Canalul 70 tace aproape mereu: un apel durează o jumătate de secundă. Lângă un port sau o stație de coastă, așteptați câteva apeluri pe oră (teste, apeluri de rutină, cereri de poziție); alertele de pericol sunt rare. Vederea spre mare ajută."</string>
+    <string name="dsc_how_it_works">"Apelul selectiv digital (DSC, ITU-R M.493) este modul în care navele și stațiile de coastă se apelează și lansează alerte de pericol pe canalul VHF 70, înainte de a vorbi pe un canal de voce. Aplicația îl decodează cu codul OnAir: fiecare simbol este trimis de două ori și un caracter de control încheie apelul, deci simbolurile deteriorate sunt reparate și un apel apare doar dacă verificarea trece. Pozițiile sunt cele trimise de nave. Doar recepție."</string>
+    <string name="dsc_kinds">"Alertă de pericol|Confirmare de pericol|Retransmisie de pericol|Confirmare de retransmisie|Apel de test|Confirmare de test|Actualizare de poziție|Cerere de poziție|Răspuns de poziție|Confirmare de apel|Apel de urgență|Apel de siguranță|Apel de rutină"</string>
+    <string name="dsc_natures">"Incendiu, explozie|Inundare|Coliziune|Eșuare|Înclinare, răsturnare|Scufundare|Avariată, în derivă|Pericol nespecificat|Abandonarea navei|Piraterie, atac armat|Om la apă|—|Radiobaliză"</string>
+    <string name="dsc_coast_station">"stație de coastă"</string>
+    <string name="dsc_all_ships">"toate navele"</string>
+    <string name="dsc_to">"către %1$s"</string>
+    <string name="dsc_in_distress">"în pericol: %1$s"</string>
+    <string name="dsc_channel">"canal de lucru %1$s"</string>
+    <plurals name="p_calls">
+        <item quantity="one">"apel"</item>
+        <item quantity="few">"apeluri"</item>
+        <item quantity="other">"de apeluri"</item>
+    </plurals>
 </resources>

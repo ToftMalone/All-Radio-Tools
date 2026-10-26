@@ -2277,4 +2277,21 @@
         <item quantity="one">"contador"</item>
         <item quantity="other">"contadores"</item>
     </plurals>
+    <string name="dsc_subtitle">"Chamadas de navios no canal 70"</string>
+    <string name="dsc_heard">"Canal 70 · 156,525 MHz · %1$d socorro"</string>
+    <string name="dsc_listening">"A ouvir o canal 70"</string>
+    <string name="dsc_none_yet">"Ainda sem chamadas"</string>
+    <string name="dsc_none_yet_body">"O canal 70 está quase sempre em silêncio: uma chamada dura meio segundo. Perto de um porto ou de uma estação costeira, conte com algumas chamadas por hora (testes, rotina, pedidos de posição); os alertas de socorro são raros. Ter vista para o mar ajuda."</string>
+    <string name="dsc_how_it_works">"A chamada seletiva digital (DSC, ITU-R M.493) é a forma como navios e estações costeiras se chamam e lançam alertas de socorro no canal VHF 70, antes de falar num canal de voz. A app descodifica-a com o código do OnAir: cada símbolo é enviado duas vezes e um carácter de controlo fecha a chamada, por isso os símbolos danificados são reparados e uma chamada só aparece se o controlo estiver certo. As posições são as enviadas pelos navios. Só receção."</string>
+    <string name="dsc_kinds">"Alerta de socorro|Confirmação de socorro|Retransmissão de socorro|Confirmação de retransmissão|Chamada de teste|Confirmação de teste|Atualização de posição|Pedido de posição|Resposta de posição|Confirmação de chamada|Chamada de urgência|Chamada de segurança|Chamada de rotina"</string>
+    <string name="dsc_natures">"Incêndio, explosão|Alagamento|Abalroamento|Encalhe|Adornamento, soçobro|Afundamento|Sem governo, à deriva|Socorro não especificado|Abandono do navio|Pirataria, ataque armado|Homem ao mar|—|Radiobaliza"</string>
+    <string name="dsc_coast_station">"estação costeira"</string>
+    <string name="dsc_all_ships">"todos os navios"</string>
+    <string name="dsc_to">"para %1$s"</string>
+    <string name="dsc_in_distress">"em perigo: %1$s"</string>
+    <string name="dsc_channel">"canal de trabalho %1$s"</string>
+    <plurals name="p_calls">
+        <item quantity="one">"chamada"</item>
+        <item quantity="other">"chamadas"</item>
+    </plurals>
 </resources>

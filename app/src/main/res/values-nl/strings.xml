@@ -2277,4 +2277,21 @@
         <item quantity="one">"meter"</item>
         <item quantity="other">"meters"</item>
     </plurals>
+    <string name="dsc_subtitle">"Scheepsoproepen op kanaal 70"</string>
+    <string name="dsc_heard">"Kanaal 70 · 156,525 MHz · %1$d nood"</string>
+    <string name="dsc_listening">"Luisteren op kanaal 70"</string>
+    <string name="dsc_none_yet">"Nog geen oproepen"</string>
+    <string name="dsc_none_yet_body">"Kanaal 70 is meestal stil: een oproep duurt een halve seconde. Bij een haven of kuststation zijn een paar oproepen per uur te verwachten (tests, routine, positieverzoeken); noodalarmen zijn zeldzaam. Zicht op zee helpt."</string>
+    <string name="dsc_how_it_works">"Digital Selective Calling (DSC, ITU-R M.493) is hoe schepen en kuststations elkaar oproepen en noodalarmen geven op VHF-kanaal 70, voordat ze op een spraakkanaal praten. De app decodeert het met de code van OnAir: elk symbool wordt twee keer verzonden en een controleteken sluit de oproep af, dus beschadigde symbolen worden hersteld en een oproep verschijnt alleen als de controle klopt. Posities zijn die welke de schepen zenden. Alleen ontvangst."</string>
+    <string name="dsc_kinds">"Noodalarm|Noodbevestiging|Noodrelais|Bevestiging noodrelais|Testoproep|Testbevestiging|Positie-update|Positieverzoek|Positieantwoord|Oproepbevestiging|Spoedoproep|Veiligheidsoproep|Routineoproep"</string>
+    <string name="dsc_natures">"Brand, explosie|Waterlek|Aanvaring|Aan de grond|Slagzij, kapseizen|Zinken|Stuurloos, drijvend|Onbepaalde nood|Schip verlaten|Piraterij, gewapende aanval|Man overboord|—|Noodbaken"</string>
+    <string name="dsc_coast_station">"kuststation"</string>
+    <string name="dsc_all_ships">"alle schepen"</string>
+    <string name="dsc_to">"aan %1$s"</string>
+    <string name="dsc_in_distress">"in nood: %1$s"</string>
+    <string name="dsc_channel">"werkkanaal %1$s"</string>
+    <plurals name="p_calls">
+        <item quantity="one">"oproep"</item>
+        <item quantity="other">"oproepen"</item>
+    </plurals>
 </resources>

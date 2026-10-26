@@ -2221,4 +2221,20 @@
     <plurals name="p_meters">
         <item quantity="other">"đồng hồ"</item>
     </plurals>
+    <string name="dsc_subtitle">"Cuộc gọi tàu trên kênh 70"</string>
+    <string name="dsc_heard">"Kênh 70 · 156,525 MHz · %1$d cấp cứu"</string>
+    <string name="dsc_listening">"Đang nghe kênh 70"</string>
+    <string name="dsc_none_yet">"Chưa có cuộc gọi"</string>
+    <string name="dsc_none_yet_body">"Kênh 70 hầu như im lặng: một cuộc gọi kéo dài nửa giây. Gần cảng hoặc đài duyên hải, có thể có vài cuộc gọi mỗi giờ (thử, thường lệ, hỏi vị trí); báo động cấp cứu rất hiếm. Nhìn ra biển sẽ có ích."</string>
+    <string name="dsc_how_it_works">"Gọi chọn lọc số (DSC, ITU-R M.493) là cách tàu và đài duyên hải gọi nhau và phát báo động cấp cứu trên kênh VHF 70 trước khi nói trên kênh thoại. Ứng dụng giải mã bằng mã của OnAir: mỗi ký hiệu được gửi hai lần và một ký tự kiểm tra kết thúc cuộc gọi, nên ký hiệu hỏng được sửa và chỉ hiện cuộc gọi khi kiểm tra đúng. Vị trí là vị trí tàu gửi. Chỉ thu."</string>
+    <string name="dsc_kinds">"Báo động cấp cứu|Xác nhận cấp cứu|Chuyển tiếp cấp cứu|Xác nhận chuyển tiếp|Cuộc gọi thử|Xác nhận thử|Cập nhật vị trí|Hỏi vị trí|Trả lời vị trí|Xác nhận cuộc gọi|Cuộc gọi khẩn cấp|Cuộc gọi an toàn|Cuộc gọi thường lệ"</string>
+    <string name="dsc_natures">"Cháy, nổ|Ngập nước|Đâm va|Mắc cạn|Nghiêng, lật|Chìm|Hỏng, trôi dạt|Cấp cứu không rõ|Bỏ tàu|Cướp biển, tấn công|Người rơi xuống biển|—|EPIRB"</string>
+    <string name="dsc_coast_station">"đài duyên hải"</string>
+    <string name="dsc_all_ships">"mọi tàu"</string>
+    <string name="dsc_to">"đến %1$s"</string>
+    <string name="dsc_in_distress">"gặp nạn: %1$s"</string>
+    <string name="dsc_channel">"kênh làm việc %1$s"</string>
+    <plurals name="p_calls">
+        <item quantity="other">"cuộc gọi"</item>
+    </plurals>
 </resources>

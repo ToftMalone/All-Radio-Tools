@@ -2221,4 +2221,20 @@
     <plurals name="p_meters">
         <item quantity="other">"台表计"</item>
     </plurals>
+    <string name="dsc_subtitle">"70 频道上的船舶呼叫"</string>
+    <string name="dsc_heard">"70 频道 · 156.525 MHz · 遇险 %1$d"</string>
+    <string name="dsc_listening">"正在接收 70 频道"</string>
+    <string name="dsc_none_yet">"暂无呼叫"</string>
+    <string name="dsc_none_yet_body">"70 频道大多数时间是安静的：一次呼叫只有半秒。在港口或海岸电台附近，每小时可能有几次呼叫(测试、常规呼叫、位置请求)；遇险报警很少见。能看到海面会有帮助。"</string>
+    <string name="dsc_how_it_works">"数字选择性呼叫(DSC，ITU-R M.493)是船舶和海岸电台在转到话音信道前，于 VHF 70 频道互相呼叫和发出遇险报警的方式。本应用用 OnAir 的代码解码：每个符号发送两次，并以校验字符结束呼叫，因此受损符号会被修复，只有通过校验的呼叫才会显示。位置为船舶发送的位置。仅接收。"</string>
+    <string name="dsc_kinds">"遇险报警|遇险确认|遇险转发|遇险转发确认|测试呼叫|测试确认|位置更新|位置请求|位置回复|呼叫确认|紧急呼叫|安全呼叫|常规呼叫"</string>
+    <string name="dsc_natures">"火灾、爆炸|进水|碰撞|搁浅|倾斜、倾覆|沉没|失控漂流|未说明的遇险|弃船|海盗、武装袭击|人员落水|—|EPIRB"</string>
+    <string name="dsc_coast_station">"海岸电台"</string>
+    <string name="dsc_all_ships">"所有船舶"</string>
+    <string name="dsc_to">"至 %1$s"</string>
+    <string name="dsc_in_distress">"遇险方: %1$s"</string>
+    <string name="dsc_channel">"工作信道 %1$s"</string>
+    <plurals name="p_calls">
+        <item quantity="other">"次呼叫"</item>
+    </plurals>
 </resources>

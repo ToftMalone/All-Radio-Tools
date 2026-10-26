@@ -2333,4 +2333,22 @@
         <item quantity="other">"compteurs"</item>
         <item quantity="many">"compteurs"</item>
     </plurals>
+    <string name="dsc_subtitle">"Appels des navires sur le canal 70"</string>
+    <string name="dsc_heard">"Canal 70 · 156,525 MHz · %1$d détresse"</string>
+    <string name="dsc_listening">"Écoute du canal 70"</string>
+    <string name="dsc_none_yet">"Aucun appel pour l\'instant"</string>
+    <string name="dsc_none_yet_body">"Le canal 70 est silencieux la plupart du temps : un appel dure une demi-seconde. Près d\'un port ou d\'une station côtière, comptez quelques appels par heure (tests, appels de routine, demandes de position) ; les alertes de détresse sont rares. Une vue sur la mer aide."</string>
+    <string name="dsc_how_it_works">"L\'appel sélectif numérique (ASN, ITU-R M.493) est la façon dont les navires et les stations côtières s\'appellent et lancent les alertes de détresse sur le canal VHF 70, avant de parler sur un canal phonie. L\'application le décode avec le code d\'OnAir : chaque symbole est envoyé deux fois et un caractère de contrôle termine l\'appel, les symboles abîmés sont donc réparés et un appel n\'est affiché que si son contrôle est bon. Les positions sont celles envoyées par les navires. Réception seule."</string>
+    <string name="dsc_kinds">"Alerte de détresse|Accusé de détresse|Relais de détresse|Accusé de relais de détresse|Appel de test|Accusé de test|Mise à jour de position|Demande de position|Réponse de position|Accusé d\'appel|Appel d\'urgence|Appel de sécurité|Appel de routine"</string>
+    <string name="dsc_natures">"Incendie, explosion|Voie d\'eau|Abordage|Échouement|Gîte, chavirement|Naufrage|Avarie, à la dérive|Détresse non précisée|Abandon du navire|Piraterie, attaque armée|Homme à la mer|—|Balise de détresse"</string>
+    <string name="dsc_coast_station">"station côtière"</string>
+    <string name="dsc_all_ships">"tous navires"</string>
+    <string name="dsc_to">"vers %1$s"</string>
+    <string name="dsc_in_distress">"en détresse : %1$s"</string>
+    <string name="dsc_channel">"canal de travail %1$s"</string>
+    <plurals name="p_calls">
+        <item quantity="one">"appel"</item>
+        <item quantity="other">"appels"</item>
+        <item quantity="many">"appels"</item>
+    </plurals>
 </resources>

@@ -2389,4 +2389,23 @@
         <item quantity="many">"měřidla"</item>
         <item quantity="other">"měřidel"</item>
     </plurals>
+    <string name="dsc_subtitle">"Volání lodí na kanálu 70"</string>
+    <string name="dsc_heard">"Kanál 70 · 156,525 MHz · tíseň: %1$d"</string>
+    <string name="dsc_listening">"Poslech kanálu 70"</string>
+    <string name="dsc_none_yet">"Zatím žádné volání"</string>
+    <string name="dsc_none_yet_body">"Kanál 70 většinou mlčí: volání trvá půl sekundy. U přístavu nebo pobřežní stanice čekejte pár volání za hodinu (testy, běžná volání, dotazy na polohu); tísňové poplachy jsou vzácné. Pomůže výhled na moře."</string>
+    <string name="dsc_how_it_works">"Digitální selektivní volání (DSC, ITU-R M.493) je způsob, jak se lodě a pobřežní stanice volají a vyhlašují tísňové poplachy na kanálu VHF 70, než přejdou na hlasový kanál. Aplikace ho dekóduje kódem OnAir: každý symbol se posílá dvakrát a volání uzavírá kontrolní znak, takže poškozené symboly se opraví a volání se zobrazí jen při úspěšné kontrole. Polohy jsou ty, které lodě posílají. Pouze příjem."</string>
+    <string name="dsc_kinds">"Tísňový poplach|Potvrzení tísně|Předání tísně|Potvrzení předání tísně|Zkušební volání|Potvrzení zkoušky|Aktualizace polohy|Dotaz na polohu|Odpověď s polohou|Potvrzení volání|Naléhavé volání|Bezpečnostní volání|Běžné volání"</string>
+    <string name="dsc_natures">"Požár, výbuch|Zaplavení|Srážka|Najetí na mělčinu|Náklon, převrácení|Potápění|Neovladatelná, unášená|Neurčená tíseň|Opouštění lodi|Pirátství, ozbrojený útok|Muž přes palubu|—|Nouzový maják"</string>
+    <string name="dsc_coast_station">"pobřežní stanice"</string>
+    <string name="dsc_all_ships">"všechny lodě"</string>
+    <string name="dsc_to">"pro %1$s"</string>
+    <string name="dsc_in_distress">"v tísni: %1$s"</string>
+    <string name="dsc_channel">"pracovní kanál %1$s"</string>
+    <plurals name="p_calls">
+        <item quantity="one">"volání"</item>
+        <item quantity="few">"volání"</item>
+        <item quantity="many">"volání"</item>
+        <item quantity="other">"volání"</item>
+    </plurals>
 </resources>

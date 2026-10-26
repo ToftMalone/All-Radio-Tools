@@ -2278,4 +2278,21 @@
         <item quantity="one">"meter"</item>
         <item quantity="other">"meters"</item>
     </plurals>
+    <string name="dsc_subtitle">"Ship calls on channel 70"</string>
+    <string name="dsc_heard">"Channel 70 · 156.525 MHz · %1$d distress"</string>
+    <string name="dsc_listening">"Listening on channel 70"</string>
+    <string name="dsc_none_yet">"No call yet"</string>
+    <string name="dsc_none_yet_body">"Channel 70 is silent most of the time: a call lasts half a second. Near a port or a coast station, expect a few calls an hour (tests, routine calls, position requests); distress alerts are rare. A view of the sea helps."</string>
+    <string name="dsc_how_it_works">"Digital Selective Calling (ITU-R M.493) is how ships and coast stations call each other and raise distress alerts on VHF channel 70, before talking on a voice channel. The app decodes it with OnAir\'s code: every symbol is sent twice and a check character closes the call, so damaged symbols are repaired and a call is shown only when its check passes. Positions are those the ships send. Receive only: never call back from this information."</string>
+    <string name="dsc_kinds">"Distress alert|Distress acknowledgement|Distress relay|Distress relay acknowledgement|Test call|Test acknowledgement|Position update|Position request|Position reply|Call acknowledgement|Urgency call|Safety call|Routine call"</string>
+    <string name="dsc_natures">"Fire, explosion|Flooding|Collision|Grounding|Listing, capsizing|Sinking|Disabled and adrift|Undesignated distress|Abandoning ship|Piracy, armed attack|Man overboard|—|EPIRB"</string>
+    <string name="dsc_coast_station">"coast station"</string>
+    <string name="dsc_all_ships">"all ships"</string>
+    <string name="dsc_to">"to %1$s"</string>
+    <string name="dsc_in_distress">"in distress: %1$s"</string>
+    <string name="dsc_channel">"working channel %1$s"</string>
+    <plurals name="p_calls">
+        <item quantity="one">"call"</item>
+        <item quantity="other">"calls"</item>
+    </plurals>
 </resources>

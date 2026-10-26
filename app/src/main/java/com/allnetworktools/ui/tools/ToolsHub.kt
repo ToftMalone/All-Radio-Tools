@@ -44,43 +44,46 @@ class ToolsHub(private val app: AntApplication, private val scope: CoroutineScop
     val unknownTrackers get() = com.allnetworktools.data.TrackerGuard.controller(app)
     // One HackRF, one tool at a time: starting one stops the other.
     val spectrum: com.allnetworktools.ui.pages.sdr.SpectrumController by lazy {
-        com.allnetworktools.ui.pages.sdr.SpectrumController(app.sdr, scope) { adsb.stop(); sonde.stop(); ais.stop(); aprs.stop(); meteor.stop(); fpv.stop(); acars.stop(); tpms.stop(); pocsag.stop(); ism.stop(); flarm.stop(); wmbus.stop() }
+        com.allnetworktools.ui.pages.sdr.SpectrumController(app.sdr, scope) { adsb.stop(); sonde.stop(); ais.stop(); aprs.stop(); meteor.stop(); fpv.stop(); acars.stop(); tpms.stop(); pocsag.stop(); ism.stop(); flarm.stop(); wmbus.stop(); dsc.stop() }
     }
     val adsb: com.allnetworktools.ui.pages.sdr.AdsbController by lazy {
-        com.allnetworktools.ui.pages.sdr.AdsbController(app.sdr, scope) { spectrum.stop(); sonde.stop(); ais.stop(); aprs.stop(); meteor.stop(); fpv.stop(); acars.stop(); tpms.stop(); pocsag.stop(); ism.stop(); flarm.stop(); wmbus.stop() }
+        com.allnetworktools.ui.pages.sdr.AdsbController(app.sdr, scope) { spectrum.stop(); sonde.stop(); ais.stop(); aprs.stop(); meteor.stop(); fpv.stop(); acars.stop(); tpms.stop(); pocsag.stop(); ism.stop(); flarm.stop(); wmbus.stop(); dsc.stop() }
     }
     val sonde: com.allnetworktools.ui.pages.sdr.SondeController by lazy {
-        com.allnetworktools.ui.pages.sdr.SondeController(app.sdr, scope) { spectrum.stop(); adsb.stop(); ais.stop(); aprs.stop(); meteor.stop(); fpv.stop(); acars.stop(); tpms.stop(); pocsag.stop(); ism.stop(); flarm.stop(); wmbus.stop() }
+        com.allnetworktools.ui.pages.sdr.SondeController(app.sdr, scope) { spectrum.stop(); adsb.stop(); ais.stop(); aprs.stop(); meteor.stop(); fpv.stop(); acars.stop(); tpms.stop(); pocsag.stop(); ism.stop(); flarm.stop(); wmbus.stop(); dsc.stop() }
     }
     val ais: com.allnetworktools.ui.pages.sdr.AisController by lazy {
-        com.allnetworktools.ui.pages.sdr.AisController(app.sdr, scope) { spectrum.stop(); adsb.stop(); sonde.stop(); aprs.stop(); meteor.stop(); fpv.stop(); acars.stop(); tpms.stop(); pocsag.stop(); ism.stop(); flarm.stop(); wmbus.stop() }
+        com.allnetworktools.ui.pages.sdr.AisController(app.sdr, scope) { spectrum.stop(); adsb.stop(); sonde.stop(); aprs.stop(); meteor.stop(); fpv.stop(); acars.stop(); tpms.stop(); pocsag.stop(); ism.stop(); flarm.stop(); wmbus.stop(); dsc.stop() }
     }
     val aprs: com.allnetworktools.ui.pages.sdr.AprsController by lazy {
-        com.allnetworktools.ui.pages.sdr.AprsController(app.sdr, scope) { spectrum.stop(); adsb.stop(); sonde.stop(); ais.stop(); meteor.stop(); fpv.stop(); acars.stop(); tpms.stop(); pocsag.stop(); ism.stop(); flarm.stop(); wmbus.stop() }
+        com.allnetworktools.ui.pages.sdr.AprsController(app.sdr, scope) { spectrum.stop(); adsb.stop(); sonde.stop(); ais.stop(); meteor.stop(); fpv.stop(); acars.stop(); tpms.stop(); pocsag.stop(); ism.stop(); flarm.stop(); wmbus.stop(); dsc.stop() }
     }
     val fpv: com.allnetworktools.ui.pages.sdr.FpvController by lazy {
-        com.allnetworktools.ui.pages.sdr.FpvController(app.sdr, scope) { spectrum.stop(); adsb.stop(); sonde.stop(); ais.stop(); aprs.stop(); meteor.stop(); acars.stop(); tpms.stop(); pocsag.stop(); ism.stop(); flarm.stop(); wmbus.stop() }
+        com.allnetworktools.ui.pages.sdr.FpvController(app.sdr, scope) { spectrum.stop(); adsb.stop(); sonde.stop(); ais.stop(); aprs.stop(); meteor.stop(); acars.stop(); tpms.stop(); pocsag.stop(); ism.stop(); flarm.stop(); wmbus.stop(); dsc.stop() }
     }
     val acars: com.allnetworktools.ui.pages.sdr.AcarsController by lazy {
-        com.allnetworktools.ui.pages.sdr.AcarsController(app.sdr, scope) { spectrum.stop(); adsb.stop(); sonde.stop(); ais.stop(); aprs.stop(); fpv.stop(); meteor.stop(); tpms.stop(); pocsag.stop(); ism.stop(); flarm.stop(); wmbus.stop() }
+        com.allnetworktools.ui.pages.sdr.AcarsController(app.sdr, scope) { spectrum.stop(); adsb.stop(); sonde.stop(); ais.stop(); aprs.stop(); fpv.stop(); meteor.stop(); tpms.stop(); pocsag.stop(); ism.stop(); flarm.stop(); wmbus.stop(); dsc.stop() }
     }
     val meteor: com.allnetworktools.ui.pages.sdr.MeteorController by lazy {
-        com.allnetworktools.ui.pages.sdr.MeteorController(app.sdr, app.weatherTles, scope) { spectrum.stop(); adsb.stop(); sonde.stop(); ais.stop(); aprs.stop(); fpv.stop(); acars.stop(); tpms.stop(); pocsag.stop(); ism.stop(); flarm.stop(); wmbus.stop() }
+        com.allnetworktools.ui.pages.sdr.MeteorController(app.sdr, app.weatherTles, scope) { spectrum.stop(); adsb.stop(); sonde.stop(); ais.stop(); aprs.stop(); fpv.stop(); acars.stop(); tpms.stop(); pocsag.stop(); ism.stop(); flarm.stop(); wmbus.stop(); dsc.stop() }
     }
     val tpms: com.allnetworktools.ui.pages.sdr.TpmsController by lazy {
-        com.allnetworktools.ui.pages.sdr.TpmsController(app.sdr, scope) { spectrum.stop(); adsb.stop(); sonde.stop(); ais.stop(); aprs.stop(); meteor.stop(); fpv.stop(); acars.stop(); pocsag.stop(); ism.stop(); flarm.stop(); wmbus.stop() }
+        com.allnetworktools.ui.pages.sdr.TpmsController(app.sdr, scope) { spectrum.stop(); adsb.stop(); sonde.stop(); ais.stop(); aprs.stop(); meteor.stop(); fpv.stop(); acars.stop(); pocsag.stop(); ism.stop(); flarm.stop(); wmbus.stop(); dsc.stop() }
     }
     val pocsag: com.allnetworktools.ui.pages.sdr.PocsagController by lazy {
-        com.allnetworktools.ui.pages.sdr.PocsagController(app.sdr, scope) { spectrum.stop(); adsb.stop(); sonde.stop(); ais.stop(); aprs.stop(); meteor.stop(); fpv.stop(); acars.stop(); tpms.stop(); ism.stop(); flarm.stop(); wmbus.stop() }
+        com.allnetworktools.ui.pages.sdr.PocsagController(app.sdr, scope) { spectrum.stop(); adsb.stop(); sonde.stop(); ais.stop(); aprs.stop(); meteor.stop(); fpv.stop(); acars.stop(); tpms.stop(); ism.stop(); flarm.stop(); wmbus.stop(); dsc.stop() }
     }
     val ism: com.allnetworktools.ui.pages.sdr.IsmController by lazy {
-        com.allnetworktools.ui.pages.sdr.IsmController(app.sdr, scope) { acars.stop(); adsb.stop(); ais.stop(); aprs.stop(); fpv.stop(); meteor.stop(); pocsag.stop(); sonde.stop(); spectrum.stop(); tpms.stop(); flarm.stop(); wmbus.stop() }
+        com.allnetworktools.ui.pages.sdr.IsmController(app.sdr, scope) { acars.stop(); adsb.stop(); ais.stop(); aprs.stop(); fpv.stop(); meteor.stop(); pocsag.stop(); sonde.stop(); spectrum.stop(); tpms.stop(); flarm.stop(); wmbus.stop(); dsc.stop() }
     }
     val flarm: com.allnetworktools.ui.pages.sdr.FlarmController by lazy {
-        com.allnetworktools.ui.pages.sdr.FlarmController(app.sdr, scope) { acars.stop(); adsb.stop(); ais.stop(); aprs.stop(); fpv.stop(); ism.stop(); meteor.stop(); pocsag.stop(); sonde.stop(); spectrum.stop(); tpms.stop(); wmbus.stop() }
+        com.allnetworktools.ui.pages.sdr.FlarmController(app.sdr, scope) { acars.stop(); adsb.stop(); ais.stop(); aprs.stop(); fpv.stop(); ism.stop(); meteor.stop(); pocsag.stop(); sonde.stop(); spectrum.stop(); tpms.stop(); wmbus.stop(); dsc.stop() }
     }
     val wmbus: com.allnetworktools.ui.pages.sdr.WmbusController by lazy {
-        com.allnetworktools.ui.pages.sdr.WmbusController(app.sdr, scope) { acars.stop(); adsb.stop(); ais.stop(); aprs.stop(); flarm.stop(); fpv.stop(); ism.stop(); meteor.stop(); pocsag.stop(); sonde.stop(); spectrum.stop(); tpms.stop() }
+        com.allnetworktools.ui.pages.sdr.WmbusController(app.sdr, scope) { acars.stop(); adsb.stop(); ais.stop(); aprs.stop(); flarm.stop(); fpv.stop(); ism.stop(); meteor.stop(); pocsag.stop(); sonde.stop(); spectrum.stop(); tpms.stop(); dsc.stop() }
+    }
+    val dsc: com.allnetworktools.ui.pages.sdr.DscController by lazy {
+        com.allnetworktools.ui.pages.sdr.DscController(app.sdr, scope) { acars.stop(); adsb.stop(); ais.stop(); aprs.stop(); flarm.stop(); fpv.stop(); ism.stop(); meteor.stop(); pocsag.stop(); sonde.stop(); spectrum.stop(); tpms.stop(); wmbus.stop() }
     }
     val skyView = androidx.compose.runtime.mutableStateOf(com.allnetworktools.ui.pages.gnss.SkyView.Sky)
 }

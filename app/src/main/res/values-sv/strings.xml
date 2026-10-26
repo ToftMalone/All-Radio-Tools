@@ -2277,4 +2277,21 @@
         <item quantity="one">"mätare"</item>
         <item quantity="other">"mätare"</item>
     </plurals>
+    <string name="dsc_subtitle">"Fartygsanrop på kanal 70"</string>
+    <string name="dsc_heard">"Kanal 70 · 156,525 MHz · %1$d nöd"</string>
+    <string name="dsc_listening">"Lyssnar på kanal 70"</string>
+    <string name="dsc_none_yet">"Inga anrop ännu"</string>
+    <string name="dsc_none_yet_body">"Kanal 70 är tyst för det mesta: ett anrop varar en halv sekund. Nära en hamn eller kustradiostation kan du vänta några anrop i timmen (tester, rutinanrop, positionsförfrågningar); nödlarm är sällsynta. Havsutsikt hjälper."</string>
+    <string name="dsc_how_it_works">"Digital Selective Calling (DSC, ITU-R M.493) är hur fartyg och kustradiostationer anropar varandra och larmar nöd på VHF-kanal 70, innan de talar på en talkanal. Appen avkodar det med OnAirs kod: varje symbol sänds två gånger och ett kontrolltecken avslutar anropet, så skadade symboler repareras och ett anrop visas bara när kontrollen stämmer. Positionerna är de som fartygen sänder. Endast mottagning."</string>
+    <string name="dsc_kinds">"Nödlarm|Nödkvittens|Nödrelä|Kvittens av nödrelä|Testanrop|Testkvittens|Positionsuppdatering|Positionsförfrågan|Positionssvar|Anropskvittens|Il-anrop|Säkerhetsanrop|Rutinanrop"</string>
+    <string name="dsc_natures">"Brand, explosion|Vatteninträngning|Kollision|Grundstötning|Slagsida, kantring|Sjunker|Manöveroförmögen, driver|Ospecificerad nöd|Överger fartyget|Piratattack|Man överbord|—|Nödradiofyr"</string>
+    <string name="dsc_coast_station">"kustradiostation"</string>
+    <string name="dsc_all_ships">"alla fartyg"</string>
+    <string name="dsc_to">"till %1$s"</string>
+    <string name="dsc_in_distress">"i nöd: %1$s"</string>
+    <string name="dsc_channel">"arbetskanal %1$s"</string>
+    <plurals name="p_calls">
+        <item quantity="one">"anrop"</item>
+        <item quantity="other">"anrop"</item>
+    </plurals>
 </resources>

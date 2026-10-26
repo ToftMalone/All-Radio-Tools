@@ -2277,4 +2277,21 @@
         <item quantity="one">"मीटर"</item>
         <item quantity="other">"मीटर"</item>
     </plurals>
+    <string name="dsc_subtitle">"चैनल 70 पर जहाज़ों की कॉल"</string>
+    <string name="dsc_heard">"चैनल 70 · 156.525 MHz · %1$d संकट"</string>
+    <string name="dsc_listening">"चैनल 70 सुना जा रहा है"</string>
+    <string name="dsc_none_yet">"अभी कोई कॉल नहीं"</string>
+    <string name="dsc_none_yet_body">"चैनल 70 ज़्यादातर समय शांत रहता है: एक कॉल आधे सेकंड की होती है। बंदरगाह या तटीय स्टेशन के पास घंटे में कुछ कॉल की उम्मीद करें (परीक्षण, सामान्य कॉल, स्थिति अनुरोध); संकट अलर्ट दुर्लभ हैं। समुद्र दिखना मदद करता है।"</string>
+    <string name="dsc_how_it_works">"डिजिटल सेलेक्टिव कॉलिंग (DSC, ITU-R M.493) वह तरीका है जिससे जहाज़ और तटीय स्टेशन वॉइस चैनल पर बात करने से पहले VHF चैनल 70 पर एक-दूसरे को बुलाते हैं और संकट अलर्ट भेजते हैं। ऐप इसे OnAir के कोड से डिकोड करता है: हर प्रतीक दो बार भेजा जाता है और एक जाँच अक्षर कॉल समाप्त करता है, इसलिए क्षतिग्रस्त प्रतीक ठीक किए जाते हैं और कॉल तभी दिखती है जब जाँच सफल हो। स्थितियाँ वही हैं जो जहाज़ भेजते हैं। केवल रिसीव।"</string>
+    <string name="dsc_kinds">"संकट अलर्ट|संकट पावती|संकट रिले|संकट रिले पावती|परीक्षण कॉल|परीक्षण पावती|स्थिति अपडेट|स्थिति अनुरोध|स्थिति उत्तर|कॉल पावती|आपात कॉल|सुरक्षा कॉल|सामान्य कॉल"</string>
+    <string name="dsc_natures">"आग, विस्फोट|पानी भरना|टक्कर|ज़मीन पर चढ़ना|झुकना, पलटना|डूबना|अक्षम, बहता हुआ|अनिर्दिष्ट संकट|जहाज़ छोड़ना|समुद्री डकैती, हमला|आदमी पानी में|—|EPIRB"</string>
+    <string name="dsc_coast_station">"तटीय स्टेशन"</string>
+    <string name="dsc_all_ships">"सभी जहाज़"</string>
+    <string name="dsc_to">"को %1$s"</string>
+    <string name="dsc_in_distress">"संकट में: %1$s"</string>
+    <string name="dsc_channel">"कार्य चैनल %1$s"</string>
+    <plurals name="p_calls">
+        <item quantity="one">"कॉल"</item>
+        <item quantity="other">"कॉल"</item>
+    </plurals>
 </resources>

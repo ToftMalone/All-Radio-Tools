@@ -2277,4 +2277,21 @@
         <item quantity="one">"sayaç"</item>
         <item quantity="other">"sayaç"</item>
     </plurals>
+    <string name="dsc_subtitle">"Kanal 70\'te gemi çağrıları"</string>
+    <string name="dsc_heard">"Kanal 70 · 156,525 MHz · %1$d tehlike"</string>
+    <string name="dsc_listening">"Kanal 70 dinleniyor"</string>
+    <string name="dsc_none_yet">"Henüz çağrı yok"</string>
+    <string name="dsc_none_yet_body">"Kanal 70 çoğu zaman sessizdir: bir çağrı yarım saniye sürer. Bir liman ya da kıyı istasyonu yakınında saatte birkaç çağrı bekleyin (testler, rutin çağrılar, konum istekleri); tehlike alarmları nadirdir. Denizi görmek yardımcı olur."</string>
+    <string name="dsc_how_it_works">"Sayısal Seçmeli Çağrı (DSC, ITU-R M.493), gemilerin ve kıyı istasyonlarının sesli bir kanala geçmeden önce VHF kanal 70\'te birbirini çağırma ve tehlike alarmı verme yoludur. Uygulama bunu OnAir\'in koduyla çözer: her simge iki kez gönderilir ve bir denetim karakteri çağrıyı kapatır, böylece bozuk simgeler onarılır ve bir çağrı yalnızca denetimi geçerse gösterilir. Konumlar gemilerin gönderdikleridir. Yalnızca alım."</string>
+    <string name="dsc_kinds">"Tehlike alarmı|Tehlike onayı|Tehlike aktarımı|Aktarım onayı|Test çağrısı|Test onayı|Konum güncellemesi|Konum isteği|Konum yanıtı|Çağrı onayı|Acil çağrı|Emniyet çağrısı|Rutin çağrı"</string>
+    <string name="dsc_natures">"Yangın, patlama|Su alma|Çatışma|Karaya oturma|Yatma, alabora|Batma|Kontrolsüz, sürükleniyor|Belirtilmemiş tehlike|Gemiyi terk|Korsanlık, silahlı saldırı|Denize adam düştü|—|EPIRB"</string>
+    <string name="dsc_coast_station">"kıyı istasyonu"</string>
+    <string name="dsc_all_ships">"tüm gemiler"</string>
+    <string name="dsc_to">"alıcı: %1$s"</string>
+    <string name="dsc_in_distress">"tehlikede: %1$s"</string>
+    <string name="dsc_channel">"çalışma kanalı %1$s"</string>
+    <plurals name="p_calls">
+        <item quantity="one">"çağrı"</item>
+        <item quantity="other">"çağrı"</item>
+    </plurals>
 </resources>
