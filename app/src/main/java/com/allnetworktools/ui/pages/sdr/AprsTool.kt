@@ -124,9 +124,12 @@ data class AprsInfo(
  */
 class AprsController(private val repo: SdrRepository, private val scope: CoroutineScope, private val onAcquire: () -> Unit = {}) {
     var frequencyMhz by mutableStateOf("144.800")
-    var lnaGain by mutableIntStateOf(32)
-    var vgaGain by mutableIntStateOf(30)
-    var amp by mutableStateOf(false)
+    val gain = SdrGain(listOf(16, 24, 32, 40), 32, listOf(20, 30, 40), 30, amp = false)
+    var lnaGain by gain::lna
+    var vgaGain by gain::vga
+    var amp: Boolean
+        get() = gain.amp == true
+        set(v) { gain.amp = v }
     var running by mutableStateOf(false)
         private set
     var starting by mutableStateOf(false)
@@ -203,8 +206,9 @@ class AprsController(private val repo: SdrRepository, private val scope: Corouti
                 }
             }
         }, "sdr-aprs").start()
+        gain.attach { applyGains() }
         r.startRx(
-            onSamples = { data, len -> free.poll()?.let { b -> System.arraycopy(data, 0, b, 0, len); full.offer(b to len) } },
+            onSamples = { data, len -> gain.feed(data, len); free.poll()?.let { b -> System.arraycopy(data, 0, b, 0, len); full.offer(b to len) } },
             onError = { msg -> scope.launch { error = msg; stop() } },
         )
     }
@@ -300,11 +304,7 @@ fun AprsTool(vm: MainViewModel) {
                     }
                 }
                 if (!c.running) HostInputField(c.frequencyMhz, { c.frequencyMhz = it }, S(R.string.frequency_mhz), Sym.Stream, keyboardType = KeyboardType.Decimal)
-                GainSettings(
-                    c.lnaGain, listOf(16, 24, 32, 40), { c.lnaGain = it; c.applyGains() },
-                    c.vgaGain, listOf(20, 30, 40), { c.vgaGain = it; c.applyGains() },
-                    c.amp, { c.amp = !c.amp; c.applyGains() },
-                )
+                GainSettings(c.gain) { c.applyGains() }
             }
         }
         SectionCard {

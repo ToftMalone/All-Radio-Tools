@@ -126,9 +126,12 @@ data class SondeInfo(
  */
 class SondeController(private val repo: SdrRepository, private val scope: CoroutineScope, private val onAcquire: () -> Unit = {}) {
     var frequencyMhz by mutableStateOf("403.000")
-    var lnaGain by mutableIntStateOf(32)
-    var vgaGain by mutableIntStateOf(30)
-    var amp by mutableStateOf(false)
+    val gain = SdrGain(listOf(16, 24, 32, 40), 32, listOf(20, 30, 40), 30, amp = false)
+    var lnaGain by gain::lna
+    var vgaGain by gain::vga
+    var amp: Boolean
+        get() = gain.amp == true
+        set(v) { gain.amp = v }
     var running by mutableStateOf(false)
         private set
     var starting by mutableStateOf(false)
@@ -227,8 +230,9 @@ class SondeController(private val repo: SdrRepository, private val scope: Corout
                 }
             }
         }, "sdr-sonde").start()
+        gain.attach { applyGains() }
         r.startRx(
-            onSamples = { data, len -> free.poll()?.let { b -> System.arraycopy(data, 0, b, 0, len); full.offer(b to len) } },
+            onSamples = { data, len -> gain.feed(data, len); free.poll()?.let { b -> System.arraycopy(data, 0, b, 0, len); full.offer(b to len) } },
             onError = { msg -> scope.launch { error = msg; stop() } },
         )
     }
@@ -331,17 +335,13 @@ fun SondeTool(vm: MainViewModel) {
             ) {
                 Symbol(Sym.Tune, size = 20.dp, tint = AntTheme.accent.accent)
                 Text(S(R.string.settings_2), Modifier.weight(1f), style = rf(14, 20, 600))
-                Text("LNA ${c.lnaGain} · VGA ${c.vgaGain}${if (c.amp) S(R.string.amp) else ""}", style = rf(12, 16), color = cs.onSurfaceVariant, maxLines = 1)
+                Text((if (c.gain.auto) S(R.string.auto_gain) + " · " else "") + "LNA ${c.lnaGain} · VGA ${c.vgaGain}${if (c.amp) S(R.string.amp) else ""}", style = rf(12, 16), color = cs.onSurfaceVariant, maxLines = 1)
             }
             if (showSettings) {
                 Column(Modifier.padding(bottom = 10.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                     HostInputField(c.frequencyMhz, { c.frequencyMhz = it }, S(R.string.frequency_mhz), Sym.Stream, keyboardType = KeyboardType.Decimal)
                     if (freqError != null) Text(freqError, style = rf(13, 18), color = cs.error)
-                    GainSettings(
-                        c.lnaGain, listOf(16, 24, 32, 40), { c.lnaGain = it; c.applyGains() },
-                        c.vgaGain, listOf(20, 30, 40), { c.vgaGain = it; c.applyGains() },
-                        c.amp, { c.amp = !c.amp; c.applyGains() },
-                    )
+                    GainSettings(c.gain) { c.applyGains() }
                     Text(
                         S(R.string.the_frequency_applies_at_the_next) +
                             S(R.string.a_line_that_comes_back_every),

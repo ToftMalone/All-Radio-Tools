@@ -93,9 +93,12 @@ enum class FpvTab(val label: String) { Dji("DJI"), Analog(S(R.string.analog)), R
  */
 class FpvController(private val repo: SdrRepository, private val scope: CoroutineScope, private val onAcquire: () -> Unit = {}) {
     var tab by mutableStateOf(FpvTab.Dji)
-    var lnaGain by mutableIntStateOf(24)
-    var vgaGain by mutableIntStateOf(24)
-    var amp by mutableStateOf(false)
+    val gain = SdrGain(listOf(0, 8, 16, 24, 32, 40), 24, listOf(10, 20, 30, 40), 24, amp = false)
+    var lnaGain by gain::lna
+    var vgaGain by gain::vga
+    var amp: Boolean
+        get() = gain.amp == true
+        set(v) { gain.amp = v }
     var band by mutableIntStateOf(0) // DroneID: 24, 58 or 0 for both
     var rcBand by mutableIntStateOf(0) // remote controls: 24, 868, 915 or 0 for all
     var analogBand by mutableIntStateOf(58) // analogue scan: 24, 58 or 0 for both
@@ -223,8 +226,10 @@ class FpvController(private val repo: SdrRepository, private val scope: Coroutin
                 scope.launch { error = e.message ?: S(R.string.processing_error) }
             }
         }, "sdr-drones").start()
+        gain.attach { applyGains() }
         r.startRx(
             onSamples = { data, len ->
+                gain.feed(data, len)
                 usbBytes.addAndGet(len.toLong())
                 pipe.free.poll()?.let { b -> System.arraycopy(data, 0, b, 0, len); pipe.full.offer(b to len) }
             },
@@ -539,11 +544,7 @@ fun FpvTool(vm: MainViewModel) {
                     else if (tab == FpvTab.Dji) listOf(0 to S(R.string.all_2), 24 to S(R.string.n_2_4_ghz), 58 to S(R.string.n_5_8_ghz)).forEach { (b, l) -> AntFilterChip(l, c.band == b, { if (c.band != b && !c.starting) { if (c.running) c.stop(); c.band = b } }) }
                     else listOf(0 to S(R.string.all_2), 868 to "868 MHz", 915 to "915 MHz", 24 to S(R.string.n_2_4_ghz)).forEach { (b, l) -> AntFilterChip(l, c.rcBand == b, { if (c.rcBand != b && !c.starting) { if (c.running) c.stop(); c.rcBand = b } }) }
                 }
-                GainSettings(
-                    c.lnaGain, listOf(0, 8, 16, 24, 32, 40), { c.lnaGain = it; c.applyGains() },
-                    c.vgaGain, listOf(10, 20, 30, 40), { c.vgaGain = it; c.applyGains() },
-                    c.amp, { c.amp = !c.amp; c.applyGains() },
-                )
+                GainSettings(c.gain) { c.applyGains() }
                 if (c.running) Text(S(R.string.usb_stream_mb_s_expected).format(Locale.getDefault(), c.usbMBps, if (tab == FpvTab.Analog) 32 else 40), style = rf(12, 16, tnum = true), color = cs.onSurfaceVariant)
             }
         }

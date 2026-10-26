@@ -2352,4 +2352,5 @@
         <item quantity="many">"Poslech %1$d kanálu"</item>
         <item quantity="other">"Poslech %1$d kanálů"</item>
     </plurals>
+    <string name="auto_gain">"Auto"</string>
 </resources>

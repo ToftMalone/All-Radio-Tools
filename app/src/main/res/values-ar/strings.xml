@@ -2462,4 +2462,5 @@
         <item quantity="many">"الاستماع إلى %1$d قناة"</item>
         <item quantity="other">"الاستماع إلى %1$d قناة"</item>
     </plurals>
+    <string name="auto_gain">"تلقائي"</string>
 </resources>

@@ -2297,4 +2297,5 @@
         <item quantity="other">"À l\'écoute de %1$d canaux"</item>
         <item quantity="many">"À l\'écoute de %1$d canaux"</item>
     </plurals>
+    <string name="auto_gain">"Auto"</string>
 </resources>

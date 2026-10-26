@@ -2187,4 +2187,5 @@
     <plurals name="p_listening_channels">
         <item quantity="other">"正在收听 %1$d 个信道"</item>
     </plurals>
+    <string name="auto_gain">"自动"</string>
 </resources>

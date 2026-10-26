@@ -2187,4 +2187,5 @@
     <plurals name="p_listening_channels">
         <item quantity="other">"กำลังฟัง %1$d ช่อง"</item>
     </plurals>
+    <string name="auto_gain">"อัตโนมัติ"</string>
 </resources>

@@ -2242,4 +2242,5 @@
         <item quantity="one">"%1$d चैनल सुना जा रहा है"</item>
         <item quantity="other">"%1$d चैनल सुने जा रहे हैं"</item>
     </plurals>
+    <string name="auto_gain">"ऑटो"</string>
 </resources>

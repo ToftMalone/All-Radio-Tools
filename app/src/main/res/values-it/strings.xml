@@ -2242,4 +2242,5 @@
         <item quantity="one">"In ascolto su %1$d canale"</item>
         <item quantity="other">"In ascolto su %1$d canali"</item>
     </plurals>
+    <string name="auto_gain">"Auto"</string>
 </resources>

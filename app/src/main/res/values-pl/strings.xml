@@ -2352,4 +2352,5 @@
         <item quantity="many">"Nasłuch %1$d kanałów"</item>
         <item quantity="other">"Nasłuch %1$d kanału"</item>
     </plurals>
+    <string name="auto_gain">"Auto"</string>
 </resources>

@@ -1,5 +1,11 @@
 package com.allnetworktools.ui.pages.sdr
 
+import com.allnetworktools.data.sdr.AutoGain
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
+import android.os.Looper
+import android.os.Handler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -96,29 +102,72 @@ internal fun ListCard(content: @Composable () -> Unit) {
 }
 
 /**
- * The HackRF's two gain stages, each on its own line so the values never mix, then the +14 dB amplifier when the tool
- * offers it. Calls [onChange] after every tap so the controller can push the new gains to the radio.
+ * The HackRF's gains for one tool: the LNA and VGA values it offers, the +14 dB amplifier when it has one, and the
+ * automatic mode, on by default, which picks among those same values from the level of the samples.
+ */
+class SdrGain(val lnaSteps: List<Int>, lna: Int, val vgaSteps: List<Int>, vga: Int, amp: Boolean? = null) {
+    var auto by mutableStateOf(true)
+    var lna by mutableIntStateOf(lna)
+    var vga by mutableIntStateOf(vga)
+    /** Null when the tool does not offer the amplifier. */
+    var amp by mutableStateOf(amp)
+
+    private val main = Handler(Looper.getMainLooper())
+    @Volatile private var loop: AutoGain? = null
+    private var onAdjust: () -> Unit = {}
+
+    /** Called when reception starts: from then on, in automatic mode, [onAdjust] pushes each new step to the radio. */
+    fun attach(onAdjust: () -> Unit) {
+        this.onAdjust = onAdjust
+        loop = AutoGain(lnaSteps, vgaSteps, lna, vga)
+    }
+
+    /** Samples as they arrive from the radio, on its thread. */
+    fun feed(buf: ByteArray, len: Int) {
+        if (!auto) return
+        val l = loop ?: return
+        val step = l.feed(buf, len, System.nanoTime()) ?: return
+        main.post {
+            if (!auto) return@post
+            lna = step.first; vga = step.second
+            onAdjust()
+        }
+    }
+
+    fun setAuto() {
+        auto = true
+        loop = AutoGain(lnaSteps, vgaSteps, lna, vga)
+    }
+}
+
+/**
+ * Each gain on its own line: Auto first, then the values. Auto is shared, picking it on one line sets both; while it
+ * runs, the value in use is lit in its own colour. Picking a value goes back to manual for both.
  */
 @Composable
-internal fun GainSettings(
-    lna: Int, lnaSteps: List<Int>, onLna: (Int) -> Unit,
-    vga: Int, vgaSteps: List<Int>, onVga: (Int) -> Unit,
-    amp: Boolean? = null, onAmp: () -> Unit = {},
-) {
+internal fun GainSettings(g: SdrGain, onChange: () -> Unit) {
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        GainLine(S(R.string.lna_gain_db), lna, lnaSteps, onLna)
-        GainLine(S(R.string.vga_gain_db), vga, vgaSteps, onVga)
-        if (amp != null) {
+        GainLine(S(R.string.lna_gain_db), g, g.lna, g.lnaSteps, onChange) { g.lna = it }
+        GainLine(S(R.string.vga_gain_db), g, g.vga, g.vgaSteps, onChange) { g.vga = it }
+        g.amp?.let { on ->
             Text(S(R.string.preamplifier), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
-            AntFilterChip(S(R.string.amp_14_db), amp, onAmp)
+            AntFilterChip(S(R.string.amp_14_db), on, { g.amp = !on; onChange() })
         }
     }
 }
 
 @Composable
-private fun GainLine(label: String, value: Int, steps: List<Int>, onPick: (Int) -> Unit) {
+private fun GainLine(label: String, g: SdrGain, value: Int, steps: List<Int>, onChange: () -> Unit, onPick: (Int) -> Unit) {
     Text(label, style = rf(13, 18, 600), color = cs.onSurfaceVariant)
     FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        steps.forEach { g -> AntFilterChip("$g", value == g, { onPick(g) }) }
+        AntFilterChip(S(R.string.auto_gain), g.auto, { if (!g.auto) { g.setAuto(); onChange() } })
+        steps.forEach { v ->
+            if (g.auto) {
+                // The value automatic mode is using right now, in the tertiary colour.
+                AntFilterChip("$v", value == v, { g.auto = false; onPick(v); onChange() }, color = cs.tertiaryContainer, onColor = cs.onTertiaryContainer, leadingDot = if (value == v) cs.tertiary else null)
+            } else {
+                AntFilterChip("$v", value == v, { onPick(v); onChange() })
+            }
+        }
     }
 }

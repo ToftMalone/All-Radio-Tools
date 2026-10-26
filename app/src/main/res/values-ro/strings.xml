@@ -2297,4 +2297,5 @@
         <item quantity="few">"Ascultă %1$d canale"</item>
         <item quantity="other">"Ascultă %1$d de canale"</item>
     </plurals>
+    <string name="auto_gain">"Auto"</string>
 </resources>

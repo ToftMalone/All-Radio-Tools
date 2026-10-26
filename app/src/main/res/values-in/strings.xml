@@ -2187,4 +2187,5 @@
     <plurals name="p_listening_channels">
         <item quantity="other">"Mendengarkan %1$d kanal"</item>
     </plurals>
+    <string name="auto_gain">"Otomatis"</string>
 </resources>

@@ -2187,4 +2187,5 @@
     <plurals name="p_listening_channels">
         <item quantity="other">"Đang nghe %1$d kênh"</item>
     </plurals>
+    <string name="auto_gain">"Tự động"</string>
 </resources>

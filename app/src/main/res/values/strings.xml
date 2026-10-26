@@ -2243,4 +2243,5 @@
         <item quantity="one">"Listening on %1$d channel"</item>
         <item quantity="other">"Listening on %1$d channels"</item>
     </plurals>
+    <string name="auto_gain">"Auto"</string>
 </resources>

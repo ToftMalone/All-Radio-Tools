@@ -41,9 +41,12 @@ enum class SpectrumPreset(val label: String, val centerMhz: Double, val spanMhz:
 class SpectrumController(private val repo: SdrRepository, private val scope: CoroutineScope, private val onAcquire: () -> Unit = {}) {
     var centerMhz by mutableStateOf("98.000")
     var spanMhz by mutableIntStateOf(10)
-    var lnaGain by mutableIntStateOf(24)
-    var vgaGain by mutableIntStateOf(20)
-    var amp by mutableStateOf(false)
+    val gain = SdrGain(listOf(0, 8, 16, 24, 32, 40), 24, listOf(10, 20, 30, 40), 20, amp = false)
+    var lnaGain by gain::lna
+    var vgaGain by gain::vga
+    var amp: Boolean
+        get() = gain.amp == true
+        set(v) { gain.amp = v }
     var peakHold by mutableStateOf(false)
 
     var running by mutableStateOf(false)
@@ -136,8 +139,10 @@ class SpectrumController(private val repo: SdrRepository, private val scope: Cor
                 }
             }
         }, "sdr-spectrum").apply { start() }
+        gain.attach { applyGains() }
         r.startRx(
             onSamples = { data, len ->
+                gain.feed(data, len)
                 // Spare buffers only: when the phone is busy, skipping transfers just thins the average.
                 free.poll()?.let { b -> System.arraycopy(data, 0, b, 0, len); full.offer(b to len) }
             },

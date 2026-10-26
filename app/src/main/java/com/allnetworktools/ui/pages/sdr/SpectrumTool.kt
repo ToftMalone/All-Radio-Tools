@@ -102,11 +102,7 @@ fun SpectrumTool(vm: MainViewModel) {
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     listOf(2, 5, 10, 20).forEach { s -> AntFilterChip("$s MHz", c.spanMhz == s, { if (c.spanMhz != s && !c.starting) { if (c.running) c.stop(); c.spanMhz = s } }) }
                 }
-                GainSettings(
-                    c.lnaGain, listOf(0, 8, 16, 24, 32, 40), { c.lnaGain = it; c.applyGains() },
-                    c.vgaGain, listOf(10, 20, 30, 40), { c.vgaGain = it; c.applyGains() },
-                    c.amp, { c.amp = !c.amp; c.applyGains() },
-                )
+                GainSettings(c.gain) { c.applyGains() }
                 Text(S(R.string.display_2), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
                 AntFilterChip(S(R.string.peak_hold), c.peakHold, { c.peakHold = !c.peakHold })
             }

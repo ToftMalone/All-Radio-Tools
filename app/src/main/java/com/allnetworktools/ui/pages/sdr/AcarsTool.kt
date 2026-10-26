@@ -60,9 +60,12 @@ import com.allnetworktools.util.P
  * 2.4 MS/s capture centred between them. Kept in memory for the session only.
  */
 class AcarsController(private val repo: SdrRepository, private val scope: CoroutineScope, private val onAcquire: () -> Unit = {}) {
-    var lnaGain by mutableIntStateOf(32)
-    var vgaGain by mutableIntStateOf(30)
-    var amp by mutableStateOf(true)
+    val gain = SdrGain(listOf(16, 24, 32, 40), 32, listOf(20, 30, 40), 30, amp = true)
+    var lnaGain by gain::lna
+    var vgaGain by gain::vga
+    var amp: Boolean
+        get() = gain.amp == true
+        set(v) { gain.amp = v }
     var running by mutableStateOf(false)
         private set
     var starting by mutableStateOf(false)
@@ -115,8 +118,9 @@ class AcarsController(private val repo: SdrRepository, private val scope: Corout
                 free.offer(item.first)
             }
         }, "sdr-acars").start()
+        gain.attach { applyGains() }
         r.startRx(
-            onSamples = { data, len -> free.poll()?.let { b -> System.arraycopy(data, 0, b, 0, len); full.offer(b to len) } },
+            onSamples = { data, len -> gain.feed(data, len); free.poll()?.let { b -> System.arraycopy(data, 0, b, 0, len); full.offer(b to len) } },
             onError = { msg -> scope.launch { error = msg; stop() } },
         )
     }
@@ -198,11 +202,7 @@ fun AcarsTool(vm: MainViewModel) {
             }
         }
         SectionCard {
-            GainSettings(
-                c.lnaGain, listOf(16, 24, 32, 40), { c.lnaGain = it; c.applyGains() },
-                c.vgaGain, listOf(20, 30, 40), { c.vgaGain = it; c.applyGains() },
-                c.amp, { c.amp = !c.amp; c.applyGains() },
-            )
+            GainSettings(c.gain) { c.applyGains() }
         }
         SectionCard {
             Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {

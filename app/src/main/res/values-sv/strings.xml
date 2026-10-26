@@ -2242,4 +2242,5 @@
         <item quantity="one">"Lyssnar på %1$d kanal"</item>
         <item quantity="other">"Lyssnar på %1$d kanaler"</item>
     </plurals>
+    <string name="auto_gain">"Auto"</string>
 </resources>

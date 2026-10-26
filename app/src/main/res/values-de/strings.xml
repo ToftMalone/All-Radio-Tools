@@ -2242,4 +2242,5 @@
         <item quantity="one">"Höre %1$d Kanal ab"</item>
         <item quantity="other">"Höre %1$d Kanäle ab"</item>
     </plurals>
+    <string name="auto_gain">"Auto"</string>
 </resources>

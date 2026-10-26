@@ -2352,4 +2352,5 @@
         <item quantity="many">"Прослушивание %1$d каналов"</item>
         <item quantity="other">"Прослушивание %1$d канала"</item>
     </plurals>
+    <string name="auto_gain">"Авто"</string>
 </resources>
