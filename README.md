@@ -2,7 +2,7 @@
 
 **Everything that transmits around you, in one Android app.**
 
-All Radio Tools brings together tools to explore Wi-Fi, Bluetooth, the mobile network, GNSS and, with a HackRF, the radio waves themselves: aircraft, radiosondes, ships, drones and weather satellites.
+All Radio Tools brings together tools to explore Wi-Fi, Bluetooth, the mobile network, GNSS and, with a HackRF, the radio waves themselves: aircraft, gliders, radiosondes, ships, drones, satellites, walkie-talkies, sensors and meters.
 
 > 🌍 Available in 22 languages (it follows the phone's language). Written in Kotlin with Jetpack Compose and Material 3.
 >
@@ -79,21 +79,32 @@ The home screen offers five networks. Each one has its dashboard, its main tool 
 | --- | --- |
 | Spectrum analyser | Spectrum and waterfall, 1 MHz to 6 GHz |
 | ACARS | Airliner messaging on the 3 European channels, 131 MHz |
-| ADS-B | Map of aircraft on 1090 MHz |
+| ADS-B | Map of aircraft on 1090 MHz, with the old Mode A/C replies (squawk, altitude) |
 | AIS | Map of ships on 162 MHz |
 | APRS | Ham radio beacons on 144.800 MHz |
+| CubeSat | AX.25 telemetry of amateur satellites and the ISS (1200 AFSK, 9600 G3RUH), next passes and automatic Doppler correction |
+| DECT | Cordless phone base stations (1880–1900 MHz): identity, carriers, slots; voice is never touched |
+| DSC | Maritime digital selective calls on VHF channel 70: distress alerts, safety and routine calls, positions |
 | Drones | DJI (DroneID), analogue FPV and remote controls (ExpressLRS, Crossfire, FrSky, FlySky, Spektrum) |
+| FLARM | Gliders and light aircraft on 868 MHz (old protocol), positions around you; aircraft asking not to be tracked are only counted |
+| ISM sensors | Weather stations, thermometers, energy monitors, door sensors, remotes on 433, 868, 315, 345 and 915 MHz (about 30 families) |
+| LoRaWAN / Sigfox | Connected objects on 868 MHz: LoRaWAN headers (device address, network, counter) on SF7 to SF12, Sigfox uplinks |
 | Meteor-M | Weather satellite LRPT images on 137 MHz |
+| PMR446 | The 16 walkie-talkie channels at once: activity, CTCSS tone, listening to analogue channels, DMR446 and dPMR446 call ids |
 | POCSAG | Pager messages (e*Message France and Germany, BOS, DAPNET or any frequency): every channel of a network at once, 512, 1200 and 2400 bit/s, BCH error correction |
-| Radiosondes | Vaisala RS41 and Meteomodem M10 / M20 around 403 MHz, with landing prediction |
+| Radiosondes | Vaisala RS41, Meteomodem M10 / M20 and Horus amateur balloons around 403 and 434 MHz, with landing prediction |
 | TPMS | Tyre pressure sensors of nearby cars on 433.92 MHz (or 315 MHz): pressure, temperature, battery, for Renault, PSA, Toyota, Ford, Hyundai/Kia, BMW/Audi, Porsche and more |
+| VDL Mode 2 | The airliners' digital datalink on 6 channels around 136.9 MHz: ACARS carried digitally, ground stations, link set-ups |
+| Wireless M-Bus | Water, heat, gas and electricity meters on 868.95 MHz (T1, C1); readings when not encrypted |
+
+Every gain has an **automatic mode**, chosen by default, which picks the LNA and VGA values from the signal level; the value in use is shown in its own colour.
 
 The decoders work with the **HackRF alone**: neither the phone's Wi-Fi nor its Bluetooth is used. The SDR card stays greyed out until a HackRF is plugged in over USB.
 
 ### 📤 Exports
 
 Only when you ask, to the location you choose:
-- **CSV**: speed test, coverage map, aircraft, radiosondes, ships, APRS, ACARS, POCSAG, TPMS, handover log;
+- **CSV**: speed test, coverage map, aircraft, radiosondes, ships, APRS, ACARS, VDL Mode 2, POCSAG, TPMS, ISM sensors, meters, DSC calls, LoRaWAN / Sigfox, handover log;
 - **RINEX**: GNSS raw measurements;
 - **PNG**: Meteor-M images.
 
@@ -121,7 +132,7 @@ No account, no ads, no trackers. Internet is used for updates, the speed test (C
 
 - The SDR is used **for reception only**. Follow your country's laws on listening to radio frequencies.
 - The Wi-Fi security tools (audit, rogue access points, man in the middle, port scan) are meant for **your own networks** or those you are allowed to test.
-- Pager messages (POCSAG) are **private correspondence**: in many countries, France included, you may only read or pass on those of your own pagers.
+- Pager messages (POCSAG) and walkie-talkie conversations (PMR446) are **private correspondence**: in many countries, France included, you may not pass on or use what you hear.
 - "Unknown trackers" and "Jamming and spoofing" are there to **protect you**, not to track or disrupt others.
 
 ---
@@ -162,6 +173,8 @@ All Radio Tools is free software released under the [GNU General Public License 
 - [@cloudflare/speedtest](https://github.com/cloudflare/speedtest), the open source engine behind speed.cloudflare.com, ported for the speed test.
 - [AirGuard](https://github.com/seemoo-lab/AirGuard) (SEEMOO, TU Darmstadt) for tracker detection and the rules that tell a tag near its owner from one following you.
 - [rs1729/RS](https://github.com/rs1729/RS) for the radiosonde formats.
-- [rtl_433](https://github.com/merbanan/rtl_433) for the tyre pressure sensor formats.
+- [rtl_433](https://github.com/merbanan/rtl_433) for the tyre pressure and ISM sensor formats.
+- [OnAir](https://github.com/adswill/OnAir) (GPL-3.0), whose decoders were ported for ISM sensors, FLARM, Wireless M-Bus, DSC, VDL Mode 2, DECT, DMR / dPMR, Sigfox, Horus, Mode A/C and CubeSat telemetry.
+- [gr-lora_sdr](https://github.com/tapparelj/gr-lora_sdr) (EPFL) for the LoRa receiver.
 - Google [GNSS Measurement Tools](https://github.com/google/gps-measurement-tools) for the pseudorange computation.
 - Roboto Flex, Google Sans Flex and Material Symbols for the interface.

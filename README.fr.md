@@ -2,7 +2,7 @@
 
 **Tout ce qui émet autour de vous, dans une seule application Android.**
 
-All Radio Tools réunit les outils pour explorer le Wi-Fi, le Bluetooth, le réseau mobile, le GNSS et, avec un HackRF, les ondes radio : avions, ballons-sondes, navires, drones et satellites météo.
+All Radio Tools réunit les outils pour explorer le Wi-Fi, le Bluetooth, le réseau mobile, le GNSS et, avec un HackRF, les ondes radio : avions, planeurs, ballons-sondes, navires, drones, satellites, talkies-walkies, capteurs et compteurs.
 
 > 🌍 Application disponible en 22 langues (elle suit la langue du téléphone), écrite en Kotlin avec Jetpack Compose et Material 3.
 >
@@ -79,21 +79,32 @@ L'écran d'accueil propose cinq réseaux. Chacun a son tableau de bord, son outi
 | --- | --- |
 | Analyseur de spectre | Spectre et chute d'eau, de 1 MHz à 6 GHz |
 | ACARS | Messagerie des avions de ligne sur les 3 canaux européens, 131 MHz |
-| ADS-B | Carte des avions sur 1090 MHz |
+| ADS-B | Carte des avions sur 1090 MHz, avec les anciennes réponses Mode A/C (squawk, altitude) |
 | AIS | Carte des navires sur 162 MHz |
 | APRS | Balises radioamateurs sur 144,800 MHz |
-| Ballons-sondes | Vaisala RS41 et Meteomodem M10 / M20 vers 403 MHz, avec prédiction d'atterrissage |
+| Ballons-sondes | Vaisala RS41, Meteomodem M10 / M20 et ballons amateurs Horus vers 403 et 434 MHz, avec prédiction d'atterrissage |
+| Capteurs ISM | Stations météo, thermomètres, compteurs d'énergie, détecteurs d'ouverture, télécommandes sur 433, 868, 315, 345 et 915 MHz (une trentaine de familles) |
+| CubeSat | Télémesure AX.25 des satellites amateurs et de l'ISS (AFSK 1200, G3RUH 9600), prochains passages et correction Doppler automatique |
+| DECT | Bases de téléphones sans fil (1880–1900 MHz) : identité, porteuses, intervalles ; la voix n'est jamais touchée |
+| DSC (ASN) | Appels sélectifs numériques maritimes sur le canal VHF 70 : alertes de détresse, appels de sécurité et de routine, positions |
 | Drones | DJI (DroneID), FPV analogique et radiocommandes (ExpressLRS, Crossfire, FrSky, FlySky, Spektrum) |
+| FLARM | Planeurs et aviation légère sur 868 MHz (ancien protocole), positions autour de vous ; les aéronefs qui refusent le suivi sont seulement comptés |
+| LoRaWAN / Sigfox | Objets connectés sur 868 MHz : en-têtes LoRaWAN (adresse, réseau, compteur) de SF7 à SF12, messages Sigfox |
 | Meteor-M | Images LRPT des satellites météo sur 137 MHz |
+| PMR446 | Les 16 canaux de talkies-walkies à la fois : activité, tonalité CTCSS, écoute des canaux analogiques, identifiants des appels DMR446 et dPMR446 |
 | POCSAG | Messages de pagers (e*Message France et Allemagne, BOS, DAPNET ou n'importe quelle fréquence) : tous les canaux d'un réseau à la fois, 512, 1200 et 2400 bit/s, correction d'erreurs BCH |
 | TPMS | Capteurs de pression des pneus des voitures alentour sur 433,92 MHz (ou 315 MHz) : pression, température, pile, pour Renault, PSA, Toyota, Ford, Hyundai/Kia, BMW/Audi, Porsche et d'autres |
+| VDL Mode 2 | Liaison de données numérique des avions de ligne sur 6 canaux vers 136,9 MHz : ACARS numérique, stations sol, ouvertures de liaison |
+| Wireless M-Bus | Compteurs d'eau, de chaleur, de gaz et d'électricité sur 868,95 MHz (T1, C1) ; relevés quand ils ne sont pas chiffrés |
+
+Chaque gain a un **mode automatique**, choisi par défaut, qui règle le LNA et le VGA d'après le niveau du signal ; la valeur utilisée s'affiche dans sa propre couleur.
 
 Les décodeurs fonctionnent avec le **HackRF seul** : ni le Wi-Fi ni le Bluetooth du téléphone ne sont utilisés. La carte SDR reste grisée tant qu'aucun HackRF n'est branché en USB.
 
 ### 📤 Exports
 
 Uniquement quand vous le demandez, à l'emplacement que vous choisissez :
-- **CSV** : test de débit, carte de couverture, avions, ballons-sondes, navires, APRS, ACARS, POCSAG, TPMS, journal de handover ;
+- **CSV** : test de débit, carte de couverture, avions, ballons-sondes, navires, APRS, ACARS, VDL Mode 2, POCSAG, TPMS, capteurs ISM, compteurs, appels ASN, LoRaWAN / Sigfox, journal de handover ;
 - **RINEX** : mesures brutes GNSS ;
 - **PNG** : images Meteor-M.
 
@@ -121,7 +132,7 @@ Aucun compte, aucune publicité, aucun traceur. Internet sert aux mises à jour,
 
 - Le SDR est utilisé **en réception seulement**. Respectez la législation de votre pays sur l'écoute des fréquences.
 - Les outils de sécurité Wi-Fi (audit, faux points d'accès, homme du milieu, scan de ports) sont faits pour **vos propres réseaux** ou ceux que vous avez l'autorisation de tester.
-- Les messages de pagers (POCSAG) sont des **correspondances privées** : dans de nombreux pays, dont la France, vous ne pouvez lire ou divulguer que ceux de vos propres pagers.
+- Les messages de pagers (POCSAG) et les conversations de talkies-walkies (PMR446) sont des **correspondances privées** : dans de nombreux pays, dont la France, il est interdit de divulguer ou d'utiliser ce que vous entendez.
 - « Traqueurs inconnus » et « Brouillage et leurrage » servent à **vous protéger**, pas à pister ou gêner les autres.
 
 ---
@@ -158,6 +169,8 @@ All Radio Tools est un logiciel libre publié sous la [licence publique généra
 - [@cloudflare/speedtest](https://github.com/cloudflare/speedtest), le moteur open source de speed.cloudflare.com, porté pour le test de débit.
 - [AirGuard](https://github.com/seemoo-lab/AirGuard) (SEEMOO, TU Darmstadt) pour la détection des traqueurs et les règles qui distinguent une balise près de son propriétaire d'une balise qui vous suit.
 - [rs1729/RS](https://github.com/rs1729/RS) pour les formats de sondes.
-- [rtl_433](https://github.com/merbanan/rtl_433) pour les formats des capteurs de pression des pneus.
+- [rtl_433](https://github.com/merbanan/rtl_433) pour les formats des capteurs de pression des pneus et des capteurs ISM.
+- [OnAir](https://github.com/adswill/OnAir) (GPL-3.0), dont les décodeurs ont été portés pour les capteurs ISM, FLARM, Wireless M-Bus, ASN, VDL Mode 2, DECT, DMR / dPMR, Sigfox, Horus, Mode A/C et la télémesure CubeSat.
+- [gr-lora_sdr](https://github.com/tapparelj/gr-lora_sdr) (EPFL) pour le récepteur LoRa.
 - Google [GNSS Measurement Tools](https://github.com/google/gps-measurement-tools) pour le calcul des pseudodistances.
 - Roboto Flex, Google Sans Flex et Material Symbols pour l'interface.
