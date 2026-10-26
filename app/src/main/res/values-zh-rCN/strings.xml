@@ -2193,4 +2193,5 @@
     <string name="squawk_radio_failure">"无线电故障"</string>
     <string name="squawk_emergency">"紧急情况"</string>
     <string name="mode_ac_info">" A/C 模式：应答机的旧式雷达应答（无论有无 ADS-B）携带应答码或高度，但不说明是哪一种；当恰好只有一架飞机在该高度飞行时，代码会与其匹配。7500、7600 和 7700 以红色显示。"</string>
+    <string name="horus_info">" 当频率与其相差 4 kHz 以内时，也会解码 Horus 业余气球（Horus Binary v1 和 v2，通常为 434.2–434.9 MHz）。"</string>
 </resources>

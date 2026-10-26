@@ -2248,4 +2248,5 @@
     <string name="squawk_radio_failure">"Funkausfall"</string>
     <string name="squawk_emergency">"Notfall"</string>
     <string name="mode_ac_info">" Mode A/C: die älteren Radarantworten der Transponder, mit oder ohne ADS-B, tragen entweder einen Squawk oder eine Höhe, ohne zu sagen, was; ein Code wird einem Flugzeug zugeordnet, wenn genau eines in dieser Höhe fliegt. 7500, 7600 und 7700 erscheinen rot."</string>
+    <string name="horus_info">" Auch Horus-Amateurballons (Horus Binary v1 und v2, meist 434,2 bis 434,9 MHz) werden dekodiert, wenn die Frequenz weniger als 4 kHz von ihrer entfernt ist."</string>
 </resources>

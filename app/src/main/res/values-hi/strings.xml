@@ -2248,4 +2248,5 @@
     <string name="squawk_radio_failure">"रेडियो विफलता"</string>
     <string name="squawk_emergency">"आपातकाल"</string>
     <string name="mode_ac_info">" मोड A/C: ट्रांसपोंडरों के पुराने रडार उत्तर, ADS-B के साथ या बिना, या तो स्क्वॉक या ऊँचाई ले जाते हैं, बिना बताए कि कौन-सा; जब उस ऊँचाई पर ठीक एक विमान उड़ता है तो कोड उससे जोड़ा जाता है। 7500, 7600 और 7700 लाल में दिखते हैं।"</string>
+    <string name="horus_info">" Horus शौकिया गुब्बारे (Horus Binary v1 और v2, आमतौर पर 434.2 से 434.9 MHz) भी डिकोड होते हैं, जब आवृत्ति उनकी आवृत्ति से 4 kHz के भीतर हो।"</string>
 </resources>

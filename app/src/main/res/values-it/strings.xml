@@ -2248,4 +2248,5 @@
     <string name="squawk_radio_failure">"Avaria radio"</string>
     <string name="squawk_emergency">"Emergenza"</string>
     <string name="mode_ac_info">" Modo A/C: le vecchie risposte radar dei transponder, con o senza ADS-B, portano uno squawk o una quota senza dire quale; un codice è associato a un aereo quando solo uno vola a quella quota. 7500, 7600 e 7700 sono in rosso."</string>
+    <string name="horus_info">" Vengono decodificati anche i palloni amatoriali Horus (Horus Binary v1 e v2, di solito tra 434,2 e 434,9 MHz), quando la frequenza è entro 4 kHz dalla loro."</string>
 </resources>

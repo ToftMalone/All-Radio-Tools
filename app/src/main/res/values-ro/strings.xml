@@ -2303,4 +2303,5 @@
     <string name="squawk_radio_failure">"Defecțiune radio"</string>
     <string name="squawk_emergency">"Urgență"</string>
     <string name="mode_ac_info">" Mod A/C: vechile răspunsuri radar ale transponderelor, cu sau fără ADS-B, poartă fie un squawk, fie o altitudine, fără să spună care; un cod e asociat unui avion când doar unul zboară la acea altitudine. 7500, 7600 și 7700 apar cu roșu."</string>
+    <string name="horus_info">" Baloanele amatoare Horus (Horus Binary v1 și v2, de obicei între 434,2 și 434,9 MHz) sunt decodate și ele, când frecvența e la mai puțin de 4 kHz de a lor."</string>
 </resources>

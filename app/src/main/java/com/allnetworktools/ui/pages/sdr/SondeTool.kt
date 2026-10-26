@@ -49,6 +49,7 @@ import com.allnetworktools.data.sdr.AdsbTracker
 import com.allnetworktools.data.sdr.Decimator
 import com.allnetworktools.data.sdr.FloatDecimator
 import com.allnetworktools.data.sdr.HackRf
+import com.allnetworktools.data.sdr.HorusReceiver
 import com.allnetworktools.data.sdr.Landing
 import com.allnetworktools.data.sdr.SondeLanding
 import com.allnetworktools.data.sdr.Meteomodem
@@ -194,6 +195,7 @@ class SondeController(private val repo: SdrRepository, private val scope: Corout
         var count = 0
         val demod = Rs41Demodulator(SAMPLE_RATE / 40.0) { f -> Rs41.parse(f)?.let { tracker.update(it, System.currentTimeMillis()); count++ } }
         val mDemod = MeteomodemDemodulator(SAMPLE_RATE / 20.0) { f -> Meteomodem.parse(f)?.let { tracker.update(it, System.currentTimeMillis()); count++ } }
+        val horus = HorusReceiver { f -> tracker.update(f, System.currentTimeMillis()); count++ }
         val d3 = FloatDecimator(5, 0.05)
         val cRe = FloatArray(8192)
         val cIm = FloatArray(8192)
@@ -215,6 +217,7 @@ class SondeController(private val repo: SdrRepository, private val scope: Corout
                     demod.feed(bRe, bIm, m)
                     val q = d3.process(aRe, aIm, k, cRe, cIm)
                     mDemod.feed(cRe, cIm, q)
+                    horus.feed(aRe, aIm, k)
                 }
                 val now = System.currentTimeMillis()
                 if (now - last >= 1000) {
@@ -339,6 +342,11 @@ fun SondeTool(vm: MainViewModel) {
             }
             if (showSettings) {
                 Column(Modifier.padding(bottom = 10.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                    FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        listOf("403.000" to S(R.string.radiosondes), "434.660" to "Horus", "434.200" to "Horus").forEach { (f, l) ->
+                            AntFilterChip("${f.replace('.', ',')} · $l", c.frequencyMhz == f, { c.frequencyMhz = f })
+                        }
+                    }
                     HostInputField(c.frequencyMhz, { c.frequencyMhz = it }, S(R.string.frequency_mhz), Sym.Stream, keyboardType = KeyboardType.Decimal)
                     if (freqError != null) Text(freqError, style = rf(13, 18), color = cs.error)
                     GainSettings(c.gain) { c.applyGains() }
@@ -356,7 +364,8 @@ fun SondeTool(vm: MainViewModel) {
                 Text(
                     S(R.string.weather_stations_launch_balloons_twice_a) +
                         S(R.string.meteomodem_m10_and_m20_sondes_other) +
-                        S(R.string.gps_position_in_clear_every_second),
+                        S(R.string.gps_position_in_clear_every_second) +
+                        S(R.string.horus_info),
                     style = rf(13, 18), color = cs.onSurfaceVariant,
                 )
             }

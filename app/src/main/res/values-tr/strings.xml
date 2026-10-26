@@ -2248,4 +2248,5 @@
     <string name="squawk_radio_failure">"Telsiz arızası"</string>
     <string name="squawk_emergency">"Acil durum"</string>
     <string name="mode_ac_info">" Mod A/C: transponderlerin eski radar yanıtları, ADS-B olsun olmasın, hangisi olduğunu söylemeden bir squawk ya da bir irtifa taşır; o irtifada tam bir uçak uçuyorsa kod ona eşlenir. 7500, 7600 ve 7700 kırmızı gösterilir."</string>
+    <string name="horus_info">" Horus amatör balonları (Horus Binary v1 ve v2, genellikle 434,2–434,9 MHz) da, frekans onlarınkine 4 kHz\'den yakınsa çözülür."</string>
 </resources>

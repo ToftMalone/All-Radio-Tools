@@ -2193,4 +2193,5 @@
     <string name="squawk_radio_failure">"Hỏng vô tuyến"</string>
     <string name="squawk_emergency">"Khẩn cấp"</string>
     <string name="mode_ac_info">" Chế độ A/C: các phản hồi radar kiểu cũ của bộ phát đáp, có hoặc không có ADS-B, mang mã squawk hoặc độ cao mà không cho biết là cái nào; mã được ghép với máy bay khi chỉ đúng một chiếc bay ở độ cao đó. 7500, 7600 và 7700 hiển thị màu đỏ."</string>
+    <string name="horus_info">" Bóng bay nghiệp dư Horus (Horus Binary v1 và v2, thường 434,2 đến 434,9 MHz) cũng được giải mã khi tần số cách tần số của chúng dưới 4 kHz."</string>
 </resources>
