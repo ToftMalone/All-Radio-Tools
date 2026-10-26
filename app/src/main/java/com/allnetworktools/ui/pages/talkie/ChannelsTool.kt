@@ -370,6 +370,8 @@ private fun PresetDialog(spec: RadioLimits, onAdd: (RadioPreset, Boolean) -> Pre
         onDismissRequest = onDismiss,
         title = { Text(p?.title ?: S(R.string.presets)) },
         text = {
+            // Inside the dialog, so it hears the dialog's back: a chosen preset goes back to the list of presets.
+            androidx.activity.compose.BackHandler(p != null && result == null) { chosen = null }
             Column(Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 when {
                     result != null -> {

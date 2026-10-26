@@ -179,6 +179,8 @@ fun CoverageTool(c: CoverageController, conn: WifiConnection?) {
     }
     val support = c.support ?: ArSupport(null, false)
     LaunchedEffect(conn?.rssi, conn?.bssid) { c.signal(conn?.rssi ?: -127, conn?.bssid) }
+    // Back during a walk ends it and shows the map drawn so far, instead of leaving the tool.
+    com.allnetworktools.ui.pages.ToolBack(c.running) { c.stop() }
     if (c.samples.isNotEmpty() && !c.running) {
         TopBarAction(Sym.Download) {
             val snapshot = c.samples.toList()

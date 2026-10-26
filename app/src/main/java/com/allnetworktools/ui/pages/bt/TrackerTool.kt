@@ -1,5 +1,6 @@
 package com.allnetworktools.ui.pages.bt
 
+import com.allnetworktools.ui.pages.ToolBack
 import android.content.Context
 import android.os.SystemClock
 import androidx.compose.animation.animateColorAsState
@@ -208,6 +209,8 @@ fun TrackerTool(c: TrackerController, heard: List<BleDevice>) {
         if (c.phase != Phase.Running) return@LaunchedEffect
         if (heat == Heat.Found) haptics.confirm() else haptics.tick()
     }
+    // Back from a followed device returns to the list of devices, not to the tools.
+    ToolBack(c.phase == Phase.Running || c.phase == Phase.Empty) { c.stop() }
     PageColumn {
         when (c.phase) {
             Phase.Idle, Phase.Error, Phase.Results -> PickDevice(nearby) { haptics.confirm(); c.follow(it) }

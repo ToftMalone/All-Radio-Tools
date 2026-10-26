@@ -1,5 +1,6 @@
 package com.allnetworktools.ui.pages.sdr
 
+import com.allnetworktools.ui.pages.ToolBack
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -605,6 +606,7 @@ private fun LevelChart(levels: List<Double>) {
 @Composable
 private fun AnalogPage(c: FpvController, d: SdrDevice?, now: Long) {
     val w = c.watching
+    ToolBack(w != null) { c.backToScan() }
     if (c.drones.isEmpty()) {
         Empty(
             if (c.running) S(R.string.no_drone_video_yet_the_sweep)

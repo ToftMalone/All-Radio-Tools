@@ -32,6 +32,22 @@ class NavAndDirectionTest {
         assertEquals(Page.Home, vm.backTarget(Page.Home))
     }
 
+    /** A tool's own back steps (a followed device, an open video) run before the page goes back, latest first. */
+    @Test fun toolBackStepsRunBeforeThePage() {
+        val stack = com.allnetworktools.ui.pages.ToolBackStack()
+        val ran = mutableListOf<String>()
+        assertEquals(false, stack.pop())
+        val device: () -> Unit = { ran += "device" }
+        val video: () -> Unit = { ran += "video" }
+        stack.entries += device
+        stack.entries += video
+        assertTrue(stack.pop())
+        assertEquals(listOf("video"), ran)
+        stack.entries.remove(video)
+        assertTrue(stack.pop())
+        assertEquals(listOf("video", "device"), ran)
+    }
+
     @Test fun revisitingAPageDoesNotLoop() {
         val vm = MainViewModel(ApplicationProvider.getApplicationContext<FakeApp>())
         vm.navigate { NavState(Network.Wifi, Page.Home) }

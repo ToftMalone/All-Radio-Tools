@@ -32,6 +32,8 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -94,6 +96,37 @@ fun TopBarAction(icon: String, onClick: () -> Unit) {
     DisposableEffect(icon, onClick) {
         slot.value = action
         onDispose { if (slot.value === action) slot.value = null }
+    }
+}
+
+/**
+ * Back steps a tool takes itself before the page closes: a picked device, an open detail, a sub-screen. The latest
+ * registered one runs first, for the system back gesture and the top bar's arrow alike.
+ */
+class ToolBackStack {
+    val entries = mutableStateListOf<() -> Unit>()
+
+    /** Runs the latest step; false when the tool has none and the page itself should go back. */
+    fun pop(): Boolean {
+        val last = entries.lastOrNull() ?: return false
+        last()
+        return true
+    }
+}
+
+val LocalToolBack = staticCompositionLocalOf { ToolBackStack() }
+
+/** While [enabled], back runs [onBack] instead of leaving the tool. */
+@Composable
+fun ToolBack(enabled: Boolean, onBack: () -> Unit) {
+    val stack = LocalToolBack.current
+    val current by rememberUpdatedState(onBack)
+    if (enabled) {
+        DisposableEffect(stack) {
+            val entry: () -> Unit = { current() }
+            stack.entries += entry
+            onDispose { stack.entries.remove(entry) }
+        }
     }
 }
 

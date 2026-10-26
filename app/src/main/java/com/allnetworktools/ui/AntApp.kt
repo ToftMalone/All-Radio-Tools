@@ -1,6 +1,8 @@
 package com.allnetworktools.ui
 
 import androidx.activity.compose.BackHandler
+import com.allnetworktools.ui.pages.LocalToolBack
+import com.allnetworktools.ui.pages.ToolBackStack
 import androidx.activity.compose.PredictiveBackHandler
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
@@ -151,7 +153,9 @@ private fun MainShell(vm: MainViewModel) {
 
     fun closePage() = vm.navigate { it.copy(page = Page.Home) }
 
-    val closesToHome = pageOpen && vm.backTarget(parentPage(nav.page)) == Page.Home
+    val toolBack = remember { ToolBackStack() }
+    val toolSteps = toolBack.entries.isNotEmpty()
+    val closesToHome = pageOpen && !toolSteps && vm.backTarget(parentPage(nav.page)) == Page.Home
     PredictiveBackHandler(enabled = closesToHome) { events ->
         var buzzed = false
         try {
@@ -169,6 +173,7 @@ private fun MainShell(vm: MainViewModel) {
     }
     BackHandler(enabled = !closesToHome && (pageOpen || nav.network != null)) {
         when {
+            pageOpen && toolBack.pop() -> Unit
             pageOpen -> vm.back(parentPage(nav.page))
             else -> vm.navigate { it.copy(network = null) }
         }
@@ -225,7 +230,9 @@ private fun MainShell(vm: MainViewModel) {
                         .background(lerp(startBg, cs.surface, p)),
                 ) {
                     Box(Modifier.fillMaxSize().graphicsLayer { alpha = contentAlpha.value }) {
-                        PageHostContent(vm, s, onBack = { vm.back(parentPage(s.page)) })
+                        CompositionLocalProvider(LocalToolBack provides toolBack) {
+                            PageHostContent(vm, s, onBack = { if (!toolBack.pop()) vm.back(parentPage(s.page)) })
+                        }
                     }
                 }
             }
