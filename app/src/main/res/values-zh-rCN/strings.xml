@@ -2283,4 +2283,12 @@
     <string name="lpwan_join">"LoRaWAN 入网"</string>
     <string name="lpwan_port">"端口 %1$d"</string>
     <string name="lpwan_encrypted">"负载已加密(网络和应用密钥)"</string>
+    <string name="cubesat_subtitle">"业余卫星遥测"</string>
+    <string name="cubesat_custom">"其他频率"</string>
+    <string name="cubesat_listening">"正在接收遥测"</string>
+    <string name="cubesat_satellite">"卫星"</string>
+    <string name="cubesat_frequency_mhz">"下行频率 (MHz)"</string>
+    <string name="cubesat_needs_location">"打开定位以查看过境并跟踪多普勒频移。"</string>
+    <string name="cubesat_no_elements">"此卫星不在 CelesTrak 业余列表中：无过境和多普勒。"</string>
+    <string name="cubesat_how_it_works">"许多业余卫星和国际空间站在 2 米和 70 厘米波段发送 AX.25 遥测：1200 波特 AFSK(与 APRS 相同)或 9600 波特 G3RUH。应用调谐到卫星，根据其轨道和您的位置跟踪多普勒频移(70 厘米波段最多 ±10 kHz)，并列出校验和正确的帧。卫星只在过境时能收到，每次几分钟；国际空间站用垂直天线即可，小卫星用更好的天线效果更佳。仅接收。"</string>
 </resources>

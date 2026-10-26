@@ -2341,4 +2341,12 @@
     <string name="lpwan_join">"LoRaWAN katılımı"</string>
     <string name="lpwan_port">"port %1$d"</string>
     <string name="lpwan_encrypted">"Veri şifreli (ağ ve uygulama anahtarları)"</string>
+    <string name="cubesat_subtitle">"Amatör uydu telemetrisi"</string>
+    <string name="cubesat_custom">"Başka frekans"</string>
+    <string name="cubesat_listening">"Telemetri dinleniyor"</string>
+    <string name="cubesat_satellite">"Uydu"</string>
+    <string name="cubesat_frequency_mhz">"İniş frekansı (MHz)"</string>
+    <string name="cubesat_needs_location">"Geçişleri görmek ve Doppler kaymasını izlemek için konumu açın."</string>
+    <string name="cubesat_no_elements">"Bu uydu CelesTrak amatör listesinde yok: geçiş ya da Doppler yok."</string>
+    <string name="cubesat_how_it_works">"Birçok amatör uydu ve ISS, 2 m ve 70 cm\'de AX.25 telemetrisi gönderir: 1200 baud AFSK (APRS gibi) ya da 9600 baud G3RUH. Uygulama uyduya ayarlanır, yörüngesinden ve konumunuzdan Doppler kaymasını (70 cm\'de ±10 kHz\'e kadar) izler ve sağlama toplamı doğru çerçeveleri listeler. Bir uydu yalnızca geçiş sırasında, birkaç dakikalığına duyulur; ISS için dikey bir anten yeter, küçük uydular için daha iyisi yardımcı olur. Yalnızca alım."</string>
 </resources>

@@ -2457,4 +2457,12 @@
     <string name="lpwan_join">"Під\'єднання LoRaWAN"</string>
     <string name="lpwan_port">"порт %1$d"</string>
     <string name="lpwan_encrypted">"Дані зашифровані (ключі мережі й застосунку)"</string>
+    <string name="cubesat_subtitle">"Телеметрія аматорських супутників"</string>
+    <string name="cubesat_custom">"Інша частота"</string>
+    <string name="cubesat_listening">"Приймання телеметрії"</string>
+    <string name="cubesat_satellite">"Супутник"</string>
+    <string name="cubesat_frequency_mhz">"Частота downlink (МГц)"</string>
+    <string name="cubesat_needs_location">"Увімкніть геолокацію, щоб бачити прольоти й ураховувати доплерівський зсув."</string>
+    <string name="cubesat_no_elements">"Цього супутника немає в аматорському списку CelesTrak: ні прольотів, ні доплера."</string>
+    <string name="cubesat_how_it_works">"Багато аматорських супутників і МКС передають телеметрію AX.25 на 2 м і 70 см: AFSK 1200 бод (як APRS) або G3RUH 9600 бод. Застосунок налаштовується на супутник, ураховує доплерівський зсув (до ±10 кГц на 70 см) за орбітою й вашим положенням і показує кадри з правильною контрольною сумою. Супутник чутно лише під час прольоту, по кілька хвилин; для МКС досить вертикальної антени, для малих супутників потрібна краща. Лише прийом."</string>
 </resources>

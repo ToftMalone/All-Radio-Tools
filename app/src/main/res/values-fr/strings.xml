@@ -2399,4 +2399,12 @@
     <string name="lpwan_join">"Connexion LoRaWAN"</string>
     <string name="lpwan_port">"port %1$d"</string>
     <string name="lpwan_encrypted">"Données chiffrées (clés du réseau et de l\'application)"</string>
+    <string name="cubesat_subtitle">"Télémesure des satellites amateurs"</string>
+    <string name="cubesat_custom">"Autre fréquence"</string>
+    <string name="cubesat_listening">"À l\'écoute de la télémesure"</string>
+    <string name="cubesat_satellite">"Satellite"</string>
+    <string name="cubesat_frequency_mhz">"Fréquence de descente (MHz)"</string>
+    <string name="cubesat_needs_location">"Activez la localisation pour voir les passages et suivre le décalage Doppler."</string>
+    <string name="cubesat_no_elements">"Ce satellite n\'est pas dans la liste amateur de CelesTrak : pas de passages ni de Doppler."</string>
+    <string name="cubesat_how_it_works">"De nombreux satellites amateurs et l\'ISS envoient de la télémesure AX.25 sur 2 m et 70 cm : AFSK 1200 bauds (comme l\'APRS) ou G3RUH 9600 bauds. L\'application se cale sur le satellite, suit son décalage Doppler (jusqu\'à ±10 kHz sur 70 cm) d\'après son orbite et votre position, et liste les trames dont la somme de contrôle est bonne. Un satellite ne s\'entend que pendant un passage, quelques minutes à la fois ; une antenne verticale suffit pour l\'ISS, une meilleure aide pour les petits satellites. Réception seule."</string>
 </resources>

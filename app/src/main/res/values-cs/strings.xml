@@ -2457,4 +2457,12 @@
     <string name="lpwan_join">"Připojení LoRaWAN"</string>
     <string name="lpwan_port">"port %1$d"</string>
     <string name="lpwan_encrypted">"Data šifrovaná (klíče sítě a aplikace)"</string>
+    <string name="cubesat_subtitle">"Telemetrie radioamatérských družic"</string>
+    <string name="cubesat_custom">"Jiná frekvence"</string>
+    <string name="cubesat_listening">"Poslech telemetrie"</string>
+    <string name="cubesat_satellite">"Družice"</string>
+    <string name="cubesat_frequency_mhz">"Frekvence downlinku (MHz)"</string>
+    <string name="cubesat_needs_location">"Zapněte polohu, abyste viděli přelety a sledovali Dopplerův posun."</string>
+    <string name="cubesat_no_elements">"Družice není v amatérském seznamu CelesTrak: žádné přelety ani Doppler."</string>
+    <string name="cubesat_how_it_works">"Mnoho radioamatérských družic a ISS vysílá telemetrii AX.25 na 2 m a 70 cm: AFSK 1200 Bd (jako APRS) nebo G3RUH 9600 Bd. Aplikace se naladí na družici, sleduje Dopplerův posun (až ±10 kHz na 70 cm) z její dráhy a vaší polohy a vypisuje rámce se správným kontrolním součtem. Družice je slyšet jen během přeletu, vždy pár minut; pro ISS stačí vertikální anténa, pro malé družice pomůže lepší. Pouze příjem."</string>
 </resources>

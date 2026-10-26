@@ -29,9 +29,9 @@ data class MeteorPass(
     val setAzimuth: Double,
 )
 
-/** Element sets of the weather satellites from CelesTrak, cached so predictions work offline. */
-open class WeatherTleRepository(context: Context?) {
-    private val file = context?.let { File(it.cacheDir, "weather.tle") }
+/** Element sets of a CelesTrak group (the weather satellites by default), cached so predictions work offline. */
+open class WeatherTleRepository(context: Context?, fileName: String = "weather.tle", private val url: String = Url) {
+    private val file = context?.let { File(it.cacheDir, fileName) }
 
     open suspend fun load(forceRefresh: Boolean = false): List<Tle> = withContext(Dispatchers.IO) {
         val cached = file?.takeIf { it.exists() && it.length() > 0 }
@@ -47,7 +47,7 @@ open class WeatherTleRepository(context: Context?) {
     }
 
     private fun download(): String {
-        val c = URL(Url).openConnection() as HttpURLConnection
+        val c = URL(url).openConnection() as HttpURLConnection
         c.connectTimeout = 10_000
         c.readTimeout = 20_000
         c.setRequestProperty("User-Agent", "AllRadioTools")
@@ -63,6 +63,7 @@ open class WeatherTleRepository(context: Context?) {
 
     companion object {
         const val Url = "https://celestrak.org/NORAD/elements/gp.php?GROUP=weather&FORMAT=tle"
+        const val AmateurUrl = "https://celestrak.org/NORAD/elements/gp.php?GROUP=amateur&FORMAT=tle"
         const val MaxAgeMs = 12 * 3_600_000L
     }
 }

@@ -2573,4 +2573,12 @@
     <string name="lpwan_join">"انضمام LoRaWAN"</string>
     <string name="lpwan_port">"المنفذ %1$d"</string>
     <string name="lpwan_encrypted">"البيانات مشفرة (مفاتيح الشبكة والتطبيق)"</string>
+    <string name="cubesat_subtitle">"قياس عن بُعد للأقمار الهواة"</string>
+    <string name="cubesat_custom">"تردد آخر"</string>
+    <string name="cubesat_listening">"الاستماع إلى القياس عن بعد"</string>
+    <string name="cubesat_satellite">"القمر الصناعي"</string>
+    <string name="cubesat_frequency_mhz">"تردد الهبوط (ميغاهرتز)"</string>
+    <string name="cubesat_needs_location">"فعّل الموقع لرؤية المرورات وتتبع انزياح دوبلر."</string>
+    <string name="cubesat_no_elements">"هذا القمر ليس في قائمة الهواة لدى CelesTrak: لا مرورات ولا دوبلر."</string>
+    <string name="cubesat_how_it_works">"ترسل أقمار هواة كثيرة ومحطة الفضاء الدولية قياسات AX.25 على نطاقي 2 م و70 سم: AFSK بسرعة 1200 بود (مثل APRS) أو G3RUH بسرعة 9600 بود. يضبط التطبيق على القمر ويتبع انزياح دوبلر (حتى ±10 كيلوهرتز على 70 سم) من مداره وموقعك، ويعرض الإطارات الصحيحة المجموع. لا يُسمع القمر إلا أثناء مروره، لبضع دقائق؛ يكفي هوائي رأسي لمحطة الفضاء، ويساعد هوائي أفضل مع الأقمار الصغيرة. استقبال فقط."</string>
 </resources>

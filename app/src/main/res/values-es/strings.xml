@@ -2341,4 +2341,12 @@
     <string name="lpwan_join">"Unión LoRaWAN"</string>
     <string name="lpwan_port">"puerto %1$d"</string>
     <string name="lpwan_encrypted">"Datos cifrados (claves de red y de aplicación)"</string>
+    <string name="cubesat_subtitle">"Telemetría de satélites de aficionados"</string>
+    <string name="cubesat_custom">"Otra frecuencia"</string>
+    <string name="cubesat_listening">"Escuchando la telemetría"</string>
+    <string name="cubesat_satellite">"Satélite"</string>
+    <string name="cubesat_frequency_mhz">"Frecuencia de bajada (MHz)"</string>
+    <string name="cubesat_needs_location">"Activa la ubicación para ver los pasos y seguir el desplazamiento Doppler."</string>
+    <string name="cubesat_no_elements">"Este satélite no está en la lista de aficionados de CelesTrak: sin pasos ni Doppler."</string>
+    <string name="cubesat_how_it_works">"Muchos satélites de aficionados y la ISS envían telemetría AX.25 en 2 m y 70 cm: AFSK a 1200 baudios (como APRS) o G3RUH a 9600 baudios. La app sintoniza el satélite, sigue su desplazamiento Doppler (hasta ±10 kHz en 70 cm) a partir de su órbita y tu posición, y lista las tramas cuya suma de control es correcta. Un satélite solo se oye durante un paso, unos minutos cada vez; una antena vertical basta para la ISS y una mejor ayuda con los satélites pequeños. Solo recepción."</string>
 </resources>

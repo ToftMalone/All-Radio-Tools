@@ -2341,4 +2341,12 @@
     <string name="lpwan_join">"LoRaWAN-anslutning"</string>
     <string name="lpwan_port">"port %1$d"</string>
     <string name="lpwan_encrypted">"Data krypterad (nät- och applikationsnycklar)"</string>
+    <string name="cubesat_subtitle">"Telemetri från amatörsatelliter"</string>
+    <string name="cubesat_custom">"Annan frekvens"</string>
+    <string name="cubesat_listening">"Lyssnar efter telemetri"</string>
+    <string name="cubesat_satellite">"Satellit"</string>
+    <string name="cubesat_frequency_mhz">"Nedlänksfrekvens (MHz)"</string>
+    <string name="cubesat_needs_location">"Slå på plats för att se passagerna och följa dopplerförskjutningen."</string>
+    <string name="cubesat_no_elements">"Satelliten finns inte i CelesTraks amatörlista: inga passager eller doppler."</string>
+    <string name="cubesat_how_it_works">"Många amatörsatelliter och ISS sänder AX.25-telemetri på 2 m och 70 cm: AFSK 1200 baud (som APRS) eller G3RUH 9600 baud. Appen ställer in satelliten, följer dess dopplerförskjutning (upp till ±10 kHz på 70 cm) utifrån banan och din position och listar ramarna med giltig kontrollsumma. En satellit hörs bara under en passage, några minuter i taget; en vertikalantenn räcker för ISS, en bättre hjälper för små satelliter. Endast mottagning."</string>
 </resources>

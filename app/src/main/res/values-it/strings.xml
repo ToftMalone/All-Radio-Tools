@@ -2341,4 +2341,12 @@
     <string name="lpwan_join">"Join LoRaWAN"</string>
     <string name="lpwan_port">"porta %1$d"</string>
     <string name="lpwan_encrypted">"Dati cifrati (chiavi di rete e di applicazione)"</string>
+    <string name="cubesat_subtitle">"Telemetria dei satelliti amatoriali"</string>
+    <string name="cubesat_custom">"Altra frequenza"</string>
+    <string name="cubesat_listening">"In ascolto della telemetria"</string>
+    <string name="cubesat_satellite">"Satellite"</string>
+    <string name="cubesat_frequency_mhz">"Frequenza di downlink (MHz)"</string>
+    <string name="cubesat_needs_location">"Attiva la posizione per vedere i passaggi e seguire lo spostamento Doppler."</string>
+    <string name="cubesat_no_elements">"Questo satellite non è nell\'elenco amatoriale di CelesTrak: niente passaggi né Doppler."</string>
+    <string name="cubesat_how_it_works">"Molti satelliti amatoriali e la ISS inviano telemetria AX.25 sui 2 m e 70 cm: AFSK a 1200 baud (come l\'APRS) o G3RUH a 9600 baud. L\'app si sintonizza sul satellite, segue lo spostamento Doppler (fino a ±10 kHz sui 70 cm) dalla sua orbita e dalla tua posizione ed elenca le trame con checksum corretto. Un satellite si sente solo durante un passaggio, pochi minuti per volta; per la ISS basta un\'antenna verticale, per i piccoli satelliti ne serve una migliore. Solo ricezione."</string>
 </resources>

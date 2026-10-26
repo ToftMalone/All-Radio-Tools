@@ -2283,4 +2283,12 @@
     <string name="lpwan_join">"Gia nhập LoRaWAN"</string>
     <string name="lpwan_port">"cổng %1$d"</string>
     <string name="lpwan_encrypted">"Dữ liệu đã mã hóa (khóa mạng và ứng dụng)"</string>
+    <string name="cubesat_subtitle">"Đo xa vệ tinh nghiệp dư"</string>
+    <string name="cubesat_custom">"Tần số khác"</string>
+    <string name="cubesat_listening">"Đang nghe dữ liệu đo xa"</string>
+    <string name="cubesat_satellite">"Vệ tinh"</string>
+    <string name="cubesat_frequency_mhz">"Tần số đường xuống (MHz)"</string>
+    <string name="cubesat_needs_location">"Bật vị trí để xem các lần bay qua và theo dõi dịch Doppler."</string>
+    <string name="cubesat_no_elements">"Vệ tinh này không có trong danh sách nghiệp dư của CelesTrak: không có lần bay qua hay Doppler."</string>
+    <string name="cubesat_how_it_works">"Nhiều vệ tinh nghiệp dư và ISS phát dữ liệu đo xa AX.25 trên 2 m và 70 cm: AFSK 1200 baud (như APRS) hoặc G3RUH 9600 baud. Ứng dụng dò đúng vệ tinh, theo dịch Doppler (tới ±10 kHz ở 70 cm) từ quỹ đạo và vị trí của bạn, và liệt kê các khung có tổng kiểm tra đúng. Vệ tinh chỉ nghe được khi bay qua, mỗi lần vài phút; ăng-ten đứng đủ cho ISS, ăng-ten tốt hơn giúp với vệ tinh nhỏ. Chỉ thu."</string>
 </resources>

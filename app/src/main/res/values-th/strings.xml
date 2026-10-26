@@ -2283,4 +2283,12 @@
     <string name="lpwan_join">"เข้าร่วม LoRaWAN"</string>
     <string name="lpwan_port">"พอร์ต %1$d"</string>
     <string name="lpwan_encrypted">"ข้อมูลถูกเข้ารหัส (กุญแจเครือข่ายและแอป)"</string>
+    <string name="cubesat_subtitle">"ข้อมูลโทรมาตรดาวเทียมสมัครเล่น"</string>
+    <string name="cubesat_custom">"ความถี่อื่น"</string>
+    <string name="cubesat_listening">"กำลังฟังข้อมูลโทรมาตร"</string>
+    <string name="cubesat_satellite">"ดาวเทียม"</string>
+    <string name="cubesat_frequency_mhz">"ความถี่ดาวน์ลิงก์ (MHz)"</string>
+    <string name="cubesat_needs_location">"เปิดตำแหน่งเพื่อดูการโคจรผ่านและติดตามการเลื่อนดอปเพลอร์"</string>
+    <string name="cubesat_no_elements">"ดาวเทียมนี้ไม่อยู่ในรายการสมัครเล่นของ CelesTrak จึงไม่มีการโคจรผ่านหรือดอปเพลอร์"</string>
+    <string name="cubesat_how_it_works">"ดาวเทียมสมัครเล่นหลายดวงและ ISS ส่งข้อมูลโทรมาตร AX.25 บนย่าน 2 ม. และ 70 ซม. แบบ AFSK 1200 บอด (เหมือน APRS) หรือ G3RUH 9600 บอด แอปจูนไปที่ดาวเทียม ติดตามการเลื่อนดอปเพลอร์ (สูงสุด ±10 kHz บน 70 ซม.) จากวงโคจรและตำแหน่งของคุณ และแสดงเฟรมที่ checksum ถูกต้อง ดาวเทียมจะได้ยินเฉพาะตอนโคจรผ่านครั้งละไม่กี่นาที สำหรับ ISS ใช้เสาอากาศแนวตั้งก็พอ ส่วนดาวเทียมเล็กควรใช้เสาอากาศที่ดีกว่า รับอย่างเดียว"</string>
 </resources>

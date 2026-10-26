@@ -2283,4 +2283,12 @@
     <string name="lpwan_join">"LoRaWAN 参加"</string>
     <string name="lpwan_port">"ポート %1$d"</string>
     <string name="lpwan_encrypted">"ペイロードは暗号化(ネットワーク鍵とアプリ鍵)"</string>
+    <string name="cubesat_subtitle">"アマチュア衛星のテレメトリー"</string>
+    <string name="cubesat_custom">"他の周波数"</string>
+    <string name="cubesat_listening">"テレメトリーを受信中"</string>
+    <string name="cubesat_satellite">"衛星"</string>
+    <string name="cubesat_frequency_mhz">"ダウンリンク周波数 (MHz)"</string>
+    <string name="cubesat_needs_location">"通過予報とドップラー補正には位置情報をオンにしてください。"</string>
+    <string name="cubesat_no_elements">"この衛星は CelesTrak のアマチュア一覧にありません。通過予報とドップラーは使えません。"</string>
+    <string name="cubesat_how_it_works">"多くのアマチュア衛星と ISS は 2 m と 70 cm で AX.25 テレメトリーを送っています。1200 ボー AFSK(APRS と同じ)または 9600 ボー G3RUH です。アプリは衛星に同調し、軌道と現在地からドップラー偏移(70 cm で最大 ±10 kHz)を補正し、チェックサムが正しいフレームを一覧表示します。衛星が聞こえるのは通過中の数分間だけです。ISS には垂直アンテナで十分ですが、小型衛星にはより良いアンテナが役立ちます。受信のみ。"</string>
 </resources>

@@ -2283,4 +2283,12 @@
     <string name="lpwan_join">"Gabung LoRaWAN"</string>
     <string name="lpwan_port">"port %1$d"</string>
     <string name="lpwan_encrypted">"Data terenkripsi (kunci jaringan dan aplikasi)"</string>
+    <string name="cubesat_subtitle">"Telemetri satelit amatir"</string>
+    <string name="cubesat_custom">"Frekuensi lain"</string>
+    <string name="cubesat_listening">"Mendengarkan telemetri"</string>
+    <string name="cubesat_satellite">"Satelit"</string>
+    <string name="cubesat_frequency_mhz">"Frekuensi downlink (MHz)"</string>
+    <string name="cubesat_needs_location">"Aktifkan lokasi untuk melihat lintasan dan mengikuti pergeseran Doppler."</string>
+    <string name="cubesat_no_elements">"Satelit ini tidak ada di daftar amatir CelesTrak: tanpa lintasan dan Doppler."</string>
+    <string name="cubesat_how_it_works">"Banyak satelit amatir dan ISS mengirim telemetri AX.25 di 2 m dan 70 cm: AFSK 1200 baud (seperti APRS) atau G3RUH 9600 baud. Aplikasi menala ke satelit, mengikuti pergeseran Doppler (hingga ±10 kHz di 70 cm) dari orbitnya dan posisi Anda, dan menampilkan frame dengan checksum benar. Satelit hanya terdengar saat melintas, beberapa menit sekali; antena vertikal cukup untuk ISS, antena lebih baik membantu untuk satelit kecil. Hanya menerima."</string>
 </resources>

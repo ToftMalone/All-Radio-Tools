@@ -2341,4 +2341,12 @@
     <string name="lpwan_join">"LoRaWAN जॉइन"</string>
     <string name="lpwan_port">"पोर्ट %1$d"</string>
     <string name="lpwan_encrypted">"डेटा एन्क्रिप्टेड (नेटवर्क और ऐप कुंजियाँ)"</string>
+    <string name="cubesat_subtitle">"शौकिया उपग्रह टेलीमेट्री"</string>
+    <string name="cubesat_custom">"अन्य आवृत्ति"</string>
+    <string name="cubesat_listening">"टेलीमेट्री सुनी जा रही है"</string>
+    <string name="cubesat_satellite">"उपग्रह"</string>
+    <string name="cubesat_frequency_mhz">"डाउनलिंक आवृत्ति (MHz)"</string>
+    <string name="cubesat_needs_location">"पास देखने और डॉप्लर शिफ़्ट का पालन करने के लिए लोकेशन चालू करें।"</string>
+    <string name="cubesat_no_elements">"यह उपग्रह CelesTrak की शौकिया सूची में नहीं है: पास या डॉप्लर नहीं।"</string>
+    <string name="cubesat_how_it_works">"कई शौकिया उपग्रह और ISS 2 m और 70 cm पर AX.25 टेलीमेट्री भेजते हैं: 1200 बॉड AFSK (APRS जैसा) या 9600 बॉड G3RUH। ऐप उपग्रह पर ट्यून करता है, उसकी कक्षा और आपकी स्थिति से डॉप्लर शिफ़्ट (70 cm पर ±10 kHz तक) का पालन करता है, और सही चेकसम वाले फ़्रेम दिखाता है। उपग्रह केवल पास के दौरान कुछ मिनट सुनाई देता है; ISS के लिए वर्टिकल एंटीना काफ़ी है, छोटे उपग्रहों के लिए बेहतर एंटीना मदद करता है। केवल रिसीव।"</string>
 </resources>

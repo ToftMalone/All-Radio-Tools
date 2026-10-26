@@ -2399,4 +2399,12 @@
     <string name="lpwan_join">"Conectare LoRaWAN"</string>
     <string name="lpwan_port">"port %1$d"</string>
     <string name="lpwan_encrypted">"Date criptate (chei de rețea și de aplicație)"</string>
+    <string name="cubesat_subtitle">"Telemetria sateliților amatori"</string>
+    <string name="cubesat_custom">"Altă frecvență"</string>
+    <string name="cubesat_listening">"Ascultă telemetria"</string>
+    <string name="cubesat_satellite">"Satelit"</string>
+    <string name="cubesat_frequency_mhz">"Frecvența de coborâre (MHz)"</string>
+    <string name="cubesat_needs_location">"Activați locația pentru a vedea trecerile și a urmări deplasarea Doppler."</string>
+    <string name="cubesat_no_elements">"Satelitul nu este în lista amatorilor CelesTrak: fără treceri sau Doppler."</string>
+    <string name="cubesat_how_it_works">"Mulți sateliți amatori și ISS trimit telemetrie AX.25 pe 2 m și 70 cm: AFSK la 1200 baud (ca APRS) sau G3RUH la 9600 baud. Aplicația se acordează pe satelit, urmărește deplasarea Doppler (până la ±10 kHz pe 70 cm) din orbită și poziția dumneavoastră și listează cadrele cu sumă de control corectă. Un satelit se aude doar în timpul unei treceri, câteva minute; pentru ISS ajunge o antenă verticală, pentru sateliții mici ajută una mai bună. Doar recepție."</string>
 </resources>

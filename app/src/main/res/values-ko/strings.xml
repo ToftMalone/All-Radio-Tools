@@ -2283,4 +2283,12 @@
     <string name="lpwan_join">"LoRaWAN 가입"</string>
     <string name="lpwan_port">"포트 %1$d"</string>
     <string name="lpwan_encrypted">"데이터 암호화됨(네트워크·앱 키)"</string>
+    <string name="cubesat_subtitle">"아마추어 위성 원격측정"</string>
+    <string name="cubesat_custom">"다른 주파수"</string>
+    <string name="cubesat_listening">"원격측정 수신 중"</string>
+    <string name="cubesat_satellite">"위성"</string>
+    <string name="cubesat_frequency_mhz">"다운링크 주파수(MHz)"</string>
+    <string name="cubesat_needs_location">"통과 예측과 도플러 보정을 위해 위치를 켜세요."</string>
+    <string name="cubesat_no_elements">"이 위성은 CelesTrak 아마추어 목록에 없습니다. 통과와 도플러가 없습니다."</string>
+    <string name="cubesat_how_it_works">"많은 아마추어 위성과 ISS가 2m와 70cm에서 AX.25 원격측정을 보냅니다. 1200보드 AFSK(APRS와 동일) 또는 9600보드 G3RUH입니다. 앱은 위성에 맞추고, 궤도와 현재 위치로 도플러 편이(70cm에서 최대 ±10kHz)를 따라가며, 체크섬이 맞는 프레임을 나열합니다. 위성은 통과하는 몇 분 동안만 들립니다. ISS는 수직 안테나로 충분하고, 소형 위성은 더 좋은 안테나가 도움이 됩니다. 수신 전용."</string>
 </resources>

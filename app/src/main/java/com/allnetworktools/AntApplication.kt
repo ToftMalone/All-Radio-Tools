@@ -34,5 +34,6 @@ open class AntApplication : Application() {
     open val towers by lazy { com.allnetworktools.data.TowerRepository() }
     open val sdr by lazy { com.allnetworktools.data.sdr.SdrRepository(this) }
     open val weatherTles by lazy { com.allnetworktools.data.orbit.WeatherTleRepository(this) }
+    open val amateurTles by lazy { com.allnetworktools.data.orbit.WeatherTleRepository(this, "amateur.tle", com.allnetworktools.data.orbit.WeatherTleRepository.AmateurUrl) }
     open val wifiDirect by lazy { com.allnetworktools.data.WifiDirectRepository(this) }
 }
