@@ -29,7 +29,6 @@ open class AntApplication : Application() {
     open val cell by lazy { CellRepository(this) }
     open val gnss by lazy { GnssRepository(this) }
     open val history by lazy { HistoryStore(this) }
-    open val cables by lazy { com.allnetworktools.data.radio.RadioCableRepository(this) }
     open val updater by lazy { com.allnetworktools.update.AppUpdater(this, BuildConfig.VERSION_NAME) }
     open val tles by lazy { com.allnetworktools.data.orbit.TleRepository(this) }
     open val towers by lazy { com.allnetworktools.data.TowerRepository() }

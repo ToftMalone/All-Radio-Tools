@@ -654,44 +654,7 @@
     <string name="celestrak_answered">"CelesTrak a răspuns %1$s"</string>
     <string name="unreadable_answer_from_celestrak">"Răspuns ilizibil de la CelesTrak"</string>
     <string name="none">"Niciunul"</string>
-    <string name="high">"Ridicat"</string>
     <string name="medium">"Mediu"</string>
-    <string name="low">"Scăzut"</string>
-    <string name="n_16_channels_446_00625_to_446">"16 canale, de la 446,00625 la 446,19375 MHz"</string>
-    <string name="transmitting_on_pmr446_needs_a_type">"Emisia pe PMR446 necesită un aparat omologat, cu antenă fixă și maximum 0,5 W: o stație programabilă nu este."</string>
-    <string name="n_69_channels_433_075_to_434">"69 de canale, de la 433,075 la 434,775 MHz"</string>
-    <string name="licence_free_band_at_10_mw">"Bandă liberă cu maximum 10 mW: o stație de câțiva wați nu are voie să emită acolo."</string>
-    <string name="marine_vhf">"VHF maritim"</string>
-    <string name="simplex_channels_156_3_to_156">"Canale simplex, de la 156,3 la 156,875 MHz"</string>
-    <string name="listen_only_transmitting_on_marine_bands">"Doar ascultare: emisia pe benzile maritime necesită o stație și un certificat dedicate."</string>
-    <string name="n_2_m_amateur_repeaters">"Repetoare radioamatori 2 m"</string>
-    <string name="rv48_to_rv63_outputs_145_600">"RV48 până la RV63, ieșiri de la 145,600 la 145,7875 MHz, decalaj −600 kHz"</string>
-    <string name="transmitting_needs_an_amateur_radio_licence">"Emisia necesită o licență de radioamator. Multe repetoare cer un ton de acces (adesea 88,5 Hz): setează-l canal cu canal."</string>
-    <string name="amateur_radio_calling_and_specials">"Radioamatori: apel și speciale"</string>
-    <string name="n_2_m_and_70_cm_calling">"Apel 2 m și 70 cm, APRS, ISS"</string>
-    <string name="transmitting_needs_an_amateur_radio_licence_2">"Emisia necesită o licență de radioamator. ISS este doar recepție."</string>
-    <string name="handheld_radio">"Stație portabilă"</string>
-    <string name="the_radio_did_not_answer">"Stația nu a răspuns (%1$s)."</string>
-    <string name="no_answer">"niciun răspuns"</string>
-    <string name="answer">"răspuns %1$s"</string>
-    <string name="unexpected_radio_identification">"Identificare neașteptată a stației: %1$s."</string>
-    <string name="the_radio_refused_clone_mode">"Stația a refuzat modul de clonare."</string>
-    <string name="the_radio_does_not_answer_check">"Stația nu răspunde (%1$s). Verifică dacă cablul este introdus complet în mufa stației, dacă stația este pornită "</string>
-    <string name="and_that_its_volume_is_not">"și dacă volumul nu este la zero."</string>
-    <string name="the_radio_refused_to_send_block" formatted="false">"Stația a refuzat să trimită blocul %04X."</string>
-    <string name="block" formatted="false">"blocul %04X"</string>
-    <string name="unexpected_answer_from_the_radio_for" formatted="false">"Răspuns neașteptat de la stație pentru blocul %04X."</string>
-    <string name="the_radio_refused_block_nothing_more" formatted="false">"Stația a refuzat blocul %04X: nu s-a mai scris nimic."</string>
-    <string name="the_radio_does_not_answer_check_2">"Stația nu răspunde. Verifică dacă cablul este introdus complet în mufa stației, dacă stația este pornită, "</string>
-    <string name="then_turn_it_off_and_on">"apoi oprește-o și pornește-o din nou."</string>
-    <string name="unrecognised_firmware_writing_is_refused_for">"Firmware nerecunoscut (%1$s): scrierea este refuzată din motive de siguranță. Citirea funcționează în continuare."</string>
-    <string name="the_radio_does_not_answer">"Stația nu răspunde."</string>
-    <string name="unexpected_answer">"Răspuns neașteptat: %1$s"</string>
-    <string name="unexpected_answer_from_the_radio">"Răspuns neașteptat de la stație (%1$s)."</string>
-    <string name="incomplete_frame_from_the_radio">"Cadru incomplet de la stație (%1$s)."</string>
-    <string name="this_is_not_a_uv_k5">"Acesta nu este un UV-K5."</string>
-    <string name="write" formatted="false">"scriere %04X"</string>
-    <string name="usb_serial">"USB-serial"</string>
     <string name="link_without_message">"Legătură fără mesaj"</string>
     <string name="link_test">"Test de legătură"</string>
     <string name="crew_company_message">"Mesaj echipaj / companie"</string>
@@ -805,7 +768,6 @@
     <string name="cells">"Celule"</string>
     <string name="sky">"Cer"</string>
     <string name="spectrum">"Spectru"</string>
-    <string name="channels">"Canale"</string>
     <string name="wi_fi_scanner">"Scaner Wi-Fi"</string>
     <string name="lan_devices">"Dispozitive LAN"</string>
     <string name="lan_device">"Dispozitiv LAN"</string>
@@ -835,7 +797,6 @@
     <string name="spectrum_analyser">"Analizor de spectru"</string>
     <string name="radiosondes">"Radiosonde"</string>
     <string name="fm_radio">"Radio FM"</string>
-    <string name="radio_channels">"Canale radio"</string>
     <string name="screen_unavailable_on_this_device">"Ecran indisponibil pe acest dispozitiv"</string>
     <string name="allow_access_in_android_settings_permissions">"Permite accesul în Setări Android › Permisiuni"</string>
     <string name="saving_unavailable_on_this_device">"Salvarea nu este disponibilă pe acest dispozitiv"</string>
@@ -880,8 +841,6 @@
     <string name="this_device_does_not_have_this">"Acest dispozitiv nu are această radio."</string>
     <string name="no_hackrf">"Fără HackRF"</string>
     <string name="plug_in_a_hackrf_over_usb">"Conectează un HackRF prin USB-C pentru a recepționa."</string>
-    <string name="no_handheld_radio">"Fără stație portabilă"</string>
-    <string name="plug_in_a_radio_with_its">"Conectează o stație cu cablul ei de programare USB."</string>
     <string name="turn_on_wi_fi_to_show">"Pornește Wi-Fi ca să vezi conexiunea actuală și să folosești instrumentele rețelei locale."</string>
     <string name="turn_on_wi_fi">"Pornește Wi-Fi"</string>
     <string name="wi_fi_settings">"Setări Wi-Fi"</string>
@@ -908,16 +867,12 @@
     <string name="plug_in_a_hackrf">"Conectează un HackRF"</string>
     <string name="connect_a_hackrf_one_or_rad1o">"Conectează un HackRF One (sau rad1o, Jawbreaker, PortaPack în modul HackRF) la telefon cu un cablu USB-C OTG. "</string>
     <string name="the_app_detects_it_as_soon">"Aplicația îl detectează imediat ce este conectat."</string>
-    <string name="plug_in_a_handheld_radio">"Conectează o stație portabilă"</string>
-    <string name="connect_the_radio_to_the_phone">"Conectează stația la telefon cu cablul ei de programare USB (cip FTDI, CH340, CP210x sau PL2303), "</string>
-    <string name="plugged_into_the_radio_s_headset">"introdus în mufa de cască a stației. Aplicația o detectează imediat ce este conectată."</string>
     <string name="tools">"Instrumente"</string>
     <string name="nearby_networks_channels_speed_wi_fi">"Rețele din apropiere, canale, viteză, diagnostic și securitate Wi-Fi."</string>
     <string name="bluetooth_le_devices_unknown_trackers_and">"Dispozitive Bluetooth LE, trackere necunoscute și căutare Cald/Rece."</string>
     <string name="cells_your_carrier_s_towers_and">"Celule, antenele operatorului tău și date mobile."</string>
     <string name="satellites_sky_position_comparison_and_passes">"Sateliți, cer, comparare de poziții și treceri."</string>
     <string name="hackrf_spectrum_aircraft_ships_radiosondes_fpv">"HackRF: spectru, avioane, nave, radiosonde, drone FPV și altele."</string>
-    <string name="program_a_baofeng_radtel_or_quansheng">"Programează un Baofeng, Radtel sau Quansheng printr-un cablu USB."</string>
     <string name="welcome_the_airwaves_are_waiting">"Bun venit! Undele te așteaptă."</string>
     <string name="good_to_see_you_again_the">"Mă bucur să te revăd, antenele sunt pregătite."</string>
     <string name="hello_which_frequency_shall_we_explore">"Salut! Ce frecvență explorăm azi?"</string>
@@ -940,8 +895,6 @@
     <string name="a_lost_airtag_it_s_never">"Un AirTag pierdut? Nu e niciodată cu adevărat singur."</string>
     <string name="gps_never_gets_lost_it_recalculates">"GPS-ul nu se rătăcește niciodată. Recalculează."</string>
     <string name="aircraft_shout_their_position_on_1090">"Avioanele își strigă poziția pe 1090 MHz. Să ascultăm."</string>
-    <string name="the_walkie_talkie_the_first_social">"Stația portabilă: prima rețea socială. Pe rând."</string>
-    <string name="over_roger_that_back_to_the">"Recepție. Am înțeles. Înapoi în studio."</string>
     <string name="short_waves_long_ideas">"Unde scurte, idei lungi."</string>
     <string name="the_sky_has_never_been_so">"Cerul n-a fost niciodată atât de vorbăreț."</string>
     <string name="better_a_good_dbm_than_a">"Mai bine un dBm bun decât un cablu lung."</string>
@@ -1009,7 +962,6 @@
     <string name="identifiers_and_measurements_of_the_connected">"Identificatori și măsurători ai celulei conectate"</string>
     <string name="sky_plot_and_world_map_of">"Sky plot și hartă a lumii a sateliților"</string>
     <string name="spectrum_and_waterfall_1_mhz_to">"Spectru și cascadă, de la 1 MHz la 6 GHz"</string>
-    <string name="read_edit_and_write_memories_over">"Citește, editează și scrie memoriile printr-un cablu USB"</string>
     <string name="launch">"Pornește"</string>
     <string name="ibeacon_eddystone_and_altbeacon_shops_museums">"iBeacon, Eddystone și AltBeacon: magazine, muzee, locații, dispozitive inteligente"</string>
     <string name="bluetooth_listening_in_progress">"Ascultare Bluetooth în curs"</string>
@@ -1598,84 +1550,7 @@
     <string name="the_line_in_the_middle_is">"Linia din mijloc este reziduul DC al HackRF, nu un semnal. Evită amplificatorul lângă emițătoare puternice."</string>
     <string name="the_spectrum_shows_here_during_the">"Spectrul apare aici în timpul analizei"</string>
     <string name="waterfall_newest_at_the_top">"Cascadă · cele mai recente sus"</string>
-    <string name="looking_for_the_radio">"Se caută stația…"</string>
-    <string name="reading_the_radio">"Se citește stația…"</string>
-    <string name="writing_to_the_radio">"Se scrie în stație…"</string>
     <string name="verifying">"Se verifică…"</string>
-    <string name="usb_access_to_the_cable_refused">"Acces USB la cablu refuzat."</string>
-    <string name="could_not_open_the_usb_cable">"Cablul USB nu a putut fi deschis."</string>
-    <string name="no_radio_recognised">"Nicio stație recunoscută ("</string>
-    <string name="or">" sau "</string>
-    <string name="check_that_the_cable_is_pushed">"). Verifică dacă cablul este introdus complet în mufa stației, "</string>
-    <string name="that_the_radio_is_on_and">"dacă stația este pornită și dacă volumul nu este la zero."</string>
-    <string name="communication_error">"Eroare de comunicare."</string>
-    <string name="error_2">"Eroare: %1$s"</string>
-    <string name="recognised_channels_read">"%1$s recunoscut: %2$s canale citite."</string>
-    <string name="unrecognised_firmware_read_only_writing_will">" Firmware nerecunoscut: doar citire, scrierea va fi refuzată."</string>
-    <string name="for_the_not_written">"%1$s %2$s pentru %3$s nescrise"</string>
-    <string name="beyond_its_memories_not_written">"%1$s %2$s peste cele %3$s memorii nescrise"</string>
-    <string name="the_already_holds_exactly_these_channels">"%1$s conține deja exact aceste canale: nimic de scris.%2$s"</string>
-    <string name="channels_written_to_the_and_verified">"%1$s canale scrise în %2$s și verificate prin recitire."</string>
-    <string name="of_channels_read_back_differently_read">"%1$s din %2$s canale au fost recitite diferit: citește din nou stația ca să vezi ce conține."</string>
-    <string name="channels_written_verification_impossible_turn_the">"%1$s canale scrise. Verificare imposibilă: oprește și pornește stația înainte de a o citi din nou."</string>
-    <string name="previous_state_of_the_restored_channels">"Starea anterioară a %1$s a fost restaurată (%2$s canale)."</string>
-    <string name="n_12_5_khz">"12,5 kHz"</string>
-    <string name="of_2">" din %1$s"</string>
-    <string name="to_write">" · %1$s de scris"</string>
-    <string name="cable">"Cablu %1$s"</string>
-    <string name="no_usb_cable">"Niciun cablu USB"</string>
-    <string name="model_recognised_when_reading">"Model recunoscut la citire"</string>
-    <string name="restore_the_state_before_writing">"Restaurează starea dinaintea scrierii"</string>
-    <string name="plug_the_programming_cable_into_the">"Conectează cablul de programare la mufa USB-C a telefonului (cu un adaptor OTG dacă e nevoie) și la "</string>
-    <string name="headset_socket_of_the_radio_switched">"mufa de cască a stației, pornite. Poți deja pregăti o listă de canale fără stație."</string>
-    <string name="new_channel">"Canal nou"</string>
-    <string name="presets">"Presetări"</string>
-    <string name="clear_all">"Golește tot"</string>
-    <string name="the_app_never_makes_the_radio">"Aplicația nu face niciodată stația să emită: îi citește și îi scrie memoria. Doar canalele modificate sunt rescrise, restul "</string>
-    <string name="settings_keys_dtmf_is_untouched_and">"(setări, taste, DTMF) rămâne neatins, iar stația este recitită pentru verificare. Programarea este liberă; emisia nu: "</string>
-    <string name="amateur_bands_need_an_amateur_radio">"benzile de radioamator necesită licență, iar PMR446 acceptă doar aparate omologate. "</string>
-    <string name="the_list_is_never_saved_it">"Lista nu este salvată niciodată: dispare la închiderea aplicației."</string>
-    <string name="write_to_the_radio">"Scrii în stație?"</string>
-    <string name="the_list">"lista"</string>
-    <string name="the_radio_will_be_recognised_and">"Stația va fi recunoscută și citită, apoi va fi scrisă %1$s "</string>
-    <string name="will_be_written_the_radio_s">"și vor fi șterse canalele stației care lipsesc din listă. Apoi va fi recitită pentru verificare, "</string>
-    <string name="and_you_will_be_able_to">"iar tu vei putea restaura starea anterioară."</string>
-    <string name="clear_the_list">"Golești lista?"</string>
-    <string name="the_channels_of_the_displayed_list">"Canalele din lista afișată vor fi eliminate. Stația se modifică doar la scriere."</string>
-    <string name="listening_4">"Ascultare"</string>
-    <string name="offset">"Decalaj"</string>
-    <string name="listen_only">"Doar ascultare"</string>
-    <string name="invalid_frequency_in_mhz_for_example">"Frecvență nevalidă (în MHz, de exemplu 145.500)."</string>
-    <string name="this_frequency_is_outside_the_s">"Această frecvență este în afara benzilor de recepție ale %1$s."</string>
-    <string name="invalid_offset_in_khz_for_example">"Decalaj nevalid (în kHz, de exemplu −600)."</string>
-    <string name="name_characters">"Nume (%1$s caractere)"</string>
-    <string name="receive_mhz">"Recepție (MHz)"</string>
-    <string name="transmit">"Emisie"</string>
-    <string name="transmit_offset_khz">"Decalaj de emisie (kHz)"</string>
-    <string name="transmit_tone">"Ton de emisie"</string>
-    <string name="receive_tone_squelch">"Ton de recepție (squelch)"</string>
-    <string name="power">"Putere"</string>
-    <string name="bandwidth">"Lățime de bandă"</string>
-    <string name="wide_25_khz">"Lată 25 kHz"</string>
-    <string name="narrow_12_5_khz">"Îngustă 12,5 kHz"</string>
-    <string name="included_in_scan">"Inclus în scanare"</string>
-    <string name="delete">"Șterge"</string>
-    <string name="reversed">"Inversat"</string>
-    <string name="outside_the_s_bands">", %1$s în afara benzilor %2$s"</string>
-    <string name="with_no_free_slot">", %1$s fără loc liber"</string>
-    <string name="channels_2">"%1$s canale: %2$s."</string>
-    <string name="receive_only_4">"Doar recepție"</string>
-    <string name="the_radio_will_not_transmit_on">"Stația nu va emite pe aceste canale"</string>
-    <string name="add_to_the_list">"Adaugă în listă"</string>
-    <string name="back">"Înapoi"</string>
-    <string name="cable_detected">"Cablu detectat"</string>
-    <string name="read_the_memory_of_a_baofeng">"Citește memoria unui Baofeng UV-5R, Radtel RT-470X sau Quansheng UV-K5 / UV-K6, editează canalele, adaugă presetări și scrie-le înapoi."</string>
-    <string name="programming_cable">"Cablu de programare"</string>
-    <string name="radio">"Stație"</string>
-    <string name="recognised_when_reading">"Recunoscută la citire"</string>
-    <string name="never_memory_read_and_write_only">"Niciodată: doar citirea și scrierea memoriei"</string>
-    <string name="to_program_a_usb_cable_with">"Pentru programare: un cablu USB cu cip FTDI, CH340, CP210x sau PL2303 în mufa de cască a stației. "</string>
-    <string name="nothing_is_saved_or_kept">"Nimic nu este salvat sau păstrat."</string>
     <string name="wifi_coverage_csv">"acoperire-wifi-%1$s.csv"</string>
     <string name="no_wi_fi">"Fără Wi-Fi"</string>
     <string name="connect_to_the_wi_fi_network">"Conectează-te la rețeaua Wi-Fi a cărei acoperire vrei să o cartografiezi."</string>
@@ -2081,11 +1956,6 @@
         <item quantity="few">"dispozitive"</item>
         <item quantity="other">"de dispozitive"</item>
     </plurals>
-    <plurals name="p_channels">
-        <item quantity="one">"canal"</item>
-        <item quantity="few">"canale"</item>
-        <item quantity="other">"de canale"</item>
-    </plurals>
     <plurals name="p_beacons_detected">
         <item quantity="one">"baliză detectată"</item>
         <item quantity="few">"balize detectate"</item>
@@ -2271,21 +2141,6 @@
         <item quantity="few">"cadre"</item>
         <item quantity="other">"de cadre"</item>
     </plurals>
-    <plurals name="p_channels_outside_the_bands">
-        <item quantity="one">"canal în afara benzilor"</item>
-        <item quantity="few">"canale în afara benzilor"</item>
-        <item quantity="other">"de canale în afara benzilor"</item>
-    </plurals>
-    <plurals name="p_channels_changed">
-        <item quantity="one">"canal modificat"</item>
-        <item quantity="few">"canale modificate"</item>
-        <item quantity="other">"de canale modificate"</item>
-    </plurals>
-    <plurals name="p_channels_added">
-        <item quantity="one">"canal adăugat"</item>
-        <item quantity="few">"canale adăugate"</item>
-        <item quantity="other">"de canale adăugate"</item>
-    </plurals>
     <plurals name="p_servers">
         <item quantity="one">"server"</item>
         <item quantity="few">"servere"</item>
@@ -2415,4 +2270,31 @@
     <string name="instant_communication">"Mod de comunicare instantanee"</string>
     <string name="wi_fi_aware_how_it_works">"Wi-Fi Aware (Neighbor Awareness Networking) permite telefoanelor să se găsească și să comunice direct, fără router sau internet. Android găsește doar serviciile al căror nume îl cunoaște, așa că acest instrument găsește celelalte telefoane care îl au deschis. Cu Wi-Fi RTT pe ambele, distanța dintre ele este măsurată cu o precizie de aproximativ un metru. Butonul de salut trimite un salut pentru a testa legătura în ambele sensuri."</string>
     <string name="parallel_connections">"%1$d conexiuni în paralel"</string>
+    <string name="tpms_heard">"%1$s MHz · %2$d pachete primite"</string>
+    <string name="tpms_listening">"Ascultă senzorii de anvelope"</string>
+    <string name="americas_asia">"America, Asia"</string>
+    <string name="tpms_none_yet">"Încă niciun senzor"</string>
+    <string name="tpms_none_yet_body">"Senzorii de anvelope transmit cam o dată pe minut cât timp mașina rulează și rar când e parcată. Stați lângă un drum sau o parcare ori plecați cu mașina având telefonul la dvs."</string>
+    <string name="tpms_how_it_works">"Din 2014, orice mașină nouă din Europa are în fiecare anvelopă un senzor care transmite presiunea și temperatura către mașină, pe 433,92 MHz (315 MHz în America și Asia). Aplicația decodează formatele principalilor producători (Continental VDO, Schrader, Pacific, TRW, HUF) așa cum le documentează rtl_433 și păstrează doar pachetele care trec propria sumă de control. Presiunile sunt afișate așa cum le trimite senzorul: absolute la unele mărci, relative la altele. Doar recepție."</string>
+    <string name="tpms_wheel">"Roata %1$d"</string>
+    <string name="tpms_moving">"În mișcare"</string>
+    <string name="tpms_battery_low">"Baterie slabă"</string>
+    <string name="pocsag_none_yet">"Încă niciun mesaj"</string>
+    <string name="pocsag_none_yet_body">"Pagerele sunt folosite mai ales de spitale, pompieri și personalul de gardă: mesajele vin în rafale, uneori la multe minute distanță. Unele canale ale unei rețele pot fi oprite."</string>
+    <string name="pocsag_network">"Rețea"</string>
+    <string name="pocsag_custom">"Altă frecvență"</string>
+    <string name="pocsag_how_it_works">"POCSAG este standardul de radiomesagerie folosit din anii \'80 de e*Message (Franța, Germania), spitale, pompieri și radioamatori (DAPNET). Aplicația ascultă toate canalele rețelei alese deodată, la 512, 1200 și 2400 bit/s, și corectează până la doi biți greșiți pe cuvânt de cod. Mesajele de pager sunt corespondență privată: în multe țări, inclusiv Franța, citirea sau divulgarea lor e permisă doar pentru pagerele proprii. Nimic nu se păstrează după închiderea aplicației. Doar recepție."</string>
+    <string name="pocsag_tone_only">"Doar ton, fără text"</string>
+    <string name="tyre_pressure_sensors_433_mhz">"Senzori de presiune a anvelopelor, 433 MHz"</string>
+    <string name="pagers_e_message_dapnet">"Pagere: e*Message, DAPNET"</string>
+    <plurals name="p_sensors">
+        <item quantity="one">"senzor"</item>
+        <item quantity="few">"senzori"</item>
+        <item quantity="other">"de senzori"</item>
+    </plurals>
+    <plurals name="p_listening_channels">
+        <item quantity="one">"Ascultă %1$d canal"</item>
+        <item quantity="few">"Ascultă %1$d canale"</item>
+        <item quantity="other">"Ascultă %1$d de canale"</item>
+    </plurals>
 </resources>

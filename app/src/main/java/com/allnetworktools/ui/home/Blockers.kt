@@ -23,7 +23,6 @@ fun cardBlock(b: Blocker): CardBlock = when (b) {
     Blocker.LocationOff -> CardBlock(Sym.LocationOff, S(R.string.location_off), S(R.string.turn_it_on_to_receive_the), S(R.string.turn_on), Sym.PowerSettings)
     Blocker.NoHardware -> CardBlock(Sym.Block, S(R.string.not_available), S(R.string.this_device_does_not_have_this), null, Sym.Block)
     Blocker.SdrMissing -> CardBlock(Sym.Usb, S(R.string.no_hackrf), S(R.string.plug_in_a_hackrf_over_usb), null, Sym.Usb)
-    Blocker.CableMissing -> CardBlock(Sym.Usb, S(R.string.no_handheld_radio), S(R.string.plug_in_a_radio_with_its), null, Sym.Usb)
 }
 
 fun pageBlock(network: Network, b: Blocker, permanentlyDenied: Boolean): PageBlock = when (b) {
@@ -53,12 +52,6 @@ fun pageBlock(network: Network, b: Blocker, permanentlyDenied: Boolean): PageBlo
         Sym.Usb, S(R.string.plug_in_a_hackrf),
         S(R.string.connect_a_hackrf_one_or_rad1o) +
             S(R.string.the_app_detects_it_as_soon),
-        null, Sym.Usb, null,
-    )
-    Blocker.CableMissing -> PageBlock(
-        Sym.Usb, S(R.string.plug_in_a_handheld_radio),
-        S(R.string.connect_the_radio_to_the_phone) +
-            S(R.string.plugged_into_the_radio_s_headset),
         null, Sym.Usb, null,
     )
 }

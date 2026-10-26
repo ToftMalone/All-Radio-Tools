@@ -652,44 +652,7 @@
     <string name="celestrak_answered">"CelesTrakの応答：%1$s"</string>
     <string name="unreadable_answer_from_celestrak">"CelesTrakの応答を読み取れません"</string>
     <string name="none">"なし"</string>
-    <string name="high">"高"</string>
     <string name="medium">"中"</string>
-    <string name="low">"低"</string>
-    <string name="n_16_channels_446_00625_to_446">"16チャンネル、446.00625～446.19375 MHz"</string>
-    <string name="transmitting_on_pmr446_needs_a_type">"PMR446での送信には、固定アンテナで最大0.5 Wの認証済み機器が必要です：プログラム可能なハンディ機は該当しません。"</string>
-    <string name="n_69_channels_433_075_to_434">"69チャンネル、433.075～434.775 MHz"</string>
-    <string name="licence_free_band_at_10_mw">"最大10 mWの免許不要バンド：数ワットのハンディ機はここで送信できません。"</string>
-    <string name="marine_vhf">"国際VHF（船舶）"</string>
-    <string name="simplex_channels_156_3_to_156">"単信チャンネル、156.3～156.875 MHz"</string>
-    <string name="listen_only_transmitting_on_marine_bands">"受信のみ：船舶バンドでの送信には専用無線機と資格が必要です。"</string>
-    <string name="n_2_m_amateur_repeaters">"2 mアマチュアレピーター"</string>
-    <string name="rv48_to_rv63_outputs_145_600">"RV48～RV63、出力 145.600～145.7875 MHz、シフト −600 kHz"</string>
-    <string name="transmitting_needs_an_amateur_radio_licence">"送信にはアマチュア無線の免許が必要です。多くのレピーターはアクセストーン（多くは88.5 Hz）が必要です：チャンネルごとに設定してください。"</string>
-    <string name="amateur_radio_calling_and_specials">"アマチュア無線：呼出と特殊周波数"</string>
-    <string name="n_2_m_and_70_cm_calling">"2 mと70 cmの呼出、APRS、ISS"</string>
-    <string name="transmitting_needs_an_amateur_radio_licence_2">"送信にはアマチュア無線の免許が必要です。ISSは受信のみです。"</string>
-    <string name="handheld_radio">"ハンディ無線機"</string>
-    <string name="the_radio_did_not_answer">"無線機が応答しませんでした（%1$s）。"</string>
-    <string name="no_answer">"応答なし"</string>
-    <string name="answer">"応答 %1$s"</string>
-    <string name="unexpected_radio_identification">"予期しない無線機の識別：%1$s。"</string>
-    <string name="the_radio_refused_clone_mode">"無線機がクローンモードを拒否しました。"</string>
-    <string name="the_radio_does_not_answer_check">"無線機が応答しません（%1$s）。ケーブルが無線機の端子に奥まで差し込まれているか、電源が入っているか、 "</string>
-    <string name="and_that_its_volume_is_not">"音量がゼロになっていないかを確認してください。"</string>
-    <string name="the_radio_refused_to_send_block" formatted="false">"無線機がブロック %04X の送信を拒否しました。"</string>
-    <string name="block" formatted="false">"ブロック %04X"</string>
-    <string name="unexpected_answer_from_the_radio_for" formatted="false">"ブロック %04X に対する無線機からの予期しない応答。"</string>
-    <string name="the_radio_refused_block_nothing_more" formatted="false">"無線機がブロック %04X を拒否しました：これ以上は書き込まれていません。"</string>
-    <string name="the_radio_does_not_answer_check_2">"無線機が応答しません。ケーブルが無線機の端子に奥まで差し込まれ、電源が入っていることを確認し、 "</string>
-    <string name="then_turn_it_off_and_on">"一度電源を切って入れ直してください。"</string>
-    <string name="unrecognised_firmware_writing_is_refused_for">"認識できないファームウェア（%1$s）：安全のため書き込みは拒否されます。読み取りは可能です。"</string>
-    <string name="the_radio_does_not_answer">"無線機が応答しません。"</string>
-    <string name="unexpected_answer">"予期しない応答：%1$s"</string>
-    <string name="unexpected_answer_from_the_radio">"無線機からの予期しない応答（%1$s）。"</string>
-    <string name="incomplete_frame_from_the_radio">"無線機からの不完全なフレーム（%1$s）。"</string>
-    <string name="this_is_not_a_uv_k5">"これはUV-K5ではありません。"</string>
-    <string name="write" formatted="false">"書き込み %04X"</string>
-    <string name="usb_serial">"USBシリアル"</string>
     <string name="link_without_message">"メッセージなしのリンク"</string>
     <string name="link_test">"リンクテスト"</string>
     <string name="crew_company_message">"乗員 / 会社メッセージ"</string>
@@ -803,7 +766,6 @@
     <string name="cells">"セル"</string>
     <string name="sky">"空"</string>
     <string name="spectrum">"スペクトラム"</string>
-    <string name="channels">"チャンネル"</string>
     <string name="wi_fi_scanner">"Wi-Fiスキャナー"</string>
     <string name="lan_devices">"LANデバイス"</string>
     <string name="lan_device">"LANデバイス"</string>
@@ -833,7 +795,6 @@
     <string name="spectrum_analyser">"スペクトラムアナライザー"</string>
     <string name="radiosondes">"ラジオゾンデ"</string>
     <string name="fm_radio">"FMラジオ"</string>
-    <string name="radio_channels">"無線チャンネル"</string>
     <string name="screen_unavailable_on_this_device">"このデバイスでは画面を利用できません"</string>
     <string name="allow_access_in_android_settings_permissions">"Androidの設定 › 権限 でアクセスを許可してください"</string>
     <string name="saving_unavailable_on_this_device">"このデバイスでは保存できません"</string>
@@ -878,8 +839,6 @@
     <string name="this_device_does_not_have_this">"このデバイスにはこの無線がありません。"</string>
     <string name="no_hackrf">"HackRFなし"</string>
     <string name="plug_in_a_hackrf_over_usb">"受信するにはUSB-CでHackRFを接続してください。"</string>
-    <string name="no_handheld_radio">"ハンディ無線機なし"</string>
-    <string name="plug_in_a_radio_with_its">"USBプログラミングケーブルで無線機を接続してください。"</string>
     <string name="turn_on_wi_fi_to_show">"現在の接続を表示し、ローカルネットワークツールを使うにはWi-Fiをオンにしてください。"</string>
     <string name="turn_on_wi_fi">"Wi-Fiをオンにする"</string>
     <string name="wi_fi_settings">"Wi-Fi設定"</string>
@@ -906,16 +865,12 @@
     <string name="plug_in_a_hackrf">"HackRFを接続"</string>
     <string name="connect_a_hackrf_one_or_rad1o">"USB-C OTGケーブルでHackRF One（またはHackRFモードのrad1o、Jawbreaker、PortaPack）をスマートフォンに接続してください。 "</string>
     <string name="the_app_detects_it_as_soon">"接続するとすぐにアプリが検出します。"</string>
-    <string name="plug_in_a_handheld_radio">"ハンディ無線機を接続"</string>
-    <string name="connect_the_radio_to_the_phone">"USBプログラミングケーブル（FTDI、CH340、CP210xまたはPL2303チップ）で無線機をスマートフォンに接続し、 "</string>
-    <string name="plugged_into_the_radio_s_headset">"無線機のイヤホン端子に差し込んでください。接続するとすぐにアプリが検出します。"</string>
     <string name="tools">"ツール"</string>
     <string name="nearby_networks_channels_speed_wi_fi">"付近のネットワーク、チャンネル、速度、Wi-Fi診断とセキュリティ。"</string>
     <string name="bluetooth_le_devices_unknown_trackers_and">"Bluetooth LEデバイス、不明なトラッカー、ホット/コールド検索。"</string>
     <string name="cells_your_carrier_s_towers_and">"セル、通信事業者の基地局、モバイルデータ。"</string>
     <string name="satellites_sky_position_comparison_and_passes">"衛星、空、位置の比較、通過予測。"</string>
     <string name="hackrf_spectrum_aircraft_ships_radiosondes_fpv">"HackRF：スペクトラム、航空機、船舶、ラジオゾンデ、FPVドローンなど。"</string>
-    <string name="program_a_baofeng_radtel_or_quansheng">"USBケーブルでBaofeng、Radtel、Quanshengをプログラム。"</string>
     <string name="welcome_the_airwaves_are_waiting">"ようこそ！電波が待っています。"</string>
     <string name="good_to_see_you_again_the">"またお会いできてうれしいです。アンテナの準備はできています。"</string>
     <string name="hello_which_frequency_shall_we_explore">"こんにちは！今日はどの周波数を探検しますか？"</string>
@@ -938,8 +893,6 @@
     <string name="a_lost_airtag_it_s_never">"なくしたAirTag？決してひとりぼっちではありません。"</string>
     <string name="gps_never_gets_lost_it_recalculates">"GPSは迷子にならない。再計算するだけ。"</string>
     <string name="aircraft_shout_their_position_on_1090">"航空機は1090 MHzで自分の位置を叫んでいます。聞いてみましょう。"</string>
-    <string name="the_walkie_talkie_the_first_social">"トランシーバー：最初のSNS。順番に話しましょう。"</string>
-    <string name="over_roger_that_back_to_the">"どうぞ。了解。スタジオにお返しします。"</string>
     <string name="short_waves_long_ideas">"短い波、長いアイデア。"</string>
     <string name="the_sky_has_never_been_so">"空がこんなににぎやかだったことはありません。"</string>
     <string name="better_a_good_dbm_than_a">"長いケーブルより良いdBm。"</string>
@@ -1007,7 +960,6 @@
     <string name="identifiers_and_measurements_of_the_connected">"接続中のセルの識別子と測定値"</string>
     <string name="sky_plot_and_world_map_of">"衛星のスカイプロットと世界地図"</string>
     <string name="spectrum_and_waterfall_1_mhz_to">"スペクトラムとウォーターフォール、1 MHz～6 GHz"</string>
-    <string name="read_edit_and_write_memories_over">"USBケーブルでメモリーを読み取り、編集、書き込み"</string>
     <string name="launch">"起動"</string>
     <string name="ibeacon_eddystone_and_altbeacon_shops_museums">"iBeacon、Eddystone、AltBeacon：店舗、美術館、施設、スマートデバイス"</string>
     <string name="bluetooth_listening_in_progress">"Bluetooth受信中"</string>
@@ -1596,84 +1548,7 @@
     <string name="the_line_in_the_middle_is">"中央の線はHackRFのDC残留で、信号ではありません。強い送信機の近くではアンプを使わないでください。"</string>
     <string name="the_spectrum_shows_here_during_the">"分析中はここにスペクトラムが表示されます"</string>
     <string name="waterfall_newest_at_the_top">"ウォーターフォール · 最新が上"</string>
-    <string name="looking_for_the_radio">"無線機を探しています…"</string>
-    <string name="reading_the_radio">"無線機を読み取り中…"</string>
-    <string name="writing_to_the_radio">"無線機に書き込み中…"</string>
     <string name="verifying">"検証中…"</string>
-    <string name="usb_access_to_the_cable_refused">"ケーブルへのUSBアクセスが拒否されました。"</string>
-    <string name="could_not_open_the_usb_cable">"USBケーブルを開けませんでした。"</string>
-    <string name="no_radio_recognised">"無線機を認識できません（"</string>
-    <string name="or">" または "</string>
-    <string name="check_that_the_cable_is_pushed">"）。ケーブルが無線機の端子に奥まで差し込まれているか、 "</string>
-    <string name="that_the_radio_is_on_and">"無線機の電源が入っていて音量がゼロでないかを確認してください。"</string>
-    <string name="communication_error">"通信エラー。"</string>
-    <string name="error_2">"エラー：%1$s"</string>
-    <string name="recognised_channels_read">"%1$s を認識：%2$s チャンネルを読み取りました。"</string>
-    <string name="unrecognised_firmware_read_only_writing_will">" 認識できないファームウェア：読み取りのみ、書き込みは拒否されます。"</string>
-    <string name="for_the_not_written">"%3$s 向けの %1$s %2$s は書き込まれませんでした"</string>
-    <string name="beyond_its_memories_not_written">"メモリー %3$s 件を超える %1$s %2$s は書き込まれませんでした"</string>
-    <string name="the_already_holds_exactly_these_channels">"%1$s はすでにまったく同じチャンネルを保持しています：書き込むものはありません。%2$s"</string>
-    <string name="channels_written_to_the_and_verified">"%1$s チャンネルを %2$s に書き込み、読み戻して検証しました。"</string>
-    <string name="of_channels_read_back_differently_read">"%2$s チャンネル中 %1$s が異なって読み戻されました：無線機を再度読み取って内容を確認してください。"</string>
-    <string name="channels_written_verification_impossible_turn_the">"%1$s チャンネルを書き込みました。検証不可：再度読み取る前に無線機の電源を入れ直してください。"</string>
-    <string name="previous_state_of_the_restored_channels">"%1$s の以前の状態を復元しました（%2$s チャンネル）。"</string>
-    <string name="n_12_5_khz">"12.5 kHz"</string>
-    <string name="of_2">" / %1$s"</string>
-    <string name="to_write">" · 書き込み対象 %1$s"</string>
-    <string name="cable">"ケーブル %1$s"</string>
-    <string name="no_usb_cable">"USBケーブルなし"</string>
-    <string name="model_recognised_when_reading">"モデルは読み取り時に認識されます"</string>
-    <string name="restore_the_state_before_writing">"書き込み前の状態を復元"</string>
-    <string name="plug_the_programming_cable_into_the">"プログラミングケーブルをスマートフォンのUSB-C端子（必要ならOTGアダプター経由）と、電源の入った無線機の "</string>
-    <string name="headset_socket_of_the_radio_switched">"イヤホン端子に差し込んでください。無線機がなくてもチャンネルリストを作成できます。"</string>
-    <string name="new_channel">"新しいチャンネル"</string>
-    <string name="presets">"プリセット"</string>
-    <string name="clear_all">"すべてクリア"</string>
-    <string name="the_app_never_makes_the_radio">"アプリは無線機に送信させることはありません：メモリーを読み書きするだけです。変更されたチャンネルだけが書き換えられ、それ以外 "</string>
-    <string name="settings_keys_dtmf_is_untouched_and">"（設定、キー、DTMF）は変更されず、無線機は読み戻して検証されます。プログラミングは自由ですが、送信は違います： "</string>
-    <string name="amateur_bands_need_an_amateur_radio">"アマチュアバンドにはアマチュア無線の免許が必要で、PMR446は認証済み機器のみ使用できます。 "</string>
-    <string name="the_list_is_never_saved_it">"リストは保存されません：アプリを閉じると消えます。"</string>
-    <string name="write_to_the_radio">"無線機に書き込みますか？"</string>
-    <string name="the_list">"リスト"</string>
-    <string name="the_radio_will_be_recognised_and">"無線機を認識して読み取り、その後 %1$s "</string>
-    <string name="will_be_written_the_radio_s">"を書き込みます。リストにない無線機のチャンネルは消去されます。その後、検証のため読み戻し、 "</string>
-    <string name="and_you_will_be_able_to">"以前の状態に戻すこともできます。"</string>
-    <string name="clear_the_list">"リストをクリアしますか？"</string>
-    <string name="the_channels_of_the_displayed_list">"表示中のリストのチャンネルが削除されます。無線機は書き込み時にのみ変更されます。"</string>
-    <string name="listening_4">"受信"</string>
-    <string name="offset">"シフト"</string>
-    <string name="listen_only">"受信のみ"</string>
-    <string name="invalid_frequency_in_mhz_for_example">"無効な周波数（MHz単位、例：145.500）。"</string>
-    <string name="this_frequency_is_outside_the_s">"この周波数は %1$s の受信バンド外です。"</string>
-    <string name="invalid_offset_in_khz_for_example">"無効なシフト（kHz単位、例：−600）。"</string>
-    <string name="name_characters">"名前（%1$s 文字）"</string>
-    <string name="receive_mhz">"受信（MHz）"</string>
-    <string name="transmit">"送信"</string>
-    <string name="transmit_offset_khz">"送信シフト（kHz）"</string>
-    <string name="transmit_tone">"送信トーン"</string>
-    <string name="receive_tone_squelch">"受信トーン（スケルチ）"</string>
-    <string name="power">"出力"</string>
-    <string name="bandwidth">"帯域幅"</string>
-    <string name="wide_25_khz">"ワイド 25 kHz"</string>
-    <string name="narrow_12_5_khz">"ナロー 12.5 kHz"</string>
-    <string name="included_in_scan">"スキャン対象"</string>
-    <string name="delete">"削除"</string>
-    <string name="reversed">"リバース"</string>
-    <string name="outside_the_s_bands">"、%1$s は %2$s のバンド外"</string>
-    <string name="with_no_free_slot">"、%1$s は空きスロットなし"</string>
-    <string name="channels_2">"%1$s チャンネル：%2$s。"</string>
-    <string name="receive_only_4">"受信のみ"</string>
-    <string name="the_radio_will_not_transmit_on">"無線機はこれらのチャンネルで送信しません"</string>
-    <string name="add_to_the_list">"リストに追加"</string>
-    <string name="back">"戻る"</string>
-    <string name="cable_detected">"ケーブルを検出"</string>
-    <string name="read_the_memory_of_a_baofeng">"Baofeng UV-5R、Radtel RT-470X、Quansheng UV-K5 / UV-K6 のメモリーを読み取り、チャンネルを編集し、プリセットを追加して書き戻します。"</string>
-    <string name="programming_cable">"プログラミングケーブル"</string>
-    <string name="radio">"無線機"</string>
-    <string name="recognised_when_reading">"読み取り時に認識"</string>
-    <string name="never_memory_read_and_write_only">"しない：メモリーの読み書きのみ"</string>
-    <string name="to_program_a_usb_cable_with">"プログラムするには：無線機のイヤホン端子に接続するFTDI、CH340、CP210x、またはPL2303チップのUSBケーブル。 "</string>
-    <string name="nothing_is_saved_or_kept">"何も保存・保持されません。"</string>
     <string name="wifi_coverage_csv">"wifi-coverage-%1$s.csv"</string>
     <string name="no_wi_fi">"Wi-Fiなし"</string>
     <string name="connect_to_the_wi_fi_network">"カバレッジを調べたいWi-Fiネットワークに接続してください。"</string>
@@ -2073,9 +1948,6 @@
     <plurals name="p_devices">
         <item quantity="other">"デバイス"</item>
     </plurals>
-    <plurals name="p_channels">
-        <item quantity="other">"チャンネル"</item>
-    </plurals>
     <plurals name="p_beacons_detected">
         <item quantity="other">"ビーコンを検出"</item>
     </plurals>
@@ -2187,15 +2059,6 @@
     <plurals name="p_frames">
         <item quantity="other">"フレーム"</item>
     </plurals>
-    <plurals name="p_channels_outside_the_bands">
-        <item quantity="other">"チャンネルがバンド外"</item>
-    </plurals>
-    <plurals name="p_channels_changed">
-        <item quantity="other">"チャンネルを変更"</item>
-    </plurals>
-    <plurals name="p_channels_added">
-        <item quantity="other">"チャンネルを追加"</item>
-    </plurals>
     <plurals name="p_servers">
         <item quantity="other">"サーバー"</item>
     </plurals>
@@ -2301,4 +2164,27 @@
     <string name="instant_communication">"インスタント通信モード"</string>
     <string name="wi_fi_aware_how_it_works">"Wi-Fi Aware（Neighbor Awareness Networking）を使うと、スマートフォン同士がルーターやインターネットなしで互いを見つけ、直接通信できます。Androidは名前を知っているサービスしか見つけられないため、このツールはこれを開いている他の端末を見つけます。両方の端末がWi-Fi RTTに対応していれば、距離を約1 mの精度で測定します。手を振るボタンで、双方向の通信を確認するあいさつを送れます。"</string>
     <string name="parallel_connections">"%1$d 本の並列接続"</string>
+    <string name="tpms_heard">"%1$s MHz · %2$d パケット受信"</string>
+    <string name="tpms_listening">"タイヤセンサーを受信中"</string>
+    <string name="americas_asia">"南北アメリカ、アジア"</string>
+    <string name="tpms_none_yet">"まだセンサーがありません"</string>
+    <string name="tpms_none_yet_body">"タイヤセンサーは走行中はおよそ 1 分に 1 回、駐車中はまれにしか送信しません。道路や駐車場の近くに立つか、スマートフォンを車に載せて走り出してください。"</string>
+    <string name="tpms_how_it_works">"2014 年以降、ヨーロッパの新車にはすべてのタイヤに空気圧と温度を無線で車に送るセンサーがあり、433.92 MHz（アメリカとアジアでは 315 MHz）を使います。アプリは主要メーカー（Continental VDO、Schrader、Pacific、TRW、HUF）の形式を rtl_433 の資料どおりに解読し、各形式のチェックサムを通ったパケットだけを残します。空気圧はセンサーが送る値のまま表示します。メーカーにより絶対圧、ゲージ圧です。受信のみ。"</string>
+    <string name="tpms_wheel">"ホイール %1$d"</string>
+    <string name="tpms_moving">"走行中"</string>
+    <string name="tpms_battery_low">"電池残量低下"</string>
+    <string name="pocsag_none_yet">"まだメッセージがありません"</string>
+    <string name="pocsag_none_yet_body">"ポケットベルは主に病院、消防、待機中の職員が使います。メッセージはまとまって届き、数分以上あくこともあります。ネットワークの一部のチャンネルは停波している場合があります。"</string>
+    <string name="pocsag_network">"ネットワーク"</string>
+    <string name="pocsag_custom">"その他の周波数"</string>
+    <string name="pocsag_how_it_works">"POCSAG は 1980 年代から e*Message（フランス、ドイツ）、病院、消防、アマチュア無線家（DAPNET）が使うページング規格です。アプリは選んだネットワークの全チャンネルを 512・1200・2400 bit/s で同時に受信し、符号語ごとに最大 2 ビットの誤りを訂正します。ポケットベルのメッセージは私的な通信です。フランスを含む多くの国では、自分のポケットベル以外のものを読んだり広めたりすることは認められていません。アプリを閉じると何も残りません。受信のみ。"</string>
+    <string name="pocsag_tone_only">"トーンのみ、テキストなし"</string>
+    <string name="tyre_pressure_sensors_433_mhz">"タイヤ空気圧センサー、433 MHz"</string>
+    <string name="pagers_e_message_dapnet">"ポケットベル：e*Message、DAPNET"</string>
+    <plurals name="p_sensors">
+        <item quantity="other">"個のセンサー"</item>
+    </plurals>
+    <plurals name="p_listening_channels">
+        <item quantity="other">"%1$d チャンネルを受信中"</item>
+    </plurals>
 </resources>

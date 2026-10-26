@@ -1,16 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  Plugging one of these in offers to open the app with USB access:
-  - HackRF One, Jawbreaker and rad1o (vendor 0x1d50);
-  - the USB-serial chips found in radio programming cables: FTDI (0x0403), Prolific PL2303 (0x067b),
-    Silicon Labs CP210x (0x10c4) and WCH CH340/CH341 (0x1a86).
--->
+<!-- Plugging one of these in offers to open the app with USB access: HackRF One, Jawbreaker and rad1o (vendor 0x1d50). -->
 <resources>
     <usb-device vendor-id="7504" product-id="24713" />
     <usb-device vendor-id="7504" product-id="24651" />
     <usb-device vendor-id="7504" product-id="52245" />
-    <usb-device vendor-id="1027" />
-    <usb-device vendor-id="1659" />
-    <usb-device vendor-id="4292" />
-    <usb-device vendor-id="6790" />
 </resources>

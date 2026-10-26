@@ -652,44 +652,7 @@
     <string name="celestrak_answered">"CelesTrak ตอบกลับ %1$s"</string>
     <string name="unreadable_answer_from_celestrak">"อ่านคำตอบจาก CelesTrak ไม่ได้"</string>
     <string name="none">"ไม่มี"</string>
-    <string name="high">"สูง"</string>
     <string name="medium">"ปานกลาง"</string>
-    <string name="low">"ต่ำ"</string>
-    <string name="n_16_channels_446_00625_to_446">"16 ช่อง, 446.00625 ถึง 446.19375 MHz"</string>
-    <string name="transmitting_on_pmr446_needs_a_type">"การส่งบน PMR446 ต้องใช้อุปกรณ์ที่ได้รับการรับรองซึ่งมีเสาอากาศคงที่และกำลังไม่เกิน 0.5 W: วิทยุมือถือที่โปรแกรมได้ไม่เข้าข่าย"</string>
-    <string name="n_69_channels_433_075_to_434">"69 ช่อง, 433.075 ถึง 434.775 MHz"</string>
-    <string name="licence_free_band_at_10_mw">"ย่านความถี่ไม่ต้องขออนุญาต กำลังไม่เกิน 10 mW: วิทยุมือถือหลายวัตต์ไม่สามารถส่งที่นี่ได้"</string>
-    <string name="marine_vhf">"VHF ทางทะเล"</string>
-    <string name="simplex_channels_156_3_to_156">"ช่องซิมเพล็กซ์, 156.3 ถึง 156.875 MHz"</string>
-    <string name="listen_only_transmitting_on_marine_bands">"ฟังอย่างเดียว: การส่งในย่านทางทะเลต้องใช้วิทยุเฉพาะและใบรับรอง"</string>
-    <string name="n_2_m_amateur_repeaters">"สถานีทวนสัญญาณสมัครเล่น 2 ม."</string>
-    <string name="rv48_to_rv63_outputs_145_600">"RV48 ถึง RV63, เอาต์พุต 145.600 ถึง 145.7875 MHz, ออฟเซ็ต −600 kHz"</string>
-    <string name="transmitting_needs_an_amateur_radio_licence">"การส่งต้องมีใบอนุญาตวิทยุสมัครเล่น สถานีทวนหลายแห่งต้องใช้โทนเข้าถึง (มักเป็น 88.5 Hz): ตั้งทีละช่อง"</string>
-    <string name="amateur_radio_calling_and_specials">"วิทยุสมัครเล่น: เรียกขานและความถี่พิเศษ"</string>
-    <string name="n_2_m_and_70_cm_calling">"เรียกขาน 2 ม. และ 70 ซม., APRS, ISS"</string>
-    <string name="transmitting_needs_an_amateur_radio_licence_2">"การส่งต้องมีใบอนุญาตวิทยุสมัครเล่น ISS รับได้อย่างเดียว"</string>
-    <string name="handheld_radio">"วิทยุสื่อสารมือถือ"</string>
-    <string name="the_radio_did_not_answer">"วิทยุไม่ตอบ (%1$s)"</string>
-    <string name="no_answer">"ไม่มีการตอบ"</string>
-    <string name="answer">"คำตอบ %1$s"</string>
-    <string name="unexpected_radio_identification">"การระบุวิทยุที่ไม่คาดคิด: %1$s"</string>
-    <string name="the_radio_refused_clone_mode">"วิทยุปฏิเสธโหมดโคลน"</string>
-    <string name="the_radio_does_not_answer_check">"วิทยุไม่ตอบ (%1$s) ตรวจสอบว่าเสียบสายเข้าช่องของวิทยุจนสุด วิทยุเปิดอยู่ "</string>
-    <string name="and_that_its_volume_is_not">"และระดับเสียงไม่เป็นศูนย์"</string>
-    <string name="the_radio_refused_to_send_block" formatted="false">"วิทยุปฏิเสธการส่งบล็อก %04X"</string>
-    <string name="block" formatted="false">"บล็อก %04X"</string>
-    <string name="unexpected_answer_from_the_radio_for" formatted="false">"คำตอบที่ไม่คาดคิดจากวิทยุสำหรับบล็อก %04X"</string>
-    <string name="the_radio_refused_block_nothing_more" formatted="false">"วิทยุปฏิเสธบล็อก %04X: ไม่มีการเขียนเพิ่มเติม"</string>
-    <string name="the_radio_does_not_answer_check_2">"วิทยุไม่ตอบ ตรวจสอบว่าเสียบสายเข้าช่องของวิทยุจนสุด วิทยุเปิดอยู่ "</string>
-    <string name="then_turn_it_off_and_on">"แล้วปิดและเปิดใหม่"</string>
-    <string name="unrecognised_firmware_writing_is_refused_for">"เฟิร์มแวร์ที่ไม่รู้จัก (%1$s): ปฏิเสธการเขียนเพื่อความปลอดภัย ยังอ่านได้"</string>
-    <string name="the_radio_does_not_answer">"วิทยุไม่ตอบ"</string>
-    <string name="unexpected_answer">"คำตอบที่ไม่คาดคิด: %1$s"</string>
-    <string name="unexpected_answer_from_the_radio">"คำตอบที่ไม่คาดคิดจากวิทยุ (%1$s)"</string>
-    <string name="incomplete_frame_from_the_radio">"เฟรมไม่สมบูรณ์จากวิทยุ (%1$s)"</string>
-    <string name="this_is_not_a_uv_k5">"นี่ไม่ใช่ UV-K5"</string>
-    <string name="write" formatted="false">"เขียน %04X"</string>
-    <string name="usb_serial">"USB-ซีเรียล"</string>
     <string name="link_without_message">"ลิงก์ไม่มีข้อความ"</string>
     <string name="link_test">"ทดสอบลิงก์"</string>
     <string name="crew_company_message">"ข้อความลูกเรือ / บริษัท"</string>
@@ -803,7 +766,6 @@
     <string name="cells">"เซลล์"</string>
     <string name="sky">"ท้องฟ้า"</string>
     <string name="spectrum">"สเปกตรัม"</string>
-    <string name="channels">"ช่อง"</string>
     <string name="wi_fi_scanner">"เครื่องสแกน Wi-Fi"</string>
     <string name="lan_devices">"อุปกรณ์ LAN"</string>
     <string name="lan_device">"อุปกรณ์ LAN"</string>
@@ -833,7 +795,6 @@
     <string name="spectrum_analyser">"เครื่องวิเคราะห์สเปกตรัม"</string>
     <string name="radiosondes">"เรดิโอซอนด์"</string>
     <string name="fm_radio">"วิทยุ FM"</string>
-    <string name="radio_channels">"ช่องวิทยุสื่อสาร"</string>
     <string name="screen_unavailable_on_this_device">"หน้าจอไม่พร้อมใช้งานบนอุปกรณ์นี้"</string>
     <string name="allow_access_in_android_settings_permissions">"อนุญาตการเข้าถึงในการตั้งค่า Android › สิทธิ์"</string>
     <string name="saving_unavailable_on_this_device">"ไม่สามารถบันทึกบนอุปกรณ์นี้"</string>
@@ -878,8 +839,6 @@
     <string name="this_device_does_not_have_this">"อุปกรณ์นี้ไม่มีวิทยุชนิดนี้"</string>
     <string name="no_hackrf">"ไม่มี HackRF"</string>
     <string name="plug_in_a_hackrf_over_usb">"เสียบ HackRF ผ่าน USB-C เพื่อรับสัญญาณ"</string>
-    <string name="no_handheld_radio">"ไม่มีวิทยุสื่อสาร"</string>
-    <string name="plug_in_a_radio_with_its">"เสียบวิทยุด้วยสายโปรแกรม USB"</string>
     <string name="turn_on_wi_fi_to_show">"เปิด Wi-Fi เพื่อแสดงการเชื่อมต่อปัจจุบันและใช้เครื่องมือเครือข่ายท้องถิ่น"</string>
     <string name="turn_on_wi_fi">"เปิด Wi-Fi"</string>
     <string name="wi_fi_settings">"การตั้งค่า Wi-Fi"</string>
@@ -906,16 +865,12 @@
     <string name="plug_in_a_hackrf">"เสียบ HackRF"</string>
     <string name="connect_a_hackrf_one_or_rad1o">"เชื่อมต่อ HackRF One (หรือ rad1o, Jawbreaker, PortaPack ในโหมด HackRF) กับโทรศัพท์ด้วยสาย USB-C OTG "</string>
     <string name="the_app_detects_it_as_soon">"แอปตรวจพบทันทีที่เสียบ"</string>
-    <string name="plug_in_a_handheld_radio">"เสียบวิทยุสื่อสาร"</string>
-    <string name="connect_the_radio_to_the_phone">"เชื่อมต่อวิทยุกับโทรศัพท์ด้วยสายโปรแกรม USB (ชิป FTDI, CH340, CP210x หรือ PL2303) "</string>
-    <string name="plugged_into_the_radio_s_headset">"เสียบเข้าช่องหูฟังของวิทยุ แอปตรวจพบทันทีที่เสียบ"</string>
     <string name="tools">"เครื่องมือ"</string>
     <string name="nearby_networks_channels_speed_wi_fi">"เครือข่ายใกล้เคียง ช่อง ความเร็ว การวินิจฉัยและความปลอดภัยของ Wi-Fi"</string>
     <string name="bluetooth_le_devices_unknown_trackers_and">"อุปกรณ์ Bluetooth LE ตัวติดตามที่ไม่รู้จัก และการค้นหาแบบร้อน/เย็น"</string>
     <string name="cells_your_carrier_s_towers_and">"เซลล์ เสาของผู้ให้บริการ และข้อมูลมือถือ"</string>
     <string name="satellites_sky_position_comparison_and_passes">"ดาวเทียม ท้องฟ้า การเปรียบเทียบตำแหน่ง และการโคจรผ่าน"</string>
     <string name="hackrf_spectrum_aircraft_ships_radiosondes_fpv">"HackRF: สเปกตรัม เครื่องบิน เรือ เรดิโอซอนด์ โดรน FPV และอื่นๆ"</string>
-    <string name="program_a_baofeng_radtel_or_quansheng">"โปรแกรม Baofeng, Radtel หรือ Quansheng ผ่านสาย USB"</string>
     <string name="welcome_the_airwaves_are_waiting">"ยินดีต้อนรับ! คลื่นวิทยุรอคุณอยู่"</string>
     <string name="good_to_see_you_again_the">"ดีใจที่ได้พบอีกครั้ง เสาอากาศพร้อมแล้ว"</string>
     <string name="hello_which_frequency_shall_we_explore">"สวัสดี! วันนี้เราจะสำรวจความถี่ไหนดี?"</string>
@@ -938,8 +893,6 @@
     <string name="a_lost_airtag_it_s_never">"AirTag หาย? มันไม่เคยโดดเดี่ยวจริงๆ"</string>
     <string name="gps_never_gets_lost_it_recalculates">"GPS ไม่เคยหลงทาง มันแค่คำนวณใหม่"</string>
     <string name="aircraft_shout_their_position_on_1090">"เครื่องบินตะโกนบอกตำแหน่งบน 1090 MHz มาฟังกัน"</string>
-    <string name="the_walkie_talkie_the_first_social">"วิทยุสื่อสาร: โซเชียลเน็ตเวิร์กแรก ผลัดกันพูด"</string>
-    <string name="over_roger_that_back_to_the">"เปลี่ยน รับทราบ กลับไปที่สตูดิโอ"</string>
     <string name="short_waves_long_ideas">"คลื่นสั้น ความคิดยาว"</string>
     <string name="the_sky_has_never_been_so">"ท้องฟ้าไม่เคยช่างคุยขนาดนี้"</string>
     <string name="better_a_good_dbm_than_a">"dBm ดีๆ ดีกว่าสายยาวๆ"</string>
@@ -1007,7 +960,6 @@
     <string name="identifiers_and_measurements_of_the_connected">"ตัวระบุและค่าวัดของเซลล์ที่เชื่อมต่อ"</string>
     <string name="sky_plot_and_world_map_of">"แผนภาพท้องฟ้าและแผนที่โลกของดาวเทียม"</string>
     <string name="spectrum_and_waterfall_1_mhz_to">"สเปกตรัมและวอเตอร์ฟอลล์ 1 MHz ถึง 6 GHz"</string>
-    <string name="read_edit_and_write_memories_over">"อ่าน แก้ไข และเขียนหน่วยความจำผ่านสาย USB"</string>
     <string name="launch">"เปิด"</string>
     <string name="ibeacon_eddystone_and_altbeacon_shops_museums">"iBeacon, Eddystone และ AltBeacon: ร้านค้า พิพิธภัณฑ์ สถานที่ อุปกรณ์อัจฉริยะ"</string>
     <string name="bluetooth_listening_in_progress">"กำลังฟัง Bluetooth"</string>
@@ -1596,84 +1548,7 @@
     <string name="the_line_in_the_middle_is">"เส้นตรงกลางคือ DC ที่ตกค้างของ HackRF ไม่ใช่สัญญาณ หลีกเลี่ยงแอมป์ใกล้เครื่องส่งกำลังสูง"</string>
     <string name="the_spectrum_shows_here_during_the">"สเปกตรัมจะแสดงที่นี่ระหว่างการวิเคราะห์"</string>
     <string name="waterfall_newest_at_the_top">"วอเตอร์ฟอลล์ · ล่าสุดอยู่ด้านบน"</string>
-    <string name="looking_for_the_radio">"กำลังค้นหาวิทยุ…"</string>
-    <string name="reading_the_radio">"กำลังอ่านวิทยุ…"</string>
-    <string name="writing_to_the_radio">"กำลังเขียนลงวิทยุ…"</string>
     <string name="verifying">"กำลังตรวจสอบ…"</string>
-    <string name="usb_access_to_the_cable_refused">"ถูกปฏิเสธการเข้าถึง USB ไปยังสาย"</string>
-    <string name="could_not_open_the_usb_cable">"เปิดสาย USB ไม่ได้"</string>
-    <string name="no_radio_recognised">"ไม่รู้จักวิทยุ ("</string>
-    <string name="or">" หรือ "</string>
-    <string name="check_that_the_cable_is_pushed">") ตรวจสอบว่าเสียบสายเข้าช่องของวิทยุจนสุด "</string>
-    <string name="that_the_radio_is_on_and">"วิทยุเปิดอยู่ และระดับเสียงไม่เป็นศูนย์"</string>
-    <string name="communication_error">"ข้อผิดพลาดในการสื่อสาร"</string>
-    <string name="error_2">"ข้อผิดพลาด: %1$s"</string>
-    <string name="recognised_channels_read">"รู้จัก %1$s: อ่าน %2$s ช่อง"</string>
-    <string name="unrecognised_firmware_read_only_writing_will">" เฟิร์มแวร์ที่ไม่รู้จัก: อ่านอย่างเดียว การเขียนจะถูกปฏิเสธ"</string>
-    <string name="for_the_not_written">"ไม่ได้เขียน %1$s %2$s สำหรับ %3$s"</string>
-    <string name="beyond_its_memories_not_written">"ไม่ได้เขียน %1$s %2$s ที่เกินหน่วยความจำ %3$s ช่อง"</string>
-    <string name="the_already_holds_exactly_these_channels">"%1$s มีช่องเหล่านี้ตรงกันทุกประการอยู่แล้ว: ไม่มีอะไรต้องเขียน%2$s"</string>
-    <string name="channels_written_to_the_and_verified">"เขียน %1$s ช่องลง %2$s และตรวจสอบโดยอ่านกลับแล้ว"</string>
-    <string name="of_channels_read_back_differently_read">"%1$s จาก %2$s ช่องอ่านกลับได้ไม่ตรง: อ่านวิทยุอีกครั้งเพื่อดูว่ามีอะไรอยู่"</string>
-    <string name="channels_written_verification_impossible_turn_the">"เขียน %1$s ช่องแล้ว ตรวจสอบไม่ได้: ปิดแล้วเปิดวิทยุก่อนอ่านอีกครั้ง"</string>
-    <string name="previous_state_of_the_restored_channels">"คืนค่าสถานะก่อนหน้าของ %1$s แล้ว (%2$s ช่อง)"</string>
-    <string name="n_12_5_khz">"12.5 kHz"</string>
-    <string name="of_2">" จาก %1$s"</string>
-    <string name="to_write">" · %1$s ที่จะเขียน"</string>
-    <string name="cable">"สาย %1$s"</string>
-    <string name="no_usb_cable">"ไม่มีสาย USB"</string>
-    <string name="model_recognised_when_reading">"รุ่นจะถูกรู้จักเมื่ออ่าน"</string>
-    <string name="restore_the_state_before_writing">"คืนค่าสถานะก่อนการเขียน"</string>
-    <string name="plug_the_programming_cable_into_the">"เสียบสายโปรแกรมเข้าช่อง USB-C ของโทรศัพท์ (ใช้อะแดปเตอร์ OTG หากจำเป็น) และเข้า "</string>
-    <string name="headset_socket_of_the_radio_switched">"ช่องหูฟังของวิทยุที่เปิดอยู่ คุณจัดรายการช่องได้แม้ยังไม่มีวิทยุ"</string>
-    <string name="new_channel">"ช่องใหม่"</string>
-    <string name="presets">"ค่าล่วงหน้า"</string>
-    <string name="clear_all">"ล้างทั้งหมด"</string>
-    <string name="the_app_never_makes_the_radio">"แอปไม่ทำให้วิทยุส่งสัญญาณเลย: แอปอ่านและเขียนหน่วยความจำเท่านั้น เขียนใหม่เฉพาะช่องที่เปลี่ยน ส่วนที่เหลือ "</string>
-    <string name="settings_keys_dtmf_is_untouched_and">"(การตั้งค่า ปุ่ม DTMF) ไม่ถูกแตะต้อง และวิทยุจะถูกอ่านกลับเพื่อตรวจสอบ การโปรแกรมทำได้อิสระ แต่การส่งไม่ใช่: "</string>
-    <string name="amateur_bands_need_an_amateur_radio">"ย่านสมัครเล่นต้องมีใบอนุญาตวิทยุสมัครเล่น และ PMR446 รับเฉพาะอุปกรณ์ที่ได้รับการรับรอง "</string>
-    <string name="the_list_is_never_saved_it">"รายการไม่ถูกบันทึก: จะหายไปเมื่อปิดแอป"</string>
-    <string name="write_to_the_radio">"เขียนลงวิทยุ?"</string>
-    <string name="the_list">"รายการ"</string>
-    <string name="the_radio_will_be_recognised_and">"วิทยุจะถูกรู้จักและอ่าน จากนั้น%1$s "</string>
-    <string name="will_be_written_the_radio_s">"จะถูกเขียน ช่องของวิทยุที่ไม่อยู่ในรายการจะถูกลบ จากนั้นจะอ่านกลับเพื่อตรวจสอบ "</string>
-    <string name="and_you_will_be_able_to">"และคุณจะคืนค่าสถานะก่อนหน้าได้"</string>
-    <string name="clear_the_list">"ล้างรายการ?"</string>
-    <string name="the_channels_of_the_displayed_list">"ช่องในรายการที่แสดงจะถูกลบ วิทยุจะเปลี่ยนเฉพาะเมื่อเขียนเท่านั้น"</string>
-    <string name="listening_4">"การฟัง"</string>
-    <string name="offset">"ออฟเซ็ต"</string>
-    <string name="listen_only">"ฟังอย่างเดียว"</string>
-    <string name="invalid_frequency_in_mhz_for_example">"ความถี่ไม่ถูกต้อง (เป็น MHz เช่น 145.500)"</string>
-    <string name="this_frequency_is_outside_the_s">"ความถี่นี้อยู่นอกย่านรับของ %1$s"</string>
-    <string name="invalid_offset_in_khz_for_example">"ออฟเซ็ตไม่ถูกต้อง (เป็น kHz เช่น −600)"</string>
-    <string name="name_characters">"ชื่อ (%1$s ตัวอักษร)"</string>
-    <string name="receive_mhz">"รับ (MHz)"</string>
-    <string name="transmit">"ส่ง"</string>
-    <string name="transmit_offset_khz">"ออฟเซ็ตการส่ง (kHz)"</string>
-    <string name="transmit_tone">"โทนส่ง"</string>
-    <string name="receive_tone_squelch">"โทนรับ (squelch)"</string>
-    <string name="power">"กำลังส่ง"</string>
-    <string name="bandwidth">"แบนด์วิดท์"</string>
-    <string name="wide_25_khz">"กว้าง 25 kHz"</string>
-    <string name="narrow_12_5_khz">"แคบ 12.5 kHz"</string>
-    <string name="included_in_scan">"รวมในการสแกน"</string>
-    <string name="delete">"ลบ"</string>
-    <string name="reversed">"กลับด้าน"</string>
-    <string name="outside_the_s_bands">", %1$s อยู่นอกย่านของ %2$s"</string>
-    <string name="with_no_free_slot">", %1$s ไม่มีช่องว่าง"</string>
-    <string name="channels_2">"%1$s ช่อง: %2$s"</string>
-    <string name="receive_only_4">"รับอย่างเดียว"</string>
-    <string name="the_radio_will_not_transmit_on">"วิทยุจะไม่ส่งบนช่องเหล่านี้"</string>
-    <string name="add_to_the_list">"เพิ่มลงรายการ"</string>
-    <string name="back">"กลับ"</string>
-    <string name="cable_detected">"ตรวจพบสาย"</string>
-    <string name="read_the_memory_of_a_baofeng">"อ่านหน่วยความจำของ Baofeng UV-5R, Radtel RT-470X หรือ Quansheng UV-K5 / UV-K6 แก้ไขช่อง เพิ่มค่าล่วงหน้า แล้วเขียนกลับ"</string>
-    <string name="programming_cable">"สายโปรแกรม"</string>
-    <string name="radio">"วิทยุ"</string>
-    <string name="recognised_when_reading">"รู้จักเมื่ออ่าน"</string>
-    <string name="never_memory_read_and_write_only">"ไม่เลย: อ่านและเขียนหน่วยความจำเท่านั้น"</string>
-    <string name="to_program_a_usb_cable_with">"สำหรับการโปรแกรม: สาย USB ที่มีชิป FTDI, CH340, CP210x หรือ PL2303 เสียบที่ช่องหูฟังของวิทยุ "</string>
-    <string name="nothing_is_saved_or_kept">"ไม่มีการบันทึกหรือเก็บข้อมูลใดๆ"</string>
     <string name="wifi_coverage_csv">"wifi-coverage-%1$s.csv"</string>
     <string name="no_wi_fi">"ไม่มี Wi-Fi"</string>
     <string name="connect_to_the_wi_fi_network">"เชื่อมต่อกับเครือข่าย Wi-Fi ที่ต้องการทำแผนที่ครอบคลุม"</string>
@@ -2073,9 +1948,6 @@
     <plurals name="p_devices">
         <item quantity="other">"อุปกรณ์"</item>
     </plurals>
-    <plurals name="p_channels">
-        <item quantity="other">"ช่อง"</item>
-    </plurals>
     <plurals name="p_beacons_detected">
         <item quantity="other">"บีคอนที่ตรวจพบ"</item>
     </plurals>
@@ -2187,15 +2059,6 @@
     <plurals name="p_frames">
         <item quantity="other">"เฟรม"</item>
     </plurals>
-    <plurals name="p_channels_outside_the_bands">
-        <item quantity="other">"ช่องที่อยู่นอกย่าน"</item>
-    </plurals>
-    <plurals name="p_channels_changed">
-        <item quantity="other">"ช่องที่เปลี่ยน"</item>
-    </plurals>
-    <plurals name="p_channels_added">
-        <item quantity="other">"ช่องที่เพิ่ม"</item>
-    </plurals>
     <plurals name="p_servers">
         <item quantity="other">"เซิร์ฟเวอร์"</item>
     </plurals>
@@ -2301,4 +2164,27 @@
     <string name="instant_communication">"โหมดสื่อสารทันที"</string>
     <string name="wi_fi_aware_how_it_works">"Wi-Fi Aware (Neighbor Awareness Networking) ช่วยให้โทรศัพท์ค้นหากันและสื่อสารกันโดยตรงได้ โดยไม่ต้องใช้เราเตอร์หรืออินเทอร์เน็ต Android ค้นหาได้เฉพาะบริการที่รู้ชื่อเท่านั้น เครื่องมือนี้จึงค้นหาโทรศัพท์เครื่องอื่นที่เปิดเครื่องมือนี้อยู่ หากทั้งสองเครื่องรองรับ Wi-Fi RTT จะวัดระยะห่างได้แม่นยำราวหนึ่งเมตร ปุ่มโบกมือจะส่งคำทักทายเพื่อทดสอบการเชื่อมต่อทั้งสองทาง"</string>
     <string name="parallel_connections">"การเชื่อมต่อแบบขนาน %1$d รายการ"</string>
+    <string name="tpms_heard">"%1$s MHz · ได้รับ %2$d แพ็กเก็ต"</string>
+    <string name="tpms_listening">"กำลังฟังเซ็นเซอร์ยาง"</string>
+    <string name="americas_asia">"ทวีปอเมริกา เอเชีย"</string>
+    <string name="tpms_none_yet">"ยังไม่มีเซ็นเซอร์"</string>
+    <string name="tpms_none_yet_body">"เซ็นเซอร์ยางส่งสัญญาณประมาณนาทีละครั้งขณะรถวิ่ง และนาน ๆ ครั้งเมื่อจอด ยืนใกล้ถนนหรือลานจอดรถ หรือขับรถออกไปโดยมีโทรศัพท์อยู่ในรถ"</string>
+    <string name="tpms_how_it_works">"ตั้งแต่ปี 2014 รถใหม่ทุกคันในยุโรปมีเซ็นเซอร์ในยางทุกเส้นที่ส่งแรงดันและอุณหภูมิไปยังรถทางวิทยุ ที่ 433.92 MHz (315 MHz ในอเมริกาและเอเชีย) แอปถอดรหัสรูปแบบของผู้ผลิตหลัก (Continental VDO, Schrader, Pacific, TRW, HUF) ตามเอกสารของ rtl_433 และเก็บเฉพาะแพ็กเก็ตที่ผ่าน checksum ของตัวเอง แรงดันแสดงตามที่เซ็นเซอร์ส่ง: บางยี่ห้อเป็นค่าสัมบูรณ์ บางยี่ห้อเป็นค่าสัมพัทธ์ รับอย่างเดียว"</string>
+    <string name="tpms_wheel">"ล้อ %1$d"</string>
+    <string name="tpms_moving">"กำลังเคลื่อนที่"</string>
+    <string name="tpms_battery_low">"แบตเตอรี่ต่ำ"</string>
+    <string name="pocsag_none_yet">"ยังไม่มีข้อความ"</string>
+    <string name="pocsag_none_yet_body">"วิทยุติดตามตัวใช้กันมากในโรงพยาบาล หน่วยดับเพลิง และเจ้าหน้าที่เวร ข้อความมาเป็นชุด บางครั้งห่างกันหลายนาที บางช่องของเครือข่ายอาจหยุดออกอากาศ"</string>
+    <string name="pocsag_network">"เครือข่าย"</string>
+    <string name="pocsag_custom">"ความถี่อื่น"</string>
+    <string name="pocsag_how_it_works">"POCSAG เป็นมาตรฐานวิทยุติดตามตัวที่ e*Message (ฝรั่งเศส เยอรมนี) โรงพยาบาล หน่วยดับเพลิง และนักวิทยุสมัครเล่น (DAPNET) ใช้มาตั้งแต่ทศวรรษ 1980 แอปฟังทุกช่องของเครือข่ายที่เลือกพร้อมกันที่ 512, 1200 และ 2400 bit/s และแก้บิตผิดได้สูงสุดสองบิตต่อคำรหัส ข้อความวิทยุติดตามตัวเป็นการติดต่อส่วนตัว ในหลายประเทศรวมถึงฝรั่งเศส อนุญาตให้อ่านหรือเผยแพร่ได้เฉพาะของเครื่องคุณเอง ไม่มีการเก็บสิ่งใดหลังปิดแอป รับอย่างเดียว"</string>
+    <string name="pocsag_tone_only">"มีแต่เสียงเตือน ไม่มีข้อความ"</string>
+    <string name="tyre_pressure_sensors_433_mhz">"เซ็นเซอร์แรงดันลมยาง 433 MHz"</string>
+    <string name="pagers_e_message_dapnet">"วิทยุติดตามตัว: e*Message, DAPNET"</string>
+    <plurals name="p_sensors">
+        <item quantity="other">"เซ็นเซอร์"</item>
+    </plurals>
+    <plurals name="p_listening_channels">
+        <item quantity="other">"กำลังฟัง %1$d ช่อง"</item>
+    </plurals>
 </resources>

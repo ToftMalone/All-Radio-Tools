@@ -22,7 +22,7 @@ All Radio Tools brings together tools to explore Wi-Fi, Bluetooth, the mobile ne
 
 ## 🧰 Tools
 
-The home screen offers six networks. Each one has its dashboard, its main tool in the floating dock and a "Tools" page.
+The home screen offers five networks. Each one has its dashboard, its main tool in the floating dock and a "Tools" page.
 
 ### 📶 Wi-Fi
 
@@ -84,18 +84,16 @@ The home screen offers six networks. Each one has its dashboard, its main tool i
 | APRS | Ham radio beacons on 144.800 MHz |
 | Drones | DJI (DroneID), analogue FPV and remote controls (ExpressLRS, Crossfire, FrSky, FlySky, Spektrum) |
 | Meteor-M | Weather satellite LRPT images on 137 MHz |
+| POCSAG | Pager messages (e*Message France and Germany, BOS, DAPNET or any frequency): every channel of a network at once, 512, 1200 and 2400 bit/s, BCH error correction |
 | Radiosondes | Vaisala RS41 and Meteomodem M10 / M20 around 403 MHz, with landing prediction |
+| TPMS | Tyre pressure sensors of nearby cars on 433.92 MHz (or 315 MHz): pressure, temperature, battery, for Renault, PSA, Toyota, Ford, Hyundai/Kia, BMW/Audi, Porsche and more |
 
 The decoders work with the **HackRF alone**: neither the phone's Wi-Fi nor its Bluetooth is used. The SDR card stays greyed out until a HackRF is plugged in over USB.
-
-### 🔌 Handheld radio
-
-Read, edit and write back the memories of a **Baofeng UV-5R**, a **Radtel RT-470X** or a **Quansheng UV-K5 / UV-K6 / UV-5R Plus** over a USB programming cable (CH340, CP210x, FTDI, PL2303 chips), with presets (PMR446, repeaters, marine…). Without a cable the card can still be browsed, but the tools won't start.
 
 ### 📤 Exports
 
 Only when you ask, to the location you choose:
-- **CSV**: speed test, coverage map, aircraft, radiosondes, ships, APRS, handover log;
+- **CSV**: speed test, coverage map, aircraft, radiosondes, ships, APRS, ACARS, POCSAG, TPMS, handover log;
 - **RINEX**: GNSS raw measurements;
 - **PNG**: Meteor-M images.
 
@@ -123,6 +121,7 @@ No account, no ads, no trackers. Internet is used for updates, the speed test (C
 
 - The SDR is used **for reception only**. Follow your country's laws on listening to radio frequencies.
 - The Wi-Fi security tools (audit, rogue access points, man in the middle, port scan) are meant for **your own networks** or those you are allowed to test.
+- Pager messages (POCSAG) are **private correspondence**: in many countries, France included, you may only read or pass on those of your own pagers.
 - "Unknown trackers" and "Jamming and spoofing" are there to **protect you**, not to track or disrupt others.
 
 ---
@@ -163,5 +162,6 @@ All Radio Tools is free software released under the [GNU General Public License 
 - [@cloudflare/speedtest](https://github.com/cloudflare/speedtest), the open source engine behind speed.cloudflare.com, ported for the speed test.
 - [AirGuard](https://github.com/seemoo-lab/AirGuard) (SEEMOO, TU Darmstadt) for tracker detection and the rules that tell a tag near its owner from one following you.
 - [rs1729/RS](https://github.com/rs1729/RS) for the radiosonde formats.
+- [rtl_433](https://github.com/merbanan/rtl_433) for the tyre pressure sensor formats.
 - Google [GNSS Measurement Tools](https://github.com/google/gps-measurement-tools) for the pseudorange computation.
 - Roboto Flex, Google Sans Flex and Material Symbols for the interface.

@@ -652,44 +652,7 @@
     <string name="celestrak_answered">"CelesTrak ने %1$s उत्तर दिया"</string>
     <string name="unreadable_answer_from_celestrak">"CelesTrak का उत्तर पढ़ा नहीं जा सका"</string>
     <string name="none">"कोई नहीं"</string>
-    <string name="high">"उच्च"</string>
     <string name="medium">"मध्यम"</string>
-    <string name="low">"निम्न"</string>
-    <string name="n_16_channels_446_00625_to_446">"16 चैनल, 446.00625 से 446.19375 MHz"</string>
-    <string name="transmitting_on_pmr446_needs_a_type">"PMR446 पर प्रसारण के लिए स्थिर एंटीना और अधिकतम 0.5 W वाला प्रमाणित डिवाइस चाहिए: प्रोग्रामेबल हैंडहेल्ड ऐसा नहीं है।"</string>
-    <string name="n_69_channels_433_075_to_434">"69 चैनल, 433.075 से 434.775 MHz"</string>
-    <string name="licence_free_band_at_10_mw">"अधिकतम 10 mW का लाइसेंस-मुक्त बैंड: कई वॉट का हैंडहेल्ड यहाँ प्रसारण नहीं कर सकता।"</string>
-    <string name="marine_vhf">"समुद्री VHF"</string>
-    <string name="simplex_channels_156_3_to_156">"सिम्प्लेक्स चैनल, 156.3 से 156.875 MHz"</string>
-    <string name="listen_only_transmitting_on_marine_bands">"केवल सुनें: समुद्री बैंड पर प्रसारण के लिए समर्पित रेडियो और प्रमाणपत्र चाहिए।"</string>
-    <string name="n_2_m_amateur_repeaters">"2 मी शौकिया रिपीटर"</string>
-    <string name="rv48_to_rv63_outputs_145_600">"RV48 से RV63, आउटपुट 145.600 से 145.7875 MHz, ऑफ़सेट −600 kHz"</string>
-    <string name="transmitting_needs_an_amateur_radio_licence">"प्रसारण के लिए शौकिया रेडियो लाइसेंस चाहिए। कई रिपीटरों को एक्सेस टोन (अक्सर 88.5 Hz) चाहिए: इसे हर चैनल पर सेट करें।"</string>
-    <string name="amateur_radio_calling_and_specials">"शौकिया रेडियो: कॉलिंग और विशेष"</string>
-    <string name="n_2_m_and_70_cm_calling">"2 मी और 70 सेमी कॉलिंग, APRS, ISS"</string>
-    <string name="transmitting_needs_an_amateur_radio_licence_2">"प्रसारण के लिए शौकिया रेडियो लाइसेंस चाहिए। ISS केवल प्राप्ति के लिए है।"</string>
-    <string name="handheld_radio">"हैंडहेल्ड रेडियो"</string>
-    <string name="the_radio_did_not_answer">"रेडियो ने उत्तर नहीं दिया (%1$s)।"</string>
-    <string name="no_answer">"कोई उत्तर नहीं"</string>
-    <string name="answer">"उत्तर %1$s"</string>
-    <string name="unexpected_radio_identification">"अप्रत्याशित रेडियो पहचान: %1$s।"</string>
-    <string name="the_radio_refused_clone_mode">"रेडियो ने क्लोन मोड अस्वीकार किया।"</string>
-    <string name="the_radio_does_not_answer_check">"रेडियो उत्तर नहीं दे रहा (%1$s)। जाँचें कि केबल रेडियो के सॉकेट में पूरी तरह लगी है, रेडियो चालू है "</string>
-    <string name="and_that_its_volume_is_not">"और उसका वॉल्यूम शून्य पर नहीं है।"</string>
-    <string name="the_radio_refused_to_send_block" formatted="false">"रेडियो ने ब्लॉक %04X भेजने से मना किया।"</string>
-    <string name="block" formatted="false">"ब्लॉक %04X"</string>
-    <string name="unexpected_answer_from_the_radio_for" formatted="false">"ब्लॉक %04X के लिए रेडियो से अप्रत्याशित उत्तर।"</string>
-    <string name="the_radio_refused_block_nothing_more" formatted="false">"रेडियो ने ब्लॉक %04X अस्वीकार किया: इसके बाद कुछ नहीं लिखा गया।"</string>
-    <string name="the_radio_does_not_answer_check_2">"रेडियो उत्तर नहीं दे रहा। जाँचें कि केबल रेडियो के सॉकेट में पूरी तरह लगी है, रेडियो चालू है, "</string>
-    <string name="then_turn_it_off_and_on">"फिर इसे बंद करके दोबारा चालू करें।"</string>
-    <string name="unrecognised_firmware_writing_is_refused_for">"अपरिचित फ़र्मवेयर (%1$s): सुरक्षा के लिए लिखना अस्वीकार। पढ़ना अब भी काम करता है।"</string>
-    <string name="the_radio_does_not_answer">"रेडियो उत्तर नहीं दे रहा।"</string>
-    <string name="unexpected_answer">"अप्रत्याशित उत्तर: %1$s"</string>
-    <string name="unexpected_answer_from_the_radio">"रेडियो से अप्रत्याशित उत्तर (%1$s)।"</string>
-    <string name="incomplete_frame_from_the_radio">"रेडियो से अधूरा फ़्रेम (%1$s)।"</string>
-    <string name="this_is_not_a_uv_k5">"यह UV-K5 नहीं है।"</string>
-    <string name="write" formatted="false">"लिखें %04X"</string>
-    <string name="usb_serial">"USB-सीरियल"</string>
     <string name="link_without_message">"बिना संदेश का लिंक"</string>
     <string name="link_test">"लिंक परीक्षण"</string>
     <string name="crew_company_message">"क्रू / कंपनी संदेश"</string>
@@ -803,7 +766,6 @@
     <string name="cells">"सेल"</string>
     <string name="sky">"आकाश"</string>
     <string name="spectrum">"स्पेक्ट्रम"</string>
-    <string name="channels">"चैनल"</string>
     <string name="wi_fi_scanner">"Wi-Fi स्कैनर"</string>
     <string name="lan_devices">"LAN डिवाइस"</string>
     <string name="lan_device">"LAN डिवाइस"</string>
@@ -833,7 +795,6 @@
     <string name="spectrum_analyser">"स्पेक्ट्रम विश्लेषक"</string>
     <string name="radiosondes">"रेडियोसोंड"</string>
     <string name="fm_radio">"FM रेडियो"</string>
-    <string name="radio_channels">"रेडियो चैनल"</string>
     <string name="screen_unavailable_on_this_device">"इस डिवाइस पर स्क्रीन उपलब्ध नहीं"</string>
     <string name="allow_access_in_android_settings_permissions">"Android सेटिंग्स › अनुमतियाँ में पहुँच की अनुमति दें"</string>
     <string name="saving_unavailable_on_this_device">"इस डिवाइस पर सहेजना उपलब्ध नहीं"</string>
@@ -878,8 +839,6 @@
     <string name="this_device_does_not_have_this">"इस डिवाइस में यह रेडियो नहीं है।"</string>
     <string name="no_hackrf">"कोई HackRF नहीं"</string>
     <string name="plug_in_a_hackrf_over_usb">"प्राप्ति के लिए USB-C से HackRF जोड़ें।"</string>
-    <string name="no_handheld_radio">"कोई हैंडहेल्ड रेडियो नहीं"</string>
-    <string name="plug_in_a_radio_with_its">"USB प्रोग्रामिंग केबल से रेडियो जोड़ें।"</string>
     <string name="turn_on_wi_fi_to_show">"मौजूदा कनेक्शन दिखाने और लोकल नेटवर्क टूल उपयोग करने के लिए Wi-Fi चालू करें।"</string>
     <string name="turn_on_wi_fi">"Wi-Fi चालू करें"</string>
     <string name="wi_fi_settings">"Wi-Fi सेटिंग्स"</string>
@@ -906,16 +865,12 @@
     <string name="plug_in_a_hackrf">"HackRF जोड़ें"</string>
     <string name="connect_a_hackrf_one_or_rad1o">"USB-C OTG केबल से फ़ोन में HackRF One (या HackRF मोड में rad1o, Jawbreaker, PortaPack) जोड़ें। "</string>
     <string name="the_app_detects_it_as_soon">"लगाते ही ऐप इसे पहचान लेता है।"</string>
-    <string name="plug_in_a_handheld_radio">"हैंडहेल्ड रेडियो जोड़ें"</string>
-    <string name="connect_the_radio_to_the_phone">"रेडियो को उसकी USB प्रोग्रामिंग केबल (FTDI, CH340, CP210x या PL2303 चिप) से फ़ोन में जोड़ें, "</string>
-    <string name="plugged_into_the_radio_s_headset">"जो रेडियो के हेडसेट सॉकेट में लगी हो। लगाते ही ऐप इसे पहचान लेता है।"</string>
     <string name="tools">"टूल"</string>
     <string name="nearby_networks_channels_speed_wi_fi">"आस-पास के नेटवर्क, चैनल, गति, Wi-Fi निदान और सुरक्षा।"</string>
     <string name="bluetooth_le_devices_unknown_trackers_and">"Bluetooth LE डिवाइस, अज्ञात ट्रैकर और गर्म/ठंडा खोज।"</string>
     <string name="cells_your_carrier_s_towers_and">"सेल, आपके ऑपरेटर के टावर और मोबाइल डेटा।"</string>
     <string name="satellites_sky_position_comparison_and_passes">"उपग्रह, आकाश, स्थान तुलना और पास।"</string>
     <string name="hackrf_spectrum_aircraft_ships_radiosondes_fpv">"HackRF: स्पेक्ट्रम, विमान, जहाज़, रेडियोसोंड, FPV ड्रोन और बहुत कुछ।"</string>
-    <string name="program_a_baofeng_radtel_or_quansheng">"USB केबल से Baofeng, Radtel या Quansheng प्रोग्राम करें।"</string>
     <string name="welcome_the_airwaves_are_waiting">"स्वागत है! तरंगें इंतज़ार कर रही हैं।"</string>
     <string name="good_to_see_you_again_the">"फिर से देखकर अच्छा लगा, एंटीना तैयार हैं।"</string>
     <string name="hello_which_frequency_shall_we_explore">"नमस्ते! आज कौन सी आवृत्ति खोजें?"</string>
@@ -938,8 +893,6 @@
     <string name="a_lost_airtag_it_s_never">"खोया AirTag? वह कभी सच में अकेला नहीं होता।"</string>
     <string name="gps_never_gets_lost_it_recalculates">"GPS कभी नहीं भटकता। वह पुनर्गणना करता है।"</string>
     <string name="aircraft_shout_their_position_on_1090">"विमान 1090 MHz पर अपनी स्थिति चिल्लाते हैं। चलिए सुनते हैं।"</string>
-    <string name="the_walkie_talkie_the_first_social">"वॉकी-टॉकी: पहला सोशल नेटवर्क। बारी-बारी से।"</string>
-    <string name="over_roger_that_back_to_the">"ओवर। रोजर। स्टूडियो को वापस।"</string>
     <string name="short_waves_long_ideas">"छोटी तरंगें, लंबे विचार।"</string>
     <string name="the_sky_has_never_been_so">"आकाश कभी इतना बातूनी नहीं था।"</string>
     <string name="better_a_good_dbm_than_a">"लंबी केबल से अच्छा एक अच्छा dBm।"</string>
@@ -1007,7 +960,6 @@
     <string name="identifiers_and_measurements_of_the_connected">"जुड़े सेल के पहचानकर्ता और माप"</string>
     <string name="sky_plot_and_world_map_of">"उपग्रहों का आकाश प्लॉट और विश्व मानचित्र"</string>
     <string name="spectrum_and_waterfall_1_mhz_to">"स्पेक्ट्रम और वॉटरफ़ॉल, 1 MHz से 6 GHz"</string>
-    <string name="read_edit_and_write_memories_over">"USB केबल से मेमोरी पढ़ें, संपादित करें और लिखें"</string>
     <string name="launch">"लॉन्च करें"</string>
     <string name="ibeacon_eddystone_and_altbeacon_shops_museums">"iBeacon, Eddystone और AltBeacon: दुकानें, संग्रहालय, स्थल, स्मार्ट डिवाइस"</string>
     <string name="bluetooth_listening_in_progress">"Bluetooth सुना जा रहा है"</string>
@@ -1596,84 +1548,7 @@
     <string name="the_line_in_the_middle_is">"बीच की रेखा HackRF का DC अवशेष है, सिग्नल नहीं। शक्तिशाली ट्रांसमीटरों के पास एम्प से बचें।"</string>
     <string name="the_spectrum_shows_here_during_the">"विश्लेषण के दौरान स्पेक्ट्रम यहाँ दिखता है"</string>
     <string name="waterfall_newest_at_the_top">"वॉटरफ़ॉल · नवीनतम ऊपर"</string>
-    <string name="looking_for_the_radio">"रेडियो खोज रहे हैं…"</string>
-    <string name="reading_the_radio">"रेडियो पढ़ रहे हैं…"</string>
-    <string name="writing_to_the_radio">"रेडियो में लिख रहे हैं…"</string>
     <string name="verifying">"सत्यापित कर रहे हैं…"</string>
-    <string name="usb_access_to_the_cable_refused">"केबल तक USB पहुँच अस्वीकृत।"</string>
-    <string name="could_not_open_the_usb_cable">"USB केबल खोली नहीं जा सकी।"</string>
-    <string name="no_radio_recognised">"कोई रेडियो पहचाना नहीं गया ("</string>
-    <string name="or">" या "</string>
-    <string name="check_that_the_cable_is_pushed">")। जाँचें कि केबल रेडियो के सॉकेट में पूरी तरह लगी है, "</string>
-    <string name="that_the_radio_is_on_and">"रेडियो चालू है और उसका वॉल्यूम शून्य पर नहीं है।"</string>
-    <string name="communication_error">"संचार त्रुटि।"</string>
-    <string name="error_2">"त्रुटि: %1$s"</string>
-    <string name="recognised_channels_read">"%1$s पहचाना गया: %2$s चैनल पढ़े।"</string>
-    <string name="unrecognised_firmware_read_only_writing_will">" अपरिचित फ़र्मवेयर: केवल पढ़ना, लिखना अस्वीकार होगा।"</string>
-    <string name="for_the_not_written">"%3$s के लिए %1$s %2$s नहीं लिखे गए"</string>
-    <string name="beyond_its_memories_not_written">"इसकी %3$s मेमोरी से अधिक %1$s %2$s नहीं लिखे गए"</string>
-    <string name="the_already_holds_exactly_these_channels">"%1$s में पहले से बिल्कुल यही चैनल हैं: लिखने को कुछ नहीं।%2$s"</string>
-    <string name="channels_written_to_the_and_verified">"%1$s चैनल %2$s में लिखे गए और वापस पढ़कर सत्यापित किए गए।"</string>
-    <string name="of_channels_read_back_differently_read">"%2$s में से %1$s चैनल अलग पढ़े गए: इसमें क्या है यह देखने के लिए रेडियो फिर पढ़ें।"</string>
-    <string name="channels_written_verification_impossible_turn_the">"%1$s चैनल लिखे गए। सत्यापन असंभव: फिर पढ़ने से पहले रेडियो बंद करके चालू करें।"</string>
-    <string name="previous_state_of_the_restored_channels">"%1$s की पिछली स्थिति बहाल की गई (%2$s चैनल)।"</string>
-    <string name="n_12_5_khz">"12.5 kHz"</string>
-    <string name="of_2">" / %1$s"</string>
-    <string name="to_write">" · %1$s लिखने हेतु"</string>
-    <string name="cable">"केबल %1$s"</string>
-    <string name="no_usb_cable">"कोई USB केबल नहीं"</string>
-    <string name="model_recognised_when_reading">"मॉडल पढ़ते समय पहचाना जाता है"</string>
-    <string name="restore_the_state_before_writing">"लिखने से पहले की स्थिति बहाल करें"</string>
-    <string name="plug_the_programming_cable_into_the">"प्रोग्रामिंग केबल को फ़ोन के USB-C सॉकेट (ज़रूरत हो तो OTG एडाप्टर के साथ) और चालू रेडियो के "</string>
-    <string name="headset_socket_of_the_radio_switched">"हेडसेट सॉकेट में लगाएँ। आप रेडियो के बिना भी चैनल सूची तैयार कर सकते हैं।"</string>
-    <string name="new_channel">"नया चैनल"</string>
-    <string name="presets">"प्रीसेट"</string>
-    <string name="clear_all">"सब साफ़ करें"</string>
-    <string name="the_app_never_makes_the_radio">"ऐप रेडियो से कभी प्रसारण नहीं करवाता: यह उसकी मेमोरी पढ़ता और लिखता है। केवल बदले चैनल फिर लिखे जाते हैं, बाकी "</string>
-    <string name="settings_keys_dtmf_is_untouched_and">"(सेटिंग्स, कुंजियाँ, DTMF) अछूते रहते हैं, और सत्यापन के लिए रेडियो वापस पढ़ा जाता है। प्रोग्रामिंग मुक्त है; प्रसारण नहीं: "</string>
-    <string name="amateur_bands_need_an_amateur_radio">"शौकिया बैंड के लिए शौकिया रेडियो लाइसेंस चाहिए, और PMR446 केवल प्रमाणित डिवाइस स्वीकार करता है। "</string>
-    <string name="the_list_is_never_saved_it">"सूची कभी सहेजी नहीं जाती: ऐप बंद होने पर गायब हो जाती है।"</string>
-    <string name="write_to_the_radio">"रेडियो में लिखें?"</string>
-    <string name="the_list">"सूची"</string>
-    <string name="the_radio_will_be_recognised_and">"रेडियो पहचाना और पढ़ा जाएगा, फिर %1$s "</string>
-    <string name="will_be_written_the_radio_s">"लिखी जाएगी; सूची में न होने वाले रेडियो के चैनल मिटा दिए जाएँगे। फिर सत्यापन के लिए वापस पढ़ा जाएगा, "</string>
-    <string name="and_you_will_be_able_to">"और आप इसकी पिछली स्थिति बहाल कर सकेंगे।"</string>
-    <string name="clear_the_list">"सूची साफ़ करें?"</string>
-    <string name="the_channels_of_the_displayed_list">"प्रदर्शित सूची के चैनल हटा दिए जाएँगे। रेडियो केवल लिखते समय बदलता है।"</string>
-    <string name="listening_4">"सुनना"</string>
-    <string name="offset">"ऑफ़सेट"</string>
-    <string name="listen_only">"केवल सुनें"</string>
-    <string name="invalid_frequency_in_mhz_for_example">"अमान्य आवृत्ति (MHz में, उदाहरण 145.500)।"</string>
-    <string name="this_frequency_is_outside_the_s">"यह आवृत्ति %1$s के प्राप्ति बैंड से बाहर है।"</string>
-    <string name="invalid_offset_in_khz_for_example">"अमान्य ऑफ़सेट (kHz में, उदाहरण −600)।"</string>
-    <string name="name_characters">"नाम (%1$s अक्षर)"</string>
-    <string name="receive_mhz">"प्राप्ति (MHz)"</string>
-    <string name="transmit">"प्रसारण"</string>
-    <string name="transmit_offset_khz">"प्रसारण ऑफ़सेट (kHz)"</string>
-    <string name="transmit_tone">"प्रसारण टोन"</string>
-    <string name="receive_tone_squelch">"प्राप्ति टोन (स्क्वेल्च)"</string>
-    <string name="power">"पावर"</string>
-    <string name="bandwidth">"बैंडविड्थ"</string>
-    <string name="wide_25_khz">"वाइड 25 kHz"</string>
-    <string name="narrow_12_5_khz">"नैरो 12.5 kHz"</string>
-    <string name="included_in_scan">"स्कैन में शामिल"</string>
-    <string name="delete">"हटाएँ"</string>
-    <string name="reversed">"उलटा"</string>
-    <string name="outside_the_s_bands">", %1$s %2$s के बैंड से बाहर"</string>
-    <string name="with_no_free_slot">", %1$s बिना खाली स्लॉट"</string>
-    <string name="channels_2">"%1$s चैनल: %2$s।"</string>
-    <string name="receive_only_4">"केवल प्राप्ति"</string>
-    <string name="the_radio_will_not_transmit_on">"रेडियो इन चैनलों पर प्रसारण नहीं करेगा"</string>
-    <string name="add_to_the_list">"सूची में जोड़ें"</string>
-    <string name="back">"वापस"</string>
-    <string name="cable_detected">"केबल मिली"</string>
-    <string name="read_the_memory_of_a_baofeng">"Baofeng UV-5R, Radtel RT-470X या Quansheng UV-K5 / UV-K6 की मेमोरी पढ़ें, चैनल संपादित करें, प्रीसेट जोड़ें और वापस लिखें।"</string>
-    <string name="programming_cable">"प्रोग्रामिंग केबल"</string>
-    <string name="radio">"रेडियो"</string>
-    <string name="recognised_when_reading">"पढ़ते समय पहचाना जाता है"</string>
-    <string name="never_memory_read_and_write_only">"कभी नहीं: केवल मेमोरी पढ़ना और लिखना"</string>
-    <string name="to_program_a_usb_cable_with">"प्रोग्राम करने के लिए: रेडियो के हेडसेट सॉकेट पर FTDI, CH340, CP210x या PL2303 चिप वाली USB केबल। "</string>
-    <string name="nothing_is_saved_or_kept">"कुछ भी सहेजा या रखा नहीं जाता।"</string>
     <string name="wifi_coverage_csv">"wifi-coverage-%1$s.csv"</string>
     <string name="no_wi_fi">"कोई Wi-Fi नहीं"</string>
     <string name="connect_to_the_wi_fi_network">"जिस Wi-Fi नेटवर्क का कवरेज मानचित्र बनाना है उससे जुड़ें।"</string>
@@ -2077,10 +1952,6 @@
         <item quantity="one">"डिवाइस"</item>
         <item quantity="other">"डिवाइस"</item>
     </plurals>
-    <plurals name="p_channels">
-        <item quantity="one">"चैनल"</item>
-        <item quantity="other">"चैनल"</item>
-    </plurals>
     <plurals name="p_beacons_detected">
         <item quantity="one">"बीकन मिला"</item>
         <item quantity="other">"बीकन मिले"</item>
@@ -2229,18 +2100,6 @@
         <item quantity="one">"फ़्रेम"</item>
         <item quantity="other">"फ़्रेम"</item>
     </plurals>
-    <plurals name="p_channels_outside_the_bands">
-        <item quantity="one">"चैनल बैंड से बाहर"</item>
-        <item quantity="other">"चैनल बैंड से बाहर"</item>
-    </plurals>
-    <plurals name="p_channels_changed">
-        <item quantity="one">"चैनल बदला"</item>
-        <item quantity="other">"चैनल बदले"</item>
-    </plurals>
-    <plurals name="p_channels_added">
-        <item quantity="one">"चैनल जोड़ा"</item>
-        <item quantity="other">"चैनल जोड़े"</item>
-    </plurals>
     <plurals name="p_servers">
         <item quantity="one">"सर्वर"</item>
         <item quantity="other">"सर्वर"</item>
@@ -2358,4 +2217,29 @@
     <string name="instant_communication">"तुरंत संचार मोड"</string>
     <string name="wi_fi_aware_how_it_works">"Wi-Fi Aware (Neighbor Awareness Networking) फ़ोनों को बिना राउटर या इंटरनेट के एक-दूसरे को खोजने और सीधे बात करने देता है। Android केवल उन्हीं सेवाओं को खोजता है जिनका नाम वह जानता है, इसलिए यह टूल उन दूसरे फ़ोनों को खोजता है जिन पर यह खुला है। दोनों फ़ोनों पर Wi-Fi RTT होने पर उनके बीच की दूरी लगभग एक मीटर की सटीकता से मापी जाती है। हाथ हिलाने वाला बटन दोनों दिशाओं में लिंक जाँचने के लिए अभिवादन भेजता है।"</string>
     <string name="parallel_connections">"%1$d समानांतर कनेक्शन"</string>
+    <string name="tpms_heard">"%1$s MHz · %2$d पैकेट प्राप्त"</string>
+    <string name="tpms_listening">"टायर सेंसर सुने जा रहे हैं"</string>
+    <string name="americas_asia">"अमेरिका, एशिया"</string>
+    <string name="tpms_none_yet">"अभी कोई सेंसर नहीं"</string>
+    <string name="tpms_none_yet_body">"टायर सेंसर कार चलते समय लगभग हर मिनट एक बार और खड़ी होने पर कभी-कभार ही भेजते हैं। किसी सड़क या पार्किंग के पास खड़े हों, या फ़ोन कार में रखकर चल पड़ें।"</string>
+    <string name="tpms_how_it_works">"2014 से यूरोप की हर नई कार के हर टायर में एक सेंसर होता है जो दबाव और तापमान रेडियो से कार को भेजता है, 433.92 MHz पर (अमेरिका और एशिया में 315 MHz)। ऐप मुख्य निर्माताओं (Continental VDO, Schrader, Pacific, TRW, HUF) के प्रारूप rtl_433 के दस्तावेज़ों के अनुसार डिकोड करता है और केवल वही पैकेट रखता है जो अपने चेकसम में पास हों। दबाव वैसे ही दिखाया जाता है जैसे सेंसर भेजता है: कुछ ब्रांडों में पूर्ण, कुछ में सापेक्ष। केवल रिसीव।"</string>
+    <string name="tpms_wheel">"पहिया %1$d"</string>
+    <string name="tpms_moving">"चलते हुए"</string>
+    <string name="tpms_battery_low">"बैटरी कम"</string>
+    <string name="pocsag_none_yet">"अभी कोई संदेश नहीं"</string>
+    <string name="pocsag_none_yet_body">"पेजर ज़्यादातर अस्पताल, दमकल और ऑन-कॉल कर्मचारी इस्तेमाल करते हैं: संदेश झुंड में आते हैं, कभी-कभी कई मिनट के अंतर पर। किसी नेटवर्क के कुछ चैनल बंद हो सकते हैं।"</string>
+    <string name="pocsag_network">"नेटवर्क"</string>
+    <string name="pocsag_custom">"अन्य आवृत्ति"</string>
+    <string name="pocsag_how_it_works">"POCSAG 1980 के दशक से e*Message (फ़्रांस, जर्मनी), अस्पतालों, दमकल और रेडियो शौकीनों (DAPNET) द्वारा इस्तेमाल किया जाने वाला पेजिंग मानक है। ऐप चुने गए नेटवर्क के सभी चैनल एक साथ 512, 1200 और 2400 bit/s पर सुनता है और हर कोडवर्ड में दो तक गलत बिट ठीक करता है। पेजर संदेश निजी पत्राचार हैं: फ़्रांस समेत कई देशों में इन्हें पढ़ना या साझा करना सिर्फ़ अपने पेजरों के लिए अनुमत है। ऐप बंद होने पर कुछ भी नहीं रखा जाता। केवल रिसीव।"</string>
+    <string name="pocsag_tone_only">"केवल टोन, कोई टेक्स्ट नहीं"</string>
+    <string name="tyre_pressure_sensors_433_mhz">"टायर प्रेशर सेंसर, 433 MHz"</string>
+    <string name="pagers_e_message_dapnet">"पेजर: e*Message, DAPNET"</string>
+    <plurals name="p_sensors">
+        <item quantity="one">"सेंसर"</item>
+        <item quantity="other">"सेंसर"</item>
+    </plurals>
+    <plurals name="p_listening_channels">
+        <item quantity="one">"%1$d चैनल सुना जा रहा है"</item>
+        <item quantity="other">"%1$d चैनल सुने जा रहे हैं"</item>
+    </plurals>
 </resources>

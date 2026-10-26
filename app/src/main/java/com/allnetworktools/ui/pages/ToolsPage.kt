@@ -107,7 +107,6 @@ private fun groups(net: Network, connectedDevice: String?, servingLabel: String?
             ),
         ),
     )
-    Network.Talkie -> emptyList()
     Network.Sdr -> listOf(
         // Named after the protocol they decode, in alphabetical order (in the phone's language).
         ToolGroup(
@@ -120,6 +119,8 @@ private fun groups(net: Network, connectedDevice: String?, servingLabel: String?
                 ToolEntry(Tool.Aprs, "APRS", S(R.string.beacons_on_144_800_mhz)),
                 ToolEntry(Tool.Acars, "ACARS", S(R.string.airliner_messaging_131_mhz)),
                 ToolEntry(Tool.Fpv, S(R.string.drones), S(R.string.analog_fpv_dji_and_rc_links)),
+                ToolEntry(Tool.Tpms, "TPMS", S(R.string.tyre_pressure_sensors_433_mhz)),
+                ToolEntry(Tool.Pocsag, "POCSAG", S(R.string.pagers_e_message_dapnet)),
             ).sortedWith(compareBy(java.text.Collator.getInstance()) { it.title }),
         ),
     )
@@ -131,7 +132,6 @@ private fun featuredSubtitle(net: Network, servingLabel: String?) = when (net) {
     Network.Cellular -> servingLabel ?: S(R.string.identifiers_and_measurements_of_the_connected)
     Network.Gnss -> S(R.string.sky_plot_and_world_map_of)
     Network.Sdr -> S(R.string.spectrum_and_waterfall_1_mhz_to)
-    Network.Talkie -> S(R.string.read_edit_and_write_memories_over)
 }
 
 @Composable
@@ -140,7 +140,6 @@ private fun featuredBadge(net: Network, vm: MainViewModel): String? = when (net)
     Network.Bluetooth -> vm.ble.collectAsStateWithLifecycle().value.size.let { "$it ${P(R.plurals.p_devices, it)}" }
     Network.Cellular -> vm.cell.collectAsStateWithLifecycle().value.state?.serving?.tech?.short
     Network.Gnss -> vm.gnss.collectAsStateWithLifecycle().value.let { "${it.used.size}/${it.visible.size} satellites" }
-    Network.Talkie -> vm.tools.radioChannels.let { c -> c.count.takeIf { it > 0 }?.let { "$it ${P(R.plurals.p_channels, it)}" } }
     Network.Sdr -> vm.tools.spectrum.let { if (it.running && it.tunedHz > 0) "%.1f MHz".format(java.util.Locale.getDefault(), it.tunedHz / 1e6) else null }
 }
 

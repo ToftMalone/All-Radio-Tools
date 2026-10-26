@@ -147,6 +147,8 @@ object Sym {
     const val Tag = "tag"
     const val Terminal = "terminal"
     const val Thermostat = "thermostat"
+    const val TireRepair = "tire_repair"
+    const val Sms = "sms"
     const val Timeline = "timeline"
     const val TimerOff = "timer_off"
     const val TravelExplore = "travel_explore"

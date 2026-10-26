@@ -14,7 +14,6 @@ enum class Network(
     Cellular(S(R.string.mobile_network), Sym.CellBars3, S(R.string.cells)),
     Gnss("GNSS", Sym.SatelliteAlt, S(R.string.sky)),
     Sdr("SDR", Sym.Antenna, S(R.string.spectrum)),
-    Talkie(S(R.string.handheld_radio), Sym.Radio, S(R.string.channels)),
     ;
 
     // Getters rather than constructor arguments: Tool's entries reference Network, so eager
@@ -28,7 +27,6 @@ enum class Network(
             Cellular -> Tool.CellDetail
             Gnss -> Tool.Sky
             Sdr -> Tool.Spectrum
-            Talkie -> Tool.RadioChannels
         }
 
     /** Tool reachable directly from the dock. */
@@ -97,9 +95,8 @@ enum class Tool(
     Acars(Network.Sdr, "ACARS", Sym.Flight),
     Meteor(Network.Sdr, "Meteor-M", Sym.SatelliteAlt),
     Fpv(Network.Sdr, "Drones", Sym.Videocam),
-
-    RadioChannels(Network.Talkie, S(R.string.radio_channels), Sym.Radio, implemented = true),
-
+    Tpms(Network.Sdr, "TPMS", Sym.TireRepair),
+    Pocsag(Network.Sdr, "POCSAG", Sym.Sms),
     ;
 
     val isDockShortcut: Boolean get() = network.dockShortcut == this

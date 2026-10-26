@@ -652,44 +652,7 @@
     <string name="celestrak_answered">"CelesTrak menjawab %1$s"</string>
     <string name="unreadable_answer_from_celestrak">"Jawaban CelesTrak tidak terbaca"</string>
     <string name="none">"Tidak ada"</string>
-    <string name="high">"Tinggi"</string>
     <string name="medium">"Sedang"</string>
-    <string name="low">"Rendah"</string>
-    <string name="n_16_channels_446_00625_to_446">"16 kanal, 446,00625 hingga 446,19375 MHz"</string>
-    <string name="transmitting_on_pmr446_needs_a_type">"Memancar di PMR446 memerlukan perangkat bersertifikat dengan antena tetap dan maksimal 0,5 W: HT yang dapat diprogram tidak termasuk."</string>
-    <string name="n_69_channels_433_075_to_434">"69 kanal, 433,075 hingga 434,775 MHz"</string>
-    <string name="licence_free_band_at_10_mw">"Pita bebas lisensi maksimal 10 mW: HT beberapa watt tidak boleh memancar di sana."</string>
-    <string name="marine_vhf">"VHF maritim"</string>
-    <string name="simplex_channels_156_3_to_156">"Kanal simpleks, 156,3 hingga 156,875 MHz"</string>
-    <string name="listen_only_transmitting_on_marine_bands">"Hanya mendengar: memancar di pita maritim memerlukan radio khusus dan sertifikat."</string>
-    <string name="n_2_m_amateur_repeaters">"Repeater amatir 2 m"</string>
-    <string name="rv48_to_rv63_outputs_145_600">"RV48 hingga RV63, keluaran 145,600 hingga 145,7875 MHz, offset −600 kHz"</string>
-    <string name="transmitting_needs_an_amateur_radio_licence">"Memancar memerlukan lisensi radio amatir. Banyak repeater memerlukan nada akses (sering 88,5 Hz): atur per kanal."</string>
-    <string name="amateur_radio_calling_and_specials">"Radio amatir: panggilan dan khusus"</string>
-    <string name="n_2_m_and_70_cm_calling">"Panggilan 2 m dan 70 cm, APRS, ISS"</string>
-    <string name="transmitting_needs_an_amateur_radio_licence_2">"Memancar memerlukan lisensi radio amatir. ISS hanya untuk penerimaan."</string>
-    <string name="handheld_radio">"Radio genggam"</string>
-    <string name="the_radio_did_not_answer">"Radio tidak menjawab (%1$s)."</string>
-    <string name="no_answer">"tidak ada jawaban"</string>
-    <string name="answer">"jawaban %1$s"</string>
-    <string name="unexpected_radio_identification">"Identifikasi radio tak terduga: %1$s."</string>
-    <string name="the_radio_refused_clone_mode">"Radio menolak mode kloning."</string>
-    <string name="the_radio_does_not_answer_check">"Radio tidak menjawab (%1$s). Pastikan kabel tertancap penuh di soket radio, radio menyala "</string>
-    <string name="and_that_its_volume_is_not">"dan volumenya tidak nol."</string>
-    <string name="the_radio_refused_to_send_block" formatted="false">"Radio menolak mengirim blok %04X."</string>
-    <string name="block" formatted="false">"blok %04X"</string>
-    <string name="unexpected_answer_from_the_radio_for" formatted="false">"Jawaban tak terduga dari radio untuk blok %04X."</string>
-    <string name="the_radio_refused_block_nothing_more" formatted="false">"Radio menolak blok %04X: tidak ada lagi yang ditulis."</string>
-    <string name="the_radio_does_not_answer_check_2">"Radio tidak menjawab. Pastikan kabel tertancap penuh di soket radio, radio menyala, "</string>
-    <string name="then_turn_it_off_and_on">"lalu matikan dan nyalakan kembali."</string>
-    <string name="unrecognised_firmware_writing_is_refused_for">"Firmware tidak dikenal (%1$s): penulisan ditolak demi keamanan. Pembacaan tetap berfungsi."</string>
-    <string name="the_radio_does_not_answer">"Radio tidak menjawab."</string>
-    <string name="unexpected_answer">"Jawaban tak terduga: %1$s"</string>
-    <string name="unexpected_answer_from_the_radio">"Jawaban tak terduga dari radio (%1$s)."</string>
-    <string name="incomplete_frame_from_the_radio">"Frame tidak lengkap dari radio (%1$s)."</string>
-    <string name="this_is_not_a_uv_k5">"Ini bukan UV-K5."</string>
-    <string name="write" formatted="false">"tulis %04X"</string>
-    <string name="usb_serial">"USB-serial"</string>
     <string name="link_without_message">"Tautan tanpa pesan"</string>
     <string name="link_test">"Uji tautan"</string>
     <string name="crew_company_message">"Pesan kru / perusahaan"</string>
@@ -803,7 +766,6 @@
     <string name="cells">"Sel"</string>
     <string name="sky">"Langit"</string>
     <string name="spectrum">"Spektrum"</string>
-    <string name="channels">"Kanal"</string>
     <string name="wi_fi_scanner">"Pemindai Wi-Fi"</string>
     <string name="lan_devices">"Perangkat LAN"</string>
     <string name="lan_device">"Perangkat LAN"</string>
@@ -833,7 +795,6 @@
     <string name="spectrum_analyser">"Penganalisis spektrum"</string>
     <string name="radiosondes">"Radiosonde"</string>
     <string name="fm_radio">"Radio FM"</string>
-    <string name="radio_channels">"Kanal radio"</string>
     <string name="screen_unavailable_on_this_device">"Layar tidak tersedia di perangkat ini"</string>
     <string name="allow_access_in_android_settings_permissions">"Izinkan akses di Setelan Android › Izin"</string>
     <string name="saving_unavailable_on_this_device">"Penyimpanan tidak tersedia di perangkat ini"</string>
@@ -878,8 +839,6 @@
     <string name="this_device_does_not_have_this">"Perangkat ini tidak memiliki radio ini."</string>
     <string name="no_hackrf">"Tidak ada HackRF"</string>
     <string name="plug_in_a_hackrf_over_usb">"Colokkan HackRF lewat USB-C untuk menerima."</string>
-    <string name="no_handheld_radio">"Tidak ada radio genggam"</string>
-    <string name="plug_in_a_radio_with_its">"Colokkan radio dengan kabel pemrograman USB-nya."</string>
     <string name="turn_on_wi_fi_to_show">"Nyalakan Wi-Fi untuk menampilkan koneksi saat ini dan memakai alat jaringan lokal."</string>
     <string name="turn_on_wi_fi">"Nyalakan Wi-Fi"</string>
     <string name="wi_fi_settings">"Setelan Wi-Fi"</string>
@@ -906,16 +865,12 @@
     <string name="plug_in_a_hackrf">"Colokkan HackRF"</string>
     <string name="connect_a_hackrf_one_or_rad1o">"Hubungkan HackRF One (atau rad1o, Jawbreaker, PortaPack dalam mode HackRF) ke ponsel dengan kabel USB-C OTG. "</string>
     <string name="the_app_detects_it_as_soon">"Aplikasi mendeteksinya begitu dicolokkan."</string>
-    <string name="plug_in_a_handheld_radio">"Colokkan radio genggam"</string>
-    <string name="connect_the_radio_to_the_phone">"Hubungkan radio ke ponsel dengan kabel pemrograman USB-nya (chip FTDI, CH340, CP210x, atau PL2303), "</string>
-    <string name="plugged_into_the_radio_s_headset">"tertancap di soket headset radio. Aplikasi mendeteksinya begitu dicolokkan."</string>
     <string name="tools">"Alat"</string>
     <string name="nearby_networks_channels_speed_wi_fi">"Jaringan sekitar, kanal, kecepatan, diagnostik dan keamanan Wi-Fi."</string>
     <string name="bluetooth_le_devices_unknown_trackers_and">"Perangkat Bluetooth LE, pelacak tidak dikenal, dan pencarian Panas/Dingin."</string>
     <string name="cells_your_carrier_s_towers_and">"Sel, menara operator Anda, dan data seluler."</string>
     <string name="satellites_sky_position_comparison_and_passes">"Satelit, langit, perbandingan posisi, dan lintasan."</string>
     <string name="hackrf_spectrum_aircraft_ships_radiosondes_fpv">"HackRF: spektrum, pesawat, kapal, radiosonde, drone FPV, dan lainnya."</string>
-    <string name="program_a_baofeng_radtel_or_quansheng">"Program Baofeng, Radtel, atau Quansheng lewat kabel USB."</string>
     <string name="welcome_the_airwaves_are_waiting">"Selamat datang! Gelombang udara menanti."</string>
     <string name="good_to_see_you_again_the">"Senang bertemu lagi, antena sudah siap."</string>
     <string name="hello_which_frequency_shall_we_explore">"Halo! Frekuensi mana yang kita jelajahi hari ini?"</string>
@@ -938,8 +893,6 @@
     <string name="a_lost_airtag_it_s_never">"AirTag hilang? Ia tak pernah benar-benar sendirian."</string>
     <string name="gps_never_gets_lost_it_recalculates">"GPS tak pernah tersesat. Ia menghitung ulang."</string>
     <string name="aircraft_shout_their_position_on_1090">"Pesawat meneriakkan posisinya di 1090 MHz. Mari dengarkan."</string>
-    <string name="the_walkie_talkie_the_first_social">"Walkie-talkie: jejaring sosial pertama. Bergantian bicara."</string>
-    <string name="over_roger_that_back_to_the">"Ganti. Diterima. Kembali ke studio."</string>
     <string name="short_waves_long_ideas">"Gelombang pendek, ide panjang."</string>
     <string name="the_sky_has_never_been_so">"Langit tak pernah secerewet ini."</string>
     <string name="better_a_good_dbm_than_a">"Lebih baik dBm yang bagus daripada kabel panjang."</string>
@@ -1007,7 +960,6 @@
     <string name="identifiers_and_measurements_of_the_connected">"Pengenal dan pengukuran sel yang terhubung"</string>
     <string name="sky_plot_and_world_map_of">"Plot langit dan peta dunia satelit"</string>
     <string name="spectrum_and_waterfall_1_mhz_to">"Spektrum dan waterfall, 1 MHz hingga 6 GHz"</string>
-    <string name="read_edit_and_write_memories_over">"Baca, edit, dan tulis memori lewat kabel USB"</string>
     <string name="launch">"Jalankan"</string>
     <string name="ibeacon_eddystone_and_altbeacon_shops_museums">"iBeacon, Eddystone, dan AltBeacon: toko, museum, tempat, perangkat pintar"</string>
     <string name="bluetooth_listening_in_progress">"Mendengarkan Bluetooth"</string>
@@ -1596,84 +1548,7 @@
     <string name="the_line_in_the_middle_is">"Garis di tengah adalah sisa DC HackRF, bukan sinyal. Hindari amp di dekat pemancar kuat."</string>
     <string name="the_spectrum_shows_here_during_the">"Spektrum muncul di sini selama analisis"</string>
     <string name="waterfall_newest_at_the_top">"Waterfall · terbaru di atas"</string>
-    <string name="looking_for_the_radio">"Mencari radio…"</string>
-    <string name="reading_the_radio">"Membaca radio…"</string>
-    <string name="writing_to_the_radio">"Menulis ke radio…"</string>
     <string name="verifying">"Memverifikasi…"</string>
-    <string name="usb_access_to_the_cable_refused">"Akses USB ke kabel ditolak."</string>
-    <string name="could_not_open_the_usb_cable">"Tidak dapat membuka kabel USB."</string>
-    <string name="no_radio_recognised">"Tidak ada radio dikenali ("</string>
-    <string name="or">" atau "</string>
-    <string name="check_that_the_cable_is_pushed">"). Pastikan kabel tertancap penuh di soket radio, "</string>
-    <string name="that_the_radio_is_on_and">"radio menyala, dan volumenya tidak nol."</string>
-    <string name="communication_error">"Kesalahan komunikasi."</string>
-    <string name="error_2">"Kesalahan: %1$s"</string>
-    <string name="recognised_channels_read">"%1$s dikenali: %2$s kanal dibaca."</string>
-    <string name="unrecognised_firmware_read_only_writing_will">" Firmware tidak dikenal: hanya baca, penulisan akan ditolak."</string>
-    <string name="for_the_not_written">"%1$s %2$s untuk %3$s tidak ditulis"</string>
-    <string name="beyond_its_memories_not_written">"%1$s %2$s melebihi %3$s memorinya tidak ditulis"</string>
-    <string name="the_already_holds_exactly_these_channels">"%1$s sudah berisi kanal-kanal ini persis: tidak ada yang perlu ditulis.%2$s"</string>
-    <string name="channels_written_to_the_and_verified">"%1$s kanal ditulis ke %2$s dan diverifikasi dengan membaca ulang."</string>
-    <string name="of_channels_read_back_differently_read">"%1$s dari %2$s kanal terbaca berbeda: baca radio lagi untuk melihat isinya."</string>
-    <string name="channels_written_verification_impossible_turn_the">"%1$s kanal ditulis. Verifikasi tidak mungkin: matikan dan nyalakan radio sebelum membacanya lagi."</string>
-    <string name="previous_state_of_the_restored_channels">"Status sebelumnya %1$s dipulihkan (%2$s kanal)."</string>
-    <string name="n_12_5_khz">"12,5 kHz"</string>
-    <string name="of_2">" dari %1$s"</string>
-    <string name="to_write">" · %1$s untuk ditulis"</string>
-    <string name="cable">"Kabel %1$s"</string>
-    <string name="no_usb_cable">"Tidak ada kabel USB"</string>
-    <string name="model_recognised_when_reading">"Model dikenali saat membaca"</string>
-    <string name="restore_the_state_before_writing">"Pulihkan status sebelum penulisan"</string>
-    <string name="plug_the_programming_cable_into_the">"Colokkan kabel pemrograman ke soket USB-C ponsel (dengan adaptor OTG jika perlu) dan ke "</string>
-    <string name="headset_socket_of_the_radio_switched">"soket headset radio yang menyala. Anda sudah bisa menyusun daftar kanal tanpa radio."</string>
-    <string name="new_channel">"Kanal baru"</string>
-    <string name="presets">"Preset"</string>
-    <string name="clear_all">"Hapus semua"</string>
-    <string name="the_app_never_makes_the_radio">"Aplikasi tidak pernah membuat radio memancar: ia membaca dan menulis memorinya. Hanya kanal yang berubah yang ditulis ulang, sisanya "</string>
-    <string name="settings_keys_dtmf_is_untouched_and">"(setelan, tombol, DTMF) tidak disentuh, dan radio dibaca ulang untuk verifikasi. Memprogram itu bebas; memancar tidak: "</string>
-    <string name="amateur_bands_need_an_amateur_radio">"pita amatir memerlukan lisensi radio amatir, dan PMR446 hanya menerima perangkat bersertifikat. "</string>
-    <string name="the_list_is_never_saved_it">"Daftar tidak pernah disimpan: hilang saat aplikasi ditutup."</string>
-    <string name="write_to_the_radio">"Tulis ke radio?"</string>
-    <string name="the_list">"daftar"</string>
-    <string name="the_radio_will_be_recognised_and">"Radio akan dikenali dan dibaca, lalu %1$s "</string>
-    <string name="will_be_written_the_radio_s">"akan ditulis; kanal radio yang tidak ada di daftar akan dihapus. Kemudian dibaca ulang untuk verifikasi, "</string>
-    <string name="and_you_will_be_able_to">"dan Anda dapat memulihkan status sebelumnya."</string>
-    <string name="clear_the_list">"Hapus daftar?"</string>
-    <string name="the_channels_of_the_displayed_list">"Kanal pada daftar yang ditampilkan akan dihapus. Radio hanya berubah saat penulisan."</string>
-    <string name="listening_4">"Mendengarkan"</string>
-    <string name="offset">"Offset"</string>
-    <string name="listen_only">"Hanya dengar"</string>
-    <string name="invalid_frequency_in_mhz_for_example">"Frekuensi tidak valid (dalam MHz, misalnya 145.500)."</string>
-    <string name="this_frequency_is_outside_the_s">"Frekuensi ini di luar pita terima %1$s."</string>
-    <string name="invalid_offset_in_khz_for_example">"Offset tidak valid (dalam kHz, misalnya −600)."</string>
-    <string name="name_characters">"Nama (%1$s karakter)"</string>
-    <string name="receive_mhz">"Terima (MHz)"</string>
-    <string name="transmit">"Pancar"</string>
-    <string name="transmit_offset_khz">"Offset pancar (kHz)"</string>
-    <string name="transmit_tone">"Nada pancar"</string>
-    <string name="receive_tone_squelch">"Nada terima (squelch)"</string>
-    <string name="power">"Daya"</string>
-    <string name="bandwidth">"Lebar pita"</string>
-    <string name="wide_25_khz">"Lebar 25 kHz"</string>
-    <string name="narrow_12_5_khz">"Sempit 12,5 kHz"</string>
-    <string name="included_in_scan">"Disertakan dalam pemindaian"</string>
-    <string name="delete">"Hapus"</string>
-    <string name="reversed">"Terbalik"</string>
-    <string name="outside_the_s_bands">", %1$s di luar pita %2$s"</string>
-    <string name="with_no_free_slot">", %1$s tanpa slot kosong"</string>
-    <string name="channels_2">"%1$s kanal: %2$s."</string>
-    <string name="receive_only_4">"Hanya menerima"</string>
-    <string name="the_radio_will_not_transmit_on">"Radio tidak akan memancar di kanal ini"</string>
-    <string name="add_to_the_list">"Tambahkan ke daftar"</string>
-    <string name="back">"Kembali"</string>
-    <string name="cable_detected">"Kabel terdeteksi"</string>
-    <string name="read_the_memory_of_a_baofeng">"Baca memori Baofeng UV-5R, Radtel RT-470X, atau Quansheng UV-K5 / UV-K6, edit kanal, tambahkan preset, dan tulis kembali."</string>
-    <string name="programming_cable">"Kabel pemrograman"</string>
-    <string name="radio">"Radio"</string>
-    <string name="recognised_when_reading">"Dikenali saat membaca"</string>
-    <string name="never_memory_read_and_write_only">"Tidak pernah: hanya baca dan tulis memori"</string>
-    <string name="to_program_a_usb_cable_with">"Untuk memprogram: kabel USB dengan chip FTDI, CH340, CP210x, atau PL2303 di soket headset radio. "</string>
-    <string name="nothing_is_saved_or_kept">"Tidak ada yang disimpan."</string>
     <string name="wifi_coverage_csv">"wifi-coverage-%1$s.csv"</string>
     <string name="no_wi_fi">"Tidak ada Wi-Fi"</string>
     <string name="connect_to_the_wi_fi_network">"Hubungkan ke jaringan Wi-Fi yang cakupannya ingin Anda petakan."</string>
@@ -2073,9 +1948,6 @@
     <plurals name="p_devices">
         <item quantity="other">"perangkat"</item>
     </plurals>
-    <plurals name="p_channels">
-        <item quantity="other">"kanal"</item>
-    </plurals>
     <plurals name="p_beacons_detected">
         <item quantity="other">"beacon terdeteksi"</item>
     </plurals>
@@ -2187,15 +2059,6 @@
     <plurals name="p_frames">
         <item quantity="other">"frame"</item>
     </plurals>
-    <plurals name="p_channels_outside_the_bands">
-        <item quantity="other">"kanal di luar pita"</item>
-    </plurals>
-    <plurals name="p_channels_changed">
-        <item quantity="other">"kanal diubah"</item>
-    </plurals>
-    <plurals name="p_channels_added">
-        <item quantity="other">"kanal ditambahkan"</item>
-    </plurals>
     <plurals name="p_servers">
         <item quantity="other">"server"</item>
     </plurals>
@@ -2301,4 +2164,27 @@
     <string name="instant_communication">"Mode komunikasi instan"</string>
     <string name="wi_fi_aware_how_it_works">"Wi-Fi Aware (Neighbor Awareness Networking) memungkinkan ponsel saling menemukan dan berkomunikasi langsung, tanpa router atau internet. Android hanya menemukan layanan yang namanya ia ketahui, jadi alat ini menemukan ponsel lain yang juga membukanya. Dengan Wi-Fi RTT di kedua ponsel, jarak di antara keduanya diukur dengan ketelitian sekitar satu meter. Tombol lambaian mengirim salam untuk menguji tautan dua arah."</string>
     <string name="parallel_connections">"%1$d koneksi paralel"</string>
+    <string name="tpms_heard">"%1$s MHz · %2$d paket diterima"</string>
+    <string name="tpms_listening">"Mendengarkan sensor ban"</string>
+    <string name="americas_asia">"Amerika, Asia"</string>
+    <string name="tpms_none_yet">"Belum ada sensor"</string>
+    <string name="tpms_none_yet_body">"Sensor ban memancar sekitar sekali per menit saat mobil melaju, dan jarang saat diparkir. Berdirilah dekat jalan atau tempat parkir, atau berangkatlah dengan ponsel di dalam mobil."</string>
+    <string name="tpms_how_it_works">"Sejak 2014 setiap mobil baru di Eropa memiliki sensor di setiap ban yang mengirim tekanan dan suhu ke mobil lewat radio, pada 433,92 MHz (315 MHz di Amerika dan Asia). Aplikasi mendekode format produsen utama (Continental VDO, Schrader, Pacific, TRW, HUF) seperti yang didokumentasikan rtl_433, dan hanya menyimpan paket yang lolos checksum-nya sendiri. Tekanan ditampilkan seperti yang dikirim sensor: absolut untuk sebagian merek, relatif untuk yang lain. Hanya menerima."</string>
+    <string name="tpms_wheel">"Roda %1$d"</string>
+    <string name="tpms_moving">"Bergerak"</string>
+    <string name="tpms_battery_low">"Baterai lemah"</string>
+    <string name="pocsag_none_yet">"Belum ada pesan"</string>
+    <string name="pocsag_none_yet_body">"Pager terutama dipakai rumah sakit, pemadam kebakaran, dan staf siaga: pesan datang bergelombang, kadang berselang banyak menit. Beberapa kanal jaringan mungkin tidak mengudara."</string>
+    <string name="pocsag_network">"Jaringan"</string>
+    <string name="pocsag_custom">"Frekuensi lain"</string>
+    <string name="pocsag_how_it_works">"POCSAG adalah standar pager yang dipakai sejak 1980-an oleh e*Message (Prancis, Jerman), rumah sakit, pemadam kebakaran, dan amatir radio (DAPNET). Aplikasi mendengarkan semua kanal jaringan yang dipilih sekaligus, pada 512, 1200, dan 2400 bit/s, dan memperbaiki hingga dua bit salah per kata kode. Pesan pager adalah korespondensi pribadi: di banyak negara, termasuk Prancis, membaca atau menyebarkannya hanya diizinkan untuk pager Anda sendiri. Tidak ada yang disimpan setelah aplikasi ditutup. Hanya menerima."</string>
+    <string name="pocsag_tone_only">"Hanya nada, tanpa teks"</string>
+    <string name="tyre_pressure_sensors_433_mhz">"Sensor tekanan ban, 433 MHz"</string>
+    <string name="pagers_e_message_dapnet">"Pager: e*Message, DAPNET"</string>
+    <plurals name="p_sensors">
+        <item quantity="other">"sensor"</item>
+    </plurals>
+    <plurals name="p_listening_channels">
+        <item quantity="other">"Mendengarkan %1$d kanal"</item>
+    </plurals>
 </resources>

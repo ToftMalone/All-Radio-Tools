@@ -652,44 +652,7 @@
     <string name="celestrak_answered">"CelesTrak 返回 %1$s"</string>
     <string name="unreadable_answer_from_celestrak">"无法读取 CelesTrak 的响应"</string>
     <string name="none">"无"</string>
-    <string name="high">"高"</string>
     <string name="medium">"中"</string>
-    <string name="low">"低"</string>
-    <string name="n_16_channels_446_00625_to_446">"16 个信道，446.00625 至 446.19375 MHz"</string>
-    <string name="transmitting_on_pmr446_needs_a_type">"在 PMR446 上发射需要带固定天线、功率不超过 0.5 W 的认证设备：可编程手台不符合要求。"</string>
-    <string name="n_69_channels_433_075_to_434">"69 个信道，433.075 至 434.775 MHz"</string>
-    <string name="licence_free_band_at_10_mw">"最大 10 mW 的免执照频段：数瓦的手台不得在此发射。"</string>
-    <string name="marine_vhf">"海事 VHF"</string>
-    <string name="simplex_channels_156_3_to_156">"单工信道，156.3 至 156.875 MHz"</string>
-    <string name="listen_only_transmitting_on_marine_bands">"仅收听：在海事频段发射需要专用电台和证书。"</string>
-    <string name="n_2_m_amateur_repeaters">"2 米业余中继"</string>
-    <string name="rv48_to_rv63_outputs_145_600">"RV48 至 RV63，输出 145.600 至 145.7875 MHz，差频 −600 kHz"</string>
-    <string name="transmitting_needs_an_amateur_radio_licence">"发射需要业余无线电执照。许多中继需要接入亚音（通常 88.5 Hz）：请逐个信道设置。"</string>
-    <string name="amateur_radio_calling_and_specials">"业余无线电：呼叫与特殊频率"</string>
-    <string name="n_2_m_and_70_cm_calling">"2 米和 70 厘米呼叫、APRS、ISS"</string>
-    <string name="transmitting_needs_an_amateur_radio_licence_2">"发射需要业余无线电执照。ISS 仅可接收。"</string>
-    <string name="handheld_radio">"手持对讲机"</string>
-    <string name="the_radio_did_not_answer">"对讲机未响应（%1$s）。"</string>
-    <string name="no_answer">"无响应"</string>
-    <string name="answer">"响应 %1$s"</string>
-    <string name="unexpected_radio_identification">"意外的对讲机标识：%1$s。"</string>
-    <string name="the_radio_refused_clone_mode">"对讲机拒绝了克隆模式。"</string>
-    <string name="the_radio_does_not_answer_check">"对讲机无响应（%1$s）。请检查数据线是否完全插入对讲机插孔、对讲机是否开机， "</string>
-    <string name="and_that_its_volume_is_not">"以及音量是否不为零。"</string>
-    <string name="the_radio_refused_to_send_block" formatted="false">"对讲机拒绝发送数据块 %04X。"</string>
-    <string name="block" formatted="false">"数据块 %04X"</string>
-    <string name="unexpected_answer_from_the_radio_for" formatted="false">"对讲机对数据块 %04X 的响应异常。"</string>
-    <string name="the_radio_refused_block_nothing_more" formatted="false">"对讲机拒绝了数据块 %04X：之后未再写入。"</string>
-    <string name="the_radio_does_not_answer_check_2">"对讲机无响应。请检查数据线是否完全插入对讲机插孔、对讲机是否开机， "</string>
-    <string name="then_turn_it_off_and_on">"然后关机再重新开机。"</string>
-    <string name="unrecognised_firmware_writing_is_refused_for">"无法识别的固件（%1$s）：为安全起见拒绝写入。仍可读取。"</string>
-    <string name="the_radio_does_not_answer">"对讲机无响应。"</string>
-    <string name="unexpected_answer">"意外响应：%1$s"</string>
-    <string name="unexpected_answer_from_the_radio">"对讲机的意外响应（%1$s）。"</string>
-    <string name="incomplete_frame_from_the_radio">"对讲机的帧不完整（%1$s）。"</string>
-    <string name="this_is_not_a_uv_k5">"这不是 UV-K5。"</string>
-    <string name="write" formatted="false">"写入 %04X"</string>
-    <string name="usb_serial">"USB 串口"</string>
     <string name="link_without_message">"无消息的链路"</string>
     <string name="link_test">"链路测试"</string>
     <string name="crew_company_message">"机组 / 公司消息"</string>
@@ -803,7 +766,6 @@
     <string name="cells">"小区"</string>
     <string name="sky">"天空"</string>
     <string name="spectrum">"频谱"</string>
-    <string name="channels">"信道"</string>
     <string name="wi_fi_scanner">"Wi-Fi 扫描器"</string>
     <string name="lan_devices">"局域网设备"</string>
     <string name="lan_device">"局域网设备"</string>
@@ -833,7 +795,6 @@
     <string name="spectrum_analyser">"频谱分析仪"</string>
     <string name="radiosondes">"无线电探空仪"</string>
     <string name="fm_radio">"FM 收音机"</string>
-    <string name="radio_channels">"对讲机信道"</string>
     <string name="screen_unavailable_on_this_device">"此设备上无法使用该界面"</string>
     <string name="allow_access_in_android_settings_permissions">"请在 Android 设置 › 权限中允许访问"</string>
     <string name="saving_unavailable_on_this_device">"此设备无法保存"</string>
@@ -878,8 +839,6 @@
     <string name="this_device_does_not_have_this">"此设备没有该无线电。"</string>
     <string name="no_hackrf">"无 HackRF"</string>
     <string name="plug_in_a_hackrf_over_usb">"请通过 USB-C 连接 HackRF 以接收。"</string>
-    <string name="no_handheld_radio">"无手持对讲机"</string>
-    <string name="plug_in_a_radio_with_its">"请用 USB 写频线连接对讲机。"</string>
     <string name="turn_on_wi_fi_to_show">"开启 Wi-Fi 以显示当前连接并使用局域网工具。"</string>
     <string name="turn_on_wi_fi">"开启 Wi-Fi"</string>
     <string name="wi_fi_settings">"Wi-Fi 设置"</string>
@@ -906,16 +865,12 @@
     <string name="plug_in_a_hackrf">"连接 HackRF"</string>
     <string name="connect_a_hackrf_one_or_rad1o">"用 USB-C OTG 线将 HackRF One（或 HackRF 模式的 rad1o、Jawbreaker、PortaPack）连接到手机。 "</string>
     <string name="the_app_detects_it_as_soon">"插入后应用会立即检测到。"</string>
-    <string name="plug_in_a_handheld_radio">"连接手持对讲机"</string>
-    <string name="connect_the_radio_to_the_phone">"用 USB 写频线（FTDI、CH340、CP210x 或 PL2303 芯片）将对讲机连接到手机， "</string>
-    <string name="plugged_into_the_radio_s_headset">"插入对讲机的耳机插孔。插入后应用会立即检测到。"</string>
     <string name="tools">"工具"</string>
     <string name="nearby_networks_channels_speed_wi_fi">"附近网络、信道、速度、Wi-Fi 诊断与安全。"</string>
     <string name="bluetooth_le_devices_unknown_trackers_and">"蓝牙 LE 设备、未知追踪器和冷热搜索。"</string>
     <string name="cells_your_carrier_s_towers_and">"小区、运营商基站和移动数据。"</string>
     <string name="satellites_sky_position_comparison_and_passes">"卫星、天空、位置比较和过境预测。"</string>
     <string name="hackrf_spectrum_aircraft_ships_radiosondes_fpv">"HackRF：频谱、飞机、船舶、探空仪、FPV 无人机等。"</string>
-    <string name="program_a_baofeng_radtel_or_quansheng">"通过 USB 线为 Baofeng、Radtel 或 Quansheng 写频。"</string>
     <string name="welcome_the_airwaves_are_waiting">"欢迎！电波在等着您。"</string>
     <string name="good_to_see_you_again_the">"很高兴再次见到您，天线已就绪。"</string>
     <string name="hello_which_frequency_shall_we_explore">"您好！今天探索哪个频率？"</string>
@@ -938,8 +893,6 @@
     <string name="a_lost_airtag_it_s_never">"丢了 AirTag？它从不真正孤单。"</string>
     <string name="gps_never_gets_lost_it_recalculates">"GPS 从不迷路。它只是重新计算。"</string>
     <string name="aircraft_shout_their_position_on_1090">"飞机在 1090 MHz 上大声报告位置。我们来听听。"</string>
-    <string name="the_walkie_talkie_the_first_social">"对讲机：最早的社交网络。轮流发言。"</string>
-    <string name="over_roger_that_back_to_the">"完毕。收到。交回演播室。"</string>
     <string name="short_waves_long_ideas">"短波，长思。"</string>
     <string name="the_sky_has_never_been_so">"天空从未如此健谈。"</string>
     <string name="better_a_good_dbm_than_a">"好的 dBm 胜过长长的线缆。"</string>
@@ -1007,7 +960,6 @@
     <string name="identifiers_and_measurements_of_the_connected">"所连小区的标识和测量值"</string>
     <string name="sky_plot_and_world_map_of">"卫星天空图和世界地图"</string>
     <string name="spectrum_and_waterfall_1_mhz_to">"频谱和瀑布图，1 MHz 至 6 GHz"</string>
-    <string name="read_edit_and_write_memories_over">"通过 USB 线读取、编辑和写入存储"</string>
     <string name="launch">"启动"</string>
     <string name="ibeacon_eddystone_and_altbeacon_shops_museums">"iBeacon、Eddystone 和 AltBeacon：商店、博物馆、场馆、智能设备"</string>
     <string name="bluetooth_listening_in_progress">"正在监听蓝牙"</string>
@@ -1596,84 +1548,7 @@
     <string name="the_line_in_the_middle_is">"中间的线是 HackRF 的直流残留，不是信号。在强发射机附近请勿使用放大。"</string>
     <string name="the_spectrum_shows_here_during_the">"分析时频谱显示在这里"</string>
     <string name="waterfall_newest_at_the_top">"瀑布图 · 最新在顶部"</string>
-    <string name="looking_for_the_radio">"正在寻找对讲机…"</string>
-    <string name="reading_the_radio">"正在读取对讲机…"</string>
-    <string name="writing_to_the_radio">"正在写入对讲机…"</string>
     <string name="verifying">"正在校验…"</string>
-    <string name="usb_access_to_the_cable_refused">"对数据线的 USB 访问被拒绝。"</string>
-    <string name="could_not_open_the_usb_cable">"无法打开 USB 数据线。"</string>
-    <string name="no_radio_recognised">"未识别到对讲机（"</string>
-    <string name="or">" 或 "</string>
-    <string name="check_that_the_cable_is_pushed">"）。请检查数据线是否完全插入对讲机插孔， "</string>
-    <string name="that_the_radio_is_on_and">"对讲机是否开机，以及音量是否不为零。"</string>
-    <string name="communication_error">"通信错误。"</string>
-    <string name="error_2">"错误：%1$s"</string>
-    <string name="recognised_channels_read">"已识别 %1$s：读取了 %2$s 个信道。"</string>
-    <string name="unrecognised_firmware_read_only_writing_will">" 无法识别的固件：仅可读取，将拒绝写入。"</string>
-    <string name="for_the_not_written">"%3$s 的 %1$s %2$s 未写入"</string>
-    <string name="beyond_its_memories_not_written">"超出其 %3$s 个存储位的 %1$s %2$s 未写入"</string>
-    <string name="the_already_holds_exactly_these_channels">"%1$s 已包含完全相同的信道：无需写入。%2$s"</string>
-    <string name="channels_written_to_the_and_verified">"已将 %1$s 个信道写入 %2$s，并回读校验。"</string>
-    <string name="of_channels_read_back_differently_read">"%2$s 个信道中有 %1$s 个回读不一致：请重新读取对讲机查看其内容。"</string>
-    <string name="channels_written_verification_impossible_turn_the">"已写入 %1$s 个信道。无法校验：重新读取前请关闭并重新打开对讲机。"</string>
-    <string name="previous_state_of_the_restored_channels">"已恢复 %1$s 的先前状态（%2$s 个信道）。"</string>
-    <string name="n_12_5_khz">"12.5 kHz"</string>
-    <string name="of_2">" / %1$s"</string>
-    <string name="to_write">" · 待写入 %1$s"</string>
-    <string name="cable">"数据线 %1$s"</string>
-    <string name="no_usb_cable">"无 USB 数据线"</string>
-    <string name="model_recognised_when_reading">"读取时识别型号"</string>
-    <string name="restore_the_state_before_writing">"恢复写入前的状态"</string>
-    <string name="plug_the_programming_cable_into_the">"将写频线插入手机的 USB-C 接口（必要时使用 OTG 转接头），另一端插入已开机对讲机的 "</string>
-    <string name="headset_socket_of_the_radio_switched">"耳机插孔。没有对讲机时也可以先编排信道列表。"</string>
-    <string name="new_channel">"新信道"</string>
-    <string name="presets">"预设"</string>
-    <string name="clear_all">"全部清除"</string>
-    <string name="the_app_never_makes_the_radio">"应用从不让对讲机发射：它只读写其存储。只重写已更改的信道，其余部分 "</string>
-    <string name="settings_keys_dtmf_is_untouched_and">"（设置、按键、DTMF）保持不变，并回读对讲机进行校验。写频是自由的；发射则不然： "</string>
-    <string name="amateur_bands_need_an_amateur_radio">"业余频段需要业余无线电执照，PMR446 只接受经认证的设备。 "</string>
-    <string name="the_list_is_never_saved_it">"列表不会保存：关闭应用后即消失。"</string>
-    <string name="write_to_the_radio">"写入对讲机？"</string>
-    <string name="the_list">"列表"</string>
-    <string name="the_radio_will_be_recognised_and">"将识别并读取对讲机，然后写入 %1$s "</string>
-    <string name="will_be_written_the_radio_s">"；对讲机中不在列表里的信道将被清除。随后会回读校验， "</string>
-    <string name="and_you_will_be_able_to">"您可以恢复其先前状态。"</string>
-    <string name="clear_the_list">"清除列表？"</string>
-    <string name="the_channels_of_the_displayed_list">"将删除所显示列表中的信道。只有写入时才会更改对讲机。"</string>
-    <string name="listening_4">"接收"</string>
-    <string name="offset">"差频"</string>
-    <string name="listen_only">"仅收听"</string>
-    <string name="invalid_frequency_in_mhz_for_example">"频率无效（单位 MHz，例如 145.500）。"</string>
-    <string name="this_frequency_is_outside_the_s">"此频率超出 %1$s 的接收频段。"</string>
-    <string name="invalid_offset_in_khz_for_example">"差频无效（单位 kHz，例如 −600）。"</string>
-    <string name="name_characters">"名称（%1$s 个字符）"</string>
-    <string name="receive_mhz">"接收（MHz）"</string>
-    <string name="transmit">"发射"</string>
-    <string name="transmit_offset_khz">"发射差频（kHz）"</string>
-    <string name="transmit_tone">"发射亚音"</string>
-    <string name="receive_tone_squelch">"接收亚音（静噪）"</string>
-    <string name="power">"功率"</string>
-    <string name="bandwidth">"带宽"</string>
-    <string name="wide_25_khz">"宽带 25 kHz"</string>
-    <string name="narrow_12_5_khz">"窄带 12.5 kHz"</string>
-    <string name="included_in_scan">"加入扫描"</string>
-    <string name="delete">"删除"</string>
-    <string name="reversed">"反向"</string>
-    <string name="outside_the_s_bands">"，%1$s 个超出 %2$s 的频段"</string>
-    <string name="with_no_free_slot">"，%1$s 个没有空位"</string>
-    <string name="channels_2">"%1$s 个信道：%2$s。"</string>
-    <string name="receive_only_4">"仅接收"</string>
-    <string name="the_radio_will_not_transmit_on">"对讲机不会在这些信道上发射"</string>
-    <string name="add_to_the_list">"添加到列表"</string>
-    <string name="back">"返回"</string>
-    <string name="cable_detected">"已检测到数据线"</string>
-    <string name="read_the_memory_of_a_baofeng">"读取 Baofeng UV-5R、Radtel RT-470X 或 Quansheng UV-K5 / UV-K6 的存储，编辑信道，添加预设并写回。"</string>
-    <string name="programming_cable">"写频线"</string>
-    <string name="radio">"对讲机"</string>
-    <string name="recognised_when_reading">"读取时识别"</string>
-    <string name="never_memory_read_and_write_only">"从不：仅读写存储"</string>
-    <string name="to_program_a_usb_cable_with">"写频需要：插在对讲机耳机插孔上、带 FTDI、CH340、CP210x 或 PL2303 芯片的 USB 线。 "</string>
-    <string name="nothing_is_saved_or_kept">"不保存、不保留任何内容。"</string>
     <string name="wifi_coverage_csv">"wifi-coverage-%1$s.csv"</string>
     <string name="no_wi_fi">"无 Wi-Fi"</string>
     <string name="connect_to_the_wi_fi_network">"请连接到要绘制覆盖范围的 Wi-Fi 网络。"</string>
@@ -2073,9 +1948,6 @@
     <plurals name="p_devices">
         <item quantity="other">"台设备"</item>
     </plurals>
-    <plurals name="p_channels">
-        <item quantity="other">"个信道"</item>
-    </plurals>
     <plurals name="p_beacons_detected">
         <item quantity="other">"个信标已检测到"</item>
     </plurals>
@@ -2187,15 +2059,6 @@
     <plurals name="p_frames">
         <item quantity="other">"帧"</item>
     </plurals>
-    <plurals name="p_channels_outside_the_bands">
-        <item quantity="other">"个信道超出频段"</item>
-    </plurals>
-    <plurals name="p_channels_changed">
-        <item quantity="other">"个信道已更改"</item>
-    </plurals>
-    <plurals name="p_channels_added">
-        <item quantity="other">"个信道已添加"</item>
-    </plurals>
     <plurals name="p_servers">
         <item quantity="other">"个服务器"</item>
     </plurals>
@@ -2301,4 +2164,27 @@
     <string name="instant_communication">"即时通信模式"</string>
     <string name="wi_fi_aware_how_it_works">"Wi-Fi Aware（邻近感知网络）让手机无需路由器或互联网即可互相发现并直接通信。Android 只能找到它知道名称的服务，因此此工具会找到同样打开它的其他手机。若两部手机都支持 Wi-Fi RTT，它们之间的距离可精确到约 1 米。招手按钮会发送问候，用来双向测试连接。"</string>
     <string name="parallel_connections">"%1$d 个并行连接"</string>
+    <string name="tpms_heard">"%1$s MHz · 已收到 %2$d 个数据包"</string>
+    <string name="tpms_listening">"正在接收胎压传感器"</string>
+    <string name="americas_asia">"美洲、亚洲"</string>
+    <string name="tpms_none_yet">"暂无传感器"</string>
+    <string name="tpms_none_yet_body">"胎压传感器在车辆行驶时约每分钟发射一次，停车时很少发射。请站在道路或停车场附近，或带着手机开车出发。"</string>
+    <string name="tpms_how_it_works">"自 2014 年起，欧洲所有新车的每个轮胎都装有传感器，通过无线电把胎压和温度发送给车辆，频率为 433.92 MHz（美洲和亚洲为 315 MHz）。本应用按照 rtl_433 的文档解码主要厂商（Continental VDO、Schrader、Pacific、TRW、HUF）的格式，只保留通过各自校验和的数据包。胎压按传感器发送的值显示：有些品牌为绝对压力，有些为相对压力。仅接收。"</string>
+    <string name="tpms_wheel">"车轮 %1$d"</string>
+    <string name="tpms_moving">"行驶中"</string>
+    <string name="tpms_battery_low">"电池电量低"</string>
+    <string name="pocsag_none_yet">"暂无消息"</string>
+    <string name="pocsag_none_yet_body">"寻呼机主要由医院、消防和值班人员使用：消息成批到达，有时相隔数分钟以上。网络的部分信道可能已停播。"</string>
+    <string name="pocsag_network">"网络"</string>
+    <string name="pocsag_custom">"其他频率"</string>
+    <string name="pocsag_how_it_works">"POCSAG 是自 1980 年代起由 e*Message（法国、德国）、医院、消防和业余无线电爱好者（DAPNET）使用的寻呼标准。本应用以 512、1200 和 2400 bit/s 同时收听所选网络的所有信道，每个码字最多纠正两个错误比特。寻呼消息属于私人通信：在包括法国在内的许多国家，只允许阅读或传播您自己寻呼机的消息。关闭应用后不保留任何内容。仅接收。"</string>
+    <string name="pocsag_tone_only">"仅提示音，无文字"</string>
+    <string name="tyre_pressure_sensors_433_mhz">"胎压传感器，433 MHz"</string>
+    <string name="pagers_e_message_dapnet">"寻呼机：e*Message、DAPNET"</string>
+    <plurals name="p_sensors">
+        <item quantity="other">"个传感器"</item>
+    </plurals>
+    <plurals name="p_listening_channels">
+        <item quantity="other">"正在收听 %1$d 个信道"</item>
+    </plurals>
 </resources>

@@ -168,7 +168,6 @@ fun HomeScreen(
                                         .onGloballyPositioned { cardBounds[n] = it.boundsInRoot() },
                                 )
                             }
-                            if (pair.size == 1) Spacer(Modifier.weight(1f))
                         }
                     }
                 }
@@ -234,7 +233,6 @@ private fun description(n: Network) = when (n) {
     Network.Cellular -> S(R.string.cells_your_carrier_s_towers_and)
     Network.Gnss -> S(R.string.satellites_sky_position_comparison_and_passes)
     Network.Sdr -> S(R.string.hackrf_spectrum_aircraft_ships_radiosondes_fpv)
-    Network.Talkie -> S(R.string.program_a_baofeng_radtel_or_quansheng)
 }
 
 @Composable
@@ -263,14 +261,6 @@ private fun CardIcon(network: Network) {
                     drawCircle(roles.accent, size.minDimension / 2 - 1.dp.toPx(), style = Stroke(2.dp.toPx(), pathEffect = dash))
                 }
                 Symbol(Sym.SatelliteAlt, size = 26.dp, filled = true, tint = roles.onAccent)
-            }
-        }
-        Network.Talkie -> {
-            // A radio handset behind a ring that pulses like a transmission.
-            Box(Modifier.size(56.dp), contentAlignment = Alignment.Center) {
-                PulseRing(roles.accent, 40.dp, periodMs = 2200)
-                Box(Modifier.size(48.dp).spinning(rememberSpin(28_000)).clip(RoundedCornerShape(20.dp)).background(roles.accent))
-                Symbol(Sym.Radio, size = 26.dp, filled = true, tint = roles.onAccent)
             }
         }
         Network.Sdr -> {
@@ -343,8 +333,6 @@ object Greetings {
         S(R.string.a_lost_airtag_it_s_never),
         S(R.string.gps_never_gets_lost_it_recalculates),
         S(R.string.aircraft_shout_their_position_on_1090),
-        S(R.string.the_walkie_talkie_the_first_social),
-        S(R.string.over_roger_that_back_to_the),
         S(R.string.short_waves_long_ideas),
         S(R.string.the_sky_has_never_been_so),
         S(R.string.better_a_good_dbm_than_a),

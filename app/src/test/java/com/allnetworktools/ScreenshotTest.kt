@@ -55,7 +55,6 @@ class ScreenshotTest {
     fun reset() {
         Scenario.airplane = false
         Scenario.sdrDevice.value = com.allnetworktools.data.sdr.SdrDevice("HackRF One", null)
-        Scenario.cable.value = com.allnetworktools.data.radio.RadioCable("FTDI", null)
         Scenario.gnssDenied = false
         Scenario.throttled = false
         Scenario.bleEmpty = false
@@ -553,25 +552,29 @@ class ScreenshotTest {
         )
     }
 
-    private fun talkieChannels(slots: Int = 8): List<com.allnetworktools.data.radio.RadioChannel> {
-        val ctcss = com.allnetworktools.data.radio.Tone.Ctcss(88.5)
-        return listOf(
-            com.allnetworktools.data.radio.RadioChannel(0, 145_500_000, 145_500_000, "APPEL2M", wide = false),
-            com.allnetworktools.data.radio.RadioChannel(1, 145_600_000, 145_000_000, "RV48", txTone = ctcss, wide = false),
-            com.allnetworktools.data.radio.RadioChannel(2, 446_006_250, null, "PMR 1", wide = false),
-            com.allnetworktools.data.radio.RadioChannel(3, 156_800_000, null, "MAR 16"),
-            com.allnetworktools.data.radio.RadioChannel(4, 144_800_000, null, "APRS", wide = false),
-            com.allnetworktools.data.radio.RadioChannel(5, 433_500_000, 433_500_000, "APPEL70", rxTone = com.allnetworktools.data.radio.Tone.Dcs(23, true), power = com.allnetworktools.data.radio.RadioPower.Low),
-        ).take(slots)
-    }
-    @Test fun talkieDashboard() = shot("T1_talkie_dashboard", nav = NavState(Network.Talkie, Page.Dashboard))
-    @Test fun talkieChannelsList() = shot("T2_talkie_channels", nav = NavState(Network.Talkie, Page.ToolPage(Tool.RadioChannels))) { vm ->
-        vm.tools.radioChannels.setForTest(
-            talkieChannels(),
-            com.allnetworktools.ui.pages.talkie.ProgMessage("Baofeng UV-5R reconnu : 6 canaux lus.", com.allnetworktools.ui.pages.talkie.ProgMessage.Kind.Success),
-            com.allnetworktools.data.radio.Uv5rSpec(),
+    @Test fun sdrTpms() = shot("S20_tpms", nav = NavState(Network.Sdr, Page.ToolPage(Tool.Tpms))) { vm ->
+        val now = System.currentTimeMillis()
+        fun r(p: String, id: String, kpa: Double, c: Double, battery: Boolean? = null) =
+            com.allnetworktools.data.sdr.TpmsReading(p, id, kpa, c, battery, timeMs = now)
+        vm.tools.tpms.setForTest(
+            listOf(
+                com.allnetworktools.ui.pages.sdr.TpmsInfo("Renault / Dacia", "4f21a8", r("Renault / Dacia", "4f21a8", 231.0, 18.0), 6, now - 3_000),
+                com.allnetworktools.ui.pages.sdr.TpmsInfo("Citroën / Peugeot", "8a3c55e1", r("Citroën / Peugeot", "8a3c55e1", 245.5, 21.0), 3, now - 41_000),
+                com.allnetworktools.ui.pages.sdr.TpmsInfo("Toyota", "0a0b0c0d", r("Toyota", "0a0b0c0d", 220.6, 16.0, false), 2, now - 95_000),
+            ),
+            11,
         )
     }
-    @Test fun talkieChannelsNoCable() = shot("T3_talkie_channels_empty", dark = true, nav = NavState(Network.Talkie, Page.ToolPage(Tool.RadioChannels))) { Scenario.cable.value = null }
-    @Test fun talkieTools() = shot("T4_talkie_tools", nav = NavState(Network.Talkie, Page.Tools))
+    @Test fun sdrPocsag() = shot("S21_pocsag", dark = true, nav = NavState(Network.Sdr, Page.ToolPage(Tool.Pocsag))) { vm ->
+        val now = System.currentTimeMillis()
+        vm.tools.pocsag.setForTest(
+            listOf(
+                com.allnetworktools.data.sdr.PocsagMessage(1234567, 3, com.allnetworktools.data.sdr.PocsagMessage.Kind.Alpha, "TEST SYSTEME - ignorer ce message", 1200, 466.025, 0, now - 20_000),
+                com.allnetworktools.data.sdr.PocsagMessage(204808, 0, com.allnetworktools.data.sdr.PocsagMessage.Kind.Numeric, "0612345678", 1200, 466.075, 1, now - 65_000),
+                com.allnetworktools.data.sdr.PocsagMessage(999999, 1, com.allnetworktools.data.sdr.PocsagMessage.Kind.Tone, "", 512, 466.2063, 0, now - 130_000),
+            ),
+        )
+    }
+    @Test fun sdrToolsList() = shot("S22_sdr_tools", nav = NavState(Network.Sdr, Page.Tools))
+    @Test fun homeFiveNetworks() = shot("H9_home_five", nav = NavState())
 }

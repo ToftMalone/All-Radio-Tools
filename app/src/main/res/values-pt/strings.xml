@@ -654,44 +654,7 @@
     <string name="celestrak_answered">"A CelesTrak respondeu %1$s"</string>
     <string name="unreadable_answer_from_celestrak">"Resposta ilegível da CelesTrak"</string>
     <string name="none">"Nenhum"</string>
-    <string name="high">"Alto"</string>
     <string name="medium">"Médio"</string>
-    <string name="low">"Baixo"</string>
-    <string name="n_16_channels_446_00625_to_446">"16 canais, de 446,00625 a 446,19375 MHz"</string>
-    <string name="transmitting_on_pmr446_needs_a_type">"Transmitir em PMR446 exige um aparelho homologado com antena fixa e no máximo 0,5 W: um rádio programável não é."</string>
-    <string name="n_69_channels_433_075_to_434">"69 canais, de 433,075 a 434,775 MHz"</string>
-    <string name="licence_free_band_at_10_mw">"Faixa livre com no máximo 10 mW: um rádio de vários watts não pode transmitir nela."</string>
-    <string name="marine_vhf">"VHF marítimo"</string>
-    <string name="simplex_channels_156_3_to_156">"Canais simplex, de 156,3 a 156,875 MHz"</string>
-    <string name="listen_only_transmitting_on_marine_bands">"Somente escuta: transmitir em faixas marítimas exige um rádio e um certificado próprios."</string>
-    <string name="n_2_m_amateur_repeaters">"Repetidoras radioamador de 2 m"</string>
-    <string name="rv48_to_rv63_outputs_145_600">"RV48 a RV63, saídas de 145,600 a 145,7875 MHz, deslocamento −600 kHz"</string>
-    <string name="transmitting_needs_an_amateur_radio_licence">"Transmitir exige licença de radioamador. Muitas repetidoras precisam de um tom de acesso (muitas vezes 88,5 Hz): ajuste-o canal a canal."</string>
-    <string name="amateur_radio_calling_and_specials">"Radioamador: chamada e especiais"</string>
-    <string name="n_2_m_and_70_cm_calling">"Chamada em 2 m e 70 cm, APRS, ISS"</string>
-    <string name="transmitting_needs_an_amateur_radio_licence_2">"Transmitir exige licença de radioamador. A ISS é somente recepção."</string>
-    <string name="handheld_radio">"Rádio portátil"</string>
-    <string name="the_radio_did_not_answer">"O rádio não respondeu (%1$s)."</string>
-    <string name="no_answer">"sem resposta"</string>
-    <string name="answer">"resposta %1$s"</string>
-    <string name="unexpected_radio_identification">"Identificação de rádio inesperada: %1$s."</string>
-    <string name="the_radio_refused_clone_mode">"O rádio recusou o modo clone."</string>
-    <string name="the_radio_does_not_answer_check">"O rádio não responde (%1$s). Verifique se o cabo está bem encaixado na entrada do rádio, se o rádio está ligado "</string>
-    <string name="and_that_its_volume_is_not">"e se o volume não está no zero."</string>
-    <string name="the_radio_refused_to_send_block" formatted="false">"O rádio se recusou a enviar o bloco %04X."</string>
-    <string name="block" formatted="false">"bloco %04X"</string>
-    <string name="unexpected_answer_from_the_radio_for" formatted="false">"Resposta inesperada do rádio para o bloco %04X."</string>
-    <string name="the_radio_refused_block_nothing_more" formatted="false">"O rádio recusou o bloco %04X: nada mais foi gravado."</string>
-    <string name="the_radio_does_not_answer_check_2">"O rádio não responde. Verifique se o cabo está bem encaixado na entrada do rádio, se o rádio está ligado, "</string>
-    <string name="then_turn_it_off_and_on">"depois desligue-o e ligue-o de novo."</string>
-    <string name="unrecognised_firmware_writing_is_refused_for">"Firmware não reconhecido (%1$s): a gravação é recusada por segurança. A leitura continua funcionando."</string>
-    <string name="the_radio_does_not_answer">"O rádio não responde."</string>
-    <string name="unexpected_answer">"Resposta inesperada: %1$s"</string>
-    <string name="unexpected_answer_from_the_radio">"Resposta inesperada do rádio (%1$s)."</string>
-    <string name="incomplete_frame_from_the_radio">"Quadro incompleto do rádio (%1$s)."</string>
-    <string name="this_is_not_a_uv_k5">"Isto não é um UV-K5."</string>
-    <string name="write" formatted="false">"gravação %04X"</string>
-    <string name="usb_serial">"USB-serial"</string>
     <string name="link_without_message">"Link sem mensagem"</string>
     <string name="link_test">"Teste de link"</string>
     <string name="crew_company_message">"Mensagem tripulação / companhia"</string>
@@ -805,7 +768,6 @@
     <string name="cells">"Células"</string>
     <string name="sky">"Céu"</string>
     <string name="spectrum">"Espectro"</string>
-    <string name="channels">"Canais"</string>
     <string name="wi_fi_scanner">"Scanner Wi-Fi"</string>
     <string name="lan_devices">"Dispositivos da LAN"</string>
     <string name="lan_device">"Dispositivo da LAN"</string>
@@ -835,7 +797,6 @@
     <string name="spectrum_analyser">"Analisador de espectro"</string>
     <string name="radiosondes">"Radiossondas"</string>
     <string name="fm_radio">"Rádio FM"</string>
-    <string name="radio_channels">"Canais de rádio"</string>
     <string name="screen_unavailable_on_this_device">"Tela indisponível neste dispositivo"</string>
     <string name="allow_access_in_android_settings_permissions">"Permita o acesso em Configurações do Android › Permissões"</string>
     <string name="saving_unavailable_on_this_device">"Salvamento indisponível neste dispositivo"</string>
@@ -880,8 +841,6 @@
     <string name="this_device_does_not_have_this">"Este dispositivo não tem este rádio."</string>
     <string name="no_hackrf">"Sem HackRF"</string>
     <string name="plug_in_a_hackrf_over_usb">"Conecte um HackRF via USB-C para receber."</string>
-    <string name="no_handheld_radio">"Sem rádio portátil"</string>
-    <string name="plug_in_a_radio_with_its">"Conecte um rádio com seu cabo de programação USB."</string>
     <string name="turn_on_wi_fi_to_show">"Ligue o Wi-Fi para ver a conexão atual e usar as ferramentas da rede local."</string>
     <string name="turn_on_wi_fi">"Ligar o Wi-Fi"</string>
     <string name="wi_fi_settings">"Configurações de Wi-Fi"</string>
@@ -908,16 +867,12 @@
     <string name="plug_in_a_hackrf">"Conecte um HackRF"</string>
     <string name="connect_a_hackrf_one_or_rad1o">"Conecte um HackRF One (ou rad1o, Jawbreaker, PortaPack em modo HackRF) ao telefone com um cabo USB-C OTG. "</string>
     <string name="the_app_detects_it_as_soon">"O app o detecta assim que é conectado."</string>
-    <string name="plug_in_a_handheld_radio">"Conecte um rádio portátil"</string>
-    <string name="connect_the_radio_to_the_phone">"Conecte o rádio ao telefone com seu cabo de programação USB (chip FTDI, CH340, CP210x ou PL2303), "</string>
-    <string name="plugged_into_the_radio_s_headset">"ligado à entrada de fone do rádio. O app o detecta assim que é conectado."</string>
     <string name="tools">"Ferramentas"</string>
     <string name="nearby_networks_channels_speed_wi_fi">"Redes próximas, canais, velocidade, diagnóstico e segurança do Wi-Fi."</string>
     <string name="bluetooth_le_devices_unknown_trackers_and">"Dispositivos Bluetooth LE, rastreadores desconhecidos e busca Quente/Frio."</string>
     <string name="cells_your_carrier_s_towers_and">"Células, antenas da sua operadora e dados móveis."</string>
     <string name="satellites_sky_position_comparison_and_passes">"Satélites, céu, comparação de posições e passagens."</string>
     <string name="hackrf_spectrum_aircraft_ships_radiosondes_fpv">"HackRF: espectro, aviões, navios, radiossondas, drones FPV e mais."</string>
-    <string name="program_a_baofeng_radtel_or_quansheng">"Programe um Baofeng, Radtel ou Quansheng por um cabo USB."</string>
     <string name="welcome_the_airwaves_are_waiting">"Bem-vindo! As ondas estão esperando."</string>
     <string name="good_to_see_you_again_the">"Que bom te ver de novo, as antenas estão prontas."</string>
     <string name="hello_which_frequency_shall_we_explore">"Olá! Que frequência vamos explorar hoje?"</string>
@@ -940,8 +895,6 @@
     <string name="a_lost_airtag_it_s_never">"Um AirTag perdido? Ele nunca está sozinho de verdade."</string>
     <string name="gps_never_gets_lost_it_recalculates">"O GPS nunca se perde. Ele recalcula."</string>
     <string name="aircraft_shout_their_position_on_1090">"Os aviões gritam sua posição em 1090 MHz. Vamos ouvir."</string>
-    <string name="the_walkie_talkie_the_first_social">"O walkie-talkie: a primeira rede social. Um de cada vez."</string>
-    <string name="over_roger_that_back_to_the">"Câmbio. Entendido. De volta ao estúdio."</string>
     <string name="short_waves_long_ideas">"Ondas curtas, ideias longas."</string>
     <string name="the_sky_has_never_been_so">"O céu nunca foi tão falante."</string>
     <string name="better_a_good_dbm_than_a">"Mais vale um bom dBm do que um cabo longo."</string>
@@ -1009,7 +962,6 @@
     <string name="identifiers_and_measurements_of_the_connected">"Identificadores e medições da célula conectada"</string>
     <string name="sky_plot_and_world_map_of">"Sky plot e mapa-múndi dos satélites"</string>
     <string name="spectrum_and_waterfall_1_mhz_to">"Espectro e cascata, de 1 MHz a 6 GHz"</string>
-    <string name="read_edit_and_write_memories_over">"Ler, editar e gravar memórias por cabo USB"</string>
     <string name="launch">"Iniciar"</string>
     <string name="ibeacon_eddystone_and_altbeacon_shops_museums">"iBeacon, Eddystone e AltBeacon: lojas, museus, locais, dispositivos inteligentes"</string>
     <string name="bluetooth_listening_in_progress">"Escuta Bluetooth em andamento"</string>
@@ -1598,84 +1550,7 @@
     <string name="the_line_in_the_middle_is">"A linha no meio é o resíduo DC do HackRF, não um sinal. Evite o amplificador perto de transmissores fortes."</string>
     <string name="the_spectrum_shows_here_during_the">"O espectro aparece aqui durante a análise"</string>
     <string name="waterfall_newest_at_the_top">"Cascata · mais recente no topo"</string>
-    <string name="looking_for_the_radio">"Procurando o rádio…"</string>
-    <string name="reading_the_radio">"Lendo o rádio…"</string>
-    <string name="writing_to_the_radio">"Gravando no rádio…"</string>
     <string name="verifying">"Verificando…"</string>
-    <string name="usb_access_to_the_cable_refused">"Acesso USB ao cabo recusado."</string>
-    <string name="could_not_open_the_usb_cable">"Não foi possível abrir o cabo USB."</string>
-    <string name="no_radio_recognised">"Nenhum rádio reconhecido ("</string>
-    <string name="or">" ou "</string>
-    <string name="check_that_the_cable_is_pushed">"). Verifique se o cabo está bem encaixado na entrada do rádio, "</string>
-    <string name="that_the_radio_is_on_and">"se o rádio está ligado e se o volume não está no zero."</string>
-    <string name="communication_error">"Erro de comunicação."</string>
-    <string name="error_2">"Erro: %1$s"</string>
-    <string name="recognised_channels_read">"%1$s reconhecido: %2$s canais lidos."</string>
-    <string name="unrecognised_firmware_read_only_writing_will">" Firmware não reconhecido: somente leitura, a gravação será recusada."</string>
-    <string name="for_the_not_written">"%1$s %2$s para o %3$s não gravados"</string>
-    <string name="beyond_its_memories_not_written">"%1$s %2$s além das suas %3$s memórias não gravados"</string>
-    <string name="the_already_holds_exactly_these_channels">"O %1$s já contém exatamente estes canais: nada a gravar.%2$s"</string>
-    <string name="channels_written_to_the_and_verified">"%1$s canais gravados no %2$s e verificados por releitura."</string>
-    <string name="of_channels_read_back_differently_read">"%1$s de %2$s canais foram relidos diferentes: leia o rádio de novo para ver o que ele contém."</string>
-    <string name="channels_written_verification_impossible_turn_the">"%1$s canais gravados. Verificação impossível: desligue e ligue o rádio antes de lê-lo de novo."</string>
-    <string name="previous_state_of_the_restored_channels">"Estado anterior do %1$s restaurado (%2$s canais)."</string>
-    <string name="n_12_5_khz">"12,5 kHz"</string>
-    <string name="of_2">" de %1$s"</string>
-    <string name="to_write">" · %1$s a gravar"</string>
-    <string name="cable">"Cabo %1$s"</string>
-    <string name="no_usb_cable">"Nenhum cabo USB"</string>
-    <string name="model_recognised_when_reading">"Modelo reconhecido na leitura"</string>
-    <string name="restore_the_state_before_writing">"Restaurar o estado anterior à gravação"</string>
-    <string name="plug_the_programming_cable_into_the">"Conecte o cabo de programação à entrada USB-C do telefone (com um adaptador OTG se necessário) e à "</string>
-    <string name="headset_socket_of_the_radio_switched">"entrada de fone do rádio, ligado. Você já pode montar uma lista de canais sem o rádio."</string>
-    <string name="new_channel">"Novo canal"</string>
-    <string name="presets">"Predefinições"</string>
-    <string name="clear_all">"Apagar tudo"</string>
-    <string name="the_app_never_makes_the_radio">"O app nunca faz o rádio transmitir: ele lê e grava a memória. Só os canais alterados são regravados; o resto "</string>
-    <string name="settings_keys_dtmf_is_untouched_and">"(configurações, teclas, DTMF) fica intacto, e o rádio é relido para verificação. Programar é livre; transmitir não: "</string>
-    <string name="amateur_bands_need_an_amateur_radio">"as bandas de radioamador exigem licença, e a PMR446 só aceita aparelhos homologados. "</string>
-    <string name="the_list_is_never_saved_it">"A lista nunca é salva: ela some quando o app é fechado."</string>
-    <string name="write_to_the_radio">"Gravar no rádio?"</string>
-    <string name="the_list">"a lista"</string>
-    <string name="the_radio_will_be_recognised_and">"O rádio será reconhecido e lido; depois %1$s "</string>
-    <string name="will_be_written_the_radio_s">"será gravada e os canais do rádio ausentes da lista serão apagados. Em seguida ele será relido para verificação, "</string>
-    <string name="and_you_will_be_able_to">"e você poderá restaurar o estado anterior."</string>
-    <string name="clear_the_list">"Limpar a lista?"</string>
-    <string name="the_channels_of_the_displayed_list">"Os canais da lista exibida serão removidos. O rádio só muda na gravação."</string>
-    <string name="listening_4">"Escuta"</string>
-    <string name="offset">"Deslocamento"</string>
-    <string name="listen_only">"Somente escuta"</string>
-    <string name="invalid_frequency_in_mhz_for_example">"Frequência inválida (em MHz, por exemplo 145.500)."</string>
-    <string name="this_frequency_is_outside_the_s">"Esta frequência está fora das bandas de recepção do %1$s."</string>
-    <string name="invalid_offset_in_khz_for_example">"Deslocamento inválido (em kHz, por exemplo −600)."</string>
-    <string name="name_characters">"Nome (%1$s caracteres)"</string>
-    <string name="receive_mhz">"Recepção (MHz)"</string>
-    <string name="transmit">"Transmissão"</string>
-    <string name="transmit_offset_khz">"Deslocamento de transmissão (kHz)"</string>
-    <string name="transmit_tone">"Tom de transmissão"</string>
-    <string name="receive_tone_squelch">"Tom de recepção (squelch)"</string>
-    <string name="power">"Potência"</string>
-    <string name="bandwidth">"Largura de banda"</string>
-    <string name="wide_25_khz">"Larga 25 kHz"</string>
-    <string name="narrow_12_5_khz">"Estreita 12,5 kHz"</string>
-    <string name="included_in_scan">"Incluído na varredura"</string>
-    <string name="delete">"Excluir"</string>
-    <string name="reversed">"Invertido"</string>
-    <string name="outside_the_s_bands">", %1$s fora das bandas do %2$s"</string>
-    <string name="with_no_free_slot">", %1$s sem espaço livre"</string>
-    <string name="channels_2">"%1$s canais: %2$s."</string>
-    <string name="receive_only_4">"Somente recepção"</string>
-    <string name="the_radio_will_not_transmit_on">"O rádio não transmitirá nestes canais"</string>
-    <string name="add_to_the_list">"Adicionar à lista"</string>
-    <string name="back">"Voltar"</string>
-    <string name="cable_detected">"Cabo detectado"</string>
-    <string name="read_the_memory_of_a_baofeng">"Leia a memória de um Baofeng UV-5R, Radtel RT-470X ou Quansheng UV-K5 / UV-K6, edite os canais, adicione predefinições e grave-as de volta."</string>
-    <string name="programming_cable">"Cabo de programação"</string>
-    <string name="radio">"Rádio"</string>
-    <string name="recognised_when_reading">"Reconhecido na leitura"</string>
-    <string name="never_memory_read_and_write_only">"Nunca: somente leitura e gravação da memória"</string>
-    <string name="to_program_a_usb_cable_with">"Para programar: um cabo USB com chip FTDI, CH340, CP210x ou PL2303 na entrada de fone do rádio. "</string>
-    <string name="nothing_is_saved_or_kept">"Nada é salvo nem guardado."</string>
     <string name="wifi_coverage_csv">"cobertura-wifi-%1$s.csv"</string>
     <string name="no_wi_fi">"Sem Wi-Fi"</string>
     <string name="connect_to_the_wi_fi_network">"Conecte-se à rede Wi-Fi cuja cobertura você quer mapear."</string>
@@ -2077,10 +1952,6 @@
         <item quantity="one">"dispositivo"</item>
         <item quantity="other">"dispositivos"</item>
     </plurals>
-    <plurals name="p_channels">
-        <item quantity="one">"canal"</item>
-        <item quantity="other">"canais"</item>
-    </plurals>
     <plurals name="p_beacons_detected">
         <item quantity="one">"beacon detectado"</item>
         <item quantity="other">"beacons detectados"</item>
@@ -2229,18 +2100,6 @@
         <item quantity="one">"quadro"</item>
         <item quantity="other">"quadros"</item>
     </plurals>
-    <plurals name="p_channels_outside_the_bands">
-        <item quantity="one">"canal fora das bandas"</item>
-        <item quantity="other">"canais fora das bandas"</item>
-    </plurals>
-    <plurals name="p_channels_changed">
-        <item quantity="one">"canal alterado"</item>
-        <item quantity="other">"canais alterados"</item>
-    </plurals>
-    <plurals name="p_channels_added">
-        <item quantity="one">"canal adicionado"</item>
-        <item quantity="other">"canais adicionados"</item>
-    </plurals>
     <plurals name="p_servers">
         <item quantity="one">"servidor"</item>
         <item quantity="other">"servidores"</item>
@@ -2358,4 +2217,29 @@
     <string name="instant_communication">"Modo de comunicação instantânea"</string>
     <string name="wi_fi_aware_how_it_works">"O Wi-Fi Aware (Neighbor Awareness Networking) permite que os telemóveis se encontrem e comuniquem diretamente, sem router nem Internet. O Android só encontra serviços cujo nome conhece, por isso esta ferramenta encontra os outros telemóveis que a têm aberta. Com Wi-Fi RTT em ambos, a distância entre eles é medida com cerca de um metro de precisão. O botão de aceno envia um olá para testar a ligação nos dois sentidos."</string>
     <string name="parallel_connections">"%1$d conexões em paralelo"</string>
+    <string name="tpms_heard">"%1$s MHz · %2$d pacotes recebidos"</string>
+    <string name="tpms_listening">"A ouvir sensores de pneus"</string>
+    <string name="americas_asia">"Américas, Ásia"</string>
+    <string name="tpms_none_yet">"Ainda nenhum sensor"</string>
+    <string name="tpms_none_yet_body">"Os sensores de pneus transmitem cerca de uma vez por minuto com o carro em movimento, e raramente quando está estacionado. Fique perto de uma estrada ou de um parque de estacionamento, ou saia de carro com o telefone."</string>
+    <string name="tpms_how_it_works">"Desde 2014, todos os carros novos na Europa têm em cada pneu um sensor que transmite a pressão e a temperatura ao carro, em 433,92 MHz (315 MHz na América e na Ásia). A app descodifica os formatos dos principais fabricantes (Continental VDO, Schrader, Pacific, TRW, HUF) tal como o rtl_433 os documenta, e só guarda os pacotes que passam a sua própria soma de verificação. As pressões são mostradas tal como o sensor as envia: absolutas em algumas marcas, relativas noutras. Só receção."</string>
+    <string name="tpms_wheel">"Roda %1$d"</string>
+    <string name="tpms_moving">"Em movimento"</string>
+    <string name="tpms_battery_low">"Bateria fraca"</string>
+    <string name="pocsag_none_yet">"Ainda nenhuma mensagem"</string>
+    <string name="pocsag_none_yet_body">"Os pagers são usados sobretudo por hospitais, bombeiros e pessoal de prevenção: as mensagens chegam em rajadas, por vezes com muitos minutos de intervalo. Alguns canais de uma rede podem estar desligados."</string>
+    <string name="pocsag_network">"Rede"</string>
+    <string name="pocsag_custom">"Outra frequência"</string>
+    <string name="pocsag_how_it_works">"POCSAG é a norma de radiomensagens usada desde os anos 80 pela e*Message (França, Alemanha), hospitais, bombeiros e radioamadores (DAPNET). A app ouve todos os canais da rede escolhida ao mesmo tempo, a 512, 1200 e 2400 bit/s, e corrige até dois bits errados por palavra de código. As mensagens de pagers são correspondência privada: em muitos países, incluindo França, lê-las ou divulgá-las só é permitido para os seus próprios pagers. Nada é guardado depois de fechar a app. Só receção."</string>
+    <string name="pocsag_tone_only">"Só tom, sem texto"</string>
+    <string name="tyre_pressure_sensors_433_mhz">"Sensores de pressão dos pneus, 433 MHz"</string>
+    <string name="pagers_e_message_dapnet">"Pagers: e*Message, DAPNET"</string>
+    <plurals name="p_sensors">
+        <item quantity="one">"sensor"</item>
+        <item quantity="other">"sensores"</item>
+    </plurals>
+    <plurals name="p_listening_channels">
+        <item quantity="one">"A ouvir %1$d canal"</item>
+        <item quantity="other">"A ouvir %1$d canais"</item>
+    </plurals>
 </resources>

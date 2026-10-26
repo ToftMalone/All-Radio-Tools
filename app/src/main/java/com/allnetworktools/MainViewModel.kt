@@ -42,10 +42,10 @@ import kotlinx.coroutines.launch
 
 /** Why a network card or page is unavailable. */
 enum class Blocker {
-    NoHardware, WifiOff, BluetoothOff, NearbyPermission, Airplane, PhonePermission, NoSim, LocationPermission, LocationOff, SdrMissing, CableMissing;
+    NoHardware, WifiOff, BluetoothOff, NearbyPermission, Airplane, PhonePermission, NoSim, LocationPermission, LocationOff, SdrMissing;
 
     /** Missing USB hardware: the network can still be browsed, only its tools refuse to start. */
-    val soft: Boolean get() = this == SdrMissing || this == CableMissing
+    val soft: Boolean get() = this == SdrMissing
 }
 
 sealed interface Page {
@@ -157,14 +157,10 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     /** The plugged-in HackRF; USB enumeration only, the radio stays off until a tool starts it. */
     val sdrDevice = g.sdr.device.stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
-    /** The plugged-in radio programming cable; USB enumeration only. */
-    val radioCable = g.cables.cable.stateIn(viewModelScope, SharingStarted.Eagerly, null)
-
     val blockers: StateFlow<Map<Network, Blocker?>> = combine(
         combine(permissions, wifiEnabled, bluetoothEnabled, airplane, locationEnabled, ::CoreAvail),
         sdrDevice,
-        radioCable,
-    ) { (p, wifi, bt, plane, loc), sdr, cable ->
+    ) { (p, wifi, bt, plane, loc), sdr ->
         mapOf(
             Network.Wifi to when {
                 !g.radios.hasWifi -> Blocker.NoHardware
@@ -190,7 +186,6 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
                 else -> null
             },
             Network.Sdr to if (sdr == null) Blocker.SdrMissing else null,
-            Network.Talkie to if (cable == null) Blocker.CableMissing else null,
         )
     }.stateIn(viewModelScope, SharingStarted.Eagerly, emptyMap())
 

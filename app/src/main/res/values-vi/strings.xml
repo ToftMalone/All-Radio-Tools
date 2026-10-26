@@ -652,44 +652,7 @@
     <string name="celestrak_answered">"CelesTrak trả lời %1$s"</string>
     <string name="unreadable_answer_from_celestrak">"Phản hồi từ CelesTrak không đọc được"</string>
     <string name="none">"Không có"</string>
-    <string name="high">"Cao"</string>
     <string name="medium">"Trung bình"</string>
-    <string name="low">"Thấp"</string>
-    <string name="n_16_channels_446_00625_to_446">"16 kênh, 446,00625 đến 446,19375 MHz"</string>
-    <string name="transmitting_on_pmr446_needs_a_type">"Phát trên PMR446 cần thiết bị được chứng nhận với ăng-ten cố định và tối đa 0,5 W: bộ đàm cầm tay lập trình được thì không."</string>
-    <string name="n_69_channels_433_075_to_434">"69 kênh, 433,075 đến 434,775 MHz"</string>
-    <string name="licence_free_band_at_10_mw">"Băng tần miễn giấy phép tối đa 10 mW: bộ đàm vài watt không được phát ở đây."</string>
-    <string name="marine_vhf">"VHF hàng hải"</string>
-    <string name="simplex_channels_156_3_to_156">"Kênh đơn công, 156,3 đến 156,875 MHz"</string>
-    <string name="listen_only_transmitting_on_marine_bands">"Chỉ nghe: phát trên băng tần hàng hải cần máy chuyên dụng và chứng chỉ."</string>
-    <string name="n_2_m_amateur_repeaters">"Trạm lặp nghiệp dư 2 m"</string>
-    <string name="rv48_to_rv63_outputs_145_600">"RV48 đến RV63, đầu ra 145,600 đến 145,7875 MHz, độ lệch −600 kHz"</string>
-    <string name="transmitting_needs_an_amateur_radio_licence">"Phát sóng cần giấy phép vô tuyến nghiệp dư. Nhiều trạm lặp cần âm truy cập (thường 88,5 Hz): hãy đặt cho từng kênh."</string>
-    <string name="amateur_radio_calling_and_specials">"Vô tuyến nghiệp dư: gọi và đặc biệt"</string>
-    <string name="n_2_m_and_70_cm_calling">"Gọi 2 m và 70 cm, APRS, ISS"</string>
-    <string name="transmitting_needs_an_amateur_radio_licence_2">"Phát sóng cần giấy phép vô tuyến nghiệp dư. ISS chỉ để thu."</string>
-    <string name="handheld_radio">"Bộ đàm cầm tay"</string>
-    <string name="the_radio_did_not_answer">"Bộ đàm không trả lời (%1$s)."</string>
-    <string name="no_answer">"không có phản hồi"</string>
-    <string name="answer">"phản hồi %1$s"</string>
-    <string name="unexpected_radio_identification">"Nhận dạng bộ đàm không mong đợi: %1$s."</string>
-    <string name="the_radio_refused_clone_mode">"Bộ đàm từ chối chế độ sao chép."</string>
-    <string name="the_radio_does_not_answer_check">"Bộ đàm không trả lời (%1$s). Hãy kiểm tra cáp đã cắm hết vào ổ của bộ đàm, bộ đàm đang bật "</string>
-    <string name="and_that_its_volume_is_not">"và âm lượng không ở mức 0."</string>
-    <string name="the_radio_refused_to_send_block" formatted="false">"Bộ đàm từ chối gửi khối %04X."</string>
-    <string name="block" formatted="false">"khối %04X"</string>
-    <string name="unexpected_answer_from_the_radio_for" formatted="false">"Phản hồi không mong đợi từ bộ đàm cho khối %04X."</string>
-    <string name="the_radio_refused_block_nothing_more" formatted="false">"Bộ đàm từ chối khối %04X: không ghi thêm gì nữa."</string>
-    <string name="the_radio_does_not_answer_check_2">"Bộ đàm không trả lời. Hãy kiểm tra cáp đã cắm hết vào ổ của bộ đàm, bộ đàm đang bật, "</string>
-    <string name="then_turn_it_off_and_on">"rồi tắt đi bật lại."</string>
-    <string name="unrecognised_firmware_writing_is_refused_for">"Firmware không nhận dạng được (%1$s): từ chối ghi để đảm bảo an toàn. Vẫn đọc được."</string>
-    <string name="the_radio_does_not_answer">"Bộ đàm không trả lời."</string>
-    <string name="unexpected_answer">"Phản hồi không mong đợi: %1$s"</string>
-    <string name="unexpected_answer_from_the_radio">"Phản hồi không mong đợi từ bộ đàm (%1$s)."</string>
-    <string name="incomplete_frame_from_the_radio">"Khung không đầy đủ từ bộ đàm (%1$s)."</string>
-    <string name="this_is_not_a_uv_k5">"Đây không phải UV-K5."</string>
-    <string name="write" formatted="false">"ghi %04X"</string>
-    <string name="usb_serial">"USB-serial"</string>
     <string name="link_without_message">"Liên kết không có tin nhắn"</string>
     <string name="link_test">"Kiểm tra liên kết"</string>
     <string name="crew_company_message">"Tin nhắn tổ bay / công ty"</string>
@@ -803,7 +766,6 @@
     <string name="cells">"Ô mạng"</string>
     <string name="sky">"Bầu trời"</string>
     <string name="spectrum">"Phổ"</string>
-    <string name="channels">"Kênh"</string>
     <string name="wi_fi_scanner">"Trình quét Wi-Fi"</string>
     <string name="lan_devices">"Thiết bị LAN"</string>
     <string name="lan_device">"Thiết bị LAN"</string>
@@ -833,7 +795,6 @@
     <string name="spectrum_analyser">"Máy phân tích phổ"</string>
     <string name="radiosondes">"Bóng thám không"</string>
     <string name="fm_radio">"Radio FM"</string>
-    <string name="radio_channels">"Kênh bộ đàm"</string>
     <string name="screen_unavailable_on_this_device">"Màn hình không khả dụng trên thiết bị này"</string>
     <string name="allow_access_in_android_settings_permissions">"Cho phép truy cập trong Cài đặt Android › Quyền"</string>
     <string name="saving_unavailable_on_this_device">"Không thể lưu trên thiết bị này"</string>
@@ -878,8 +839,6 @@
     <string name="this_device_does_not_have_this">"Thiết bị này không có loại vô tuyến này."</string>
     <string name="no_hackrf">"Không có HackRF"</string>
     <string name="plug_in_a_hackrf_over_usb">"Cắm HackRF qua USB-C để thu."</string>
-    <string name="no_handheld_radio">"Không có bộ đàm"</string>
-    <string name="plug_in_a_radio_with_its">"Cắm bộ đàm bằng cáp lập trình USB của nó."</string>
     <string name="turn_on_wi_fi_to_show">"Bật Wi-Fi để hiển thị kết nối hiện tại và dùng các công cụ mạng cục bộ."</string>
     <string name="turn_on_wi_fi">"Bật Wi-Fi"</string>
     <string name="wi_fi_settings">"Cài đặt Wi-Fi"</string>
@@ -906,16 +865,12 @@
     <string name="plug_in_a_hackrf">"Cắm HackRF"</string>
     <string name="connect_a_hackrf_one_or_rad1o">"Kết nối HackRF One (hoặc rad1o, Jawbreaker, PortaPack ở chế độ HackRF) với điện thoại bằng cáp USB-C OTG. "</string>
     <string name="the_app_detects_it_as_soon">"Ứng dụng phát hiện ngay khi được cắm."</string>
-    <string name="plug_in_a_handheld_radio">"Cắm bộ đàm"</string>
-    <string name="connect_the_radio_to_the_phone">"Kết nối bộ đàm với điện thoại bằng cáp lập trình USB (chip FTDI, CH340, CP210x hoặc PL2303), "</string>
-    <string name="plugged_into_the_radio_s_headset">"cắm vào ổ tai nghe của bộ đàm. Ứng dụng phát hiện ngay khi được cắm."</string>
     <string name="tools">"Công cụ"</string>
     <string name="nearby_networks_channels_speed_wi_fi">"Mạng lân cận, kênh, tốc độ, chẩn đoán và bảo mật Wi-Fi."</string>
     <string name="bluetooth_le_devices_unknown_trackers_and">"Thiết bị Bluetooth LE, thiết bị theo dõi lạ và tìm kiếm Nóng/Lạnh."</string>
     <string name="cells_your_carrier_s_towers_and">"Ô mạng, trạm của nhà mạng và dữ liệu di động."</string>
     <string name="satellites_sky_position_comparison_and_passes">"Vệ tinh, bầu trời, so sánh vị trí và lượt bay qua."</string>
     <string name="hackrf_spectrum_aircraft_ships_radiosondes_fpv">"HackRF: phổ, máy bay, tàu thuyền, bóng thám không, drone FPV và hơn thế."</string>
-    <string name="program_a_baofeng_radtel_or_quansheng">"Lập trình Baofeng, Radtel hoặc Quansheng qua cáp USB."</string>
     <string name="welcome_the_airwaves_are_waiting">"Chào mừng! Sóng vô tuyến đang chờ bạn."</string>
     <string name="good_to_see_you_again_the">"Rất vui gặp lại bạn, ăng-ten đã sẵn sàng."</string>
     <string name="hello_which_frequency_shall_we_explore">"Xin chào! Hôm nay ta khám phá tần số nào?"</string>
@@ -938,8 +893,6 @@
     <string name="a_lost_airtag_it_s_never">"Mất AirTag? Nó chẳng bao giờ thật sự cô đơn."</string>
     <string name="gps_never_gets_lost_it_recalculates">"GPS không bao giờ lạc. Nó tính lại."</string>
     <string name="aircraft_shout_their_position_on_1090">"Máy bay hét to vị trí trên 1090 MHz. Cùng nghe nào."</string>
-    <string name="the_walkie_talkie_the_first_social">"Bộ đàm: mạng xã hội đầu tiên. Lần lượt nói."</string>
-    <string name="over_roger_that_back_to_the">"Hết. Đã rõ. Trả lại trường quay."</string>
     <string name="short_waves_long_ideas">"Sóng ngắn, ý tưởng dài."</string>
     <string name="the_sky_has_never_been_so">"Bầu trời chưa bao giờ rôm rả đến thế."</string>
     <string name="better_a_good_dbm_than_a">"Thà dBm tốt còn hơn cáp dài."</string>
@@ -1007,7 +960,6 @@
     <string name="identifiers_and_measurements_of_the_connected">"Mã định danh và phép đo của ô đang kết nối"</string>
     <string name="sky_plot_and_world_map_of">"Biểu đồ bầu trời và bản đồ thế giới của vệ tinh"</string>
     <string name="spectrum_and_waterfall_1_mhz_to">"Phổ và thác nước, 1 MHz đến 6 GHz"</string>
-    <string name="read_edit_and_write_memories_over">"Đọc, sửa và ghi bộ nhớ qua cáp USB"</string>
     <string name="launch">"Khởi chạy"</string>
     <string name="ibeacon_eddystone_and_altbeacon_shops_museums">"iBeacon, Eddystone và AltBeacon: cửa hàng, bảo tàng, địa điểm, thiết bị thông minh"</string>
     <string name="bluetooth_listening_in_progress">"Đang nghe Bluetooth"</string>
@@ -1596,84 +1548,7 @@
     <string name="the_line_in_the_middle_is">"Vạch ở giữa là phần dư DC của HackRF, không phải tín hiệu. Tránh dùng khuếch đại gần máy phát mạnh."</string>
     <string name="the_spectrum_shows_here_during_the">"Phổ hiển thị ở đây trong khi phân tích"</string>
     <string name="waterfall_newest_at_the_top">"Thác nước · mới nhất ở trên cùng"</string>
-    <string name="looking_for_the_radio">"Đang tìm bộ đàm…"</string>
-    <string name="reading_the_radio">"Đang đọc bộ đàm…"</string>
-    <string name="writing_to_the_radio">"Đang ghi vào bộ đàm…"</string>
     <string name="verifying">"Đang xác minh…"</string>
-    <string name="usb_access_to_the_cable_refused">"Quyền USB tới cáp bị từ chối."</string>
-    <string name="could_not_open_the_usb_cable">"Không thể mở cáp USB."</string>
-    <string name="no_radio_recognised">"Không nhận dạng được bộ đàm ("</string>
-    <string name="or">" hoặc "</string>
-    <string name="check_that_the_cable_is_pushed">"). Hãy kiểm tra cáp đã cắm hết vào ổ của bộ đàm, "</string>
-    <string name="that_the_radio_is_on_and">"bộ đàm đang bật và âm lượng không ở mức 0."</string>
-    <string name="communication_error">"Lỗi giao tiếp."</string>
-    <string name="error_2">"Lỗi: %1$s"</string>
-    <string name="recognised_channels_read">"Đã nhận dạng %1$s: đọc %2$s kênh."</string>
-    <string name="unrecognised_firmware_read_only_writing_will">" Firmware không nhận dạng được: chỉ đọc, việc ghi sẽ bị từ chối."</string>
-    <string name="for_the_not_written">"%1$s %2$s cho %3$s không được ghi"</string>
-    <string name="beyond_its_memories_not_written">"%1$s %2$s vượt quá %3$s ô nhớ không được ghi"</string>
-    <string name="the_already_holds_exactly_these_channels">"%1$s đã có đúng các kênh này: không có gì để ghi.%2$s"</string>
-    <string name="channels_written_to_the_and_verified">"Đã ghi %1$s kênh vào %2$s và xác minh bằng cách đọc lại."</string>
-    <string name="of_channels_read_back_differently_read">"%1$s trên %2$s kênh đọc lại khác: hãy đọc lại bộ đàm để xem nội dung."</string>
-    <string name="channels_written_verification_impossible_turn_the">"Đã ghi %1$s kênh. Không thể xác minh: tắt và bật lại bộ đàm trước khi đọc lại."</string>
-    <string name="previous_state_of_the_restored_channels">"Đã khôi phục trạng thái trước của %1$s (%2$s kênh)."</string>
-    <string name="n_12_5_khz">"12,5 kHz"</string>
-    <string name="of_2">" trên %1$s"</string>
-    <string name="to_write">" · %1$s cần ghi"</string>
-    <string name="cable">"Cáp %1$s"</string>
-    <string name="no_usb_cable">"Không có cáp USB"</string>
-    <string name="model_recognised_when_reading">"Model được nhận dạng khi đọc"</string>
-    <string name="restore_the_state_before_writing">"Khôi phục trạng thái trước khi ghi"</string>
-    <string name="plug_the_programming_cable_into_the">"Cắm cáp lập trình vào ổ USB-C của điện thoại (dùng bộ chuyển OTG nếu cần) và vào "</string>
-    <string name="headset_socket_of_the_radio_switched">"ổ tai nghe của bộ đàm đang bật. Bạn có thể soạn danh sách kênh ngay cả khi chưa có bộ đàm."</string>
-    <string name="new_channel">"Kênh mới"</string>
-    <string name="presets">"Thiết lập sẵn"</string>
-    <string name="clear_all">"Xóa tất cả"</string>
-    <string name="the_app_never_makes_the_radio">"Ứng dụng không bao giờ cho bộ đàm phát: nó đọc và ghi bộ nhớ. Chỉ kênh thay đổi được ghi lại, phần còn lại "</string>
-    <string name="settings_keys_dtmf_is_untouched_and">"(cài đặt, phím, DTMF) giữ nguyên, và bộ đàm được đọc lại để xác minh. Lập trình là tự do; phát sóng thì không: "</string>
-    <string name="amateur_bands_need_an_amateur_radio">"băng nghiệp dư cần giấy phép vô tuyến nghiệp dư, và PMR446 chỉ chấp nhận thiết bị được chứng nhận. "</string>
-    <string name="the_list_is_never_saved_it">"Danh sách không bao giờ được lưu: biến mất khi đóng ứng dụng."</string>
-    <string name="write_to_the_radio">"Ghi vào bộ đàm?"</string>
-    <string name="the_list">"danh sách"</string>
-    <string name="the_radio_will_be_recognised_and">"Bộ đàm sẽ được nhận dạng và đọc, sau đó %1$s "</string>
-    <string name="will_be_written_the_radio_s">"sẽ được ghi; các kênh của bộ đàm không có trong danh sách sẽ bị xóa. Sau đó nó được đọc lại để xác minh, "</string>
-    <string name="and_you_will_be_able_to">"và bạn có thể khôi phục trạng thái trước."</string>
-    <string name="clear_the_list">"Xóa danh sách?"</string>
-    <string name="the_channels_of_the_displayed_list">"Các kênh trong danh sách đang hiển thị sẽ bị xóa. Bộ đàm chỉ thay đổi khi ghi."</string>
-    <string name="listening_4">"Nghe"</string>
-    <string name="offset">"Độ lệch"</string>
-    <string name="listen_only">"Chỉ nghe"</string>
-    <string name="invalid_frequency_in_mhz_for_example">"Tần số không hợp lệ (tính bằng MHz, ví dụ 145.500)."</string>
-    <string name="this_frequency_is_outside_the_s">"Tần số này nằm ngoài băng thu của %1$s."</string>
-    <string name="invalid_offset_in_khz_for_example">"Độ lệch không hợp lệ (tính bằng kHz, ví dụ −600)."</string>
-    <string name="name_characters">"Tên (%1$s ký tự)"</string>
-    <string name="receive_mhz">"Thu (MHz)"</string>
-    <string name="transmit">"Phát"</string>
-    <string name="transmit_offset_khz">"Độ lệch phát (kHz)"</string>
-    <string name="transmit_tone">"Âm phát"</string>
-    <string name="receive_tone_squelch">"Âm thu (squelch)"</string>
-    <string name="power">"Công suất"</string>
-    <string name="bandwidth">"Băng thông"</string>
-    <string name="wide_25_khz">"Rộng 25 kHz"</string>
-    <string name="narrow_12_5_khz">"Hẹp 12,5 kHz"</string>
-    <string name="included_in_scan">"Có trong quét"</string>
-    <string name="delete">"Xóa"</string>
-    <string name="reversed">"Đảo ngược"</string>
-    <string name="outside_the_s_bands">", %1$s ngoài băng của %2$s"</string>
-    <string name="with_no_free_slot">", %1$s không còn ô trống"</string>
-    <string name="channels_2">"%1$s kênh: %2$s."</string>
-    <string name="receive_only_4">"Chỉ thu"</string>
-    <string name="the_radio_will_not_transmit_on">"Bộ đàm sẽ không phát trên các kênh này"</string>
-    <string name="add_to_the_list">"Thêm vào danh sách"</string>
-    <string name="back">"Quay lại"</string>
-    <string name="cable_detected">"Đã phát hiện cáp"</string>
-    <string name="read_the_memory_of_a_baofeng">"Đọc bộ nhớ của Baofeng UV-5R, Radtel RT-470X hoặc Quansheng UV-K5 / UV-K6, sửa kênh, thêm thiết lập sẵn và ghi lại."</string>
-    <string name="programming_cable">"Cáp lập trình"</string>
-    <string name="radio">"Bộ đàm"</string>
-    <string name="recognised_when_reading">"Nhận dạng khi đọc"</string>
-    <string name="never_memory_read_and_write_only">"Không bao giờ: chỉ đọc và ghi bộ nhớ"</string>
-    <string name="to_program_a_usb_cable_with">"Để lập trình: cáp USB có chip FTDI, CH340, CP210x hoặc PL2303 cắm vào ổ tai nghe của bộ đàm. "</string>
-    <string name="nothing_is_saved_or_kept">"Không lưu hay giữ lại gì."</string>
     <string name="wifi_coverage_csv">"wifi-coverage-%1$s.csv"</string>
     <string name="no_wi_fi">"Không có Wi-Fi"</string>
     <string name="connect_to_the_wi_fi_network">"Kết nối với mạng Wi-Fi bạn muốn lập bản đồ vùng phủ."</string>
@@ -2073,9 +1948,6 @@
     <plurals name="p_devices">
         <item quantity="other">"thiết bị"</item>
     </plurals>
-    <plurals name="p_channels">
-        <item quantity="other">"kênh"</item>
-    </plurals>
     <plurals name="p_beacons_detected">
         <item quantity="other">"beacon được phát hiện"</item>
     </plurals>
@@ -2187,15 +2059,6 @@
     <plurals name="p_frames">
         <item quantity="other">"khung"</item>
     </plurals>
-    <plurals name="p_channels_outside_the_bands">
-        <item quantity="other">"kênh ngoài băng tần"</item>
-    </plurals>
-    <plurals name="p_channels_changed">
-        <item quantity="other">"kênh đã đổi"</item>
-    </plurals>
-    <plurals name="p_channels_added">
-        <item quantity="other">"kênh đã thêm"</item>
-    </plurals>
     <plurals name="p_servers">
         <item quantity="other">"máy chủ"</item>
     </plurals>
@@ -2301,4 +2164,27 @@
     <string name="instant_communication">"Chế độ giao tiếp tức thì"</string>
     <string name="wi_fi_aware_how_it_works">"Wi-Fi Aware (Neighbor Awareness Networking) cho phép các điện thoại tìm thấy nhau và giao tiếp trực tiếp, không cần bộ định tuyến hay Internet. Android chỉ tìm được dịch vụ mà nó biết tên, nên công cụ này tìm các điện thoại khác cũng đang mở nó. Khi cả hai máy có Wi-Fi RTT, khoảng cách giữa chúng được đo với độ chính xác khoảng một mét. Nút vẫy tay gửi lời chào để thử kết nối theo cả hai chiều."</string>
     <string name="parallel_connections">"%1$d kết nối song song"</string>
+    <string name="tpms_heard">"%1$s MHz · đã nhận %2$d gói"</string>
+    <string name="tpms_listening">"Đang nghe cảm biến lốp"</string>
+    <string name="americas_asia">"Châu Mỹ, châu Á"</string>
+    <string name="tpms_none_yet">"Chưa có cảm biến"</string>
+    <string name="tpms_none_yet_body">"Cảm biến lốp phát khoảng mỗi phút một lần khi xe chạy, và hiếm khi phát lúc đỗ. Hãy đứng gần đường hoặc bãi đỗ xe, hoặc lái xe đi với điện thoại trong xe."</string>
+    <string name="tpms_how_it_works">"Từ năm 2014, mọi xe mới ở châu Âu đều có cảm biến trong mỗi lốp phát áp suất và nhiệt độ về xe bằng sóng vô tuyến, trên 433,92 MHz (315 MHz ở châu Mỹ và châu Á). Ứng dụng giải mã định dạng của các hãng lớn (Continental VDO, Schrader, Pacific, TRW, HUF) theo tài liệu của rtl_433, và chỉ giữ các gói vượt qua mã kiểm tra của chính chúng. Áp suất được hiển thị đúng như cảm biến gửi: tuyệt đối với một số hãng, tương đối với hãng khác. Chỉ thu."</string>
+    <string name="tpms_wheel">"Bánh %1$d"</string>
+    <string name="tpms_moving">"Đang di chuyển"</string>
+    <string name="tpms_battery_low">"Pin yếu"</string>
+    <string name="pocsag_none_yet">"Chưa có tin nhắn"</string>
+    <string name="pocsag_none_yet_body">"Máy nhắn tin chủ yếu được bệnh viện, cứu hỏa và nhân viên trực dùng: tin nhắn đến theo đợt, đôi khi cách nhau nhiều phút. Một số kênh của mạng có thể đã ngừng phát."</string>
+    <string name="pocsag_network">"Mạng"</string>
+    <string name="pocsag_custom">"Tần số khác"</string>
+    <string name="pocsag_how_it_works">"POCSAG là chuẩn nhắn tin được e*Message (Pháp, Đức), bệnh viện, cứu hỏa và người chơi vô tuyến nghiệp dư (DAPNET) dùng từ thập niên 1980. Ứng dụng nghe đồng thời mọi kênh của mạng đã chọn, ở 512, 1200 và 2400 bit/s, và sửa tối đa hai bit sai mỗi từ mã. Tin nhắn máy nhắn tin là thư từ riêng tư: ở nhiều nước, kể cả Pháp, chỉ được đọc hoặc chia sẻ tin của máy nhắn tin của chính bạn. Không lưu gì sau khi đóng ứng dụng. Chỉ thu."</string>
+    <string name="pocsag_tone_only">"Chỉ có tiếng báo, không có văn bản"</string>
+    <string name="tyre_pressure_sensors_433_mhz">"Cảm biến áp suất lốp, 433 MHz"</string>
+    <string name="pagers_e_message_dapnet">"Máy nhắn tin: e*Message, DAPNET"</string>
+    <plurals name="p_sensors">
+        <item quantity="other">"cảm biến"</item>
+    </plurals>
+    <plurals name="p_listening_channels">
+        <item quantity="other">"Đang nghe %1$d kênh"</item>
+    </plurals>
 </resources>

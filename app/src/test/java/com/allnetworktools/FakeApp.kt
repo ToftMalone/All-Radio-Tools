@@ -40,7 +40,6 @@ import kotlinx.coroutines.flow.onStart
 /** Scenario switches read by the fakes; set before the ViewModel is created. */
 object Scenario {
     val sdrDevice = kotlinx.coroutines.flow.MutableStateFlow<com.allnetworktools.data.sdr.SdrDevice?>(com.allnetworktools.data.sdr.SdrDevice("HackRF One", null))
-    val cable = kotlinx.coroutines.flow.MutableStateFlow<com.allnetworktools.data.radio.RadioCable?>(com.allnetworktools.data.radio.RadioCable("FTDI", null))
     var airplane = false
     var gnssDenied = false
     var throttled = false
@@ -261,12 +260,6 @@ class FakeApp : AntApplication() {
                 com.allnetworktools.update.ReleaseNote("v0.9.2", "2026-10-04T10:54:03Z", "- Wi-Fi : jauge de signal redessinée\n- Bluetooth : radar selon la distance estimée\n- Réseau mobile : carte des antennes retirée"),
                 com.allnetworktools.update.ReleaseNote("v0.1", "2026-09-01T09:00:00Z", "- Première version"),
             )
-        }
-    }
-    override val cables by lazy {
-        object : com.allnetworktools.data.radio.RadioCableRepository(this@FakeApp) {
-            override val cable: Flow<com.allnetworktools.data.radio.RadioCable?> = Scenario.cable
-            override fun hasPermission(c: com.allnetworktools.data.radio.RadioCable) = true
         }
     }
     override val sdr by lazy {

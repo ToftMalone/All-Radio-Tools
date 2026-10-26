@@ -654,44 +654,7 @@
     <string name="celestrak_answered">"CelesTrak svarade %1$s"</string>
     <string name="unreadable_answer_from_celestrak">"Oläsligt svar från CelesTrak"</string>
     <string name="none">"Ingen"</string>
-    <string name="high">"Hög"</string>
     <string name="medium">"Medel"</string>
-    <string name="low">"Låg"</string>
-    <string name="n_16_channels_446_00625_to_446">"16 kanaler, 446,00625 till 446,19375 MHz"</string>
-    <string name="transmitting_on_pmr446_needs_a_type">"Sändning på PMR446 kräver en typgodkänd apparat med fast antenn och högst 0,5 W: en programmerbar handradio är inte det."</string>
-    <string name="n_69_channels_433_075_to_434">"69 kanaler, 433,075 till 434,775 MHz"</string>
-    <string name="licence_free_band_at_10_mw">"Licensfritt band med högst 10 mW: en handradio på flera watt får inte sända där."</string>
-    <string name="marine_vhf">"Marin VHF"</string>
-    <string name="simplex_channels_156_3_to_156">"Simplexkanaler, 156,3 till 156,875 MHz"</string>
-    <string name="listen_only_transmitting_on_marine_bands">"Endast lyssning: sändning på marina band kräver en särskild radio och ett certifikat."</string>
-    <string name="n_2_m_amateur_repeaters">"2 m-amatörrepeatrar"</string>
-    <string name="rv48_to_rv63_outputs_145_600">"RV48 till RV63, utgångar 145,600 till 145,7875 MHz, skift −600 kHz"</string>
-    <string name="transmitting_needs_an_amateur_radio_licence">"Sändning kräver amatörradiolicens. Många repeatrar kräver en åtkomstton (ofta 88,5 Hz): ställ in den kanal för kanal."</string>
-    <string name="amateur_radio_calling_and_specials">"Amatörradio: anrop och specialkanaler"</string>
-    <string name="n_2_m_and_70_cm_calling">"Anrop 2 m och 70 cm, APRS, ISS"</string>
-    <string name="transmitting_needs_an_amateur_radio_licence_2">"Sändning kräver amatörradiolicens. ISS är endast mottagning."</string>
-    <string name="handheld_radio">"Handradio"</string>
-    <string name="the_radio_did_not_answer">"Radion svarade inte (%1$s)."</string>
-    <string name="no_answer">"inget svar"</string>
-    <string name="answer">"svar %1$s"</string>
-    <string name="unexpected_radio_identification">"Oväntad radioidentifiering: %1$s."</string>
-    <string name="the_radio_refused_clone_mode">"Radion vägrade klonläget."</string>
-    <string name="the_radio_does_not_answer_check">"Radion svarar inte (%1$s). Kontrollera att kabeln sitter hela vägen in i radions uttag, att radion är på "</string>
-    <string name="and_that_its_volume_is_not">"och att volymen inte står på noll."</string>
-    <string name="the_radio_refused_to_send_block" formatted="false">"Radion vägrade skicka block %04X."</string>
-    <string name="block" formatted="false">"block %04X"</string>
-    <string name="unexpected_answer_from_the_radio_for" formatted="false">"Oväntat svar från radion för block %04X."</string>
-    <string name="the_radio_refused_block_nothing_more" formatted="false">"Radion vägrade block %04X: inget mer har skrivits."</string>
-    <string name="the_radio_does_not_answer_check_2">"Radion svarar inte. Kontrollera att kabeln sitter hela vägen in i radions uttag, att radion är på, "</string>
-    <string name="then_turn_it_off_and_on">"och stäng sedan av den och slå på den igen."</string>
-    <string name="unrecognised_firmware_writing_is_refused_for">"Okänd firmware (%1$s): skrivning nekas av säkerhetsskäl. Läsning fungerar fortfarande."</string>
-    <string name="the_radio_does_not_answer">"Radion svarar inte."</string>
-    <string name="unexpected_answer">"Oväntat svar: %1$s"</string>
-    <string name="unexpected_answer_from_the_radio">"Oväntat svar från radion (%1$s)."</string>
-    <string name="incomplete_frame_from_the_radio">"Ofullständig ram från radion (%1$s)."</string>
-    <string name="this_is_not_a_uv_k5">"Det här är ingen UV-K5."</string>
-    <string name="write" formatted="false">"skrivning %04X"</string>
-    <string name="usb_serial">"USB-seriell"</string>
     <string name="link_without_message">"Länk utan meddelande"</string>
     <string name="link_test">"Länktest"</string>
     <string name="crew_company_message">"Meddelande besättning / bolag"</string>
@@ -805,7 +768,6 @@
     <string name="cells">"Celler"</string>
     <string name="sky">"Himmel"</string>
     <string name="spectrum">"Spektrum"</string>
-    <string name="channels">"Kanaler"</string>
     <string name="wi_fi_scanner">"Wifi-skanner"</string>
     <string name="lan_devices">"LAN-enheter"</string>
     <string name="lan_device">"LAN-enhet"</string>
@@ -835,7 +797,6 @@
     <string name="spectrum_analyser">"Spektrumanalysator"</string>
     <string name="radiosondes">"Radiosonder"</string>
     <string name="fm_radio">"FM-radio"</string>
-    <string name="radio_channels">"Radiokanaler"</string>
     <string name="screen_unavailable_on_this_device">"Skärmen är inte tillgänglig på den här enheten"</string>
     <string name="allow_access_in_android_settings_permissions">"Tillåt åtkomst i Androids inställningar › Behörigheter"</string>
     <string name="saving_unavailable_on_this_device">"Det går inte att spara på den här enheten"</string>
@@ -880,8 +841,6 @@
     <string name="this_device_does_not_have_this">"Den här enheten har inte den här radion."</string>
     <string name="no_hackrf">"Ingen HackRF"</string>
     <string name="plug_in_a_hackrf_over_usb">"Anslut en HackRF via USB-C för att ta emot."</string>
-    <string name="no_handheld_radio">"Ingen handradio"</string>
-    <string name="plug_in_a_radio_with_its">"Anslut en radio med dess USB-programmeringskabel."</string>
     <string name="turn_on_wi_fi_to_show">"Slå på wifi för att se den aktuella anslutningen och använda verktygen för det lokala nätverket."</string>
     <string name="turn_on_wi_fi">"Slå på wifi"</string>
     <string name="wi_fi_settings">"Wifi-inställningar"</string>
@@ -908,16 +867,12 @@
     <string name="plug_in_a_hackrf">"Anslut en HackRF"</string>
     <string name="connect_a_hackrf_one_or_rad1o">"Anslut en HackRF One (eller rad1o, Jawbreaker, PortaPack i HackRF-läge) till telefonen med en USB-C OTG-kabel. "</string>
     <string name="the_app_detects_it_as_soon">"Appen känner av den så snart den ansluts."</string>
-    <string name="plug_in_a_handheld_radio">"Anslut en handradio"</string>
-    <string name="connect_the_radio_to_the_phone">"Anslut radion till telefonen med dess USB-programmeringskabel (krets FTDI, CH340, CP210x eller PL2303), "</string>
-    <string name="plugged_into_the_radio_s_headset">"isatt i radions headsetuttag. Appen känner av den så snart den ansluts."</string>
     <string name="tools">"Verktyg"</string>
     <string name="nearby_networks_channels_speed_wi_fi">"Nätverk i närheten, kanaler, hastighet, wifi-diagnostik och säkerhet."</string>
     <string name="bluetooth_le_devices_unknown_trackers_and">"Bluetooth LE-enheter, okända spårare och Varmt/Kallt-sökning."</string>
     <string name="cells_your_carrier_s_towers_and">"Celler, din operatörs master och mobildata."</string>
     <string name="satellites_sky_position_comparison_and_passes">"Satelliter, himmel, positionsjämförelse och passager."</string>
     <string name="hackrf_spectrum_aircraft_ships_radiosondes_fpv">"HackRF: spektrum, flygplan, fartyg, radiosonder, FPV-drönare med mera."</string>
-    <string name="program_a_baofeng_radtel_or_quansheng">"Programmera en Baofeng, Radtel eller Quansheng via USB-kabel."</string>
     <string name="welcome_the_airwaves_are_waiting">"Välkommen! Etern väntar."</string>
     <string name="good_to_see_you_again_the">"Kul att se dig igen, antennerna är redo."</string>
     <string name="hello_which_frequency_shall_we_explore">"Hej! Vilken frekvens utforskar vi i dag?"</string>
@@ -940,8 +895,6 @@
     <string name="a_lost_airtag_it_s_never">"En borttappad AirTag? Den är aldrig riktigt ensam."</string>
     <string name="gps_never_gets_lost_it_recalculates">"GPS går aldrig vilse. Den räknar om."</string>
     <string name="aircraft_shout_their_position_on_1090">"Flygplan ropar ut sin position på 1090 MHz. Vi lyssnar."</string>
-    <string name="the_walkie_talkie_the_first_social">"Komradion: det första sociala nätverket. Turvis."</string>
-    <string name="over_roger_that_back_to_the">"Över. Uppfattat. Tillbaka till studion."</string>
     <string name="short_waves_long_ideas">"Korta vågor, långa tankar."</string>
     <string name="the_sky_has_never_been_so">"Himlen har aldrig varit så pratsam."</string>
     <string name="better_a_good_dbm_than_a">"Hellre en bra dBm än en lång kabel."</string>
@@ -1009,7 +962,6 @@
     <string name="identifiers_and_measurements_of_the_connected">"Den anslutna cellens identifierare och mätvärden"</string>
     <string name="sky_plot_and_world_map_of">"Himmelsdiagram och världskarta över satelliterna"</string>
     <string name="spectrum_and_waterfall_1_mhz_to">"Spektrum och vattenfall, 1 MHz till 6 GHz"</string>
-    <string name="read_edit_and_write_memories_over">"Läs, redigera och skriv minnen via USB-kabel"</string>
     <string name="launch">"Starta"</string>
     <string name="ibeacon_eddystone_and_altbeacon_shops_museums">"iBeacon, Eddystone och AltBeacon: butiker, museer, platser, smarta enheter"</string>
     <string name="bluetooth_listening_in_progress">"Bluetooth-lyssning pågår"</string>
@@ -1598,84 +1550,7 @@
     <string name="the_line_in_the_middle_is">"Linjen i mitten är HackRF:s DC-rest, inte en signal. Undvik förstärkaren nära starka sändare."</string>
     <string name="the_spectrum_shows_here_during_the">"Spektrumet visas här under analysen"</string>
     <string name="waterfall_newest_at_the_top">"Vattenfall · nyast överst"</string>
-    <string name="looking_for_the_radio">"Söker radion…"</string>
-    <string name="reading_the_radio">"Läser radion…"</string>
-    <string name="writing_to_the_radio">"Skriver till radion…"</string>
     <string name="verifying">"Kontrollerar…"</string>
-    <string name="usb_access_to_the_cable_refused">"USB-åtkomst till kabeln nekad."</string>
-    <string name="could_not_open_the_usb_cable">"Kunde inte öppna USB-kabeln."</string>
-    <string name="no_radio_recognised">"Ingen radio igenkänd ("</string>
-    <string name="or">" eller "</string>
-    <string name="check_that_the_cable_is_pushed">"). Kontrollera att kabeln sitter hela vägen in i radions uttag, "</string>
-    <string name="that_the_radio_is_on_and">"att radion är på och att volymen inte står på noll."</string>
-    <string name="communication_error">"Kommunikationsfel."</string>
-    <string name="error_2">"Fel: %1$s"</string>
-    <string name="recognised_channels_read">"%1$s igenkänd: %2$s kanaler lästa."</string>
-    <string name="unrecognised_firmware_read_only_writing_will">" Okänd firmware: endast läsning, skrivning nekas."</string>
-    <string name="for_the_not_written">"%1$s %2$s för %3$s inte skrivna"</string>
-    <string name="beyond_its_memories_not_written">"%1$s %2$s utöver dess %3$s minnen inte skrivna"</string>
-    <string name="the_already_holds_exactly_these_channels">"%1$s innehåller redan exakt dessa kanaler: inget att skriva.%2$s"</string>
-    <string name="channels_written_to_the_and_verified">"%1$s kanaler skrivna till %2$s och kontrollerade genom återläsning."</string>
-    <string name="of_channels_read_back_differently_read">"%1$s av %2$s kanaler lästes tillbaka annorlunda: läs radion igen för att se vad den innehåller."</string>
-    <string name="channels_written_verification_impossible_turn_the">"%1$s kanaler skrivna. Kontroll omöjlig: stäng av och slå på radion innan du läser den igen."</string>
-    <string name="previous_state_of_the_restored_channels">"Tidigare tillstånd för %1$s återställt (%2$s kanaler)."</string>
-    <string name="n_12_5_khz">"12,5 kHz"</string>
-    <string name="of_2">" av %1$s"</string>
-    <string name="to_write">" · %1$s att skriva"</string>
-    <string name="cable">"Kabel %1$s"</string>
-    <string name="no_usb_cable">"Ingen USB-kabel"</string>
-    <string name="model_recognised_when_reading">"Modell igenkänd vid läsning"</string>
-    <string name="restore_the_state_before_writing">"Återställ tillståndet före skrivning"</string>
-    <string name="plug_the_programming_cable_into_the">"Anslut programmeringskabeln till telefonens USB-C-uttag (med OTG-adapter vid behov) och till "</string>
-    <string name="headset_socket_of_the_radio_switched">"headsetuttaget på den påslagna radion. Du kan redan sätta ihop en kanallista utan radion."</string>
-    <string name="new_channel">"Ny kanal"</string>
-    <string name="presets">"Förinställningar"</string>
-    <string name="clear_all">"Rensa allt"</string>
-    <string name="the_app_never_makes_the_radio">"Appen får aldrig radion att sända: den läser och skriver dess minne. Bara ändrade kanaler skrivs om, resten "</string>
-    <string name="settings_keys_dtmf_is_untouched_and">"(inställningar, knappar, DTMF) lämnas orört, och radion läses tillbaka för kontroll. Att programmera är fritt; att sända är det inte: "</string>
-    <string name="amateur_bands_need_an_amateur_radio">"amatörband kräver amatörradiolicens, och PMR446 tillåter bara typgodkända apparater. "</string>
-    <string name="the_list_is_never_saved_it">"Listan sparas aldrig: den försvinner när appen stängs."</string>
-    <string name="write_to_the_radio">"Skriva till radion?"</string>
-    <string name="the_list">"listan"</string>
-    <string name="the_radio_will_be_recognised_and">"Radion känns igen och läses, sedan skrivs %1$s "</string>
-    <string name="will_be_written_the_radio_s">"och radions kanaler som saknas i listan raderas. Därefter läses den tillbaka för kontroll, "</string>
-    <string name="and_you_will_be_able_to">"och du kan återställa dess tidigare tillstånd."</string>
-    <string name="clear_the_list">"Rensa listan?"</string>
-    <string name="the_channels_of_the_displayed_list">"Kanalerna i den visade listan tas bort. Radion ändras först vid skrivning."</string>
-    <string name="listening_4">"Lyssning"</string>
-    <string name="offset">"Skift"</string>
-    <string name="listen_only">"Endast lyssning"</string>
-    <string name="invalid_frequency_in_mhz_for_example">"Ogiltig frekvens (i MHz, till exempel 145.500)."</string>
-    <string name="this_frequency_is_outside_the_s">"Den här frekvensen ligger utanför mottagningsbanden för %1$s."</string>
-    <string name="invalid_offset_in_khz_for_example">"Ogiltigt skift (i kHz, till exempel −600)."</string>
-    <string name="name_characters">"Namn (%1$s tecken)"</string>
-    <string name="receive_mhz">"Mottagning (MHz)"</string>
-    <string name="transmit">"Sändning"</string>
-    <string name="transmit_offset_khz">"Sändskift (kHz)"</string>
-    <string name="transmit_tone">"Sändton"</string>
-    <string name="receive_tone_squelch">"Mottagningston (brusspärr)"</string>
-    <string name="power">"Effekt"</string>
-    <string name="bandwidth">"Bandbredd"</string>
-    <string name="wide_25_khz">"Bred 25 kHz"</string>
-    <string name="narrow_12_5_khz">"Smal 12,5 kHz"</string>
-    <string name="included_in_scan">"Med i skanning"</string>
-    <string name="delete">"Ta bort"</string>
-    <string name="reversed">"Omvänd"</string>
-    <string name="outside_the_s_bands">", %1$s utanför banden för %2$s"</string>
-    <string name="with_no_free_slot">", %1$s utan ledig plats"</string>
-    <string name="channels_2">"%1$s kanaler: %2$s."</string>
-    <string name="receive_only_4">"Endast mottagning"</string>
-    <string name="the_radio_will_not_transmit_on">"Radion sänder inte på dessa kanaler"</string>
-    <string name="add_to_the_list">"Lägg till i listan"</string>
-    <string name="back">"Tillbaka"</string>
-    <string name="cable_detected">"Kabel upptäckt"</string>
-    <string name="read_the_memory_of_a_baofeng">"Läs minnet i en Baofeng UV-5R, Radtel RT-470X eller Quansheng UV-K5 / UV-K6, redigera kanalerna, lägg till förinställningar och skriv tillbaka dem."</string>
-    <string name="programming_cable">"Programmeringskabel"</string>
-    <string name="radio">"Radio"</string>
-    <string name="recognised_when_reading">"Igenkänd vid läsning"</string>
-    <string name="never_memory_read_and_write_only">"Aldrig: endast läsning och skrivning av minnet"</string>
-    <string name="to_program_a_usb_cable_with">"För att programmera: en USB-kabel med FTDI-, CH340-, CP210x- eller PL2303-krets i radions headsetuttag. "</string>
-    <string name="nothing_is_saved_or_kept">"Inget sparas eller behålls."</string>
     <string name="wifi_coverage_csv">"wifi-tackning-%1$s.csv"</string>
     <string name="no_wi_fi">"Inget wifi"</string>
     <string name="connect_to_the_wi_fi_network">"Anslut till det wifi-nätverk vars täckning du vill kartlägga."</string>
@@ -2077,10 +1952,6 @@
         <item quantity="one">"enhet"</item>
         <item quantity="other">"enheter"</item>
     </plurals>
-    <plurals name="p_channels">
-        <item quantity="one">"kanal"</item>
-        <item quantity="other">"kanaler"</item>
-    </plurals>
     <plurals name="p_beacons_detected">
         <item quantity="one">"fyr upptäckt"</item>
         <item quantity="other">"fyrar upptäckta"</item>
@@ -2229,18 +2100,6 @@
         <item quantity="one">"ram"</item>
         <item quantity="other">"ramar"</item>
     </plurals>
-    <plurals name="p_channels_outside_the_bands">
-        <item quantity="one">"kanal utanför banden"</item>
-        <item quantity="other">"kanaler utanför banden"</item>
-    </plurals>
-    <plurals name="p_channels_changed">
-        <item quantity="one">"kanal ändrad"</item>
-        <item quantity="other">"kanaler ändrade"</item>
-    </plurals>
-    <plurals name="p_channels_added">
-        <item quantity="one">"kanal tillagd"</item>
-        <item quantity="other">"kanaler tillagda"</item>
-    </plurals>
     <plurals name="p_servers">
         <item quantity="one">"server"</item>
         <item quantity="other">"servrar"</item>
@@ -2358,4 +2217,29 @@
     <string name="instant_communication">"Läge för direktkommunikation"</string>
     <string name="wi_fi_aware_how_it_works">"Wi-Fi Aware (Neighbor Awareness Networking) låter telefoner hitta varandra och kommunicera direkt, utan router eller internet. Android hittar bara tjänster vars namn det känner till, så verktyget hittar de andra telefonerna som har det öppet. Med Wi-Fi RTT på båda mäts avståndet mellan dem på ungefär en meter när. Vinka-knappen skickar en hälsning för att testa länken åt båda hållen."</string>
     <string name="parallel_connections">"%1$d parallella anslutningar"</string>
+    <string name="tpms_heard">"%1$s MHz · %2$d paket mottagna"</string>
+    <string name="tpms_listening">"Lyssnar efter däcksensorer"</string>
+    <string name="americas_asia">"Amerika, Asien"</string>
+    <string name="tpms_none_yet">"Ingen sensor än"</string>
+    <string name="tpms_none_yet_body">"Däcksensorer sänder ungefär en gång per minut när bilen rullar, och sällan när den står parkerad. Ställ dig nära en väg eller en parkering, eller kör iväg med telefonen i bilen."</string>
+    <string name="tpms_how_it_works">"Sedan 2014 har varje ny bil i Europa en sensor i varje däck som sänder tryck och temperatur till bilen, på 433,92 MHz (315 MHz i Amerika och Asien). Appen avkodar formaten från de stora tillverkarna (Continental VDO, Schrader, Pacific, TRW, HUF) så som rtl_433 dokumenterar dem, och behåller bara paket som klarar sin egen kontrollsumma. Trycket visas så som sensorn skickar det: absolut för vissa märken, relativt för andra. Endast mottagning."</string>
+    <string name="tpms_wheel">"Hjul %1$d"</string>
+    <string name="tpms_moving">"I rörelse"</string>
+    <string name="tpms_battery_low">"Svagt batteri"</string>
+    <string name="pocsag_none_yet">"Inget meddelande än"</string>
+    <string name="pocsag_none_yet_body">"Personsökare används mest av sjukhus, brandkår och jourpersonal: meddelanden kommer i skurar, ibland med många minuters mellanrum. Vissa kanaler i ett nät kan vara avstängda."</string>
+    <string name="pocsag_network">"Nät"</string>
+    <string name="pocsag_custom">"Annan frekvens"</string>
+    <string name="pocsag_how_it_works">"POCSAG är personsökarstandarden som sedan 1980-talet används av e*Message (Frankrike, Tyskland), sjukhus, brandkårer och radioamatörer (DAPNET). Appen lyssnar på alla kanaler i det valda nätet samtidigt, i 512, 1200 och 2400 bit/s, och rättar upp till två felaktiga bitar per kodord. Personsökarmeddelanden är privat korrespondens: i många länder, däribland Frankrike, får du bara läsa eller sprida dem för dina egna personsökare. Inget sparas när appen stängs. Endast mottagning."</string>
+    <string name="pocsag_tone_only">"Endast ton, ingen text"</string>
+    <string name="tyre_pressure_sensors_433_mhz">"Däcktryckssensorer, 433 MHz"</string>
+    <string name="pagers_e_message_dapnet">"Personsökare: e*Message, DAPNET"</string>
+    <plurals name="p_sensors">
+        <item quantity="one">"sensor"</item>
+        <item quantity="other">"sensorer"</item>
+    </plurals>
+    <plurals name="p_listening_channels">
+        <item quantity="one">"Lyssnar på %1$d kanal"</item>
+        <item quantity="other">"Lyssnar på %1$d kanaler"</item>
+    </plurals>
 </resources>

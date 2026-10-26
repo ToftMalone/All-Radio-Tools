@@ -44,29 +44,34 @@ class ToolsHub(private val app: AntApplication, private val scope: CoroutineScop
     val unknownTrackers get() = com.allnetworktools.data.TrackerGuard.controller(app)
     // One HackRF, one tool at a time: starting one stops the other.
     val spectrum: com.allnetworktools.ui.pages.sdr.SpectrumController by lazy {
-        com.allnetworktools.ui.pages.sdr.SpectrumController(app.sdr, scope) { adsb.stop(); sonde.stop(); ais.stop(); aprs.stop(); meteor.stop(); fpv.stop(); acars.stop() }
+        com.allnetworktools.ui.pages.sdr.SpectrumController(app.sdr, scope) { adsb.stop(); sonde.stop(); ais.stop(); aprs.stop(); meteor.stop(); fpv.stop(); acars.stop(); tpms.stop(); pocsag.stop() }
     }
     val adsb: com.allnetworktools.ui.pages.sdr.AdsbController by lazy {
-        com.allnetworktools.ui.pages.sdr.AdsbController(app.sdr, scope) { spectrum.stop(); sonde.stop(); ais.stop(); aprs.stop(); meteor.stop(); fpv.stop(); acars.stop() }
+        com.allnetworktools.ui.pages.sdr.AdsbController(app.sdr, scope) { spectrum.stop(); sonde.stop(); ais.stop(); aprs.stop(); meteor.stop(); fpv.stop(); acars.stop(); tpms.stop(); pocsag.stop() }
     }
     val sonde: com.allnetworktools.ui.pages.sdr.SondeController by lazy {
-        com.allnetworktools.ui.pages.sdr.SondeController(app.sdr, scope) { spectrum.stop(); adsb.stop(); ais.stop(); aprs.stop(); meteor.stop(); fpv.stop(); acars.stop() }
+        com.allnetworktools.ui.pages.sdr.SondeController(app.sdr, scope) { spectrum.stop(); adsb.stop(); ais.stop(); aprs.stop(); meteor.stop(); fpv.stop(); acars.stop(); tpms.stop(); pocsag.stop() }
     }
     val ais: com.allnetworktools.ui.pages.sdr.AisController by lazy {
-        com.allnetworktools.ui.pages.sdr.AisController(app.sdr, scope) { spectrum.stop(); adsb.stop(); sonde.stop(); aprs.stop(); meteor.stop(); fpv.stop(); acars.stop() }
+        com.allnetworktools.ui.pages.sdr.AisController(app.sdr, scope) { spectrum.stop(); adsb.stop(); sonde.stop(); aprs.stop(); meteor.stop(); fpv.stop(); acars.stop(); tpms.stop(); pocsag.stop() }
     }
     val aprs: com.allnetworktools.ui.pages.sdr.AprsController by lazy {
-        com.allnetworktools.ui.pages.sdr.AprsController(app.sdr, scope) { spectrum.stop(); adsb.stop(); sonde.stop(); ais.stop(); meteor.stop(); fpv.stop(); acars.stop() }
+        com.allnetworktools.ui.pages.sdr.AprsController(app.sdr, scope) { spectrum.stop(); adsb.stop(); sonde.stop(); ais.stop(); meteor.stop(); fpv.stop(); acars.stop(); tpms.stop(); pocsag.stop() }
     }
     val fpv: com.allnetworktools.ui.pages.sdr.FpvController by lazy {
-        com.allnetworktools.ui.pages.sdr.FpvController(app.sdr, scope) { spectrum.stop(); adsb.stop(); sonde.stop(); ais.stop(); aprs.stop(); meteor.stop(); acars.stop() }
+        com.allnetworktools.ui.pages.sdr.FpvController(app.sdr, scope) { spectrum.stop(); adsb.stop(); sonde.stop(); ais.stop(); aprs.stop(); meteor.stop(); acars.stop(); tpms.stop(); pocsag.stop() }
     }
     val acars: com.allnetworktools.ui.pages.sdr.AcarsController by lazy {
-        com.allnetworktools.ui.pages.sdr.AcarsController(app.sdr, scope) { spectrum.stop(); adsb.stop(); sonde.stop(); ais.stop(); aprs.stop(); fpv.stop(); meteor.stop() }
+        com.allnetworktools.ui.pages.sdr.AcarsController(app.sdr, scope) { spectrum.stop(); adsb.stop(); sonde.stop(); ais.stop(); aprs.stop(); fpv.stop(); meteor.stop(); tpms.stop(); pocsag.stop() }
     }
     val meteor: com.allnetworktools.ui.pages.sdr.MeteorController by lazy {
-        com.allnetworktools.ui.pages.sdr.MeteorController(app.sdr, app.weatherTles, scope) { spectrum.stop(); adsb.stop(); sonde.stop(); ais.stop(); aprs.stop(); fpv.stop(); acars.stop() }
+        com.allnetworktools.ui.pages.sdr.MeteorController(app.sdr, app.weatherTles, scope) { spectrum.stop(); adsb.stop(); sonde.stop(); ais.stop(); aprs.stop(); fpv.stop(); acars.stop(); tpms.stop(); pocsag.stop() }
     }
-    val radioChannels by lazy { com.allnetworktools.ui.pages.talkie.ChannelsController(app.cables, scope) }
+    val tpms: com.allnetworktools.ui.pages.sdr.TpmsController by lazy {
+        com.allnetworktools.ui.pages.sdr.TpmsController(app.sdr, scope) { spectrum.stop(); adsb.stop(); sonde.stop(); ais.stop(); aprs.stop(); meteor.stop(); fpv.stop(); acars.stop(); pocsag.stop() }
+    }
+    val pocsag: com.allnetworktools.ui.pages.sdr.PocsagController by lazy {
+        com.allnetworktools.ui.pages.sdr.PocsagController(app.sdr, scope) { spectrum.stop(); adsb.stop(); sonde.stop(); ais.stop(); aprs.stop(); meteor.stop(); fpv.stop(); acars.stop(); tpms.stop() }
+    }
     val skyView = androidx.compose.runtime.mutableStateOf(com.allnetworktools.ui.pages.gnss.SkyView.Sky)
 }

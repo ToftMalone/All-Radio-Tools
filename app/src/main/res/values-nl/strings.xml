@@ -654,44 +654,7 @@
     <string name="celestrak_answered">"CelesTrak antwoordde %1$s"</string>
     <string name="unreadable_answer_from_celestrak">"Onleesbaar antwoord van CelesTrak"</string>
     <string name="none">"Geen"</string>
-    <string name="high">"Hoog"</string>
     <string name="medium">"Gemiddeld"</string>
-    <string name="low">"Laag"</string>
-    <string name="n_16_channels_446_00625_to_446">"16 kanalen, 446,00625 tot 446,19375 MHz"</string>
-    <string name="transmitting_on_pmr446_needs_a_type">"Zenden op PMR446 vereist een goedgekeurd apparaat met vaste antenne en maximaal 0,5 W: een programmeerbare portofoon is dat niet."</string>
-    <string name="n_69_channels_433_075_to_434">"69 kanalen, 433,075 tot 434,775 MHz"</string>
-    <string name="licence_free_band_at_10_mw">"Vrije band met maximaal 10 mW: een portofoon van enkele watts mag daar niet zenden."</string>
-    <string name="marine_vhf">"Marifoon"</string>
-    <string name="simplex_channels_156_3_to_156">"Simplexkanalen, 156,3 tot 156,875 MHz"</string>
-    <string name="listen_only_transmitting_on_marine_bands">"Alleen luisteren: zenden op maritieme banden vereist een eigen marifoon en certificaat."</string>
-    <string name="n_2_m_amateur_repeaters">"2 m-amateurrepeaters"</string>
-    <string name="rv48_to_rv63_outputs_145_600">"RV48 tot RV63, uitgangen 145,600 tot 145,7875 MHz, shift −600 kHz"</string>
-    <string name="transmitting_needs_an_amateur_radio_licence">"Zenden vereist een zendmachtiging voor radioamateurs. Veel repeaters vragen een toegangstoon (vaak 88,5 Hz): stel die per kanaal in."</string>
-    <string name="amateur_radio_calling_and_specials">"Radioamateurs: aanroep en speciaal"</string>
-    <string name="n_2_m_and_70_cm_calling">"Aanroep 2 m en 70 cm, APRS, ISS"</string>
-    <string name="transmitting_needs_an_amateur_radio_licence_2">"Zenden vereist een zendmachtiging voor radioamateurs. Het ISS is alleen ontvangst."</string>
-    <string name="handheld_radio">"Portofoon"</string>
-    <string name="the_radio_did_not_answer">"De radio antwoordde niet (%1$s)."</string>
-    <string name="no_answer">"geen antwoord"</string>
-    <string name="answer">"antwoord %1$s"</string>
-    <string name="unexpected_radio_identification">"Onverwachte radio-identificatie: %1$s."</string>
-    <string name="the_radio_refused_clone_mode">"De radio weigerde de kloonmodus."</string>
-    <string name="the_radio_does_not_answer_check">"De radio antwoordt niet (%1$s). Controleer of de kabel helemaal in de aansluiting van de radio zit, of de radio aanstaat "</string>
-    <string name="and_that_its_volume_is_not">"en of het volume niet op nul staat."</string>
-    <string name="the_radio_refused_to_send_block" formatted="false">"De radio weigerde blok %04X te verzenden."</string>
-    <string name="block" formatted="false">"blok %04X"</string>
-    <string name="unexpected_answer_from_the_radio_for" formatted="false">"Onverwacht antwoord van de radio voor blok %04X."</string>
-    <string name="the_radio_refused_block_nothing_more" formatted="false">"De radio weigerde blok %04X: er is niets meer geschreven."</string>
-    <string name="the_radio_does_not_answer_check_2">"De radio antwoordt niet. Controleer of de kabel helemaal in de aansluiting van de radio zit, of de radio aanstaat, "</string>
-    <string name="then_turn_it_off_and_on">"en zet hem daarna uit en weer aan."</string>
-    <string name="unrecognised_firmware_writing_is_refused_for">"Onbekende firmware (%1$s): schrijven wordt uit veiligheid geweigerd. Lezen werkt nog."</string>
-    <string name="the_radio_does_not_answer">"De radio antwoordt niet."</string>
-    <string name="unexpected_answer">"Onverwacht antwoord: %1$s"</string>
-    <string name="unexpected_answer_from_the_radio">"Onverwacht antwoord van de radio (%1$s)."</string>
-    <string name="incomplete_frame_from_the_radio">"Onvolledig frame van de radio (%1$s)."</string>
-    <string name="this_is_not_a_uv_k5">"Dit is geen UV-K5."</string>
-    <string name="write" formatted="false">"schrijven %04X"</string>
-    <string name="usb_serial">"USB-serieel"</string>
     <string name="link_without_message">"Verbinding zonder bericht"</string>
     <string name="link_test">"Verbindingstest"</string>
     <string name="crew_company_message">"Bericht bemanning / maatschappij"</string>
@@ -805,7 +768,6 @@
     <string name="cells">"Cellen"</string>
     <string name="sky">"Hemel"</string>
     <string name="spectrum">"Spectrum"</string>
-    <string name="channels">"Kanalen"</string>
     <string name="wi_fi_scanner">"Wifiscanner"</string>
     <string name="lan_devices">"LAN-apparaten"</string>
     <string name="lan_device">"LAN-apparaat"</string>
@@ -835,7 +797,6 @@
     <string name="spectrum_analyser">"Spectrumanalyser"</string>
     <string name="radiosondes">"Radiosondes"</string>
     <string name="fm_radio">"FM-radio"</string>
-    <string name="radio_channels">"Radiokanalen"</string>
     <string name="screen_unavailable_on_this_device">"Scherm niet beschikbaar op dit apparaat"</string>
     <string name="allow_access_in_android_settings_permissions">"Sta toegang toe in Android-instellingen › Rechten"</string>
     <string name="saving_unavailable_on_this_device">"Opslaan niet beschikbaar op dit apparaat"</string>
@@ -880,8 +841,6 @@
     <string name="this_device_does_not_have_this">"Dit apparaat heeft deze radio niet."</string>
     <string name="no_hackrf">"Geen HackRF"</string>
     <string name="plug_in_a_hackrf_over_usb">"Sluit een HackRF aan via USB-C om te ontvangen."</string>
-    <string name="no_handheld_radio">"Geen portofoon"</string>
-    <string name="plug_in_a_radio_with_its">"Sluit een radio aan met zijn USB-programmeerkabel."</string>
     <string name="turn_on_wi_fi_to_show">"Zet wifi aan om de huidige verbinding te zien en de tools voor het lokale netwerk te gebruiken."</string>
     <string name="turn_on_wi_fi">"Wifi aanzetten"</string>
     <string name="wi_fi_settings">"Wifi-instellingen"</string>
@@ -908,16 +867,12 @@
     <string name="plug_in_a_hackrf">"Sluit een HackRF aan"</string>
     <string name="connect_a_hackrf_one_or_rad1o">"Verbind een HackRF One (of rad1o, Jawbreaker, PortaPack in HackRF-modus) met de telefoon via een USB-C OTG-kabel. "</string>
     <string name="the_app_detects_it_as_soon">"De app herkent hem zodra hij is aangesloten."</string>
-    <string name="plug_in_a_handheld_radio">"Sluit een portofoon aan"</string>
-    <string name="connect_the_radio_to_the_phone">"Verbind de radio met de telefoon via zijn USB-programmeerkabel (chip FTDI, CH340, CP210x of PL2303), "</string>
-    <string name="plugged_into_the_radio_s_headset">"aangesloten op de headsetaansluiting van de radio. De app herkent hem zodra hij is aangesloten."</string>
     <string name="tools">"Tools"</string>
     <string name="nearby_networks_channels_speed_wi_fi">"Netwerken in de buurt, kanalen, snelheid, wifidiagnose en -beveiliging."</string>
     <string name="bluetooth_le_devices_unknown_trackers_and">"Bluetooth LE-apparaten, onbekende trackers en Warm/Koud-zoeken."</string>
     <string name="cells_your_carrier_s_towers_and">"Cellen, de masten van je provider en mobiele data."</string>
     <string name="satellites_sky_position_comparison_and_passes">"Satellieten, hemel, positievergelijking en overkomsten."</string>
     <string name="hackrf_spectrum_aircraft_ships_radiosondes_fpv">"HackRF: spectrum, vliegtuigen, schepen, radiosondes, FPV-drones en meer."</string>
-    <string name="program_a_baofeng_radtel_or_quansheng">"Programmeer een Baofeng, Radtel of Quansheng via een USB-kabel."</string>
     <string name="welcome_the_airwaves_are_waiting">"Welkom! De ether wacht op je."</string>
     <string name="good_to_see_you_again_the">"Leuk je weer te zien, de antennes staan klaar."</string>
     <string name="hello_which_frequency_shall_we_explore">"Hallo! Welke frequentie verkennen we vandaag?"</string>
@@ -940,8 +895,6 @@
     <string name="a_lost_airtag_it_s_never">"Een verloren AirTag? Hij is nooit echt alleen."</string>
     <string name="gps_never_gets_lost_it_recalculates">"GPS verdwaalt nooit. Het herberekent."</string>
     <string name="aircraft_shout_their_position_on_1090">"Vliegtuigen roepen hun positie op 1090 MHz. Laten we luisteren."</string>
-    <string name="the_walkie_talkie_the_first_social">"De portofoon: het eerste sociale netwerk. Om de beurt."</string>
-    <string name="over_roger_that_back_to_the">"Over. Ontvangen. Terug naar de studio."</string>
     <string name="short_waves_long_ideas">"Korte golven, lange gedachten."</string>
     <string name="the_sky_has_never_been_so">"De hemel was nog nooit zo spraakzaam."</string>
     <string name="better_a_good_dbm_than_a">"Beter een goede dBm dan een lange kabel."</string>
@@ -1009,7 +962,6 @@
     <string name="identifiers_and_measurements_of_the_connected">"Identificaties en metingen van de verbonden cel"</string>
     <string name="sky_plot_and_world_map_of">"Skyplot en wereldkaart van de satellieten"</string>
     <string name="spectrum_and_waterfall_1_mhz_to">"Spectrum en waterval, 1 MHz tot 6 GHz"</string>
-    <string name="read_edit_and_write_memories_over">"Geheugens lezen, bewerken en schrijven via USB-kabel"</string>
     <string name="launch">"Starten"</string>
     <string name="ibeacon_eddystone_and_altbeacon_shops_museums">"iBeacon, Eddystone en AltBeacon: winkels, musea, locaties, slimme apparaten"</string>
     <string name="bluetooth_listening_in_progress">"Bluetooth-luisteren bezig"</string>
@@ -1598,84 +1550,7 @@
     <string name="the_line_in_the_middle_is">"De lijn in het midden is het DC-restsignaal van de HackRF, geen signaal. Vermijd de versterker bij sterke zenders."</string>
     <string name="the_spectrum_shows_here_during_the">"Het spectrum verschijnt hier tijdens de analyse"</string>
     <string name="waterfall_newest_at_the_top">"Waterval · nieuwste bovenaan"</string>
-    <string name="looking_for_the_radio">"Radio zoeken…"</string>
-    <string name="reading_the_radio">"Radio lezen…"</string>
-    <string name="writing_to_the_radio">"Naar de radio schrijven…"</string>
     <string name="verifying">"Controleren…"</string>
-    <string name="usb_access_to_the_cable_refused">"USB-toegang tot de kabel geweigerd."</string>
-    <string name="could_not_open_the_usb_cable">"Kan de USB-kabel niet openen."</string>
-    <string name="no_radio_recognised">"Geen radio herkend ("</string>
-    <string name="or">" of "</string>
-    <string name="check_that_the_cable_is_pushed">"). Controleer of de kabel helemaal in de aansluiting van de radio zit, "</string>
-    <string name="that_the_radio_is_on_and">"of de radio aanstaat en of het volume niet op nul staat."</string>
-    <string name="communication_error">"Communicatiefout."</string>
-    <string name="error_2">"Fout: %1$s"</string>
-    <string name="recognised_channels_read">"%1$s herkend: %2$s kanalen gelezen."</string>
-    <string name="unrecognised_firmware_read_only_writing_will">" Onbekende firmware: alleen lezen, schrijven wordt geweigerd."</string>
-    <string name="for_the_not_written">"%1$s %2$s voor de %3$s niet geschreven"</string>
-    <string name="beyond_its_memories_not_written">"%1$s %2$s voorbij zijn %3$s geheugens niet geschreven"</string>
-    <string name="the_already_holds_exactly_these_channels">"De %1$s bevat al precies deze kanalen: niets te schrijven.%2$s"</string>
-    <string name="channels_written_to_the_and_verified">"%1$s kanalen naar de %2$s geschreven en gecontroleerd door teruglezen."</string>
-    <string name="of_channels_read_back_differently_read">"%1$s van %2$s kanalen werden anders teruggelezen: lees de radio opnieuw om te zien wat hij bevat."</string>
-    <string name="channels_written_verification_impossible_turn_the">"%1$s kanalen geschreven. Controle onmogelijk: zet de radio uit en aan voordat je hem opnieuw leest."</string>
-    <string name="previous_state_of_the_restored_channels">"Vorige toestand van de %1$s hersteld (%2$s kanalen)."</string>
-    <string name="n_12_5_khz">"12,5 kHz"</string>
-    <string name="of_2">" van %1$s"</string>
-    <string name="to_write">" · %1$s te schrijven"</string>
-    <string name="cable">"Kabel %1$s"</string>
-    <string name="no_usb_cable">"Geen USB-kabel"</string>
-    <string name="model_recognised_when_reading">"Model herkend bij het lezen"</string>
-    <string name="restore_the_state_before_writing">"Toestand van vóór het schrijven herstellen"</string>
-    <string name="plug_the_programming_cable_into_the">"Steek de programmeerkabel in de USB-C-aansluiting van de telefoon (zo nodig met een OTG-adapter) en in de "</string>
-    <string name="headset_socket_of_the_radio_switched">"headsetaansluiting van de ingeschakelde radio. Je kunt al zonder radio een kanaallijst samenstellen."</string>
-    <string name="new_channel">"Nieuw kanaal"</string>
-    <string name="presets">"Voorinstellingen"</string>
-    <string name="clear_all">"Alles wissen"</string>
-    <string name="the_app_never_makes_the_radio">"De app laat de radio nooit zenden: hij leest en schrijft zijn geheugen. Alleen gewijzigde kanalen worden herschreven, de rest "</string>
-    <string name="settings_keys_dtmf_is_untouched_and">"(instellingen, toetsen, DTMF) blijft ongemoeid, en de radio wordt ter controle teruggelezen. Programmeren is vrij; zenden niet: "</string>
-    <string name="amateur_bands_need_an_amateur_radio">"amateurbanden vereisen een zendmachtiging, en PMR446 accepteert alleen goedgekeurde apparaten. "</string>
-    <string name="the_list_is_never_saved_it">"De lijst wordt nooit opgeslagen: hij verdwijnt als de app sluit."</string>
-    <string name="write_to_the_radio">"Naar de radio schrijven?"</string>
-    <string name="the_list">"de lijst"</string>
-    <string name="the_radio_will_be_recognised_and">"De radio wordt herkend en gelezen, daarna wordt %1$s "</string>
-    <string name="will_be_written_the_radio_s">"geschreven; kanalen van de radio die niet in de lijst staan, worden gewist. Daarna wordt hij ter controle teruggelezen, "</string>
-    <string name="and_you_will_be_able_to">"en kun je de vorige toestand herstellen."</string>
-    <string name="clear_the_list">"Lijst leegmaken?"</string>
-    <string name="the_channels_of_the_displayed_list">"De kanalen van de getoonde lijst worden verwijderd. De radio verandert pas bij het schrijven."</string>
-    <string name="listening_4">"Luisteren"</string>
-    <string name="offset">"Shift"</string>
-    <string name="listen_only">"Alleen luisteren"</string>
-    <string name="invalid_frequency_in_mhz_for_example">"Ongeldige frequentie (in MHz, bijvoorbeeld 145.500)."</string>
-    <string name="this_frequency_is_outside_the_s">"Deze frequentie ligt buiten de ontvangstbanden van de %1$s."</string>
-    <string name="invalid_offset_in_khz_for_example">"Ongeldige shift (in kHz, bijvoorbeeld −600)."</string>
-    <string name="name_characters">"Naam (%1$s tekens)"</string>
-    <string name="receive_mhz">"Ontvangst (MHz)"</string>
-    <string name="transmit">"Zenden"</string>
-    <string name="transmit_offset_khz">"Zendshift (kHz)"</string>
-    <string name="transmit_tone">"Zendtoon"</string>
-    <string name="receive_tone_squelch">"Ontvangsttoon (squelch)"</string>
-    <string name="power">"Vermogen"</string>
-    <string name="bandwidth">"Bandbreedte"</string>
-    <string name="wide_25_khz">"Breed 25 kHz"</string>
-    <string name="narrow_12_5_khz">"Smal 12,5 kHz"</string>
-    <string name="included_in_scan">"Opgenomen in de scan"</string>
-    <string name="delete">"Verwijderen"</string>
-    <string name="reversed">"Omgekeerd"</string>
-    <string name="outside_the_s_bands">", %1$s buiten de banden van de %2$s"</string>
-    <string name="with_no_free_slot">", %1$s zonder vrije plek"</string>
-    <string name="channels_2">"%1$s kanalen: %2$s."</string>
-    <string name="receive_only_4">"Alleen ontvangst"</string>
-    <string name="the_radio_will_not_transmit_on">"De radio zendt niet op deze kanalen"</string>
-    <string name="add_to_the_list">"Aan de lijst toevoegen"</string>
-    <string name="back">"Terug"</string>
-    <string name="cable_detected">"Kabel gedetecteerd"</string>
-    <string name="read_the_memory_of_a_baofeng">"Lees het geheugen van een Baofeng UV-5R, Radtel RT-470X of Quansheng UV-K5 / UV-K6, bewerk de kanalen, voeg voorinstellingen toe en schrijf ze terug."</string>
-    <string name="programming_cable">"Programmeerkabel"</string>
-    <string name="radio">"Radio"</string>
-    <string name="recognised_when_reading">"Herkend bij het lezen"</string>
-    <string name="never_memory_read_and_write_only">"Nooit: alleen geheugen lezen en schrijven"</string>
-    <string name="to_program_a_usb_cable_with">"Om te programmeren: een USB-kabel met FTDI-, CH340-, CP210x- of PL2303-chip op de headsetaansluiting van de radio. "</string>
-    <string name="nothing_is_saved_or_kept">"Er wordt niets opgeslagen of bewaard."</string>
     <string name="wifi_coverage_csv">"wifi-dekking-%1$s.csv"</string>
     <string name="no_wi_fi">"Geen wifi"</string>
     <string name="connect_to_the_wi_fi_network">"Maak verbinding met het wifinetwerk waarvan je de dekking wilt vastleggen."</string>
@@ -2077,10 +1952,6 @@
         <item quantity="one">"apparaat"</item>
         <item quantity="other">"apparaten"</item>
     </plurals>
-    <plurals name="p_channels">
-        <item quantity="one">"kanaal"</item>
-        <item quantity="other">"kanalen"</item>
-    </plurals>
     <plurals name="p_beacons_detected">
         <item quantity="one">"baken gedetecteerd"</item>
         <item quantity="other">"bakens gedetecteerd"</item>
@@ -2229,18 +2100,6 @@
         <item quantity="one">"frame"</item>
         <item quantity="other">"frames"</item>
     </plurals>
-    <plurals name="p_channels_outside_the_bands">
-        <item quantity="one">"kanaal buiten de banden"</item>
-        <item quantity="other">"kanalen buiten de banden"</item>
-    </plurals>
-    <plurals name="p_channels_changed">
-        <item quantity="one">"kanaal gewijzigd"</item>
-        <item quantity="other">"kanalen gewijzigd"</item>
-    </plurals>
-    <plurals name="p_channels_added">
-        <item quantity="one">"kanaal toegevoegd"</item>
-        <item quantity="other">"kanalen toegevoegd"</item>
-    </plurals>
     <plurals name="p_servers">
         <item quantity="one">"server"</item>
         <item quantity="other">"servers"</item>
@@ -2358,4 +2217,29 @@
     <string name="instant_communication">"Directe-communicatiemodus"</string>
     <string name="wi_fi_aware_how_it_works">"Wi-Fi Aware (Neighbor Awareness Networking) laat telefoons elkaar vinden en rechtstreeks communiceren, zonder router of internet. Android vindt alleen services waarvan het de naam kent, dus deze tool vindt de andere telefoons die hem open hebben. Met Wi-Fi RTT op beide telefoons wordt de afstand tot op ongeveer een meter gemeten. De zwaaiknop stuurt een groet om de verbinding in beide richtingen te testen."</string>
     <string name="parallel_connections">"%1$d parallelle verbindingen"</string>
+    <string name="tpms_heard">"%1$s MHz · %2$d pakketten ontvangen"</string>
+    <string name="tpms_listening">"Luisteren naar bandensensoren"</string>
+    <string name="americas_asia">"Amerika, Azië"</string>
+    <string name="tpms_none_yet">"Nog geen sensor"</string>
+    <string name="tpms_none_yet_body">"Bandensensoren zenden ongeveer eens per minuut terwijl de auto rijdt, en zelden als hij geparkeerd staat. Ga bij een weg of parkeerplaats staan, of rijd weg met de telefoon in de auto."</string>
+    <string name="tpms_how_it_works">"Sinds 2014 heeft elke nieuwe auto in Europa in elke band een sensor die druk en temperatuur naar de auto zendt, op 433,92 MHz (315 MHz in Amerika en Azië). De app decodeert de formaten van de belangrijkste fabrikanten (Continental VDO, Schrader, Pacific, TRW, HUF) zoals rtl_433 ze documenteert, en houdt alleen pakketten die hun eigen controlesom doorstaan. Drukken worden getoond zoals de sensor ze stuurt: absoluut bij sommige merken, relatief bij andere. Alleen ontvangst."</string>
+    <string name="tpms_wheel">"Wiel %1$d"</string>
+    <string name="tpms_moving">"Rijdend"</string>
+    <string name="tpms_battery_low">"Batterij bijna leeg"</string>
+    <string name="pocsag_none_yet">"Nog geen bericht"</string>
+    <string name="pocsag_none_yet_body">"Pagers worden vooral gebruikt door ziekenhuizen, brandweer en mensen van wacht: berichten komen in vlagen, soms met vele minuten ertussen. Sommige kanalen van een netwerk kunnen uit de lucht zijn."</string>
+    <string name="pocsag_network">"Netwerk"</string>
+    <string name="pocsag_custom">"Andere frequentie"</string>
+    <string name="pocsag_how_it_works">"POCSAG is de semafoonstandaard die sinds de jaren 80 wordt gebruikt door e*Message (Frankrijk, Duitsland), ziekenhuizen, brandweer en radioamateurs (DAPNET). De app luistert tegelijk naar alle kanalen van het gekozen netwerk, op 512, 1200 en 2400 bit/s, en corrigeert tot twee foute bits per codewoord. Pagerberichten zijn privécorrespondentie: in veel landen, waaronder Frankrijk, mag u ze alleen lezen of doorgeven voor uw eigen pagers. Niets wordt bewaard zodra de app gesloten is. Alleen ontvangst."</string>
+    <string name="pocsag_tone_only">"Alleen toon, geen tekst"</string>
+    <string name="tyre_pressure_sensors_433_mhz">"Bandenspanningssensoren, 433 MHz"</string>
+    <string name="pagers_e_message_dapnet">"Pagers: e*Message, DAPNET"</string>
+    <plurals name="p_sensors">
+        <item quantity="one">"sensor"</item>
+        <item quantity="other">"sensoren"</item>
+    </plurals>
+    <plurals name="p_listening_channels">
+        <item quantity="one">"Luistert naar %1$d kanaal"</item>
+        <item quantity="other">"Luistert naar %1$d kanalen"</item>
+    </plurals>
 </resources>
