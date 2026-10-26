@@ -2325,7 +2325,7 @@
     <string name="pmr_heard">"%1$d channels heard · %2$d digital calls · 446.0–446.2 MHz"</string>
     <string name="pmr_listening">"Watching all 16 channels"</string>
     <string name="pmr_listening_to">"Listening to channel %1$d"</string>
-    <string name="pmr_tap_to_listen">"Tap an analogue channel to hear it"</string>
+    <string name="pmr_tap_to_listen">"Tap a channel to listen: FM, or DMR / dPMR voice decoded"</string>
     <string name="pmr_how_it_works">"PMR446 is the licence-free walkie-talkie band: 16 analogue FM channels from 446.00625 MHz, and digital radios in the upper half (DMR446 on the same centres, dPMR446 on 6.25 kHz channels). The band is only 200 kHz wide, so every channel is watched at once and an active one is demodulated: its CTCSS tone is measured, and for digital radios the call signalling OnAir\'s code reads (colour code, group or private call, the ids of both radios) is listed. Digital voice is not decoded. Analogue voice can be heard; what you hear is for you only: in France, as in most countries, repeating or using it is forbidden. Receive only."</string>
     <string name="pmr_end_of_call">"end of call"</string>
     <string name="pmr_group_call">"group call %1$s"</string>

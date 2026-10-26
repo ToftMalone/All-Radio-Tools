@@ -2266,7 +2266,7 @@
     <string name="pmr_heard">"%1$d kênh đã nghe · %2$d cuộc gọi số · 446,0–446,2 MHz"</string>
     <string name="pmr_listening">"Đang theo dõi 16 kênh"</string>
     <string name="pmr_listening_to">"Đang nghe kênh %1$d"</string>
-    <string name="pmr_tap_to_listen">"Chạm vào một kênh tương tự để nghe"</string>
+    <string name="pmr_tap_to_listen">"Chạm vào một kênh để nghe: FM hoặc giọng DMR / dPMR đã giải mã"</string>
     <string name="pmr_how_it_works">"PMR446 là băng tần bộ đàm không cần giấy phép: 16 kênh FM tương tự từ 446,00625 MHz, và bộ đàm số ở nửa trên (DMR446 ở cùng tần số trung tâm, dPMR446 ở kênh 6,25 kHz). Băng tần chỉ rộng 200 kHz nên mọi kênh được theo dõi cùng lúc và kênh đang hoạt động được giải điều chế: đo âm CTCSS, và với bộ đàm số thì liệt kê tín hiệu cuộc gọi mà mã của OnAir đọc (mã màu, gọi nhóm hay riêng, ID của hai máy). Giọng nói số không được giải mã. Có thể nghe giọng nói tương tự; những gì bạn nghe chỉ dành cho bạn: ở hầu hết các nước, tiết lộ hoặc sử dụng nội dung đó là bị cấm. Chỉ thu."</string>
     <string name="pmr_end_of_call">"kết thúc cuộc gọi"</string>
     <string name="pmr_group_call">"gọi nhóm %1$s"</string>

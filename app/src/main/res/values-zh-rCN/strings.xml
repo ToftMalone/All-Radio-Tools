@@ -2266,7 +2266,7 @@
     <string name="pmr_heard">"已收到 %1$d 个信道 · %2$d 次数字呼叫 · 446.0–446.2 MHz"</string>
     <string name="pmr_listening">"正在监视 16 个信道"</string>
     <string name="pmr_listening_to">"正在收听信道 %1$d"</string>
-    <string name="pmr_tap_to_listen">"点按模拟信道即可收听"</string>
+    <string name="pmr_tap_to_listen">"点按频道收听：FM 或解码后的 DMR / dPMR 语音"</string>
     <string name="pmr_how_it_works">"PMR446 是免执照对讲机频段：从 446.00625 MHz 开始的 16 个模拟 FM 信道，上半段还有数字对讲机(同样中心频率的 DMR446，以及 6.25 kHz 信道的 dPMR446)。整个频段只有 200 kHz 宽，所以同时监视所有信道并解调活动信道：测量其 CTCSS 亚音，对于数字对讲机，列出 OnAir 代码读取的呼叫信令(色码、组呼或单呼、双方 ID)。不解码数字语音。可以收听模拟语音；你听到的内容仅供自己：在大多数国家，泄露或利用这些内容是违法的。仅接收。"</string>
     <string name="pmr_end_of_call">"呼叫结束"</string>
     <string name="pmr_group_call">"组呼 %1$s"</string>

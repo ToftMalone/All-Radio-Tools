@@ -2440,7 +2440,7 @@
     <string name="pmr_heard">"usłyszane kanały: %1$d · wywołania cyfrowe: %2$d · 446,0–446,2 MHz"</string>
     <string name="pmr_listening">"Obserwacja 16 kanałów"</string>
     <string name="pmr_listening_to">"Odsłuch kanału %1$d"</string>
-    <string name="pmr_tap_to_listen">"Dotknij kanału analogowego, aby go słuchać"</string>
+    <string name="pmr_tap_to_listen">"Dotknij kanału, aby go słuchać: FM lub zdekodowany głos DMR / dPMR"</string>
     <string name="pmr_how_it_works">"PMR446 to pasmo krótkofalówek bez licencji: 16 analogowych kanałów FM od 446,00625 MHz oraz radiotelefony cyfrowe w górnej połowie (DMR446 na tych samych środkach, dPMR446 na kanałach 6,25 kHz). Pasmo ma tylko 200 kHz, więc wszystkie kanały są obserwowane jednocześnie, a aktywny jest demodulowany: mierzony jest jego ton CTCSS, a dla radiotelefonów cyfrowych wyświetlana jest sygnalizacja wywołania odczytana kodem OnAir (kod koloru, wywołanie grupowe lub prywatne, ID obu radiotelefonów). Głos cyfrowy nie jest dekodowany. Głos analogowy można odsłuchać; to, co słyszysz, jest tylko dla ciebie: w większości krajów rozpowszechnianie lub wykorzystywanie tego jest zabronione. Tylko odbiór."</string>
     <string name="pmr_end_of_call">"koniec wywołania"</string>
     <string name="pmr_group_call">"wywołanie grupowe %1$s"</string>

@@ -91,7 +91,7 @@ L'écran d'accueil propose cinq réseaux. Chacun a son tableau de bord, son outi
 | FLARM | Planeurs et aviation légère sur 868 MHz (ancien protocole), positions autour de vous ; les aéronefs qui refusent le suivi sont seulement comptés |
 | LoRaWAN / Sigfox | Objets connectés sur 868 MHz : en-têtes LoRaWAN (adresse, réseau, compteur) de SF7 à SF12, messages Sigfox |
 | Meteor-M | Images LRPT des satellites météo sur 137 MHz |
-| PMR446 | Les 16 canaux de talkies-walkies à la fois : activité, tonalité CTCSS, écoute des canaux analogiques, identifiants des appels DMR446 et dPMR446 |
+| PMR446 | Les 16 canaux de talkies-walkies à la fois : activité, tonalité CTCSS, écoute des canaux analogiques et de la voix DMR446 / dPMR446 (décodage AMBE+2), identifiants des appels |
 | POCSAG | Messages de pagers (e*Message France et Allemagne, BOS, DAPNET ou n'importe quelle fréquence) : tous les canaux d'un réseau à la fois, 512, 1200 et 2400 bit/s, correction d'erreurs BCH |
 | TPMS | Capteurs de pression des pneus des voitures alentour sur 433,92 MHz (ou 315 MHz) : pression, température, pile, pour Renault, PSA, Toyota, Ford, Hyundai/Kia, BMW/Audi, Porsche et d'autres |
 | VDL Mode 2 | Liaison de données numérique des avions de ligne sur 6 canaux vers 136,9 MHz : ACARS numérique, stations sol, ouvertures de liaison |
@@ -172,5 +172,6 @@ All Radio Tools est un logiciel libre publié sous la [licence publique généra
 - [rtl_433](https://github.com/merbanan/rtl_433) pour les formats des capteurs de pression des pneus et des capteurs ISM.
 - [OnAir](https://github.com/adswill/OnAir) (GPL-3.0), dont les décodeurs ont été portés pour les capteurs ISM, FLARM, Wireless M-Bus, ASN, VDL Mode 2, DECT, DMR / dPMR, Sigfox, Horus, Mode A/C et la télémesure CubeSat.
 - [gr-lora_sdr](https://github.com/tapparelj/gr-lora_sdr) (EPFL) pour le récepteur LoRa.
+- [mbelib](https://github.com/szechyjs/mbelib) (ISC) pour le décodeur vocal AMBE+2. L'AMBE+2 est couvert par des brevets dans certains pays : ce code est fourni à des fins de recherche et d'enseignement.
 - Google [GNSS Measurement Tools](https://github.com/google/gps-measurement-tools) pour le calcul des pseudodistances.
 - Roboto Flex, Google Sans Flex et Material Symbols pour l'interface.

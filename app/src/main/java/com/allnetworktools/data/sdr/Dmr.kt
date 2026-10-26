@@ -241,6 +241,8 @@ object Dpmr {
     val FS1 = syms(0x57FF5F75D577, 24)
     val FS3 = syms(0x7DFFD5F55D5F, 24)
     val FS4 = syms(0xFD55F5DF7FDD, 24)
+    /** Payload frames 0 and 2 open with this 12-symbol sync (1 and 3 with the colour code). */
+    val FS2 = syms(0x5FF77D, 12)
 
     private val syn = intArrayOf(0x3, 0x5, 0x6, 0x7, 0x9, 0xA, 0xB, 0xC)
 
@@ -309,6 +311,17 @@ object Dpmr {
         if (get(b, 72, 8) != crc8(b, 72)) return null
         val h = Header(get(b, 0, 4), get(b, 4, 24), get(b, 28, 24), get(b, 52, 3), get(b, 55, 2), get(b, 57, 1) == 1)
         return h.takeIf { it.type <= 5 && it.commMode <= 5 && it.callType <= 2 }
+    }
+
+    /** The control channel of a payload frame (48 bits: frame number, id half, modes, slow data, CRC-7). */
+    fun cchCrcOk(b: IntArray) = get(b, 41, 7) == crc7(b, 41)
+
+    fun cchBits(frame: Int, idPart: Int, commMode: Int, callType: Int): IntArray {
+        val b = IntArray(48)
+        var p = put(b, 0, frame, 2)
+        p = put(b, p, idPart, 12); p = put(b, p, commMode, 3); p = put(b, p, 0, 2); p = put(b, p, callType, 2); p = put(b, p, 0, 20)
+        put(b, p, crc7(b, 41), 7)
+        return b
     }
 
     fun endBits(own: Int): IntArray {

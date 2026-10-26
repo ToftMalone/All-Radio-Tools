@@ -2324,7 +2324,7 @@
     <string name="pmr_heard">"%1$d kanaler hörda · %2$d digitala anrop · 446,0–446,2 MHz"</string>
     <string name="pmr_listening">"Bevakar alla 16 kanaler"</string>
     <string name="pmr_listening_to">"Lyssnar på kanal %1$d"</string>
-    <string name="pmr_tap_to_listen">"Tryck på en analog kanal för att lyssna"</string>
+    <string name="pmr_tap_to_listen">"Tryck på en kanal för att lyssna: FM eller avkodat DMR-/dPMR-tal"</string>
     <string name="pmr_how_it_works">"PMR446 är det licensfria komradiobandet: 16 analoga FM-kanaler från 446,00625 MHz och digitala radioapparater i den övre halvan (DMR446 på samma mittfrekvenser, dPMR446 på 6,25 kHz-kanaler). Bandet är bara 200 kHz brett, så alla kanaler bevakas samtidigt och en aktiv demoduleras: dess CTCSS-ton mäts och för digitala radioapparater listas den anropssignalering som OnAirs kod läser (färgkod, grupp- eller enskilt anrop, båda radioapparaternas ID). Digitalt tal avkodas inte. Analogt tal kan avlyssnas; det du hör är bara för dig: i de flesta länder är det förbjudet att föra det vidare eller använda det. Endast mottagning."</string>
     <string name="pmr_end_of_call">"anropet slut"</string>
     <string name="pmr_group_call">"gruppanrop %1$s"</string>

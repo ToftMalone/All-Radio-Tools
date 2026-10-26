@@ -2266,7 +2266,7 @@
     <string name="pmr_heard">"%1$d kanal terdengar · %2$d panggilan digital · 446,0–446,2 MHz"</string>
     <string name="pmr_listening">"Memantau 16 kanal"</string>
     <string name="pmr_listening_to">"Mendengarkan kanal %1$d"</string>
-    <string name="pmr_tap_to_listen">"Ketuk kanal analog untuk mendengarnya"</string>
+    <string name="pmr_tap_to_listen">"Ketuk saluran untuk mendengarkan: FM atau suara DMR / dPMR yang didekode"</string>
     <string name="pmr_how_it_works">"PMR446 adalah pita walkie-talkie tanpa izin: 16 kanal FM analog mulai 446,00625 MHz, dan radio digital di separuh atas (DMR446 di pusat yang sama, dPMR446 di kanal 6,25 kHz). Pita ini hanya selebar 200 kHz, jadi semua kanal dipantau sekaligus dan kanal aktif didemodulasi: nada CTCSS-nya diukur, dan untuk radio digital ditampilkan pensinyalan panggilan yang dibaca kode OnAir (kode warna, panggilan grup atau pribadi, ID kedua radio). Suara digital tidak didekode. Suara analog dapat didengarkan; yang Anda dengar hanya untuk Anda: di sebagian besar negara dilarang menyebarkan atau memanfaatkannya. Hanya menerima."</string>
     <string name="pmr_end_of_call">"akhir panggilan"</string>
     <string name="pmr_group_call">"panggilan grup %1$s"</string>

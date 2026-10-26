@@ -61,7 +61,7 @@ data class PmrCall(val atMs: Long, val hz: Long, val dmr: Boolean, val cc: Int?,
 
 /**
  * The PMR446 band at once: activity on the 16 analogue channels, CTCSS tones, DMR446 and dPMR446 call signalling with
- * their ids, and the audio of one analogue channel on demand. Kept in memory for the session only.
+ * their ids, and the audio of one channel on demand (FM, or the digital voice decoded). Kept in memory for the session only.
  */
 class PmrController(repo: SdrRepository, scope: CoroutineScope, onAcquire: () -> Unit = {}) :
     SdrRxController(repo, scope, onAcquire, SdrGain(listOf(16, 24, 32, 40), 32, listOf(20, 30, 40), 30, amp = true), "sdr-pmr") {
@@ -89,7 +89,25 @@ class PmrController(repo: SdrRepository, scope: CoroutineScope, onAcquire: () ->
         val last = HashMap<Int, Long>()
         var changed = false
         fun chOf(hz: Long) = ((hz - 446_006_250L + 6_250) / 12_500).toInt() + 1
+        var audio: AudioTrack? = null
+        var audioCh: Int? = null
+        // Decoded digital voice, 8 kHz, brought to the track's 25 kHz by linear interpolation.
+        var vPrev = 0f
+        var vPhase = 0.0
+        val vOut = FloatArray(520)
         val rx = Pmr446Receiver { e ->
+            if (e is PmrEvent.Voice) {
+                if (audioCh != null && chOf(e.hz) == audioCh) {
+                    var n = 0
+                    for (x in e.pcm) {
+                        while (vPhase < 1.0) { vOut[n++] = (vPrev + (x - vPrev) * vPhase.toFloat()).coerceIn(-1f, 1f); vPhase += 8_000.0 / 25_000.0 }
+                        vPhase -= 1.0
+                        vPrev = x
+                    }
+                    audio?.write(vOut, 0, n, AudioTrack.WRITE_NON_BLOCKING)
+                }
+                return@Pmr446Receiver
+            }
             val now = System.currentTimeMillis()
             val call: PmrCall? = when (e) {
                 is PmrEvent.Dmr -> when (val b = e.burst) {
@@ -101,6 +119,7 @@ class PmrController(repo: SdrRepository, scope: CoroutineScope, onAcquire: () ->
                 is PmrEvent.DmrVoice -> null
                 is PmrEvent.DpmrHeader -> PmrCall(now, e.hz, false, e.cc, e.header.callType != 0, e.header.own, e.header.called, 0, e.header.emergency, false, false)
                 is PmrEvent.DpmrEnd -> PmrCall(now, e.hz, false, null, true, e.own, null, 0, false, false, true)
+                is PmrEvent.Voice -> null
             }
             val ch = chOf(e.hz)
             kind[ch] = if (e is PmrEvent.Dmr || e is PmrEvent.DmrVoice) "DMR" else "dPMR"
@@ -114,8 +133,6 @@ class PmrController(repo: SdrRepository, scope: CoroutineScope, onAcquire: () ->
                 }
             }
         }
-        var audio: AudioTrack? = null
-        var audioCh: Int? = null
         var hp = 0f
         var hpIn = 0f
         var lp = 0f

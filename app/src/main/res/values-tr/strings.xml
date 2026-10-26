@@ -2324,7 +2324,7 @@
     <string name="pmr_heard">"%1$d kanal duyuldu · %2$d sayısal çağrı · 446,0–446,2 MHz"</string>
     <string name="pmr_listening">"16 kanal izleniyor"</string>
     <string name="pmr_listening_to">"Kanal %1$d dinleniyor"</string>
-    <string name="pmr_tap_to_listen">"Dinlemek için analog bir kanala dokunun"</string>
+    <string name="pmr_tap_to_listen">"Dinlemek için bir kanala dokunun: FM veya çözülmüş DMR / dPMR sesi"</string>
     <string name="pmr_how_it_works">"PMR446 lisanssız telsiz bandıdır: 446,00625 MHz\'ten başlayan 16 analog FM kanalı ve üst yarıda sayısal telsizler (aynı merkezlerde DMR446, 6,25 kHz kanallarda dPMR446). Bant yalnızca 200 kHz genişliğinde olduğundan tüm kanallar aynı anda izlenir ve etkin olan demodüle edilir: CTCSS tonu ölçülür, sayısal telsizlerde ise OnAir\'in koduyla okunan çağrı sinyalleşmesi (renk kodu, grup ya da özel çağrı, iki telsizin kimliği) listelenir. Sayısal ses çözülmez. Analog ses dinlenebilir; duyduklarınız yalnızca size aittir: çoğu ülkede bunları yaymak veya kullanmak yasaktır. Yalnızca alım."</string>
     <string name="pmr_end_of_call">"çağrı sonu"</string>
     <string name="pmr_group_call">"grup çağrısı %1$s"</string>

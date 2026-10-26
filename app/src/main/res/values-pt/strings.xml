@@ -2324,7 +2324,7 @@
     <string name="pmr_heard">"%1$d canais ouvidos · %2$d chamadas digitais · 446,0–446,2 MHz"</string>
     <string name="pmr_listening">"A vigiar os 16 canais"</string>
     <string name="pmr_listening_to">"A ouvir o canal %1$d"</string>
-    <string name="pmr_tap_to_listen">"Toque num canal analógico para o ouvir"</string>
+    <string name="pmr_tap_to_listen">"Toque num canal para o ouvir: FM ou voz DMR / dPMR descodificada"</string>
     <string name="pmr_how_it_works">"PMR446 é a banda dos walkie-talkies sem licença: 16 canais FM analógicos a partir de 446,00625 MHz e rádios digitais na metade superior (DMR446 nos mesmos centros, dPMR446 em canais de 6,25 kHz). A banda tem só 200 kHz, por isso todos os canais são vigiados ao mesmo tempo e um ativo é desmodulado: o seu tom CTCSS é medido e, nos rádios digitais, é listada a sinalização de chamada que o código do OnAir lê (código de cor, chamada de grupo ou privada, ids dos dois rádios). A voz digital não é descodificada. A voz analógica pode ser ouvida; o que ouve é só para si: na maioria dos países é proibido divulgá-lo ou usá-lo. Só receção."</string>
     <string name="pmr_end_of_call">"fim de chamada"</string>
     <string name="pmr_group_call">"chamada de grupo %1$s"</string>

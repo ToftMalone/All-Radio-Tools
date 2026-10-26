@@ -2324,7 +2324,7 @@
     <string name="pmr_heard">"%1$d Kanäle gehört · %2$d digitale Rufe · 446,0–446,2 MHz"</string>
     <string name="pmr_listening">"Alle 16 Kanäle werden überwacht"</string>
     <string name="pmr_listening_to">"Kanal %1$d wird gehört"</string>
-    <string name="pmr_tap_to_listen">"Tippen Sie auf einen analogen Kanal, um ihn zu hören"</string>
+    <string name="pmr_tap_to_listen">"Tippen Sie auf einen Kanal, um ihn zu hören: FM oder dekodierte DMR-/dPMR-Sprache"</string>
     <string name="pmr_how_it_works">"PMR446 ist das lizenzfreie Funkgeräteband: 16 analoge FM-Kanäle ab 446,00625 MHz und digitale Geräte in der oberen Hälfte (DMR446 auf denselben Mittenfrequenzen, dPMR446 auf 6,25-kHz-Kanälen). Das Band ist nur 200 kHz breit, daher werden alle Kanäle gleichzeitig überwacht und ein aktiver demoduliert: Sein CTCSS-Ton wird gemessen, und bei digitalen Geräten wird die Rufsignalisierung aufgelistet, die der Code von OnAir liest (Farbcode, Gruppen- oder Einzelruf, IDs beider Geräte). Digitale Sprache wird nicht dekodiert. Analoge Sprache kann gehört werden; was Sie hören, ist nur für Sie: In den meisten Ländern ist es verboten, es weiterzugeben oder zu verwenden. Nur Empfang."</string>
     <string name="pmr_end_of_call">"Rufende"</string>
     <string name="pmr_group_call">"Gruppenruf %1$s"</string>

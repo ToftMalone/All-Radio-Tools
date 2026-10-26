@@ -38,8 +38,27 @@ class FourFskSync(
     private val before: Int,
     private val after: IntArray,
     private val threshold: Float = 0.86f,
-    private val onFrame: (sync: Int, symbols: FloatArray) -> Unit,
+    private val onFrame: (FourFskSync.Frame) -> Unit,
 ) {
+    /** A frame read: its sync (or the tag of a scheduled read), symbols normalised to ±1/±3, where symbol 0 lies, levels. */
+    class Frame(val sync: Int, val symbols: FloatArray, val first: Double, val a: Double, val b: Double)
+
+    private class Read(val tag: Int, var first: Double, val n: Int, var a: Double, var b: Double, val refine: IntArray?)
+    private val reads = ArrayList<Read>()
+    /** Called with each scheduled read once its samples are in. */
+    var onRead: ((Frame) -> Unit)? = null
+
+    /**
+     * Reads [n] symbols from sample [first] with the levels [a], [b] once they have arrived. With [refine], the symbols
+     * the read opens with are known: the timing is moved by up to a symbol and a half to fit them best, and the levels
+     * fitted on them, so long calls do not drift off the symbol clock.
+     */
+    fun schedule(tag: Int, first: Double, n: Int, a: Double, b: Double, refine: IntArray? = null) { reads += Read(tag, first, n, a, b, refine) }
+
+    fun cancelReads() = reads.clear()
+
+    val samplesPerSymbol get() = sps
+
     private val sps = rate / symRate
     private val len = syncs.first().size.also { l -> require(syncs.all { it.size == l }) }
     private val xs = DoubleArray(len)
@@ -96,7 +115,36 @@ class FourFskSync(
             val total = before + l + after[s]
             val first = at0 - (l - 1 + before) * sps
             if (first < n - RING + 4) continue
-            onFrame(s, FloatArray(total) { k -> ((at(first + k * sps) - ab.second) / ab.first).toFloat() })
+            onFrame(Frame(s, FloatArray(total) { k -> ((at(first + k * sps) - ab.second) / ab.first).toFloat() }, first, ab.first, ab.second))
+        }
+        if (reads.isNotEmpty()) runReads()
+    }
+
+    private fun runReads() {
+        if (reads.none { n - 1 >= it.first + (it.n + 3) * sps }) return
+        val due = reads.filter { n - 1 >= it.first + (it.n + 3) * sps }
+        reads.removeAll(due)
+        for (r in due) {
+            if (r.first < n - RING + 4 * sps) continue
+            val tpl = r.refine
+            if (tpl != null) {
+                var best = Double.NEGATIVE_INFINITY
+                var bestOff = 0.0
+                var off = -1.5 * sps
+                while (off <= 1.5 * sps) {
+                    var c = 0.0
+                    for (k in tpl.indices) c += (at(r.first + off + k * sps) - r.b) * tpl[k]
+                    if (c > best) { best = c; bestOff = off }
+                    off += 1.0
+                }
+                r.first += bestOff
+                var sx = 0.0; var sy = 0.0; var sxx = 0.0; var sxy = 0.0
+                val l = tpl.size
+                for (k in 0 until l) { val y = at(r.first + k * sps).toDouble(); val x = tpl[k].toDouble(); sx += x; sy += y; sxx += x * x; sxy += x * y }
+                val a = (l * sxy - sx * sy) / (l * sxx - sx * sx)
+                if (a > 0.5 * r.a && a < 2 * r.a) { r.a = a; r.b = (sy - a * sx) / l }
+            }
+            onRead?.invoke(Frame(r.tag, FloatArray(r.n) { k -> ((at(r.first + k * sps) - r.b) / r.a).toFloat() }, r.first, r.a, r.b))
         }
     }
 
@@ -120,6 +168,8 @@ sealed class PmrEvent(val hz: Long) {
     class DmrVoice(hz: Long, val slot: Int) : PmrEvent(hz)
     class DpmrHeader(hz: Long, val cc: Int, val header: Dpmr.Header) : PmrEvent(hz)
     class DpmrEnd(hz: Long, val own: Int) : PmrEvent(hz)
+    /** Digital voice decoded: 160 samples at 8 kHz per 20 ms; [slot] 0 for dPMR. */
+    class Voice(hz: Long, val slot: Int, val pcm: FloatArray) : PmrEvent(hz)
 }
 
 /**
@@ -141,8 +191,18 @@ class PmrChannel(val hz: Long, private val offHz: Double, narrow: Boolean, priva
     private val bi = FloatArray(2048)
     private var lr = 1f
     private var li = 0f
-    private val dmr = FourFskSync(50_000.0, 4800.0, Dmr.SYNC.indices.map { Dmr.syncSymbols(it) }, 54, IntArray(9) { 54 }) { s, sym -> dmrFrame(s, sym) }
-    private val dpmr = FourFskSync(50_000.0, 2400.0, listOf(Dpmr.FS1, Dpmr.FS3, Dpmr.FS4), 0, intArrayOf(132, 36, 132)) { s, sym -> dpmrFrame(s, sym) }
+    private val dmr = FourFskSync(50_000.0, 4800.0, Dmr.SYNC.indices.map { Dmr.syncSymbols(it) }, 54, IntArray(9) { 54 }) { dmrFrame(it) }.also { s -> s.onRead = { dmrVoiceBurst(it) } }
+    private val dpmr = FourFskSync(50_000.0, 2400.0, listOf(Dpmr.FS1, Dpmr.FS3, Dpmr.FS4), 0, intArrayOf(132, 36, 132)) { dpmrFrame(it) }.also { s -> s.onRead = { dpmrPayload(it) } }
+    // AMBE+2 decoders: one per DMR time slot (0 when the slot is not known), one for dPMR.
+    private val ambe = Array(3) { AmbeDecoder() }
+    private val ambeDpmr = AmbeDecoder()
+    /** Voice is played unless the call says it is encrypted (DMR privacy bit). */
+    private val privacy = BooleanArray(3)
+    private var dpmrCc = 0
+    private var dpmrBad = 0
+    /** Sample count up to which this channel carries digital signalling: its FM audio is then noise, not voice. */
+    private var digitalUntil = 0L
+    private var nOut = 0L
     // CTCSS: the discriminator averaged to 1 kS/s, kept for two seconds.
     private val low = FloatArray(2000)
     private var lowN = 0
@@ -177,11 +237,12 @@ class PmrChannel(val hz: Long, private val offHz: Double, narrow: Boolean, priva
                 val zi = yi * lr - yr * li
                 lr = yr; li = yi
                 val hz = (kotlin.math.atan2(zi, zr) * 50_000.0 / (2 * PI)).toFloat()
+                nOut++
                 dmr.push(hz)
                 dpmr.push(hz)
                 lowAcc += hz; lowCnt++
                 if (lowCnt == 50) { low[lowN % low.size] = lowAcc / 50; lowN++; lowAcc = 0f; lowCnt = 0 }
-                if (audio != null && i % 2 == 1) { aud[na++] = hz; if (na == aud.size) { audio?.invoke(aud, na); na = 0 } }
+                if (audio != null && i % 2 == 1 && nOut > digitalUntil) { aud[na++] = hz; if (na == aud.size) { audio?.invoke(aud, na); na = 0 } }
             }
             if (na > 0) audio?.invoke(aud, na)
             off += m
@@ -215,23 +276,93 @@ class PmrChannel(val hz: Long, private val offHz: Double, narrow: Boolean, priva
 
     fun resetTone() { lowN = 0 }
 
-    private fun dmrFrame(s: Int, sym: FloatArray) {
-        val bits = IntArray(264)
-        for (k in 0 until 132) { val d = Dmr.symbolToDibit(FourFskSync.hard(sym[k])); bits[2 * k] = d shr 1; bits[2 * k + 1] = d and 1 }
-        if (Dmr.syncIsVoice(s)) { onEvent(PmrEvent.DmrVoice(hz, Dmr.syncSlot(s))); return }
-        Dmr.readData(bits)?.let { onEvent(PmrEvent.Dmr(hz, it, Dmr.syncSlot(s))) }
+    private fun dibits(sym: FloatArray, from: Int, nSym: Int, out: IntArray = IntArray(2 * nSym), at: Int = 0): IntArray {
+        for (k in 0 until nSym) { val d = Dmr.symbolToDibit(FourFskSync.hard(sym[from + k])); out[at + 2 * k] = d shr 1; out[at + 2 * k + 1] = d and 1 }
+        return out
     }
 
-    private fun dpmrFrame(s: Int, sym: FloatArray) {
-        fun airBits(from: Int, nSym: Int) = IntArray(2 * nSym).also { b -> for (k in 0 until nSym) { val d = Dmr.symbolToDibit(FourFskSync.hard(sym[from + k])); b[2 * k] = d shr 1; b[2 * k + 1] = d and 1 } }
-        when (s) {
+    private fun dmrFrame(f: FourFskSync.Frame) {
+        val s = f.sync
+        val bits = dibits(f.symbols, 0, 132)
+        digitalUntil = nOut + 50_000
+        val slot = Dmr.syncSlot(s)
+        if (Dmr.syncIsVoice(s)) {
+            onEvent(PmrEvent.DmrVoice(hz, slot))
+            // Burst A of a superframe: B to F follow on the same slot every 60 ms (288 symbols), with embedded
+            // signalling where the sync was; they are read with A's timing and levels.
+            dmr.cancelReads()
+            for (k in 1..5) dmr.schedule(slot, f.first + 288 * k * dmr.samplesPerSymbol, 132, f.a, f.b)
+            dmrVoice(slot, bits)
+            return
+        }
+        Dmr.readData(bits)?.let { b ->
+            when (b) {
+                is Dmr.Burst.Header -> privacy[slot] = b.lc.privacy
+                is Dmr.Burst.Terminator -> { privacy[slot] = false; dmr.cancelReads() }
+                else -> {}
+            }
+            onEvent(PmrEvent.Dmr(hz, b, slot))
+        }
+    }
+
+    private fun dmrVoiceBurst(f: FourFskSync.Frame) {
+        digitalUntil = nOut + 50_000
+        dmrVoice(f.sync, dibits(f.symbols, 0, 132))
+    }
+
+    /** The three AMBE+2 frames of a voice burst: its 216 voice bits around the centre field. */
+    private fun dmrVoice(slot: Int, burst: IntArray) {
+        if (privacy[slot]) return
+        val vs = IntArray(216)
+        burst.copyInto(vs, 0, 0, 108)
+        burst.copyInto(vs, 108, 156, 264)
+        for (k in 0 until 3) {
+            val pcm = FloatArray(160)
+            ambe[slot].decode(vs, 72 * k, pcm)
+            onEvent(PmrEvent.Voice(hz, slot, pcm))
+        }
+    }
+
+    private fun dpmrFrame(f: FourFskSync.Frame) {
+        val sym = f.symbols
+        digitalUntil = nOut + 50_000
+        when (f.sync) {
             0, 2 -> {
                 // HI0 then the colour code then HI1, the same header twice: either copy may do.
-                val h = Dpmr.blockDecode(airBits(24, 60), 10)?.let(Dpmr::headerParse) ?: Dpmr.blockDecode(airBits(96, 60), 10)?.let(Dpmr::headerParse) ?: return
-                onEvent(PmrEvent.DpmrHeader(hz, Dpmr.ccDecode(sym, 84), h))
+                val h = Dpmr.blockDecode(dibits(sym, 24, 60), 10)?.let(Dpmr::headerParse) ?: Dpmr.blockDecode(dibits(sym, 96, 60), 10)?.let(Dpmr::headerParse) ?: return
+                dpmrCc = Dpmr.ccDecode(sym, 84)
+                onEvent(PmrEvent.DpmrHeader(hz, dpmrCc, h))
+                // Payload frames follow back to back, 192 symbols each, from the end of the header.
+                if (h.commMode <= 1 || h.commMode == 5) {
+                    dpmrBad = 0
+                    dpmr.cancelReads()
+                    dpmr.schedule(0, f.first + 156 * dpmr.samplesPerSymbol, 192, f.a, f.b, Dpmr.FS2)
+                }
             }
-            1 -> Dpmr.blockDecode(airBits(24, 36), 6)?.let(Dpmr::endParse)?.let { onEvent(PmrEvent.DpmrEnd(hz, it)) }
+            1 -> {
+                dpmr.cancelReads()
+                Dpmr.blockDecode(dibits(sym, 24, 36), 6)?.let(Dpmr::endParse)?.let { onEvent(PmrEvent.DpmrEnd(hz, it)) }
+            }
         }
+    }
+
+    /** One payload frame ([f].sync is its number in the superframe): control channel, then four voice frames. */
+    private fun dpmrPayload(f: FourFskSync.Frame) {
+        val sym = f.symbols
+        val cchOk = Dpmr.blockDecode(dibits(sym, 12, 36), 6)?.let { Dpmr.cchCrcOk(it) } == true
+        dpmrBad = if (cchOk) 0 else dpmrBad + 1
+        if (dpmrBad >= 3) return // the call has ended (or is lost): no more frames
+        digitalUntil = nOut + 50_000
+        val tch = dibits(sym, 48, 144)
+        val pn = Dpmr.pn9(288)
+        for (i in 0 until 288) tch[i] = tch[i] xor pn[i]
+        for (k in 0 until 4) {
+            val pcm = FloatArray(160)
+            ambeDpmr.decode(tch, 72 * k, pcm)
+            onEvent(PmrEvent.Voice(hz, 0, pcm))
+        }
+        val next = (f.sync + 1) % 4
+        dpmr.schedule(next, f.first + 192 * dpmr.samplesPerSymbol, 192, f.a, f.b, if (next % 2 == 0) Dpmr.FS2 else Dpmr.ccSymbols(dpmrCc))
     }
 }
 

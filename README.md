@@ -90,7 +90,7 @@ The home screen offers five networks. Each one has its dashboard, its main tool 
 | ISM sensors | Weather stations, thermometers, energy monitors, door sensors, remotes on 433, 868, 315, 345 and 915 MHz (about 30 families) |
 | LoRaWAN / Sigfox | Connected objects on 868 MHz: LoRaWAN headers (device address, network, counter) on SF7 to SF12, Sigfox uplinks |
 | Meteor-M | Weather satellite LRPT images on 137 MHz |
-| PMR446 | The 16 walkie-talkie channels at once: activity, CTCSS tone, listening to analogue channels, DMR446 and dPMR446 call ids |
+| PMR446 | The 16 walkie-talkie channels at once: activity, CTCSS tone, listening to analogue channels and to DMR446 / dPMR446 voice (AMBE+2 decoded), their call ids |
 | POCSAG | Pager messages (e*Message France and Germany, BOS, DAPNET or any frequency): every channel of a network at once, 512, 1200 and 2400 bit/s, BCH error correction |
 | Radiosondes | Vaisala RS41, Meteomodem M10 / M20 and Horus amateur balloons around 403 and 434 MHz, with landing prediction |
 | TPMS | Tyre pressure sensors of nearby cars on 433.92 MHz (or 315 MHz): pressure, temperature, battery, for Renault, PSA, Toyota, Ford, Hyundai/Kia, BMW/Audi, Porsche and more |
@@ -176,5 +176,6 @@ All Radio Tools is free software released under the [GNU General Public License 
 - [rtl_433](https://github.com/merbanan/rtl_433) for the tyre pressure and ISM sensor formats.
 - [OnAir](https://github.com/adswill/OnAir) (GPL-3.0), whose decoders were ported for ISM sensors, FLARM, Wireless M-Bus, DSC, VDL Mode 2, DECT, DMR / dPMR, Sigfox, Horus, Mode A/C and CubeSat telemetry.
 - [gr-lora_sdr](https://github.com/tapparelj/gr-lora_sdr) (EPFL) for the LoRa receiver.
+- [mbelib](https://github.com/szechyjs/mbelib) (ISC) for the AMBE+2 voice decoder. AMBE+2 is covered by patents in some countries: the code is provided for research and education.
 - Google [GNSS Measurement Tools](https://github.com/google/gps-measurement-tools) for the pseudorange computation.
 - Roboto Flex, Google Sans Flex and Material Symbols for the interface.

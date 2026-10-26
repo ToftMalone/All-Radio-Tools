@@ -2266,7 +2266,7 @@
     <string name="pmr_heard">"受信したチャンネル %1$d · デジタル通話 %2$d · 446.0–446.2 MHz"</string>
     <string name="pmr_listening">"16 チャンネルを監視中"</string>
     <string name="pmr_listening_to">"チャンネル %1$d を聴取中"</string>
-    <string name="pmr_tap_to_listen">"アナログチャンネルをタップすると聴けます"</string>
+    <string name="pmr_tap_to_listen">"チャンネルをタップして聴く：FM、またはデコードした DMR / dPMR 音声"</string>
     <string name="pmr_how_it_works">"PMR446 は免許不要のトランシーバー帯域です。446.00625 MHz からの 16 のアナログ FM チャンネルと、上半分のデジタル機(同じ中心周波数の DMR446、6.25 kHz チャンネルの dPMR446)があります。帯域は 200 kHz しかないため全チャンネルを同時に監視し、使用中のものを復調します。CTCSS トーンを測定し、デジタル機では OnAir のコードが読む通話信号(カラーコード、グループ/個別通話、双方の ID)を表示します。デジタル音声は解読しません。アナログ音声は聴けますが、聞いた内容はあなただけのものです。多くの国で漏洩や利用は禁止されています。受信のみ。"</string>
     <string name="pmr_end_of_call">"通話終了"</string>
     <string name="pmr_group_call">"グループ通話 %1$s"</string>
