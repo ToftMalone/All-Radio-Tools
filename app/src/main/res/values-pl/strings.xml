@@ -2417,4 +2417,22 @@
     <string name="vdl2_atn">"Pakiet ATN (X.25)"</string>
     <string name="vdl2_airports">"lotniska %1$s"</string>
     <string name="vdl2_destination">"cel %1$s"</string>
+    <string name="dect_subtitle">"Stacje bazowe telefonów bezprzewodowych"</string>
+    <string name="dect_heard">"Nośna %1$d · %2$s MHz · serie słuchawek: %3$d"</string>
+    <string name="dect_scanning">"Skanowanie nośnych"</string>
+    <string name="dect_none_yet">"Brak stacji bazowych"</string>
+    <string name="dect_none_yet_body">"Każda baza DECT nadaje swoją tożsamość nawet bez trwającej rozmowy, więc telefony sąsiadów pojawiają się w pełnym skanie (ok. 10–40 s). Ściany mocno tłumią 1,9 GHz: spróbuj przy oknie. Niektóre bazy w trybie eko milczą bez rozmowy."</string>
+    <string name="dect_how_it_works">"DECT łączy telefony bezprzewodowe z ich bazą na 1880–1900 MHz w Europie (1920–1930 MHz w Ameryce Północnej, DECT 6.0). Każda baza nadaje jawnie swoją tożsamość (RFPI) i informacje systemowe w jednej szczelinie ramki; tylko to odczytuje aplikacja, kodem OnAir: pole A każdej serii, sprawdzone przez CRC. Głos nigdy nie jest dekodowany i w większości telefonów jest szyfrowany. Nośne są skanowane po kolei: baza pojawia się na nośnych, na których była słyszana. Tylko odbiór."</string>
+    <string name="dect_identity_a">"Klasa A · producent %1$s · jednostka %2$s"</string>
+    <string name="dect_identity">"Klasa %1$s"</string>
+    <string name="dect_carriers">"nośne %1$s"</string>
+    <string name="dect_slots">"szczeliny %1$s"</string>
+    <string name="dect_band_eu">"Europa 1880–1900 MHz"</string>
+    <string name="dect_band_us">"Ameryka Północna 1920–1930 MHz"</string>
+    <plurals name="p_bases">
+        <item quantity="one">"baza"</item>
+        <item quantity="few">"bazy"</item>
+        <item quantity="many">"baz"</item>
+        <item quantity="other">"bazy"</item>
+    </plurals>
 </resources>

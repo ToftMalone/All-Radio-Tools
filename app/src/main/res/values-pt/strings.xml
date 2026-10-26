@@ -2303,4 +2303,20 @@
     <string name="vdl2_atn">"Pacote ATN (X.25)"</string>
     <string name="vdl2_airports">"aeroportos %1$s"</string>
     <string name="vdl2_destination">"destino %1$s"</string>
+    <string name="dect_subtitle">"Bases de telefones sem fios"</string>
+    <string name="dect_heard">"Portadora %1$d · %2$s MHz · %3$d rajadas de terminais"</string>
+    <string name="dect_scanning">"A varrer as portadoras"</string>
+    <string name="dect_none_yet">"Ainda sem bases"</string>
+    <string name="dect_none_yet_body">"Cada base DECT envia a sua identidade mesmo sem chamada em curso, por isso os telefones dos vizinhos aparecem num varrimento completo (cerca de 10 a 40 s). As paredes atenuam muito os 1,9 GHz: experimente junto a uma janela. Algumas bases em modo eco ficam caladas sem chamada."</string>
+    <string name="dect_how_it_works">"O DECT liga os telefones sem fios à sua base em 1880–1900 MHz na Europa (1920–1930 MHz na América do Norte, DECT 6.0). Cada base difunde em claro a sua identidade (RFPI) e informações de sistema num intervalo da sua trama; é tudo o que a app lê, com o código do OnAir: o campo A de cada rajada, verificado pelo CRC. A voz nunca é descodificada e é cifrada na maioria dos telefones. As portadoras são varridas à vez: uma base aparece nas portadoras em que foi ouvida. Só receção."</string>
+    <string name="dect_identity_a">"Classe A · fabricante %1$s · unidade %2$s"</string>
+    <string name="dect_identity">"Classe %1$s"</string>
+    <string name="dect_carriers">"portadoras %1$s"</string>
+    <string name="dect_slots">"intervalos %1$s"</string>
+    <string name="dect_band_eu">"Europa 1880–1900 MHz"</string>
+    <string name="dect_band_us">"América do Norte 1920–1930 MHz"</string>
+    <plurals name="p_bases">
+        <item quantity="one">"base"</item>
+        <item quantity="other">"bases"</item>
+    </plurals>
 </resources>

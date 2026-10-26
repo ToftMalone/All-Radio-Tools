@@ -2531,4 +2531,24 @@
     <string name="vdl2_atn">"حزمة ATN (X.25)"</string>
     <string name="vdl2_airports">"المطارات %1$s"</string>
     <string name="vdl2_destination">"الوجهة %1$s"</string>
+    <string name="dect_subtitle">"قواعد الهواتف اللاسلكية"</string>
+    <string name="dect_heard">"الحامل %1$d · %2$s ميغاهرتز · %3$d دفقة من السماعات"</string>
+    <string name="dect_scanning">"مسح الحوامل"</string>
+    <string name="dect_none_yet">"لا قواعد بعد"</string>
+    <string name="dect_none_yet_body">"ترسل كل قاعدة DECT هويتها حتى دون مكالمة جارية، لذا تظهر هواتف الجيران خلال مسح كامل (نحو 10 إلى 40 ثانية). تُضعف الجدران تردد 1.9 غيغاهرتز كثيرًا: جرّب قرب نافذة. تصمت بعض القواعد في الوضع الاقتصادي دون مكالمة."</string>
+    <string name="dect_how_it_works">"تربط DECT الهواتف اللاسلكية بقاعدتها على 1880–1900 ميغاهرتز في أوروبا (1920–1930 ميغاهرتز في أمريكا الشمالية، DECT 6.0). تبث كل قاعدة هويتها (RFPI) ومعلومات النظام دون تشفير في فتحة واحدة من إطارها؛ وهذا كل ما يقرؤه التطبيق بشيفرة OnAir: الحقل A لكل دفقة مع التحقق بـ CRC. لا يُفك الصوت أبدًا وهو مشفر في معظم الهواتف. تُمسح الحوامل بالتناوب، فتظهر القاعدة على الحوامل التي سُمعت عليها. استقبال فقط."</string>
+    <string name="dect_identity_a">"الفئة A · الصانع %1$s · الوحدة %2$s"</string>
+    <string name="dect_identity">"الفئة %1$s"</string>
+    <string name="dect_carriers">"الحوامل %1$s"</string>
+    <string name="dect_slots">"الفتحات %1$s"</string>
+    <string name="dect_band_eu">"أوروبا 1880–1900 ميغاهرتز"</string>
+    <string name="dect_band_us">"أمريكا الشمالية 1920–1930 ميغاهرتز"</string>
+    <plurals name="p_bases">
+        <item quantity="zero">"قاعدة"</item>
+        <item quantity="one">"قاعدة"</item>
+        <item quantity="two">"قاعدتان"</item>
+        <item quantity="few">"قواعد"</item>
+        <item quantity="many">"قاعدة"</item>
+        <item quantity="other">"قاعدة"</item>
+    </plurals>
 </resources>

@@ -2360,4 +2360,21 @@
     <string name="vdl2_atn">"Paquet ATN (X.25)"</string>
     <string name="vdl2_airports">"aéroports %1$s"</string>
     <string name="vdl2_destination">"destination %1$s"</string>
+    <string name="dect_subtitle">"Bases de téléphones sans fil"</string>
+    <string name="dect_heard">"Porteuse %1$d · %2$s MHz · %3$d salves de combinés"</string>
+    <string name="dect_scanning">"Balayage des porteuses"</string>
+    <string name="dect_none_yet">"Aucune base pour l\'instant"</string>
+    <string name="dect_none_yet_body">"Chaque base DECT envoie son identité même sans appel en cours : les téléphones des voisins apparaissent en un balayage complet (10 à 40 s environ). Les murs atténuent beaucoup le 1,9 GHz : essayez près d\'une fenêtre. Certaines bases en mode éco se taisent hors appel."</string>
+    <string name="dect_how_it_works">"Le DECT relie les téléphones sans fil à leur base sur 1880–1900 MHz en Europe (1920–1930 MHz en Amérique du Nord, DECT 6.0). Chaque base diffuse en clair son identité (RFPI) et ses informations système sur un intervalle de sa trame ; c\'est tout ce que lit l\'application, avec le code d\'OnAir : le champ A de chaque salve, vérifié par son CRC. La voix n\'est jamais décodée et elle est chiffrée sur la plupart des téléphones. Les porteuses sont balayées tour à tour : une base apparaît sur les porteuses où elle a été entendue. Réception seule."</string>
+    <string name="dect_identity_a">"Classe A · fabricant %1$s · unité %2$s"</string>
+    <string name="dect_identity">"Classe %1$s"</string>
+    <string name="dect_carriers">"porteuses %1$s"</string>
+    <string name="dect_slots">"intervalles %1$s"</string>
+    <string name="dect_band_eu">"Europe 1880–1900 MHz"</string>
+    <string name="dect_band_us">"Amérique du Nord 1920–1930 MHz"</string>
+    <plurals name="p_bases">
+        <item quantity="one">"base"</item>
+        <item quantity="other">"bases"</item>
+        <item quantity="many">"bases"</item>
+    </plurals>
 </resources>

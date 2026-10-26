@@ -2360,4 +2360,21 @@
     <string name="vdl2_atn">"Pachet ATN (X.25)"</string>
     <string name="vdl2_airports">"aeroporturi %1$s"</string>
     <string name="vdl2_destination">"destinație %1$s"</string>
+    <string name="dect_subtitle">"Baze de telefoane fără fir"</string>
+    <string name="dect_heard">"Purtătoare %1$d · %2$s MHz · %3$d rafale de receptoare"</string>
+    <string name="dect_scanning">"Scanare a purtătoarelor"</string>
+    <string name="dect_none_yet">"Încă nicio bază"</string>
+    <string name="dect_none_yet_body">"Fiecare bază DECT își trimite identitatea chiar și fără apel în curs, așa că telefoanele vecinilor apar într-o scanare completă (circa 10–40 s). Pereții atenuează mult 1,9 GHz: încercați lângă o fereastră. Unele baze în modul eco tac fără apel."</string>
+    <string name="dect_how_it_works">"DECT leagă telefoanele fără fir de baza lor pe 1880–1900 MHz în Europa (1920–1930 MHz în America de Nord, DECT 6.0). Fiecare bază își difuzează în clar identitatea (RFPI) și informațiile de sistem într-un interval al cadrului; doar atât citește aplicația, cu codul OnAir: câmpul A al fiecărei rafale, verificat prin CRC. Vocea nu este niciodată decodată și este criptată pe majoritatea telefoanelor. Purtătoarele sunt scanate pe rând: o bază apare pe purtătoarele pe care a fost auzită. Doar recepție."</string>
+    <string name="dect_identity_a">"Clasa A · producător %1$s · unitate %2$s"</string>
+    <string name="dect_identity">"Clasa %1$s"</string>
+    <string name="dect_carriers">"purtătoare %1$s"</string>
+    <string name="dect_slots">"intervale %1$s"</string>
+    <string name="dect_band_eu">"Europa 1880–1900 MHz"</string>
+    <string name="dect_band_us">"America de Nord 1920–1930 MHz"</string>
+    <plurals name="p_bases">
+        <item quantity="one">"bază"</item>
+        <item quantity="few">"baze"</item>
+        <item quantity="other">"de baze"</item>
+    </plurals>
 </resources>

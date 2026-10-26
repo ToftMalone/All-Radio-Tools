@@ -2246,4 +2246,19 @@
     <string name="vdl2_atn">"Gói ATN (X.25)"</string>
     <string name="vdl2_airports">"sân bay %1$s"</string>
     <string name="vdl2_destination">"điểm đến %1$s"</string>
+    <string name="dect_subtitle">"Đế điện thoại không dây"</string>
+    <string name="dect_heard">"Sóng mang %1$d · %2$s MHz · %3$d đợt từ tay con"</string>
+    <string name="dect_scanning">"Đang quét sóng mang"</string>
+    <string name="dect_none_yet">"Chưa có đế nào"</string>
+    <string name="dect_none_yet_body">"Mỗi đế DECT gửi danh tính ngay cả khi không có cuộc gọi, nên điện thoại nhà hàng xóm xuất hiện trong một lượt quét đầy đủ (khoảng 10–40 giây). Tường làm suy giảm 1,9 GHz nhiều: hãy thử gần cửa sổ. Một số đế ở chế độ tiết kiệm im lặng khi không gọi."</string>
+    <string name="dect_how_it_works">"DECT nối điện thoại không dây với đế ở 1880–1900 MHz tại châu Âu (1920–1930 MHz ở Bắc Mỹ, DECT 6.0). Mỗi đế phát công khai danh tính (RFPI) và thông tin hệ thống ở một khe của khung; đó là tất cả những gì ứng dụng đọc bằng mã của OnAir: trường A của mỗi đợt, kiểm tra bằng CRC. Giọng nói không bao giờ được giải mã và được mã hóa trên hầu hết điện thoại. Các sóng mang được quét lần lượt: đế hiện trên sóng mang mà nó được nghe thấy. Chỉ thu."</string>
+    <string name="dect_identity_a">"Lớp A · hãng %1$s · thiết bị %2$s"</string>
+    <string name="dect_identity">"Lớp %1$s"</string>
+    <string name="dect_carriers">"sóng mang %1$s"</string>
+    <string name="dect_slots">"khe %1$s"</string>
+    <string name="dect_band_eu">"Châu Âu 1880–1900 MHz"</string>
+    <string name="dect_band_us">"Bắc Mỹ 1920–1930 MHz"</string>
+    <plurals name="p_bases">
+        <item quantity="other">"đế"</item>
+    </plurals>
 </resources>

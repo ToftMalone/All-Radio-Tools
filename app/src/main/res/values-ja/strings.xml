@@ -2246,4 +2246,19 @@
     <string name="vdl2_atn">"ATN パケット (X.25)"</string>
     <string name="vdl2_airports">"空港 %1$s"</string>
     <string name="vdl2_destination">"目的地 %1$s"</string>
+    <string name="dect_subtitle">"コードレス電話の親機"</string>
+    <string name="dect_heard">"キャリア %1$d · %2$s MHz · 子機バースト %3$d"</string>
+    <string name="dect_scanning">"キャリアを走査中"</string>
+    <string name="dect_none_yet">"まだ親機はありません"</string>
+    <string name="dect_none_yet_body">"DECT 親機は通話中でなくても識別情報を送るため、近所の電話は 1 回の走査(約 10〜40 秒)で現れます。壁は 1.9 GHz を大きく減衰させるので、窓の近くで試してください。エコモードの親機は通話時以外は送信しないことがあります。"</string>
+    <string name="dect_how_it_works">"DECT はコードレス電話と親機をヨーロッパでは 1880〜1900 MHz(北米では 1920〜1930 MHz、DECT 6.0)で結びます。各親機はフレームの 1 スロットで識別情報(RFPI)とシステム情報を平文で送ります。アプリが OnAir のコードで読むのはそれだけで、各バーストの A フィールドを CRC で検査します。音声は解読せず、ほとんどの電話で暗号化されています。キャリアは順番に走査するため、親機は受信できたキャリアに表示されます。受信のみ。"</string>
+    <string name="dect_identity_a">"クラス A · メーカー %1$s · 機器 %2$s"</string>
+    <string name="dect_identity">"クラス %1$s"</string>
+    <string name="dect_carriers">"キャリア %1$s"</string>
+    <string name="dect_slots">"スロット %1$s"</string>
+    <string name="dect_band_eu">"ヨーロッパ 1880–1900 MHz"</string>
+    <string name="dect_band_us">"北米 1920–1930 MHz"</string>
+    <plurals name="p_bases">
+        <item quantity="other">"台の親機"</item>
+    </plurals>
 </resources>

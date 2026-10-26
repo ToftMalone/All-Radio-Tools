@@ -2246,4 +2246,19 @@
     <string name="vdl2_atn">"ATN 数据包 (X.25)"</string>
     <string name="vdl2_airports">"机场 %1$s"</string>
     <string name="vdl2_destination">"目的地 %1$s"</string>
+    <string name="dect_subtitle">"无绳电话基站"</string>
+    <string name="dect_heard">"载波 %1$d · %2$s MHz · 手机突发 %3$d"</string>
+    <string name="dect_scanning">"正在扫描载波"</string>
+    <string name="dect_none_yet">"暂无基站"</string>
+    <string name="dect_none_yet_body">"每个 DECT 基站即使没有通话也会发送身份，所以邻居的电话在一次完整扫描(约 10 到 40 秒)内就会出现。墙壁对 1.9 GHz 衰减很大：请靠近窗户。部分处于节能模式的基站在没有通话时不发射。"</string>
+    <string name="dect_how_it_works">"DECT 在欧洲以 1880–1900 MHz(北美为 1920–1930 MHz，DECT 6.0)连接无绳电话和基站。每个基站在帧的一个时隙中以明文广播其身份(RFPI)和系统信息；应用用 OnAir 的代码只读取这些：每个突发的 A 字段，并用 CRC 校验。语音从不解码，大多数电话的语音是加密的。载波依次扫描，所以基站显示在收到它的载波上。仅接收。"</string>
+    <string name="dect_identity_a">"A 类 · 厂商 %1$s · 设备 %2$s"</string>
+    <string name="dect_identity">"%1$s 类"</string>
+    <string name="dect_carriers">"载波 %1$s"</string>
+    <string name="dect_slots">"时隙 %1$s"</string>
+    <string name="dect_band_eu">"欧洲 1880–1900 MHz"</string>
+    <string name="dect_band_us">"北美 1920–1930 MHz"</string>
+    <plurals name="p_bases">
+        <item quantity="other">"个基站"</item>
+    </plurals>
 </resources>

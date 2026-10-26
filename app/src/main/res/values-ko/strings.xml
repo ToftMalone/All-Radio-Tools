@@ -2246,4 +2246,19 @@
     <string name="vdl2_atn">"ATN 패킷(X.25)"</string>
     <string name="vdl2_airports">"공항 %1$s"</string>
     <string name="vdl2_destination">"목적지 %1$s"</string>
+    <string name="dect_subtitle">"무선 전화기 베이스"</string>
+    <string name="dect_heard">"캐리어 %1$d · %2$s MHz · 핸드셋 버스트 %3$d"</string>
+    <string name="dect_scanning">"캐리어 스캔 중"</string>
+    <string name="dect_none_yet">"아직 베이스가 없습니다"</string>
+    <string name="dect_none_yet_body">"DECT 베이스는 통화 중이 아니어도 식별 정보를 보내므로 이웃의 전화기는 한 번의 전체 스캔(약 10~40초) 안에 나타납니다. 벽이 1.9GHz를 많이 감쇠하므로 창가에서 시도하세요. 에코 모드의 일부 베이스는 통화가 없으면 조용합니다."</string>
+    <string name="dect_how_it_works">"DECT는 무선 전화기를 유럽에서는 1880~1900MHz(북미 1920~1930MHz, DECT 6.0)로 베이스에 연결합니다. 각 베이스는 프레임의 한 슬롯에서 식별자(RFPI)와 시스템 정보를 평문으로 방송합니다. 앱이 OnAir의 코드로 읽는 것은 그뿐이며, 각 버스트의 A 필드를 CRC로 검사합니다. 음성은 해독하지 않으며 대부분의 전화기에서 암호화됩니다. 캐리어를 차례로 스캔하므로 베이스는 수신된 캐리어에 표시됩니다. 수신 전용."</string>
+    <string name="dect_identity_a">"클래스 A · 제조사 %1$s · 장치 %2$s"</string>
+    <string name="dect_identity">"클래스 %1$s"</string>
+    <string name="dect_carriers">"캐리어 %1$s"</string>
+    <string name="dect_slots">"슬롯 %1$s"</string>
+    <string name="dect_band_eu">"유럽 1880–1900MHz"</string>
+    <string name="dect_band_us">"북미 1920–1930MHz"</string>
+    <plurals name="p_bases">
+        <item quantity="other">"대의 베이스"</item>
+    </plurals>
 </resources>

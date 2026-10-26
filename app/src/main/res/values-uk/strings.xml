@@ -2417,4 +2417,22 @@
     <string name="vdl2_atn">"Пакет ATN (X.25)"</string>
     <string name="vdl2_airports">"аеропорти %1$s"</string>
     <string name="vdl2_destination">"пункт призначення %1$s"</string>
+    <string name="dect_subtitle">"Бази радіотелефонів"</string>
+    <string name="dect_heard">"Несуча %1$d · %2$s МГц · пакетів слухавок: %3$d"</string>
+    <string name="dect_scanning">"Сканування несучих"</string>
+    <string name="dect_none_yet">"Поки немає баз"</string>
+    <string name="dect_none_yet_body">"Кожна база DECT передає свою ідентичність навіть без розмови, тож телефони сусідів з\'являються за повний цикл сканування (близько 10–40 с). Стіни сильно послаблюють 1,9 ГГц: спробуйте біля вікна. Деякі бази в еко-режимі мовчать без розмови."</string>
+    <string name="dect_how_it_works">"DECT з\'єднує радіотелефони з базою на 1880–1900 МГц у Європі (1920–1930 МГц у Північній Америці, DECT 6.0). Кожна база відкрито передає свою ідентичність (RFPI) і системну інформацію в одному слоті кадру; лише це й читає застосунок кодом OnAir: поле A кожного пакета, перевірене CRC. Голос ніколи не декодується і на більшості телефонів зашифрований. Несучі скануються по черзі: база з\'являється на тих несучих, де її почули. Лише прийом."</string>
+    <string name="dect_identity_a">"Клас A · виробник %1$s · блок %2$s"</string>
+    <string name="dect_identity">"Клас %1$s"</string>
+    <string name="dect_carriers">"несучі %1$s"</string>
+    <string name="dect_slots">"слоти %1$s"</string>
+    <string name="dect_band_eu">"Європа 1880–1900 МГц"</string>
+    <string name="dect_band_us">"Північна Америка 1920–1930 МГц"</string>
+    <plurals name="p_bases">
+        <item quantity="one">"база"</item>
+        <item quantity="few">"бази"</item>
+        <item quantity="many">"баз"</item>
+        <item quantity="other">"бази"</item>
+    </plurals>
 </resources>

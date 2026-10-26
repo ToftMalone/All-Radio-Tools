@@ -2417,4 +2417,22 @@
     <string name="vdl2_atn">"Paket ATN (X.25)"</string>
     <string name="vdl2_airports">"letiště %1$s"</string>
     <string name="vdl2_destination">"cíl %1$s"</string>
+    <string name="dect_subtitle">"Základny bezdrátových telefonů"</string>
+    <string name="dect_heard">"Nosná %1$d · %2$s MHz · dávky sluchátek: %3$d"</string>
+    <string name="dect_scanning">"Prohledávání nosných"</string>
+    <string name="dect_none_yet">"Zatím žádná základna"</string>
+    <string name="dect_none_yet_body">"Každá základna DECT vysílá svou identitu i bez probíhajícího hovoru, takže telefony sousedů se objeví během úplného prohledání (asi 10–40 s). Zdi 1,9 GHz silně tlumí: zkuste u okna. Některé základny v režimu eko bez hovoru mlčí."</string>
+    <string name="dect_how_it_works">"DECT spojuje bezdrátové telefony s jejich základnou na 1880–1900 MHz v Evropě (1920–1930 MHz v Severní Americe, DECT 6.0). Každá základna vysílá nešifrovaně svou identitu (RFPI) a systémové informace v jednom slotu rámce; jen to aplikace čte, kódem OnAir: pole A každé dávky ověřené CRC. Hlas se nikdy nedekóduje a u většiny telefonů je šifrovaný. Nosné se prohledávají postupně: základna se objeví na nosných, kde byla zachycena. Pouze příjem."</string>
+    <string name="dect_identity_a">"Třída A · výrobce %1$s · jednotka %2$s"</string>
+    <string name="dect_identity">"Třída %1$s"</string>
+    <string name="dect_carriers">"nosné %1$s"</string>
+    <string name="dect_slots">"sloty %1$s"</string>
+    <string name="dect_band_eu">"Evropa 1880–1900 MHz"</string>
+    <string name="dect_band_us">"Severní Amerika 1920–1930 MHz"</string>
+    <plurals name="p_bases">
+        <item quantity="one">"základna"</item>
+        <item quantity="few">"základny"</item>
+        <item quantity="many">"základny"</item>
+        <item quantity="other">"základen"</item>
+    </plurals>
 </resources>

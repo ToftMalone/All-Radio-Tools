@@ -2303,4 +2303,20 @@
     <string name="vdl2_atn">"ATN पैकेट (X.25)"</string>
     <string name="vdl2_airports">"हवाई अड्डे %1$s"</string>
     <string name="vdl2_destination">"गंतव्य %1$s"</string>
+    <string name="dect_subtitle">"कॉर्डलेस फ़ोन बेस स्टेशन"</string>
+    <string name="dect_heard">"कैरियर %1$d · %2$s MHz · %3$d हैंडसेट बर्स्ट"</string>
+    <string name="dect_scanning">"कैरियर स्कैन हो रहे हैं"</string>
+    <string name="dect_none_yet">"अभी कोई बेस स्टेशन नहीं"</string>
+    <string name="dect_none_yet_body">"हर DECT बेस कॉल न चलने पर भी अपनी पहचान भेजता है, इसलिए पड़ोसियों के फ़ोन एक पूरे स्कैन (लगभग 10–40 सेकंड) में दिख जाते हैं। दीवारें 1.9 GHz को बहुत कमज़ोर करती हैं: खिड़की के पास आज़माएँ। इको मोड वाले कुछ बेस कॉल के बिना चुप रहते हैं।"</string>
+    <string name="dect_how_it_works">"DECT कॉर्डलेस फ़ोनों को यूरोप में 1880–1900 MHz (उत्तरी अमेरिका में 1920–1930 MHz, DECT 6.0) पर उनके बेस से जोड़ता है। हर बेस अपने फ़्रेम के एक स्लॉट में अपनी पहचान (RFPI) और सिस्टम जानकारी खुले में प्रसारित करता है; ऐप OnAir के कोड से बस यही पढ़ता है: हर बर्स्ट का A-फ़ील्ड, CRC से जाँचा गया। आवाज़ कभी डिकोड नहीं होती और ज़्यादातर फ़ोनों पर एन्क्रिप्टेड होती है। कैरियर बारी-बारी से स्कैन होते हैं, इसलिए बेस उन्हीं कैरियर पर दिखता है जिन पर वह सुना गया। केवल रिसीव।"</string>
+    <string name="dect_identity_a">"क्लास A · निर्माता %1$s · इकाई %2$s"</string>
+    <string name="dect_identity">"क्लास %1$s"</string>
+    <string name="dect_carriers">"कैरियर %1$s"</string>
+    <string name="dect_slots">"स्लॉट %1$s"</string>
+    <string name="dect_band_eu">"यूरोप 1880–1900 MHz"</string>
+    <string name="dect_band_us">"उत्तरी अमेरिका 1920–1930 MHz"</string>
+    <plurals name="p_bases">
+        <item quantity="one">"बेस स्टेशन"</item>
+        <item quantity="other">"बेस स्टेशन"</item>
+    </plurals>
 </resources>

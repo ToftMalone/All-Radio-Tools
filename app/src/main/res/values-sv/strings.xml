@@ -2303,4 +2303,20 @@
     <string name="vdl2_atn">"ATN-paket (X.25)"</string>
     <string name="vdl2_airports">"flygplatser %1$s"</string>
     <string name="vdl2_destination">"destination %1$s"</string>
+    <string name="dect_subtitle">"Basstationer för trådlösa telefoner"</string>
+    <string name="dect_heard">"Bärvåg %1$d · %2$s MHz · %3$d lurskurar"</string>
+    <string name="dect_scanning">"Söker igenom bärvågorna"</string>
+    <string name="dect_none_yet">"Ingen basstation ännu"</string>
+    <string name="dect_none_yet_body">"Varje DECT-bas sänder sin identitet även utan pågående samtal, så grannarnas telefoner syns inom en hel genomsökning (cirka 10–40 s). Väggar dämpar 1,9 GHz mycket: försök vid ett fönster. Vissa baser i eco-läge är tysta utan samtal."</string>
+    <string name="dect_how_it_works">"DECT kopplar trådlösa telefoner till sin bas på 1880–1900 MHz i Europa (1920–1930 MHz i Nordamerika, DECT 6.0). Varje bas sänder sin identitet (RFPI) och systeminformation i klartext i en tidlucka i sin ram; det är allt appen läser, med OnAirs kod: varje skurs A-fält, kontrollerat med CRC. Tal avkodas aldrig och är krypterat på de flesta telefoner. Bärvågorna söks igenom i tur och ordning: en bas visas på de bärvågor där den hörts. Endast mottagning."</string>
+    <string name="dect_identity_a">"Klass A · tillverkare %1$s · enhet %2$s"</string>
+    <string name="dect_identity">"Klass %1$s"</string>
+    <string name="dect_carriers">"bärvågor %1$s"</string>
+    <string name="dect_slots">"tidluckor %1$s"</string>
+    <string name="dect_band_eu">"Europa 1880–1900 MHz"</string>
+    <string name="dect_band_us">"Nordamerika 1920–1930 MHz"</string>
+    <plurals name="p_bases">
+        <item quantity="one">"basstation"</item>
+        <item quantity="other">"basstationer"</item>
+    </plurals>
 </resources>

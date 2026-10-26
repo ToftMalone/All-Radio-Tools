@@ -2303,4 +2303,20 @@
     <string name="vdl2_atn">"ATN-pakket (X.25)"</string>
     <string name="vdl2_airports">"luchthavens %1$s"</string>
     <string name="vdl2_destination">"bestemming %1$s"</string>
+    <string name="dect_subtitle">"Basisstations van draadloze telefoons"</string>
+    <string name="dect_heard">"Draaggolf %1$d · %2$s MHz · %3$d handsetbursts"</string>
+    <string name="dect_scanning">"Draaggolven worden gescand"</string>
+    <string name="dect_none_yet">"Nog geen basisstation"</string>
+    <string name="dect_none_yet_body">"Elk DECT-basisstation zendt zijn identiteit ook zonder gesprek, dus telefoons van de buren verschijnen binnen een volledige scan (ongeveer 10 tot 40 s). Muren dempen 1,9 GHz sterk: probeer bij een raam. Sommige basisstations in eco-modus zwijgen zonder gesprek."</string>
+    <string name="dect_how_it_works">"DECT verbindt draadloze telefoons met hun basis op 1880–1900 MHz in Europa (1920–1930 MHz in Noord-Amerika, DECT 6.0). Elke basis zendt onversleuteld zijn identiteit (RFPI) en systeeminformatie in één tijdslot van zijn frame; dat is alles wat de app leest, met de code van OnAir: het A-veld van elke burst, gecontroleerd met de CRC. Spraak wordt nooit gedecodeerd en is op de meeste telefoons versleuteld. De draaggolven worden om beurten gescand: een basis verschijnt op de draaggolven waarop hij werd gehoord. Alleen ontvangst."</string>
+    <string name="dect_identity_a">"Klasse A · fabrikant %1$s · eenheid %2$s"</string>
+    <string name="dect_identity">"Klasse %1$s"</string>
+    <string name="dect_carriers">"draaggolven %1$s"</string>
+    <string name="dect_slots">"tijdslots %1$s"</string>
+    <string name="dect_band_eu">"Europa 1880–1900 MHz"</string>
+    <string name="dect_band_us">"Noord-Amerika 1920–1930 MHz"</string>
+    <plurals name="p_bases">
+        <item quantity="one">"basisstation"</item>
+        <item quantity="other">"basisstations"</item>
+    </plurals>
 </resources>

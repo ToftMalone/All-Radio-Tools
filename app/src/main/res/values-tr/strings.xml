@@ -2303,4 +2303,20 @@
     <string name="vdl2_atn">"ATN paketi (X.25)"</string>
     <string name="vdl2_airports">"havalimanları %1$s"</string>
     <string name="vdl2_destination">"varış %1$s"</string>
+    <string name="dect_subtitle">"Telsiz telefon baz istasyonları"</string>
+    <string name="dect_heard">"Taşıyıcı %1$d · %2$s MHz · %3$d el cihazı patlaması"</string>
+    <string name="dect_scanning">"Taşıyıcılar taranıyor"</string>
+    <string name="dect_none_yet">"Henüz baz istasyonu yok"</string>
+    <string name="dect_none_yet_body">"Her DECT baz istasyonu görüşme yokken bile kimliğini gönderir, bu yüzden komşuların telefonları tam bir taramada (yaklaşık 10–40 sn) görünür. Duvarlar 1,9 GHz\'i çok zayıflatır: pencere yanında deneyin. Eko moddaki bazı baz istasyonları görüşme dışında sessiz kalır."</string>
+    <string name="dect_how_it_works">"DECT, telsiz telefonları Avrupa\'da 1880–1900 MHz\'te (Kuzey Amerika\'da 1920–1930 MHz, DECT 6.0) baz istasyonlarına bağlar. Her baz istasyonu kimliğini (RFPI) ve sistem bilgisini çerçevesinin bir zaman diliminde şifresiz yayınlar; uygulamanın OnAir\'in koduyla okuduğu yalnızca budur: her patlamanın CRC ile denetlenen A alanı. Ses asla çözülmez ve çoğu telefonda şifrelidir. Taşıyıcılar sırayla taranır: bir baz istasyonu duyulduğu taşıyıcılarda görünür. Yalnızca alım."</string>
+    <string name="dect_identity_a">"Sınıf A · üretici %1$s · birim %2$s"</string>
+    <string name="dect_identity">"Sınıf %1$s"</string>
+    <string name="dect_carriers">"taşıyıcılar %1$s"</string>
+    <string name="dect_slots">"zaman dilimleri %1$s"</string>
+    <string name="dect_band_eu">"Avrupa 1880–1900 MHz"</string>
+    <string name="dect_band_us">"Kuzey Amerika 1920–1930 MHz"</string>
+    <plurals name="p_bases">
+        <item quantity="one">"baz istasyonu"</item>
+        <item quantity="other">"baz istasyonu"</item>
+    </plurals>
 </resources>

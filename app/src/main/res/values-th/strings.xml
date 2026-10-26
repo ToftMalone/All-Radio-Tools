@@ -2246,4 +2246,19 @@
     <string name="vdl2_atn">"แพ็กเก็ต ATN (X.25)"</string>
     <string name="vdl2_airports">"สนามบิน %1$s"</string>
     <string name="vdl2_destination">"ปลายทาง %1$s"</string>
+    <string name="dect_subtitle">"ฐานโทรศัพท์ไร้สาย"</string>
+    <string name="dect_heard">"คลื่นพาห์ %1$d · %2$s MHz · ชุดสัญญาณจากเครื่องลูก %3$d"</string>
+    <string name="dect_scanning">"กำลังสแกนคลื่นพาห์"</string>
+    <string name="dect_none_yet">"ยังไม่มีฐาน"</string>
+    <string name="dect_none_yet_body">"ฐาน DECT ทุกเครื่องส่งตัวตนแม้ไม่มีการโทร โทรศัพท์ของเพื่อนบ้านจึงปรากฏภายในการสแกนครบหนึ่งรอบ (ราว 10–40 วินาที) ผนังลดทอน 1.9 GHz มาก ลองใกล้หน้าต่าง ฐานบางรุ่นในโหมดประหยัดจะเงียบเมื่อไม่มีการโทร"</string>
+    <string name="dect_how_it_works">"DECT เชื่อมโทรศัพท์ไร้สายกับฐานบน 1880–1900 MHz ในยุโรป (1920–1930 MHz ในอเมริกาเหนือ DECT 6.0) ฐานแต่ละเครื่องกระจายตัวตน (RFPI) และข้อมูลระบบแบบไม่เข้ารหัสในหนึ่งช่องเวลาของเฟรม แอปอ่านเพียงเท่านั้นด้วยโค้ดของ OnAir คือฟิลด์ A ของแต่ละชุดสัญญาณ ตรวจด้วย CRC เสียงพูดไม่ถูกถอดรหัสเลยและเข้ารหัสในโทรศัพท์ส่วนใหญ่ คลื่นพาห์ถูกสแกนทีละช่อง ฐานจึงแสดงบนคลื่นพาห์ที่ได้ยิน รับอย่างเดียว"</string>
+    <string name="dect_identity_a">"คลาส A · ผู้ผลิต %1$s · หน่วย %2$s"</string>
+    <string name="dect_identity">"คลาส %1$s"</string>
+    <string name="dect_carriers">"คลื่นพาห์ %1$s"</string>
+    <string name="dect_slots">"ช่องเวลา %1$s"</string>
+    <string name="dect_band_eu">"ยุโรป 1880–1900 MHz"</string>
+    <string name="dect_band_us">"อเมริกาเหนือ 1920–1930 MHz"</string>
+    <plurals name="p_bases">
+        <item quantity="other">"ฐาน"</item>
+    </plurals>
 </resources>

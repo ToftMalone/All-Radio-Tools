@@ -2303,4 +2303,20 @@
     <string name="vdl2_atn">"Pacchetto ATN (X.25)"</string>
     <string name="vdl2_airports">"aeroporti %1$s"</string>
     <string name="vdl2_destination">"destinazione %1$s"</string>
+    <string name="dect_subtitle">"Basi di telefoni cordless"</string>
+    <string name="dect_heard">"Portante %1$d · %2$s MHz · %3$d raffiche di portatili"</string>
+    <string name="dect_scanning">"Scansione delle portanti"</string>
+    <string name="dect_none_yet">"Nessuna base per ora"</string>
+    <string name="dect_none_yet_body">"Ogni base DECT invia la propria identità anche senza chiamate in corso, quindi i telefoni dei vicini compaiono in una scansione completa (circa 10–40 s). I muri attenuano molto 1,9 GHz: prova vicino a una finestra. Alcune basi in modalità eco tacciono senza chiamate."</string>
+    <string name="dect_how_it_works">"Il DECT collega i telefoni cordless alla loro base su 1880–1900 MHz in Europa (1920–1930 MHz in Nord America, DECT 6.0). Ogni base diffonde in chiaro la propria identità (RFPI) e le informazioni di sistema in un intervallo della trama; è tutto ciò che l\'app legge, col codice di OnAir: il campo A di ogni raffica, verificato dal CRC. La voce non è mai decodificata ed è cifrata sulla maggior parte dei telefoni. Le portanti vengono scansionate a turno: una base compare sulle portanti in cui è stata sentita. Solo ricezione."</string>
+    <string name="dect_identity_a">"Classe A · produttore %1$s · unità %2$s"</string>
+    <string name="dect_identity">"Classe %1$s"</string>
+    <string name="dect_carriers">"portanti %1$s"</string>
+    <string name="dect_slots">"intervalli %1$s"</string>
+    <string name="dect_band_eu">"Europa 1880–1900 MHz"</string>
+    <string name="dect_band_us">"Nord America 1920–1930 MHz"</string>
+    <plurals name="p_bases">
+        <item quantity="one">"base"</item>
+        <item quantity="other">"basi"</item>
+    </plurals>
 </resources>

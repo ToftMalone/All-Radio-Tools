@@ -2246,4 +2246,19 @@
     <string name="vdl2_atn">"Paket ATN (X.25)"</string>
     <string name="vdl2_airports">"bandara %1$s"</string>
     <string name="vdl2_destination">"tujuan %1$s"</string>
+    <string name="dect_subtitle">"Basis telepon nirkabel"</string>
+    <string name="dect_heard">"Pembawa %1$d · %2$s MHz · %3$d semburan handset"</string>
+    <string name="dect_scanning">"Memindai pembawa"</string>
+    <string name="dect_none_yet">"Belum ada basis"</string>
+    <string name="dect_none_yet_body">"Setiap basis DECT mengirim identitasnya bahkan tanpa panggilan, jadi telepon tetangga muncul dalam satu pemindaian penuh (sekitar 10–40 dtk). Dinding sangat meredam 1,9 GHz: coba dekat jendela. Beberapa basis dalam mode eco diam tanpa panggilan."</string>
+    <string name="dect_how_it_works">"DECT menghubungkan telepon nirkabel ke basisnya di 1880–1900 MHz di Eropa (1920–1930 MHz di Amerika Utara, DECT 6.0). Setiap basis menyiarkan identitasnya (RFPI) dan informasi sistem tanpa enkripsi di satu slot framenya; hanya itu yang dibaca aplikasi dengan kode OnAir: field A setiap semburan, diperiksa dengan CRC. Suara tidak pernah didekode dan terenkripsi di kebanyakan telepon. Pembawa dipindai bergiliran: basis muncul di pembawa tempat ia terdengar. Hanya menerima."</string>
+    <string name="dect_identity_a">"Kelas A · pembuat %1$s · unit %2$s"</string>
+    <string name="dect_identity">"Kelas %1$s"</string>
+    <string name="dect_carriers">"pembawa %1$s"</string>
+    <string name="dect_slots">"slot %1$s"</string>
+    <string name="dect_band_eu">"Eropa 1880–1900 MHz"</string>
+    <string name="dect_band_us">"Amerika Utara 1920–1930 MHz"</string>
+    <plurals name="p_bases">
+        <item quantity="other">"basis"</item>
+    </plurals>
 </resources>
