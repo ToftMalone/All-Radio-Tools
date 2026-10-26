@@ -2188,4 +2188,9 @@
         <item quantity="other">"%1$d チャンネルを受信中"</item>
     </plurals>
     <string name="auto_gain">"自動"</string>
+    <string name="squawk_s">"スコーク %1$s"</string>
+    <string name="squawk_hijack">"ハイジャック"</string>
+    <string name="squawk_radio_failure">"無線故障"</string>
+    <string name="squawk_emergency">"緊急事態"</string>
+    <string name="mode_ac_info">" モード A/C：トランスポンダーの旧来のレーダー応答は、ADS-B の有無にかかわらず、スコークか高度のどちらかを伝えますが、どちらかは示しません。その高度を飛ぶ航空機がちょうど 1 機なら、その機体に対応付けます。7500、7600、7700 は赤で表示します。"</string>
 </resources>

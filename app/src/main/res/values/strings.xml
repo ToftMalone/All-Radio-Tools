@@ -2244,4 +2244,9 @@
         <item quantity="other">"Listening on %1$d channels"</item>
     </plurals>
     <string name="auto_gain">"Auto"</string>
+    <string name="squawk_s">"Squawk %1$s"</string>
+    <string name="squawk_hijack">"Hijack"</string>
+    <string name="squawk_radio_failure">"Radio failure"</string>
+    <string name="squawk_emergency">"Emergency"</string>
+    <string name="mode_ac_info">" Mode A/C: the older radar replies, from transponders with or without ADS-B, carry either a squawk or an altitude without saying which; a code is matched to an aircraft when exactly one flies at that altitude. 7500, 7600 and 7700 are shown in red."</string>
 </resources>

@@ -2188,4 +2188,9 @@
         <item quantity="other">"Đang nghe %1$d kênh"</item>
     </plurals>
     <string name="auto_gain">"Tự động"</string>
+    <string name="squawk_s">"Squawk %1$s"</string>
+    <string name="squawk_hijack">"Không tặc"</string>
+    <string name="squawk_radio_failure">"Hỏng vô tuyến"</string>
+    <string name="squawk_emergency">"Khẩn cấp"</string>
+    <string name="mode_ac_info">" Chế độ A/C: các phản hồi radar kiểu cũ của bộ phát đáp, có hoặc không có ADS-B, mang mã squawk hoặc độ cao mà không cho biết là cái nào; mã được ghép với máy bay khi chỉ đúng một chiếc bay ở độ cao đó. 7500, 7600 và 7700 hiển thị màu đỏ."</string>
 </resources>

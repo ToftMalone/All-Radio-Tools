@@ -2243,4 +2243,9 @@
         <item quantity="other">"%1$d चैनल सुने जा रहे हैं"</item>
     </plurals>
     <string name="auto_gain">"ऑटो"</string>
+    <string name="squawk_s">"स्क्वॉक %1$s"</string>
+    <string name="squawk_hijack">"अपहरण"</string>
+    <string name="squawk_radio_failure">"रेडियो विफलता"</string>
+    <string name="squawk_emergency">"आपातकाल"</string>
+    <string name="mode_ac_info">" मोड A/C: ट्रांसपोंडरों के पुराने रडार उत्तर, ADS-B के साथ या बिना, या तो स्क्वॉक या ऊँचाई ले जाते हैं, बिना बताए कि कौन-सा; जब उस ऊँचाई पर ठीक एक विमान उड़ता है तो कोड उससे जोड़ा जाता है। 7500, 7600 और 7700 लाल में दिखते हैं।"</string>
 </resources>

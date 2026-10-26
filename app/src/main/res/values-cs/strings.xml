@@ -2353,4 +2353,9 @@
         <item quantity="other">"Poslech %1$d kanálů"</item>
     </plurals>
     <string name="auto_gain">"Auto"</string>
+    <string name="squawk_s">"Squawk %1$s"</string>
+    <string name="squawk_hijack">"Únos"</string>
+    <string name="squawk_radio_failure">"Porucha rádia"</string>
+    <string name="squawk_emergency">"Nouze"</string>
+    <string name="mode_ac_info">" Mode A/C: starší radarové odpovědi transpondérů, s ADS-B i bez něj, nesou buď squawk, nebo výšku, aniž by řekly co; kód se přiřadí letadlu, když v té výšce letí právě jedno. 7500, 7600 a 7700 jsou červeně."</string>
 </resources>

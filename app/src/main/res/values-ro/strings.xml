@@ -2298,4 +2298,9 @@
         <item quantity="other">"Ascultă %1$d de canale"</item>
     </plurals>
     <string name="auto_gain">"Auto"</string>
+    <string name="squawk_s">"Squawk %1$s"</string>
+    <string name="squawk_hijack">"Deturnare"</string>
+    <string name="squawk_radio_failure">"Defecțiune radio"</string>
+    <string name="squawk_emergency">"Urgență"</string>
+    <string name="mode_ac_info">" Mod A/C: vechile răspunsuri radar ale transponderelor, cu sau fără ADS-B, poartă fie un squawk, fie o altitudine, fără să spună care; un cod e asociat unui avion când doar unul zboară la acea altitudine. 7500, 7600 și 7700 apar cu roșu."</string>
 </resources>

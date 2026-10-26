@@ -2188,4 +2188,9 @@
         <item quantity="other">"Mendengarkan %1$d kanal"</item>
     </plurals>
     <string name="auto_gain">"Otomatis"</string>
+    <string name="squawk_s">"Squawk %1$s"</string>
+    <string name="squawk_hijack">"Pembajakan"</string>
+    <string name="squawk_radio_failure">"Gangguan radio"</string>
+    <string name="squawk_emergency">"Darurat"</string>
+    <string name="mode_ac_info">" Mode A/C: balasan radar lama dari transponder, dengan atau tanpa ADS-B, membawa squawk atau ketinggian tanpa menyebut yang mana; kode dicocokkan ke pesawat bila tepat satu terbang di ketinggian itu. 7500, 7600, dan 7700 ditampilkan merah."</string>
 </resources>

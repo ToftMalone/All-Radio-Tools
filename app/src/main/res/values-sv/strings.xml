@@ -2243,4 +2243,9 @@
         <item quantity="other">"Lyssnar på %1$d kanaler"</item>
     </plurals>
     <string name="auto_gain">"Auto"</string>
+    <string name="squawk_s">"Squawk %1$s"</string>
+    <string name="squawk_hijack">"Kapning"</string>
+    <string name="squawk_radio_failure">"Radiofel"</string>
+    <string name="squawk_emergency">"Nödläge"</string>
+    <string name="mode_ac_info">" Mode A/C: transpondrarnas äldre radarsvar, med eller utan ADS-B, bär antingen en squawk eller en höjd utan att säga vilket; en kod kopplas till ett flygplan när exakt ett flyger på den höjden. 7500, 7600 och 7700 visas i rött."</string>
 </resources>

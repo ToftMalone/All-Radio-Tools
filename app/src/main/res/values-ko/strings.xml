@@ -2188,4 +2188,9 @@
         <item quantity="other">"%1$d개 채널 수신 중"</item>
     </plurals>
     <string name="auto_gain">"자동"</string>
+    <string name="squawk_s">"스쿼크 %1$s"</string>
+    <string name="squawk_hijack">"납치"</string>
+    <string name="squawk_radio_failure">"무선 고장"</string>
+    <string name="squawk_emergency">"비상"</string>
+    <string name="mode_ac_info">" 모드 A/C: 트랜스폰더의 예전 레이더 응답은 ADS-B 유무와 관계없이 스쿼크나 고도 중 하나를 담지만 어느 쪽인지는 알리지 않습니다. 그 고도에 항공기가 딱 한 대 있으면 그 항공기와 연결합니다. 7500, 7600, 7700은 빨간색으로 표시합니다."</string>
 </resources>

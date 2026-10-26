@@ -2188,4 +2188,9 @@
         <item quantity="other">"กำลังฟัง %1$d ช่อง"</item>
     </plurals>
     <string name="auto_gain">"อัตโนมัติ"</string>
+    <string name="squawk_s">"สควอค %1$s"</string>
+    <string name="squawk_hijack">"จี้เครื่องบิน"</string>
+    <string name="squawk_radio_failure">"วิทยุขัดข้อง"</string>
+    <string name="squawk_emergency">"ฉุกเฉิน"</string>
+    <string name="mode_ac_info">" Mode A/C: การตอบสนองเรดาร์แบบเก่าของทรานสปอนเดอร์ ไม่ว่ามี ADS-B หรือไม่ จะส่งรหัสสควอคหรือความสูงโดยไม่บอกว่าเป็นอะไร รหัสจะจับคู่กับเครื่องบินเมื่อมีเพียงลำเดียวบินที่ความสูงนั้น 7500, 7600 และ 7700 แสดงเป็นสีแดง"</string>
 </resources>

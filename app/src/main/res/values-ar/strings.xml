@@ -2463,4 +2463,9 @@
         <item quantity="other">"الاستماع إلى %1$d قناة"</item>
     </plurals>
     <string name="auto_gain">"تلقائي"</string>
+    <string name="squawk_s">"سكواك %1$s"</string>
+    <string name="squawk_hijack">"اختطاف"</string>
+    <string name="squawk_radio_failure">"عطل لاسلكي"</string>
+    <string name="squawk_emergency">"طوارئ"</string>
+    <string name="mode_ac_info">" الوضع A/C: ردود الرادار القديمة من أجهزة المرسل المستجيب، مع ADS-B أو بدونه، تحمل إما رمز سكواك أو ارتفاعًا دون تحديد أيهما؛ يُطابَق الرمز مع طائرة عندما تطير طائرة واحدة فقط على ذلك الارتفاع. تظهر 7500 و7600 و7700 بالأحمر."</string>
 </resources>

@@ -45,6 +45,10 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.allnetworktools.MainViewModel
 import com.allnetworktools.data.sdr.AdsbDemodulator
+import com.allnetworktools.data.sdr.ModeAcTracker
+import com.allnetworktools.data.sdr.ModeAcDemodulator
+import com.allnetworktools.data.sdr.ModeAcCode
+import com.allnetworktools.data.sdr.ModeAc
 import com.allnetworktools.data.sdr.AdsbTracker
 import com.allnetworktools.data.sdr.HackRf
 import com.allnetworktools.data.sdr.SdrDevice
@@ -104,6 +108,20 @@ data class Plane(
     val levelDb: Double,
 )
 
+/** A Mode A/C code for the UI: what it reads as, and the Mode S aircraft whose altitude it matches, if exactly one. */
+data class ModeAcInfo(
+    val bits: Int,
+    val squawk: Int,
+    val altitudeFt: Int?,
+    val kind: Kind,
+    val spi: Boolean,
+    val replies: Int,
+    val ageS: Int,
+    val match: Plane?,
+) {
+    enum class Kind { Squawk, Altitude, Either }
+}
+
 /** ADS-B receiver on 1090 MHz, 2 MS/s, the rate dump1090 was designed around. */
 class AdsbController(private val repo: SdrRepository, private val scope: CoroutineScope, private val onAcquire: () -> Unit = {}) {
     val gain = SdrGain(listOf(16, 24, 32, 40), 32, listOf(20, 30, 40), 30, amp = false)
@@ -125,6 +143,8 @@ class AdsbController(private val repo: SdrRepository, private val scope: Corouti
     var totalMessages by mutableIntStateOf(0)
         private set
     var selected by mutableStateOf<Int?>(null)
+    var modeAc by mutableStateOf<List<ModeAcInfo>>(emptyList())
+        private set
 
     private var radio: HackRf? = null
     @Volatile private var dspRunning = false
@@ -162,6 +182,8 @@ class AdsbController(private val repo: SdrRepository, private val scope: Corouti
         val tracker = AdsbTracker()
         var count = 0
         val demod = AdsbDemodulator { msg, level -> tracker.update(msg, level, System.currentTimeMillis()); count++ }
+        val acTracker = ModeAcTracker()
+        val acDemod = ModeAcDemodulator { acTracker.update(it, System.currentTimeMillis()) }
         dspRunning = true
         Thread({
             var last = System.currentTimeMillis()
@@ -170,6 +192,7 @@ class AdsbController(private val repo: SdrRepository, private val scope: Corouti
                 val item = full.poll(200, TimeUnit.MILLISECONDS)
                 if (item != null) {
                     demod.feed(item.first, item.second)
+                    acDemod.feed(item.first, item.second)
                     free.offer(item.first)
                 }
                 val now = System.currentTimeMillis()
@@ -183,7 +206,10 @@ class AdsbController(private val repo: SdrRepository, private val scope: Corouti
                     windowCount = count
                     val total = count
                     last = now
-                    scope.launch { planes = snapshot; messagesPerSecond = rate; totalMessages = total }
+                    acTracker.prune(now)
+                    val codes = acTracker.confirmed().map { code -> modeAcInfo(code, snapshot, now) }
+                        .sortedWith(compareByDescending<ModeAcInfo> { ModeAc.isEmergency(it.squawk) && it.kind != ModeAcInfo.Kind.Altitude }.thenBy { it.ageS })
+                    scope.launch { planes = snapshot; messagesPerSecond = rate; totalMessages = total; modeAc = codes }
                 }
             }
         }, "sdr-adsb").start()
@@ -208,6 +234,17 @@ class AdsbController(private val repo: SdrRepository, private val scope: Corouti
         radio = null
         running = false
         if (r != null) scope.launch(Dispatchers.IO) { r.close() }
+    }
+
+    private fun modeAcInfo(code: ModeAcCode, planes: List<Plane>, now: Long): ModeAcInfo {
+        val alt = code.altitudeFt
+        val near = if (alt == null) emptyList() else planes.filter { p -> p.altitudeFt?.let { kotlin.math.abs(it - alt) <= 200 } == true }
+        val kind = when {
+            alt == null -> ModeAcInfo.Kind.Squawk
+            near.size == 1 -> ModeAcInfo.Kind.Altitude
+            else -> ModeAcInfo.Kind.Either
+        }
+        return ModeAcInfo(code.bits, code.squawk, alt, kind, code.spi, code.count, ((now - code.lastSeenMs) / 1000).toInt(), near.singleOrNull())
     }
 
     internal fun setForTest(list: List<Plane>, rate: Int) {
@@ -266,6 +303,15 @@ fun AdsbTool(vm: MainViewModel) {
                 }
             }
         }
+        if (c.modeAc.isNotEmpty()) {
+            SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 12.dp, bottom = 4.dp)) {
+                Text("Mode A/C", Modifier.padding(bottom = 4.dp), style = rf(14, 20, 600), color = AntTheme.accent.accent)
+                c.modeAc.forEach { m ->
+                    Hairline()
+                    ModeAcRow(m) { m.match?.let { p -> c.selected = p.icao } }
+                }
+            }
+        }
         SectionCard {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 GainSettings(c.gain) { c.applyGains() }
@@ -277,10 +323,49 @@ fun AdsbTool(vm: MainViewModel) {
                 Text(
                     S(R.string.aircraft_broadcast_their_identity_altitude_speed) +
                         S(R.string.a_position_needs_two_frames_even) +
+                        S(R.string.mode_ac_info) +
                         S(R.string.receive_only),
                     style = rf(13, 18), color = cs.onSurfaceVariant,
                 )
             }
+        }
+    }
+}
+
+@Composable
+private fun ModeAcRow(m: ModeAcInfo, onClick: () -> Unit) {
+    val emergency = ModeAc.isEmergency(m.squawk) && m.kind != ModeAcInfo.Kind.Altitude
+    val squawk = "%04d".format(m.squawk)
+    val alt = m.altitudeFt?.let { "%,d ft".format(Locale.getDefault(), it) }
+    val title = when (m.kind) {
+        ModeAcInfo.Kind.Squawk -> S(R.string.squawk_s, squawk)
+        ModeAcInfo.Kind.Altitude -> alt!!
+        ModeAcInfo.Kind.Either -> S(R.string.squawk_s, squawk) + " · " + alt
+    }
+    Row(
+        Modifier.fillMaxWidth().clickable(enabled = m.match != null, onClick = onClick).padding(vertical = 10.dp),
+        verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp),
+    ) {
+        Box(
+            Modifier.size(40.dp).clip(RoundedCornerShape(14.dp)).background(if (emergency) cs.errorContainer else AntTheme.accent.container),
+            contentAlignment = Alignment.Center,
+        ) {
+            Text(if (m.kind == ModeAcInfo.Kind.Squawk) "A" else if (m.kind == ModeAcInfo.Kind.Altitude) "C" else "A/C", style = rf(13, 18, 700), color = if (emergency) cs.onErrorContainer else AntTheme.accent.onContainer)
+        }
+        Column(Modifier.weight(1f)) {
+            Text(title, style = rf(15, 20, 600, tnum = true), color = if (emergency) cs.error else cs.onSurface, maxLines = 1)
+            Text(
+                listOfNotNull(
+                    when (m.squawk) {
+                        7500 -> S(R.string.squawk_hijack); 7600 -> S(R.string.squawk_radio_failure); 7700 -> S(R.string.squawk_emergency); else -> null
+                    }.takeIf { emergency },
+                    m.match?.let { p -> p.callsign ?: p.hex },
+                    if (m.spi) "Ident" else null,
+                    "×${m.replies}",
+                    if (m.ageS <= 2) S(R.string.just_now) else S(R.string.s_ago, m.ageS.toString()),
+                ).joinToString(" · "),
+                style = rf(12, 16, tnum = true), color = cs.onSurfaceVariant, maxLines = 1,
+            )
         }
     }
 }

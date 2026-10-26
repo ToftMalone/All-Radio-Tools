@@ -2353,4 +2353,9 @@
         <item quantity="other">"Прослуховування %1$d каналу"</item>
     </plurals>
     <string name="auto_gain">"Авто"</string>
+    <string name="squawk_s">"Сквок %1$s"</string>
+    <string name="squawk_hijack">"Захоплення"</string>
+    <string name="squawk_radio_failure">"Відмова зв\'язку"</string>
+    <string name="squawk_emergency">"Лихо"</string>
+    <string name="mode_ac_info">" Mode A/C: старі радарні відповіді транспондерів, з ADS-B чи без, несуть або сквок, або висоту, не вказуючи що саме; код пов\'язується з літаком, якщо на цій висоті летить рівно один. 7500, 7600 і 7700 показано червоним."</string>
 </resources>

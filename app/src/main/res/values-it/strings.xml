@@ -2243,4 +2243,9 @@
         <item quantity="other">"In ascolto su %1$d canali"</item>
     </plurals>
     <string name="auto_gain">"Auto"</string>
+    <string name="squawk_s">"Squawk %1$s"</string>
+    <string name="squawk_hijack">"Dirottamento"</string>
+    <string name="squawk_radio_failure">"Avaria radio"</string>
+    <string name="squawk_emergency">"Emergenza"</string>
+    <string name="mode_ac_info">" Modo A/C: le vecchie risposte radar dei transponder, con o senza ADS-B, portano uno squawk o una quota senza dire quale; un codice è associato a un aereo quando solo uno vola a quella quota. 7500, 7600 e 7700 sono in rosso."</string>
 </resources>

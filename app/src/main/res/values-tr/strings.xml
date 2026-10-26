@@ -2243,4 +2243,9 @@
         <item quantity="other">"%1$d kanal dinleniyor"</item>
     </plurals>
     <string name="auto_gain">"Otomatik"</string>
+    <string name="squawk_s">"Squawk %1$s"</string>
+    <string name="squawk_hijack">"Kaçırma"</string>
+    <string name="squawk_radio_failure">"Telsiz arızası"</string>
+    <string name="squawk_emergency">"Acil durum"</string>
+    <string name="mode_ac_info">" Mod A/C: transponderlerin eski radar yanıtları, ADS-B olsun olmasın, hangisi olduğunu söylemeden bir squawk ya da bir irtifa taşır; o irtifada tam bir uçak uçuyorsa kod ona eşlenir. 7500, 7600 ve 7700 kırmızı gösterilir."</string>
 </resources>

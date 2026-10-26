@@ -2188,4 +2188,9 @@
         <item quantity="other">"正在收听 %1$d 个信道"</item>
     </plurals>
     <string name="auto_gain">"自动"</string>
+    <string name="squawk_s">"应答码 %1$s"</string>
+    <string name="squawk_hijack">"劫机"</string>
+    <string name="squawk_radio_failure">"无线电故障"</string>
+    <string name="squawk_emergency">"紧急情况"</string>
+    <string name="mode_ac_info">" A/C 模式：应答机的旧式雷达应答（无论有无 ADS-B）携带应答码或高度，但不说明是哪一种；当恰好只有一架飞机在该高度飞行时，代码会与其匹配。7500、7600 和 7700 以红色显示。"</string>
 </resources>
