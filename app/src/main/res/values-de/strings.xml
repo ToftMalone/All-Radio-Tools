@@ -2255,4 +2255,13 @@
     <string name="ism_how_it_works">"Viele kleine Geräte funken ihre Messwerte unverschlüsselt in den ISM-Bändern: Wetterstationen, Thermometer, Energiemonitore, Zähler, Tür- und Bewegungsmelder, Festcode-Fernbedienungen. Die App dekodiert %1$d Gerätefamilien mit den von rtl_433 dokumentierten Formaten, wie OnAir sie portiert, und zeigt einen Wert nur, wenn CRC, Prüfsumme oder Wiederholung stimmen. Unbekannte Bursts werden gezählt. Nur Empfang."</string>
     <string name="ism_channel">"Kanal %1$s"</string>
     <string name="ism_subtitle">"Wetterstationen, Zähler, Sensoren"</string>
+    <string name="flarm_subtitle">"Segelflugzeuge und Kleinflugzeuge"</string>
+    <string name="flarm_heard">"868,2 / 868,4 MHz · %1$d auf Wunsch nicht verfolgt · %2$d mit neuem Protokoll"</string>
+    <string name="flarm_listening">"Beide Kanäle werden abgehört"</string>
+    <string name="flarm_none_yet">"Noch keine Luftfahrzeuge"</string>
+    <string name="flarm_none_yet_body">"Jedes FLARM sendet etwa einmal pro Sekunde, aber nur im Umkreis einiger zehn Kilometer und vor allem an Flugtagen nahe Segelfluggeländen. Eine Antenne draußen oder in der Höhe hilft sehr."</string>
+    <string name="flarm_how_it_works">"FLARM warnt Segelflugzeuge und Kleinflugzeuge voreinander: Jedes sendet Position, Höhe, Geschwindigkeit und Steigen auf 868,2 und 868,4 MHz. Die App dekodiert das alte Protokoll, dessen Format und Schlüsselschema öffentlich sind (SoftRF, Open Glider Network), mit dem Code von OnAir; der Schlüssel wechselt alle 64 Sekunden, die Uhr des Telefons muss also stimmen. Positionen werden gekürzt gesendet und um den Standort des Telefons ergänzt. Wie beim Open Glider Network werden Luftfahrzeuge, die nicht verfolgt werden wollen oder ihre Identität verbergen, nur gezählt und sonst nichts gespeichert; Pakete des neueren, verschlüsselten Protokolls werden nur gezählt. Nur Empfang."</string>
+    <string name="flarm_types">"Unbekannt|Segelflugzeug|Schleppflugzeug|Hubschrauber|Fallschirmspringer|Absetzflugzeug|Hängegleiter|Gleitschirm|Motorflugzeug|Jet|Tragschrauber|Ballon|Luftschiff|Drohne|Reserviert|Festes Hindernis"</string>
+    <string name="flarm_no_position">"Schalten Sie den Standort ein, um zu sehen, wo die Luftfahrzeuge sind: FLARM sendet gekürzte Positionen, die App ergänzt sie um das Telefon herum."</string>
+    <string name="flarm_on_ground">"am Boden"</string>
 </resources>

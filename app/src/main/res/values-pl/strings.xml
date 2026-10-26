@@ -2365,4 +2365,13 @@
     <string name="ism_how_it_works">"Wiele małych urządzeń nadaje odczyty w pasmach ISM bez szyfrowania: stacje pogodowe, termometry, monitory energii, liczniki, czujniki drzwi i ruchu, piloty o stałym kodzie. Aplikacja dekoduje %1$d rodzin urządzeń według formatów opisanych przez rtl_433, w przeniesieniu OnAir, i pokazuje odczyt tylko po pozytywnej kontroli CRC, sumy kontrolnej lub powtórzenia. Nierozpoznane serie są liczone. Tylko odbiór."</string>
     <string name="ism_channel">"Kanał %1$s"</string>
     <string name="ism_subtitle">"Stacje pogodowe, liczniki, czujniki"</string>
+    <string name="flarm_subtitle">"Szybowce i lotnictwo lekkie"</string>
+    <string name="flarm_heard">"868,2 / 868,4 MHz · nieśledzone na życzenie: %1$d · nowszy protokół: %2$d"</string>
+    <string name="flarm_listening">"Nasłuch obu kanałów"</string>
+    <string name="flarm_none_yet">"Brak statków powietrznych"</string>
+    <string name="flarm_none_yet_body">"Każdy FLARM nadaje mniej więcej raz na sekundę, ale tylko w promieniu kilkudziesięciu kilometrów, głównie w dni lotne w pobliżu lotnisk szybowcowych. Antena na zewnątrz lub wysoko bardzo pomaga."</string>
+    <string name="flarm_how_it_works">"FLARM ostrzega szybowce i lekkie samoloty przed sobą nawzajem: każdy nadaje pozycję, wysokość, prędkość i wznoszenie na 868,2 i 868,4 MHz. Aplikacja dekoduje stary protokół, którego format i schemat klucza są publiczne (SoftRF, Open Glider Network), kodem OnAir; klucz zmienia się co 64 sekundy, więc zegar telefonu musi być dokładny. Pozycje są przesyłane w skrócie i uzupełniane wokół lokalizacji telefonu. Tak jak w Open Glider Network statki powietrzne, które proszą o nieśledzenie lub ukrywają tożsamość, są tylko liczone i nic więcej nie jest przechowywane; pakiety nowszego, szyfrowanego protokołu są tylko liczone. Tylko odbiór."</string>
+    <string name="flarm_types">"Nieznany|Szybowiec|Holownik|Śmigłowiec|Skoczek|Samolot zrzutowy|Lotnia|Paralotnia|Samolot silnikowy|Odrzutowiec|Wiatrakowiec|Balon|Sterowiec|Dron|Zarezerwowany|Przeszkoda stała"</string>
+    <string name="flarm_no_position">"Włącz lokalizację, aby zobaczyć, gdzie są statki powietrzne: FLARM wysyła skrócone pozycje, aplikacja uzupełnia je wokół telefonu."</string>
+    <string name="flarm_on_ground">"na ziemi"</string>
 </resources>

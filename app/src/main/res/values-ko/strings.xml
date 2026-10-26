@@ -2200,4 +2200,13 @@
     <string name="ism_how_it_works">"많은 소형 기기가 ISM 대역에서 측정값을 암호화 없이 송신합니다. 기상 관측기, 온도계, 전력 모니터, 계량기, 문·동작 센서, 고정 코드 리모컨 등입니다. 앱은 rtl_433이 문서화하고 OnAir가 이식한 형식으로 %1$d개 기기 계열을 해독하며, CRC·체크섬·반복 검사를 통과한 값만 표시합니다. 인식되지 않은 버스트는 개수만 셉니다. 수신 전용."</string>
     <string name="ism_channel">"채널 %1$s"</string>
     <string name="ism_subtitle">"기상 관측기, 계량기, 센서"</string>
+    <string name="flarm_subtitle">"글라이더와 경비행기"</string>
+    <string name="flarm_heard">"868.2 / 868.4MHz · 추적 거부 %1$d · 신규 프로토콜 %2$d"</string>
+    <string name="flarm_listening">"두 채널 수신 중"</string>
+    <string name="flarm_none_yet">"아직 항공기가 없습니다"</string>
+    <string name="flarm_none_yet_body">"FLARM은 약 1초마다 송신하지만 수십 km 이내에서만 들리며, 주로 비행하는 날 글라이더 비행장 근처입니다. 실외나 높은 곳의 안테나가 큰 도움이 됩니다."</string>
+    <string name="flarm_how_it_works">"FLARM은 글라이더와 경비행기에 서로의 존재를 알립니다. 각 기체는 위치, 고도, 속도, 상승률을 868.2와 868.4MHz로 송신합니다. 앱은 형식과 키 방식이 공개된 구 프로토콜(SoftRF, Open Glider Network)을 OnAir의 코드로 해독합니다. 키는 64초마다 바뀌므로 휴대폰 시계가 정확해야 합니다. 위치는 잘린 채 전송되며 휴대폰 위치를 기준으로 보완합니다. Open Glider Network처럼 추적 거부나 신원을 숨긴 항공기는 개수만 세고 다른 것은 보관하지 않습니다. 암호화된 신규 프로토콜 패킷은 개수만 셉니다. 수신 전용."</string>
+    <string name="flarm_types">"알 수 없음|글라이더|예인기|헬리콥터|스카이다이버|강하기|행글라이더|패러글라이더|동력기|제트기|자이로콥터|기구|비행선|드론|예약됨|고정 장애물"</string>
+    <string name="flarm_no_position">"항공기 위치를 보려면 위치를 켜세요. FLARM은 잘린 위치를 보내고 앱이 휴대폰 기준으로 보완합니다."</string>
+    <string name="flarm_on_ground">"지상"</string>
 </resources>

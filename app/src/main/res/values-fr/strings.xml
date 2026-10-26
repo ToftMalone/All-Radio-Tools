@@ -2310,4 +2310,13 @@
     <string name="ism_how_it_works">"Beaucoup de petits appareils transmettent leurs mesures dans les bandes ISM sans chiffrement : stations météo, thermomètres, compteurs d\'énergie, compteurs d\'eau ou de gaz, détecteurs d\'ouverture et de mouvement, télécommandes à code fixe. L\'application décode %1$d familles d\'appareils avec les formats documentés par rtl_433, tels que les porte OnAir, et n\'affiche une mesure que si son CRC, sa somme de contrôle ou sa répétition est vérifiée. Les rafales qu\'aucun format ne reconnaît sont comptées. Réception seule."</string>
     <string name="ism_channel">"Canal %1$s"</string>
     <string name="ism_subtitle">"Stations météo, compteurs, capteurs"</string>
+    <string name="flarm_subtitle">"Planeurs et aviation légère"</string>
+    <string name="flarm_heard">"868,2 / 868,4 MHz · %1$d non suivis à leur demande · %2$d en protocole récent"</string>
+    <string name="flarm_listening">"Écoute des deux canaux"</string>
+    <string name="flarm_none_yet">"Aucun aéronef pour l\'instant"</string>
+    <string name="flarm_none_yet_body">"Chaque FLARM émet environ une fois par seconde, mais seulement dans un rayon de quelques dizaines de kilomètres, surtout les jours de vol près des terrains de vol à voile. Une antenne dehors ou en hauteur aide beaucoup."</string>
+    <string name="flarm_how_it_works">"FLARM avertit les planeurs et avions légers de la présence des autres : chacun diffuse sa position, son altitude, sa vitesse et son taux de montée sur 868,2 et 868,4 MHz. L\'application décode l\'ancien protocole, dont le format et le schéma de clé sont publics (SoftRF, Open Glider Network), avec le code d\'OnAir ; la clé change toutes les 64 secondes, l\'horloge du téléphone doit donc être juste. Les positions sont tronquées et complétées autour de la position du téléphone. Comme le fait l\'Open Glider Network, les aéronefs qui demandent à ne pas être suivis, ou masquent leur identité, sont comptés et rien d\'autre n\'est gardé ; les paquets du protocole récent, chiffré, sont seulement comptés. Réception seule."</string>
+    <string name="flarm_types">"Inconnu|Planeur|Remorqueur|Hélicoptère|Parachutiste|Avion largueur|Deltaplane|Parapente|Avion à moteur|Jet|Autogire|Ballon|Dirigeable|Drone|Réservé|Obstacle fixe"</string>
+    <string name="flarm_no_position">"Activez la localisation pour voir où sont les aéronefs : FLARM envoie des positions tronquées, l\'application les complète autour du téléphone."</string>
+    <string name="flarm_on_ground">"au sol"</string>
 </resources>

@@ -2365,4 +2365,13 @@
     <string name="ism_how_it_works">"Mnoho malých zařízení vysílá svá měření v pásmech ISM bez šifrování: meteostanice, teploměry, měřiče energie, měřidla, čidla dveří a pohybu, dálkové ovladače s pevným kódem. Aplikace dekóduje %1$d rodin zařízení podle formátů popsaných v rtl_433, jak je převzal OnAir, a měření ukáže jen po úspěšné kontrole CRC, součtu nebo opakování. Nerozpoznané dávky se počítají. Pouze příjem."</string>
     <string name="ism_channel">"Kanál %1$s"</string>
     <string name="ism_subtitle">"Meteostanice, měřidla, čidla"</string>
+    <string name="flarm_subtitle">"Kluzáky a malá letadla"</string>
+    <string name="flarm_heard">"868,2 / 868,4 MHz · nesledovaná na přání: %1$d · novější protokol: %2$d"</string>
+    <string name="flarm_listening">"Poslech obou kanálů"</string>
+    <string name="flarm_none_yet">"Zatím žádná letadla"</string>
+    <string name="flarm_none_yet_body">"Každý FLARM vysílá zhruba jednou za sekundu, ale jen na několik desítek kilometrů a hlavně v letové dny poblíž plachtařských letišť. Hodně pomůže anténa venku nebo ve výšce."</string>
+    <string name="flarm_how_it_works">"FLARM varuje kluzáky a malá letadla před sebou navzájem: každé vysílá polohu, výšku, rychlost a stoupání na 868,2 a 868,4 MHz. Aplikace dekóduje starý protokol, jehož formát a schéma klíče jsou veřejné (SoftRF, Open Glider Network), kódem OnAir; klíč se mění každých 64 sekund, takže hodiny telefonu musí jít přesně. Polohy se posílají zkrácené a doplňují se podle polohy telefonu. Stejně jako Open Glider Network se letadla, která žádají o nesledování nebo skrývají identitu, jen počítají a nic dalšího se neukládá; pakety novějšího, šifrovaného protokolu se jen počítají. Pouze příjem."</string>
+    <string name="flarm_types">"Neznámý|Kluzák|Vlečný letoun|Vrtulník|Parašutista|Výsadkový letoun|Závěsný kluzák|Paraglide|Motorové letadlo|Proudové letadlo|Vírník|Balon|Vzducholoď|Dron|Rezervováno|Pevná překážka"</string>
+    <string name="flarm_no_position">"Zapněte polohu, abyste viděli, kde letadla jsou: FLARM posílá zkrácené polohy, aplikace je doplní podle telefonu."</string>
+    <string name="flarm_on_ground">"na zemi"</string>
 </resources>

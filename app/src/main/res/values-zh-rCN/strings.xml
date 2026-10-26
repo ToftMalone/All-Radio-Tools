@@ -2200,4 +2200,13 @@
     <string name="ism_how_it_works">"许多小型设备在 ISM 频段中以不加密的方式发送读数：气象站、温度计、电能监测器、各类表计、门磁和人体感应器、固定码遥控器。本应用按 rtl_433 记录、由 OnAir 移植的格式解码 %1$d 个设备系列，只显示通过 CRC、校验和或重复检查的读数。无法识别的突发只计数。仅接收。"</string>
     <string name="ism_channel">"通道 %1$s"</string>
     <string name="ism_subtitle">"气象站、表计、传感器"</string>
+    <string name="flarm_subtitle">"滑翔机和轻型飞机"</string>
+    <string name="flarm_heard">"868.2 / 868.4 MHz · 应要求不跟踪 %1$d · 新协议 %2$d"</string>
+    <string name="flarm_listening">"正在接收两个信道"</string>
+    <string name="flarm_none_yet">"暂无航空器"</string>
+    <string name="flarm_none_yet_body">"每台 FLARM 大约每秒发送一次，但只在几十公里内可收到，主要是在飞行日的滑翔场附近。室外或高处的天线帮助很大。"</string>
+    <string name="flarm_how_it_works">"FLARM 让滑翔机和轻型飞机互相知晓：每架飞机在 868.2 和 868.4 MHz 上广播位置、高度、速度和爬升率。本应用用 OnAir 的代码解码旧协议，其格式和密钥方案是公开的(SoftRF、Open Glider Network)；密钥每 64 秒更换，因此手机时钟必须准确。位置以截断形式发送，并以手机位置为参考补全。与 Open Glider Network 一样，要求不被跟踪或隐藏身份的航空器只计数，不保留其他任何内容；新的加密协议数据包只计数。仅接收。"</string>
+    <string name="flarm_types">"未知|滑翔机|拖曳机|直升机|跳伞员|跳伞飞机|悬挂滑翔机|滑翔伞|动力飞机|喷气机|旋翼机|气球|飞艇|无人机|保留|固定障碍物"</string>
+    <string name="flarm_no_position">"打开定位即可看到航空器位置：FLARM 发送截断的位置，应用以手机为参考补全。"</string>
+    <string name="flarm_on_ground">"在地面"</string>
 </resources>

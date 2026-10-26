@@ -2200,4 +2200,13 @@
     <string name="ism_how_it_works">"Banyak perangkat kecil memancarkan pembacaannya di pita ISM tanpa enkripsi: stasiun cuaca, termometer, monitor energi, meteran, sensor pintu dan gerak, remote berkode tetap. Aplikasi mendekode %1$d keluarga perangkat dengan format yang didokumentasikan rtl_433, sebagaimana di-port OnAir, dan hanya menampilkan pembacaan yang lolos CRC, checksum, atau pemeriksaan pengulangan. Semburan yang tidak dikenali dihitung. Hanya menerima."</string>
     <string name="ism_channel">"Kanal %1$s"</string>
     <string name="ism_subtitle">"Stasiun cuaca, meteran, sensor"</string>
+    <string name="flarm_subtitle">"Pesawat layang dan ringan"</string>
+    <string name="flarm_heard">"868,2 / 868,4 MHz · %1$d tidak dilacak atas permintaan · %2$d protokol baru"</string>
+    <string name="flarm_listening">"Mendengarkan kedua kanal"</string>
+    <string name="flarm_none_yet">"Belum ada pesawat"</string>
+    <string name="flarm_none_yet_body">"Setiap FLARM memancar kira-kira sekali per detik, tetapi hanya dalam beberapa puluh kilometer dan terutama pada hari terbang di dekat lapangan layang. Antena di luar atau di tempat tinggi sangat membantu."</string>
+    <string name="flarm_how_it_works">"FLARM memperingatkan pesawat layang dan pesawat ringan satu sama lain: masing-masing menyiarkan posisi, ketinggian, kecepatan, dan laju naik di 868,2 dan 868,4 MHz. Aplikasi mendekode protokol lama, yang format dan skema kuncinya publik (SoftRF, Open Glider Network), dengan kode OnAir; kunci berganti setiap 64 detik, jadi jam ponsel harus tepat. Posisi dikirim terpotong dan dilengkapi di sekitar lokasi ponsel. Seperti Open Glider Network, pesawat yang meminta tidak dilacak atau menyembunyikan identitasnya hanya dihitung dan tidak ada lagi yang disimpan; paket protokol baru yang terenkripsi hanya dihitung. Hanya menerima."</string>
+    <string name="flarm_types">"Tak dikenal|Pesawat layang|Pesawat penarik|Helikopter|Penerjun|Pesawat terjun|Gantole|Paralayang|Pesawat bermesin|Jet|Girokopter|Balon|Kapal udara|Drone|Dicadangkan|Rintangan tetap"</string>
+    <string name="flarm_no_position">"Aktifkan lokasi untuk melihat posisi pesawat: FLARM mengirim posisi terpotong, aplikasi melengkapinya di sekitar ponsel."</string>
+    <string name="flarm_on_ground">"di darat"</string>
 </resources>

@@ -2255,4 +2255,13 @@
     <string name="ism_how_it_works">"Veel kleine apparaten zenden hun metingen onversleuteld in de ISM-banden: weerstations, thermometers, energiemeters, nutsmeters, deur- en bewegingssensoren, afstandsbedieningen met vaste code. De app decodeert %1$d apparaatfamilies met de formaten die rtl_433 documenteert, zoals OnAir ze overneemt, en toont een meting alleen als de CRC, controlesom of herhaling klopt. Onbekende bursts worden geteld. Alleen ontvangst."</string>
     <string name="ism_channel">"Kanaal %1$s"</string>
     <string name="ism_subtitle">"Weerstations, meters, sensoren"</string>
+    <string name="flarm_subtitle">"Zweefvliegtuigen en kleine luchtvaart"</string>
+    <string name="flarm_heard">"868,2 / 868,4 MHz · %1$d op verzoek niet gevolgd · %2$d met nieuw protocol"</string>
+    <string name="flarm_listening">"Luisteren op beide kanalen"</string>
+    <string name="flarm_none_yet">"Nog geen luchtvaartuigen"</string>
+    <string name="flarm_none_yet_body">"Elke FLARM zendt ongeveer eens per seconde, maar alleen binnen enkele tientallen kilometers en vooral op vliegdagen bij zweefvliegvelden. Een antenne buiten of hoog helpt veel."</string>
+    <string name="flarm_how_it_works">"FLARM waarschuwt zweefvliegtuigen en kleine vliegtuigen voor elkaar: elk zendt positie, hoogte, snelheid en stijgen uit op 868,2 en 868,4 MHz. De app decodeert het oude protocol, waarvan formaat en sleutelschema openbaar zijn (SoftRF, Open Glider Network), met de code van OnAir; de sleutel wisselt elke 64 seconden, dus de klok van de telefoon moet kloppen. Posities worden afgekapt verzonden en rond de locatie van de telefoon aangevuld. Zoals het Open Glider Network doet, worden luchtvaartuigen die niet gevolgd willen worden of hun identiteit verbergen alleen geteld en verder niets bewaard; pakketten van het nieuwere, versleutelde protocol worden alleen geteld. Alleen ontvangst."</string>
+    <string name="flarm_types">"Onbekend|Zweefvliegtuig|Sleepvliegtuig|Helikopter|Parachutist|Dropvliegtuig|Deltavlieger|Paraglider|Motorvliegtuig|Jet|Autogiro|Ballon|Luchtschip|Drone|Gereserveerd|Vast obstakel"</string>
+    <string name="flarm_no_position">"Zet locatie aan om te zien waar de luchtvaartuigen zijn: FLARM zendt afgekapte posities, de app vult ze aan rond de telefoon."</string>
+    <string name="flarm_on_ground">"op de grond"</string>
 </resources>

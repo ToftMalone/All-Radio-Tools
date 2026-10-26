@@ -2200,4 +2200,13 @@
     <string name="ism_how_it_works">"Nhiều thiết bị nhỏ phát số đo trong các băng ISM mà không mã hóa: trạm thời tiết, nhiệt kế, máy đo năng lượng, đồng hồ đo, cảm biến cửa và chuyển động, điều khiển mã cố định. Ứng dụng giải mã %1$d họ thiết bị theo định dạng rtl_433 mô tả và OnAir chuyển sang, chỉ hiện số đo khi qua kiểm tra CRC, tổng kiểm tra hoặc lặp lại. Các đợt không nhận ra được đếm lại. Chỉ thu."</string>
     <string name="ism_channel">"Kênh %1$s"</string>
     <string name="ism_subtitle">"Trạm thời tiết, đồng hồ đo, cảm biến"</string>
+    <string name="flarm_subtitle">"Tàu lượn và máy bay hạng nhẹ"</string>
+    <string name="flarm_heard">"868,2 / 868,4 MHz · %1$d không theo dõi theo yêu cầu · %2$d giao thức mới"</string>
+    <string name="flarm_listening">"Đang nghe cả hai kênh"</string>
+    <string name="flarm_none_yet">"Chưa có máy bay"</string>
+    <string name="flarm_none_yet_body">"Mỗi FLARM phát khoảng một lần mỗi giây, nhưng chỉ trong vài chục km và chủ yếu vào ngày bay gần sân tàu lượn. Ăng-ten ngoài trời hoặc đặt cao giúp rất nhiều."</string>
+    <string name="flarm_how_it_works">"FLARM cảnh báo tàu lượn và máy bay nhẹ về nhau: mỗi chiếc phát vị trí, độ cao, tốc độ và tốc độ lên xuống trên 868,2 và 868,4 MHz. Ứng dụng giải mã giao thức cũ, có định dạng và cơ chế khóa công khai (SoftRF, Open Glider Network), bằng mã của OnAir; khóa đổi mỗi 64 giây nên đồng hồ điện thoại phải đúng. Vị trí được gửi rút gọn và được bổ sung quanh vị trí điện thoại. Như Open Glider Network, máy bay yêu cầu không bị theo dõi hoặc ẩn danh tính chỉ được đếm và không lưu gì khác; gói của giao thức mới, đã mã hóa, chỉ được đếm. Chỉ thu."</string>
+    <string name="flarm_types">"Không rõ|Tàu lượn|Máy bay kéo|Trực thăng|Người nhảy dù|Máy bay thả dù|Diều lượn|Dù lượn|Máy bay động cơ|Phản lực|Máy bay trực thăng tự quay|Khinh khí cầu|Khí cầu|Drone|Dành riêng|Vật cản cố định"</string>
+    <string name="flarm_no_position">"Bật vị trí để xem máy bay ở đâu: FLARM gửi vị trí rút gọn, ứng dụng bổ sung quanh điện thoại."</string>
+    <string name="flarm_on_ground">"trên mặt đất"</string>
 </resources>

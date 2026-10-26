@@ -2256,4 +2256,13 @@
     <string name="ism_how_it_works">"Many small devices radio their readings in the ISM bands without encryption: weather stations, thermometers, energy monitors, utility meters, door and motion sensors, fixed-code remotes. The app decodes %1$d device families with the formats documented by rtl_433, as OnAir ports them, and shows a reading only when its CRC, checksum or repetition check passes. Bursts no format recognises are counted. Receive only."</string>
     <string name="ism_channel">"Ch. %1$s"</string>
     <string name="ism_subtitle">"Weather stations, meters, sensors"</string>
+    <string name="flarm_subtitle">"Gliders and light aircraft"</string>
+    <string name="flarm_heard">"868.2 / 868.4 MHz · %1$d not tracked on request · %2$d on the newer protocol"</string>
+    <string name="flarm_listening">"Listening on both channels"</string>
+    <string name="flarm_none_yet">"No aircraft yet"</string>
+    <string name="flarm_none_yet_body">"Each FLARM sends about once a second, but only within a few tens of kilometres and mostly on flying days, near gliding sites. An antenna outside or high up helps a lot."</string>
+    <string name="flarm_how_it_works">"FLARM warns gliders and light aircraft of each other: each one broadcasts its position, altitude, speed and climb on 868.2 and 868.4 MHz. The app decodes the old protocol, whose format and key scheme are public (SoftRF, Open Glider Network), with OnAir\'s code; the key changes every 64 seconds, so the phone\'s clock must be right. Positions are sent truncated and completed around the phone\'s location. As the Open Glider Network does, aircraft that ask not to be tracked, or hide their identity, are counted and nothing else is kept; packets on the newer, encrypted protocol are only counted. Receive only."</string>
+    <string name="flarm_types">"Unknown|Glider|Tow plane|Helicopter|Skydiver|Drop plane|Hang glider|Paraglider|Powered aircraft|Jet|Gyrocopter|Balloon|Airship|Drone|Reserved|Static object"</string>
+    <string name="flarm_no_position">"Turn on location to see where the aircraft are: FLARM sends positions truncated, the app completes them around the phone."</string>
+    <string name="flarm_on_ground">"on the ground"</string>
 </resources>

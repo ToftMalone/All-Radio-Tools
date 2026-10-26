@@ -2255,4 +2255,13 @@
     <string name="ism_how_it_works">"Muchos pequeños dispositivos transmiten sus lecturas en las bandas ISM sin cifrar: estaciones meteorológicas, termómetros, monitores de energía, contadores, sensores de puerta y movimiento, mandos de código fijo. La app decodifica %1$d familias de dispositivos con los formatos documentados por rtl_433, tal como los porta OnAir, y solo muestra una lectura si pasa su CRC, suma de comprobación o repetición. Las ráfagas que ningún formato reconoce se cuentan. Solo recepción."</string>
     <string name="ism_channel">"Canal %1$s"</string>
     <string name="ism_subtitle">"Estaciones meteo, contadores, sensores"</string>
+    <string name="flarm_subtitle">"Planeadores y aviación ligera"</string>
+    <string name="flarm_heard">"868,2 / 868,4 MHz · %1$d sin seguimiento a petición · %2$d con el protocolo nuevo"</string>
+    <string name="flarm_listening">"Escuchando ambos canales"</string>
+    <string name="flarm_none_yet">"Aún no hay aeronaves"</string>
+    <string name="flarm_none_yet_body">"Cada FLARM emite aproximadamente una vez por segundo, pero solo en unas decenas de kilómetros y sobre todo los días de vuelo, cerca de los aeródromos de vuelo a vela. Una antena fuera o en altura ayuda mucho."</string>
+    <string name="flarm_how_it_works">"FLARM avisa a planeadores y avionetas de la presencia de los demás: cada uno emite su posición, altitud, velocidad y ascenso en 868,2 y 868,4 MHz. La app decodifica el protocolo antiguo, cuyo formato y esquema de clave son públicos (SoftRF, Open Glider Network), con el código de OnAir; la clave cambia cada 64 segundos, así que el reloj del teléfono debe ser correcto. Las posiciones llegan truncadas y se completan alrededor de la ubicación del teléfono. Como hace la Open Glider Network, las aeronaves que piden no ser seguidas, u ocultan su identidad, se cuentan y no se guarda nada más; los paquetes del protocolo nuevo, cifrado, solo se cuentan. Solo recepción."</string>
+    <string name="flarm_types">"Desconocido|Planeador|Remolcador|Helicóptero|Paracaidista|Avión lanzador|Ala delta|Parapente|Avión a motor|Reactor|Autogiro|Globo|Dirigible|Dron|Reservado|Obstáculo fijo"</string>
+    <string name="flarm_no_position">"Activa la ubicación para ver dónde están las aeronaves: FLARM envía posiciones truncadas y la app las completa alrededor del teléfono."</string>
+    <string name="flarm_on_ground">"en tierra"</string>
 </resources>

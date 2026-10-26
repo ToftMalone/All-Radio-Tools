@@ -2200,4 +2200,13 @@
     <string name="ism_how_it_works">"多くの小型機器は ISM 帯で測定値を暗号化せずに送信しています。気象ステーション、温度計、電力モニター、各種メーター、ドア・人感センサー、固定コードのリモコンなどです。アプリは rtl_433 が文書化し OnAir が移植した形式で %1$d 系統の機器を解読し、CRC・チェックサム・繰り返しの検査を通った値だけを表示します。認識できないバーストは数えます。受信のみ。"</string>
     <string name="ism_channel">"チャンネル %1$s"</string>
     <string name="ism_subtitle">"気象局、メーター、センサー"</string>
+    <string name="flarm_subtitle">"グライダーと小型機"</string>
+    <string name="flarm_heard">"868.2 / 868.4 MHz · 追跡拒否 %1$d · 新プロトコル %2$d"</string>
+    <string name="flarm_listening">"両チャンネルを受信中"</string>
+    <string name="flarm_none_yet">"まだ機体はありません"</string>
+    <string name="flarm_none_yet_body">"FLARM は約 1 秒ごとに送信しますが、届くのは数十 km 以内で、主に飛行日のグライダー場の近くです。屋外や高い場所のアンテナが大いに役立ちます。"</string>
+    <string name="flarm_how_it_works">"FLARM はグライダーや小型機に互いの存在を知らせます。各機は位置・高度・速度・上昇率を 868.2 と 868.4 MHz で送信します。アプリは形式と鍵の仕組みが公開されている旧プロトコル(SoftRF、Open Glider Network)を OnAir のコードで解読します。鍵は 64 秒ごとに変わるため、端末の時計が正確である必要があります。位置は切り詰めて送られ、端末の位置を基準に補完します。Open Glider Network と同じく、追跡拒否や身元を隠す機体は数えるだけで他は何も保持しません。暗号化された新プロトコルのパケットは数えるだけです。受信のみ。"</string>
+    <string name="flarm_types">"不明|グライダー|曳航機|ヘリコプター|スカイダイバー|降下機|ハンググライダー|パラグライダー|動力機|ジェット|オートジャイロ|気球|飛行船|ドローン|予約|固定障害物"</string>
+    <string name="flarm_no_position">"機体の位置を見るには位置情報をオンにしてください。FLARM は切り詰めた位置を送り、アプリが端末の位置を基準に補完します。"</string>
+    <string name="flarm_on_ground">"地上"</string>
 </resources>

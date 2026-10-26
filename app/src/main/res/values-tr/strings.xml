@@ -2255,4 +2255,13 @@
     <string name="ism_how_it_works">"Birçok küçük cihaz ölçümlerini ISM bantlarında şifresiz yayınlar: hava istasyonları, termometreler, enerji ölçerler, sayaçlar, kapı ve hareket sensörleri, sabit kodlu kumandalar. Uygulama, rtl_433\'ün belgelediği ve OnAir\'in aktardığı biçimlerle %1$d cihaz ailesini çözer ve bir ölçümü yalnızca CRC, sağlama toplamı ya da tekrar denetimi geçerse gösterir. Tanınmayan patlamalar sayılır. Yalnızca alım."</string>
     <string name="ism_channel">"Kanal %1$s"</string>
     <string name="ism_subtitle">"Hava istasyonları, sayaçlar, sensörler"</string>
+    <string name="flarm_subtitle">"Planörler ve hafif hava araçları"</string>
+    <string name="flarm_heard">"868,2 / 868,4 MHz · istek üzerine izlenmeyen %1$d · yeni protokolde %2$d"</string>
+    <string name="flarm_listening">"İki kanal dinleniyor"</string>
+    <string name="flarm_none_yet">"Henüz hava aracı yok"</string>
+    <string name="flarm_none_yet_body">"Her FLARM yaklaşık saniyede bir yayın yapar, ancak yalnızca birkaç on kilometre içinde ve çoğunlukla uçuş günlerinde planör sahalarının yakınında. Dışarıda ya da yüksekte bir anten çok yardımcı olur."</string>
+    <string name="flarm_how_it_works">"FLARM, planörleri ve hafif uçakları birbirine karşı uyarır: her biri konumunu, irtifasını, hızını ve tırmanmasını 868,2 ve 868,4 MHz\'te yayınlar. Uygulama, biçimi ve anahtar şeması herkese açık olan (SoftRF, Open Glider Network) eski protokolü OnAir\'in koduyla çözer; anahtar 64 saniyede bir değişir, bu yüzden telefonun saati doğru olmalıdır. Konumlar kısaltılmış gönderilir ve telefonun konumu etrafında tamamlanır. Open Glider Network\'te olduğu gibi, izlenmemeyi isteyen ya da kimliğini gizleyen hava araçları yalnızca sayılır, başka hiçbir şey saklanmaz; yeni, şifreli protokol paketleri yalnızca sayılır. Yalnızca alım."</string>
+    <string name="flarm_types">"Bilinmiyor|Planör|Çekici uçak|Helikopter|Paraşütçü|Atlayış uçağı|Yelkenkanat|Yamaç paraşütü|Motorlu uçak|Jet|Otojiro|Balon|Zeplin|Dron|Ayrılmış|Sabit engel"</string>
+    <string name="flarm_no_position">"Hava araçlarının nerede olduğunu görmek için konumu açın: FLARM kısaltılmış konumlar gönderir, uygulama bunları telefonun çevresinde tamamlar."</string>
+    <string name="flarm_on_ground">"yerde"</string>
 </resources>
