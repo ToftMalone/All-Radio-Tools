@@ -2261,4 +2261,17 @@
     <plurals name="p_bases">
         <item quantity="other">"대의 베이스"</item>
     </plurals>
+    <string name="pmr_subtitle">"무전기: FM, DMR, dPMR"</string>
+    <string name="pmr_active">"개 채널 사용 중"</string>
+    <string name="pmr_heard">"수신 채널 %1$d · 디지털 호출 %2$d · 446.0–446.2MHz"</string>
+    <string name="pmr_listening">"16개 채널 감시 중"</string>
+    <string name="pmr_listening_to">"채널 %1$d 청취 중"</string>
+    <string name="pmr_tap_to_listen">"아날로그 채널을 탭하면 들을 수 있습니다"</string>
+    <string name="pmr_how_it_works">"PMR446은 면허 없이 쓰는 무전기 대역입니다. 446.00625MHz부터 16개의 아날로그 FM 채널이 있고 상단 절반에는 디지털 무전기(같은 중심의 DMR446, 6.25kHz 채널의 dPMR446)가 있습니다. 대역폭이 200kHz뿐이라 모든 채널을 동시에 감시하고 활성 채널을 복조합니다. CTCSS 톤을 측정하고, 디지털 무전기는 OnAir 코드가 읽는 호출 신호(컬러 코드, 그룹·개별 호출, 양측 ID)를 표시합니다. 디지털 음성은 해독하지 않습니다. 아날로그 음성은 들을 수 있지만 들은 내용은 본인만을 위한 것입니다. 대부분의 국가에서 이를 누설하거나 이용하는 것은 금지되어 있습니다. 수신 전용."</string>
+    <string name="pmr_end_of_call">"호출 종료"</string>
+    <string name="pmr_group_call">"그룹 호출 %1$s"</string>
+    <string name="pmr_private_call">"%1$s에게 개별 호출"</string>
+    <string name="pmr_from">"발신 %1$s"</string>
+    <string name="pmr_emergency">"긴급"</string>
+    <string name="pmr_encrypted">"암호화"</string>
 </resources>

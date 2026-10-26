@@ -2319,4 +2319,17 @@
         <item quantity="one">"बेस स्टेशन"</item>
         <item quantity="other">"बेस स्टेशन"</item>
     </plurals>
+    <string name="pmr_subtitle">"वॉकी-टॉकी: FM, DMR, dPMR"</string>
+    <string name="pmr_active">"सक्रिय चैनल"</string>
+    <string name="pmr_heard">"%1$d चैनल सुने गए · %2$d डिजिटल कॉल · 446.0–446.2 MHz"</string>
+    <string name="pmr_listening">"सभी 16 चैनलों पर नज़र"</string>
+    <string name="pmr_listening_to">"चैनल %1$d सुना जा रहा है"</string>
+    <string name="pmr_tap_to_listen">"सुनने के लिए किसी एनालॉग चैनल पर टैप करें"</string>
+    <string name="pmr_how_it_works">"PMR446 बिना लाइसेंस वाले वॉकी-टॉकी का बैंड है: 446.00625 MHz से 16 एनालॉग FM चैनल, और ऊपरी आधे में डिजिटल रेडियो (उन्हीं केंद्रों पर DMR446, 6.25 kHz चैनलों पर dPMR446)। बैंड सिर्फ़ 200 kHz चौड़ा है, इसलिए सभी चैनल एक साथ देखे जाते हैं और सक्रिय चैनल डिमॉड्युलेट होता है: उसका CTCSS टोन मापा जाता है, और डिजिटल रेडियो के लिए OnAir के कोड से पढ़ी गई कॉल सिग्नलिंग (कलर कोड, ग्रुप या निजी कॉल, दोनों रेडियो की ID) दिखाई जाती है। डिजिटल आवाज़ डिकोड नहीं होती। एनालॉग आवाज़ सुनी जा सकती है; जो आप सुनते हैं वह केवल आपके लिए है: अधिकांश देशों में इसे फैलाना या उपयोग करना वर्जित है। केवल रिसीव।"</string>
+    <string name="pmr_end_of_call">"कॉल समाप्त"</string>
+    <string name="pmr_group_call">"ग्रुप कॉल %1$s"</string>
+    <string name="pmr_private_call">"%1$s को निजी कॉल"</string>
+    <string name="pmr_from">"%1$s से"</string>
+    <string name="pmr_emergency">"आपातकाल"</string>
+    <string name="pmr_encrypted">"एन्क्रिप्टेड"</string>
 </resources>

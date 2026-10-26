@@ -2377,4 +2377,17 @@
         <item quantity="few">"baze"</item>
         <item quantity="other">"de baze"</item>
     </plurals>
+    <string name="pmr_subtitle">"Stații portabile: FM, DMR, dPMR"</string>
+    <string name="pmr_active">"canale active"</string>
+    <string name="pmr_heard">"%1$d canale auzite · %2$d apeluri digitale · 446,0–446,2 MHz"</string>
+    <string name="pmr_listening">"Monitorizare pe cele 16 canale"</string>
+    <string name="pmr_listening_to">"Ascultă canalul %1$d"</string>
+    <string name="pmr_tap_to_listen">"Atingeți un canal analogic pentru a-l asculta"</string>
+    <string name="pmr_how_it_works">"PMR446 este banda stațiilor portabile fără licență: 16 canale FM analogice de la 446,00625 MHz și stații digitale în jumătatea superioară (DMR446 pe aceleași centre, dPMR446 pe canale de 6,25 kHz). Banda are doar 200 kHz, așa că toate canalele sunt urmărite simultan, iar unul activ este demodulat: i se măsoară tonul CTCSS și, pentru stațiile digitale, se listează semnalizarea de apel citită de codul OnAir (cod de culoare, apel de grup sau privat, ID-urile ambelor stații). Vocea digitală nu este decodată. Vocea analogică poate fi ascultată; ce auziți este doar pentru dumneavoastră: în majoritatea țărilor este interzis să fie divulgat sau folosit. Doar recepție."</string>
+    <string name="pmr_end_of_call">"sfârșit de apel"</string>
+    <string name="pmr_group_call">"apel de grup %1$s"</string>
+    <string name="pmr_private_call">"apel privat către %1$s"</string>
+    <string name="pmr_from">"de la %1$s"</string>
+    <string name="pmr_emergency">"urgență"</string>
+    <string name="pmr_encrypted">"criptat"</string>
 </resources>

@@ -2319,4 +2319,17 @@
         <item quantity="one">"basisstation"</item>
         <item quantity="other">"basisstations"</item>
     </plurals>
+    <string name="pmr_subtitle">"Portofoons: FM, DMR, dPMR"</string>
+    <string name="pmr_active">"actieve kanalen"</string>
+    <string name="pmr_heard">"%1$d kanalen gehoord · %2$d digitale oproepen · 446,0–446,2 MHz"</string>
+    <string name="pmr_listening">"Alle 16 kanalen bewaakt"</string>
+    <string name="pmr_listening_to">"Luisteren naar kanaal %1$d"</string>
+    <string name="pmr_tap_to_listen">"Tik op een analoog kanaal om het te horen"</string>
+    <string name="pmr_how_it_works">"PMR446 is de vergunningsvrije portofoonband: 16 analoge FM-kanalen vanaf 446,00625 MHz en digitale portofoons in de bovenste helft (DMR446 op dezelfde middens, dPMR446 op kanalen van 6,25 kHz). De band is maar 200 kHz breed, dus alle kanalen worden tegelijk bewaakt en een actief kanaal wordt gedemoduleerd: de CTCSS-toon wordt gemeten en bij digitale portofoons wordt de oproepsignalering getoond die de code van OnAir leest (kleurcode, groeps- of privéoproep, de id\'s van beide portofoons). Digitale spraak wordt niet gedecodeerd. Analoge spraak kun je beluisteren; wat je hoort is alleen voor jou: in de meeste landen is doorvertellen of gebruiken verboden. Alleen ontvangst."</string>
+    <string name="pmr_end_of_call">"einde oproep"</string>
+    <string name="pmr_group_call">"groepsoproep %1$s"</string>
+    <string name="pmr_private_call">"privéoproep naar %1$s"</string>
+    <string name="pmr_from">"van %1$s"</string>
+    <string name="pmr_emergency">"noodoproep"</string>
+    <string name="pmr_encrypted">"versleuteld"</string>
 </resources>

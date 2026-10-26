@@ -15,10 +15,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-/** What a tool does with the samples, on its DSP thread: [feed] for each buffer, [tick] about once a second. */
+/** What a tool does with the samples, on its DSP thread: [feed] for each buffer, [tick] about once a second, [close] at the end. */
 interface SdrSink {
     fun feed(buf: ByteArray, len: Int)
     fun tick(nowMs: Long) {}
+    /** Once reception has stopped, on the DSP thread. */
+    fun close() {}
 }
 
 /**
@@ -91,6 +93,7 @@ abstract class SdrRxController(
                 val now = System.currentTimeMillis()
                 if (now - last >= 1000) { last = now; sink.tick(now) }
             }
+            sink.close()
         }, threadName).start()
         gain.attach { applyGains() }
         r.startRx(

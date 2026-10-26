@@ -2551,4 +2551,17 @@
         <item quantity="many">"قاعدة"</item>
         <item quantity="other">"قاعدة"</item>
     </plurals>
+    <string name="pmr_subtitle">"أجهزة اللاسلكي: FM وDMR وdPMR"</string>
+    <string name="pmr_active">"قنوات نشطة"</string>
+    <string name="pmr_heard">"%1$d قناة مسموعة · %2$d نداء رقمي · 446.0–446.2 ميغاهرتز"</string>
+    <string name="pmr_listening">"مراقبة القنوات الـ16"</string>
+    <string name="pmr_listening_to">"الاستماع إلى القناة %1$d"</string>
+    <string name="pmr_tap_to_listen">"المس قناة تناظرية للاستماع إليها"</string>
+    <string name="pmr_how_it_works">"PMR446 هو نطاق أجهزة اللاسلكي دون ترخيص: 16 قناة FM تناظرية بدءًا من 446.00625 ميغاهرتز، وأجهزة رقمية في النصف الأعلى (DMR446 على المراكز نفسها، وdPMR446 على قنوات 6.25 كيلوهرتز). عرض النطاق 200 كيلوهرتز فقط، لذا تُراقب كل القنوات معًا وتُفك القناة النشطة: تُقاس نغمة CTCSS الخاصة بها، وبالنسبة للأجهزة الرقمية تُعرض إشارات النداء التي تقرؤها شيفرة OnAir (رمز اللون، نداء جماعي أو خاص، معرّفا الجهازين). لا يُفك الصوت الرقمي. يمكن الاستماع إلى الصوت التناظري؛ ما تسمعه لك وحدك: يُحظر في معظم البلدان إفشاؤه أو استخدامه. استقبال فقط."</string>
+    <string name="pmr_end_of_call">"نهاية النداء"</string>
+    <string name="pmr_group_call">"نداء جماعي %1$s"</string>
+    <string name="pmr_private_call">"نداء خاص إلى %1$s"</string>
+    <string name="pmr_from">"من %1$s"</string>
+    <string name="pmr_emergency">"طوارئ"</string>
+    <string name="pmr_encrypted">"مشفر"</string>
 </resources>

@@ -2435,4 +2435,17 @@
         <item quantity="many">"баз"</item>
         <item quantity="other">"бази"</item>
     </plurals>
+    <string name="pmr_subtitle">"Рації: FM, DMR, dPMR"</string>
+    <string name="pmr_active">"активних каналів"</string>
+    <string name="pmr_heard">"почуто каналів: %1$d · цифрових викликів: %2$d · 446,0–446,2 МГц"</string>
+    <string name="pmr_listening">"Спостереження за 16 каналами"</string>
+    <string name="pmr_listening_to">"Прослуховування каналу %1$d"</string>
+    <string name="pmr_tap_to_listen">"Торкніться аналогового каналу, щоб слухати"</string>
+    <string name="pmr_how_it_works">"PMR446 — безліцензійний діапазон рацій: 16 аналогових FM-каналів від 446,00625 МГц і цифрові рації у верхній половині (DMR446 на тих самих частотах, dPMR446 на каналах 6,25 кГц). Діапазон шириною лише 200 кГц, тож усі канали відстежуються одночасно, а активний демодулюється: вимірюється його тон CTCSS, а для цифрових рацій виводиться сигналізація виклику, яку читає код OnAir (кольоровий код, груповий чи індивідуальний виклик, ID обох рацій). Цифровий голос не декодується. Аналоговий голос можна слухати; почуте призначене лише вам: у більшості країн поширювати чи використовувати його заборонено. Лише прийом."</string>
+    <string name="pmr_end_of_call">"кінець виклику"</string>
+    <string name="pmr_group_call">"груповий виклик %1$s"</string>
+    <string name="pmr_private_call">"індивідуальний виклик %1$s"</string>
+    <string name="pmr_from">"від %1$s"</string>
+    <string name="pmr_emergency">"екстрений"</string>
+    <string name="pmr_encrypted">"зашифрований"</string>
 </resources>

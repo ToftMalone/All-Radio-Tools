@@ -2261,4 +2261,17 @@
     <plurals name="p_bases">
         <item quantity="other">"ฐาน"</item>
     </plurals>
+    <string name="pmr_subtitle">"วิทยุสื่อสาร: FM, DMR, dPMR"</string>
+    <string name="pmr_active">"ช่องที่ใช้งาน"</string>
+    <string name="pmr_heard">"ได้ยิน %1$d ช่อง · การเรียกดิจิทัล %2$d · 446.0–446.2 MHz"</string>
+    <string name="pmr_listening">"กำลังเฝ้าทั้ง 16 ช่อง"</string>
+    <string name="pmr_listening_to">"กำลังฟังช่อง %1$d"</string>
+    <string name="pmr_tap_to_listen">"แตะช่องแอนะล็อกเพื่อฟัง"</string>
+    <string name="pmr_how_it_works">"PMR446 คือย่านวิทยุสื่อสารที่ไม่ต้องขอใบอนุญาต มี 16 ช่อง FM แอนะล็อกตั้งแต่ 446.00625 MHz และวิทยุดิจิทัลในครึ่งบน (DMR446 บนความถี่กลางเดียวกัน dPMR446 บนช่อง 6.25 kHz) ย่านนี้กว้างเพียง 200 kHz จึงเฝ้าทุกช่องพร้อมกันและดีมอดูเลตช่องที่ใช้งาน วัดโทน CTCSS และสำหรับวิทยุดิจิทัลจะแสดงสัญญาณการเรียกที่โค้ดของ OnAir อ่านได้ (รหัสสี การเรียกกลุ่มหรือส่วนตัว ID ของทั้งสองเครื่อง) ไม่ถอดรหัสเสียงดิจิทัล ฟังเสียงแอนะล็อกได้ แต่สิ่งที่ได้ยินมีไว้สำหรับคุณเท่านั้น ในประเทศส่วนใหญ่ห้ามเปิดเผยหรือนำไปใช้ รับอย่างเดียว"</string>
+    <string name="pmr_end_of_call">"สิ้นสุดการเรียก"</string>
+    <string name="pmr_group_call">"เรียกกลุ่ม %1$s"</string>
+    <string name="pmr_private_call">"เรียกส่วนตัวถึง %1$s"</string>
+    <string name="pmr_from">"จาก %1$s"</string>
+    <string name="pmr_emergency">"ฉุกเฉิน"</string>
+    <string name="pmr_encrypted">"เข้ารหัส"</string>
 </resources>

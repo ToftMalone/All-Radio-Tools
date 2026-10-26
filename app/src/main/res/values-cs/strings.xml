@@ -2435,4 +2435,17 @@
         <item quantity="many">"základny"</item>
         <item quantity="other">"základen"</item>
     </plurals>
+    <string name="pmr_subtitle">"Vysílačky: FM, DMR, dPMR"</string>
+    <string name="pmr_active">"aktivní kanály"</string>
+    <string name="pmr_heard">"zachycené kanály: %1$d · digitální volání: %2$d · 446,0–446,2 MHz"</string>
+    <string name="pmr_listening">"Sledování všech 16 kanálů"</string>
+    <string name="pmr_listening_to">"Poslech kanálu %1$d"</string>
+    <string name="pmr_tap_to_listen">"Klepnutím na analogový kanál ho uslyšíte"</string>
+    <string name="pmr_how_it_works">"PMR446 je pásmo vysílaček bez licence: 16 analogových kanálů FM od 446,00625 MHz a digitální stanice v horní polovině (DMR446 na stejných středech, dPMR446 na kanálech 6,25 kHz). Pásmo má jen 200 kHz, takže se sledují všechny kanály naráz a aktivní se demoduluje: změří se jeho tón CTCSS a u digitálních stanic se vypíše signalizace volání, kterou čte kód OnAir (barevný kód, skupinové nebo soukromé volání, ID obou stanic). Digitální hlas se nedekóduje. Analogový hlas lze poslouchat; co slyšíte, je jen pro vás: ve většině zemí je zakázáno to šířit nebo využívat. Pouze příjem."</string>
+    <string name="pmr_end_of_call">"konec volání"</string>
+    <string name="pmr_group_call">"skupinové volání %1$s"</string>
+    <string name="pmr_private_call">"soukromé volání pro %1$s"</string>
+    <string name="pmr_from">"od %1$s"</string>
+    <string name="pmr_emergency">"tíseň"</string>
+    <string name="pmr_encrypted">"šifrované"</string>
 </resources>
