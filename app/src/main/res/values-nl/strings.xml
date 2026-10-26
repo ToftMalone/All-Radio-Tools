@@ -2249,4 +2249,10 @@
     <string name="squawk_emergency">"Noodgeval"</string>
     <string name="mode_ac_info">" Mode A/C: de oudere radarantwoorden van transponders, met of zonder ADS-B, bevatten een squawk of een hoogte zonder te zeggen welke; een code wordt aan een vliegtuig gekoppeld als er precies één op die hoogte vliegt. 7500, 7600 en 7700 staan in rood."</string>
     <string name="horus_info">" Horus-amateurballonnen (Horus Binary v1 en v2, meestal 434,2 tot 434,9 MHz) worden ook gedecodeerd als de frequentie binnen 4 kHz van de hunne ligt."</string>
+    <string name="ism_heard">"%1$s · %2$d metingen · %3$d onbekende bursts"</string>
+    <string name="ism_listening">"Luisteren naar sensoren"</string>
+    <string name="ism_none_yet_body">"Weerstations en thermometers zenden elke 30 seconden tot enkele minuten. De meeste gebruiken in Europa 433,92 MHz; Bresser-, LaCrosse- en Fine Offset-stations vaak 868,3 MHz."</string>
+    <string name="ism_how_it_works">"Veel kleine apparaten zenden hun metingen onversleuteld in de ISM-banden: weerstations, thermometers, energiemeters, nutsmeters, deur- en bewegingssensoren, afstandsbedieningen met vaste code. De app decodeert %1$d apparaatfamilies met de formaten die rtl_433 documenteert, zoals OnAir ze overneemt, en toont een meting alleen als de CRC, controlesom of herhaling klopt. Onbekende bursts worden geteld. Alleen ontvangst."</string>
+    <string name="ism_channel">"Kanaal %1$s"</string>
+    <string name="ism_subtitle">"Weerstations, meters, sensoren"</string>
 </resources>

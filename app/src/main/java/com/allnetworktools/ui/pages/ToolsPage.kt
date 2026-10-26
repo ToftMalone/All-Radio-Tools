@@ -121,6 +121,7 @@ private fun groups(net: Network, connectedDevice: String?, servingLabel: String?
                 ToolEntry(Tool.Fpv, S(R.string.drones), S(R.string.analog_fpv_dji_and_rc_links)),
                 ToolEntry(Tool.Tpms, "TPMS", S(R.string.tyre_pressure_sensors_433_mhz)),
                 ToolEntry(Tool.Pocsag, "POCSAG", S(R.string.pagers_e_message_dapnet)),
+                ToolEntry(Tool.Ism, "ISM", S(R.string.ism_subtitle)),
             ).sortedWith(compareBy(java.text.Collator.getInstance()) { it.title }),
         ),
     )

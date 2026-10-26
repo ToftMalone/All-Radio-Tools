@@ -2249,4 +2249,10 @@
     <string name="squawk_emergency">"Emergenza"</string>
     <string name="mode_ac_info">" Modo A/C: le vecchie risposte radar dei transponder, con o senza ADS-B, portano uno squawk o una quota senza dire quale; un codice è associato a un aereo quando solo uno vola a quella quota. 7500, 7600 e 7700 sono in rosso."</string>
     <string name="horus_info">" Vengono decodificati anche i palloni amatoriali Horus (Horus Binary v1 e v2, di solito tra 434,2 e 434,9 MHz), quando la frequenza è entro 4 kHz dalla loro."</string>
+    <string name="ism_heard">"%1$s · %2$d letture · %3$d raffiche sconosciute"</string>
+    <string name="ism_listening">"In ascolto dei sensori"</string>
+    <string name="ism_none_yet_body">"Stazioni meteo e termometri trasmettono ogni 30 secondi o pochi minuti. La maggior parte usa 433,92 MHz in Europa; le stazioni Bresser, LaCrosse e Fine Offset spesso 868,3 MHz."</string>
+    <string name="ism_how_it_works">"Molti piccoli dispositivi trasmettono le loro letture nelle bande ISM senza cifratura: stazioni meteo, termometri, monitor di energia, contatori, sensori di porta e movimento, telecomandi a codice fisso. L\'app decodifica %1$d famiglie di dispositivi con i formati documentati da rtl_433, come li porta OnAir, e mostra una lettura solo se supera CRC, checksum o ripetizione. Le raffiche non riconosciute vengono contate. Solo ricezione."</string>
+    <string name="ism_channel">"Canale %1$s"</string>
+    <string name="ism_subtitle">"Stazioni meteo, contatori, sensori"</string>
 </resources>

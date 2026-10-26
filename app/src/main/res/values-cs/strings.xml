@@ -2359,4 +2359,10 @@
     <string name="squawk_emergency">"Nouze"</string>
     <string name="mode_ac_info">" Mode A/C: starší radarové odpovědi transpondérů, s ADS-B i bez něj, nesou buď squawk, nebo výšku, aniž by řekly co; kód se přiřadí letadlu, když v té výšce letí právě jedno. 7500, 7600 a 7700 jsou červeně."</string>
     <string name="horus_info">" Dekódují se i amatérské balóny Horus (Horus Binary v1 a v2, obvykle 434,2 až 434,9 MHz), pokud je frekvence do 4 kHz od jejich."</string>
+    <string name="ism_heard">"%1$s · měření: %2$d · neznámé dávky: %3$d"</string>
+    <string name="ism_listening">"Poslech čidel"</string>
+    <string name="ism_none_yet_body">"Meteostanice a teploměry vysílají každých 30 sekund až několik minut. Většina v Evropě používá 433,92 MHz; stanice Bresser, LaCrosse a Fine Offset často 868,3 MHz."</string>
+    <string name="ism_how_it_works">"Mnoho malých zařízení vysílá svá měření v pásmech ISM bez šifrování: meteostanice, teploměry, měřiče energie, měřidla, čidla dveří a pohybu, dálkové ovladače s pevným kódem. Aplikace dekóduje %1$d rodin zařízení podle formátů popsaných v rtl_433, jak je převzal OnAir, a měření ukáže jen po úspěšné kontrole CRC, součtu nebo opakování. Nerozpoznané dávky se počítají. Pouze příjem."</string>
+    <string name="ism_channel">"Kanál %1$s"</string>
+    <string name="ism_subtitle">"Meteostanice, měřidla, čidla"</string>
 </resources>

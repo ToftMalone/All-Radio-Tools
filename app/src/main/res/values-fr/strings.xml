@@ -2304,4 +2304,10 @@
     <string name="squawk_emergency">"Urgence"</string>
     <string name="mode_ac_info">" Mode A/C : les anciennes réponses radar des transpondeurs, avec ou sans ADS-B, portent soit un squawk, soit une altitude, sans dire lequel ; un code est associé à un avion quand un seul vole à cette altitude. 7500, 7600 et 7700 s\'affichent en rouge."</string>
     <string name="horus_info">" Les ballons amateurs Horus (Horus Binary v1 et v2, en général entre 434,2 et 434,9 MHz) sont aussi décodés, quand la fréquence est à moins de 4 kHz de la leur."</string>
+    <string name="ism_heard">"%1$s · %2$d mesures · %3$d rafales inconnues"</string>
+    <string name="ism_listening">"À l\'écoute des capteurs"</string>
+    <string name="ism_none_yet_body">"Les stations météo et thermomètres émettent toutes les 30 secondes à quelques minutes. La plupart utilisent 433,92 MHz en Europe ; les stations Bresser, LaCrosse et Fine Offset sont souvent sur 868,3 MHz."</string>
+    <string name="ism_how_it_works">"Beaucoup de petits appareils transmettent leurs mesures dans les bandes ISM sans chiffrement : stations météo, thermomètres, compteurs d\'énergie, compteurs d\'eau ou de gaz, détecteurs d\'ouverture et de mouvement, télécommandes à code fixe. L\'application décode %1$d familles d\'appareils avec les formats documentés par rtl_433, tels que les porte OnAir, et n\'affiche une mesure que si son CRC, sa somme de contrôle ou sa répétition est vérifiée. Les rafales qu\'aucun format ne reconnaît sont comptées. Réception seule."</string>
+    <string name="ism_channel">"Canal %1$s"</string>
+    <string name="ism_subtitle">"Stations météo, compteurs, capteurs"</string>
 </resources>

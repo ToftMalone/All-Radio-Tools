@@ -2194,4 +2194,10 @@
     <string name="squawk_emergency">"紧急情况"</string>
     <string name="mode_ac_info">" A/C 模式：应答机的旧式雷达应答（无论有无 ADS-B）携带应答码或高度，但不说明是哪一种；当恰好只有一架飞机在该高度飞行时，代码会与其匹配。7500、7600 和 7700 以红色显示。"</string>
     <string name="horus_info">" 当频率与其相差 4 kHz 以内时，也会解码 Horus 业余气球（Horus Binary v1 和 v2，通常为 434.2–434.9 MHz）。"</string>
+    <string name="ism_heard">"%1$s · %2$d 条读数 · %3$d 个未知突发"</string>
+    <string name="ism_listening">"正在接收传感器"</string>
+    <string name="ism_none_yet_body">"气象站和温度计每 30 秒到几分钟发送一次。欧洲大多使用 433.92 MHz；Bresser、LaCrosse 和 Fine Offset 气象站常用 868.3 MHz。"</string>
+    <string name="ism_how_it_works">"许多小型设备在 ISM 频段中以不加密的方式发送读数：气象站、温度计、电能监测器、各类表计、门磁和人体感应器、固定码遥控器。本应用按 rtl_433 记录、由 OnAir 移植的格式解码 %1$d 个设备系列，只显示通过 CRC、校验和或重复检查的读数。无法识别的突发只计数。仅接收。"</string>
+    <string name="ism_channel">"通道 %1$s"</string>
+    <string name="ism_subtitle">"气象站、表计、传感器"</string>
 </resources>

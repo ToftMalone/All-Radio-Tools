@@ -2359,4 +2359,10 @@
     <string name="squawk_emergency">"Niebezpieczeństwo"</string>
     <string name="mode_ac_info">" Mode A/C: starsze odpowiedzi radarowe transponderów, z ADS-B lub bez, niosą squawk albo wysokość, nie mówiąc, co to jest; kod jest przypisywany samolotowi, gdy na tej wysokości leci dokładnie jeden. 7500, 7600 i 7700 są na czerwono."</string>
     <string name="horus_info">" Dekodowane są też amatorskie balony Horus (Horus Binary v1 i v2, zwykle 434,2–434,9 MHz), gdy częstotliwość różni się od ich o mniej niż 4 kHz."</string>
+    <string name="ism_heard">"%1$s · odczyty: %2$d · nieznane serie: %3$d"</string>
+    <string name="ism_listening">"Nasłuch czujników"</string>
+    <string name="ism_none_yet_body">"Stacje pogodowe i termometry nadają co 30 sekund do kilku minut. Większość w Europie używa 433,92 MHz; stacje Bresser, LaCrosse i Fine Offset często 868,3 MHz."</string>
+    <string name="ism_how_it_works">"Wiele małych urządzeń nadaje odczyty w pasmach ISM bez szyfrowania: stacje pogodowe, termometry, monitory energii, liczniki, czujniki drzwi i ruchu, piloty o stałym kodzie. Aplikacja dekoduje %1$d rodzin urządzeń według formatów opisanych przez rtl_433, w przeniesieniu OnAir, i pokazuje odczyt tylko po pozytywnej kontroli CRC, sumy kontrolnej lub powtórzenia. Nierozpoznane serie są liczone. Tylko odbiór."</string>
+    <string name="ism_channel">"Kanał %1$s"</string>
+    <string name="ism_subtitle">"Stacje pogodowe, liczniki, czujniki"</string>
 </resources>

@@ -2249,4 +2249,10 @@
     <string name="squawk_emergency">"Acil durum"</string>
     <string name="mode_ac_info">" Mod A/C: transponderlerin eski radar yanıtları, ADS-B olsun olmasın, hangisi olduğunu söylemeden bir squawk ya da bir irtifa taşır; o irtifada tam bir uçak uçuyorsa kod ona eşlenir. 7500, 7600 ve 7700 kırmızı gösterilir."</string>
     <string name="horus_info">" Horus amatör balonları (Horus Binary v1 ve v2, genellikle 434,2–434,9 MHz) da, frekans onlarınkine 4 kHz\'den yakınsa çözülür."</string>
+    <string name="ism_heard">"%1$s · %2$d ölçüm · %3$d bilinmeyen patlama"</string>
+    <string name="ism_listening">"Sensörler dinleniyor"</string>
+    <string name="ism_none_yet_body">"Hava istasyonları ve termometreler 30 saniyede bir ile birkaç dakikada bir yayın yapar. Avrupa\'da çoğu 433,92 MHz kullanır; Bresser, LaCrosse ve Fine Offset istasyonları çoğunlukla 868,3 MHz kullanır."</string>
+    <string name="ism_how_it_works">"Birçok küçük cihaz ölçümlerini ISM bantlarında şifresiz yayınlar: hava istasyonları, termometreler, enerji ölçerler, sayaçlar, kapı ve hareket sensörleri, sabit kodlu kumandalar. Uygulama, rtl_433\'ün belgelediği ve OnAir\'in aktardığı biçimlerle %1$d cihaz ailesini çözer ve bir ölçümü yalnızca CRC, sağlama toplamı ya da tekrar denetimi geçerse gösterir. Tanınmayan patlamalar sayılır. Yalnızca alım."</string>
+    <string name="ism_channel">"Kanal %1$s"</string>
+    <string name="ism_subtitle">"Hava istasyonları, sayaçlar, sensörler"</string>
 </resources>

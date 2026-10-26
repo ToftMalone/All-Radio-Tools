@@ -2194,4 +2194,10 @@
     <string name="squawk_emergency">"Khẩn cấp"</string>
     <string name="mode_ac_info">" Chế độ A/C: các phản hồi radar kiểu cũ của bộ phát đáp, có hoặc không có ADS-B, mang mã squawk hoặc độ cao mà không cho biết là cái nào; mã được ghép với máy bay khi chỉ đúng một chiếc bay ở độ cao đó. 7500, 7600 và 7700 hiển thị màu đỏ."</string>
     <string name="horus_info">" Bóng bay nghiệp dư Horus (Horus Binary v1 và v2, thường 434,2 đến 434,9 MHz) cũng được giải mã khi tần số cách tần số của chúng dưới 4 kHz."</string>
+    <string name="ism_heard">"%1$s · %2$d số đo · %3$d đợt không rõ"</string>
+    <string name="ism_listening">"Đang nghe cảm biến"</string>
+    <string name="ism_none_yet_body">"Trạm thời tiết và nhiệt kế phát mỗi 30 giây đến vài phút. Phần lớn dùng 433,92 MHz ở châu Âu; trạm Bresser, LaCrosse và Fine Offset thường dùng 868,3 MHz."</string>
+    <string name="ism_how_it_works">"Nhiều thiết bị nhỏ phát số đo trong các băng ISM mà không mã hóa: trạm thời tiết, nhiệt kế, máy đo năng lượng, đồng hồ đo, cảm biến cửa và chuyển động, điều khiển mã cố định. Ứng dụng giải mã %1$d họ thiết bị theo định dạng rtl_433 mô tả và OnAir chuyển sang, chỉ hiện số đo khi qua kiểm tra CRC, tổng kiểm tra hoặc lặp lại. Các đợt không nhận ra được đếm lại. Chỉ thu."</string>
+    <string name="ism_channel">"Kênh %1$s"</string>
+    <string name="ism_subtitle">"Trạm thời tiết, đồng hồ đo, cảm biến"</string>
 </resources>

@@ -2194,4 +2194,10 @@
     <string name="squawk_emergency">"緊急事態"</string>
     <string name="mode_ac_info">" モード A/C：トランスポンダーの旧来のレーダー応答は、ADS-B の有無にかかわらず、スコークか高度のどちらかを伝えますが、どちらかは示しません。その高度を飛ぶ航空機がちょうど 1 機なら、その機体に対応付けます。7500、7600、7700 は赤で表示します。"</string>
     <string name="horus_info">" Horus のアマチュア気球（Horus Binary v1・v2、通常 434.2〜434.9 MHz）も、周波数が 4 kHz 以内なら解読します。"</string>
+    <string name="ism_heard">"%1$s · %2$d 件の測定 · 不明なバースト %3$d 件"</string>
+    <string name="ism_listening">"センサーを受信中"</string>
+    <string name="ism_none_yet_body">"気象ステーションや温度計は 30 秒〜数分ごとに送信します。ヨーロッパでは多くが 433.92 MHz、Bresser・LaCrosse・Fine Offset は 868.3 MHz が多いです。"</string>
+    <string name="ism_how_it_works">"多くの小型機器は ISM 帯で測定値を暗号化せずに送信しています。気象ステーション、温度計、電力モニター、各種メーター、ドア・人感センサー、固定コードのリモコンなどです。アプリは rtl_433 が文書化し OnAir が移植した形式で %1$d 系統の機器を解読し、CRC・チェックサム・繰り返しの検査を通った値だけを表示します。認識できないバーストは数えます。受信のみ。"</string>
+    <string name="ism_channel">"チャンネル %1$s"</string>
+    <string name="ism_subtitle">"気象局、メーター、センサー"</string>
 </resources>

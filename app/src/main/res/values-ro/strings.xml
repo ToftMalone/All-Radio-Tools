@@ -2304,4 +2304,10 @@
     <string name="squawk_emergency">"Urgență"</string>
     <string name="mode_ac_info">" Mod A/C: vechile răspunsuri radar ale transponderelor, cu sau fără ADS-B, poartă fie un squawk, fie o altitudine, fără să spună care; un cod e asociat unui avion când doar unul zboară la acea altitudine. 7500, 7600 și 7700 apar cu roșu."</string>
     <string name="horus_info">" Baloanele amatoare Horus (Horus Binary v1 și v2, de obicei între 434,2 și 434,9 MHz) sunt decodate și ele, când frecvența e la mai puțin de 4 kHz de a lor."</string>
+    <string name="ism_heard">"%1$s · %2$d citiri · %3$d rafale necunoscute"</string>
+    <string name="ism_listening">"Ascultă senzorii"</string>
+    <string name="ism_none_yet_body">"Stațiile meteo și termometrele emit la 30 de secunde până la câteva minute. Majoritatea folosesc 433,92 MHz în Europa; stațiile Bresser, LaCrosse și Fine Offset folosesc des 868,3 MHz."</string>
+    <string name="ism_how_it_works">"Multe dispozitive mici își transmit citirile în benzile ISM fără criptare: stații meteo, termometre, monitoare de energie, contoare, senzori de ușă și mișcare, telecomenzi cu cod fix. Aplicația decodează %1$d familii de dispozitive cu formatele documentate de rtl_433, așa cum le portează OnAir, și afișează o citire doar dacă trece CRC-ul, suma de control sau repetiția. Rafalele nerecunoscute sunt numărate. Doar recepție."</string>
+    <string name="ism_channel">"Canal %1$s"</string>
+    <string name="ism_subtitle">"Stații meteo, contoare, senzori"</string>
 </resources>

@@ -2194,4 +2194,10 @@
     <string name="squawk_emergency">"비상"</string>
     <string name="mode_ac_info">" 모드 A/C: 트랜스폰더의 예전 레이더 응답은 ADS-B 유무와 관계없이 스쿼크나 고도 중 하나를 담지만 어느 쪽인지는 알리지 않습니다. 그 고도에 항공기가 딱 한 대 있으면 그 항공기와 연결합니다. 7500, 7600, 7700은 빨간색으로 표시합니다."</string>
     <string name="horus_info">" Horus 아마추어 풍선(Horus Binary v1·v2, 보통 434.2~434.9MHz)도 주파수가 4kHz 이내이면 해독합니다."</string>
+    <string name="ism_heard">"%1$s · 측정 %2$d건 · 알 수 없는 버스트 %3$d건"</string>
+    <string name="ism_listening">"센서 수신 중"</string>
+    <string name="ism_none_yet_body">"기상 관측기와 온도계는 30초에서 몇 분마다 송신합니다. 유럽에서는 대부분 433.92MHz를, Bresser·LaCrosse·Fine Offset 관측기는 흔히 868.3MHz를 씁니다."</string>
+    <string name="ism_how_it_works">"많은 소형 기기가 ISM 대역에서 측정값을 암호화 없이 송신합니다. 기상 관측기, 온도계, 전력 모니터, 계량기, 문·동작 센서, 고정 코드 리모컨 등입니다. 앱은 rtl_433이 문서화하고 OnAir가 이식한 형식으로 %1$d개 기기 계열을 해독하며, CRC·체크섬·반복 검사를 통과한 값만 표시합니다. 인식되지 않은 버스트는 개수만 셉니다. 수신 전용."</string>
+    <string name="ism_channel">"채널 %1$s"</string>
+    <string name="ism_subtitle">"기상 관측기, 계량기, 센서"</string>
 </resources>
