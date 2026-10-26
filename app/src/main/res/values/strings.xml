@@ -2333,4 +2333,13 @@
     <string name="pmr_from">"from %1$s"</string>
     <string name="pmr_emergency">"emergency"</string>
     <string name="pmr_encrypted">"encrypted"</string>
+    <string name="lpwan_subtitle">"Connected objects on 868 MHz"</string>
+    <string name="lpwan_heard">"%1$d LoRa · %2$d Sigfox · %3$d damaged frames"</string>
+    <string name="lpwan_listening">"Listening on 868.1–868.5 MHz"</string>
+    <string name="lpwan_none_yet">"No device yet"</string>
+    <string name="lpwan_none_yet_body">"Sensors often send once every 10 minutes to a few hours, so leave it running. In town, parking sensors, meters and trackers are common; an antenna outside helps a lot."</string>
+    <string name="lpwan_how_it_works">"LoRaWAN and Sigfox carry the short messages of connected objects: sensors, meters, trackers. On the three channels every EU868 LoRaWAN device uses (868.1, 868.3 and 868.5 MHz), the app runs a software LoRa receiver for each spreading factor from 7 to 12 and reads the LoRaWAN header: message type, device address (and the network that gave it), frame counter, port; the payload itself is encrypted. Sigfox\'s 100 bit/s ultra-narrowband uplinks are found anywhere in their 192 kHz and decoded with OnAir\'s code (frame type, device ID, counter, payload). Receive only."</string>
+    <string name="lpwan_join">"LoRaWAN join"</string>
+    <string name="lpwan_port">"port %1$d"</string>
+    <string name="lpwan_encrypted">"Payload encrypted (network and application keys)"</string>
 </resources>

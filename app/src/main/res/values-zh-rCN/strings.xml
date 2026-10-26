@@ -2274,4 +2274,13 @@
     <string name="pmr_from">"来自 %1$s"</string>
     <string name="pmr_emergency">"紧急"</string>
     <string name="pmr_encrypted">"已加密"</string>
+    <string name="lpwan_subtitle">"868 MHz 物联网设备"</string>
+    <string name="lpwan_heard">"LoRa %1$d · Sigfox %2$d · 损坏帧 %3$d"</string>
+    <string name="lpwan_listening">"正在接收 868.1–868.5 MHz"</string>
+    <string name="lpwan_none_yet">"暂无设备"</string>
+    <string name="lpwan_none_yet_body">"传感器通常每 10 分钟到几小时才发送一次，请保持接收。城市中常见停车传感器、表计和追踪器；室外天线帮助很大。"</string>
+    <string name="lpwan_how_it_works">"LoRaWAN 和 Sigfox 承载物联网设备(传感器、表计、追踪器)的短消息。在每个 EU868 LoRaWAN 设备都会使用的三个信道(868.1、868.3 和 868.5 MHz)上，应用为 7 到 12 的每个扩频因子运行一个软件 LoRa 接收机，并读取 LoRaWAN 报头：消息类型、设备地址(以及分配它的网络)、帧计数、端口；负载本身是加密的。100 bit/s 的超窄带 Sigfox 消息可在其 192 kHz 内任意位置被找到，并用 OnAir 的代码解码(帧类型、设备 ID、计数、数据)。仅接收。"</string>
+    <string name="lpwan_join">"LoRaWAN 入网"</string>
+    <string name="lpwan_port">"端口 %1$d"</string>
+    <string name="lpwan_encrypted">"负载已加密(网络和应用密钥)"</string>
 </resources>

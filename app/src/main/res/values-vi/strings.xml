@@ -2274,4 +2274,13 @@
     <string name="pmr_from">"từ %1$s"</string>
     <string name="pmr_emergency">"khẩn cấp"</string>
     <string name="pmr_encrypted">"đã mã hóa"</string>
+    <string name="lpwan_subtitle">"Thiết bị IoT trên 868 MHz"</string>
+    <string name="lpwan_heard">"%1$d LoRa · %2$d Sigfox · %3$d khung hỏng"</string>
+    <string name="lpwan_listening">"Đang nghe 868,1–868,5 MHz"</string>
+    <string name="lpwan_none_yet">"Chưa có thiết bị"</string>
+    <string name="lpwan_none_yet_body">"Cảm biến thường phát 10 phút đến vài giờ một lần, nên hãy để chạy. Trong thành phố, cảm biến đỗ xe, đồng hồ đo và thiết bị định vị rất phổ biến; ăng-ten ngoài trời giúp nhiều."</string>
+    <string name="lpwan_how_it_works">"LoRaWAN và Sigfox mang các tin nhắn ngắn của thiết bị IoT: cảm biến, đồng hồ đo, thiết bị định vị. Trên ba kênh mà mọi thiết bị LoRaWAN EU868 dùng (868,1, 868,3 và 868,5 MHz), ứng dụng chạy một bộ thu LoRa phần mềm cho mỗi hệ số trải phổ từ 7 đến 12 và đọc phần đầu LoRaWAN: loại tin, địa chỉ thiết bị (và mạng đã cấp), bộ đếm khung, cổng; dữ liệu thì đã mã hóa. Tin Sigfox băng siêu hẹp 100 bit/s được tìm ở bất kỳ đâu trong 192 kHz và giải mã bằng mã của OnAir (loại khung, ID, bộ đếm, dữ liệu). Chỉ thu."</string>
+    <string name="lpwan_join">"Gia nhập LoRaWAN"</string>
+    <string name="lpwan_port">"cổng %1$d"</string>
+    <string name="lpwan_encrypted">"Dữ liệu đã mã hóa (khóa mạng và ứng dụng)"</string>
 </resources>

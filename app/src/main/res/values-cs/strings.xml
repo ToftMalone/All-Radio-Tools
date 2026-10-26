@@ -2448,4 +2448,13 @@
     <string name="pmr_from">"od %1$s"</string>
     <string name="pmr_emergency">"tíseň"</string>
     <string name="pmr_encrypted">"šifrované"</string>
+    <string name="lpwan_subtitle">"Připojená zařízení na 868 MHz"</string>
+    <string name="lpwan_heard">"LoRa: %1$d · Sigfox: %2$d · poškozené rámce: %3$d"</string>
+    <string name="lpwan_listening">"Poslech 868,1–868,5 MHz"</string>
+    <string name="lpwan_none_yet">"Zatím žádné zařízení"</string>
+    <string name="lpwan_none_yet_body">"Čidla vysílají často jednou za 10 minut až několik hodin, nechte příjem běžet. Ve městě jsou běžná parkovací čidla, měřidla a sledovače; hodně pomůže anténa venku."</string>
+    <string name="lpwan_how_it_works">"LoRaWAN a Sigfox přenášejí krátké zprávy připojených zařízení: čidel, měřidel, sledovačů. Na třech kanálech, které používá každé zařízení LoRaWAN EU868 (868,1, 868,3 a 868,5 MHz), aplikace spouští softwarový přijímač LoRa pro každý rozprostírací faktor 7 až 12 a čte záhlaví LoRaWAN: typ zprávy, adresu zařízení (a síť, která ji přidělila), čítač rámců, port; samotná data jsou šifrovaná. Zprávy Sigfox v ultraúzkém pásmu 100 bit/s se hledají kdekoli v jejich 192 kHz a dekódují kódem OnAir (typ rámce, ID, čítač, data). Pouze příjem."</string>
+    <string name="lpwan_join">"Připojení LoRaWAN"</string>
+    <string name="lpwan_port">"port %1$d"</string>
+    <string name="lpwan_encrypted">"Data šifrovaná (klíče sítě a aplikace)"</string>
 </resources>

@@ -2274,4 +2274,13 @@
     <string name="pmr_from">"จาก %1$s"</string>
     <string name="pmr_emergency">"ฉุกเฉิน"</string>
     <string name="pmr_encrypted">"เข้ารหัส"</string>
+    <string name="lpwan_subtitle">"อุปกรณ์ IoT บน 868 MHz"</string>
+    <string name="lpwan_heard">"LoRa %1$d · Sigfox %2$d · เฟรมเสีย %3$d"</string>
+    <string name="lpwan_listening">"กำลังฟัง 868.1–868.5 MHz"</string>
+    <string name="lpwan_none_yet">"ยังไม่มีอุปกรณ์"</string>
+    <string name="lpwan_none_yet_body">"เซ็นเซอร์มักส่งทุก 10 นาทีถึงไม่กี่ชั่วโมง จึงควรเปิดรับไว้ ในเมืองมีเซ็นเซอร์ที่จอดรถ มิเตอร์ และตัวติดตามจำนวนมาก เสาอากาศภายนอกช่วยได้มาก"</string>
+    <string name="lpwan_how_it_works">"LoRaWAN และ Sigfox ส่งข้อความสั้นของอุปกรณ์ IoT เช่น เซ็นเซอร์ มิเตอร์ ตัวติดตาม บนสามช่องที่อุปกรณ์ LoRaWAN EU868 ทุกเครื่องใช้ (868.1, 868.3 และ 868.5 MHz) แอปรันตัวรับ LoRa แบบซอฟต์แวร์สำหรับ spreading factor 7 ถึง 12 และอ่านส่วนหัว LoRaWAN ได้แก่ ชนิดข้อความ ที่อยู่อุปกรณ์ (และเครือข่ายที่ออกให้) ตัวนับเฟรม พอร์ต ส่วนข้อมูลถูกเข้ารหัส ข้อความ Sigfox แถบแคบพิเศษ 100 bit/s ถูกค้นหาได้ทุกตำแหน่งในช่วง 192 kHz และถอดรหัสด้วยโค้ดของ OnAir (ชนิดเฟรม ID ตัวนับ ข้อมูล) รับอย่างเดียว"</string>
+    <string name="lpwan_join">"เข้าร่วม LoRaWAN"</string>
+    <string name="lpwan_port">"พอร์ต %1$d"</string>
+    <string name="lpwan_encrypted">"ข้อมูลถูกเข้ารหัส (กุญแจเครือข่ายและแอป)"</string>
 </resources>

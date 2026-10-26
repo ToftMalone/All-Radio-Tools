@@ -2332,4 +2332,13 @@
     <string name="pmr_from">"da %1$s"</string>
     <string name="pmr_emergency">"emergenza"</string>
     <string name="pmr_encrypted">"cifrata"</string>
+    <string name="lpwan_subtitle">"Oggetti connessi su 868 MHz"</string>
+    <string name="lpwan_heard">"%1$d LoRa · %2$d Sigfox · %3$d trame danneggiate"</string>
+    <string name="lpwan_listening">"In ascolto su 868,1–868,5 MHz"</string>
+    <string name="lpwan_none_yet">"Nessun dispositivo per ora"</string>
+    <string name="lpwan_none_yet_body">"I sensori trasmettono spesso ogni 10 minuti o poche ore: lascialo acceso. In città sono comuni sensori di parcheggio, contatori e tracker; un\'antenna all\'esterno aiuta molto."</string>
+    <string name="lpwan_how_it_works">"LoRaWAN e Sigfox trasportano i brevi messaggi degli oggetti connessi: sensori, contatori, tracker. Sui tre canali usati da ogni dispositivo LoRaWAN EU868 (868,1, 868,3 e 868,5 MHz), l\'app esegue un ricevitore LoRa software per ogni fattore di spreading da 7 a 12 e legge l\'intestazione LoRaWAN: tipo di messaggio, indirizzo del dispositivo (e la rete che l\'ha assegnato), contatore, porta; i dati sono cifrati. I messaggi Sigfox a banda ultrastretta a 100 bit/s vengono trovati ovunque nei loro 192 kHz e decodificati col codice di OnAir (tipo di trama, ID, contatore, dati). Solo ricezione."</string>
+    <string name="lpwan_join">"Join LoRaWAN"</string>
+    <string name="lpwan_port">"porta %1$d"</string>
+    <string name="lpwan_encrypted">"Dati cifrati (chiavi di rete e di applicazione)"</string>
 </resources>

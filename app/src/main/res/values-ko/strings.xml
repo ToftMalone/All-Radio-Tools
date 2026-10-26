@@ -2274,4 +2274,13 @@
     <string name="pmr_from">"발신 %1$s"</string>
     <string name="pmr_emergency">"긴급"</string>
     <string name="pmr_encrypted">"암호화"</string>
+    <string name="lpwan_subtitle">"868MHz의 IoT 기기"</string>
+    <string name="lpwan_heard">"LoRa %1$d · Sigfox %2$d · 손상된 프레임 %3$d"</string>
+    <string name="lpwan_listening">"868.1–868.5MHz 수신 중"</string>
+    <string name="lpwan_none_yet">"아직 기기가 없습니다"</string>
+    <string name="lpwan_none_yet_body">"센서는 10분에서 몇 시간에 한 번만 송신하는 경우가 많으니 계속 켜 두세요. 도심에는 주차 센서, 계량기, 위치 추적기가 흔합니다. 실외 안테나가 큰 도움이 됩니다."</string>
+    <string name="lpwan_how_it_works">"LoRaWAN과 Sigfox는 IoT 기기(센서, 계량기, 위치 추적기)의 짧은 메시지를 전달합니다. 모든 EU868 LoRaWAN 기기가 쓰는 세 채널(868.1, 868.3, 868.5MHz)에서 앱은 확산 계수 7~12마다 소프트웨어 LoRa 수신기를 돌려 LoRaWAN 헤더(메시지 종류, 기기 주소와 이를 할당한 네트워크, 프레임 카운터, 포트)를 읽습니다. 데이터 자체는 암호화되어 있습니다. 100bit/s 초협대역 Sigfox 메시지는 192kHz 어디서든 찾아 OnAir의 코드로 해독합니다(프레임 종류, ID, 카운터, 데이터). 수신 전용."</string>
+    <string name="lpwan_join">"LoRaWAN 가입"</string>
+    <string name="lpwan_port">"포트 %1$d"</string>
+    <string name="lpwan_encrypted">"데이터 암호화됨(네트워크·앱 키)"</string>
 </resources>

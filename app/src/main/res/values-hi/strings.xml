@@ -2332,4 +2332,13 @@
     <string name="pmr_from">"%1$s से"</string>
     <string name="pmr_emergency">"आपातकाल"</string>
     <string name="pmr_encrypted">"एन्क्रिप्टेड"</string>
+    <string name="lpwan_subtitle">"868 MHz पर जुड़े उपकरण"</string>
+    <string name="lpwan_heard">"%1$d LoRa · %2$d Sigfox · %3$d क्षतिग्रस्त फ़्रेम"</string>
+    <string name="lpwan_listening">"868.1–868.5 MHz सुना जा रहा है"</string>
+    <string name="lpwan_none_yet">"अभी कोई उपकरण नहीं"</string>
+    <string name="lpwan_none_yet_body">"सेंसर अक्सर हर 10 मिनट से कुछ घंटों में एक बार भेजते हैं, इसलिए चलने दें। शहर में पार्किंग सेंसर, मीटर और ट्रैकर आम हैं; बाहर लगा एंटीना बहुत मदद करता है।"</string>
+    <string name="lpwan_how_it_works">"LoRaWAN और Sigfox कनेक्टेड उपकरणों (सेंसर, मीटर, ट्रैकर) के छोटे संदेश ले जाते हैं। हर EU868 LoRaWAN उपकरण द्वारा उपयोग किए जाने वाले तीन चैनलों (868.1, 868.3 और 868.5 MHz) पर ऐप 7 से 12 तक हर स्प्रेडिंग फ़ैक्टर के लिए एक सॉफ़्टवेयर LoRa रिसीवर चलाता है और LoRaWAN हेडर पढ़ता है: संदेश प्रकार, उपकरण पता (और उसे देने वाला नेटवर्क), फ़्रेम काउंटर, पोर्ट; डेटा स्वयं एन्क्रिप्टेड होता है। 100 bit/s के अल्ट्रा-नैरोबैंड Sigfox संदेश उनके 192 kHz में कहीं भी खोजे जाते हैं और OnAir के कोड से डिकोड होते हैं (फ़्रेम प्रकार, ID, काउंटर, डेटा)। केवल रिसीव।"</string>
+    <string name="lpwan_join">"LoRaWAN जॉइन"</string>
+    <string name="lpwan_port">"पोर्ट %1$d"</string>
+    <string name="lpwan_encrypted">"डेटा एन्क्रिप्टेड (नेटवर्क और ऐप कुंजियाँ)"</string>
 </resources>

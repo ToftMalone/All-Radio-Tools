@@ -2448,4 +2448,13 @@
     <string name="pmr_from">"od %1$s"</string>
     <string name="pmr_emergency">"alarm"</string>
     <string name="pmr_encrypted">"szyfrowane"</string>
+    <string name="lpwan_subtitle">"Urządzenia IoT na 868 MHz"</string>
+    <string name="lpwan_heard">"LoRa: %1$d · Sigfox: %2$d · uszkodzone ramki: %3$d"</string>
+    <string name="lpwan_listening">"Nasłuch 868,1–868,5 MHz"</string>
+    <string name="lpwan_none_yet">"Brak urządzeń"</string>
+    <string name="lpwan_none_yet_body">"Czujniki nadają często co 10 minut do kilku godzin, więc zostaw nasłuch włączony. W mieście częste są czujniki parkingowe, liczniki i lokalizatory; antena na zewnątrz bardzo pomaga."</string>
+    <string name="lpwan_how_it_works">"LoRaWAN i Sigfox przenoszą krótkie wiadomości urządzeń IoT: czujników, liczników, lokalizatorów. Na trzech kanałach używanych przez każde urządzenie LoRaWAN EU868 (868,1, 868,3 i 868,5 MHz) aplikacja uruchamia programowy odbiornik LoRa dla każdego współczynnika rozpraszania od 7 do 12 i odczytuje nagłówek LoRaWAN: typ wiadomości, adres urządzenia (i sieć, która go nadała), licznik ramek, port; same dane są szyfrowane. Wiadomości Sigfox w ultrawąskim paśmie 100 bit/s są wyszukiwane w całych 192 kHz i dekodowane kodem OnAir (typ ramki, ID urządzenia, licznik, dane). Tylko odbiór."</string>
+    <string name="lpwan_join">"Dołączenie LoRaWAN"</string>
+    <string name="lpwan_port">"port %1$d"</string>
+    <string name="lpwan_encrypted">"Dane szyfrowane (klucze sieci i aplikacji)"</string>
 </resources>

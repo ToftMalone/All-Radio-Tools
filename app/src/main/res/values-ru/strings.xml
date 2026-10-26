@@ -2448,4 +2448,13 @@
     <string name="pmr_from">"от %1$s"</string>
     <string name="pmr_emergency">"экстренный"</string>
     <string name="pmr_encrypted">"зашифрован"</string>
+    <string name="lpwan_subtitle">"Подключённые устройства на 868 МГц"</string>
+    <string name="lpwan_heard">"LoRa: %1$d · Sigfox: %2$d · повреждённых кадров: %3$d"</string>
+    <string name="lpwan_listening">"Прослушивание 868,1–868,5 МГц"</string>
+    <string name="lpwan_none_yet">"Пока нет устройств"</string>
+    <string name="lpwan_none_yet_body">"Датчики часто передают раз в 10 минут или несколько часов, так что оставьте приём включённым. В городе обычны датчики парковки, счётчики и трекеры; антенна снаружи очень помогает."</string>
+    <string name="lpwan_how_it_works">"LoRaWAN и Sigfox передают короткие сообщения подключённых устройств: датчиков, счётчиков, трекеров. На трёх каналах, которые использует любое устройство LoRaWAN EU868 (868,1, 868,3 и 868,5 МГц), приложение запускает программный приёмник LoRa для каждого коэффициента расширения от 7 до 12 и читает заголовок LoRaWAN: тип сообщения, адрес устройства (и сеть, выдавшую его), счётчик кадров, порт; сами данные зашифрованы. Сверхузкополосные сообщения Sigfox на 100 бит/с ищутся по всем 192 кГц и декодируются кодом OnAir (тип кадра, ID, счётчик, данные). Только приём."</string>
+    <string name="lpwan_join">"Подключение LoRaWAN"</string>
+    <string name="lpwan_port">"порт %1$d"</string>
+    <string name="lpwan_encrypted">"Данные зашифрованы (ключи сети и приложения)"</string>
 </resources>

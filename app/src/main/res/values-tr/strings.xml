@@ -2332,4 +2332,13 @@
     <string name="pmr_from">"gönderen %1$s"</string>
     <string name="pmr_emergency">"acil"</string>
     <string name="pmr_encrypted">"şifreli"</string>
+    <string name="lpwan_subtitle">"868 MHz\'te bağlı nesneler"</string>
+    <string name="lpwan_heard">"%1$d LoRa · %2$d Sigfox · %3$d bozuk çerçeve"</string>
+    <string name="lpwan_listening">"868,1–868,5 MHz dinleniyor"</string>
+    <string name="lpwan_none_yet">"Henüz cihaz yok"</string>
+    <string name="lpwan_none_yet_body">"Sensörler çoğu zaman 10 dakikada bir ile birkaç saatte bir yayın yapar, çalışır bırakın. Şehirde park sensörleri, sayaçlar ve izleyiciler yaygındır; dışarıda bir anten çok yardımcı olur."</string>
+    <string name="lpwan_how_it_works">"LoRaWAN ve Sigfox bağlı nesnelerin kısa mesajlarını taşır: sensörler, sayaçlar, izleyiciler. Her EU868 LoRaWAN cihazının kullandığı üç kanalda (868,1, 868,3 ve 868,5 MHz) uygulama, 7\'den 12\'ye her yayılma faktörü için bir yazılım LoRa alıcısı çalıştırır ve LoRaWAN başlığını okur: mesaj türü, cihaz adresi (ve onu veren ağ), çerçeve sayacı, port; verinin kendisi şifrelidir. 100 bit/s ultra dar bant Sigfox mesajları 192 kHz\'in herhangi bir yerinde bulunur ve OnAir\'in koduyla çözülür (çerçeve türü, cihaz kimliği, sayaç, veri). Yalnızca alım."</string>
+    <string name="lpwan_join">"LoRaWAN katılımı"</string>
+    <string name="lpwan_port">"port %1$d"</string>
+    <string name="lpwan_encrypted">"Veri şifreli (ağ ve uygulama anahtarları)"</string>
 </resources>

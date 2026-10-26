@@ -2564,4 +2564,13 @@
     <string name="pmr_from">"من %1$s"</string>
     <string name="pmr_emergency">"طوارئ"</string>
     <string name="pmr_encrypted">"مشفر"</string>
+    <string name="lpwan_subtitle">"الأجهزة المتصلة على 868 ميغاهرتز"</string>
+    <string name="lpwan_heard">"%1$d LoRa · %2$d Sigfox · %3$d إطار تالف"</string>
+    <string name="lpwan_listening">"الاستماع إلى 868.1–868.5 ميغاهرتز"</string>
+    <string name="lpwan_none_yet">"لا أجهزة بعد"</string>
+    <string name="lpwan_none_yet_body">"كثيرًا ما ترسل الحساسات مرة كل 10 دقائق إلى بضع ساعات، فاترك الاستقبال يعمل. في المدن تكثر حساسات المواقف والعدادات وأجهزة التتبع؛ يساعد كثيرًا هوائي في الخارج."</string>
+    <string name="lpwan_how_it_works">"تحمل LoRaWAN وSigfox الرسائل القصيرة للأجهزة المتصلة: الحساسات والعدادات وأجهزة التتبع. على القنوات الثلاث التي يستخدمها كل جهاز LoRaWAN في EU868 (868.1 و868.3 و868.5 ميغاهرتز)، يشغّل التطبيق مستقبل LoRa برمجيًا لكل عامل انتشار من 7 إلى 12 ويقرأ ترويسة LoRaWAN: نوع الرسالة، عنوان الجهاز (والشبكة التي منحته)، عدّاد الإطارات، المنفذ؛ أما البيانات فمشفرة. تُكتشف رسائل Sigfox فائقة الضيق بسرعة 100 بت/ث في أي مكان من نطاقها البالغ 192 كيلوهرتز وتُفك بشيفرة OnAir (نوع الإطار، المعرّف، العدّاد، البيانات). استقبال فقط."</string>
+    <string name="lpwan_join">"انضمام LoRaWAN"</string>
+    <string name="lpwan_port">"المنفذ %1$d"</string>
+    <string name="lpwan_encrypted">"البيانات مشفرة (مفاتيح الشبكة والتطبيق)"</string>
 </resources>

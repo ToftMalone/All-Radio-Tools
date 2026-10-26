@@ -97,6 +97,7 @@ enum class Tool(
     Fpv(Network.Sdr, "Drones", Sym.Videocam),
     Tpms(Network.Sdr, "TPMS", Sym.TireRepair),
     Pocsag(Network.Sdr, "POCSAG", Sym.Sms),
+    Lpwan(Network.Sdr, "LoRaWAN / Sigfox", Sym.Hub),
     Pmr(Network.Sdr, "PMR446", Sym.SettingsInputAntenna),
     Dect(Network.Sdr, "DECT", Sym.Deskphone),
     Vdl2(Network.Sdr, "VDL Mode 2", Sym.ConnectingAirports),

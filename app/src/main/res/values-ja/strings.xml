@@ -2274,4 +2274,13 @@
     <string name="pmr_from">"発信 %1$s"</string>
     <string name="pmr_emergency">"緊急"</string>
     <string name="pmr_encrypted">"暗号化"</string>
+    <string name="lpwan_subtitle">"868 MHz の IoT 機器"</string>
+    <string name="lpwan_heard">"LoRa %1$d · Sigfox %2$d · 破損フレーム %3$d"</string>
+    <string name="lpwan_listening">"868.1–868.5 MHz を受信中"</string>
+    <string name="lpwan_none_yet">"まだ機器はありません"</string>
+    <string name="lpwan_none_yet_body">"センサーは 10 分〜数時間に 1 回しか送信しないことが多いので、受信を続けてください。街中では駐車センサー、メーター、トラッカーがよくあります。屋外アンテナが大いに役立ちます。"</string>
+    <string name="lpwan_how_it_works">"LoRaWAN と Sigfox は IoT 機器(センサー、メーター、トラッカー)の短いメッセージを運びます。EU868 の LoRaWAN 機器が必ず使う 3 チャンネル(868.1、868.3、868.5 MHz)で、アプリは拡散率 7〜12 ごとにソフトウェア LoRa 受信機を動かし、LoRaWAN ヘッダー(メッセージ種別、デバイスアドレスと割り当てたネットワーク、フレームカウンター、ポート)を読みます。ペイロード自体は暗号化されています。100 bit/s の超狭帯域 Sigfox メッセージは 192 kHz 内のどこでも検出し、OnAir のコードで解読します(フレーム種別、ID、カウンター、データ)。受信のみ。"</string>
+    <string name="lpwan_join">"LoRaWAN 参加"</string>
+    <string name="lpwan_port">"ポート %1$d"</string>
+    <string name="lpwan_encrypted">"ペイロードは暗号化(ネットワーク鍵とアプリ鍵)"</string>
 </resources>
