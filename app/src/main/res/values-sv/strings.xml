@@ -2264,4 +2264,17 @@
     <string name="flarm_types">"Okänd|Segelflygplan|Bogserflygplan|Helikopter|Fallskärmshoppare|Hoppflygplan|Hängglidare|Skärmflygare|Motorflygplan|Jet|Autogiro|Ballong|Luftskepp|Drönare|Reserverad|Fast hinder"</string>
     <string name="flarm_no_position">"Slå på plats för att se var luftfartygen är: FLARM sänder avkortade positioner som appen kompletterar kring telefonen."</string>
     <string name="flarm_on_ground">"på marken"</string>
+    <string name="wmbus_subtitle">"Vatten-, värme- och gasmätare"</string>
+    <string name="wmbus_heard">"868,95 MHz · %1$d telegram · %2$d krypterade"</string>
+    <string name="wmbus_listening">"Lyssnar efter mätare"</string>
+    <string name="wmbus_none_yet">"Inga mätare ännu"</string>
+    <string name="wmbus_none_yet_body">"Radiomätare sänder var 8:e sekund till med några minuters mellanrum, ofta svagt och från källare. Försök nära mätarrummet eller i ett trapphus; värmekostnadsfördelare på element sänder också."</string>
+    <string name="wmbus_encrypted">"Krypterade värden: bara tillverkare, ID och typ är i klartext"</string>
+    <string name="wmbus_how_it_works">"Wireless M-Bus (EN 13757) är hur radiomätare rapporterar: vatten-, värme-, gas- och elmätare, värmekostnadsfördelare. Appen tar emot lägena T1 och C1 på 868,95 MHz, de vanligaste, med OnAirs kod: varje blocks CRC måste stämma. Tillverkare, ID och typ för varje mätare är alltid i klartext; värden visas bara när mätaren inte krypterar dem, vilket många gör (AES). Mätare på 169 MHz använder ett annat band och tas inte emot. Endast mottagning."</string>
+    <string name="wmbus_types">"Annat|Olja|El|Gas|Värme|Ånga|Ljummet vatten|Vatten|Värmekostnadsfördelare|Tryckluft|Kyla|Värme och kyla|Buss / system|Okänd|Varmvatten|Kallvatten|Dubbelvatten|Tryck|A/D-omvandlare|Brandvarnare|Rumssensor|Gasvarnare|Brytare|Ventil|Avloppsvatten|Repeater"</string>
+    <string name="wmbus_quantities">"Energi|Volym|Massa|Påslagen tid|Drifttid|Effekt|Flöde|Massflöde|Framledningstemperatur|Returtemperatur|Temperaturskillnad|Utetemperatur|Tryck|Datum|Datum och tid|Fördelarenheter|Medelvärdestid|Aktualitet|Tillverkningsnummer|Utökat ID|Bussadress|Åtkomstnummer|Medium|Tillverkare|Parameteruppsättning|Modell|Hårdvaruversion|Firmwareversion|Programversion|Plats|Kund|Felflaggor|Batteri (dagar)|Tillverkardata"</string>
+    <plurals name="p_meters">
+        <item quantity="one">"mätare"</item>
+        <item quantity="other">"mätare"</item>
+    </plurals>
 </resources>

@@ -2209,4 +2209,16 @@
     <string name="flarm_types">"Tak dikenal|Pesawat layang|Pesawat penarik|Helikopter|Penerjun|Pesawat terjun|Gantole|Paralayang|Pesawat bermesin|Jet|Girokopter|Balon|Kapal udara|Drone|Dicadangkan|Rintangan tetap"</string>
     <string name="flarm_no_position">"Aktifkan lokasi untuk melihat posisi pesawat: FLARM mengirim posisi terpotong, aplikasi melengkapinya di sekitar ponsel."</string>
     <string name="flarm_on_ground">"di darat"</string>
+    <string name="wmbus_subtitle">"Meteran air, panas, dan gas"</string>
+    <string name="wmbus_heard">"868,95 MHz · %1$d telegram · %2$d terenkripsi"</string>
+    <string name="wmbus_listening">"Mendengarkan meteran"</string>
+    <string name="wmbus_none_yet">"Belum ada meteran"</string>
+    <string name="wmbus_none_yet_body">"Meteran radio memancar setiap 8 detik hingga beberapa menit, sering lemah dan dari ruang bawah tanah. Coba dekat ruang meteran atau tangga; pembagi biaya pemanas di radiator juga memancar."</string>
+    <string name="wmbus_encrypted">"Pembacaan terenkripsi: hanya pembuat, ID, dan jenis yang terbuka"</string>
+    <string name="wmbus_how_it_works">"Wireless M-Bus (EN 13757) adalah cara meteran radio melapor: meteran air, panas, gas, dan listrik, pembagi biaya pemanas. Aplikasi menerima mode T1 dan C1 di 868,95 MHz, yang paling umum, dengan kode OnAir: CRC setiap blok harus lolos. Pembuat, ID, dan jenis setiap meteran selalu terbuka; pembacaan hanya ditampilkan jika meteran tidak mengenkripsinya, padahal banyak yang melakukannya (AES). Meteran 169 MHz memakai pita lain dan tidak diterima. Hanya menerima."</string>
+    <string name="wmbus_types">"Lainnya|Minyak|Listrik|Gas|Panas|Uap|Air hangat|Air|Pembagi biaya pemanas|Udara tekan|Pendingin|Panas dan dingin|Bus / sistem|Tak dikenal|Air panas|Air dingin|Air ganda|Tekanan|Konverter A/D|Detektor asap|Sensor ruangan|Detektor gas|Pemutus|Katup|Air limbah|Repeater"</string>
+    <string name="wmbus_quantities">"Energi|Volume|Massa|Waktu menyala|Waktu operasi|Daya|Aliran|Aliran massa|Suhu suplai|Suhu balik|Selisih suhu|Suhu luar|Tekanan|Tanggal|Tanggal dan waktu|Unit pembagi|Waktu rata-rata|Kebaruan|Nomor fabrikasi|ID diperluas|Alamat bus|Nomor akses|Medium|Pembuat|Set parameter|Model|Versi perangkat keras|Versi firmware|Versi perangkat lunak|Lokasi|Pelanggan|Bendera galat|Baterai (hari)|Data pembuat"</string>
+    <plurals name="p_meters">
+        <item quantity="other">"meteran"</item>
+    </plurals>
 </resources>

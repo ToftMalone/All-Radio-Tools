@@ -2209,4 +2209,16 @@
     <string name="flarm_types">"不明|グライダー|曳航機|ヘリコプター|スカイダイバー|降下機|ハンググライダー|パラグライダー|動力機|ジェット|オートジャイロ|気球|飛行船|ドローン|予約|固定障害物"</string>
     <string name="flarm_no_position">"機体の位置を見るには位置情報をオンにしてください。FLARM は切り詰めた位置を送り、アプリが端末の位置を基準に補完します。"</string>
     <string name="flarm_on_ground">"地上"</string>
+    <string name="wmbus_subtitle">"水道・熱・ガスのメーター"</string>
+    <string name="wmbus_heard">"868.95 MHz · テレグラム %1$d · 暗号化 %2$d"</string>
+    <string name="wmbus_listening">"メーターを受信中"</string>
+    <string name="wmbus_none_yet">"まだメーターはありません"</string>
+    <string name="wmbus_none_yet_body">"無線メーターは 8 秒〜数分ごとに、地下などから弱く送信することが多いです。メーター室や階段の近くで試してください。ラジエーターの熱量配分計も送信します。"</string>
+    <string name="wmbus_encrypted">"暗号化された値:メーカー・ID・種類のみ平文"</string>
+    <string name="wmbus_how_it_works">"Wireless M-Bus (EN 13757) は無線メーターの通信方式です。水道・熱・ガス・電気のメーターや熱量配分計が使います。アプリは最も一般的な 868.95 MHz の T1 と C1 モードを OnAir のコードで受信し、各ブロックの CRC が合ったものだけを扱います。メーカー・ID・種類は常に平文です。値はメーターが暗号化していない場合のみ表示され、多くは AES で暗号化しています。169 MHz のメーターは別の帯域で、受信しません。受信のみ。"</string>
+    <string name="wmbus_types">"その他|石油|電気|ガス|熱|蒸気|温水|水道|熱量配分計|圧縮空気|冷房|冷暖房|バス / システム|不明|給湯|冷水|二系統水|圧力|A/D 変換器|煙感知器|室内センサー|ガス検知器|遮断器|バルブ|下水|中継器"</string>
+    <string name="wmbus_quantities">"エネルギー|体積|質量|通電時間|稼働時間|電力|流量|質量流量|往き温度|戻り温度|温度差|外気温|圧力|日付|日時|配分単位|平均化時間|経過時間|製造番号|拡張 ID|バスアドレス|アクセス番号|媒体|メーカー|パラメータセット|型式|ハードウェア版|ファームウェア版|ソフトウェア版|設置場所|顧客|エラーフラグ|電池(日)|メーカーデータ"</string>
+    <plurals name="p_meters">
+        <item quantity="other">"台のメーター"</item>
+    </plurals>
 </resources>

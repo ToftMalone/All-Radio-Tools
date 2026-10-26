@@ -2265,4 +2265,17 @@
     <string name="flarm_types">"Unknown|Glider|Tow plane|Helicopter|Skydiver|Drop plane|Hang glider|Paraglider|Powered aircraft|Jet|Gyrocopter|Balloon|Airship|Drone|Reserved|Static object"</string>
     <string name="flarm_no_position">"Turn on location to see where the aircraft are: FLARM sends positions truncated, the app completes them around the phone."</string>
     <string name="flarm_on_ground">"on the ground"</string>
+    <string name="wmbus_subtitle">"Water, heat and gas meters"</string>
+    <string name="wmbus_heard">"868.95 MHz · %1$d telegrams · %2$d encrypted"</string>
+    <string name="wmbus_listening">"Listening for meters"</string>
+    <string name="wmbus_none_yet">"No meter yet"</string>
+    <string name="wmbus_none_yet_body">"Radio meters send every 8 seconds to a few minutes, often weakly and from cellars. Try near a building\'s meter room or a stairwell; heat cost allocators on radiators send too."</string>
+    <string name="wmbus_encrypted">"Encrypted readings: only the maker, ID and type are in the clear"</string>
+    <string name="wmbus_how_it_works">"Wireless M-Bus (EN 13757) is how radio utility meters report: water, heat, gas and electricity meters, heat cost allocators. The app receives modes T1 and C1 on 868.95 MHz, the most common, with OnAir\'s code: every block CRC must pass. Each meter\'s maker, ID and type are always in the clear; readings are shown only when the meter does not encrypt them, which many do (AES). The 169 MHz meters, such as Gazpar, use another band and are not received. Receive only."</string>
+    <string name="wmbus_types">"Other|Oil|Electricity|Gas|Heat|Steam|Warm water|Water|Heat cost allocator|Compressed air|Cooling|Heat and cooling|Bus / system|Unknown|Hot water|Cold water|Dual water|Pressure|A/D converter|Smoke detector|Room sensor|Gas detector|Breaker|Valve|Waste water|Repeater"</string>
+    <string name="wmbus_quantities">"Energy|Volume|Mass|On time|Operating time|Power|Volume flow|Mass flow|Flow temperature|Return temperature|Temperature difference|Outside temperature|Pressure|Date|Date and time|Allocator units|Averaging time|Actuality|Fabrication number|Extended ID|Bus address|Access number|Medium|Maker|Parameter set|Model|Hardware version|Firmware version|Software version|Location|Customer|Error flags|Battery (days)|Maker data"</string>
+    <plurals name="p_meters">
+        <item quantity="one">"meter"</item>
+        <item quantity="other">"meters"</item>
+    </plurals>
 </resources>

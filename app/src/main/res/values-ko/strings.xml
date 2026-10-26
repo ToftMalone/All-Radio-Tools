@@ -2209,4 +2209,16 @@
     <string name="flarm_types">"알 수 없음|글라이더|예인기|헬리콥터|스카이다이버|강하기|행글라이더|패러글라이더|동력기|제트기|자이로콥터|기구|비행선|드론|예약됨|고정 장애물"</string>
     <string name="flarm_no_position">"항공기 위치를 보려면 위치를 켜세요. FLARM은 잘린 위치를 보내고 앱이 휴대폰 기준으로 보완합니다."</string>
     <string name="flarm_on_ground">"지상"</string>
+    <string name="wmbus_subtitle">"수도·열·가스 계량기"</string>
+    <string name="wmbus_heard">"868.95MHz · 텔레그램 %1$d · 암호화 %2$d"</string>
+    <string name="wmbus_listening">"계량기 수신 중"</string>
+    <string name="wmbus_none_yet">"아직 계량기가 없습니다"</string>
+    <string name="wmbus_none_yet_body">"무선 계량기는 8초에서 몇 분마다, 지하실 등에서 약하게 송신하는 경우가 많습니다. 계량기실이나 계단 근처에서 시도해 보세요. 라디에이터의 열량 분배계도 송신합니다."</string>
+    <string name="wmbus_encrypted">"암호화된 값: 제조사, ID, 종류만 공개"</string>
+    <string name="wmbus_how_it_works">"Wireless M-Bus(EN 13757)는 무선 계량기의 통신 방식입니다. 수도·열·가스·전기 계량기와 열량 분배계가 사용합니다. 앱은 가장 흔한 868.95MHz의 T1과 C1 모드를 OnAir의 코드로 수신하며, 모든 블록 CRC가 맞아야 합니다. 제조사, ID, 종류는 항상 공개되며, 값은 계량기가 암호화하지 않을 때만 표시됩니다. 많은 계량기가 AES로 암호화합니다. 169MHz 계량기는 다른 대역이라 수신하지 않습니다. 수신 전용."</string>
+    <string name="wmbus_types">"기타|유류|전기|가스|열|증기|미온수|수도|열량 분배계|압축 공기|냉방|냉난방|버스 / 시스템|알 수 없음|온수|냉수|이중 수도|압력|A/D 변환기|연기 감지기|실내 센서|가스 감지기|차단기|밸브|하수|중계기"</string>
+    <string name="wmbus_quantities">"에너지|부피|질량|전원 켜짐 시간|작동 시간|전력|유량|질량 유량|공급 온도|환수 온도|온도 차|외기 온도|압력|날짜|날짜와 시간|분배 단위|평균 시간|경과 시간|제조 번호|확장 ID|버스 주소|접근 번호|매체|제조사|파라미터 세트|모델|하드웨어 버전|펌웨어 버전|소프트웨어 버전|위치|고객|오류 플래그|배터리(일)|제조사 데이터"</string>
+    <plurals name="p_meters">
+        <item quantity="other">"대의 계량기"</item>
+    </plurals>
 </resources>

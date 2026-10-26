@@ -2264,4 +2264,17 @@
     <string name="flarm_types">"Unbekannt|Segelflugzeug|Schleppflugzeug|Hubschrauber|Fallschirmspringer|Absetzflugzeug|Hängegleiter|Gleitschirm|Motorflugzeug|Jet|Tragschrauber|Ballon|Luftschiff|Drohne|Reserviert|Festes Hindernis"</string>
     <string name="flarm_no_position">"Schalten Sie den Standort ein, um zu sehen, wo die Luftfahrzeuge sind: FLARM sendet gekürzte Positionen, die App ergänzt sie um das Telefon herum."</string>
     <string name="flarm_on_ground">"am Boden"</string>
+    <string name="wmbus_subtitle">"Wasser-, Wärme- und Gaszähler"</string>
+    <string name="wmbus_heard">"868,95 MHz · %1$d Telegramme · %2$d verschlüsselt"</string>
+    <string name="wmbus_listening">"Zähler werden abgehört"</string>
+    <string name="wmbus_none_yet">"Noch keine Zähler"</string>
+    <string name="wmbus_none_yet_body">"Funkzähler senden alle 8 Sekunden bis wenige Minuten, oft schwach und aus Kellern. Versuchen Sie es nahe dem Zählerraum oder im Treppenhaus; auch Heizkostenverteiler an Heizkörpern senden."</string>
+    <string name="wmbus_encrypted">"Verschlüsselte Werte: nur Hersteller, ID und Typ sind lesbar"</string>
+    <string name="wmbus_how_it_works">"Wireless M-Bus (EN 13757) ist das Funkverfahren von Verbrauchszählern: Wasser-, Wärme-, Gas- und Stromzähler, Heizkostenverteiler. Die App empfängt die Modi T1 und C1 auf 868,95 MHz, die verbreitetsten, mit dem Code von OnAir: Jede Block-CRC muss stimmen. Hersteller, ID und Typ jedes Zählers sind immer lesbar; Messwerte werden nur gezeigt, wenn der Zähler sie nicht verschlüsselt, was viele tun (AES). Zähler auf 169 MHz nutzen ein anderes Band und werden nicht empfangen. Nur Empfang."</string>
+    <string name="wmbus_types">"Sonstiges|Öl|Strom|Gas|Wärme|Dampf|Warmwasser (lau)|Wasser|Heizkostenverteiler|Druckluft|Kälte|Wärme und Kälte|Bus / System|Unbekannt|Warmwasser|Kaltwasser|Doppelwasser|Druck|A/D-Wandler|Rauchmelder|Raumsensor|Gasmelder|Schalter|Ventil|Abwasser|Repeater"</string>
+    <string name="wmbus_quantities">"Energie|Volumen|Masse|Einschaltzeit|Betriebszeit|Leistung|Durchfluss|Massenstrom|Vorlauftemperatur|Rücklauftemperatur|Temperaturdifferenz|Außentemperatur|Druck|Datum|Datum und Uhrzeit|Verteilereinheiten|Mittelungsdauer|Aktualität|Fabrikationsnummer|Erweiterte ID|Busadresse|Zugriffsnummer|Medium|Hersteller|Parametersatz|Modell|Hardwareversion|Firmwareversion|Softwareversion|Standort|Kunde|Fehlerflags|Batterie (Tage)|Herstellerdaten"</string>
+    <plurals name="p_meters">
+        <item quantity="one">"Zähler"</item>
+        <item quantity="other">"Zähler"</item>
+    </plurals>
 </resources>

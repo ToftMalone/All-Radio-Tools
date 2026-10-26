@@ -2264,4 +2264,17 @@
     <string name="flarm_types">"Sconosciuto|Aliante|Trainatore|Elicottero|Paracadutista|Aereo lancio|Deltaplano|Parapendio|Aereo a motore|Jet|Autogiro|Pallone|Dirigibile|Drone|Riservato|Ostacolo fisso"</string>
     <string name="flarm_no_position">"Attiva la posizione per vedere dove sono gli aeromobili: FLARM invia posizioni troncate, l\'app le completa attorno al telefono."</string>
     <string name="flarm_on_ground">"a terra"</string>
+    <string name="wmbus_subtitle">"Contatori di acqua, calore e gas"</string>
+    <string name="wmbus_heard">"868,95 MHz · %1$d telegrammi · %2$d cifrati"</string>
+    <string name="wmbus_listening">"In ascolto dei contatori"</string>
+    <string name="wmbus_none_yet">"Nessun contatore per ora"</string>
+    <string name="wmbus_none_yet_body">"I contatori radio trasmettono ogni 8 secondi o pochi minuti, spesso debolmente e dalle cantine. Prova vicino al locale contatori o alle scale; anche i ripartitori di calore sui termosifoni trasmettono."</string>
+    <string name="wmbus_encrypted">"Letture cifrate: solo produttore, ID e tipo sono in chiaro"</string>
+    <string name="wmbus_how_it_works">"Wireless M-Bus (EN 13757) è il modo in cui i contatori radio comunicano: acqua, calore, gas ed elettricità, ripartitori di calore. L\'app riceve i modi T1 e C1 su 868,95 MHz, i più comuni, col codice di OnAir: il CRC di ogni blocco deve essere giusto. Produttore, ID e tipo di ogni contatore sono sempre in chiaro; le letture compaiono solo se il contatore non le cifra, cosa che molti fanno (AES). I contatori a 169 MHz usano un\'altra banda e non sono ricevuti. Solo ricezione."</string>
+    <string name="wmbus_types">"Altro|Gasolio|Elettricità|Gas|Calore|Vapore|Acqua tiepida|Acqua|Ripartitore di calore|Aria compressa|Freddo|Calore e freddo|Bus / sistema|Sconosciuto|Acqua calda|Acqua fredda|Acqua doppia|Pressione|Convertitore A/D|Rilevatore di fumo|Sensore ambiente|Rilevatore di gas|Interruttore|Valvola|Acque reflue|Ripetitore"</string>
+    <string name="wmbus_quantities">"Energia|Volume|Massa|Tempo acceso|Tempo di funzionamento|Potenza|Portata|Portata massica|Temperatura di mandata|Temperatura di ritorno|Differenza di temperatura|Temperatura esterna|Pressione|Data|Data e ora|Unità di ripartizione|Tempo di media|Attualità|Numero di fabbricazione|ID esteso|Indirizzo bus|Numero di accesso|Fluido|Produttore|Set di parametri|Modello|Versione hardware|Versione firmware|Versione software|Posizione|Cliente|Flag di errore|Batteria (giorni)|Dati del produttore"</string>
+    <plurals name="p_meters">
+        <item quantity="one">"contatore"</item>
+        <item quantity="other">"contatori"</item>
+    </plurals>
 </resources>

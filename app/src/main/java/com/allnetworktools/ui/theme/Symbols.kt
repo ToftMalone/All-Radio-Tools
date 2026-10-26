@@ -210,4 +210,12 @@ object Sym {
     const val Stream = "stream"
     const val NewspaperNotes = "newspaper"
     const val WavingHand = "waving_hand"
+    const val WaterDrop = "water_drop"
+    const val GasMeter = "gas_meter"
+    const val ElectricMeter = "electric_meter"
+    const val Heat = "heat"
+    const val Sailing = "sailing"
+    const val Deskphone = "deskphone"
+    const val ConnectingAirports = "connecting_airports"
+    const val SettingsInputAntenna = "settings_input_antenna"
 }

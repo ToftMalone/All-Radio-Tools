@@ -2374,4 +2374,19 @@
     <string name="flarm_types">"Nieznany|Szybowiec|Holownik|Śmigłowiec|Skoczek|Samolot zrzutowy|Lotnia|Paralotnia|Samolot silnikowy|Odrzutowiec|Wiatrakowiec|Balon|Sterowiec|Dron|Zarezerwowany|Przeszkoda stała"</string>
     <string name="flarm_no_position">"Włącz lokalizację, aby zobaczyć, gdzie są statki powietrzne: FLARM wysyła skrócone pozycje, aplikacja uzupełnia je wokół telefonu."</string>
     <string name="flarm_on_ground">"na ziemi"</string>
+    <string name="wmbus_subtitle">"Liczniki wody, ciepła i gazu"</string>
+    <string name="wmbus_heard">"868,95 MHz · telegramy: %1$d · szyfrowane: %2$d"</string>
+    <string name="wmbus_listening">"Nasłuch liczników"</string>
+    <string name="wmbus_none_yet">"Brak liczników"</string>
+    <string name="wmbus_none_yet_body">"Liczniki radiowe nadają co 8 sekund do kilku minut, często słabo i z piwnic. Spróbuj przy pomieszczeniu liczników lub na klatce schodowej; nadają też podzielniki kosztów na grzejnikach."</string>
+    <string name="wmbus_encrypted">"Szyfrowane odczyty: jawne są tylko producent, ID i typ"</string>
+    <string name="wmbus_how_it_works">"Wireless M-Bus (EN 13757) to sposób, w jaki raportują liczniki radiowe: wody, ciepła, gazu i prądu, podzielniki kosztów ogrzewania. Aplikacja odbiera tryby T1 i C1 na 868,95 MHz, najczęstsze, kodem OnAir: CRC każdego bloku musi się zgadzać. Producent, ID i typ każdego licznika są zawsze jawne; odczyty są pokazywane tylko, gdy licznik ich nie szyfruje, co wiele robi (AES). Liczniki na 169 MHz używają innego pasma i nie są odbierane. Tylko odbiór."</string>
+    <string name="wmbus_types">"Inne|Olej|Prąd|Gaz|Ciepło|Para|Woda letnia|Woda|Podzielnik kosztów|Sprężone powietrze|Chłód|Ciepło i chłód|Magistrala / system|Nieznany|Ciepła woda|Zimna woda|Woda podwójna|Ciśnienie|Przetwornik A/C|Czujnik dymu|Czujnik pokojowy|Czujnik gazu|Wyłącznik|Zawór|Ścieki|Przekaźnik"</string>
+    <string name="wmbus_quantities">"Energia|Objętość|Masa|Czas włączenia|Czas pracy|Moc|Przepływ|Przepływ masowy|Temperatura zasilania|Temperatura powrotu|Różnica temperatur|Temperatura zewnętrzna|Ciśnienie|Data|Data i godzina|Jednostki podzielnika|Czas uśredniania|Aktualność|Numer fabryczny|Rozszerzone ID|Adres magistrali|Numer dostępu|Medium|Producent|Zestaw parametrów|Model|Wersja sprzętu|Wersja firmware|Wersja oprogramowania|Lokalizacja|Klient|Flagi błędów|Bateria (dni)|Dane producenta"</string>
+    <plurals name="p_meters">
+        <item quantity="one">"licznik"</item>
+        <item quantity="few">"liczniki"</item>
+        <item quantity="many">"liczników"</item>
+        <item quantity="other">"licznika"</item>
+    </plurals>
 </resources>

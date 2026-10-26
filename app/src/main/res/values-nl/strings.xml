@@ -2264,4 +2264,17 @@
     <string name="flarm_types">"Onbekend|Zweefvliegtuig|Sleepvliegtuig|Helikopter|Parachutist|Dropvliegtuig|Deltavlieger|Paraglider|Motorvliegtuig|Jet|Autogiro|Ballon|Luchtschip|Drone|Gereserveerd|Vast obstakel"</string>
     <string name="flarm_no_position">"Zet locatie aan om te zien waar de luchtvaartuigen zijn: FLARM zendt afgekapte posities, de app vult ze aan rond de telefoon."</string>
     <string name="flarm_on_ground">"op de grond"</string>
+    <string name="wmbus_subtitle">"Water-, warmte- en gasmeters"</string>
+    <string name="wmbus_heard">"868,95 MHz · %1$d telegrammen · %2$d versleuteld"</string>
+    <string name="wmbus_listening">"Luisteren naar meters"</string>
+    <string name="wmbus_none_yet">"Nog geen meters"</string>
+    <string name="wmbus_none_yet_body">"Radiometers zenden elke 8 seconden tot enkele minuten, vaak zwak en vanuit kelders. Probeer het bij de meterkast of in een trappenhuis; ook kostenverdelers op radiatoren zenden."</string>
+    <string name="wmbus_encrypted">"Versleutelde metingen: alleen fabrikant, ID en type zijn leesbaar"</string>
+    <string name="wmbus_how_it_works">"Wireless M-Bus (EN 13757) is hoe radiometers rapporteren: water-, warmte-, gas- en elektriciteitsmeters, kostenverdelers. De app ontvangt de modi T1 en C1 op 868,95 MHz, de meest gebruikte, met de code van OnAir: elke blok-CRC moet kloppen. Fabrikant, ID en type van elke meter zijn altijd leesbaar; metingen worden alleen getoond als de meter ze niet versleutelt, wat veel meters doen (AES). Meters op 169 MHz gebruiken een andere band en worden niet ontvangen. Alleen ontvangst."</string>
+    <string name="wmbus_types">"Overig|Olie|Elektriciteit|Gas|Warmte|Stoom|Lauw water|Water|Kostenverdeler|Perslucht|Koude|Warmte en koude|Bus / systeem|Onbekend|Warm water|Koud water|Dubbel water|Druk|A/D-omzetter|Rookmelder|Ruimtesensor|Gasmelder|Schakelaar|Klep|Afvalwater|Repeater"</string>
+    <string name="wmbus_quantities">"Energie|Volume|Massa|Inschakeltijd|Bedrijfstijd|Vermogen|Debiet|Massadebiet|Aanvoertemperatuur|Retourtemperatuur|Temperatuurverschil|Buitentemperatuur|Druk|Datum|Datum en tijd|Verdeeleenheden|Middelingsduur|Actualiteit|Fabricagenummer|Uitgebreide ID|Busadres|Toegangsnummer|Medium|Fabrikant|Parameterset|Model|Hardwareversie|Firmwareversie|Softwareversie|Locatie|Klant|Foutvlaggen|Batterij (dagen)|Fabrikantgegevens"</string>
+    <plurals name="p_meters">
+        <item quantity="one">"meter"</item>
+        <item quantity="other">"meters"</item>
+    </plurals>
 </resources>

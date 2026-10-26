@@ -2264,4 +2264,17 @@
     <string name="flarm_types">"Bilinmiyor|Planör|Çekici uçak|Helikopter|Paraşütçü|Atlayış uçağı|Yelkenkanat|Yamaç paraşütü|Motorlu uçak|Jet|Otojiro|Balon|Zeplin|Dron|Ayrılmış|Sabit engel"</string>
     <string name="flarm_no_position">"Hava araçlarının nerede olduğunu görmek için konumu açın: FLARM kısaltılmış konumlar gönderir, uygulama bunları telefonun çevresinde tamamlar."</string>
     <string name="flarm_on_ground">"yerde"</string>
+    <string name="wmbus_subtitle">"Su, ısı ve gaz sayaçları"</string>
+    <string name="wmbus_heard">"868,95 MHz · %1$d telgraf · %2$d şifreli"</string>
+    <string name="wmbus_listening">"Sayaçlar dinleniyor"</string>
+    <string name="wmbus_none_yet">"Henüz sayaç yok"</string>
+    <string name="wmbus_none_yet_body">"Radyolu sayaçlar 8 saniyede bir ile birkaç dakikada bir, çoğu zaman zayıf ve bodrumdan yayın yapar. Sayaç odası ya da merdiven boşluğu yakınında deneyin; radyatörlerdeki ısı payı ölçerler de yayın yapar."</string>
+    <string name="wmbus_encrypted">"Şifreli değerler: yalnızca üretici, kimlik ve tür açık"</string>
+    <string name="wmbus_how_it_works">"Wireless M-Bus (EN 13757), radyolu sayaçların bildirim biçimidir: su, ısı, gaz ve elektrik sayaçları, ısı payı ölçerler. Uygulama en yaygın olan T1 ve C1 modlarını 868,95 MHz\'te OnAir\'in koduyla alır: her bloğun CRC\'si tutmalıdır. Her sayacın üreticisi, kimliği ve türü her zaman açıktır; değerler yalnızca sayaç onları şifrelemiyorsa gösterilir, birçoğu şifreler (AES). 169 MHz sayaçlar başka bir bant kullanır ve alınmaz. Yalnızca alım."</string>
+    <string name="wmbus_types">"Diğer|Yakıt|Elektrik|Gaz|Isı|Buhar|Ilık su|Su|Isı payı ölçer|Basınçlı hava|Soğutma|Isı ve soğutma|Veri yolu / sistem|Bilinmiyor|Sıcak su|Soğuk su|Çift su|Basınç|A/D dönüştürücü|Duman dedektörü|Oda sensörü|Gaz dedektörü|Kesici|Vana|Atık su|Tekrarlayıcı"</string>
+    <string name="wmbus_quantities">"Enerji|Hacim|Kütle|Açık kalma süresi|Çalışma süresi|Güç|Debi|Kütle debisi|Gidiş sıcaklığı|Dönüş sıcaklığı|Sıcaklık farkı|Dış sıcaklık|Basınç|Tarih|Tarih ve saat|Pay ölçer birimleri|Ortalama süresi|Güncellik|Üretim numarası|Genişletilmiş kimlik|Veri yolu adresi|Erişim numarası|Ortam|Üretici|Parametre seti|Model|Donanım sürümü|Bellenim sürümü|Yazılım sürümü|Konum|Müşteri|Hata bayrakları|Pil (gün)|Üretici verisi"</string>
+    <plurals name="p_meters">
+        <item quantity="one">"sayaç"</item>
+        <item quantity="other">"sayaç"</item>
+    </plurals>
 </resources>

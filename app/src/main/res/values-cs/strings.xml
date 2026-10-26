@@ -2374,4 +2374,19 @@
     <string name="flarm_types">"Neznámý|Kluzák|Vlečný letoun|Vrtulník|Parašutista|Výsadkový letoun|Závěsný kluzák|Paraglide|Motorové letadlo|Proudové letadlo|Vírník|Balon|Vzducholoď|Dron|Rezervováno|Pevná překážka"</string>
     <string name="flarm_no_position">"Zapněte polohu, abyste viděli, kde letadla jsou: FLARM posílá zkrácené polohy, aplikace je doplní podle telefonu."</string>
     <string name="flarm_on_ground">"na zemi"</string>
+    <string name="wmbus_subtitle">"Vodoměry, měřiče tepla a plynu"</string>
+    <string name="wmbus_heard">"868,95 MHz · telegramy: %1$d · šifrované: %2$d"</string>
+    <string name="wmbus_listening">"Poslech měřidel"</string>
+    <string name="wmbus_none_yet">"Zatím žádné měřidlo"</string>
+    <string name="wmbus_none_yet_body">"Rádiová měřidla vysílají každých 8 sekund až několik minut, často slabě a ze sklepů. Zkuste to u místnosti s měřidly nebo na schodišti; vysílají i indikátory topných nákladů na radiátorech."</string>
+    <string name="wmbus_encrypted">"Šifrované hodnoty: čitelný je jen výrobce, ID a typ"</string>
+    <string name="wmbus_how_it_works">"Wireless M-Bus (EN 13757) je způsob, jak hlásí rádiová měřidla: vodoměry, měřiče tepla, plynu a elektřiny, indikátory topných nákladů. Aplikace přijímá režimy T1 a C1 na 868,95 MHz, nejběžnější, kódem OnAir: CRC každého bloku musí sedět. Výrobce, ID a typ každého měřidla jsou vždy čitelné; hodnoty se zobrazí jen tehdy, když je měřidlo nešifruje, což mnohá dělají (AES). Měřidla na 169 MHz používají jiné pásmo a nepřijímají se. Pouze příjem."</string>
+    <string name="wmbus_types">"Jiné|Olej|Elektřina|Plyn|Teplo|Pára|Vlažná voda|Voda|Indikátor topných nákladů|Stlačený vzduch|Chlad|Teplo a chlad|Sběrnice / systém|Neznámý|Teplá voda|Studená voda|Dvojitá voda|Tlak|A/D převodník|Hlásič kouře|Prostorové čidlo|Detektor plynu|Jistič|Ventil|Odpadní voda|Opakovač"</string>
+    <string name="wmbus_quantities">"Energie|Objem|Hmotnost|Doba zapnutí|Doba provozu|Výkon|Průtok|Hmotnostní průtok|Teplota přívodu|Teplota zpátečky|Rozdíl teplot|Venkovní teplota|Tlak|Datum|Datum a čas|Jednotky indikátoru|Doba průměrování|Aktuálnost|Výrobní číslo|Rozšířené ID|Adresa sběrnice|Přístupové číslo|Médium|Výrobce|Sada parametrů|Model|Verze hardwaru|Verze firmwaru|Verze softwaru|Umístění|Zákazník|Chybové příznaky|Baterie (dny)|Data výrobce"</string>
+    <plurals name="p_meters">
+        <item quantity="one">"měřidlo"</item>
+        <item quantity="few">"měřidla"</item>
+        <item quantity="many">"měřidla"</item>
+        <item quantity="other">"měřidel"</item>
+    </plurals>
 </resources>

@@ -2209,4 +2209,16 @@
     <string name="flarm_types">"Không rõ|Tàu lượn|Máy bay kéo|Trực thăng|Người nhảy dù|Máy bay thả dù|Diều lượn|Dù lượn|Máy bay động cơ|Phản lực|Máy bay trực thăng tự quay|Khinh khí cầu|Khí cầu|Drone|Dành riêng|Vật cản cố định"</string>
     <string name="flarm_no_position">"Bật vị trí để xem máy bay ở đâu: FLARM gửi vị trí rút gọn, ứng dụng bổ sung quanh điện thoại."</string>
     <string name="flarm_on_ground">"trên mặt đất"</string>
+    <string name="wmbus_subtitle">"Đồng hồ nước, nhiệt và gas"</string>
+    <string name="wmbus_heard">"868,95 MHz · %1$d bản tin · %2$d đã mã hóa"</string>
+    <string name="wmbus_listening">"Đang nghe đồng hồ"</string>
+    <string name="wmbus_none_yet">"Chưa có đồng hồ"</string>
+    <string name="wmbus_none_yet_body">"Đồng hồ vô tuyến phát mỗi 8 giây đến vài phút, thường yếu và từ tầng hầm. Hãy thử gần phòng đồng hồ hoặc cầu thang; bộ phân bổ chi phí sưởi trên lò sưởi cũng phát."</string>
+    <string name="wmbus_encrypted">"Số đo đã mã hóa: chỉ hãng, ID và loại là văn bản rõ"</string>
+    <string name="wmbus_how_it_works">"Wireless M-Bus (EN 13757) là cách đồng hồ vô tuyến báo số liệu: đồng hồ nước, nhiệt, gas, điện, bộ phân bổ chi phí sưởi. Ứng dụng thu chế độ T1 và C1 trên 868,95 MHz, phổ biến nhất, bằng mã của OnAir: CRC của mọi khối phải đúng. Hãng, ID và loại của mỗi đồng hồ luôn là văn bản rõ; số đo chỉ hiện khi đồng hồ không mã hóa, trong khi nhiều cái có mã hóa (AES). Đồng hồ 169 MHz dùng băng khác và không được thu. Chỉ thu."</string>
+    <string name="wmbus_types">"Khác|Dầu|Điện|Gas|Nhiệt|Hơi nước|Nước ấm|Nước|Bộ phân bổ chi phí sưởi|Khí nén|Làm lạnh|Nóng và lạnh|Bus / hệ thống|Không rõ|Nước nóng|Nước lạnh|Nước kép|Áp suất|Bộ chuyển đổi A/D|Đầu báo khói|Cảm biến phòng|Đầu báo gas|Cầu dao|Van|Nước thải|Bộ lặp"</string>
+    <string name="wmbus_quantities">"Năng lượng|Thể tích|Khối lượng|Thời gian bật|Thời gian hoạt động|Công suất|Lưu lượng|Lưu lượng khối|Nhiệt độ cấp|Nhiệt độ hồi|Chênh lệch nhiệt độ|Nhiệt độ ngoài trời|Áp suất|Ngày|Ngày giờ|Đơn vị phân bổ|Thời gian trung bình|Độ mới|Số chế tạo|ID mở rộng|Địa chỉ bus|Số truy cập|Môi chất|Hãng|Bộ tham số|Kiểu|Phiên bản phần cứng|Phiên bản firmware|Phiên bản phần mềm|Vị trí|Khách hàng|Cờ lỗi|Pin (ngày)|Dữ liệu hãng"</string>
+    <plurals name="p_meters">
+        <item quantity="other">"đồng hồ"</item>
+    </plurals>
 </resources>

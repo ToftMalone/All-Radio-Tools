@@ -2264,4 +2264,17 @@
     <string name="flarm_types">"Desconocido|Planeador|Remolcador|Helicóptero|Paracaidista|Avión lanzador|Ala delta|Parapente|Avión a motor|Reactor|Autogiro|Globo|Dirigible|Dron|Reservado|Obstáculo fijo"</string>
     <string name="flarm_no_position">"Activa la ubicación para ver dónde están las aeronaves: FLARM envía posiciones truncadas y la app las completa alrededor del teléfono."</string>
     <string name="flarm_on_ground">"en tierra"</string>
+    <string name="wmbus_subtitle">"Contadores de agua, calor y gas"</string>
+    <string name="wmbus_heard">"868,95 MHz · %1$d telegramas · %2$d cifrados"</string>
+    <string name="wmbus_listening">"Escuchando contadores"</string>
+    <string name="wmbus_none_yet">"Aún no hay contadores"</string>
+    <string name="wmbus_none_yet_body">"Los contadores por radio emiten cada 8 segundos a pocos minutos, a menudo débilmente y desde sótanos. Prueba cerca del cuarto de contadores o de una escalera; los repartidores de costes de calefacción en los radiadores también emiten."</string>
+    <string name="wmbus_encrypted">"Lecturas cifradas: solo el fabricante, el ID y el tipo van en claro"</string>
+    <string name="wmbus_how_it_works">"Wireless M-Bus (EN 13757) es la forma en que informan los contadores por radio: agua, calor, gas y electricidad, repartidores de costes de calefacción. La app recibe los modos T1 y C1 en 868,95 MHz, los más comunes, con el código de OnAir: el CRC de cada bloque debe ser correcto. El fabricante, el ID y el tipo de cada contador van siempre en claro; las lecturas solo se muestran si el contador no las cifra, cosa que muchos hacen (AES). Los contadores de 169 MHz usan otra banda y no se reciben. Solo recepción."</string>
+    <string name="wmbus_types">"Otro|Gasóleo|Electricidad|Gas|Calor|Vapor|Agua templada|Agua|Repartidor de calefacción|Aire comprimido|Frío|Calor y frío|Bus / sistema|Desconocido|Agua caliente|Agua fría|Agua doble|Presión|Convertidor A/D|Detector de humo|Sensor ambiente|Detector de gas|Interruptor|Válvula|Aguas residuales|Repetidor"</string>
+    <string name="wmbus_quantities">"Energía|Volumen|Masa|Tiempo encendido|Tiempo de funcionamiento|Potencia|Caudal|Caudal másico|Temperatura de ida|Temperatura de retorno|Diferencia de temperatura|Temperatura exterior|Presión|Fecha|Fecha y hora|Unidades de reparto|Tiempo de promedio|Antigüedad|Número de fabricación|ID extendido|Dirección de bus|Número de acceso|Medio|Fabricante|Juego de parámetros|Modelo|Versión de hardware|Versión de firmware|Versión de software|Ubicación|Cliente|Indicadores de error|Batería (días)|Datos del fabricante"</string>
+    <plurals name="p_meters">
+        <item quantity="one">"contador"</item>
+        <item quantity="other">"contadores"</item>
+    </plurals>
 </resources>

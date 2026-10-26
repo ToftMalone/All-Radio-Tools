@@ -2264,4 +2264,17 @@
     <string name="flarm_types">"Desconhecido|Planador|Rebocador|Helicóptero|Paraquedista|Avião de largada|Asa delta|Parapente|Avião a motor|Jato|Autogiro|Balão|Dirigível|Drone|Reservado|Obstáculo fixo"</string>
     <string name="flarm_no_position">"Ative a localização para ver onde estão as aeronaves: o FLARM envia posições truncadas, a app completa-as em torno do telefone."</string>
     <string name="flarm_on_ground">"no solo"</string>
+    <string name="wmbus_subtitle">"Contadores de água, calor e gás"</string>
+    <string name="wmbus_heard">"868,95 MHz · %1$d telegramas · %2$d cifrados"</string>
+    <string name="wmbus_listening">"A ouvir contadores"</string>
+    <string name="wmbus_none_yet">"Ainda sem contadores"</string>
+    <string name="wmbus_none_yet_body">"Os contadores por rádio emitem a cada 8 segundos a poucos minutos, muitas vezes fracos e a partir das caves. Experimente junto à sala de contadores ou a uma escadaria; os repartidores de custos de aquecimento nos radiadores também emitem."</string>
+    <string name="wmbus_encrypted">"Leituras cifradas: só o fabricante, o ID e o tipo vão em claro"</string>
+    <string name="wmbus_how_it_works">"O Wireless M-Bus (EN 13757) é a forma como os contadores por rádio comunicam: água, calor, gás e eletricidade, repartidores de custos de aquecimento. A app recebe os modos T1 e C1 em 868,95 MHz, os mais comuns, com o código do OnAir: o CRC de cada bloco tem de estar certo. O fabricante, o ID e o tipo de cada contador estão sempre em claro; as leituras só são mostradas se o contador não as cifrar, o que muitos fazem (AES). Os contadores de 169 MHz usam outra banda e não são recebidos. Só receção."</string>
+    <string name="wmbus_types">"Outro|Gasóleo|Eletricidade|Gás|Calor|Vapor|Água morna|Água|Repartidor de aquecimento|Ar comprimido|Frio|Calor e frio|Bus / sistema|Desconhecido|Água quente|Água fria|Água dupla|Pressão|Conversor A/D|Detetor de fumo|Sensor ambiente|Detetor de gás|Disjuntor|Válvula|Águas residuais|Repetidor"</string>
+    <string name="wmbus_quantities">"Energia|Volume|Massa|Tempo ligado|Tempo de funcionamento|Potência|Caudal|Caudal mássico|Temperatura de ida|Temperatura de retorno|Diferença de temperatura|Temperatura exterior|Pressão|Data|Data e hora|Unidades de repartição|Tempo de média|Atualidade|Número de fabrico|ID alargado|Endereço de bus|Número de acesso|Meio|Fabricante|Conjunto de parâmetros|Modelo|Versão de hardware|Versão de firmware|Versão de software|Localização|Cliente|Indicadores de erro|Bateria (dias)|Dados do fabricante"</string>
+    <plurals name="p_meters">
+        <item quantity="one">"contador"</item>
+        <item quantity="other">"contadores"</item>
+    </plurals>
 </resources>

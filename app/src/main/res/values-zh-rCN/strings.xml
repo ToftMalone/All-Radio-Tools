@@ -2209,4 +2209,16 @@
     <string name="flarm_types">"未知|滑翔机|拖曳机|直升机|跳伞员|跳伞飞机|悬挂滑翔机|滑翔伞|动力飞机|喷气机|旋翼机|气球|飞艇|无人机|保留|固定障碍物"</string>
     <string name="flarm_no_position">"打开定位即可看到航空器位置：FLARM 发送截断的位置，应用以手机为参考补全。"</string>
     <string name="flarm_on_ground">"在地面"</string>
+    <string name="wmbus_subtitle">"水表、热表和燃气表"</string>
+    <string name="wmbus_heard">"868.95 MHz · %1$d 条报文 · %2$d 个已加密"</string>
+    <string name="wmbus_listening">"正在接收表计"</string>
+    <string name="wmbus_none_yet">"暂无表计"</string>
+    <string name="wmbus_none_yet_body">"无线表计每 8 秒到几分钟发送一次，信号常常较弱且来自地下室。请在表计间或楼梯间附近尝试；暖气片上的热分配表也会发送。"</string>
+    <string name="wmbus_encrypted">"读数已加密：只有厂商、ID 和类型是明文"</string>
+    <string name="wmbus_how_it_works">"Wireless M-Bus(EN 13757)是无线表计的上报方式：水表、热表、燃气表、电表和热分配表。本应用用 OnAir 的代码接收 868.95 MHz 上最常见的 T1 和 C1 模式，每个数据块的 CRC 都必须正确。每台表的厂商、ID 和类型始终是明文；只有表计不加密时才显示读数，而很多表计会加密(AES)。169 MHz 的表计使用其他频段，不接收。仅接收。"</string>
+    <string name="wmbus_types">"其他|燃油|电|燃气|热|蒸汽|温水|水|热分配表|压缩空气|冷|冷热|总线 / 系统|未知|热水|冷水|双水|压力|A/D 转换器|烟雾探测器|室内传感器|燃气探测器|断路器|阀门|污水|中继器"</string>
+    <string name="wmbus_quantities">"能量|体积|质量|通电时间|运行时间|功率|流量|质量流量|供水温度|回水温度|温差|室外温度|压力|日期|日期和时间|分配单位|平均时间|时效|出厂编号|扩展 ID|总线地址|访问编号|介质|厂商|参数集|型号|硬件版本|固件版本|软件版本|位置|客户|错误标志|电池(天)|厂商数据"</string>
+    <plurals name="p_meters">
+        <item quantity="other">"台表计"</item>
+    </plurals>
 </resources>

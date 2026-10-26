@@ -97,6 +97,7 @@ enum class Tool(
     Fpv(Network.Sdr, "Drones", Sym.Videocam),
     Tpms(Network.Sdr, "TPMS", Sym.TireRepair),
     Pocsag(Network.Sdr, "POCSAG", Sym.Sms),
+    Wmbus(Network.Sdr, "Wireless M-Bus", Sym.WaterDrop),
     Flarm(Network.Sdr, "FLARM", Sym.Flight),
     Ism(Network.Sdr, "ISM", Sym.Thermostat),
     ;

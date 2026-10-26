@@ -2319,4 +2319,18 @@
     <string name="flarm_types">"Inconnu|Planeur|Remorqueur|Hélicoptère|Parachutiste|Avion largueur|Deltaplane|Parapente|Avion à moteur|Jet|Autogire|Ballon|Dirigeable|Drone|Réservé|Obstacle fixe"</string>
     <string name="flarm_no_position">"Activez la localisation pour voir où sont les aéronefs : FLARM envoie des positions tronquées, l\'application les complète autour du téléphone."</string>
     <string name="flarm_on_ground">"au sol"</string>
+    <string name="wmbus_subtitle">"Compteurs d\'eau, de chaleur, de gaz"</string>
+    <string name="wmbus_heard">"868,95 MHz · %1$d télégrammes · %2$d chiffrés"</string>
+    <string name="wmbus_listening">"À l\'écoute des compteurs"</string>
+    <string name="wmbus_none_yet">"Aucun compteur pour l\'instant"</string>
+    <string name="wmbus_none_yet_body">"Les compteurs radio émettent toutes les 8 secondes à quelques minutes, souvent faiblement et depuis les caves. Essayez près d\'un local compteurs ou d\'une cage d\'escalier ; les répartiteurs de frais de chauffage sur les radiateurs émettent aussi."</string>
+    <string name="wmbus_encrypted">"Relevés chiffrés : seuls le fabricant, l\'identifiant et le type sont en clair"</string>
+    <string name="wmbus_how_it_works">"Le Wireless M-Bus (EN 13757) est la façon dont les compteurs radio transmettent : compteurs d\'eau, de chaleur, de gaz et d\'électricité, répartiteurs de frais de chauffage. L\'application reçoit les modes T1 et C1 sur 868,95 MHz, les plus courants, avec le code d\'OnAir : le CRC de chaque bloc doit être bon. Le fabricant, l\'identifiant et le type de chaque compteur sont toujours en clair ; les relevés ne sont affichés que si le compteur ne les chiffre pas, ce que beaucoup font (AES). Les compteurs en 169 MHz, comme Gazpar, utilisent une autre bande et ne sont pas reçus. Réception seule."</string>
+    <string name="wmbus_types">"Autre|Fioul|Électricité|Gaz|Chaleur|Vapeur|Eau tiède|Eau|Répartiteur de chauffage|Air comprimé|Froid|Chaleur et froid|Bus / système|Inconnu|Eau chaude|Eau froide|Eau double|Pression|Convertisseur A/N|Détecteur de fumée|Capteur d\'ambiance|Détecteur de gaz|Disjoncteur|Vanne|Eaux usées|Répéteur"</string>
+    <string name="wmbus_quantities">"Énergie|Volume|Masse|Temps sous tension|Temps de fonctionnement|Puissance|Débit|Débit massique|Température aller|Température retour|Écart de température|Température extérieure|Pression|Date|Date et heure|Unités de répartition|Durée de moyenne|Ancienneté|Numéro de fabrication|ID étendu|Adresse bus|Numéro d\'accès|Fluide|Fabricant|Jeu de paramètres|Modèle|Version matérielle|Version du firmware|Version logicielle|Emplacement|Client|Indicateurs d\'erreur|Pile (jours)|Données fabricant"</string>
+    <plurals name="p_meters">
+        <item quantity="one">"compteur"</item>
+        <item quantity="other">"compteurs"</item>
+        <item quantity="many">"compteurs"</item>
+    </plurals>
 </resources>

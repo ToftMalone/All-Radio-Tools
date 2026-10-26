@@ -2319,4 +2319,18 @@
     <string name="flarm_types">"Necunoscut|Planor|Remorcher|Elicopter|Parașutist|Avion de lansare|Deltaplan|Parapantă|Avion cu motor|Avion cu reacție|Autogir|Balon|Dirijabil|Dronă|Rezervat|Obstacol fix"</string>
     <string name="flarm_no_position">"Activați locația pentru a vedea unde sunt aeronavele: FLARM trimite poziții trunchiate, aplicația le completează în jurul telefonului."</string>
     <string name="flarm_on_ground">"la sol"</string>
+    <string name="wmbus_subtitle">"Contoare de apă, căldură și gaz"</string>
+    <string name="wmbus_heard">"868,95 MHz · %1$d telegrame · %2$d criptate"</string>
+    <string name="wmbus_listening">"Ascultă contoarele"</string>
+    <string name="wmbus_none_yet">"Încă niciun contor"</string>
+    <string name="wmbus_none_yet_body">"Contoarele radio emit la 8 secunde până la câteva minute, adesea slab și din subsoluri. Încercați lângă camera contoarelor sau pe o casă a scării; și repartitoarele de costuri de pe calorifere emit."</string>
+    <string name="wmbus_encrypted">"Citiri criptate: doar producătorul, ID-ul și tipul sunt în clar"</string>
+    <string name="wmbus_how_it_works">"Wireless M-Bus (EN 13757) este modul în care raportează contoarele radio: apă, căldură, gaz și electricitate, repartitoare de costuri. Aplicația recepționează modurile T1 și C1 pe 868,95 MHz, cele mai răspândite, cu codul OnAir: CRC-ul fiecărui bloc trebuie să fie corect. Producătorul, ID-ul și tipul fiecărui contor sunt mereu în clar; citirile apar doar dacă contorul nu le criptează, ceea ce mulți fac (AES). Contoarele pe 169 MHz folosesc altă bandă și nu sunt recepționate. Doar recepție."</string>
+    <string name="wmbus_types">"Altul|Motorină|Electricitate|Gaz|Căldură|Abur|Apă călduță|Apă|Repartitor de căldură|Aer comprimat|Răcire|Căldură și răcire|Magistrală / sistem|Necunoscut|Apă caldă|Apă rece|Apă dublă|Presiune|Convertor A/D|Detector de fum|Senzor de cameră|Detector de gaz|Întrerupător|Supapă|Ape uzate|Repetor"</string>
+    <string name="wmbus_quantities">"Energie|Volum|Masă|Timp pornit|Timp de funcționare|Putere|Debit|Debit masic|Temperatură tur|Temperatură retur|Diferență de temperatură|Temperatură exterioară|Presiune|Dată|Dată și oră|Unități de repartiție|Durată de mediere|Actualitate|Număr de fabricație|ID extins|Adresă magistrală|Număr de acces|Mediu|Producător|Set de parametri|Model|Versiune hardware|Versiune firmware|Versiune software|Locație|Client|Indicatori de eroare|Baterie (zile)|Date producător"</string>
+    <plurals name="p_meters">
+        <item quantity="one">"contor"</item>
+        <item quantity="few">"contoare"</item>
+        <item quantity="other">"de contoare"</item>
+    </plurals>
 </resources>
