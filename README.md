@@ -2,9 +2,9 @@
 
 **Everything that transmits around you, in one Android app.**
 
-All Radio Tools brings together tools to explore Wi-Fi, Bluetooth, the mobile network, GNSS and, with a HackRF, the radio waves themselves: aircraft, radiosondes, ships, drones, weather satellites, Meshtastic networks, and even GPS received by the HackRF alone.
+All Radio Tools brings together tools to explore Wi-Fi, Bluetooth, the mobile network, GNSS and, with a HackRF, the radio waves themselves: aircraft, radiosondes, ships, drones and weather satellites.
 
-> 🌍 Available in English and French (it follows the phone's language). Written in Kotlin with Jetpack Compose and Material 3.
+> 🌍 Available in 22 languages (it follows the phone's language). Written in Kotlin with Jetpack Compose and Material 3.
 >
 > 🇫🇷 [Version française](README.fr.md)
 
@@ -29,12 +29,13 @@ The home screen offers six networks. Each one has its dashboard, its main tool i
 | Tool | What it does |
 | --- | --- |
 | Wi-Fi scanner | Nearby networks, channels, congestion, access points of the connected network |
-| Speed test | The [speed.cloudflare.com](https://speed.cloudflare.com) test, step by step: same measurements, same calculations (90th percentile throughput, idle and loaded latency and jitter, packet loss through Cloudflare's TURN relay), network quality score and the same CSV export as the site |
+| Speed test | The [speed.cloudflare.com](https://speed.cloudflare.com) test, step by step: same measurements, same calculations (90th percentile throughput, idle and loaded latency and jitter, packet loss through Cloudflare's TURN relay), network quality score and the same CSV export as the site. On fast lines it ends with 500 MB then 1 GB each way over **six parallel connections**, like Ookla's app, so speeds above 600 Mbit/s are measured (skipped on metered connections) |
 | Coverage map | Walk around and the map draws itself: in **augmented reality** (ARCore, ToF sensor when available) the floor is coloured under your feet like in WiFiman; without ARCore, a step counter and the compass trace your path |
 | LAN devices | Discover the devices on your network |
 | Ping, Traceroute, Port scan, DNS | The network diagnostic classics |
 | Whois | Who owns a domain or an IP address |
 | Wi-Fi Direct | Nearby Wi-Fi Direct devices |
+| Wi-Fi Aware | What the phone's Wi-Fi Aware (NAN) supports, and the nearby phones with the tool open, with their distance through Wi-Fi RTT; wave at them to test the link |
 | Network audit | Encryption, WPS, PMF, router |
 | Rogue access points | "Evil twins" of the connected network |
 | Man in the middle | ARP spoofing and rogue DHCP |
@@ -46,7 +47,7 @@ The home screen offers six networks. Each one has its dashboard, its main tool i
 | BLE scanner | Nearby devices with filters and identification (manufacturer, model, services) |
 | BLE device | GATT exploration of a device |
 | Hot/Cold | Find a device by its signal |
-| Unknown trackers | Trackers that might be following you (AirTag, Find My accessories, AirPods, Google tags, Galaxy SmartTag, Tile), each with a **drawing faithful to the real object**, sorted by detection time, with "play sound" |
+| Unknown trackers | Trackers that might be following you (AirTag, Find My accessories, AirPods, Google tags, Galaxy SmartTag, Tile, Chipolo, Pebblebee), each with a **drawing faithful to the real object**, sorted by detection time, with "play sound". A **background guard** keeps watching with the app closed and alerts you when a tracker follows you; tags connected to their owner are ignored, as in AirGuard |
 | Beacons | iBeacon, Eddystone, AltBeacon |
 | Earbuds battery | AirPods and Beats: left, right, case |
 
@@ -58,6 +59,7 @@ The home screen offers six networks. Each one has its dashboard, its main tool i
 | Neighbouring cells | Cells seen by the modem |
 | Handover log | Cell changes while travelling, started by hand, CSV export |
 | Cell tower map | Your carrier's towers, from ANFR open data (France) |
+| Fake cell detector | Watches the network, even with the app closed, for the signs of an IMSI catcher: forced 2G, test network codes, inconsistent area codes, cells without neighbours, unusually strong new cells, no matching ANFR mast nearby |
 
 ### 🛰️ GNSS
 
@@ -76,16 +78,13 @@ The home screen offers six networks. Each one has its dashboard, its main tool i
 | Tool | What it does |
 | --- | --- |
 | Spectrum analyser | Spectrum and waterfall, 1 MHz to 6 GHz |
-| Aircraft (ADS-B) | Map of aircraft on 1090 MHz |
-| Aircraft messages (ACARS) | Airliner messaging on the 3 European channels, 131 MHz |
+| ACARS | Airliner messaging on the 3 European channels, 131 MHz |
+| ADS-B | Map of aircraft on 1090 MHz |
+| AIS | Map of ships on 162 MHz |
+| APRS | Ham radio beacons on 144.800 MHz |
+| Drones | DJI (DroneID), analogue FPV and remote controls (ExpressLRS, Crossfire, FrSky, FlySky, Spektrum) |
+| Meteor-M | Weather satellite LRPT images on 137 MHz |
 | Radiosondes | Vaisala RS41 and Meteomodem M10 / M20 around 403 MHz, with landing prediction |
-| FM radio | Listening and RDS |
-| Ships (AIS) | Map of ships on 162 MHz |
-| Ham radio (APRS) | Beacons on 144.800 MHz |
-| Meshtastic | Receives and decrypts LoRa frames: choice of region, preset, frequency and channels |
-| GPS receiver | The position computed by the HackRF alone, with its telescopic antenna, on 1575.42 MHz |
-| Weather satellites (Meteor-M) | LRPT images on 137 MHz |
-| Drones | Analogue FPV, DJI (DroneID) and remote controls (ExpressLRS, Crossfire, FrSky, FlySky, Spektrum) |
 
 The decoders work with the **HackRF alone**: neither the phone's Wi-Fi nor its Bluetooth is used. The SDR card stays greyed out until a HackRF is plugged in over USB.
 
@@ -96,7 +95,7 @@ Read, edit and write back the memories of a **Baofeng UV-5R**, a **Radtel RT-470
 ### 📤 Exports
 
 Only when you ask, to the location you choose:
-- **CSV**: speed test, coverage map, aircraft, radiosondes, ships, APRS, Meshtastic, handover log;
+- **CSV**: speed test, coverage map, aircraft, radiosondes, ships, APRS, handover log;
 - **RINEX**: GNSS raw measurements;
 - **PNG**: Meteor-M images.
 
@@ -112,6 +111,7 @@ The app keeps no copy: nothing is saved without your action.
 | Nearby devices | Bluetooth scanning and connection |
 | Phone | Carrier, cells, dual SIM |
 | Camera | Augmented reality coverage map (asked only when it starts) |
+| Notifications | Alerts from the tracker guard and the fake cell detector, which run in the background |
 | Local network (Android 17) | LAN scan, ping, port scan |
 | Install apps | Built-in updates |
 
@@ -161,8 +161,7 @@ All Radio Tools is free software released under the [GNU General Public License 
 ## 🙏 Thanks
 
 - [@cloudflare/speedtest](https://github.com/cloudflare/speedtest), the open source engine behind speed.cloudflare.com, ported for the speed test.
-- [AirGuard](https://github.com/seemoo-lab/AirGuard) (SEEMOO, TU Darmstadt) for tracker detection.
-- [gr-lora_sdr](https://github.com/tapparelj/gr-lora_sdr) (EPFL) and [Meshtastic](https://meshtastic.org) for the LoRa layer and the protocol.
+- [AirGuard](https://github.com/seemoo-lab/AirGuard) (SEEMOO, TU Darmstadt) for tracker detection and the rules that tell a tag near its owner from one following you.
 - [rs1729/RS](https://github.com/rs1729/RS) for the radiosonde formats.
 - Google [GNSS Measurement Tools](https://github.com/google/gps-measurement-tools) for the pseudorange computation.
 - Roboto Flex, Google Sans Flex and Material Symbols for the interface.
