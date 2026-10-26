@@ -2237,4 +2237,13 @@
     <plurals name="p_calls">
         <item quantity="other">"panggilan"</item>
     </plurals>
+    <string name="vdl2_subtitle">"Tautan data pesawat, 136,7–137 MHz"</string>
+    <string name="vdl2_heard">"%1$d pesawat · %2$d stasiun darat · 136,725–136,975 MHz"</string>
+    <string name="vdl2_listening">"Mendengarkan 6 kanal"</string>
+    <string name="vdl2_none_yet">"Belum ada pesan"</string>
+    <string name="vdl2_none_yet_body">"Pesawat di udara terdengar hingga 200 km atau lebih, stasiun darat hanya dekat bandara. Semburan pendek dan sering: beberapa menit dengan antena di luar biasanya cukup."</string>
+    <string name="vdl2_how_it_works">"VDL Mode 2 adalah tautan data digital yang menggantikan sebagian besar ACARS analog lama di Eropa: semburan D8PSK 31,5 kbit/s di enam kanal antara 136,725 dan 136,975 MHz. Aplikasi menerima keenamnya sekaligus dan mendekodenya dengan kode OnAir: urutan pelatihan, header, koreksi Reed-Solomon, lalu checksum setiap frame. Ditampilkan pesan ACARS yang dibawa dengan cara ini, pengumuman stasiun darat (posisi, bandara yang dilayani), dan pembentukan tautan pesawat; paket ATN (X.25) hanya disebut namanya. Hanya menerima."</string>
+    <string name="vdl2_atn">"Paket ATN (X.25)"</string>
+    <string name="vdl2_airports">"bandara %1$s"</string>
+    <string name="vdl2_destination">"tujuan %1$s"</string>
 </resources>

@@ -2294,4 +2294,13 @@
         <item quantity="one">"chamada"</item>
         <item quantity="other">"chamadas"</item>
     </plurals>
+    <string name="vdl2_subtitle">"Ligação de dados dos aviões, 136,7–137 MHz"</string>
+    <string name="vdl2_heard">"%1$d aeronaves · %2$d estações terrestres · 136,725–136,975 MHz"</string>
+    <string name="vdl2_listening">"A ouvir os 6 canais"</string>
+    <string name="vdl2_none_yet">"Ainda sem mensagens"</string>
+    <string name="vdl2_none_yet_body">"Os aviões em voo ouvem-se até 200 km ou mais; as estações terrestres só perto de um aeroporto. As rajadas são curtas e frequentes: alguns minutos com uma antena no exterior costumam bastar."</string>
+    <string name="vdl2_how_it_works">"O VDL Mode 2 é a ligação de dados digital que substituiu grande parte do antigo ACARS analógico na Europa: rajadas D8PSK a 31,5 kbit/s em seis canais entre 136,725 e 136,975 MHz. A app recebe os seis ao mesmo tempo e descodifica-os com o código do OnAir: sequência de treino, cabeçalho, correção Reed-Solomon e a soma de verificação de cada trama. Mostra as mensagens ACARS assim transportadas, os anúncios das estações terrestres (posição, aeroportos servidos) e os estabelecimentos de ligação dos aviões; os pacotes ATN (X.25) são apenas nomeados. Só receção."</string>
+    <string name="vdl2_atn">"Pacote ATN (X.25)"</string>
+    <string name="vdl2_airports">"aeroportos %1$s"</string>
+    <string name="vdl2_destination">"destino %1$s"</string>
 </resources>

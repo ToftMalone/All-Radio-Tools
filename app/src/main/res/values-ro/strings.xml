@@ -2351,4 +2351,13 @@
         <item quantity="few">"apeluri"</item>
         <item quantity="other">"de apeluri"</item>
     </plurals>
+    <string name="vdl2_subtitle">"Legătura de date a avioanelor, 136,7–137 MHz"</string>
+    <string name="vdl2_heard">"%1$d aeronave · %2$d stații de sol · 136,725–136,975 MHz"</string>
+    <string name="vdl2_listening">"Ascultă cele 6 canale"</string>
+    <string name="vdl2_none_yet">"Încă niciun mesaj"</string>
+    <string name="vdl2_none_yet_body">"Avioanele în zbor se aud până la 200 km sau mai mult, stațiile de sol doar lângă un aeroport. Rafalele sunt scurte și dese: de obicei ajung câteva minute cu o antenă afară."</string>
+    <string name="vdl2_how_it_works">"VDL Mode 2 este legătura de date digitală care a înlocuit în Europa mare parte din vechiul ACARS analogic: rafale D8PSK la 31,5 kbit/s pe șase canale între 136,725 și 136,975 MHz. Aplicația le recepționează pe toate șase deodată și le decodează cu codul OnAir: secvența de antrenare, antetul, corecția Reed-Solomon, apoi suma de control a fiecărui cadru. Afișează mesajele ACARS transportate astfel, anunțurile stațiilor de sol (poziție, aeroporturi) și stabilirile de legătură ale avioanelor; pachetele ATN (X.25) sunt doar numite. Doar recepție."</string>
+    <string name="vdl2_atn">"Pachet ATN (X.25)"</string>
+    <string name="vdl2_airports">"aeroporturi %1$s"</string>
+    <string name="vdl2_destination">"destinație %1$s"</string>
 </resources>

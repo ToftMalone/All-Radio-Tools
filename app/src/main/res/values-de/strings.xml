@@ -2294,4 +2294,13 @@
         <item quantity="one">"Ruf"</item>
         <item quantity="other">"Rufe"</item>
     </plurals>
+    <string name="vdl2_subtitle">"Datenfunk der Verkehrsflugzeuge, 136,7–137 MHz"</string>
+    <string name="vdl2_heard">"%1$d Luftfahrzeuge · %2$d Bodenstationen · 136,725–136,975 MHz"</string>
+    <string name="vdl2_listening">"Die 6 Kanäle werden abgehört"</string>
+    <string name="vdl2_none_yet">"Noch keine Nachrichten"</string>
+    <string name="vdl2_none_yet_body">"Fliegende Flugzeuge sind bis 200 km und mehr zu hören, Bodenstationen nur nahe einem Flughafen. Die Bursts sind kurz und häufig: einige Minuten mit einer Antenne draußen reichen meist."</string>
+    <string name="vdl2_how_it_works">"VDL Mode 2 ist der digitale Datenfunk, der in Europa den Großteil des alten analogen ACARS ersetzt hat: D8PSK-Bursts mit 31,5 kbit/s auf sechs Kanälen zwischen 136,725 und 136,975 MHz. Die App empfängt alle sechs gleichzeitig und dekodiert sie mit dem Code von OnAir: Trainingssequenz, Header, Reed-Solomon-Korrektur, dann die Prüfsumme jedes Rahmens. Sie zeigt so übertragene ACARS-Nachrichten, die Ankündigungen der Bodenstationen (Position, bediente Flughäfen) und Verbindungsaufbauten der Flugzeuge; ATN-Pakete (X.25) werden nur benannt. Nur Empfang."</string>
+    <string name="vdl2_atn">"ATN-Paket (X.25)"</string>
+    <string name="vdl2_airports">"Flughäfen %1$s"</string>
+    <string name="vdl2_destination">"Ziel %1$s"</string>
 </resources>

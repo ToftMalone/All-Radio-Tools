@@ -2351,4 +2351,13 @@
         <item quantity="other">"appels"</item>
         <item quantity="many">"appels"</item>
     </plurals>
+    <string name="vdl2_subtitle">"Liaison de données des avions de ligne, 136,7–137 MHz"</string>
+    <string name="vdl2_heard">"%1$d aéronefs · %2$d stations sol · 136,725–136,975 MHz"</string>
+    <string name="vdl2_listening">"Écoute des 6 canaux"</string>
+    <string name="vdl2_none_yet">"Aucun message pour l\'instant"</string>
+    <string name="vdl2_none_yet_body">"Les avions en vol s\'entendent jusqu\'à 200 km ou plus, les stations sol seulement près d\'un aéroport. Les salves sont courtes et fréquentes : quelques minutes avec une antenne dehors suffisent en général."</string>
+    <string name="vdl2_how_it_works">"Le VDL Mode 2 est la liaison de données numérique qui a remplacé l\'essentiel de l\'ancien ACARS analogique en Europe : des salves D8PSK à 31,5 kbit/s sur six canaux entre 136,725 et 136,975 MHz. L\'application reçoit les six à la fois et les décode avec le code d\'OnAir : séquence d\'apprentissage, en-tête, correction Reed-Solomon, puis la somme de contrôle de chaque trame. Elle affiche les messages ACARS transportés ainsi, les annonces des stations sol (position, aéroports desservis) et les ouvertures de liaison des avions ; les paquets ATN (X.25) sont seulement nommés. Réception seule."</string>
+    <string name="vdl2_atn">"Paquet ATN (X.25)"</string>
+    <string name="vdl2_airports">"aéroports %1$s"</string>
+    <string name="vdl2_destination">"destination %1$s"</string>
 </resources>

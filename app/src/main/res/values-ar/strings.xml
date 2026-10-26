@@ -2522,4 +2522,13 @@
         <item quantity="many">"نداءً"</item>
         <item quantity="other">"نداء"</item>
     </plurals>
+    <string name="vdl2_subtitle">"وصلة بيانات الطائرات، 136.7–137 ميغاهرتز"</string>
+    <string name="vdl2_heard">"%1$d طائرة · %2$d محطة أرضية · 136.725–136.975 ميغاهرتز"</string>
+    <string name="vdl2_listening">"الاستماع إلى القنوات الست"</string>
+    <string name="vdl2_none_yet">"لا رسائل بعد"</string>
+    <string name="vdl2_none_yet_body">"تُسمع الطائرات في الجو حتى 200 كم أو أكثر، والمحطات الأرضية قرب المطار فقط. الدفقات قصيرة ومتكررة: تكفي عادة بضع دقائق مع هوائي في الخارج."</string>
+    <string name="vdl2_how_it_works">"VDL Mode 2 هي وصلة البيانات الرقمية التي حلت محل معظم ACARS التناظري القديم في أوروبا: دفقات D8PSK بسرعة 31.5 كيلوبت/ث على ست قنوات بين 136.725 و136.975 ميغاهرتز. يستقبل التطبيق القنوات الست معًا ويفكها بشيفرة OnAir: تسلسل التدريب، الترويسة، تصحيح ريد-سولومون، ثم مجموع التحقق لكل إطار. يعرض رسائل ACARS المنقولة بهذه الطريقة، وإعلانات المحطات الأرضية (الموقع والمطارات المخدومة)، وإنشاء الطائرات للوصلات؛ وتُسمّى حزم ATN (X.25) فقط. استقبال فقط."</string>
+    <string name="vdl2_atn">"حزمة ATN (X.25)"</string>
+    <string name="vdl2_airports">"المطارات %1$s"</string>
+    <string name="vdl2_destination">"الوجهة %1$s"</string>
 </resources>

@@ -2408,4 +2408,13 @@
         <item quantity="many">"volání"</item>
         <item quantity="other">"volání"</item>
     </plurals>
+    <string name="vdl2_subtitle">"Datové spojení dopravních letadel, 136,7–137 MHz"</string>
+    <string name="vdl2_heard">"letadla: %1$d · pozemní stanice: %2$d · 136,725–136,975 MHz"</string>
+    <string name="vdl2_listening">"Poslech 6 kanálů"</string>
+    <string name="vdl2_none_yet">"Zatím žádná zpráva"</string>
+    <string name="vdl2_none_yet_body">"Letadla ve vzduchu jsou slyšet až na 200 km i dál, pozemní stanice jen u letiště. Dávky jsou krátké a časté: obvykle stačí pár minut s anténou venku."</string>
+    <string name="vdl2_how_it_works">"VDL Mode 2 je digitální datové spojení, které v Evropě nahradilo většinu starého analogového ACARS: dávky D8PSK 31,5 kbit/s na šesti kanálech mezi 136,725 a 136,975 MHz. Aplikace přijímá všech šest najednou a dekóduje je kódem OnAir: tréninková sekvence, záhlaví, oprava Reed-Solomon a pak kontrolní součet každého rámce. Zobrazuje takto přenášené zprávy ACARS, ohlášení pozemních stanic (poloha, obsluhovaná letiště) a navazování spojení letadel; pakety ATN (X.25) jsou jen pojmenovány. Pouze příjem."</string>
+    <string name="vdl2_atn">"Paket ATN (X.25)"</string>
+    <string name="vdl2_airports">"letiště %1$s"</string>
+    <string name="vdl2_destination">"cíl %1$s"</string>
 </resources>

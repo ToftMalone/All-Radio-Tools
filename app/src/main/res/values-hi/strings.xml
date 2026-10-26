@@ -2294,4 +2294,13 @@
         <item quantity="one">"कॉल"</item>
         <item quantity="other">"कॉल"</item>
     </plurals>
+    <string name="vdl2_subtitle">"विमानों का डेटालिंक, 136.7–137 MHz"</string>
+    <string name="vdl2_heard">"%1$d विमान · %2$d ग्राउंड स्टेशन · 136.725–136.975 MHz"</string>
+    <string name="vdl2_listening">"6 चैनल सुने जा रहे हैं"</string>
+    <string name="vdl2_none_yet">"अभी कोई संदेश नहीं"</string>
+    <string name="vdl2_none_yet_body">"उड़ान में विमान 200 किमी या अधिक तक सुनाई देते हैं, ग्राउंड स्टेशन केवल हवाई अड्डे के पास। बर्स्ट छोटे और बार-बार होते हैं: बाहर एंटीना के साथ कुछ मिनट आमतौर पर काफ़ी होते हैं।"</string>
+    <string name="vdl2_how_it_works">"VDL Mode 2 वह डिजिटल डेटालिंक है जिसने यूरोप में पुराने एनालॉग ACARS का अधिकांश भाग बदल दिया: 136.725 से 136.975 MHz के बीच छह चैनलों पर 31.5 kbit/s D8PSK बर्स्ट। ऐप सभी छह को एक साथ प्राप्त करता है और OnAir के कोड से डिकोड करता है: ट्रेनिंग अनुक्रम, हेडर, रीड-सोलोमन सुधार, फिर हर फ़्रेम का चेकसम। यह इस तरह भेजे गए ACARS संदेश, ग्राउंड स्टेशनों की घोषणाएँ (स्थिति, सेवा वाले हवाई अड्डे) और विमानों के लिंक सेट-अप दिखाता है; ATN पैकेट (X.25) केवल नामित होते हैं। केवल रिसीव।"</string>
+    <string name="vdl2_atn">"ATN पैकेट (X.25)"</string>
+    <string name="vdl2_airports">"हवाई अड्डे %1$s"</string>
+    <string name="vdl2_destination">"गंतव्य %1$s"</string>
 </resources>

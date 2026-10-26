@@ -2294,4 +2294,13 @@
         <item quantity="one">"oproep"</item>
         <item quantity="other">"oproepen"</item>
     </plurals>
+    <string name="vdl2_subtitle">"Datalink van verkeersvliegtuigen, 136,7–137 MHz"</string>
+    <string name="vdl2_heard">"%1$d luchtvaartuigen · %2$d grondstations · 136,725–136,975 MHz"</string>
+    <string name="vdl2_listening">"Luisteren op de 6 kanalen"</string>
+    <string name="vdl2_none_yet">"Nog geen berichten"</string>
+    <string name="vdl2_none_yet_body">"Vliegtuigen in de lucht zijn tot 200 km of verder te horen, grondstations alleen bij een luchthaven. Bursts zijn kort en frequent: een paar minuten met een antenne buiten volstaat meestal."</string>
+    <string name="vdl2_how_it_works">"VDL Mode 2 is de digitale datalink die in Europa het meeste van het oude analoge ACARS heeft vervangen: D8PSK-bursts op 31,5 kbit/s op zes kanalen tussen 136,725 en 136,975 MHz. De app ontvangt alle zes tegelijk en decodeert ze met de code van OnAir: trainingsreeks, header, Reed-Solomon-correctie en dan de controlesom van elk frame. Hij toont ACARS-berichten die zo worden vervoerd, de aankondigingen van grondstations (positie, bediende luchthavens) en verbindingsopbouw van vliegtuigen; ATN-pakketten (X.25) worden alleen benoemd. Alleen ontvangst."</string>
+    <string name="vdl2_atn">"ATN-pakket (X.25)"</string>
+    <string name="vdl2_airports">"luchthavens %1$s"</string>
+    <string name="vdl2_destination">"bestemming %1$s"</string>
 </resources>

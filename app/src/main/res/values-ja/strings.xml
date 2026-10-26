@@ -2237,4 +2237,13 @@
     <plurals name="p_calls">
         <item quantity="other">"件の呼出し"</item>
     </plurals>
+    <string name="vdl2_subtitle">"旅客機のデータリンク、136.7–137 MHz"</string>
+    <string name="vdl2_heard">"機体 %1$d · 地上局 %2$d · 136.725–136.975 MHz"</string>
+    <string name="vdl2_listening">"6 チャンネルを受信中"</string>
+    <string name="vdl2_none_yet">"まだメッセージはありません"</string>
+    <string name="vdl2_none_yet_body">"飛行中の機体は 200 km 以上先まで届きますが、地上局は空港の近くでしか聞こえません。バーストは短く頻繁なので、屋外アンテナで数分待てばたいてい受信できます。"</string>
+    <string name="vdl2_how_it_works">"VDL Mode 2 は、ヨーロッパで旧来のアナログ ACARS の大半を置き換えたデジタルデータリンクです。136.725〜136.975 MHz の 6 チャンネルで 31.5 kbit/s の D8PSK バーストを送ります。アプリは 6 チャンネルを同時に受信し、OnAir のコードでトレーニング系列、ヘッダー、リード・ソロモン訂正、各フレームのチェックサムの順に解読します。こうして運ばれる ACARS メッセージ、地上局の告知(位置・担当空港)、機体のリンク確立を表示します。ATN パケット(X.25)は名称のみです。受信のみ。"</string>
+    <string name="vdl2_atn">"ATN パケット (X.25)"</string>
+    <string name="vdl2_airports">"空港 %1$s"</string>
+    <string name="vdl2_destination">"目的地 %1$s"</string>
 </resources>

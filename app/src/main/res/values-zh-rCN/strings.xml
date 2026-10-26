@@ -2237,4 +2237,13 @@
     <plurals name="p_calls">
         <item quantity="other">"次呼叫"</item>
     </plurals>
+    <string name="vdl2_subtitle">"客机数据链，136.7–137 MHz"</string>
+    <string name="vdl2_heard">"%1$d 架航空器 · %2$d 个地面站 · 136.725–136.975 MHz"</string>
+    <string name="vdl2_listening">"正在接收 6 个信道"</string>
+    <string name="vdl2_none_yet">"暂无消息"</string>
+    <string name="vdl2_none_yet_body">"飞行中的飞机在 200 公里甚至更远都能收到，地面站只有在机场附近才能收到。突发短而频繁：用室外天线等几分钟通常就有消息。"</string>
+    <string name="vdl2_how_it_works">"VDL Mode 2 是在欧洲取代了大部分旧式模拟 ACARS 的数字数据链：在 136.725 至 136.975 MHz 的六个信道上发送 31.5 kbit/s 的 D8PSK 突发。本应用同时接收六个信道，并用 OnAir 的代码解码：训练序列、报头、里德-所罗门纠错，然后检查每帧的校验和。显示以此方式传输的 ACARS 消息、地面站公告(位置、服务机场)和飞机的链路建立；ATN 数据包(X.25)仅显示名称。仅接收。"</string>
+    <string name="vdl2_atn">"ATN 数据包 (X.25)"</string>
+    <string name="vdl2_airports">"机场 %1$s"</string>
+    <string name="vdl2_destination">"目的地 %1$s"</string>
 </resources>

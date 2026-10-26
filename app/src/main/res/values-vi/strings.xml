@@ -2237,4 +2237,13 @@
     <plurals name="p_calls">
         <item quantity="other">"cuộc gọi"</item>
     </plurals>
+    <string name="vdl2_subtitle">"Liên kết dữ liệu máy bay, 136,7–137 MHz"</string>
+    <string name="vdl2_heard">"%1$d máy bay · %2$d trạm mặt đất · 136,725–136,975 MHz"</string>
+    <string name="vdl2_listening">"Đang nghe 6 kênh"</string>
+    <string name="vdl2_none_yet">"Chưa có tin nhắn"</string>
+    <string name="vdl2_none_yet_body">"Máy bay đang bay nghe được tới 200 km hoặc xa hơn, trạm mặt đất chỉ gần sân bay. Các đợt phát ngắn và dày: vài phút với ăng-ten ngoài trời thường là đủ."</string>
+    <string name="vdl2_how_it_works">"VDL Mode 2 là liên kết dữ liệu số đã thay thế phần lớn ACARS tương tự cũ ở châu Âu: các đợt D8PSK 31,5 kbit/s trên sáu kênh từ 136,725 đến 136,975 MHz. Ứng dụng thu cả sáu cùng lúc và giải mã bằng mã của OnAir: chuỗi huấn luyện, phần đầu, sửa lỗi Reed-Solomon, rồi tổng kiểm tra của từng khung. Hiển thị tin ACARS được truyền theo cách này, thông báo của trạm mặt đất (vị trí, sân bay phục vụ) và việc thiết lập liên kết của máy bay; gói ATN (X.25) chỉ được nêu tên. Chỉ thu."</string>
+    <string name="vdl2_atn">"Gói ATN (X.25)"</string>
+    <string name="vdl2_airports">"sân bay %1$s"</string>
+    <string name="vdl2_destination">"điểm đến %1$s"</string>
 </resources>

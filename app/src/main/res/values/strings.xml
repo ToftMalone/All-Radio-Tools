@@ -2295,4 +2295,13 @@
         <item quantity="one">"call"</item>
         <item quantity="other">"calls"</item>
     </plurals>
+    <string name="vdl2_subtitle">"Airliner datalink, 136.7–137 MHz"</string>
+    <string name="vdl2_heard">"%1$d aircraft · %2$d ground stations · 136.725–136.975 MHz"</string>
+    <string name="vdl2_listening">"Listening on the 6 channels"</string>
+    <string name="vdl2_none_yet">"No message yet"</string>
+    <string name="vdl2_none_yet_body">"Aircraft in flight are heard up to 200 km or more, ground stations only near an airport. Bursts are short and frequent: a few minutes with an antenna outside usually bring messages."</string>
+    <string name="vdl2_how_it_works">"VDL Mode 2 is the digital datalink that replaced most of the old analogue ACARS in Europe: 31.5 kbit/s D8PSK bursts on six channels between 136.725 and 136.975 MHz. The app receives all six at once and decodes them with OnAir\'s code: training sequence, header, Reed-Solomon correction, then each frame\'s checksum. It shows ACARS messages carried this way, the ground stations\' announcements (position, airports served) and aircraft link set-ups; ATN packets (X.25) are only named. Receive only."</string>
+    <string name="vdl2_atn">"ATN packet (X.25)"</string>
+    <string name="vdl2_airports">"airports %1$s"</string>
+    <string name="vdl2_destination">"destination %1$s"</string>
 </resources>

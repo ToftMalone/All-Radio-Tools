@@ -2294,4 +2294,13 @@
         <item quantity="one">"çağrı"</item>
         <item quantity="other">"çağrı"</item>
     </plurals>
+    <string name="vdl2_subtitle">"Yolcu uçağı veri bağı, 136,7–137 MHz"</string>
+    <string name="vdl2_heard">"%1$d hava aracı · %2$d yer istasyonu · 136,725–136,975 MHz"</string>
+    <string name="vdl2_listening">"6 kanal dinleniyor"</string>
+    <string name="vdl2_none_yet">"Henüz mesaj yok"</string>
+    <string name="vdl2_none_yet_body">"Uçuştaki uçaklar 200 km veya daha uzaktan duyulur, yer istasyonları yalnızca bir havalimanı yakınında. Patlamalar kısa ve sıktır: dışarıda bir antenle birkaç dakika genellikle yeter."</string>
+    <string name="vdl2_how_it_works">"VDL Mode 2, Avrupa\'da eski analog ACARS\'ın çoğunun yerini alan sayısal veri bağıdır: 136,725 ile 136,975 MHz arasındaki altı kanalda 31,5 kbit/s D8PSK patlamaları. Uygulama altısını aynı anda alır ve OnAir\'in koduyla çözer: eğitim dizisi, başlık, Reed-Solomon düzeltmesi, ardından her çerçevenin sağlama toplamı. Bu yolla taşınan ACARS mesajlarını, yer istasyonlarının duyurularını (konum, hizmet verilen havalimanları) ve uçakların bağlantı kurmalarını gösterir; ATN paketleri (X.25) yalnızca adlandırılır. Yalnızca alım."</string>
+    <string name="vdl2_atn">"ATN paketi (X.25)"</string>
+    <string name="vdl2_airports">"havalimanları %1$s"</string>
+    <string name="vdl2_destination">"varış %1$s"</string>
 </resources>

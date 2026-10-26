@@ -2237,4 +2237,13 @@
     <plurals name="p_calls">
         <item quantity="other">"การเรียก"</item>
     </plurals>
+    <string name="vdl2_subtitle">"ดาต้าลิงก์ของเครื่องบินโดยสาร 136.7–137 MHz"</string>
+    <string name="vdl2_heard">"อากาศยาน %1$d · สถานีภาคพื้น %2$d · 136.725–136.975 MHz"</string>
+    <string name="vdl2_listening">"กำลังฟัง 6 ช่อง"</string>
+    <string name="vdl2_none_yet">"ยังไม่มีข้อความ"</string>
+    <string name="vdl2_none_yet_body">"เครื่องบินที่บินอยู่รับได้ไกลถึง 200 กม. หรือมากกว่า สถานีภาคพื้นรับได้เฉพาะใกล้สนามบิน สัญญาณส่งสั้นและถี่ ใช้เสาอากาศภายนอกไม่กี่นาทีมักจะได้ข้อความ"</string>
+    <string name="vdl2_how_it_works">"VDL Mode 2 คือดาต้าลิงก์ดิจิทัลที่มาแทน ACARS แบบแอนะล็อกเดิมเกือบทั้งหมดในยุโรป ส่งแบบ D8PSK 31.5 kbit/s บนหกช่องระหว่าง 136.725 ถึง 136.975 MHz แอปรับทั้งหกช่องพร้อมกันและถอดรหัสด้วยโค้ดของ OnAir ได้แก่ ลำดับฝึก ส่วนหัว การแก้ไขรีด-โซโลมอน แล้วตรวจ checksum ของแต่ละเฟรม แสดงข้อความ ACARS ที่ส่งผ่านทางนี้ ประกาศของสถานีภาคพื้น (ตำแหน่ง สนามบินที่ให้บริการ) และการตั้งลิงก์ของเครื่องบิน แพ็กเก็ต ATN (X.25) แสดงเพียงชื่อ รับอย่างเดียว"</string>
+    <string name="vdl2_atn">"แพ็กเก็ต ATN (X.25)"</string>
+    <string name="vdl2_airports">"สนามบิน %1$s"</string>
+    <string name="vdl2_destination">"ปลายทาง %1$s"</string>
 </resources>

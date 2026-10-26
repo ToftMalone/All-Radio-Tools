@@ -257,6 +257,7 @@ private fun PageBody(vm: MainViewModel, net: Network, page: Page) {
             Tool.Acars -> com.allnetworktools.ui.pages.sdr.AcarsTool(vm)
             Tool.Tpms -> com.allnetworktools.ui.pages.sdr.TpmsTool(vm)
             Tool.Pocsag -> com.allnetworktools.ui.pages.sdr.PocsagTool(vm)
+            Tool.Vdl2 -> com.allnetworktools.ui.pages.sdr.Vdl2Tool(vm)
             Tool.Dsc -> com.allnetworktools.ui.pages.sdr.DscTool(vm)
             Tool.Wmbus -> com.allnetworktools.ui.pages.sdr.WmbusTool(vm)
             Tool.Flarm -> com.allnetworktools.ui.pages.sdr.FlarmTool(vm)

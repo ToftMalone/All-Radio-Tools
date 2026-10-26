@@ -2294,4 +2294,13 @@
         <item quantity="one">"anrop"</item>
         <item quantity="other">"anrop"</item>
     </plurals>
+    <string name="vdl2_subtitle">"Datalänk för trafikflyg, 136,7–137 MHz"</string>
+    <string name="vdl2_heard">"%1$d luftfartyg · %2$d markstationer · 136,725–136,975 MHz"</string>
+    <string name="vdl2_listening">"Lyssnar på de 6 kanalerna"</string>
+    <string name="vdl2_none_yet">"Inga meddelanden ännu"</string>
+    <string name="vdl2_none_yet_body">"Flygplan i luften hörs upp till 200 km eller mer, markstationer bara nära en flygplats. Skurarna är korta och täta: några minuter med en antenn utomhus räcker oftast."</string>
+    <string name="vdl2_how_it_works">"VDL Mode 2 är den digitala datalänk som ersatt det mesta av gamla analoga ACARS i Europa: D8PSK-skurar på 31,5 kbit/s på sex kanaler mellan 136,725 och 136,975 MHz. Appen tar emot alla sex samtidigt och avkodar dem med OnAirs kod: träningssekvens, huvud, Reed-Solomon-korrigering och sedan varje ramens kontrollsumma. Den visar ACARS-meddelanden som skickas så, markstationernas annonser (position, flygplatser) och flygplanens länkuppkopplingar; ATN-paket (X.25) namnges bara. Endast mottagning."</string>
+    <string name="vdl2_atn">"ATN-paket (X.25)"</string>
+    <string name="vdl2_airports">"flygplatser %1$s"</string>
+    <string name="vdl2_destination">"destination %1$s"</string>
 </resources>

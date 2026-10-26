@@ -2408,4 +2408,13 @@
         <item quantity="many">"wywołań"</item>
         <item quantity="other">"wywołania"</item>
     </plurals>
+    <string name="vdl2_subtitle">"Łącze danych samolotów, 136,7–137 MHz"</string>
+    <string name="vdl2_heard">"statki powietrzne: %1$d · stacje naziemne: %2$d · 136,725–136,975 MHz"</string>
+    <string name="vdl2_listening">"Nasłuch 6 kanałów"</string>
+    <string name="vdl2_none_yet">"Brak wiadomości"</string>
+    <string name="vdl2_none_yet_body">"Samoloty w locie słychać do 200 km lub dalej, stacje naziemne tylko w pobliżu lotniska. Serie są krótkie i częste: zwykle wystarczy kilka minut z anteną na zewnątrz."</string>
+    <string name="vdl2_how_it_works">"VDL Mode 2 to cyfrowe łącze danych, które w Europie zastąpiło większość starego analogowego ACARS: serie D8PSK 31,5 kbit/s na sześciu kanałach między 136,725 a 136,975 MHz. Aplikacja odbiera wszystkie sześć naraz i dekoduje je kodem OnAir: sekwencja treningowa, nagłówek, korekcja Reed-Solomona, a potem suma kontrolna każdej ramki. Pokazuje przesyłane tak wiadomości ACARS, komunikaty stacji naziemnych (pozycja, obsługiwane lotniska) i zestawianie łączy przez samoloty; pakiety ATN (X.25) są tylko nazywane. Tylko odbiór."</string>
+    <string name="vdl2_atn">"Pakiet ATN (X.25)"</string>
+    <string name="vdl2_airports">"lotniska %1$s"</string>
+    <string name="vdl2_destination">"cel %1$s"</string>
 </resources>
