@@ -108,6 +108,37 @@ class ScreenshotTest {
         assertFalse("GNSS", Scenario.gnssStarted)
     }
     @Test fun homeSelected() = shot("03_home_wifi_selected", nav = NavState(Network.Wifi))
+    @Test fun homePair() = shot("03c_home_wifi_bt_pair", nav = NavState(Network.WifiBt))
+    @Test fun wardriving() = shot("W1_wardriving", dark = true, nav = NavState(Network.WifiBt, Page.ToolPage(Tool.Wardriving))) { wardriveDemo() }
+    @Test fun wardrivingLight() = shot("W2_wardriving_light", nav = NavState(Network.WifiBt, Page.ToolPage(Tool.Wardriving))) { wardriveDemo(fix = false) }
+    @Test fun wardrivingSettings() = shot("W3_wardriving_settings", nav = NavState(Network.WifiBt, Page.ToolPage(Tool.WardrivingSettings)))
+    @Test fun wardrivingTools() = shot("W4_wardriving_tools", nav = NavState(Network.WifiBt, Page.Tools))
+
+    private fun wardriveDemo(fix: Boolean = true) {
+        val now = System.currentTimeMillis()
+        fun w(name: String, mac: String, lvl: Int, f: Int, caps: String, vendor: String? = null) =
+            com.allnetworktools.data.WardriveRow(mac, name, com.allnetworktools.data.NetType.Wifi, lvl, f, com.allnetworktools.data.Wardrive.shortCaps(caps), vendor, com.allnetworktools.data.Wardrive.guardOf(caps), now)
+        fun b(name: String, mac: String, lvl: Int) =
+            com.allnetworktools.data.WardriveRow(mac, name, com.allnetworktools.data.NetType.Ble, lvl, 0, "BLE | Inconnu", null, com.allnetworktools.data.Guard.Ble, now)
+        val rows = listOf(
+            w("egym-guest", "ee:55:a8:a5:f6:5b", -39, 2412, "[WPA2-PSK-CCMP][RSN-PSK-CCMP][ESS][MFPC]"),
+            w("egym-client", "e2:55:a8:a5:f6:5b", -40, 2412, "[WPA2-PSK-CCMP][RSN-PSK-CCMP][ESS][MFPC]"),
+            w("", "da:55:88:a5:f6:5b", -47, 5700, "[WPA2-PSK-CCMP][RSN-PSK-CCMP][ESS]"),
+            b("TY", "dc:23:50:75:9c:27", -48),
+            w("Livebox-7A2C", "34:27:92:10:eb:55", -58, 5180, "[RSN-SAE-CCMP][ESS]", "Sagemcom Broadband SAS"),
+            b("DAVID-DELL", "54:c6:7c:54:ce:45", -56),
+            w("Freebox-10EB54", "e4:9e:12:12:eb:55", -66, 2437, "[WPA2-PSK-CCMP][RSN-PSK-CCMP][ESS][WPS]", "Freebox Sas"),
+            w("FreeWifi_secure", "e6:9e:12:12:eb:56", -67, 2437, "[ESS]"),
+            w("SFR_7111", "00:1d:6a:20:71:11", -78, 2462, "[WEP][ESS]", "Shenzhen SDMC Technology CO.,Ltd."),
+        ).sortedByDescending { it.level }
+        com.allnetworktools.data.Wardrive.update {
+            it.copy(
+                running = true, rows = rows, newWifi = 37, newBle = 12, db = com.allnetworktools.data.DbCounts(1_284, 316),
+                fix = if (fix) com.allnetworktools.data.WardriveFix(48.85341, 2.3488, 41.0, 4f, true) else null,
+                lastScanCount = 52, lastScanMs = 2600, queue = 0,
+            )
+        }
+    }
     @Test fun dockOnTools() = shot("06_dock_tools", nav = NavState(Network.Wifi, Page.Tools))
     @Test fun homeDark() = shot("04_home_gnss_dark", dark = true, nav = NavState(Network.Gnss))
     @Test fun homeAirplane() {

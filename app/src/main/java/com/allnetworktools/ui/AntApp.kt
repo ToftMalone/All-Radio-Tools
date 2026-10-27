@@ -191,6 +191,16 @@ private fun MainShell(vm: MainViewModel) {
                 cardBounds = cardBounds,
                 onSettingsBounds = { settingsBounds = it },
                 onCard = ::select,
+                onPair = {
+                    // Held again once picked: straight to wardriving.
+                    if (vm.nav.value.network == Network.WifiBt) {
+                        haptics.confirm()
+                        vm.navigate { it.copy(page = Page.ToolPage(Tool.Wardriving)) }
+                    } else {
+                        haptics.segment()
+                        vm.navigate { it.copy(network = Network.WifiBt) }
+                    }
+                },
                 onBlockerAction = actions::resolve,
                 onDeselect = { vm.navigate { it.copy(network = null) } },
                 onSettings = { vm.navigate { it.copy(network = null, page = Page.Settings) } },

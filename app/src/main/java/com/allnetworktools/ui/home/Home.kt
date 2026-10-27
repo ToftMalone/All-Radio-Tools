@@ -56,8 +56,16 @@ import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.foundation.gestures.awaitEachGesture
+import androidx.compose.foundation.gestures.awaitFirstDown
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.ui.input.pointer.PointerEventPass
+import androidx.compose.ui.input.pointer.PointerId
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.boundsInRoot
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.allnetworktools.Blocker
@@ -119,6 +127,7 @@ fun HomeScreen(
     cardBounds: SnapshotStateMap<Network, Rect>,
     onSettingsBounds: (Rect) -> Unit,
     onCard: (Network) -> Unit,
+    onPair: () -> Unit,
     onBlockerAction: (Blocker) -> Unit,
     onDeselect: () -> Unit,
     onSettings: () -> Unit,
@@ -142,12 +151,16 @@ fun HomeScreen(
                         bg = cs.surfaceContainerHigh, tint = cs.onSurfaceVariant,
                     )
                 }
-                val rows = Network.entries.chunked(2)
+                val rows = Network.entries.filter { it.inGrid }.chunked(2)
                 // Cards only hold an icon and a short description, so they stay compact.
                 val cardH = 184.dp
+                var gridOrigin by remember { mutableStateOf(Offset.Zero) }
+                val pair by rememberUpdatedState(onPair)
                 Column(
                     // Padding sits inside the scroll area so the selection outline and scale are not clipped.
                     Modifier.fillMaxWidth()
+                        .onGloballyPositioned { gridOrigin = it.positionInRoot() }
+                        .pairHold({ p -> cardBounds[p] }, { gridOrigin }) { pair() }
                         .verticalScroll(rememberScrollState())
                         .padding(start = 16.dp, end = 16.dp, top = 20.dp, bottom = 16.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -155,20 +168,31 @@ fun HomeScreen(
                     rows.forEach { pair ->
                         Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                             pair.forEach { n ->
+                                val picked = selected == n || (selected == Network.WifiBt && n in PairCards)
                                 NetworkCard(
                                     network = n,
                                     data = data,
-                                    selected = selected == n,
-                                    dimmed = selected != null && selected != n,
+                                    selected = picked,
+                                    dimmed = selected != null && !picked,
                                     onClick = { onCard(n) },
                                     onAction = onBlockerAction,
                                     modifier = Modifier
                                         .weight(1f)
                                         .height(cardH)
-                                        .onGloballyPositioned { cardBounds[n] = it.boundsInRoot() },
+                                        .onGloballyPositioned {
+                                            cardBounds[n] = it.boundsInRoot()
+                                            // The pair's page grows out of both cards at once.
+                                            val a = cardBounds[Network.Wifi]
+                                            val b = cardBounds[Network.Bluetooth]
+                                            if (a != null && b != null) cardBounds[Network.WifiBt] = Rect(minOf(a.left, b.left), minOf(a.top, b.top), maxOf(a.right, b.right), maxOf(a.bottom, b.bottom))
+                                        },
                                 )
                             }
                         }
+                    }
+                    Row(Modifier.fillMaxWidth().padding(top = 4.dp), horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically) {
+                        Symbol(Sym.DirectionsCar, size = 16.dp, tint = cs.onSurfaceVariant)
+                        Text(S(R.string.wardriving_hint), Modifier.padding(start = 6.dp), style = rf(12, 16), color = cs.onSurfaceVariant)
                     }
                 }
             }
@@ -233,6 +257,7 @@ private fun description(n: Network) = when (n) {
     Network.Cellular -> S(R.string.cells_your_carrier_s_towers_and)
     Network.Gnss -> S(R.string.satellites_sky_position_comparison_and_passes)
     Network.Sdr -> S(R.string.hackrf_spectrum_aircraft_ships_radiosondes_fpv)
+    Network.WifiBt -> S(R.string.wardriving_subtitle)
 }
 
 @Composable
@@ -269,6 +294,53 @@ private fun CardIcon(network: Network) {
                 PulseRing(roles.accent, 40.dp, periodMs = 1800)
                 Box(Modifier.size(48.dp).spinning(rememberSpin(24_000, reverse = true)).clip(RoundedCornerShape(16.dp)).background(roles.accent))
                 Symbol(Sym.Antenna, size = 26.dp, filled = true, tint = roles.onAccent)
+            }
+        }
+        Network.WifiBt -> ShapeBadge(Sym.DirectionsCar, cookieShape(), 56.dp, roles.accent, roles.onAccent, 28.dp)
+    }
+}
+
+/** The two cards held together to pick the pair of radios. */
+private val PairCards = setOf(Network.Wifi, Network.Bluetooth)
+
+/**
+ * Two fingers held still for a long press, one on the Wi-Fi card and one on the Bluetooth card: [onPair]. Watched on
+ * the way down (before the cards), and once it fires the rest of the gesture is swallowed so neither card sees a tap.
+ */
+private fun Modifier.pairHold(bounds: (Network) -> Rect?, origin: () -> Offset, onPair: () -> Unit): Modifier = pointerInput(Unit) {
+    val hold = viewConfiguration.longPressTimeoutMillis
+    val slop = viewConfiguration.touchSlop
+    awaitEachGesture {
+        awaitFirstDown(requireUnconsumed = false, pass = PointerEventPass.Initial)
+        var since = -1L
+        var starts: Map<PointerId, Offset> = emptyMap()
+        var fired = false
+        while (true) {
+            val wait = if (since >= 0 && !fired) maxOf(1L, hold - (System.currentTimeMillis() - since)) else Long.MAX_VALUE
+            val ev = withTimeoutOrNull(wait) { awaitPointerEvent(PointerEventPass.Initial) }
+            if (ev == null) {
+                fired = true
+                onPair()
+                continue
+            }
+            val down = ev.changes.filter { it.pressed }
+            if (down.isEmpty()) {
+                if (fired) ev.changes.forEach { it.consume() }
+                break
+            }
+            if (fired) { ev.changes.forEach { it.consume() }; continue }
+            val o = origin()
+            val w = bounds(Network.Wifi)
+            val b = bounds(Network.Bluetooth)
+            val onBoth = down.size == 2 && w != null && b != null && run {
+                val p0 = down[0].position + o
+                val p1 = down[1].position + o
+                (w.contains(p0) && b.contains(p1)) || (w.contains(p1) && b.contains(p0))
+            }
+            when {
+                !onBoth -> { since = -1L; starts = emptyMap() }
+                since < 0 || down.map { it.id }.toSet() != starts.keys -> { since = System.currentTimeMillis(); starts = down.associate { it.id to it.position } }
+                down.any { c -> (c.position - starts.getValue(c.id)).getDistance() > slop } -> { since = -1L; starts = emptyMap() }
             }
         }
     }

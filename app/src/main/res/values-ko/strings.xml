@@ -2291,4 +2291,57 @@
     <string name="cubesat_needs_location">"통과 예측과 도플러 보정을 위해 위치를 켜세요."</string>
     <string name="cubesat_no_elements">"이 위성은 CelesTrak 아마추어 목록에 없습니다. 통과와 도플러가 없습니다."</string>
     <string name="cubesat_how_it_works">"많은 아마추어 위성과 ISS가 2m와 70cm에서 AX.25 원격측정을 보냅니다. 1200보드 AFSK(APRS와 동일) 또는 9600보드 G3RUH입니다. 앱은 위성에 맞추고, 궤도와 현재 위치로 도플러 편이(70cm에서 최대 ±10kHz)를 따라가며, 체크섬이 맞는 프레임을 나열합니다. 위성은 통과하는 몇 분 동안만 들립니다. ISS는 수직 안테나로 충분하고, 소형 위성은 더 좋은 안테나가 도움이 됩니다. 수신 전용."</string>
+    <string name="wardriving_settings">"워드라이빙 설정"</string>
+    <string name="wardriving_settings_subtitle">"WiGLE.net 계정, 제외된 주소, 데이터베이스"</string>
+    <string name="wardriving_subtitle">"이동 중 기록한 Wi-Fi와 블루투스(WiGLE.net용)"</string>
+    <string name="wardriving_recording">"기록 중"</string>
+    <string name="wardriving_hint">"워드라이빙은 Wi-Fi와 블루투스를 함께 길게 누르세요"</string>
+    <string name="wardriving_notification">"새 Wi-Fi %1$d · 블루투스 %2$d · 데이터베이스 %3$d"</string>
+    <string name="wardriving_waiting_gps">"GPS 대기 중"</string>
+    <string name="wardriving_running">"워드라이빙 진행 중"</string>
+    <string name="wardriving_upload">"WiGLE.net에 업로드"</string>
+    <string name="wardriving_sending">"전송 중…"</string>
+    <string name="wardriving_waiting_gps_sync">"(GPS 동기화 대기 중…)"</string>
+    <string name="wardriving_stopped">"기록 중지됨: Wi-Fi를 탭하여 시작"</string>
+    <string name="wardriving_queue">"DB 대기열: %1$d"</string>
+    <string name="wardriving_network_fix">"네트워크"</string>
+    <string name="wardriving_exclude_mac">"이 주소 제외"</string>
+    <string name="wardriving_exclude_oui">"제조사 %1$s 제외(%2$s)"</string>
+    <string name="wardriving_upload_nothing">"업로드할 새 항목 없음"</string>
+    <string name="wardriving_upload_failed">"업로드 실패: %1$s"</string>
+    <string name="wardriving_connect_first">"먼저 WiGLE.net 계정을 연결하세요"</string>
+    <string name="wardriving_empty">"아직 네트워크 없음"</string>
+    <string name="wardriving_empty_text">"기록을 시작하면 수신된 Wi-Fi 네트워크와 블루투스 기기가 강한 순서로 여기에 표시됩니다."</string>
+    <string name="wardriving_open">"개방"</string>
+    <string name="wigle_account">"WiGLE.net 계정"</string>
+    <string name="wigle_connected_as">"연결됨: %1$s"</string>
+    <string name="wigle_help">"API 이름과 토큰은 wigle.net의 Account 페이지 “Show my token”에 있습니다. 계정 비밀번호는 묻지 않습니다."</string>
+    <string name="wigle_open_account">"wigle.net/account 열기"</string>
+    <string name="wigle_api_name">"API 이름"</string>
+    <string name="wigle_api_token">"API 토큰"</string>
+    <string name="wigle_connect">"연결"</string>
+    <string name="wigle_checking">"확인 중…"</string>
+    <string name="wigle_disconnect">"연결 해제"</string>
+    <string name="wigle_failed">"연결 거부됨: %1$s"</string>
+    <string name="wardriving_exclusions">"제외된 주소"</string>
+    <string name="wardriving_exclusions_help">"전체 MAC 주소(AA:BB:CC:DD:EE:FF) 또는 제조사 접두사 OUI(AA:BB:CC). 일치하는 항목은 표시하거나 기록하지 않으며, 이미 데이터베이스에 있던 항목은 삭제됩니다."</string>
+    <string name="wardriving_exclusion_field">"MAC 주소 또는 OUI"</string>
+    <string name="wardriving_exclusion_invalid">"16진수 6자리 또는 12자리를 입력하세요"</string>
+    <string name="wardriving_add">"추가"</string>
+    <string name="wardriving_no_exclusion">"제외된 주소 없음"</string>
+    <string name="wardriving_database">"데이터베이스"</string>
+    <string name="wardriving_db_counts">"Wi-Fi 네트워크 %1$d · 블루투스 기기 %2$d"</string>
+    <string name="wardriving_clear">"데이터베이스 지우기"</string>
+    <string name="wardriving_clear_confirm">"기록된 모든 네트워크와 관측을 지울까요? WiGLE.net에 보내지 않은 항목은 사라집니다."</string>
+    <string name="wardriving_throttle_title">"더 잦은 Wi-Fi 검색"</string>
+    <string name="wardriving_throttle_text">"Android는 Wi-Fi 검색을 2분에 4회로 제한합니다. 운전 중 더 많은 네트워크를 기록하려면 개발자 옵션에서 ‘Wi-Fi 검색 제한’을 끄세요."</string>
+    <plurals name="p_wardriving_uploaded">
+        <item quantity="other">"관측 %1$d건을 WiGLE.net에 보냈습니다"</item>
+    </plurals>
+    <plurals name="p_wardriving_scanned">
+        <item quantity="other">"%2$dms 동안 %1$d개 검색."</item>
+    </plurals>
+    <plurals name="p_wardriving_pending">
+        <item quantity="other">"보낼 관측 %1$d건"</item>
+    </plurals>
 </resources>

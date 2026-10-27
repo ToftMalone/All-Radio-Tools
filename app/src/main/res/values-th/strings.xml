@@ -2291,4 +2291,57 @@
     <string name="cubesat_needs_location">"เปิดตำแหน่งเพื่อดูการโคจรผ่านและติดตามการเลื่อนดอปเพลอร์"</string>
     <string name="cubesat_no_elements">"ดาวเทียมนี้ไม่อยู่ในรายการสมัครเล่นของ CelesTrak จึงไม่มีการโคจรผ่านหรือดอปเพลอร์"</string>
     <string name="cubesat_how_it_works">"ดาวเทียมสมัครเล่นหลายดวงและ ISS ส่งข้อมูลโทรมาตร AX.25 บนย่าน 2 ม. และ 70 ซม. แบบ AFSK 1200 บอด (เหมือน APRS) หรือ G3RUH 9600 บอด แอปจูนไปที่ดาวเทียม ติดตามการเลื่อนดอปเพลอร์ (สูงสุด ±10 kHz บน 70 ซม.) จากวงโคจรและตำแหน่งของคุณ และแสดงเฟรมที่ checksum ถูกต้อง ดาวเทียมจะได้ยินเฉพาะตอนโคจรผ่านครั้งละไม่กี่นาที สำหรับ ISS ใช้เสาอากาศแนวตั้งก็พอ ส่วนดาวเทียมเล็กควรใช้เสาอากาศที่ดีกว่า รับอย่างเดียว"</string>
+    <string name="wardriving_settings">"การตั้งค่าวอร์ไดรฟ์วิง"</string>
+    <string name="wardriving_settings_subtitle">"บัญชี WiGLE.net ที่อยู่ที่ยกเว้น ฐานข้อมูล"</string>
+    <string name="wardriving_subtitle">"Wi-Fi และบลูทูธที่บันทึกระหว่างทาง สำหรับ WiGLE.net"</string>
+    <string name="wardriving_recording">"กำลังบันทึก"</string>
+    <string name="wardriving_hint">"กด Wi-Fi และบลูทูธค้างพร้อมกันเพื่อวอร์ไดรฟ์วิง"</string>
+    <string name="wardriving_notification">"ใหม่: Wi-Fi %1$d · บลูทูธ %2$d · ในฐานข้อมูล %3$d"</string>
+    <string name="wardriving_waiting_gps">"กำลังรอ GPS"</string>
+    <string name="wardriving_running">"กำลังวอร์ไดรฟ์วิง"</string>
+    <string name="wardriving_upload">"ส่งไปยัง WiGLE.net"</string>
+    <string name="wardriving_sending">"กำลังส่ง…"</string>
+    <string name="wardriving_waiting_gps_sync">"(กำลังรอการซิงค์ GPS…)"</string>
+    <string name="wardriving_stopped">"หยุดบันทึกแล้ว: แตะ Wi-Fi เพื่อเริ่ม"</string>
+    <string name="wardriving_queue">"คิวฐานข้อมูล: %1$d"</string>
+    <string name="wardriving_network_fix">"เครือข่าย"</string>
+    <string name="wardriving_exclude_mac">"ยกเว้นที่อยู่นี้"</string>
+    <string name="wardriving_exclude_oui">"ยกเว้นผู้ผลิต %1$s (%2$s)"</string>
+    <string name="wardriving_upload_nothing">"ไม่มีข้อมูลใหม่ให้ส่ง"</string>
+    <string name="wardriving_upload_failed">"ส่งไม่สำเร็จ: %1$s"</string>
+    <string name="wardriving_connect_first">"เชื่อมต่อบัญชี WiGLE.net ก่อน"</string>
+    <string name="wardriving_empty">"ยังไม่มีเครือข่าย"</string>
+    <string name="wardriving_empty_text">"เริ่มบันทึก: เครือข่าย Wi-Fi และอุปกรณ์บลูทูธที่ได้ยินจะแสดงที่นี่ เรียงจากแรงที่สุด"</string>
+    <string name="wardriving_open">"เปิด"</string>
+    <string name="wigle_account">"บัญชี WiGLE.net"</string>
+    <string name="wigle_connected_as">"เชื่อมต่อแล้ว: %1$s"</string>
+    <string name="wigle_help">"ชื่อ API และโทเค็นอยู่ที่ wigle.net หน้า Account หัวข้อ “Show my token” ไม่มีการขอรหัสผ่านบัญชี"</string>
+    <string name="wigle_open_account">"เปิด wigle.net/account"</string>
+    <string name="wigle_api_name">"ชื่อ API"</string>
+    <string name="wigle_api_token">"โทเค็น API"</string>
+    <string name="wigle_connect">"เชื่อมต่อ"</string>
+    <string name="wigle_checking">"กำลังตรวจสอบ…"</string>
+    <string name="wigle_disconnect">"ยกเลิกการเชื่อมต่อ"</string>
+    <string name="wigle_failed">"การเชื่อมต่อถูกปฏิเสธ: %1$s"</string>
+    <string name="wardriving_exclusions">"ที่อยู่ที่ยกเว้น"</string>
+    <string name="wardriving_exclusions_help">"ที่อยู่ MAC เต็ม (AA:BB:CC:DD:EE:FF) หรือคำนำหน้าผู้ผลิต OUI (AA:BB:CC) รายการที่ตรงจะไม่แสดงและไม่บันทึก และรายการที่อยู่ในฐานข้อมูลแล้วจะถูกลบ"</string>
+    <string name="wardriving_exclusion_field">"ที่อยู่ MAC หรือ OUI"</string>
+    <string name="wardriving_exclusion_invalid">"ป้อนเลขฐานสิบหก 6 หรือ 12 หลัก"</string>
+    <string name="wardriving_add">"เพิ่ม"</string>
+    <string name="wardriving_no_exclusion">"ไม่มีที่อยู่ที่ยกเว้น"</string>
+    <string name="wardriving_database">"ฐานข้อมูล"</string>
+    <string name="wardriving_db_counts">"เครือข่าย Wi-Fi %1$d · อุปกรณ์บลูทูธ %2$d"</string>
+    <string name="wardriving_clear">"ล้างฐานข้อมูล"</string>
+    <string name="wardriving_clear_confirm">"ลบเครือข่ายและการสังเกตที่บันทึกไว้ทั้งหมดหรือไม่ ข้อมูลที่ยังไม่ได้ส่งไปยัง WiGLE.net จะหายไป"</string>
+    <string name="wardriving_throttle_title">"สแกน Wi-Fi บ่อยขึ้น"</string>
+    <string name="wardriving_throttle_text">"Android จำกัดการสแกน Wi-Fi ไว้ที่ 4 ครั้งทุก 2 นาที หากต้องการบันทึกเครือข่ายมากขึ้นขณะขับรถ ให้ปิด “การควบคุมการสแกน Wi-Fi” ในตัวเลือกสำหรับนักพัฒนาซอฟต์แวร์"</string>
+    <plurals name="p_wardriving_uploaded">
+        <item quantity="other">"ส่งการสังเกต %1$d รายการไปยัง WiGLE.net แล้ว"</item>
+    </plurals>
+    <plurals name="p_wardriving_scanned">
+        <item quantity="other">"สแกนได้ %1$d ใน %2$d มิลลิวินาที"</item>
+    </plurals>
+    <plurals name="p_wardriving_pending">
+        <item quantity="other">"รอส่งการสังเกต %1$d รายการ"</item>
+    </plurals>
 </resources>

@@ -2291,4 +2291,57 @@
     <string name="cubesat_needs_location">"Aktifkan lokasi untuk melihat lintasan dan mengikuti pergeseran Doppler."</string>
     <string name="cubesat_no_elements">"Satelit ini tidak ada di daftar amatir CelesTrak: tanpa lintasan dan Doppler."</string>
     <string name="cubesat_how_it_works">"Banyak satelit amatir dan ISS mengirim telemetri AX.25 di 2 m dan 70 cm: AFSK 1200 baud (seperti APRS) atau G3RUH 9600 baud. Aplikasi menala ke satelit, mengikuti pergeseran Doppler (hingga ±10 kHz di 70 cm) dari orbitnya dan posisi Anda, dan menampilkan frame dengan checksum benar. Satelit hanya terdengar saat melintas, beberapa menit sekali; antena vertikal cukup untuk ISS, antena lebih baik membantu untuk satelit kecil. Hanya menerima."</string>
+    <string name="wardriving_settings">"Setelan wardriving"</string>
+    <string name="wardriving_settings_subtitle">"Akun WiGLE.net, alamat yang dikecualikan, database"</string>
+    <string name="wardriving_subtitle">"Wi-Fi dan Bluetooth yang dicatat di perjalanan, untuk WiGLE.net"</string>
+    <string name="wardriving_recording">"Merekam"</string>
+    <string name="wardriving_hint">"Tahan Wi-Fi dan Bluetooth bersamaan untuk wardriving"</string>
+    <string name="wardriving_notification">"Baru: %1$d Wi-Fi · %2$d Bluetooth · %3$d di database"</string>
+    <string name="wardriving_waiting_gps">"Menunggu GPS"</string>
+    <string name="wardriving_running">"Wardriving berjalan"</string>
+    <string name="wardriving_upload">"Unggah ke WiGLE.net"</string>
+    <string name="wardriving_sending">"Mengirim…"</string>
+    <string name="wardriving_waiting_gps_sync">"(Menunggu sinkronisasi GPS…)"</string>
+    <string name="wardriving_stopped">"Perekaman berhenti: ketuk Wi-Fi untuk mulai"</string>
+    <string name="wardriving_queue">"Antrean DB: %1$d"</string>
+    <string name="wardriving_network_fix">"Jaringan"</string>
+    <string name="wardriving_exclude_mac">"Kecualikan alamat ini"</string>
+    <string name="wardriving_exclude_oui">"Kecualikan produsen %1$s (%2$s)"</string>
+    <string name="wardriving_upload_nothing">"Tidak ada yang baru untuk diunggah"</string>
+    <string name="wardriving_upload_failed">"Gagal mengunggah: %1$s"</string>
+    <string name="wardriving_connect_first">"Hubungkan akun WiGLE.net Anda terlebih dahulu"</string>
+    <string name="wardriving_empty">"Belum ada jaringan"</string>
+    <string name="wardriving_empty_text">"Mulai perekaman: jaringan Wi-Fi dan perangkat Bluetooth yang terdengar akan muncul di sini, dari yang terkuat."</string>
+    <string name="wardriving_open">"Terbuka"</string>
+    <string name="wigle_account">"Akun WiGLE.net"</string>
+    <string name="wigle_connected_as">"Terhubung: %1$s"</string>
+    <string name="wigle_help">"Nama dan token API ada di wigle.net, halaman Account, bagian “Show my token”. Kata sandi akun tidak pernah diminta."</string>
+    <string name="wigle_open_account">"Buka wigle.net/account"</string>
+    <string name="wigle_api_name">"Nama API"</string>
+    <string name="wigle_api_token">"Token API"</string>
+    <string name="wigle_connect">"Hubungkan"</string>
+    <string name="wigle_checking">"Memeriksa…"</string>
+    <string name="wigle_disconnect">"Putuskan"</string>
+    <string name="wigle_failed">"Koneksi ditolak: %1$s"</string>
+    <string name="wardriving_exclusions">"Alamat yang dikecualikan"</string>
+    <string name="wardriving_exclusions_help">"Alamat MAC lengkap (AA:BB:CC:DD:EE:FF) atau awalan produsen, OUI (AA:BB:CC). Yang cocok tidak ditampilkan maupun direkam, dan yang sudah ada di database dihapus."</string>
+    <string name="wardriving_exclusion_field">"Alamat MAC atau OUI"</string>
+    <string name="wardriving_exclusion_invalid">"Masukkan 6 atau 12 digit heksadesimal"</string>
+    <string name="wardriving_add">"Tambah"</string>
+    <string name="wardriving_no_exclusion">"Tidak ada alamat yang dikecualikan"</string>
+    <string name="wardriving_database">"Database"</string>
+    <string name="wardriving_db_counts">"%1$d jaringan Wi-Fi · %2$d perangkat Bluetooth"</string>
+    <string name="wardriving_clear">"Kosongkan database"</string>
+    <string name="wardriving_clear_confirm">"Hapus semua jaringan dan pengamatan yang direkam? Yang belum dikirim ke WiGLE.net akan hilang."</string>
+    <string name="wardriving_throttle_title">"Pemindaian Wi-Fi lebih sering"</string>
+    <string name="wardriving_throttle_text">"Android membatasi pemindaian Wi-Fi hingga 4 kali tiap 2 menit. Untuk mencatat lebih banyak jaringan saat berkendara, matikan “Throttling pemindaian Wi-Fi” di opsi developer."</string>
+    <plurals name="p_wardriving_uploaded">
+        <item quantity="other">"%1$d pengamatan dikirim ke WiGLE.net"</item>
+    </plurals>
+    <plurals name="p_wardriving_scanned">
+        <item quantity="other">"%1$d dipindai dalam %2$d md."</item>
+    </plurals>
+    <plurals name="p_wardriving_pending">
+        <item quantity="other">"%1$d pengamatan untuk diunggah"</item>
+    </plurals>
 </resources>

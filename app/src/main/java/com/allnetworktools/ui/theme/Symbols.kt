@@ -218,4 +218,10 @@ object Sym {
     const val Deskphone = "deskphone"
     const val ConnectingAirports = "connecting_airports"
     const val SettingsInputAntenna = "settings_input_antenna"
+    const val Star = "star"
+    const val Database = "database"
+    const val GpsOff = "gps_off"
+    const val GpsFixed = "gps_fixed"
+    const val CloudUpload = "cloud_upload"
+    const val BlockFlipped = "block_flipped"
 }

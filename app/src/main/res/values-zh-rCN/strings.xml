@@ -2291,4 +2291,57 @@
     <string name="cubesat_needs_location">"打开定位以查看过境并跟踪多普勒频移。"</string>
     <string name="cubesat_no_elements">"此卫星不在 CelesTrak 业余列表中：无过境和多普勒。"</string>
     <string name="cubesat_how_it_works">"许多业余卫星和国际空间站在 2 米和 70 厘米波段发送 AX.25 遥测：1200 波特 AFSK(与 APRS 相同)或 9600 波特 G3RUH。应用调谐到卫星，根据其轨道和您的位置跟踪多普勒频移(70 厘米波段最多 ±10 kHz)，并列出校验和正确的帧。卫星只在过境时能收到，每次几分钟；国际空间站用垂直天线即可，小卫星用更好的天线效果更佳。仅接收。"</string>
+    <string name="wardriving_settings">"驾驶扫描设置"</string>
+    <string name="wardriving_settings_subtitle">"WiGLE.net 账户、排除的地址、数据库"</string>
+    <string name="wardriving_subtitle">"途中记录的 Wi-Fi 和蓝牙，用于 WiGLE.net"</string>
+    <string name="wardriving_recording">"正在记录"</string>
+    <string name="wardriving_hint">"同时长按 Wi-Fi 和蓝牙即可进行驾驶扫描"</string>
+    <string name="wardriving_notification">"新 Wi-Fi %1$d · 新蓝牙 %2$d · 数据库 %3$d"</string>
+    <string name="wardriving_waiting_gps">"正在等待 GPS"</string>
+    <string name="wardriving_running">"驾驶扫描进行中"</string>
+    <string name="wardriving_upload">"上传到 WiGLE.net"</string>
+    <string name="wardriving_sending">"正在发送…"</string>
+    <string name="wardriving_waiting_gps_sync">"（正在等待 GPS 定位…）"</string>
+    <string name="wardriving_stopped">"记录已停止：点按 Wi-Fi 开始"</string>
+    <string name="wardriving_queue">"数据库队列：%1$d"</string>
+    <string name="wardriving_network_fix">"网络"</string>
+    <string name="wardriving_exclude_mac">"排除此地址"</string>
+    <string name="wardriving_exclude_oui">"排除厂商 %1$s（%2$s）"</string>
+    <string name="wardriving_upload_nothing">"没有新内容可上传"</string>
+    <string name="wardriving_upload_failed">"上传失败：%1$s"</string>
+    <string name="wardriving_connect_first">"请先连接您的 WiGLE.net 账户"</string>
+    <string name="wardriving_empty">"暂无网络"</string>
+    <string name="wardriving_empty_text">"开始记录后，收到的 Wi-Fi 网络和蓝牙设备将按信号强弱显示在这里。"</string>
+    <string name="wardriving_open">"开放"</string>
+    <string name="wigle_account">"WiGLE.net 账户"</string>
+    <string name="wigle_connected_as">"已连接：%1$s"</string>
+    <string name="wigle_help">"API 名称和令牌位于 wigle.net 的 Account 页面“Show my token”中。从不需要账户密码。"</string>
+    <string name="wigle_open_account">"打开 wigle.net/account"</string>
+    <string name="wigle_api_name">"API 名称"</string>
+    <string name="wigle_api_token">"API 令牌"</string>
+    <string name="wigle_connect">"连接"</string>
+    <string name="wigle_checking">"正在验证…"</string>
+    <string name="wigle_disconnect">"断开连接"</string>
+    <string name="wigle_failed">"连接被拒绝：%1$s"</string>
+    <string name="wardriving_exclusions">"排除的地址"</string>
+    <string name="wardriving_exclusions_help">"完整的 MAC 地址（AA:BB:CC:DD:EE:FF）或厂商前缀 OUI（AA:BB:CC）。匹配的内容既不显示也不记录，数据库中已有的也会被删除。"</string>
+    <string name="wardriving_exclusion_field">"MAC 地址或 OUI"</string>
+    <string name="wardriving_exclusion_invalid">"请输入 6 位或 12 位十六进制数字"</string>
+    <string name="wardriving_add">"添加"</string>
+    <string name="wardriving_no_exclusion">"没有排除的地址"</string>
+    <string name="wardriving_database">"数据库"</string>
+    <string name="wardriving_db_counts">"Wi-Fi 网络 %1$d · 蓝牙设备 %2$d"</string>
+    <string name="wardriving_clear">"清空数据库"</string>
+    <string name="wardriving_clear_confirm">"删除所有记录的网络和观测？未发送到 WiGLE.net 的内容将丢失。"</string>
+    <string name="wardriving_throttle_title">"更频繁的 Wi-Fi 扫描"</string>
+    <string name="wardriving_throttle_text">"Android 将 Wi-Fi 扫描限制为每 2 分钟 4 次。若要在驾驶时记录更多网络，请在开发者选项中关闭“WLAN 扫描调节”。"</string>
+    <plurals name="p_wardriving_uploaded">
+        <item quantity="other">"已向 WiGLE.net 发送 %1$d 条观测"</item>
+    </plurals>
+    <plurals name="p_wardriving_scanned">
+        <item quantity="other">"%2$d 毫秒内扫描到 %1$d 个。"</item>
+    </plurals>
+    <plurals name="p_wardriving_pending">
+        <item quantity="other">"待上传 %1$d 条观测"</item>
+    </plurals>
 </resources>

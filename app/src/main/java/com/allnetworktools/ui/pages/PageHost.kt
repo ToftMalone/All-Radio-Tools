@@ -222,6 +222,7 @@ private fun PageBody(vm: MainViewModel, net: Network, page: Page) {
             Network.Cellular -> CellDashboard(vm)
             Network.Gnss -> GnssDashboard(vm)
             Network.Sdr -> com.allnetworktools.ui.pages.sdr.SdrDashboard(vm)
+            Network.WifiBt -> ToolsPage(net, vm)
         }
         Page.Tools -> ToolsPage(net, vm)
         is Page.ToolPage -> when (page.tool) {
@@ -267,6 +268,8 @@ private fun PageBody(vm: MainViewModel, net: Network, page: Page) {
             Tool.Flarm -> com.allnetworktools.ui.pages.sdr.FlarmTool(vm)
             Tool.Ism -> com.allnetworktools.ui.pages.sdr.IsmTool(vm)
             Tool.Meteor -> com.allnetworktools.ui.pages.sdr.MeteorTool(vm)
+            Tool.Wardriving -> com.allnetworktools.ui.pages.wardrive.WardrivingTool(vm)
+            Tool.WardrivingSettings -> com.allnetworktools.ui.pages.wardrive.WardrivingSettingsTool(vm)
             Tool.WifiDirect -> {
                 val perms by vm.permissions.collectAsStateWithLifecycle()
                 val actions = LocalActions.current

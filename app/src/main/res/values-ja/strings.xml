@@ -2291,4 +2291,57 @@
     <string name="cubesat_needs_location">"通過予報とドップラー補正には位置情報をオンにしてください。"</string>
     <string name="cubesat_no_elements">"この衛星は CelesTrak のアマチュア一覧にありません。通過予報とドップラーは使えません。"</string>
     <string name="cubesat_how_it_works">"多くのアマチュア衛星と ISS は 2 m と 70 cm で AX.25 テレメトリーを送っています。1200 ボー AFSK(APRS と同じ)または 9600 ボー G3RUH です。アプリは衛星に同調し、軌道と現在地からドップラー偏移(70 cm で最大 ±10 kHz)を補正し、チェックサムが正しいフレームを一覧表示します。衛星が聞こえるのは通過中の数分間だけです。ISS には垂直アンテナで十分ですが、小型衛星にはより良いアンテナが役立ちます。受信のみ。"</string>
+    <string name="wardriving_settings">"ウォードライビングの設定"</string>
+    <string name="wardriving_settings_subtitle">"WiGLE.net アカウント、除外アドレス、データベース"</string>
+    <string name="wardriving_subtitle">"移動中に記録した Wi-Fi と Bluetooth（WiGLE.net 用）"</string>
+    <string name="wardriving_recording">"記録中"</string>
+    <string name="wardriving_hint">"ウォードライビングは Wi-Fi と Bluetooth を同時に長押し"</string>
+    <string name="wardriving_notification">"新規 Wi-Fi %1$d · Bluetooth %2$d · データベース %3$d"</string>
+    <string name="wardriving_waiting_gps">"GPS を待機中"</string>
+    <string name="wardriving_running">"ウォードライビング中"</string>
+    <string name="wardriving_upload">"WiGLE.net に送信"</string>
+    <string name="wardriving_sending">"送信中…"</string>
+    <string name="wardriving_waiting_gps_sync">"（GPS の測位を待機中…）"</string>
+    <string name="wardriving_stopped">"記録停止中：Wi-Fi をタップして開始"</string>
+    <string name="wardriving_queue">"DB キュー：%1$d"</string>
+    <string name="wardriving_network_fix">"ネットワーク"</string>
+    <string name="wardriving_exclude_mac">"このアドレスを除外"</string>
+    <string name="wardriving_exclude_oui">"メーカー %1$s を除外（%2$s）"</string>
+    <string name="wardriving_upload_nothing">"送信する新しいデータはありません"</string>
+    <string name="wardriving_upload_failed">"送信に失敗しました：%1$s"</string>
+    <string name="wardriving_connect_first">"先に WiGLE.net アカウントを接続してください"</string>
+    <string name="wardriving_empty">"まだネットワークはありません"</string>
+    <string name="wardriving_empty_text">"記録を開始すると、受信した Wi-Fi ネットワークと Bluetooth 機器が強い順にここに表示されます。"</string>
+    <string name="wardriving_open">"オープン"</string>
+    <string name="wigle_account">"WiGLE.net アカウント"</string>
+    <string name="wigle_connected_as">"接続済み：%1$s"</string>
+    <string name="wigle_help">"API 名とトークンは wigle.net の Account ページ「Show my token」にあります。アカウントのパスワードは求めません。"</string>
+    <string name="wigle_open_account">"wigle.net/account を開く"</string>
+    <string name="wigle_api_name">"API 名"</string>
+    <string name="wigle_api_token">"API トークン"</string>
+    <string name="wigle_connect">"接続"</string>
+    <string name="wigle_checking">"確認中…"</string>
+    <string name="wigle_disconnect">"切断"</string>
+    <string name="wigle_failed">"接続が拒否されました：%1$s"</string>
+    <string name="wardriving_exclusions">"除外アドレス"</string>
+    <string name="wardriving_exclusions_help">"完全な MAC アドレス（AA:BB:CC:DD:EE:FF）またはメーカーのプレフィックス OUI（AA:BB:CC）。一致したものは表示も記録もされず、既にデータベースにあるものは削除されます。"</string>
+    <string name="wardriving_exclusion_field">"MAC アドレスまたは OUI"</string>
+    <string name="wardriving_exclusion_invalid">"16 進数を 6 桁または 12 桁で入力してください"</string>
+    <string name="wardriving_add">"追加"</string>
+    <string name="wardriving_no_exclusion">"除外アドレスはありません"</string>
+    <string name="wardriving_database">"データベース"</string>
+    <string name="wardriving_db_counts">"Wi-Fi ネットワーク %1$d · Bluetooth 機器 %2$d"</string>
+    <string name="wardriving_clear">"データベースを消去"</string>
+    <string name="wardriving_clear_confirm">"記録したすべてのネットワークと観測を消去しますか？WiGLE.net に送信していないものは失われます。"</string>
+    <string name="wardriving_throttle_title">"Wi-Fi スキャンを増やす"</string>
+    <string name="wardriving_throttle_text">"Android は Wi-Fi スキャンを 2 分間に 4 回に制限しています。走行中により多くのネットワークを記録するには、開発者向けオプションで「Wi-Fi スキャン調整」をオフにしてください。"</string>
+    <plurals name="p_wardriving_uploaded">
+        <item quantity="other">"%1$d 件の観測を WiGLE.net に送信しました"</item>
+    </plurals>
+    <plurals name="p_wardriving_scanned">
+        <item quantity="other">"%2$d ms で %1$d 件をスキャン。"</item>
+    </plurals>
+    <plurals name="p_wardriving_pending">
+        <item quantity="other">"未送信の観測 %1$d 件"</item>
+    </plurals>
 </resources>
