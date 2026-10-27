@@ -52,6 +52,9 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.animation.core.spring
+import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
@@ -165,30 +168,42 @@ fun HomeScreen(
                         .padding(start = 16.dp, end = 16.dp, top = 20.dp, bottom = 16.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
+                    val fused = selected == Network.WifiBt
+                    // 0: two cards; 1: one tile. The spring overshoots a little, so the tile bumps as the cards meet.
+                    val merge by animateFloatAsState(if (fused) 1f else 0f, spring(0.55f, 320f), label = "merge")
                     rows.forEach { pair ->
-                        Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                            pair.forEach { n ->
-                                val picked = selected == n || (selected == Network.WifiBt && n in PairCards)
-                                NetworkCard(
-                                    network = n,
-                                    data = data,
-                                    selected = picked,
-                                    dimmed = selected != null && !picked,
-                                    onClick = { onCard(n) },
-                                    onAction = onBlockerAction,
-                                    modifier = Modifier
-                                        .weight(1f)
-                                        .height(cardH)
-                                        .onGloballyPositioned {
-                                            cardBounds[n] = it.boundsInRoot()
-                                            // The pair's page grows out of both cards at once.
-                                            val a = cardBounds[Network.Wifi]
-                                            val b = cardBounds[Network.Bluetooth]
-                                            if (a != null && b != null) cardBounds[Network.WifiBt] = Rect(minOf(a.left, b.left), minOf(a.top, b.top), maxOf(a.right, b.right), maxOf(a.bottom, b.bottom))
-                                        },
-                                )
+                        val pairRow = pair.toSet() == PairCards
+                        val m = if (pairRow) merge.coerceIn(0f, 1f) else 0f
+                        val cards: @Composable () -> Unit = {
+                            Row(horizontalArrangement = Arrangement.spacedBy(12.dp * (1f - m))) {
+                                pair.forEachIndexed { i, n ->
+                                    val picked = selected == n
+                                    // Where the two cards meet, their corners square off as they close the gap.
+                                    val inner = 28.dp * (1f - m)
+                                    val shape = if (i == 0) RoundedCornerShape(28.dp, inner, inner, 28.dp) else RoundedCornerShape(inner, 28.dp, 28.dp, inner)
+                                    NetworkCard(
+                                        network = n,
+                                        data = data,
+                                        selected = picked,
+                                        dimmed = selected != null && !picked && !(fused && pairRow),
+                                        onClick = { if (fused && n in PairCards) onPair() else onCard(n) },
+                                        onAction = onBlockerAction,
+                                        shape = if (pairRow) shape else RoundedCornerShape(28.dp),
+                                        modifier = Modifier
+                                            .weight(1f)
+                                            .height(cardH)
+                                            .onGloballyPositioned {
+                                                cardBounds[n] = it.boundsInRoot()
+                                                // The pair's page grows out of both cards at once.
+                                                val a = cardBounds[Network.Wifi]
+                                                val b = cardBounds[Network.Bluetooth]
+                                                if (a != null && b != null) cardBounds[Network.WifiBt] = Rect(minOf(a.left, b.left), minOf(a.top, b.top), maxOf(a.right, b.right), maxOf(a.bottom, b.bottom))
+                                            },
+                                    )
+                                }
                             }
                         }
+                        if (!pairRow) cards() else PairTile(merge, onPair, cards)
                     }
                     Row(Modifier.fillMaxWidth().padding(top = 4.dp), horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically) {
                         Symbol(Sym.DirectionsCar, size = 16.dp, tint = cs.onSurfaceVariant)
@@ -209,6 +224,7 @@ private fun NetworkCard(
     onClick: () -> Unit,
     onAction: (Blocker) -> Unit,
     modifier: Modifier,
+    shape: Shape = RoundedCornerShape(28.dp),
 ) {
     val roles = AntTheme.net[network]
     val blocker = data.blockers[network]?.takeUnless { it.soft }
@@ -218,7 +234,6 @@ private fun NetworkCard(
     val elevation by animateDpAsState(if (selected) 10.dp else 0.dp, tween(300, easing = Motion.Emphasized), label = "elev")
     val shadowColor = AntTheme.net.shadow
     val bg by animateColorAsState(if (blocker != null) cs.surfaceContainerHigh else roles.container, tween(250, easing = Motion.Emphasized), label = "cardBg")
-    val shape = RoundedCornerShape(28.dp)
     Box(
         modifier
             .graphicsLayer { scaleX = scale; scaleY = scale }
@@ -297,6 +312,66 @@ private fun CardIcon(network: Network) {
             }
         }
         Network.WifiBt -> ShapeBadge(Sym.DirectionsCar, cookieShape(), 56.dp, roles.accent, roles.onAccent, 28.dp)
+    }
+}
+
+/**
+ * The Wi-Fi and Bluetooth cards fused into one tile: the gap closes, then the tile takes the pair's look (both
+ * colours, both badges, one outline) over the two cards. [merge] runs from 0 (apart) to 1, overshooting a little.
+ */
+@Composable
+private fun PairTile(merge: Float, onOpen: () -> Unit, cards: @Composable () -> Unit) {
+    val net = AntTheme.net
+    val m = merge.coerceIn(0f, 1f)
+    // The pair's colours only once the cards touch: before that the two cards are still seen moving.
+    val look = ((m - 0.45f) / 0.55f).coerceIn(0f, 1f)
+    val shadowColor = net.shadow
+    Box(
+        Modifier.fillMaxWidth()
+            .graphicsLayer { val s = 1f + 0.03f * merge; scaleX = s; scaleY = s }
+            .drawBehind {
+                if (look > 0f) {
+                    val inset = 3.dp.toPx() + 1.5.dp.toPx()
+                    drawRoundRect(
+                        Brush.horizontalGradient(listOf(net.wifi.accent, net.bt.accent)), Offset(-inset, -inset), Size(size.width + inset * 2, size.height + inset * 2),
+                        CornerRadius(28.dp.toPx() + inset), alpha = look, style = Stroke(3.dp.toPx()),
+                    )
+                }
+            },
+    ) {
+        cards()
+        if (look > 0f) {
+            val shape = RoundedCornerShape(28.dp)
+            Box(
+                Modifier.matchParentSize()
+                    .shadow(10.dp * look, shape, ambientColor = shadowColor, spotColor = shadowColor)
+                    .graphicsLayer { alpha = look }
+                    .clip(shape)
+                    .background(Brush.horizontalGradient(listOf(net.wifi.container, net.bt.container)))
+                    .clickable(enabled = look > 0.5f, onClick = onOpen),
+            ) {
+                Column(Modifier.fillMaxSize().padding(16.dp)) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        CardIcon(Network.Wifi)
+                        // The two badges overlap, joined by the car of wardriving.
+                        Box(Modifier.padding(start = 4.dp).size(36.dp).clip(CircleShape).background(cs.surface), contentAlignment = Alignment.Center) {
+                            Symbol(Sym.DirectionsCar, size = 20.dp, filled = true, tint = AntTheme.net.wifiBt.accent)
+                        }
+                        Box(Modifier.padding(start = 4.dp)) { CardIcon(Network.Bluetooth) }
+                    }
+                    Spacer(Modifier.weight(1f))
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text("Wi-Fi", style = rf(18, 24, 600), color = net.wifi.onContainer)
+                        Text(" + ", style = rf(18, 24, 600), color = net.wifi.onContainer)
+                        Text("Bluetooth", style = rf(18, 24, 600), color = net.bt.onContainer)
+                    }
+                    Text(
+                        S(R.string.wardriving_subtitle), Modifier.padding(top = 4.dp).graphicsLayer { alpha = 0.85f },
+                        style = rf(13, 18), color = net.bt.onContainer, maxLines = 2, overflow = TextOverflow.Ellipsis,
+                    )
+                }
+            }
+        }
     }
 }
 
