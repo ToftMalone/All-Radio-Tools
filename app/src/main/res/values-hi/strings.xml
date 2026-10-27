@@ -2450,4 +2450,55 @@
     <string name="bluetooth_is_off">"ब्लूटूथ बंद है"</string>
     <string name="nearby_devices_permission_needed">"आस-पास के डिवाइस की अनुमति ज़रूरी है"</string>
     <string name="out_of_range">"सीमा से बाहर"</string>
+    <string name="wardriving_map">"वॉरड्राइविंग नक्शा"</string>
+    <string name="wardriving_map_subtitle">"हर दर्ज नेटवर्क वहाँ, जहाँ वह सबसे तेज़ सुना गया"</string>
+    <string name="wardriving_map_empty">"अभी कोई नेटवर्क दर्ज नहीं"</string>
+    <string name="wardriving_map_empty_text">"वॉरड्राइविंग शुरू करें: मिले नेटवर्क यहाँ दिखेंगे।"</string>
+    <string name="wardriving_last_seen">"आख़िरी बार %1$s"</string>
+    <string name="cam_title">"छिपे कैमरे"</string>
+    <string name="cam_subtitle">"आपके आसपास और आपके नेटवर्क पर Wi-Fi और ब्लूटूथ कैमरे"</string>
+    <string name="cam_check_room">"कमरा जाँचें"</string>
+    <string name="cam_listening">"आसपास सुन रहा है"</string>
+    <string name="cam_around">"आपके आसपास"</string>
+    <string name="cam_none_around">"कोई संदिग्ध डिवाइस नहीं"</string>
+    <string name="cam_none_around_text">"अभी किसी कैमरा निर्माता का या कैमरा नाम वाला कोई Wi-Fi नेटवर्क या ब्लूटूथ डिवाइस नहीं सुनाई दे रहा।"</string>
+    <string name="cam_on_network">"जिस Wi-Fi नेटवर्क से आप जुड़े हैं उस पर"</string>
+    <string name="cam_not_connected">"वहाँ के Wi-Fi (किराये का घर, होटल) से जुड़ें ताकि उस पर कैमरे खोजे जा सकें।"</string>
+    <string name="cam_scanning_network">"%1$s पर कैमरे खोजे जा रहे हैं…"</string>
+    <string name="cam_network_help">"%1$s के हर डिवाइस को कैमरों के वीडियो पोर्ट (RTSP, ONVIF, Hikvision, Dahua, XMEye) पर जाँचा जाता है।"</string>
+    <string name="cam_scan_again">"फिर से"</string>
+    <string name="cam_scan_network">"नेटवर्क स्कैन करें"</string>
+    <string name="cam_tips_title">"यह क्या नहीं देख सकता"</string>
+    <string name="cam_tips_text">"कैमरा तभी दिखता है जब वह Wi-Fi या ब्लूटूथ इस्तेमाल करे: तार वाला कैमरा या मेमोरी कार्ड पर रिकॉर्ड करने वाला कैमरा कुछ नहीं भेजता। टॉर्च की रोशनी चमकाने वाले छोटे लेंस भी खोजें, और फ़ोन के कैमरे से नाइट विज़न की इंफ़्रारेड LED।"</string>
+    <string name="cam_reason_maker">"कैमरा निर्माता"</string>
+    <string name="cam_reason_name">"कैमरा नाम"</string>
+    <string name="cam_reason_chip">"स्मार्ट डिवाइस चिप"</string>
+    <string name="cam_reason_ports">"वीडियो पोर्ट: %1$s"</string>
+    <string name="cam_reason_near">"बहुत पास"</string>
+    <string name="cam_burning">"बहुत गरम"</string>
+    <string name="cam_hot">"गरम"</string>
+    <string name="cam_warm">"गुनगुना"</string>
+    <string name="cam_cold">"ठंडा"</string>
+    <string name="cam_locating">"%1$s खोजा जा रहा है"</string>
+    <string name="cam_locating_help">"कमरे में घूमें: जितना पास जाएँगे, सिग्नल उतना बढ़ेगा। फ़ोन को फ़र्नीचर, धुआँ डिटेक्टर, घड़ियों और चार्जरों की ओर करें।"</string>
+    <plurals name="p_cam_likely">
+        <item quantity="one">"संभावित कैमरा"</item>
+        <item quantity="other">"संभावित कैमरे"</item>
+    </plurals>
+    <plurals name="p_cam_possible">
+        <item quantity="one">"%1$d संभव (कनेक्टेड डिवाइस)"</item>
+        <item quantity="other">"%1$d संभव (कनेक्टेड डिवाइस)"</item>
+    </plurals>
+    <plurals name="p_cam_network_clean">
+        <item quantity="one">"%1$d डिवाइस जाँचा: कोई कैमरा नहीं"</item>
+        <item quantity="other">"%1$d डिवाइस जाँचे: कोई कैमरा नहीं"</item>
+    </plurals>
+    <plurals name="p_cam_network_found">
+        <item quantity="one">"%1$d डिवाइस कैमरे जैसा है"</item>
+        <item quantity="other">"%1$d डिवाइस कैमरे जैसे हैं"</item>
+    </plurals>
+    <plurals name="p_wardriving_map_count">
+        <item quantity="one">"नक्शे पर %1$d नेटवर्क"</item>
+        <item quantity="other">"नक्शे पर %1$d नेटवर्क"</item>
+    </plurals>
 </resources>

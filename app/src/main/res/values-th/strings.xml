@@ -2389,4 +2389,50 @@
     <string name="bluetooth_is_off">"บลูทูธปิดอยู่"</string>
     <string name="nearby_devices_permission_needed">"ต้องใช้สิทธิ์อุปกรณ์ใกล้เคียง"</string>
     <string name="out_of_range">"อยู่นอกระยะ"</string>
+    <string name="wardriving_map">"แผนที่วอร์ไดรฟ์วิง"</string>
+    <string name="wardriving_map_subtitle">"ทุกเครือข่ายที่บันทึก ณ จุดที่สัญญาณแรงที่สุด"</string>
+    <string name="wardriving_map_empty">"ยังไม่มีเครือข่ายที่บันทึก"</string>
+    <string name="wardriving_map_empty_text">"เริ่มวอร์ไดรฟ์วิง แล้วเครือข่ายที่พบจะแสดงที่นี่"</string>
+    <string name="wardriving_last_seen">"เห็นล่าสุด %1$s"</string>
+    <string name="cam_title">"กล้องซ่อน"</string>
+    <string name="cam_subtitle">"กล้อง Wi-Fi และบลูทูธรอบตัวคุณและในเครือข่ายของคุณ"</string>
+    <string name="cam_check_room">"ตรวจห้อง"</string>
+    <string name="cam_listening">"กำลังฟังรอบตัว"</string>
+    <string name="cam_around">"รอบตัวคุณ"</string>
+    <string name="cam_none_around">"ไม่มีอุปกรณ์น่าสงสัย"</string>
+    <string name="cam_none_around_text">"ขณะนี้ไม่ได้ยินเครือข่าย Wi-Fi หรืออุปกรณ์บลูทูธของผู้ผลิตกล้องหรือที่มีชื่อแบบกล้อง"</string>
+    <string name="cam_on_network">"ในเครือข่าย Wi-Fi ที่คุณเชื่อมต่อ"</string>
+    <string name="cam_not_connected">"เชื่อมต่อ Wi-Fi ของสถานที่ (ที่พักเช่า โรงแรม) เพื่อค้นหากล้องในเครือข่ายนั้น"</string>
+    <string name="cam_scanning_network">"กำลังค้นหากล้องใน %1$s…"</string>
+    <string name="cam_network_help">"ทุกอุปกรณ์ใน %1$s จะถูกทดสอบพอร์ตวิดีโอของกล้อง (RTSP, ONVIF, Hikvision, Dahua, XMEye)"</string>
+    <string name="cam_scan_again">"สแกนอีกครั้ง"</string>
+    <string name="cam_scan_network">"สแกนเครือข่าย"</string>
+    <string name="cam_tips_title">"สิ่งที่มองไม่เห็น"</string>
+    <string name="cam_tips_text">"กล้องจะปรากฏก็ต่อเมื่อใช้ Wi-Fi หรือบลูทูธ กล้องแบบมีสายหรือที่บันทึกลงการ์ดหน่วยความจำจะไม่ส่งสัญญาณใดๆ ลองมองหาเลนส์เล็กๆ ที่สะท้อนแสงไฟฉาย และใช้กล้องโทรศัพท์มองหา LED อินฟราเรดสำหรับมองกลางคืน"</string>
+    <string name="cam_reason_maker">"ผู้ผลิตกล้อง"</string>
+    <string name="cam_reason_name">"ชื่อแบบกล้อง"</string>
+    <string name="cam_reason_chip">"ชิปอุปกรณ์อัจฉริยะ"</string>
+    <string name="cam_reason_ports">"พอร์ตวิดีโอ: %1$s"</string>
+    <string name="cam_reason_near">"ใกล้มาก"</string>
+    <string name="cam_burning">"ร้อนจัด"</string>
+    <string name="cam_hot">"ร้อน"</string>
+    <string name="cam_warm">"อุ่น"</string>
+    <string name="cam_cold">"เย็น"</string>
+    <string name="cam_locating">"กำลังค้นหา %1$s"</string>
+    <string name="cam_locating_help">"เดินไปรอบห้อง ยิ่งใกล้สัญญาณยิ่งแรง หันโทรศัพท์ไปที่เฟอร์นิเจอร์ เครื่องตรวจจับควัน นาฬิกา และที่ชาร์จ"</string>
+    <plurals name="p_cam_likely">
+        <item quantity="other">"กล้องที่น่าจะใช่"</item>
+    </plurals>
+    <plurals name="p_cam_possible">
+        <item quantity="other">"อาจเป็น %1$d (อุปกรณ์อัจฉริยะ)"</item>
+    </plurals>
+    <plurals name="p_cam_network_clean">
+        <item quantity="other">"ตรวจ %1$d อุปกรณ์: ไม่พบกล้อง"</item>
+    </plurals>
+    <plurals name="p_cam_network_found">
+        <item quantity="other">"%1$d อุปกรณ์ดูเหมือนกล้อง"</item>
+    </plurals>
+    <plurals name="p_wardriving_map_count">
+        <item quantity="other">"%1$d เครือข่ายบนแผนที่"</item>
+    </plurals>
 </resources>

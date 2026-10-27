@@ -2389,4 +2389,50 @@
     <string name="bluetooth_is_off">"Bluetoothがオフです"</string>
     <string name="nearby_devices_permission_needed">"付近のデバイスの権限が必要です"</string>
     <string name="out_of_range">"圏外"</string>
+    <string name="wardriving_map">"ウォードライビング地図"</string>
+    <string name="wardriving_map_subtitle">"記録したネットワークを最も強く受信した場所に表示"</string>
+    <string name="wardriving_map_empty">"記録したネットワークはまだありません"</string>
+    <string name="wardriving_map_empty_text">"ウォードライビングを開始すると、見つかったネットワークがここに表示されます。"</string>
+    <string name="wardriving_last_seen">"最終確認 %1$s"</string>
+    <string name="cam_title">"隠しカメラ"</string>
+    <string name="cam_subtitle">"周囲とネットワーク上の Wi-Fi・Bluetooth カメラ"</string>
+    <string name="cam_check_room">"部屋を確認してください"</string>
+    <string name="cam_listening">"周囲を監視中"</string>
+    <string name="cam_around">"周囲"</string>
+    <string name="cam_none_around">"不審な機器はありません"</string>
+    <string name="cam_none_around_text">"カメラメーカー製、またはカメラ名の Wi-Fi ネットワークや Bluetooth 機器は今のところ受信されていません。"</string>
+    <string name="cam_on_network">"接続中の Wi-Fi ネットワーク上"</string>
+    <string name="cam_not_connected">"その場所の Wi-Fi（民泊、ホテル）に接続すると、ネットワーク上のカメラを探せます。"</string>
+    <string name="cam_scanning_network">"%1$s でカメラを検索中…"</string>
+    <string name="cam_network_help">"%1$s の各機器について、カメラの映像ポート（RTSP、ONVIF、Hikvision、Dahua、XMEye）を確認します。"</string>
+    <string name="cam_scan_again">"再スキャン"</string>
+    <string name="cam_scan_network">"ネットワークをスキャン"</string>
+    <string name="cam_tips_title">"検出できないもの"</string>
+    <string name="cam_tips_text">"カメラは Wi-Fi か Bluetooth を使う場合にのみ検出できます。有線カメラやメモリーカードに録画するだけのカメラは電波を出しません。ライトの光を反射する小さなレンズや、スマホのカメラ越しに暗視用の赤外線 LED も探してください。"</string>
+    <string name="cam_reason_maker">"カメラメーカー"</string>
+    <string name="cam_reason_name">"カメラ名"</string>
+    <string name="cam_reason_chip">"スマート機器用チップ"</string>
+    <string name="cam_reason_ports">"映像ポート：%1$s"</string>
+    <string name="cam_reason_near">"すぐ近く"</string>
+    <string name="cam_burning">"激アツ"</string>
+    <string name="cam_hot">"アツい"</string>
+    <string name="cam_warm">"ぬるい"</string>
+    <string name="cam_cold">"冷たい"</string>
+    <string name="cam_locating">"%1$s を探索中"</string>
+    <string name="cam_locating_help">"部屋を歩き回ってください。近づくほど信号が強くなります。家具、煙感知器、時計、充電器に向けてみてください。"</string>
+    <plurals name="p_cam_likely">
+        <item quantity="other">"台のカメラの可能性大"</item>
+    </plurals>
+    <plurals name="p_cam_possible">
+        <item quantity="other">"可能性あり %1$d 件（スマート機器）"</item>
+    </plurals>
+    <plurals name="p_cam_network_clean">
+        <item quantity="other">"%1$d 台を確認：カメラなし"</item>
+    </plurals>
+    <plurals name="p_cam_network_found">
+        <item quantity="other">"%1$d 台がカメラの可能性"</item>
+    </plurals>
+    <plurals name="p_wardriving_map_count">
+        <item quantity="other">"地図上のネットワーク %1$d 件"</item>
+    </plurals>
 </resources>

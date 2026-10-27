@@ -2450,4 +2450,55 @@
     <string name="bluetooth_is_off">"Bluetooth disattivato"</string>
     <string name="nearby_devices_permission_needed">"Serve il permesso dispositivi nelle vicinanze"</string>
     <string name="out_of_range">"Fuori portata"</string>
+    <string name="wardriving_map">"Mappa del wardriving"</string>
+    <string name="wardriving_map_subtitle">"Ogni rete registrata, dove è stata sentita più forte"</string>
+    <string name="wardriving_map_empty">"Nessuna rete registrata"</string>
+    <string name="wardriving_map_empty_text">"Avvia il wardriving: le reti incontrate appariranno qui."</string>
+    <string name="wardriving_last_seen">"Visto l\'ultima volta %1$s"</string>
+    <string name="cam_title">"Telecamere nascoste"</string>
+    <string name="cam_subtitle">"Telecamere Wi-Fi e Bluetooth intorno a te e sulla tua rete"</string>
+    <string name="cam_check_room">"Controlla la stanza"</string>
+    <string name="cam_listening">"In ascolto"</string>
+    <string name="cam_around">"Intorno a te"</string>
+    <string name="cam_none_around">"Nessun dispositivo sospetto"</string>
+    <string name="cam_none_around_text">"Al momento non si sente nessuna rete Wi-Fi né dispositivo Bluetooth di un produttore di telecamere o con un nome da telecamera."</string>
+    <string name="cam_on_network">"Sulla rete Wi-Fi a cui sei connesso"</string>
+    <string name="cam_not_connected">"Connettiti al Wi-Fi del luogo (affitto, hotel) per cercarvi telecamere."</string>
+    <string name="cam_scanning_network">"Ricerca di telecamere su %1$s…"</string>
+    <string name="cam_network_help">"Ogni dispositivo di %1$s viene provato sulle porte video delle telecamere (RTSP, ONVIF, Hikvision, Dahua, XMEye)."</string>
+    <string name="cam_scan_again">"Ripeti"</string>
+    <string name="cam_scan_network">"Analizza la rete"</string>
+    <string name="cam_tips_title">"Cosa non può vedere"</string>
+    <string name="cam_tips_text">"Una telecamera appare solo se usa Wi-Fi o Bluetooth: una telecamera cablata, o che registra sulla sua scheda di memoria, non trasmette nulla. Cerca anche piccoli obiettivi che riflettono la luce di una torcia e, attraverso la fotocamera del telefono, i LED infrarossi della visione notturna."</string>
+    <string name="cam_reason_maker">"Produttore di telecamere"</string>
+    <string name="cam_reason_name">"Nome da telecamera"</string>
+    <string name="cam_reason_chip">"Chip da oggetto connesso"</string>
+    <string name="cam_reason_ports">"Porte video: %1$s"</string>
+    <string name="cam_reason_near">"Molto vicino"</string>
+    <string name="cam_burning">"Bollente"</string>
+    <string name="cam_hot">"Caldo"</string>
+    <string name="cam_warm">"Tiepido"</string>
+    <string name="cam_cold">"Freddo"</string>
+    <string name="cam_locating">"Localizzazione di %1$s"</string>
+    <string name="cam_locating_help">"Muoviti nella stanza: più ti avvicini, più sale il segnale. Punta mobili, rilevatori di fumo, sveglie e caricatori."</string>
+    <plurals name="p_cam_likely">
+        <item quantity="one">"telecamera probabile"</item>
+        <item quantity="other">"telecamere probabili"</item>
+    </plurals>
+    <plurals name="p_cam_possible">
+        <item quantity="one">"%1$d possibile (oggetto connesso)"</item>
+        <item quantity="other">"%1$d possibili (oggetti connessi)"</item>
+    </plurals>
+    <plurals name="p_cam_network_clean">
+        <item quantity="one">"%1$d dispositivo controllato: nessuna telecamera"</item>
+        <item quantity="other">"%1$d dispositivi controllati: nessuna telecamera"</item>
+    </plurals>
+    <plurals name="p_cam_network_found">
+        <item quantity="one">"%1$d dispositivo sembra una telecamera"</item>
+        <item quantity="other">"%1$d dispositivi sembrano telecamere"</item>
+    </plurals>
+    <plurals name="p_wardriving_map_count">
+        <item quantity="one">"%1$d rete sulla mappa"</item>
+        <item quantity="other">"%1$d reti sulla mappa"</item>
+    </plurals>
 </resources>

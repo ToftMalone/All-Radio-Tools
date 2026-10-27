@@ -2511,4 +2511,60 @@
     <string name="bluetooth_is_off">"Bluetooth este oprit"</string>
     <string name="nearby_devices_permission_needed">"Este necesară permisiunea pentru dispozitive din apropiere"</string>
     <string name="out_of_range">"În afara razei"</string>
+    <string name="wardriving_map">"Harta wardriving"</string>
+    <string name="wardriving_map_subtitle">"Fiecare rețea înregistrată, acolo unde a fost auzită cel mai tare"</string>
+    <string name="wardriving_map_empty">"Nicio rețea înregistrată"</string>
+    <string name="wardriving_map_empty_text">"Porniți wardrivingul: rețelele întâlnite vor apărea aici."</string>
+    <string name="wardriving_last_seen">"Văzut ultima dată %1$s"</string>
+    <string name="cam_title">"Camere ascunse"</string>
+    <string name="cam_subtitle">"Camere Wi-Fi și Bluetooth în jurul dvs. și în rețeaua dvs."</string>
+    <string name="cam_check_room">"Verificați camera"</string>
+    <string name="cam_listening">"Ascultă în jur"</string>
+    <string name="cam_around">"În jurul dvs."</string>
+    <string name="cam_none_around">"Niciun dispozitiv suspect"</string>
+    <string name="cam_none_around_text">"În acest moment nu se aude nicio rețea Wi-Fi sau dispozitiv Bluetooth al unui producător de camere sau cu nume de cameră."</string>
+    <string name="cam_on_network">"În rețeaua Wi-Fi la care sunteți conectat"</string>
+    <string name="cam_not_connected">"Conectați-vă la Wi-Fi-ul locului (închiriere, hotel) pentru a căuta camere în el."</string>
+    <string name="cam_scanning_network">"Se caută camere în %1$s…"</string>
+    <string name="cam_network_help">"Fiecare dispozitiv din %1$s este testat pe porturile video ale camerelor (RTSP, ONVIF, Hikvision, Dahua, XMEye)."</string>
+    <string name="cam_scan_again">"Din nou"</string>
+    <string name="cam_scan_network">"Scanează rețeaua"</string>
+    <string name="cam_tips_title">"Ce nu poate vedea"</string>
+    <string name="cam_tips_text">"O cameră apare doar dacă folosește Wi-Fi sau Bluetooth: o cameră cu fir, sau care înregistrează pe cardul de memorie, nu emite nimic. Căutați și obiective mici care reflectă lumina unei lanterne, iar prin camera telefonului LED-urile infraroșii ale vederii nocturne."</string>
+    <string name="cam_reason_maker">"Producător de camere"</string>
+    <string name="cam_reason_name">"Nume de cameră"</string>
+    <string name="cam_reason_chip">"Cip de obiect conectat"</string>
+    <string name="cam_reason_ports">"Porturi video: %1$s"</string>
+    <string name="cam_reason_near">"Foarte aproape"</string>
+    <string name="cam_burning">"Fierbinte rău"</string>
+    <string name="cam_hot">"Fierbinte"</string>
+    <string name="cam_warm">"Călduț"</string>
+    <string name="cam_cold">"Rece"</string>
+    <string name="cam_locating">"Se localizează %1$s"</string>
+    <string name="cam_locating_help">"Mergeți prin încăpere: cu cât vă apropiați, cu atât semnalul crește. Îndreptați telefonul spre mobilă, detectoare de fum, ceasuri și încărcătoare."</string>
+    <plurals name="p_cam_likely">
+        <item quantity="one">"cameră probabilă"</item>
+        <item quantity="few">"camere probabile"</item>
+        <item quantity="other">"de camere probabile"</item>
+    </plurals>
+    <plurals name="p_cam_possible">
+        <item quantity="one">"%1$d posibil (obiect conectat)"</item>
+        <item quantity="few">"%1$d posibile (obiecte conectate)"</item>
+        <item quantity="other">"%1$d de posibile (obiecte conectate)"</item>
+    </plurals>
+    <plurals name="p_cam_network_clean">
+        <item quantity="one">"%1$d dispozitiv testat: nicio cameră"</item>
+        <item quantity="few">"%1$d dispozitive testate: nicio cameră"</item>
+        <item quantity="other">"%1$d de dispozitive testate: nicio cameră"</item>
+    </plurals>
+    <plurals name="p_cam_network_found">
+        <item quantity="one">"%1$d dispozitiv seamănă cu o cameră"</item>
+        <item quantity="few">"%1$d dispozitive seamănă cu camere"</item>
+        <item quantity="other">"%1$d de dispozitive seamănă cu camere"</item>
+    </plurals>
+    <plurals name="p_wardriving_map_count">
+        <item quantity="one">"%1$d rețea pe hartă"</item>
+        <item quantity="few">"%1$d rețele pe hartă"</item>
+        <item quantity="other">"%1$d de rețele pe hartă"</item>
+    </plurals>
 </resources>

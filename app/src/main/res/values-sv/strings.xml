@@ -2450,4 +2450,55 @@
     <string name="bluetooth_is_off">"Bluetooth är av"</string>
     <string name="nearby_devices_permission_needed">"Behörighet för enheter i närheten krävs"</string>
     <string name="out_of_range">"Utom räckhåll"</string>
+    <string name="wardriving_map">"Wardriving-karta"</string>
+    <string name="wardriving_map_subtitle">"Varje sparat nätverk, där det hördes starkast"</string>
+    <string name="wardriving_map_empty">"Inget nätverk sparat ännu"</string>
+    <string name="wardriving_map_empty_text">"Starta wardriving: nätverken du möter visas här."</string>
+    <string name="wardriving_last_seen">"Senast sedd %1$s"</string>
+    <string name="cam_title">"Dolda kameror"</string>
+    <string name="cam_subtitle">"Wi-Fi- och Bluetooth-kameror omkring dig och på ditt nätverk"</string>
+    <string name="cam_check_room">"Kontrollera rummet"</string>
+    <string name="cam_listening">"Lyssnar runt omkring"</string>
+    <string name="cam_around">"Omkring dig"</string>
+    <string name="cam_none_around">"Ingen misstänkt enhet"</string>
+    <string name="cam_none_around_text">"Inget Wi-Fi-nätverk eller Bluetooth-enhet från en kameratillverkare eller med ett kameranamn hörs just nu."</string>
+    <string name="cam_on_network">"På Wi-Fi-nätverket du är ansluten till"</string>
+    <string name="cam_not_connected">"Anslut till platsens Wi-Fi (uthyrning, hotell) för att leta efter kameror där."</string>
+    <string name="cam_scanning_network">"Letar efter kameror på %1$s…"</string>
+    <string name="cam_network_help">"Varje enhet på %1$s testas på kamerors videoportar (RTSP, ONVIF, Hikvision, Dahua, XMEye)."</string>
+    <string name="cam_scan_again">"Igen"</string>
+    <string name="cam_scan_network">"Skanna nätverket"</string>
+    <string name="cam_tips_title">"Vad den inte kan se"</string>
+    <string name="cam_tips_text">"En kamera syns bara om den använder Wi-Fi eller Bluetooth: en trådbunden kamera, eller en som spelar in på sitt minneskort, sänder ingenting. Leta också efter små linser som reflekterar en ficklampas ljus, och genom telefonens kamera efter mörkerseendets infraröda lysdioder."</string>
+    <string name="cam_reason_maker">"Kameratillverkare"</string>
+    <string name="cam_reason_name">"Kameranamn"</string>
+    <string name="cam_reason_chip">"Chip för uppkopplade prylar"</string>
+    <string name="cam_reason_ports">"Videoportar: %1$s"</string>
+    <string name="cam_reason_near">"Mycket nära"</string>
+    <string name="cam_burning">"Brännhet"</string>
+    <string name="cam_hot">"Het"</string>
+    <string name="cam_warm">"Varm"</string>
+    <string name="cam_cold">"Kall"</string>
+    <string name="cam_locating">"Lokaliserar %1$s"</string>
+    <string name="cam_locating_help">"Gå runt i rummet: ju närmare du kommer, desto starkare signal. Rikta mot möbler, brandvarnare, klockor och laddare."</string>
+    <plurals name="p_cam_likely">
+        <item quantity="one">"trolig kamera"</item>
+        <item quantity="other">"troliga kameror"</item>
+    </plurals>
+    <plurals name="p_cam_possible">
+        <item quantity="one">"%1$d möjlig (uppkopplad pryl)"</item>
+        <item quantity="other">"%1$d möjliga (uppkopplade prylar)"</item>
+    </plurals>
+    <plurals name="p_cam_network_clean">
+        <item quantity="one">"%1$d enhet testad: ingen kamera"</item>
+        <item quantity="other">"%1$d enheter testade: ingen kamera"</item>
+    </plurals>
+    <plurals name="p_cam_network_found">
+        <item quantity="one">"%1$d enhet liknar en kamera"</item>
+        <item quantity="other">"%1$d enheter liknar kameror"</item>
+    </plurals>
+    <plurals name="p_wardriving_map_count">
+        <item quantity="one">"%1$d nätverk på kartan"</item>
+        <item quantity="other">"%1$d nätverk på kartan"</item>
+    </plurals>
 </resources>

@@ -2450,4 +2450,55 @@
     <string name="bluetooth_is_off">"Bluetooth ist aus"</string>
     <string name="nearby_devices_permission_needed">"Berechtigung für Geräte in der Nähe erforderlich"</string>
     <string name="out_of_range">"Außer Reichweite"</string>
+    <string name="wardriving_map">"Wardriving-Karte"</string>
+    <string name="wardriving_map_subtitle">"Jedes erfasste Netz dort, wo es am stärksten war"</string>
+    <string name="wardriving_map_empty">"Noch kein Netz erfasst"</string>
+    <string name="wardriving_map_empty_text">"Starte das Wardriving: die gefundenen Netze erscheinen hier."</string>
+    <string name="wardriving_last_seen">"Zuletzt gesehen %1$s"</string>
+    <string name="cam_title">"Versteckte Kameras"</string>
+    <string name="cam_subtitle">"WLAN- und Bluetooth-Kameras um dich herum und in deinem Netz"</string>
+    <string name="cam_check_room">"Raum prüfen"</string>
+    <string name="cam_listening">"Umgebung wird abgehört"</string>
+    <string name="cam_around">"Um dich herum"</string>
+    <string name="cam_none_around">"Kein verdächtiges Gerät"</string>
+    <string name="cam_none_around_text">"Gerade ist kein WLAN und kein Bluetooth-Gerät eines Kameraherstellers oder mit Kameranamen zu hören."</string>
+    <string name="cam_on_network">"Im WLAN, mit dem du verbunden bist"</string>
+    <string name="cam_not_connected">"Verbinde dich mit dem WLAN des Ortes (Ferienwohnung, Hotel), um dort nach Kameras zu suchen."</string>
+    <string name="cam_scanning_network">"Suche Kameras in %1$s…"</string>
+    <string name="cam_network_help">"Jedes Gerät in %1$s wird auf die Videoports von Kameras geprüft (RTSP, ONVIF, Hikvision, Dahua, XMEye)."</string>
+    <string name="cam_scan_again">"Erneut"</string>
+    <string name="cam_scan_network">"Netz prüfen"</string>
+    <string name="cam_tips_title">"Was es nicht sehen kann"</string>
+    <string name="cam_tips_text">"Eine Kamera taucht nur auf, wenn sie WLAN oder Bluetooth nutzt: eine Kabelkamera oder eine, die auf ihre Speicherkarte aufzeichnet, sendet nichts. Suche auch nach kleinen Linsen, die Taschenlampenlicht spiegeln, und durch die Handykamera nach den Infrarot-LEDs der Nachtsicht."</string>
+    <string name="cam_reason_maker">"Kamerahersteller"</string>
+    <string name="cam_reason_name">"Kameraname"</string>
+    <string name="cam_reason_chip">"Chip vernetzter Geräte"</string>
+    <string name="cam_reason_ports">"Videoports: %1$s"</string>
+    <string name="cam_reason_near">"Sehr nah"</string>
+    <string name="cam_burning">"Brennend heiß"</string>
+    <string name="cam_hot">"Heiß"</string>
+    <string name="cam_warm">"Warm"</string>
+    <string name="cam_cold">"Kalt"</string>
+    <string name="cam_locating">"Ortung von %1$s"</string>
+    <string name="cam_locating_help">"Geh durch den Raum: je näher du kommst, desto stärker das Signal. Ziele auf Möbel, Rauchmelder, Wecker und Ladegeräte."</string>
+    <plurals name="p_cam_likely">
+        <item quantity="one">"wahrscheinliche Kamera"</item>
+        <item quantity="other">"wahrscheinliche Kameras"</item>
+    </plurals>
+    <plurals name="p_cam_possible">
+        <item quantity="one">"%1$d möglich (vernetztes Gerät)"</item>
+        <item quantity="other">"%1$d möglich (vernetzte Geräte)"</item>
+    </plurals>
+    <plurals name="p_cam_network_clean">
+        <item quantity="one">"%1$d Gerät geprüft: keine Kamera"</item>
+        <item quantity="other">"%1$d Geräte geprüft: keine Kamera"</item>
+    </plurals>
+    <plurals name="p_cam_network_found">
+        <item quantity="one">"%1$d Gerät sieht wie eine Kamera aus"</item>
+        <item quantity="other">"%1$d Geräte sehen wie Kameras aus"</item>
+    </plurals>
+    <plurals name="p_wardriving_map_count">
+        <item quantity="one">"%1$d Netz auf der Karte"</item>
+        <item quantity="other">"%1$d Netze auf der Karte"</item>
+    </plurals>
 </resources>

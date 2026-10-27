@@ -2451,4 +2451,55 @@
     <string name="bluetooth_is_off">"Bluetooth is off"</string>
     <string name="nearby_devices_permission_needed">"Nearby devices permission needed"</string>
     <string name="out_of_range">"Out of range"</string>
+    <string name="wardriving_map">"Wardriving map"</string>
+    <string name="wardriving_map_subtitle">"Every network recorded, where it was heard strongest"</string>
+    <string name="wardriving_map_empty">"No network recorded yet"</string>
+    <string name="wardriving_map_empty_text">"Start wardriving: the networks met will appear here."</string>
+    <string name="wardriving_last_seen">"Last seen %1$s"</string>
+    <string name="cam_title">"Hidden cameras"</string>
+    <string name="cam_subtitle">"Wi-Fi and Bluetooth cameras around you and on your network"</string>
+    <string name="cam_check_room">"Check the room"</string>
+    <string name="cam_listening">"Listening around"</string>
+    <string name="cam_around">"Around you"</string>
+    <string name="cam_none_around">"No suspicious device"</string>
+    <string name="cam_none_around_text">"No Wi-Fi network or Bluetooth device from a camera maker or with a camera name is heard right now."</string>
+    <string name="cam_on_network">"On the Wi-Fi network you are connected to"</string>
+    <string name="cam_not_connected">"Connect to the place\'s Wi-Fi (rental, hotel) to look for cameras on it."</string>
+    <string name="cam_scanning_network">"Looking for cameras on %1$s…"</string>
+    <string name="cam_network_help">"Every device of %1$s is checked for the video ports cameras use (RTSP, ONVIF, Hikvision, Dahua, XMEye)."</string>
+    <string name="cam_scan_again">"Scan again"</string>
+    <string name="cam_scan_network">"Scan the network"</string>
+    <string name="cam_tips_title">"What this cannot see"</string>
+    <string name="cam_tips_text">"A camera only shows up if it uses Wi-Fi or Bluetooth: a wired camera, or one recording to its memory card, sends nothing. Also look for small lenses that reflect a torch\'s light, and through your phone\'s camera for the infrared LEDs of night vision."</string>
+    <string name="cam_reason_maker">"Camera maker"</string>
+    <string name="cam_reason_name">"Camera name"</string>
+    <string name="cam_reason_chip">"Smart-gadget chip"</string>
+    <string name="cam_reason_ports">"Video ports: %1$s"</string>
+    <string name="cam_reason_near">"Very close"</string>
+    <string name="cam_burning">"Burning"</string>
+    <string name="cam_hot">"Hot"</string>
+    <string name="cam_warm">"Warm"</string>
+    <string name="cam_cold">"Cold"</string>
+    <string name="cam_locating">"Locating %1$s"</string>
+    <string name="cam_locating_help">"Walk around the room: the closer you get, the higher the signal. Point the phone at furniture, smoke detectors, clocks and chargers."</string>
+    <plurals name="p_cam_likely">
+        <item quantity="one">"likely camera"</item>
+        <item quantity="other">"likely cameras"</item>
+    </plurals>
+    <plurals name="p_cam_possible">
+        <item quantity="one">"%1$d possible (connected gadget)"</item>
+        <item quantity="other">"%1$d possible (connected gadgets)"</item>
+    </plurals>
+    <plurals name="p_cam_network_clean">
+        <item quantity="one">"%1$d device checked: no camera"</item>
+        <item quantity="other">"%1$d devices checked: no camera"</item>
+    </plurals>
+    <plurals name="p_cam_network_found">
+        <item quantity="one">"%1$d device looks like a camera"</item>
+        <item quantity="other">"%1$d devices look like cameras"</item>
+    </plurals>
+    <plurals name="p_wardriving_map_count">
+        <item quantity="one">"%1$d network on the map"</item>
+        <item quantity="other">"%1$d networks on the map"</item>
+    </plurals>
 </resources>

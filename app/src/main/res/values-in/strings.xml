@@ -2389,4 +2389,50 @@
     <string name="bluetooth_is_off">"Bluetooth mati"</string>
     <string name="nearby_devices_permission_needed">"Izin perangkat di sekitar diperlukan"</string>
     <string name="out_of_range">"Di luar jangkauan"</string>
+    <string name="wardriving_map">"Peta wardriving"</string>
+    <string name="wardriving_map_subtitle">"Setiap jaringan yang direkam, di tempat sinyalnya paling kuat"</string>
+    <string name="wardriving_map_empty">"Belum ada jaringan yang direkam"</string>
+    <string name="wardriving_map_empty_text">"Mulai wardriving: jaringan yang ditemui akan muncul di sini."</string>
+    <string name="wardriving_last_seen">"Terakhir terlihat %1$s"</string>
+    <string name="cam_title">"Kamera tersembunyi"</string>
+    <string name="cam_subtitle">"Kamera Wi-Fi dan Bluetooth di sekitar Anda dan di jaringan Anda"</string>
+    <string name="cam_check_room">"Periksa ruangan"</string>
+    <string name="cam_listening">"Mendengarkan sekitar"</string>
+    <string name="cam_around">"Di sekitar Anda"</string>
+    <string name="cam_none_around">"Tidak ada perangkat mencurigakan"</string>
+    <string name="cam_none_around_text">"Saat ini tidak terdengar jaringan Wi-Fi atau perangkat Bluetooth dari produsen kamera atau bernama kamera."</string>
+    <string name="cam_on_network">"Di jaringan Wi-Fi yang tersambung"</string>
+    <string name="cam_not_connected">"Sambungkan ke Wi-Fi tempat itu (sewa, hotel) untuk mencari kamera di dalamnya."</string>
+    <string name="cam_scanning_network">"Mencari kamera di %1$s…"</string>
+    <string name="cam_network_help">"Setiap perangkat di %1$s diuji pada port video kamera (RTSP, ONVIF, Hikvision, Dahua, XMEye)."</string>
+    <string name="cam_scan_again">"Ulangi"</string>
+    <string name="cam_scan_network">"Pindai jaringan"</string>
+    <string name="cam_tips_title">"Yang tidak dapat dilihat"</string>
+    <string name="cam_tips_text">"Kamera hanya muncul jika memakai Wi-Fi atau Bluetooth: kamera berkabel, atau yang merekam ke kartu memorinya, tidak memancarkan apa pun. Cari juga lensa kecil yang memantulkan cahaya senter, dan lewat kamera ponsel cari LED inframerah penglihatan malam."</string>
+    <string name="cam_reason_maker">"Produsen kamera"</string>
+    <string name="cam_reason_name">"Nama kamera"</string>
+    <string name="cam_reason_chip">"Cip perangkat pintar"</string>
+    <string name="cam_reason_ports">"Port video: %1$s"</string>
+    <string name="cam_reason_near">"Sangat dekat"</string>
+    <string name="cam_burning">"Membara"</string>
+    <string name="cam_hot">"Panas"</string>
+    <string name="cam_warm">"Hangat"</string>
+    <string name="cam_cold">"Dingin"</string>
+    <string name="cam_locating">"Melacak %1$s"</string>
+    <string name="cam_locating_help">"Berjalanlah di ruangan: makin dekat, makin kuat sinyalnya. Arahkan ke perabot, detektor asap, jam, dan pengisi daya."</string>
+    <plurals name="p_cam_likely">
+        <item quantity="other">"kemungkinan kamera"</item>
+    </plurals>
+    <plurals name="p_cam_possible">
+        <item quantity="other">"%1$d mungkin (perangkat pintar)"</item>
+    </plurals>
+    <plurals name="p_cam_network_clean">
+        <item quantity="other">"%1$d perangkat diuji: tidak ada kamera"</item>
+    </plurals>
+    <plurals name="p_cam_network_found">
+        <item quantity="other">"%1$d perangkat mirip kamera"</item>
+    </plurals>
+    <plurals name="p_wardriving_map_count">
+        <item quantity="other">"%1$d jaringan di peta"</item>
+    </plurals>
 </resources>

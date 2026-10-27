@@ -2389,4 +2389,50 @@
     <string name="bluetooth_is_off">"블루투스가 꺼져 있습니다"</string>
     <string name="nearby_devices_permission_needed">"주변 기기 권한이 필요합니다"</string>
     <string name="out_of_range">"범위 밖"</string>
+    <string name="wardriving_map">"워드라이빙 지도"</string>
+    <string name="wardriving_map_subtitle">"기록된 모든 네트워크를 가장 강하게 수신된 위치에 표시"</string>
+    <string name="wardriving_map_empty">"기록된 네트워크 없음"</string>
+    <string name="wardriving_map_empty_text">"워드라이빙을 시작하면 만난 네트워크가 여기에 표시됩니다."</string>
+    <string name="wardriving_last_seen">"마지막 확인 %1$s"</string>
+    <string name="cam_title">"숨겨진 카메라"</string>
+    <string name="cam_subtitle">"주변과 내 네트워크의 Wi-Fi·블루투스 카메라"</string>
+    <string name="cam_check_room">"방을 확인하세요"</string>
+    <string name="cam_listening">"주변 수신 중"</string>
+    <string name="cam_around">"주변"</string>
+    <string name="cam_none_around">"의심스러운 기기 없음"</string>
+    <string name="cam_none_around_text">"카메라 제조사 또는 카메라 이름을 가진 Wi-Fi 네트워크나 블루투스 기기가 지금은 수신되지 않습니다."</string>
+    <string name="cam_on_network">"연결된 Wi-Fi 네트워크"</string>
+    <string name="cam_not_connected">"숙소(임대, 호텔)의 Wi-Fi에 연결하면 그 안의 카메라를 찾을 수 있습니다."</string>
+    <string name="cam_scanning_network">"%1$s에서 카메라 찾는 중…"</string>
+    <string name="cam_network_help">"%1$s의 모든 기기를 카메라 영상 포트(RTSP, ONVIF, Hikvision, Dahua, XMEye)로 확인합니다."</string>
+    <string name="cam_scan_again">"다시 검색"</string>
+    <string name="cam_scan_network">"네트워크 검색"</string>
+    <string name="cam_tips_title">"찾을 수 없는 것"</string>
+    <string name="cam_tips_text">"카메라는 Wi-Fi나 블루투스를 사용할 때만 나타납니다. 유선 카메라나 메모리 카드에만 녹화하는 카메라는 아무것도 송신하지 않습니다. 손전등 빛을 반사하는 작은 렌즈와, 휴대폰 카메라로 야간 투시용 적외선 LED도 찾아보세요."</string>
+    <string name="cam_reason_maker">"카메라 제조사"</string>
+    <string name="cam_reason_name">"카메라 이름"</string>
+    <string name="cam_reason_chip">"스마트 기기 칩"</string>
+    <string name="cam_reason_ports">"영상 포트: %1$s"</string>
+    <string name="cam_reason_near">"매우 가까움"</string>
+    <string name="cam_burning">"아주 뜨거움"</string>
+    <string name="cam_hot">"뜨거움"</string>
+    <string name="cam_warm">"미지근함"</string>
+    <string name="cam_cold">"차가움"</string>
+    <string name="cam_locating">"%1$s 찾는 중"</string>
+    <string name="cam_locating_help">"방 안을 돌아다니세요. 가까워질수록 신호가 강해집니다. 가구, 연기 감지기, 시계, 충전기 쪽으로 향해 보세요."</string>
+    <plurals name="p_cam_likely">
+        <item quantity="other">"대 카메라 가능성 높음"</item>
+    </plurals>
+    <plurals name="p_cam_possible">
+        <item quantity="other">"가능성 %1$d건(스마트 기기)"</item>
+    </plurals>
+    <plurals name="p_cam_network_clean">
+        <item quantity="other">"기기 %1$d대 확인: 카메라 없음"</item>
+    </plurals>
+    <plurals name="p_cam_network_found">
+        <item quantity="other">"기기 %1$d대가 카메라로 보임"</item>
+    </plurals>
+    <plurals name="p_wardriving_map_count">
+        <item quantity="other">"지도의 네트워크 %1$d개"</item>
+    </plurals>
 </resources>

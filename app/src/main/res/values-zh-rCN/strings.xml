@@ -2389,4 +2389,50 @@
     <string name="bluetooth_is_off">"蓝牙已关闭"</string>
     <string name="nearby_devices_permission_needed">"需要“附近设备”权限"</string>
     <string name="out_of_range">"超出范围"</string>
+    <string name="wardriving_map">"驾驶扫描地图"</string>
+    <string name="wardriving_map_subtitle">"每个已记录网络显示在信号最强的位置"</string>
+    <string name="wardriving_map_empty">"尚无记录的网络"</string>
+    <string name="wardriving_map_empty_text">"开始驾驶扫描：遇到的网络会显示在这里。"</string>
+    <string name="wardriving_last_seen">"最后出现 %1$s"</string>
+    <string name="cam_title">"隐藏摄像头"</string>
+    <string name="cam_subtitle">"周围和您网络中的 Wi-Fi 与蓝牙摄像头"</string>
+    <string name="cam_check_room">"请检查房间"</string>
+    <string name="cam_listening">"正在监听周围"</string>
+    <string name="cam_around">"您周围"</string>
+    <string name="cam_none_around">"没有可疑设备"</string>
+    <string name="cam_none_around_text">"目前没有收到摄像头厂商或带有摄像头名称的 Wi-Fi 网络或蓝牙设备。"</string>
+    <string name="cam_on_network">"在您连接的 Wi-Fi 网络上"</string>
+    <string name="cam_not_connected">"连接该场所（民宿、酒店）的 Wi-Fi，即可在其中查找摄像头。"</string>
+    <string name="cam_scanning_network">"正在 %1$s 上查找摄像头…"</string>
+    <string name="cam_network_help">"会检测 %1$s 上每台设备的摄像头视频端口（RTSP、ONVIF、海康威视、大华、XMEye）。"</string>
+    <string name="cam_scan_again">"重新扫描"</string>
+    <string name="cam_scan_network">"扫描网络"</string>
+    <string name="cam_tips_title">"无法发现的情况"</string>
+    <string name="cam_tips_text">"只有使用 Wi-Fi 或蓝牙的摄像头才会被发现：有线摄像头或只录到存储卡的摄像头不发射任何信号。也请寻找能反射手电筒光的小镜头，并通过手机摄像头查看夜视用的红外 LED。"</string>
+    <string name="cam_reason_maker">"摄像头厂商"</string>
+    <string name="cam_reason_name">"摄像头名称"</string>
+    <string name="cam_reason_chip">"智能设备芯片"</string>
+    <string name="cam_reason_ports">"视频端口：%1$s"</string>
+    <string name="cam_reason_near">"非常近"</string>
+    <string name="cam_burning">"烫手"</string>
+    <string name="cam_hot">"热"</string>
+    <string name="cam_warm">"温"</string>
+    <string name="cam_cold">"冷"</string>
+    <string name="cam_locating">"正在定位 %1$s"</string>
+    <string name="cam_locating_help">"在房间里走动：越靠近信号越强。把手机对准家具、烟雾报警器、时钟和充电器。"</string>
+    <plurals name="p_cam_likely">
+        <item quantity="other">"个疑似摄像头"</item>
+    </plurals>
+    <plurals name="p_cam_possible">
+        <item quantity="other">"%1$d 个可能（智能设备）"</item>
+    </plurals>
+    <plurals name="p_cam_network_clean">
+        <item quantity="other">"已检测 %1$d 台设备：没有摄像头"</item>
+    </plurals>
+    <plurals name="p_cam_network_found">
+        <item quantity="other">"%1$d 台设备像摄像头"</item>
+    </plurals>
+    <plurals name="p_wardriving_map_count">
+        <item quantity="other">"地图上有 %1$d 个网络"</item>
+    </plurals>
 </resources>

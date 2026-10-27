@@ -134,7 +134,14 @@ private fun groups(net: Network, connectedDevice: String?, servingLabel: String?
         ),
     )
     Network.WifiBt -> listOf(
-        ToolGroup(S(R.string.security_2), listOf(ToolEntry(Tool.RemoteId, S(R.string.drone_detector), S(R.string.remote_id_subtitle)))),
+        ToolGroup(S(R.string.wardriving_map), listOf(ToolEntry(Tool.WardriveMap, S(R.string.wardriving_map), S(R.string.wardriving_map_subtitle)))),
+        ToolGroup(
+            S(R.string.security_2),
+            listOf(
+                ToolEntry(Tool.RemoteId, S(R.string.drone_detector), S(R.string.remote_id_subtitle)),
+                ToolEntry(Tool.HiddenCam, S(R.string.cam_title), S(R.string.cam_subtitle)),
+            ),
+        ),
     )
 }
 

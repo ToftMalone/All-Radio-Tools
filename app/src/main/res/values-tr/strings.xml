@@ -2450,4 +2450,55 @@
     <string name="bluetooth_is_off">"Bluetooth kapalı"</string>
     <string name="nearby_devices_permission_needed">"Yakındaki cihazlar izni gerekli"</string>
     <string name="out_of_range">"Menzil dışı"</string>
+    <string name="wardriving_map">"Wardriving haritası"</string>
+    <string name="wardriving_map_subtitle">"Kaydedilen her ağ, en güçlü duyulduğu yerde"</string>
+    <string name="wardriving_map_empty">"Henüz kayıtlı ağ yok"</string>
+    <string name="wardriving_map_empty_text">"Wardriving\'i başlatın: rastlanan ağlar burada görünür."</string>
+    <string name="wardriving_last_seen">"Son görülme %1$s"</string>
+    <string name="cam_title">"Gizli kameralar"</string>
+    <string name="cam_subtitle">"Çevrenizdeki ve ağınızdaki Wi-Fi ve Bluetooth kameralar"</string>
+    <string name="cam_check_room">"Odayı kontrol edin"</string>
+    <string name="cam_listening">"Çevre dinleniyor"</string>
+    <string name="cam_around">"Çevrenizde"</string>
+    <string name="cam_none_around">"Şüpheli cihaz yok"</string>
+    <string name="cam_none_around_text">"Şu anda bir kamera üreticisine ait ya da kamera adı taşıyan hiçbir Wi-Fi ağı veya Bluetooth cihazı duyulmuyor."</string>
+    <string name="cam_on_network">"Bağlı olduğunuz Wi-Fi ağında"</string>
+    <string name="cam_not_connected">"Kamera aramak için mekânın Wi-Fi\'sine (kiralık ev, otel) bağlanın."</string>
+    <string name="cam_scanning_network">"%1$s üzerinde kamera aranıyor…"</string>
+    <string name="cam_network_help">"%1$s üzerindeki her cihaz kameraların video portlarında denenir (RTSP, ONVIF, Hikvision, Dahua, XMEye)."</string>
+    <string name="cam_scan_again">"Yeniden"</string>
+    <string name="cam_scan_network">"Ağı tara"</string>
+    <string name="cam_tips_title">"Göremedikleri"</string>
+    <string name="cam_tips_text">"Bir kamera yalnızca Wi-Fi veya Bluetooth kullanıyorsa görünür: kablolu ya da hafıza kartına kaydeden bir kamera hiçbir şey yaymaz. El fenerinin ışığını yansıtan küçük lensleri, telefon kamerasıyla da gece görüşünün kızılötesi LED\'lerini arayın."</string>
+    <string name="cam_reason_maker">"Kamera üreticisi"</string>
+    <string name="cam_reason_name">"Kamera adı"</string>
+    <string name="cam_reason_chip">"Akıllı cihaz çipi"</string>
+    <string name="cam_reason_ports">"Video portları: %1$s"</string>
+    <string name="cam_reason_near">"Çok yakın"</string>
+    <string name="cam_burning">"Yanıyor"</string>
+    <string name="cam_hot">"Sıcak"</string>
+    <string name="cam_warm">"Ilık"</string>
+    <string name="cam_cold">"Soğuk"</string>
+    <string name="cam_locating">"%1$s bulunuyor"</string>
+    <string name="cam_locating_help">"Odada dolaşın: yaklaştıkça sinyal yükselir. Telefonu mobilyalara, duman dedektörlerine, saatlere ve şarj cihazlarına doğrultun."</string>
+    <plurals name="p_cam_likely">
+        <item quantity="one">"olası kamera"</item>
+        <item quantity="other">"olası kamera"</item>
+    </plurals>
+    <plurals name="p_cam_possible">
+        <item quantity="one">"%1$d olası (bağlı cihaz)"</item>
+        <item quantity="other">"%1$d olası (bağlı cihaz)"</item>
+    </plurals>
+    <plurals name="p_cam_network_clean">
+        <item quantity="one">"%1$d cihaz denendi: kamera yok"</item>
+        <item quantity="other">"%1$d cihaz denendi: kamera yok"</item>
+    </plurals>
+    <plurals name="p_cam_network_found">
+        <item quantity="one">"%1$d cihaz kameraya benziyor"</item>
+        <item quantity="other">"%1$d cihaz kameraya benziyor"</item>
+    </plurals>
+    <plurals name="p_wardriving_map_count">
+        <item quantity="one">"Haritada %1$d ağ"</item>
+        <item quantity="other">"Haritada %1$d ağ"</item>
+    </plurals>
 </resources>

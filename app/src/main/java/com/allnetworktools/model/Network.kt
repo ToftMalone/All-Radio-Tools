@@ -118,6 +118,8 @@ enum class Tool(
 
     Wardriving(Network.WifiBt, "Wardriving", Sym.DirectionsCar, Sym.Settings, implemented = true),
     RemoteId(Network.WifiBt, S(R.string.drone_detector), Sym.Drone),
+    WardriveMap(Network.WifiBt, S(R.string.wardriving_map), Sym.Map),
+    HiddenCam(Network.WifiBt, S(R.string.cam_title), Sym.Videocam),
     WardrivingSettings(Network.WifiBt, S(R.string.wardriving_settings), Sym.Settings, parent = ToolParent.Other(Wardriving)),
     ;
 

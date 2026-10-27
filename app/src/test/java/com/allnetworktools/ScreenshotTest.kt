@@ -131,6 +131,51 @@ class ScreenshotTest {
     @Test fun wardrivingLight() = shot("W2_wardriving_light", nav = NavState(Network.WifiBt, Page.ToolPage(Tool.Wardriving))) { wardriveDemo(fix = false) }
     @Test fun wardrivingSettings() = shot("W3_wardriving_settings", nav = NavState(Network.WifiBt, Page.ToolPage(Tool.WardrivingSettings)))
     @Test fun wardrivingTools() = shot("W4_wardriving_tools", nav = NavState(Network.WifiBt, Page.Tools))
+    @Test fun wardriveMap() = shot("W6_wardrive_map", nav = NavState(Network.WifiBt, Page.ToolPage(Tool.WardriveMap))) {
+        val db = com.allnetworktools.data.Wardrive.db(app)
+        db.clear()
+        val rnd = java.util.Random(4)
+        val caps = listOf("[WPA2-PSK-CCMP][ESS]", "[RSN-SAE-CCMP][ESS]", "[ESS]", "[WEP][ESS]")
+        db.write(List(300) { i ->
+            val ble = i % 5 == 0
+            com.allnetworktools.data.NetSighting(
+                "aa:bb:cc:%02x:%02x:%02x".format(i / 65536, (i / 256) % 256, i % 256), "Net$i", if (ble) 0 else 2437,
+                if (ble) "" else caps[i % 4], if (ble) com.allnetworktools.data.NetType.Ble else com.allnetworktools.data.NetType.Wifi,
+                -50 - rnd.nextInt(40), 48.8566 + rnd.nextGaussian() * 0.004, 2.3522 + rnd.nextGaussian() * 0.006, 35.0, 5f, 1_700_000_000_000L + i,
+            )
+        })
+    }
+    @Test fun hiddenCam() {
+        runBlocking { app.settings.setTheme(ThemeMode.Light) }
+        fun s(src: com.allnetworktools.data.CamSource, addr: String, name: String, vendor: String?, rssi: Int?) = com.allnetworktools.data.HiddenCam.assess(src, addr, name, vendor, rssi)!!
+        val air = com.allnetworktools.data.HiddenCam.sort(listOf(
+            s(com.allnetworktools.data.CamSource.Wifi, "a0:11:22:33:44:55", "HDWiFiCam-8F3A", null, -47),
+            s(com.allnetworktools.data.CamSource.Wifi, "44:19:b6:12:34:56", "", "Hangzhou Hikvision Digital Technology Co.,Ltd.", -68),
+            s(com.allnetworktools.data.CamSource.Ble, "dc:23:50:75:9c:27", "TY", null, -61),
+            s(com.allnetworktools.data.CamSource.Wifi, "24:0a:c4:00:00:03", "ESP_1A2B3C", "Espressif Inc.", -79),
+        ))
+        val lan = com.allnetworktools.ui.pages.wardrive.HiddenCamController.LanState.Done(
+            "Airbnb-Guest", listOf(com.allnetworktools.data.HiddenCam.assessLan(com.allnetworktools.data.net.LanDevice("192.168.1.37", hostname = "IPC-salon"), setOf(80, 554, 8899))!!), 9,
+        )
+        val conn = com.allnetworktools.data.WifiConnection(
+            ssid = "Airbnb-Guest", bssid = null, rssi = -50, frequency = 2437, linkTx = null, linkRx = null, standard = 4, security = null,
+            ipv4 = "192.168.1.12", prefix = 24, gateway = "192.168.1.1", dns = emptyList(), ipv6 = null, connectedAtElapsed = null,
+        )
+        compose.mainClock.autoAdvance = false
+        compose.setContent {
+            com.allnetworktools.ui.theme.AntTheme(com.allnetworktools.data.AppSettings()) {
+                com.allnetworktools.ui.theme.ProvideAccent(Network.WifiBt) {
+                    androidx.compose.foundation.layout.Box(androidx.compose.ui.Modifier.background(com.allnetworktools.ui.theme.cs.surface)) {
+                        com.allnetworktools.ui.pages.wardrive.HiddenCamScreen(air, lan, conn, air.first().key, {}, {})
+                    }
+                }
+            }
+        }
+        repeat(20) { compose.mainClock.advanceTimeBy(100); org.robolectric.shadows.ShadowLooper.idleMainLooper(100, java.util.concurrent.TimeUnit.MILLISECONDS) }
+        val bitmap = compose.onRoot().captureToImage().asAndroidBitmap()
+        val dir = File(System.getProperty("screenshots.dir") ?: "build/screenshots").apply { mkdirs() }
+        File(dir, "W7_hidden_cam.png").outputStream().use { bitmap.compress(Bitmap.CompressFormat.PNG, 100, it) }
+    }
     @Test fun remoteId() = shot("W5_remote_id", nav = NavState(Network.WifiBt, Page.ToolPage(Tool.RemoteId))) {
         val now = System.currentTimeMillis()
         val d = com.allnetworktools.data.remoteid.Drone(

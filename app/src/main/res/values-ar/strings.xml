@@ -2694,4 +2694,75 @@
     <string name="bluetooth_is_off">"البلوتوث متوقف"</string>
     <string name="nearby_devices_permission_needed">"مطلوب إذن الأجهزة القريبة"</string>
     <string name="out_of_range">"خارج النطاق"</string>
+    <string name="wardriving_map">"خريطة التجوال اللاسلكي"</string>
+    <string name="wardriving_map_subtitle">"كل شبكة مسجّلة في المكان الذي سُمعت فيه أقوى"</string>
+    <string name="wardriving_map_empty">"لا توجد شبكات مسجّلة بعد"</string>
+    <string name="wardriving_map_empty_text">"ابدأ التجوال اللاسلكي: ستظهر هنا الشبكات التي تصادفها."</string>
+    <string name="wardriving_last_seen">"آخر ظهور %1$s"</string>
+    <string name="cam_title">"كاميرات مخفية"</string>
+    <string name="cam_subtitle">"كاميرات Wi-Fi وبلوتوث حولك وعلى شبكتك"</string>
+    <string name="cam_check_room">"افحص الغرفة"</string>
+    <string name="cam_listening">"الاستماع للمحيط"</string>
+    <string name="cam_around">"حولك"</string>
+    <string name="cam_none_around">"لا توجد أجهزة مريبة"</string>
+    <string name="cam_none_around_text">"لا تُلتقط الآن أي شبكة Wi-Fi أو جهاز بلوتوث من شركة كاميرات أو يحمل اسم كاميرا."</string>
+    <string name="cam_on_network">"على شبكة Wi-Fi المتصل بها"</string>
+    <string name="cam_not_connected">"اتصل بشبكة Wi-Fi المكان (سكن مؤجّر، فندق) للبحث عن كاميرات فيها."</string>
+    <string name="cam_scanning_network">"البحث عن كاميرات على %1$s…"</string>
+    <string name="cam_network_help">"يُختبر كل جهاز على %1$s على منافذ الفيديو الخاصة بالكاميرات (RTSP وONVIF وHikvision وDahua وXMEye)."</string>
+    <string name="cam_scan_again">"أعد البحث"</string>
+    <string name="cam_scan_network">"افحص الشبكة"</string>
+    <string name="cam_tips_title">"ما لا يمكنه رؤيته"</string>
+    <string name="cam_tips_text">"لا تظهر الكاميرا إلا إذا استخدمت Wi-Fi أو بلوتوث: الكاميرا السلكية أو التي تسجّل على بطاقة الذاكرة لا تبث شيئًا. ابحث أيضًا عن العدسات الصغيرة التي تعكس ضوء المصباح، وعبر كاميرا الهاتف عن مصابيح الأشعة تحت الحمراء للرؤية الليلية."</string>
+    <string name="cam_reason_maker">"شركة كاميرات"</string>
+    <string name="cam_reason_name">"اسم كاميرا"</string>
+    <string name="cam_reason_chip">"شريحة أجهزة متصلة"</string>
+    <string name="cam_reason_ports">"منافذ الفيديو: %1$s"</string>
+    <string name="cam_reason_near">"قريب جدًا"</string>
+    <string name="cam_burning">"ملتهب"</string>
+    <string name="cam_hot">"ساخن"</string>
+    <string name="cam_warm">"دافئ"</string>
+    <string name="cam_cold">"بارد"</string>
+    <string name="cam_locating">"تحديد موقع %1$s"</string>
+    <string name="cam_locating_help">"تجوّل في الغرفة: كلما اقتربت ارتفعت الإشارة. وجّه الهاتف نحو الأثاث وكواشف الدخان والساعات والشواحن."</string>
+    <plurals name="p_cam_likely">
+        <item quantity="zero">"كاميرات مرجّحة"</item>
+        <item quantity="one">"كاميرا مرجّحة"</item>
+        <item quantity="two">"كاميرات مرجّحة"</item>
+        <item quantity="few">"كاميرات مرجّحة"</item>
+        <item quantity="many">"كاميرا مرجّحة"</item>
+        <item quantity="other">"كاميرات مرجّحة"</item>
+    </plurals>
+    <plurals name="p_cam_possible">
+        <item quantity="zero">"%1$d محتملة (أجهزة متصلة)"</item>
+        <item quantity="one">"%1$d محتمل (جهاز متصل)"</item>
+        <item quantity="two">"%1$d محتملة (أجهزة متصلة)"</item>
+        <item quantity="few">"%1$d محتملة (أجهزة متصلة)"</item>
+        <item quantity="many">"%1$d محتملة (أجهزة متصلة)"</item>
+        <item quantity="other">"%1$d محتملة (أجهزة متصلة)"</item>
+    </plurals>
+    <plurals name="p_cam_network_clean">
+        <item quantity="zero">"فُحص %1$d جهازًا: لا كاميرا"</item>
+        <item quantity="one">"فُحص %1$d جهاز: لا كاميرا"</item>
+        <item quantity="two">"فُحص %1$d جهازًا: لا كاميرا"</item>
+        <item quantity="few">"فُحصت %1$d أجهزة: لا كاميرا"</item>
+        <item quantity="many">"فُحص %1$d جهازًا: لا كاميرا"</item>
+        <item quantity="other">"فُحص %1$d جهازًا: لا كاميرا"</item>
+    </plurals>
+    <plurals name="p_cam_network_found">
+        <item quantity="zero">"%1$d جهازًا تشبه كاميرات"</item>
+        <item quantity="one">"%1$d جهاز يشبه كاميرا"</item>
+        <item quantity="two">"%1$d جهازًا تشبه كاميرات"</item>
+        <item quantity="few">"%1$d أجهزة تشبه كاميرات"</item>
+        <item quantity="many">"%1$d جهازًا تشبه كاميرات"</item>
+        <item quantity="other">"%1$d جهازًا تشبه كاميرات"</item>
+    </plurals>
+    <plurals name="p_wardriving_map_count">
+        <item quantity="zero">"%1$d شبكة على الخريطة"</item>
+        <item quantity="one">"%1$d شبكة على الخريطة"</item>
+        <item quantity="two">"%1$d شبكة على الخريطة"</item>
+        <item quantity="few">"%1$d شبكات على الخريطة"</item>
+        <item quantity="many">"%1$d شبكة على الخريطة"</item>
+        <item quantity="other">"%1$d شبكة على الخريطة"</item>
+    </plurals>
 </resources>

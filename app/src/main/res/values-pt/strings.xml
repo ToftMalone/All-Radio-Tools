@@ -2450,4 +2450,55 @@
     <string name="bluetooth_is_off">"Bluetooth desligado"</string>
     <string name="nearby_devices_permission_needed">"É necessária a permissão de dispositivos próximos"</string>
     <string name="out_of_range">"Fora de alcance"</string>
+    <string name="wardriving_map">"Mapa do wardriving"</string>
+    <string name="wardriving_map_subtitle">"Cada rede gravada, onde foi ouvida mais forte"</string>
+    <string name="wardriving_map_empty">"Nenhuma rede gravada"</string>
+    <string name="wardriving_map_empty_text">"Inicie o wardriving: as redes encontradas aparecerão aqui."</string>
+    <string name="wardriving_last_seen">"Visto pela última vez %1$s"</string>
+    <string name="cam_title">"Câmaras ocultas"</string>
+    <string name="cam_subtitle">"Câmaras Wi-Fi e Bluetooth à sua volta e na sua rede"</string>
+    <string name="cam_check_room">"Verifique o quarto"</string>
+    <string name="cam_listening">"À escuta"</string>
+    <string name="cam_around">"À sua volta"</string>
+    <string name="cam_none_around">"Nenhum dispositivo suspeito"</string>
+    <string name="cam_none_around_text">"Neste momento não se ouve nenhuma rede Wi-Fi nem dispositivo Bluetooth de um fabricante de câmaras ou com nome de câmara."</string>
+    <string name="cam_on_network">"Na rede Wi-Fi a que está ligado"</string>
+    <string name="cam_not_connected">"Ligue-se ao Wi-Fi do local (alojamento, hotel) para procurar câmaras nele."</string>
+    <string name="cam_scanning_network">"A procurar câmaras em %1$s…"</string>
+    <string name="cam_network_help">"Cada dispositivo de %1$s é testado nas portas de vídeo das câmaras (RTSP, ONVIF, Hikvision, Dahua, XMEye)."</string>
+    <string name="cam_scan_again">"Repetir"</string>
+    <string name="cam_scan_network">"Analisar a rede"</string>
+    <string name="cam_tips_title">"O que não consegue ver"</string>
+    <string name="cam_tips_text">"Uma câmara só aparece se usar Wi-Fi ou Bluetooth: uma câmara com fios, ou que grava no seu cartão de memória, não emite nada. Procure também pequenas lentes que refletem a luz de uma lanterna e, através da câmara do telemóvel, os LED infravermelhos da visão noturna."</string>
+    <string name="cam_reason_maker">"Fabricante de câmaras"</string>
+    <string name="cam_reason_name">"Nome de câmara"</string>
+    <string name="cam_reason_chip">"Chip de objeto ligado"</string>
+    <string name="cam_reason_ports">"Portas de vídeo: %1$s"</string>
+    <string name="cam_reason_near">"Muito perto"</string>
+    <string name="cam_burning">"A escaldar"</string>
+    <string name="cam_hot">"Quente"</string>
+    <string name="cam_warm">"Morno"</string>
+    <string name="cam_cold">"Frio"</string>
+    <string name="cam_locating">"A localizar %1$s"</string>
+    <string name="cam_locating_help">"Desloque-se no quarto: quanto mais perto, mais sobe o sinal. Aponte para móveis, detetores de fumo, relógios e carregadores."</string>
+    <plurals name="p_cam_likely">
+        <item quantity="one">"câmara provável"</item>
+        <item quantity="other">"câmaras prováveis"</item>
+    </plurals>
+    <plurals name="p_cam_possible">
+        <item quantity="one">"%1$d possível (objeto ligado)"</item>
+        <item quantity="other">"%1$d possíveis (objetos ligados)"</item>
+    </plurals>
+    <plurals name="p_cam_network_clean">
+        <item quantity="one">"%1$d dispositivo testado: nenhuma câmara"</item>
+        <item quantity="other">"%1$d dispositivos testados: nenhuma câmara"</item>
+    </plurals>
+    <plurals name="p_cam_network_found">
+        <item quantity="one">"%1$d dispositivo parece uma câmara"</item>
+        <item quantity="other">"%1$d dispositivos parecem câmaras"</item>
+    </plurals>
+    <plurals name="p_wardriving_map_count">
+        <item quantity="one">"%1$d rede no mapa"</item>
+        <item quantity="other">"%1$d redes no mapa"</item>
+    </plurals>
 </resources>

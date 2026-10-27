@@ -2572,4 +2572,65 @@
     <string name="bluetooth_is_off">"Bluetooth jest wyłączony"</string>
     <string name="nearby_devices_permission_needed">"Wymagane uprawnienie urządzeń w pobliżu"</string>
     <string name="out_of_range">"Poza zasięgiem"</string>
+    <string name="wardriving_map">"Mapa wardrivingu"</string>
+    <string name="wardriving_map_subtitle">"Każda zapisana sieć tam, gdzie była najsilniejsza"</string>
+    <string name="wardriving_map_empty">"Brak zapisanych sieci"</string>
+    <string name="wardriving_map_empty_text">"Uruchom wardriving: napotkane sieci pojawią się tutaj."</string>
+    <string name="wardriving_last_seen">"Ostatnio widziano %1$s"</string>
+    <string name="cam_title">"Ukryte kamery"</string>
+    <string name="cam_subtitle">"Kamery Wi-Fi i Bluetooth wokół ciebie i w twojej sieci"</string>
+    <string name="cam_check_room">"Sprawdź pokój"</string>
+    <string name="cam_listening">"Nasłuch otoczenia"</string>
+    <string name="cam_around">"Wokół ciebie"</string>
+    <string name="cam_none_around">"Brak podejrzanych urządzeń"</string>
+    <string name="cam_none_around_text">"Teraz nie słychać żadnej sieci Wi-Fi ani urządzenia Bluetooth producenta kamer lub z nazwą kamery."</string>
+    <string name="cam_on_network">"W sieci Wi-Fi, z którą jesteś połączony"</string>
+    <string name="cam_not_connected">"Połącz się z Wi-Fi miejsca (wynajem, hotel), aby szukać w niej kamer."</string>
+    <string name="cam_scanning_network">"Szukanie kamer w %1$s…"</string>
+    <string name="cam_network_help">"Każde urządzenie w %1$s jest sprawdzane na portach wideo kamer (RTSP, ONVIF, Hikvision, Dahua, XMEye)."</string>
+    <string name="cam_scan_again">"Ponów"</string>
+    <string name="cam_scan_network">"Skanuj sieć"</string>
+    <string name="cam_tips_title">"Czego nie zobaczy"</string>
+    <string name="cam_tips_text">"Kamera pojawi się tylko, jeśli używa Wi-Fi lub Bluetooth: kamera przewodowa lub nagrywająca na kartę pamięci nic nie nadaje. Szukaj też małych obiektywów odbijających światło latarki, a przez aparat telefonu diod podczerwieni noktowizji."</string>
+    <string name="cam_reason_maker">"Producent kamer"</string>
+    <string name="cam_reason_name">"Nazwa kamery"</string>
+    <string name="cam_reason_chip">"Układ urządzeń IoT"</string>
+    <string name="cam_reason_ports">"Porty wideo: %1$s"</string>
+    <string name="cam_reason_near">"Bardzo blisko"</string>
+    <string name="cam_burning">"Parzy"</string>
+    <string name="cam_hot">"Gorąco"</string>
+    <string name="cam_warm">"Ciepło"</string>
+    <string name="cam_cold">"Zimno"</string>
+    <string name="cam_locating">"Lokalizowanie: %1$s"</string>
+    <string name="cam_locating_help">"Chodź po pokoju: im bliżej, tym silniejszy sygnał. Celuj w meble, czujniki dymu, zegary i ładowarki."</string>
+    <plurals name="p_cam_likely">
+        <item quantity="one">"prawdopodobna kamera"</item>
+        <item quantity="few">"prawdopodobne kamery"</item>
+        <item quantity="many">"prawdopodobnych kamer"</item>
+        <item quantity="other">"prawdopodobnych kamer"</item>
+    </plurals>
+    <plurals name="p_cam_possible">
+        <item quantity="one">"%1$d możliwe (urządzenie IoT)"</item>
+        <item quantity="few">"%1$d możliwe (urządzenia IoT)"</item>
+        <item quantity="many">"%1$d możliwych (urządzeń IoT)"</item>
+        <item quantity="other">"%1$d możliwych (urządzenia IoT)"</item>
+    </plurals>
+    <plurals name="p_cam_network_clean">
+        <item quantity="one">"Sprawdzono %1$d urządzenie: brak kamer"</item>
+        <item quantity="few">"Sprawdzono %1$d urządzenia: brak kamer"</item>
+        <item quantity="many">"Sprawdzono %1$d urządzeń: brak kamer"</item>
+        <item quantity="other">"Sprawdzono %1$d urządzeń: brak kamer"</item>
+    </plurals>
+    <plurals name="p_cam_network_found">
+        <item quantity="one">"%1$d urządzenie wygląda na kamerę"</item>
+        <item quantity="few">"%1$d urządzenia wyglądają na kamery"</item>
+        <item quantity="many">"%1$d urządzeń wygląda na kamery"</item>
+        <item quantity="other">"%1$d urządzeń wygląda na kamery"</item>
+    </plurals>
+    <plurals name="p_wardriving_map_count">
+        <item quantity="one">"%1$d sieć na mapie"</item>
+        <item quantity="few">"%1$d sieci na mapie"</item>
+        <item quantity="many">"%1$d sieci na mapie"</item>
+        <item quantity="other">"%1$d sieci na mapie"</item>
+    </plurals>
 </resources>

@@ -2450,4 +2450,55 @@
     <string name="bluetooth_is_off">"Bluetooth staat uit"</string>
     <string name="nearby_devices_permission_needed">"Toestemming voor apparaten in de buurt nodig"</string>
     <string name="out_of_range">"Buiten bereik"</string>
+    <string name="wardriving_map">"Wardriving-kaart"</string>
+    <string name="wardriving_map_subtitle">"Elk opgeslagen netwerk, waar het het sterkst was"</string>
+    <string name="wardriving_map_empty">"Nog geen netwerk opgeslagen"</string>
+    <string name="wardriving_map_empty_text">"Start wardriving: de gevonden netwerken verschijnen hier."</string>
+    <string name="wardriving_last_seen">"Laatst gezien %1$s"</string>
+    <string name="cam_title">"Verborgen camera\'s"</string>
+    <string name="cam_subtitle">"Wifi- en Bluetooth-camera\'s om je heen en op je netwerk"</string>
+    <string name="cam_check_room">"Controleer de kamer"</string>
+    <string name="cam_listening">"Luistert rond"</string>
+    <string name="cam_around">"Om je heen"</string>
+    <string name="cam_none_around">"Geen verdacht apparaat"</string>
+    <string name="cam_none_around_text">"Er is nu geen wifinetwerk of Bluetooth-apparaat van een camerafabrikant of met een cameranaam te horen."</string>
+    <string name="cam_on_network">"Op het wifinetwerk waarmee je verbonden bent"</string>
+    <string name="cam_not_connected">"Maak verbinding met de wifi van de plek (vakantiewoning, hotel) om er camera\'s te zoeken."</string>
+    <string name="cam_scanning_network">"Camera\'s zoeken op %1$s…"</string>
+    <string name="cam_network_help">"Elk apparaat van %1$s wordt getest op de videopoorten van camera\'s (RTSP, ONVIF, Hikvision, Dahua, XMEye)."</string>
+    <string name="cam_scan_again">"Opnieuw"</string>
+    <string name="cam_scan_network">"Netwerk scannen"</string>
+    <string name="cam_tips_title">"Wat het niet kan zien"</string>
+    <string name="cam_tips_text">"Een camera verschijnt alleen als hij wifi of Bluetooth gebruikt: een bekabelde camera, of een die op zijn geheugenkaart opneemt, zendt niets uit. Zoek ook naar kleine lenzen die het licht van een zaklamp weerkaatsen, en via de camera van je telefoon naar de infrarood-leds van nachtzicht."</string>
+    <string name="cam_reason_maker">"Camerafabrikant"</string>
+    <string name="cam_reason_name">"Cameranaam"</string>
+    <string name="cam_reason_chip">"Chip van slim apparaat"</string>
+    <string name="cam_reason_ports">"Videopoorten: %1$s"</string>
+    <string name="cam_reason_near">"Heel dichtbij"</string>
+    <string name="cam_burning">"Gloeiend heet"</string>
+    <string name="cam_hot">"Heet"</string>
+    <string name="cam_warm">"Lauw"</string>
+    <string name="cam_cold">"Koud"</string>
+    <string name="cam_locating">"%1$s lokaliseren"</string>
+    <string name="cam_locating_help">"Loop door de kamer: hoe dichterbij, hoe sterker het signaal. Richt op meubels, rookmelders, wekkers en opladers."</string>
+    <plurals name="p_cam_likely">
+        <item quantity="one">"waarschijnlijke camera"</item>
+        <item quantity="other">"waarschijnlijke camera\'s"</item>
+    </plurals>
+    <plurals name="p_cam_possible">
+        <item quantity="one">"%1$d mogelijk (verbonden apparaat)"</item>
+        <item quantity="other">"%1$d mogelijk (verbonden apparaten)"</item>
+    </plurals>
+    <plurals name="p_cam_network_clean">
+        <item quantity="one">"%1$d apparaat getest: geen camera"</item>
+        <item quantity="other">"%1$d apparaten getest: geen camera"</item>
+    </plurals>
+    <plurals name="p_cam_network_found">
+        <item quantity="one">"%1$d apparaat lijkt op een camera"</item>
+        <item quantity="other">"%1$d apparaten lijken op camera\'s"</item>
+    </plurals>
+    <plurals name="p_wardriving_map_count">
+        <item quantity="one">"%1$d netwerk op de kaart"</item>
+        <item quantity="other">"%1$d netwerken op de kaart"</item>
+    </plurals>
 </resources>

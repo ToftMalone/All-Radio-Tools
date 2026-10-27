@@ -2572,4 +2572,65 @@
     <string name="bluetooth_is_off">"Bluetooth выключен"</string>
     <string name="nearby_devices_permission_needed">"Нужно разрешение «Устройства рядом»"</string>
     <string name="out_of_range">"Вне зоны"</string>
+    <string name="wardriving_map">"Карта вардрайвинга"</string>
+    <string name="wardriving_map_subtitle">"Каждая записанная сеть там, где её сигнал был сильнее всего"</string>
+    <string name="wardriving_map_empty">"Пока нет записанных сетей"</string>
+    <string name="wardriving_map_empty_text">"Запустите вардрайвинг: найденные сети появятся здесь."</string>
+    <string name="wardriving_last_seen">"Последний раз: %1$s"</string>
+    <string name="cam_title">"Скрытые камеры"</string>
+    <string name="cam_subtitle">"Камеры Wi-Fi и Bluetooth вокруг вас и в вашей сети"</string>
+    <string name="cam_check_room">"Проверьте комнату"</string>
+    <string name="cam_listening">"Прослушивание вокруг"</string>
+    <string name="cam_around">"Вокруг вас"</string>
+    <string name="cam_none_around">"Подозрительных устройств нет"</string>
+    <string name="cam_none_around_text">"Сейчас не слышно ни одной сети Wi-Fi или устройства Bluetooth производителя камер или с названием камеры."</string>
+    <string name="cam_on_network">"В сети Wi-Fi, к которой вы подключены"</string>
+    <string name="cam_not_connected">"Подключитесь к Wi-Fi места (аренда, отель), чтобы искать в нём камеры."</string>
+    <string name="cam_scanning_network">"Поиск камер в %1$s…"</string>
+    <string name="cam_network_help">"Каждое устройство в %1$s проверяется на видеопортах камер (RTSP, ONVIF, Hikvision, Dahua, XMEye)."</string>
+    <string name="cam_scan_again">"Ещё раз"</string>
+    <string name="cam_scan_network">"Проверить сеть"</string>
+    <string name="cam_tips_title">"Чего он не видит"</string>
+    <string name="cam_tips_text">"Камера видна, только если использует Wi-Fi или Bluetooth: проводная камера или камера, пишущая на карту памяти, ничего не передаёт. Ищите также маленькие объективы, отражающие свет фонарика, а через камеру телефона — инфракрасные светодиоды ночного видения."</string>
+    <string name="cam_reason_maker">"Производитель камер"</string>
+    <string name="cam_reason_name">"Название камеры"</string>
+    <string name="cam_reason_chip">"Чип умных устройств"</string>
+    <string name="cam_reason_ports">"Видеопорты: %1$s"</string>
+    <string name="cam_reason_near">"Очень близко"</string>
+    <string name="cam_burning">"Горячо-горячо"</string>
+    <string name="cam_hot">"Горячо"</string>
+    <string name="cam_warm">"Тепло"</string>
+    <string name="cam_cold">"Холодно"</string>
+    <string name="cam_locating">"Поиск: %1$s"</string>
+    <string name="cam_locating_help">"Пройдитесь по комнате: чем ближе, тем сильнее сигнал. Направляйте телефон на мебель, датчики дыма, часы и зарядки."</string>
+    <plurals name="p_cam_likely">
+        <item quantity="one">"вероятная камера"</item>
+        <item quantity="few">"вероятные камеры"</item>
+        <item quantity="many">"вероятных камер"</item>
+        <item quantity="other">"вероятных камер"</item>
+    </plurals>
+    <plurals name="p_cam_possible">
+        <item quantity="one">"%1$d возможное (умное устройство)"</item>
+        <item quantity="few">"%1$d возможных (умные устройства)"</item>
+        <item quantity="many">"%1$d возможных (умных устройств)"</item>
+        <item quantity="other">"%1$d возможных (умные устройства)"</item>
+    </plurals>
+    <plurals name="p_cam_network_clean">
+        <item quantity="one">"Проверено %1$d устройство: камер нет"</item>
+        <item quantity="few">"Проверено %1$d устройства: камер нет"</item>
+        <item quantity="many">"Проверено %1$d устройств: камер нет"</item>
+        <item quantity="other">"Проверено %1$d устройства: камер нет"</item>
+    </plurals>
+    <plurals name="p_cam_network_found">
+        <item quantity="one">"%1$d устройство похоже на камеру"</item>
+        <item quantity="few">"%1$d устройства похожи на камеры"</item>
+        <item quantity="many">"%1$d устройств похожи на камеры"</item>
+        <item quantity="other">"%1$d устройства похожи на камеры"</item>
+    </plurals>
+    <plurals name="p_wardriving_map_count">
+        <item quantity="one">"%1$d сеть на карте"</item>
+        <item quantity="few">"%1$d сети на карте"</item>
+        <item quantity="many">"%1$d сетей на карте"</item>
+        <item quantity="other">"%1$d сети на карте"</item>
+    </plurals>
 </resources>
