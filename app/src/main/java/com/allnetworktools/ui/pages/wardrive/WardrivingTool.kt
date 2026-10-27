@@ -21,7 +21,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
@@ -54,7 +54,7 @@ import com.allnetworktools.data.WardriveRow
 import com.allnetworktools.data.WardriveState
 import com.allnetworktools.model.Tool
 import com.allnetworktools.ui.LocalActions
-import com.allnetworktools.ui.components.Hairline
+import com.allnetworktools.ui.components.groupShape
 import com.allnetworktools.ui.components.Symbol
 import com.allnetworktools.ui.pages.TopBarAction
 import com.allnetworktools.ui.theme.AntTheme
@@ -160,88 +160,96 @@ private fun DialogChoice(icon: String, text: String, onClick: () -> Unit) {
 
 @Composable
 fun WardrivingScreen(st: WardriveState, onUpload: () -> Unit, onToggle: () -> Unit, onRow: (WardriveRow) -> Unit) {
+    val nav = WindowInsets.navigationBars.asPaddingValues()
+    LazyColumn(
+        Modifier.fillMaxSize(),
+        contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 128.dp + nav.calculateBottomPadding()),
+        verticalArrangement = Arrangement.spacedBy(2.dp),
+    ) {
+        item(key = "head") {
+            Column(Modifier.padding(bottom = 12.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                Header(st, onUpload, onToggle)
+                Row(Modifier.fillMaxWidth().padding(horizontal = 4.dp), verticalAlignment = Alignment.CenterVertically) {
+                    val ms = st.lastScanMs
+                    Text(
+                        if (st.running && ms != null) P(R.plurals.p_wardriving_scanned, st.lastScanCount, st.lastScanCount, ms.toInt())
+                        else P(R.plurals.p_wardriving_pending, st.pending.toInt(), st.pending.toInt()),
+                        Modifier.weight(1f), style = rf(12, 16), color = cs.onSurfaceVariant, maxLines = 1, overflow = TextOverflow.Ellipsis,
+                    )
+                    Text(S(R.string.wardriving_queue, st.queue), style = rf(12, 16), color = cs.onSurfaceVariant, maxLines = 1)
+                }
+            }
+        }
+        if (st.rows.isEmpty()) {
+            item(key = "empty") {
+                ToolEmpty(Sym.DirectionsCar, S(R.string.wardriving_empty), S(R.string.wardriving_empty_text), if (st.running) null else S(R.string.start), onToggle)
+            }
+        } else {
+            val n = st.rows.size
+            itemsIndexed(st.rows, key = { _, r -> r.type.code + r.mac }) { i, r -> NetworkLine(r, groupShape(i, n), onRow) }
+        }
+    }
+}
+
+/** The accent card on top: counts, upload, position, and the recording switch. */
+@Composable
+private fun Header(st: WardriveState, onUpload: () -> Unit, onToggle: () -> Unit) {
     val acc = AntTheme.accent
     val net = AntTheme.net
-    val nav = WindowInsets.navigationBars.asPaddingValues()
-    Column(Modifier.fillMaxSize()) {
+    Column(
+        Modifier.fillMaxWidth().clip(RoundedCornerShape(32.dp)).background(acc.container).padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(14.dp),
+    ) {
         // Run counters, then the database.
-        Row(
-            Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp),
-            verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(20.dp),
-        ) {
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
             Counter(Sym.Wifi, st.newWifi.toString(), net.wifi.accent)
             Counter(Sym.Bluetooth, st.newBle.toString(), net.bt.accent)
             Spacer(Modifier.weight(1f))
             Counter(Sym.Star, st.newTotal.toString(), acc.accent)
-            Text("/", style = rf(16, 22), color = cs.onSurfaceVariant)
-            Counter(Sym.Database, st.db.total.toString(), cs.onSurface)
+            Counter(Sym.Database, st.db.total.toString(), acc.onContainer)
         }
-        Row(
-            Modifier.fillMaxWidth().padding(start = 16.dp, end = 8.dp, top = 6.dp, bottom = 2.dp),
-            verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp),
-        ) {
-            val sending = st.upload == UploadState.Sending
-            Box(
-                Modifier.widthIn(max = 120.dp).heightIn(min = 56.dp).clip(RoundedCornerShape(14.dp))
-                    .border(2.dp, acc.accent, RoundedCornerShape(14.dp)).background(acc.container)
-                    .clickable(enabled = !sending, onClick = onUpload).padding(horizontal = 12.dp, vertical = 6.dp),
-                contentAlignment = Alignment.Center,
-            ) {
-                Text(
-                    if (sending) S(R.string.wardriving_sending) else S(R.string.wardriving_upload),
-                    style = rf(13, 17, 700), color = acc.onContainer, textAlign = androidx.compose.ui.text.style.TextAlign.Center,
-                )
-            }
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
             val fix = st.fix
             Box(
-                Modifier.size(44.dp).clip(CircleShape).border(2.dp, if (fix != null) net.good else cs.outline, CircleShape),
+                Modifier.size(48.dp).clip(RoundedCornerShape(16.dp)).background(if (fix != null) net.good else cs.surface),
                 contentAlignment = Alignment.Center,
             ) {
-                Symbol(if (fix != null) Sym.GpsFixed else Sym.GpsOff, size = 24.dp, tint = if (fix != null) net.good else cs.onSurfaceVariant)
+                Symbol(if (fix != null) Sym.GpsFixed else Sym.GpsOff, size = 26.dp, tint = if (fix != null) cs.surface else cs.onSurfaceVariant)
             }
             Column(Modifier.weight(1f)) {
                 when {
-                    !st.running -> Text(S(R.string.wardriving_stopped), style = rf(13, 18), color = cs.onSurfaceVariant)
-                    fix == null -> Text(S(R.string.wardriving_waiting_gps_sync), style = rf(13, 18), color = cs.onSurfaceVariant)
+                    !st.running -> Text(S(R.string.wardriving_stopped), style = rf(14, 19, 500), color = acc.onContainer)
+                    fix == null -> Text(S(R.string.wardriving_waiting_gps_sync), style = rf(14, 19, 500), color = acc.onContainer)
                     else -> {
-                        Text(String.format(Locale.US, "%.5f, %.5f", fix.lat, fix.lon), style = mono(13, 18), maxLines = 1)
+                        Text(String.format(Locale.US, "%.5f, %.5f", fix.lat, fix.lon), style = mono(14, 19, 600), color = acc.onContainer, maxLines = 1)
                         Text(
                             (if (fix.gps) "GPS" else S(R.string.wardriving_network_fix)) + " ±${fix.accuracy.toInt()} m · ${fix.altitude.toInt()} m",
-                            style = rf(12, 16), color = cs.onSurfaceVariant, maxLines = 1,
+                            style = rf(12, 16), color = acc.onContainer.copy(alpha = 0.75f), maxLines = 1,
                         )
                     }
                 }
             }
             // The recording switch: the Wi-Fi symbol lit while it records.
             Box(
-                Modifier.size(56.dp).clip(CircleShape).background(if (st.running) acc.accent else cs.surfaceContainerHigh).clickable(onClick = onToggle),
+                Modifier.size(64.dp).clip(RoundedCornerShape(if (st.running) 22.dp else 32.dp))
+                    .background(if (st.running) acc.accent else cs.surface).clickable(onClick = onToggle),
                 contentAlignment = Alignment.Center,
             ) {
-                Symbol(if (st.running) Sym.Wifi else Sym.WifiOff, size = 32.dp, filled = true, tint = if (st.running) acc.onAccent else cs.onSurfaceVariant)
+                Symbol(if (st.running) Sym.Wifi else Sym.WifiOff, size = 34.dp, filled = true, tint = if (st.running) acc.onAccent else cs.onSurfaceVariant)
             }
         }
+        val sending = st.upload == UploadState.Sending
         Row(
-            Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp),
+            Modifier.fillMaxWidth().height(48.dp).clip(RoundedCornerShape(24.dp)).background(acc.accent)
+                .clickable(enabled = !sending, onClick = onUpload),
+            horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            val ms = st.lastScanMs
-            Text(
-                if (st.running && ms != null) P(R.plurals.p_wardriving_scanned, st.lastScanCount, st.lastScanCount, ms.toInt())
-                else P(R.plurals.p_wardriving_pending, st.pending.toInt(), st.pending.toInt()),
-                Modifier.weight(1f), style = rf(12, 16), color = cs.onSurfaceVariant, maxLines = 1, overflow = TextOverflow.Ellipsis,
-            )
-            Text(S(R.string.wardriving_queue, st.queue), style = rf(12, 16), color = cs.onSurfaceVariant, maxLines = 1)
-        }
-        Box(Modifier.fillMaxWidth().height(2.dp).background(acc.accent))
-        if (st.rows.isEmpty()) {
-            Box(Modifier.fillMaxSize().padding(16.dp)) {
-                ToolEmpty(Sym.DirectionsCar, S(R.string.wardriving_empty), S(R.string.wardriving_empty_text), if (st.running) null else S(R.string.start), onToggle)
-            }
-        } else {
-            LazyColumn(Modifier.fillMaxSize(), contentPadding = PaddingValues(bottom = 128.dp + nav.calculateBottomPadding())) {
-                items(st.rows, key = { it.type.code + it.mac }) { r ->
-                    NetworkLine(r, onRow)
-                    Hairline()
+            Symbol(Sym.CloudUpload, size = 20.dp, filled = true, tint = acc.onAccent)
+            Text(if (sending) S(R.string.wardriving_sending) else S(R.string.wardriving_upload), style = rf(15, 20, 600), color = acc.onAccent)
+            if (!sending && st.pending > 0) {
+                Box(Modifier.clip(RoundedCornerShape(10.dp)).background(acc.onAccent).padding(horizontal = 8.dp, vertical = 1.dp)) {
+                    Text(st.pending.toString(), style = gs(12, 16, 700, tnum = true), color = acc.accent)
                 }
             }
         }
@@ -250,16 +258,19 @@ fun WardrivingScreen(st: WardriveState, onUpload: () -> Unit, onToggle: () -> Un
 
 @Composable
 private fun Counter(icon: String, value: String, tint: Color) {
-    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-        Symbol(icon, size = 20.dp, filled = true, tint = tint)
-        Text(value, style = gs(16, 22, 600, tnum = true), color = tint)
+    Row(
+        Modifier.clip(RoundedCornerShape(14.dp)).background(cs.surface).padding(horizontal = 10.dp, vertical = 6.dp),
+        verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(5.dp),
+    ) {
+        Symbol(icon, size = 18.dp, filled = true, tint = tint)
+        Text(value, style = gs(15, 20, 600, tnum = true), color = cs.onSurface)
     }
 }
 
 private val clock = SimpleDateFormat("HH:mm:ss", Locale.ROOT)
 
 @Composable
-private fun NetworkLine(r: WardriveRow, onRow: (WardriveRow) -> Unit) {
+private fun NetworkLine(r: WardriveRow, shape: androidx.compose.ui.graphics.Shape, onRow: (WardriveRow) -> Unit) {
     val net = AntTheme.net
     val levelColor = when {
         r.level >= -60 -> net.good
@@ -267,33 +278,33 @@ private fun NetworkLine(r: WardriveRow, onRow: (WardriveRow) -> Unit) {
         else -> net.poor
     }
     Row(
-        Modifier.fillMaxWidth().clickable { onRow(r) }.padding(start = 8.dp, end = 12.dp, top = 6.dp, bottom = 6.dp),
-        verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp),
+        Modifier.fillMaxWidth().clip(shape).background(cs.surfaceContainerLow).clickable { onRow(r) }.padding(start = 10.dp, end = 14.dp, top = 10.dp, bottom = 10.dp),
+        verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-        Column(Modifier.width(44.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-            GuardBadge(r.guard)
-            Text(r.level.toString(), style = gs(13, 16, 600, tnum = true), color = levelColor)
-        }
+        GuardBadge(r.guard)
         Column(Modifier.weight(1f)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(r.name, Modifier.weight(1f), style = rf(15, 20, 600), maxLines = 1, overflow = TextOverflow.Ellipsis)
-                val time = synchronized(clock) { clock.format(Date(r.seenAt)) }
                 Text(
-                    listOfNotNull(r.vendor, time).joinToString(" - "), Modifier.padding(start = 8.dp).widthIn(max = 220.dp),
-                    style = rf(12, 16), color = cs.onSurfaceVariant, maxLines = 1, overflow = TextOverflow.Ellipsis,
+                    r.name.ifEmpty { S(R.string.hidden_network) }, Modifier.weight(1f), style = rf(15, 20, 600),
+                    color = if (r.name.isEmpty()) cs.onSurfaceVariant else cs.onSurface, maxLines = 1, overflow = TextOverflow.Ellipsis,
                 )
+                Text("${r.level} dBm", Modifier.padding(start = 8.dp), style = gs(13, 18, 700, tnum = true), color = levelColor)
             }
+            Text(
+                r.mac.lowercase(Locale.ROOT) + " · " + (if (r.type == NetType.Wifi) "${r.frequency} MHz" else "BLE"),
+                style = mono(12, 17), color = cs.onSurfaceVariant, maxLines = 1,
+            )
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(r.mac.lowercase(Locale.ROOT), style = mono(13, 18))
-                Text(if (r.type == NetType.Wifi) "${r.frequency}MHz" else "BLE", Modifier.padding(start = 8.dp), style = rf(12, 16), color = cs.onSurfaceVariant)
-                Spacer(Modifier.weight(1f))
-                Text(r.detail, Modifier.padding(start = 8.dp), style = rf(12, 16), color = cs.onSurfaceVariant, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                Text(r.detail, Modifier.weight(1f), style = rf(12, 16), color = cs.onSurfaceVariant, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                val time = synchronized(clock) { clock.format(Date(r.seenAt)) }
+                Text(time, Modifier.padding(start = 8.dp), style = rf(12, 16), color = cs.onSurfaceVariant)
             }
+            if (r.vendor != null) Text(r.vendor, style = rf(12, 16, 500), color = AntTheme.accent.accent, maxLines = 1, overflow = TextOverflow.Ellipsis)
         }
     }
 }
 
-/** The lock of a Wi-Fi network with its family, or the Bluetooth LE symbol. */
+/** The lock of a Wi-Fi network with its family, or the Bluetooth LE symbol, on a tinted tile. */
 @Composable
 private fun GuardBadge(g: Guard) {
     val net = AntTheme.net
@@ -304,10 +315,11 @@ private fun GuardBadge(g: Guard) {
         Guard.Open -> Triple(Sym.LockOpen, S(R.string.wardriving_open), net.poor)
         Guard.Ble -> Triple(Sym.Bluetooth, "LE", net.bt.accent)
     }
-    Box(contentAlignment = Alignment.Center) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Symbol(icon, size = 22.dp, filled = true, tint = color)
-            Text(label, style = rf(9, 10, 700), color = color, maxLines = 1)
-        }
+    Column(
+        Modifier.width(52.dp).clip(RoundedCornerShape(16.dp)).background(color.copy(alpha = 0.16f)).padding(vertical = 6.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Symbol(icon, size = 22.dp, filled = true, tint = color)
+        Text(label, style = rf(10, 12, 700), color = color, maxLines = 1)
     }
 }
