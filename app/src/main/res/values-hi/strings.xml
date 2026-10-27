@@ -2450,11 +2450,6 @@
     <string name="bluetooth_is_off">"ब्लूटूथ बंद है"</string>
     <string name="nearby_devices_permission_needed">"आस-पास के डिवाइस की अनुमति ज़रूरी है"</string>
     <string name="out_of_range">"सीमा से बाहर"</string>
-    <string name="wardriving_map">"वॉरड्राइविंग नक्शा"</string>
-    <string name="wardriving_map_subtitle">"हर दर्ज नेटवर्क वहाँ, जहाँ वह सबसे तेज़ सुना गया"</string>
-    <string name="wardriving_map_empty">"अभी कोई नेटवर्क दर्ज नहीं"</string>
-    <string name="wardriving_map_empty_text">"वॉरड्राइविंग शुरू करें: मिले नेटवर्क यहाँ दिखेंगे।"</string>
-    <string name="wardriving_last_seen">"आख़िरी बार %1$s"</string>
     <string name="cam_title">"छिपे कैमरे"</string>
     <string name="cam_subtitle">"आपके आसपास और आपके नेटवर्क पर Wi-Fi और ब्लूटूथ कैमरे"</string>
     <string name="cam_check_room">"कमरा जाँचें"</string>
@@ -2497,8 +2492,5 @@
         <item quantity="one">"%1$d डिवाइस कैमरे जैसा है"</item>
         <item quantity="other">"%1$d डिवाइस कैमरे जैसे हैं"</item>
     </plurals>
-    <plurals name="p_wardriving_map_count">
-        <item quantity="one">"नक्शे पर %1$d नेटवर्क"</item>
-        <item quantity="other">"नक्शे पर %1$d नेटवर्क"</item>
-    </plurals>
+    <string name="pair_subtitle">"दोनों रेडियो को साथ इस्तेमाल करने वाले टूल"</string>
 </resources>

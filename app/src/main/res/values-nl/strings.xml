@@ -2450,11 +2450,6 @@
     <string name="bluetooth_is_off">"Bluetooth staat uit"</string>
     <string name="nearby_devices_permission_needed">"Toestemming voor apparaten in de buurt nodig"</string>
     <string name="out_of_range">"Buiten bereik"</string>
-    <string name="wardriving_map">"Wardriving-kaart"</string>
-    <string name="wardriving_map_subtitle">"Elk opgeslagen netwerk, waar het het sterkst was"</string>
-    <string name="wardriving_map_empty">"Nog geen netwerk opgeslagen"</string>
-    <string name="wardriving_map_empty_text">"Start wardriving: de gevonden netwerken verschijnen hier."</string>
-    <string name="wardriving_last_seen">"Laatst gezien %1$s"</string>
     <string name="cam_title">"Verborgen camera\'s"</string>
     <string name="cam_subtitle">"Wifi- en Bluetooth-camera\'s om je heen en op je netwerk"</string>
     <string name="cam_check_room">"Controleer de kamer"</string>
@@ -2497,8 +2492,5 @@
         <item quantity="one">"%1$d apparaat lijkt op een camera"</item>
         <item quantity="other">"%1$d apparaten lijken op camera\'s"</item>
     </plurals>
-    <plurals name="p_wardriving_map_count">
-        <item quantity="one">"%1$d netwerk op de kaart"</item>
-        <item quantity="other">"%1$d netwerken op de kaart"</item>
-    </plurals>
+    <string name="pair_subtitle">"Tools die beide radio\'s samen gebruiken"</string>
 </resources>

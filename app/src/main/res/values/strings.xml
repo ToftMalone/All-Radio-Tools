@@ -2451,11 +2451,6 @@
     <string name="bluetooth_is_off">"Bluetooth is off"</string>
     <string name="nearby_devices_permission_needed">"Nearby devices permission needed"</string>
     <string name="out_of_range">"Out of range"</string>
-    <string name="wardriving_map">"Wardriving map"</string>
-    <string name="wardriving_map_subtitle">"Every network recorded, where it was heard strongest"</string>
-    <string name="wardriving_map_empty">"No network recorded yet"</string>
-    <string name="wardriving_map_empty_text">"Start wardriving: the networks met will appear here."</string>
-    <string name="wardriving_last_seen">"Last seen %1$s"</string>
     <string name="cam_title">"Hidden cameras"</string>
     <string name="cam_subtitle">"Wi-Fi and Bluetooth cameras around you and on your network"</string>
     <string name="cam_check_room">"Check the room"</string>
@@ -2498,8 +2493,5 @@
         <item quantity="one">"%1$d device looks like a camera"</item>
         <item quantity="other">"%1$d devices look like cameras"</item>
     </plurals>
-    <plurals name="p_wardriving_map_count">
-        <item quantity="one">"%1$d network on the map"</item>
-        <item quantity="other">"%1$d networks on the map"</item>
-    </plurals>
+    <string name="pair_subtitle">"Tools that use both radios together"</string>
 </resources>

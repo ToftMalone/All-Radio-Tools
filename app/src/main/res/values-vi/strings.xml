@@ -2389,11 +2389,6 @@
     <string name="bluetooth_is_off">"Bluetooth đang tắt"</string>
     <string name="nearby_devices_permission_needed">"Cần quyền thiết bị ở gần"</string>
     <string name="out_of_range">"Ngoài phạm vi"</string>
-    <string name="wardriving_map">"Bản đồ wardriving"</string>
-    <string name="wardriving_map_subtitle">"Mỗi mạng đã ghi, tại nơi bắt được mạnh nhất"</string>
-    <string name="wardriving_map_empty">"Chưa ghi mạng nào"</string>
-    <string name="wardriving_map_empty_text">"Bắt đầu wardriving: các mạng gặp được sẽ hiện ở đây."</string>
-    <string name="wardriving_last_seen">"Thấy lần cuối %1$s"</string>
     <string name="cam_title">"Camera ẩn"</string>
     <string name="cam_subtitle">"Camera Wi-Fi và Bluetooth quanh bạn và trên mạng của bạn"</string>
     <string name="cam_check_room">"Kiểm tra căn phòng"</string>
@@ -2432,7 +2427,5 @@
     <plurals name="p_cam_network_found">
         <item quantity="other">"%1$d thiết bị giống camera"</item>
     </plurals>
-    <plurals name="p_wardriving_map_count">
-        <item quantity="other">"%1$d mạng trên bản đồ"</item>
-    </plurals>
+    <string name="pair_subtitle">"Công cụ dùng cả hai sóng vô tuyến cùng lúc"</string>
 </resources>

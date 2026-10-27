@@ -2450,11 +2450,6 @@
     <string name="bluetooth_is_off">"Bluetooth ist aus"</string>
     <string name="nearby_devices_permission_needed">"Berechtigung für Geräte in der Nähe erforderlich"</string>
     <string name="out_of_range">"Außer Reichweite"</string>
-    <string name="wardriving_map">"Wardriving-Karte"</string>
-    <string name="wardriving_map_subtitle">"Jedes erfasste Netz dort, wo es am stärksten war"</string>
-    <string name="wardriving_map_empty">"Noch kein Netz erfasst"</string>
-    <string name="wardriving_map_empty_text">"Starte das Wardriving: die gefundenen Netze erscheinen hier."</string>
-    <string name="wardriving_last_seen">"Zuletzt gesehen %1$s"</string>
     <string name="cam_title">"Versteckte Kameras"</string>
     <string name="cam_subtitle">"WLAN- und Bluetooth-Kameras um dich herum und in deinem Netz"</string>
     <string name="cam_check_room">"Raum prüfen"</string>
@@ -2497,8 +2492,5 @@
         <item quantity="one">"%1$d Gerät sieht wie eine Kamera aus"</item>
         <item quantity="other">"%1$d Geräte sehen wie Kameras aus"</item>
     </plurals>
-    <plurals name="p_wardriving_map_count">
-        <item quantity="one">"%1$d Netz auf der Karte"</item>
-        <item quantity="other">"%1$d Netze auf der Karte"</item>
-    </plurals>
+    <string name="pair_subtitle">"Werkzeuge, die beide Funkmodule zusammen nutzen"</string>
 </resources>

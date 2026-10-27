@@ -2450,11 +2450,6 @@
     <string name="bluetooth_is_off">"Bluetooth disattivato"</string>
     <string name="nearby_devices_permission_needed">"Serve il permesso dispositivi nelle vicinanze"</string>
     <string name="out_of_range">"Fuori portata"</string>
-    <string name="wardriving_map">"Mappa del wardriving"</string>
-    <string name="wardriving_map_subtitle">"Ogni rete registrata, dove è stata sentita più forte"</string>
-    <string name="wardriving_map_empty">"Nessuna rete registrata"</string>
-    <string name="wardriving_map_empty_text">"Avvia il wardriving: le reti incontrate appariranno qui."</string>
-    <string name="wardriving_last_seen">"Visto l\'ultima volta %1$s"</string>
     <string name="cam_title">"Telecamere nascoste"</string>
     <string name="cam_subtitle">"Telecamere Wi-Fi e Bluetooth intorno a te e sulla tua rete"</string>
     <string name="cam_check_room">"Controlla la stanza"</string>
@@ -2497,8 +2492,5 @@
         <item quantity="one">"%1$d dispositivo sembra una telecamera"</item>
         <item quantity="other">"%1$d dispositivi sembrano telecamere"</item>
     </plurals>
-    <plurals name="p_wardriving_map_count">
-        <item quantity="one">"%1$d rete sulla mappa"</item>
-        <item quantity="other">"%1$d reti sulla mappa"</item>
-    </plurals>
+    <string name="pair_subtitle">"Strumenti che usano insieme le due radio"</string>
 </resources>

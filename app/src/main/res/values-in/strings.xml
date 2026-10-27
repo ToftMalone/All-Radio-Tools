@@ -2389,11 +2389,6 @@
     <string name="bluetooth_is_off">"Bluetooth mati"</string>
     <string name="nearby_devices_permission_needed">"Izin perangkat di sekitar diperlukan"</string>
     <string name="out_of_range">"Di luar jangkauan"</string>
-    <string name="wardriving_map">"Peta wardriving"</string>
-    <string name="wardriving_map_subtitle">"Setiap jaringan yang direkam, di tempat sinyalnya paling kuat"</string>
-    <string name="wardriving_map_empty">"Belum ada jaringan yang direkam"</string>
-    <string name="wardriving_map_empty_text">"Mulai wardriving: jaringan yang ditemui akan muncul di sini."</string>
-    <string name="wardriving_last_seen">"Terakhir terlihat %1$s"</string>
     <string name="cam_title">"Kamera tersembunyi"</string>
     <string name="cam_subtitle">"Kamera Wi-Fi dan Bluetooth di sekitar Anda dan di jaringan Anda"</string>
     <string name="cam_check_room">"Periksa ruangan"</string>
@@ -2432,7 +2427,5 @@
     <plurals name="p_cam_network_found">
         <item quantity="other">"%1$d perangkat mirip kamera"</item>
     </plurals>
-    <plurals name="p_wardriving_map_count">
-        <item quantity="other">"%1$d jaringan di peta"</item>
-    </plurals>
+    <string name="pair_subtitle">"Alat yang memakai kedua radio bersamaan"</string>
 </resources>

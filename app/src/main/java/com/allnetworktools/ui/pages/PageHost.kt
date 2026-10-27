@@ -270,7 +270,6 @@ private fun PageBody(vm: MainViewModel, net: Network, page: Page) {
             Tool.Meteor -> com.allnetworktools.ui.pages.sdr.MeteorTool(vm)
             Tool.Wardriving -> com.allnetworktools.ui.pages.wardrive.WardrivingTool(vm)
             Tool.WardrivingSettings -> com.allnetworktools.ui.pages.wardrive.WardrivingSettingsTool(vm)
-            Tool.WardriveMap -> com.allnetworktools.ui.pages.wardrive.WardriveMapTool(vm)
             Tool.HiddenCam -> com.allnetworktools.ui.pages.wardrive.HiddenCamTool(vm)
             Tool.RemoteId -> {
                 val perms by vm.permissions.collectAsStateWithLifecycle()

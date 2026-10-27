@@ -109,7 +109,6 @@ The decoders work with the **HackRF alone**: neither the phone's Wi-Fi nor its B
 - Recording runs in a **foreground service**: it goes on with the screen off and the app closed, until you stop it.
 - Everything stays in a database on the phone. **Upload to WiGLE.net** is manual only, with your account's API name and token (never your password).
 - Exclude a full MAC address or a maker prefix (OUI): it is neither shown nor recorded, and is erased from the database.
-- **Wardriving map**: every network recorded at the place it was heard strongest, coloured by its lock (open, WEP, WPA, WPA3, Bluetooth), with filters and details.
 - **Hidden cameras**: Wi-Fi networks and Bluetooth devices from camera makers or with camera names, a warm / cold signal to walk to one, and the video ports (RTSP, ONVIF, Hikvision, Dahua, XMEye) of the devices on the Wi-Fi network you are connected to. Clues, not proof: a wired camera sends nothing.
 - **Drone detector**: Remote ID (EU / US electronic identification) broadcast over Bluetooth LE (legacy and long range) and Wi-Fi (beacons, Wi-Fi Aware): drone position, height, speed, operator position and id, on a map, with a background engine that keeps listening with the app closed.
 

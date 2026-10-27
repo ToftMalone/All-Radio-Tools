@@ -2450,11 +2450,6 @@
     <string name="bluetooth_is_off">"Bluetooth kapalı"</string>
     <string name="nearby_devices_permission_needed">"Yakındaki cihazlar izni gerekli"</string>
     <string name="out_of_range">"Menzil dışı"</string>
-    <string name="wardriving_map">"Wardriving haritası"</string>
-    <string name="wardriving_map_subtitle">"Kaydedilen her ağ, en güçlü duyulduğu yerde"</string>
-    <string name="wardriving_map_empty">"Henüz kayıtlı ağ yok"</string>
-    <string name="wardriving_map_empty_text">"Wardriving\'i başlatın: rastlanan ağlar burada görünür."</string>
-    <string name="wardriving_last_seen">"Son görülme %1$s"</string>
     <string name="cam_title">"Gizli kameralar"</string>
     <string name="cam_subtitle">"Çevrenizdeki ve ağınızdaki Wi-Fi ve Bluetooth kameralar"</string>
     <string name="cam_check_room">"Odayı kontrol edin"</string>
@@ -2497,8 +2492,5 @@
         <item quantity="one">"%1$d cihaz kameraya benziyor"</item>
         <item quantity="other">"%1$d cihaz kameraya benziyor"</item>
     </plurals>
-    <plurals name="p_wardriving_map_count">
-        <item quantity="one">"Haritada %1$d ağ"</item>
-        <item quantity="other">"Haritada %1$d ağ"</item>
-    </plurals>
+    <string name="pair_subtitle">"İki radyoyu birlikte kullanan araçlar"</string>
 </resources>

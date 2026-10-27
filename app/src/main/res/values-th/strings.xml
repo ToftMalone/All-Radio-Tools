@@ -2389,11 +2389,6 @@
     <string name="bluetooth_is_off">"บลูทูธปิดอยู่"</string>
     <string name="nearby_devices_permission_needed">"ต้องใช้สิทธิ์อุปกรณ์ใกล้เคียง"</string>
     <string name="out_of_range">"อยู่นอกระยะ"</string>
-    <string name="wardriving_map">"แผนที่วอร์ไดรฟ์วิง"</string>
-    <string name="wardriving_map_subtitle">"ทุกเครือข่ายที่บันทึก ณ จุดที่สัญญาณแรงที่สุด"</string>
-    <string name="wardriving_map_empty">"ยังไม่มีเครือข่ายที่บันทึก"</string>
-    <string name="wardriving_map_empty_text">"เริ่มวอร์ไดรฟ์วิง แล้วเครือข่ายที่พบจะแสดงที่นี่"</string>
-    <string name="wardriving_last_seen">"เห็นล่าสุด %1$s"</string>
     <string name="cam_title">"กล้องซ่อน"</string>
     <string name="cam_subtitle">"กล้อง Wi-Fi และบลูทูธรอบตัวคุณและในเครือข่ายของคุณ"</string>
     <string name="cam_check_room">"ตรวจห้อง"</string>
@@ -2432,7 +2427,5 @@
     <plurals name="p_cam_network_found">
         <item quantity="other">"%1$d อุปกรณ์ดูเหมือนกล้อง"</item>
     </plurals>
-    <plurals name="p_wardriving_map_count">
-        <item quantity="other">"%1$d เครือข่ายบนแผนที่"</item>
-    </plurals>
+    <string name="pair_subtitle">"เครื่องมือที่ใช้วิทยุทั้งสองร่วมกัน"</string>
 </resources>

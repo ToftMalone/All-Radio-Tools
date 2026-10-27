@@ -2389,11 +2389,6 @@
     <string name="bluetooth_is_off">"蓝牙已关闭"</string>
     <string name="nearby_devices_permission_needed">"需要“附近设备”权限"</string>
     <string name="out_of_range">"超出范围"</string>
-    <string name="wardriving_map">"驾驶扫描地图"</string>
-    <string name="wardriving_map_subtitle">"每个已记录网络显示在信号最强的位置"</string>
-    <string name="wardriving_map_empty">"尚无记录的网络"</string>
-    <string name="wardriving_map_empty_text">"开始驾驶扫描：遇到的网络会显示在这里。"</string>
-    <string name="wardriving_last_seen">"最后出现 %1$s"</string>
     <string name="cam_title">"隐藏摄像头"</string>
     <string name="cam_subtitle">"周围和您网络中的 Wi-Fi 与蓝牙摄像头"</string>
     <string name="cam_check_room">"请检查房间"</string>
@@ -2432,7 +2427,5 @@
     <plurals name="p_cam_network_found">
         <item quantity="other">"%1$d 台设备像摄像头"</item>
     </plurals>
-    <plurals name="p_wardriving_map_count">
-        <item quantity="other">"地图上有 %1$d 个网络"</item>
-    </plurals>
+    <string name="pair_subtitle">"同时使用两种无线电的工具"</string>
 </resources>

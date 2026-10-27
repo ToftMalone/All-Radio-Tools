@@ -2694,11 +2694,6 @@
     <string name="bluetooth_is_off">"البلوتوث متوقف"</string>
     <string name="nearby_devices_permission_needed">"مطلوب إذن الأجهزة القريبة"</string>
     <string name="out_of_range">"خارج النطاق"</string>
-    <string name="wardriving_map">"خريطة التجوال اللاسلكي"</string>
-    <string name="wardriving_map_subtitle">"كل شبكة مسجّلة في المكان الذي سُمعت فيه أقوى"</string>
-    <string name="wardriving_map_empty">"لا توجد شبكات مسجّلة بعد"</string>
-    <string name="wardriving_map_empty_text">"ابدأ التجوال اللاسلكي: ستظهر هنا الشبكات التي تصادفها."</string>
-    <string name="wardriving_last_seen">"آخر ظهور %1$s"</string>
     <string name="cam_title">"كاميرات مخفية"</string>
     <string name="cam_subtitle">"كاميرات Wi-Fi وبلوتوث حولك وعلى شبكتك"</string>
     <string name="cam_check_room">"افحص الغرفة"</string>
@@ -2757,12 +2752,5 @@
         <item quantity="many">"%1$d جهازًا تشبه كاميرات"</item>
         <item quantity="other">"%1$d جهازًا تشبه كاميرات"</item>
     </plurals>
-    <plurals name="p_wardriving_map_count">
-        <item quantity="zero">"%1$d شبكة على الخريطة"</item>
-        <item quantity="one">"%1$d شبكة على الخريطة"</item>
-        <item quantity="two">"%1$d شبكة على الخريطة"</item>
-        <item quantity="few">"%1$d شبكات على الخريطة"</item>
-        <item quantity="many">"%1$d شبكة على الخريطة"</item>
-        <item quantity="other">"%1$d شبكة على الخريطة"</item>
-    </plurals>
+    <string name="pair_subtitle">"أدوات تستخدم الراديوين معًا"</string>
 </resources>

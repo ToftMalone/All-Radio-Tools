@@ -2389,11 +2389,6 @@
     <string name="bluetooth_is_off">"Bluetoothがオフです"</string>
     <string name="nearby_devices_permission_needed">"付近のデバイスの権限が必要です"</string>
     <string name="out_of_range">"圏外"</string>
-    <string name="wardriving_map">"ウォードライビング地図"</string>
-    <string name="wardriving_map_subtitle">"記録したネットワークを最も強く受信した場所に表示"</string>
-    <string name="wardriving_map_empty">"記録したネットワークはまだありません"</string>
-    <string name="wardriving_map_empty_text">"ウォードライビングを開始すると、見つかったネットワークがここに表示されます。"</string>
-    <string name="wardriving_last_seen">"最終確認 %1$s"</string>
     <string name="cam_title">"隠しカメラ"</string>
     <string name="cam_subtitle">"周囲とネットワーク上の Wi-Fi・Bluetooth カメラ"</string>
     <string name="cam_check_room">"部屋を確認してください"</string>
@@ -2432,7 +2427,5 @@
     <plurals name="p_cam_network_found">
         <item quantity="other">"%1$d 台がカメラの可能性"</item>
     </plurals>
-    <plurals name="p_wardriving_map_count">
-        <item quantity="other">"地図上のネットワーク %1$d 件"</item>
-    </plurals>
+    <string name="pair_subtitle">"2 つの無線を組み合わせて使うツール"</string>
 </resources>

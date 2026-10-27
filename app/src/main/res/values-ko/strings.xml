@@ -2389,11 +2389,6 @@
     <string name="bluetooth_is_off">"블루투스가 꺼져 있습니다"</string>
     <string name="nearby_devices_permission_needed">"주변 기기 권한이 필요합니다"</string>
     <string name="out_of_range">"범위 밖"</string>
-    <string name="wardriving_map">"워드라이빙 지도"</string>
-    <string name="wardriving_map_subtitle">"기록된 모든 네트워크를 가장 강하게 수신된 위치에 표시"</string>
-    <string name="wardriving_map_empty">"기록된 네트워크 없음"</string>
-    <string name="wardriving_map_empty_text">"워드라이빙을 시작하면 만난 네트워크가 여기에 표시됩니다."</string>
-    <string name="wardriving_last_seen">"마지막 확인 %1$s"</string>
     <string name="cam_title">"숨겨진 카메라"</string>
     <string name="cam_subtitle">"주변과 내 네트워크의 Wi-Fi·블루투스 카메라"</string>
     <string name="cam_check_room">"방을 확인하세요"</string>
@@ -2432,7 +2427,5 @@
     <plurals name="p_cam_network_found">
         <item quantity="other">"기기 %1$d대가 카메라로 보임"</item>
     </plurals>
-    <plurals name="p_wardriving_map_count">
-        <item quantity="other">"지도의 네트워크 %1$d개"</item>
-    </plurals>
+    <string name="pair_subtitle">"두 무선을 함께 사용하는 도구"</string>
 </resources>

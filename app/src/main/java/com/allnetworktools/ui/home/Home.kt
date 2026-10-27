@@ -290,7 +290,7 @@ private fun description(n: Network) = when (n) {
     Network.Cellular -> S(R.string.cells_your_carrier_s_towers_and)
     Network.Gnss -> S(R.string.satellites_sky_position_comparison_and_passes)
     Network.Sdr -> S(R.string.hackrf_spectrum_aircraft_ships_radiosondes_fpv)
-    Network.WifiBt -> S(R.string.wardriving_subtitle)
+    Network.WifiBt -> S(R.string.pair_subtitle)
 }
 
 @Composable
@@ -380,7 +380,7 @@ private fun PairTile(merge: Float, onOpen: () -> Unit, onSeparate: () -> Unit, c
                         Text("Bluetooth", style = rf(18, 24, 600), color = net.bt.onContainer)
                     }
                     Text(
-                        S(R.string.wardriving_subtitle), Modifier.padding(top = 4.dp).graphicsLayer { alpha = 0.85f },
+                        S(R.string.pair_subtitle), Modifier.padding(top = 4.dp).graphicsLayer { alpha = 0.85f },
                         style = rf(13, 18), color = net.bt.onContainer, maxLines = 2, overflow = TextOverflow.Ellipsis,
                     )
                 }

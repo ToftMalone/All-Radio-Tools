@@ -2572,11 +2572,6 @@
     <string name="bluetooth_is_off">"Bluetooth jest wyłączony"</string>
     <string name="nearby_devices_permission_needed">"Wymagane uprawnienie urządzeń w pobliżu"</string>
     <string name="out_of_range">"Poza zasięgiem"</string>
-    <string name="wardriving_map">"Mapa wardrivingu"</string>
-    <string name="wardriving_map_subtitle">"Każda zapisana sieć tam, gdzie była najsilniejsza"</string>
-    <string name="wardriving_map_empty">"Brak zapisanych sieci"</string>
-    <string name="wardriving_map_empty_text">"Uruchom wardriving: napotkane sieci pojawią się tutaj."</string>
-    <string name="wardriving_last_seen">"Ostatnio widziano %1$s"</string>
     <string name="cam_title">"Ukryte kamery"</string>
     <string name="cam_subtitle">"Kamery Wi-Fi i Bluetooth wokół ciebie i w twojej sieci"</string>
     <string name="cam_check_room">"Sprawdź pokój"</string>
@@ -2627,10 +2622,5 @@
         <item quantity="many">"%1$d urządzeń wygląda na kamery"</item>
         <item quantity="other">"%1$d urządzeń wygląda na kamery"</item>
     </plurals>
-    <plurals name="p_wardriving_map_count">
-        <item quantity="one">"%1$d sieć na mapie"</item>
-        <item quantity="few">"%1$d sieci na mapie"</item>
-        <item quantity="many">"%1$d sieci na mapie"</item>
-        <item quantity="other">"%1$d sieci na mapie"</item>
-    </plurals>
+    <string name="pair_subtitle">"Narzędzia, które łączą oba moduły radiowe"</string>
 </resources>

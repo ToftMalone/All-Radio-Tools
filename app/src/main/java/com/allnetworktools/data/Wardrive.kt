@@ -147,19 +147,6 @@ object WigleCsv {
     }
 }
 
-/** A network of the database at its best place. */
-data class MapNet(
-    val mac: String,
-    val name: String,
-    val type: NetType,
-    val caps: String,
-    val frequency: Int,
-    val level: Int,
-    val lat: Double,
-    val lon: Double,
-    val lastTime: Long,
-)
-
 /** Counts of networks in the database. */
 data class DbCounts(val wifi: Long = 0, val ble: Long = 0) { val total get() = wifi + ble }
 
@@ -226,19 +213,6 @@ class WardriveDb(context: Context, name: String? = "wardriving.db") : SQLiteOpen
         var b = 0L
         while (c.moveToNext()) when (c.getString(0)) { NetType.Wifi.code -> w = c.getLong(1); NetType.Ble.code -> b = c.getLong(1) }
         DbCounts(w, b)
-    }
-
-    /** Every network at the place it was heard strongest, for the map. */
-    @Synchronized
-    fun mapNetworks(): List<MapNet> = readableDatabase.rawQuery(
-        "SELECT bssid, ssid, type, capabilities, frequency, bestlevel, bestlat, bestlon, lasttime FROM network", null,
-    ).use { c ->
-        buildList {
-            while (c.moveToNext()) {
-                val type = if (c.getString(2) == NetType.Ble.code) NetType.Ble else NetType.Wifi
-                add(MapNet(c.getString(0), c.getString(1), type, c.getString(3), c.getInt(4), c.getInt(5), c.getDouble(6), c.getDouble(7), c.getLong(8)))
-            }
-        }
     }
 
     @Synchronized

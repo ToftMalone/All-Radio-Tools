@@ -2511,11 +2511,6 @@
     <string name="bluetooth_is_off">"Bluetooth este oprit"</string>
     <string name="nearby_devices_permission_needed">"Este necesară permisiunea pentru dispozitive din apropiere"</string>
     <string name="out_of_range">"În afara razei"</string>
-    <string name="wardriving_map">"Harta wardriving"</string>
-    <string name="wardriving_map_subtitle">"Fiecare rețea înregistrată, acolo unde a fost auzită cel mai tare"</string>
-    <string name="wardriving_map_empty">"Nicio rețea înregistrată"</string>
-    <string name="wardriving_map_empty_text">"Porniți wardrivingul: rețelele întâlnite vor apărea aici."</string>
-    <string name="wardriving_last_seen">"Văzut ultima dată %1$s"</string>
     <string name="cam_title">"Camere ascunse"</string>
     <string name="cam_subtitle">"Camere Wi-Fi și Bluetooth în jurul dvs. și în rețeaua dvs."</string>
     <string name="cam_check_room">"Verificați camera"</string>
@@ -2562,9 +2557,5 @@
         <item quantity="few">"%1$d dispozitive seamănă cu camere"</item>
         <item quantity="other">"%1$d de dispozitive seamănă cu camere"</item>
     </plurals>
-    <plurals name="p_wardriving_map_count">
-        <item quantity="one">"%1$d rețea pe hartă"</item>
-        <item quantity="few">"%1$d rețele pe hartă"</item>
-        <item quantity="other">"%1$d de rețele pe hartă"</item>
-    </plurals>
+    <string name="pair_subtitle">"Instrumente care folosesc ambele radiouri împreună"</string>
 </resources>

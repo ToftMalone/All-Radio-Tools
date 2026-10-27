@@ -2572,11 +2572,6 @@
     <string name="bluetooth_is_off">"Bluetooth выключен"</string>
     <string name="nearby_devices_permission_needed">"Нужно разрешение «Устройства рядом»"</string>
     <string name="out_of_range">"Вне зоны"</string>
-    <string name="wardriving_map">"Карта вардрайвинга"</string>
-    <string name="wardriving_map_subtitle">"Каждая записанная сеть там, где её сигнал был сильнее всего"</string>
-    <string name="wardriving_map_empty">"Пока нет записанных сетей"</string>
-    <string name="wardriving_map_empty_text">"Запустите вардрайвинг: найденные сети появятся здесь."</string>
-    <string name="wardriving_last_seen">"Последний раз: %1$s"</string>
     <string name="cam_title">"Скрытые камеры"</string>
     <string name="cam_subtitle">"Камеры Wi-Fi и Bluetooth вокруг вас и в вашей сети"</string>
     <string name="cam_check_room">"Проверьте комнату"</string>
@@ -2627,10 +2622,5 @@
         <item quantity="many">"%1$d устройств похожи на камеры"</item>
         <item quantity="other">"%1$d устройства похожи на камеры"</item>
     </plurals>
-    <plurals name="p_wardriving_map_count">
-        <item quantity="one">"%1$d сеть на карте"</item>
-        <item quantity="few">"%1$d сети на карте"</item>
-        <item quantity="many">"%1$d сетей на карте"</item>
-        <item quantity="other">"%1$d сети на карте"</item>
-    </plurals>
+    <string name="pair_subtitle">"Инструменты, использующие оба радиомодуля вместе"</string>
 </resources>

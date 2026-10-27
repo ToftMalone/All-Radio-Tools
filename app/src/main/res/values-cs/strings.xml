@@ -2572,11 +2572,6 @@
     <string name="bluetooth_is_off">"Bluetooth je vypnutý"</string>
     <string name="nearby_devices_permission_needed">"Je nutné oprávnění k zařízením poblíž"</string>
     <string name="out_of_range">"Mimo dosah"</string>
-    <string name="wardriving_map">"Mapa wardrivingu"</string>
-    <string name="wardriving_map_subtitle">"Každá uložená síť tam, kde byla nejsilnější"</string>
-    <string name="wardriving_map_empty">"Zatím žádná uložená síť"</string>
-    <string name="wardriving_map_empty_text">"Spusťte wardriving: nalezené sítě se zobrazí zde."</string>
-    <string name="wardriving_last_seen">"Naposledy viděno %1$s"</string>
     <string name="cam_title">"Skryté kamery"</string>
     <string name="cam_subtitle">"Kamery Wi-Fi a Bluetooth kolem vás a ve vaší síti"</string>
     <string name="cam_check_room">"Zkontrolujte místnost"</string>
@@ -2627,10 +2622,5 @@
         <item quantity="many">"%1$d zařízení vypadá jako kamery"</item>
         <item quantity="other">"%1$d zařízení vypadá jako kamery"</item>
     </plurals>
-    <plurals name="p_wardriving_map_count">
-        <item quantity="one">"%1$d síť na mapě"</item>
-        <item quantity="few">"%1$d sítě na mapě"</item>
-        <item quantity="many">"%1$d sítě na mapě"</item>
-        <item quantity="other">"%1$d sítí na mapě"</item>
-    </plurals>
+    <string name="pair_subtitle">"Nástroje, které využívají obě rádia zároveň"</string>
 </resources>

@@ -109,7 +109,6 @@ Les décodeurs fonctionnent avec le **HackRF seul** : ni le Wi-Fi ni le Bluetoot
 - L'enregistrement tourne dans un **service de premier plan** : il continue écran éteint et application fermée, jusqu'à ce que vous l'arrêtiez.
 - Tout reste dans une base de données sur le téléphone. **L'envoi vers WiGLE.net** est uniquement manuel, avec le nom d'API et le jeton de votre compte (jamais votre mot de passe).
 - Excluez une adresse MAC complète ou un préfixe constructeur (OUI) : il n'est ni affiché ni enregistré, et il est effacé de la base.
-- **Carte du wardriving** : chaque réseau enregistré là où il a été entendu le plus fort, coloré selon sa sécurité (ouvert, WEP, WPA, WPA3, Bluetooth), avec filtres et détails.
 - **Caméras cachées** : réseaux Wi-Fi et appareils Bluetooth de fabricants de caméras ou portant un nom de caméra, un signal chaud / froid pour s'en approcher, et les ports vidéo (RTSP, ONVIF, Hikvision, Dahua, XMEye) des appareils du réseau Wi-Fi auquel vous êtes connecté. Des indices, pas des preuves : une caméra filaire n'émet rien.
 - **Détecteur de drones** : le Remote ID (signalement électronique européen et américain) diffusé en Bluetooth LE (classique et longue portée) et en Wi-Fi (balises, Wi-Fi Aware) : position, hauteur et vitesse du drone, position et identifiant du télépilote, sur une carte, avec un moteur qui continue d'écouter application fermée.
 

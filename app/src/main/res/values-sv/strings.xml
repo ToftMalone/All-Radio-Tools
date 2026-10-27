@@ -2450,11 +2450,6 @@
     <string name="bluetooth_is_off">"Bluetooth är av"</string>
     <string name="nearby_devices_permission_needed">"Behörighet för enheter i närheten krävs"</string>
     <string name="out_of_range">"Utom räckhåll"</string>
-    <string name="wardriving_map">"Wardriving-karta"</string>
-    <string name="wardriving_map_subtitle">"Varje sparat nätverk, där det hördes starkast"</string>
-    <string name="wardriving_map_empty">"Inget nätverk sparat ännu"</string>
-    <string name="wardriving_map_empty_text">"Starta wardriving: nätverken du möter visas här."</string>
-    <string name="wardriving_last_seen">"Senast sedd %1$s"</string>
     <string name="cam_title">"Dolda kameror"</string>
     <string name="cam_subtitle">"Wi-Fi- och Bluetooth-kameror omkring dig och på ditt nätverk"</string>
     <string name="cam_check_room">"Kontrollera rummet"</string>
@@ -2497,8 +2492,5 @@
         <item quantity="one">"%1$d enhet liknar en kamera"</item>
         <item quantity="other">"%1$d enheter liknar kameror"</item>
     </plurals>
-    <plurals name="p_wardriving_map_count">
-        <item quantity="one">"%1$d nätverk på kartan"</item>
-        <item quantity="other">"%1$d nätverk på kartan"</item>
-    </plurals>
+    <string name="pair_subtitle">"Verktyg som använder båda radioenheterna tillsammans"</string>
 </resources>

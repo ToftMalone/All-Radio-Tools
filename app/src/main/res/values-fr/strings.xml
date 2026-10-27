@@ -2511,11 +2511,6 @@
     <string name="bluetooth_is_off">"Bluetooth désactivé"</string>
     <string name="nearby_devices_permission_needed">"Autorisation « Appareils à proximité » requise"</string>
     <string name="out_of_range">"Hors de portée"</string>
-    <string name="wardriving_map">"Carte du wardriving"</string>
-    <string name="wardriving_map_subtitle">"Chaque réseau enregistré, là où il a été entendu le plus fort"</string>
-    <string name="wardriving_map_empty">"Aucun réseau enregistré"</string>
-    <string name="wardriving_map_empty_text">"Lancez le wardriving : les réseaux rencontrés apparaîtront ici."</string>
-    <string name="wardriving_last_seen">"Vu pour la dernière fois %1$s"</string>
     <string name="cam_title">"Caméras cachées"</string>
     <string name="cam_subtitle">"Caméras Wi-Fi et Bluetooth autour de vous et sur votre réseau"</string>
     <string name="cam_check_room">"Vérifiez la pièce"</string>
@@ -2562,9 +2557,5 @@
         <item quantity="other">"%1$d appareils ressemblent à des caméras"</item>
         <item quantity="many">"%1$d appareils ressemblent à des caméras"</item>
     </plurals>
-    <plurals name="p_wardriving_map_count">
-        <item quantity="one">"%1$d réseau sur la carte"</item>
-        <item quantity="other">"%1$d réseaux sur la carte"</item>
-        <item quantity="many">"%1$d réseaux sur la carte"</item>
-    </plurals>
+    <string name="pair_subtitle">"Des outils qui utilisent les deux radios ensemble"</string>
 </resources>
