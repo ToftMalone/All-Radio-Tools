@@ -353,11 +353,7 @@ private fun PairTile(merge: Float, onOpen: () -> Unit, cards: @Composable () -> 
                 Column(Modifier.fillMaxSize().padding(16.dp)) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         CardIcon(Network.Wifi)
-                        // The two badges overlap, joined by the car of wardriving.
-                        Box(Modifier.padding(start = 4.dp).size(36.dp).clip(CircleShape).background(cs.surface), contentAlignment = Alignment.Center) {
-                            Symbol(Sym.DirectionsCar, size = 20.dp, filled = true, tint = AntTheme.net.wifiBt.accent)
-                        }
-                        Box(Modifier.padding(start = 4.dp)) { CardIcon(Network.Bluetooth) }
+                        Box(Modifier.padding(start = 8.dp)) { CardIcon(Network.Bluetooth) }
                     }
                     Spacer(Modifier.weight(1f))
                     Row(verticalAlignment = Alignment.CenterVertically) {
