@@ -270,6 +270,18 @@ private fun PageBody(vm: MainViewModel, net: Network, page: Page) {
             Tool.Meteor -> com.allnetworktools.ui.pages.sdr.MeteorTool(vm)
             Tool.Wardriving -> com.allnetworktools.ui.pages.wardrive.WardrivingTool(vm)
             Tool.WardrivingSettings -> com.allnetworktools.ui.pages.wardrive.WardrivingSettingsTool(vm)
+            Tool.RemoteId -> {
+                val perms by vm.permissions.collectAsStateWithLifecycle()
+                val positions by vm.positions.collectAsStateWithLifecycle()
+                val actions = LocalActions.current
+                val loc = positions.fused ?: positions.gnss ?: positions.network
+                com.allnetworktools.ui.pages.bt.RemoteIdTool(
+                    permitted = perms.nearby,
+                    me = loc?.let { it.latitude to it.longitude },
+                    onGrant = { actions.request(PermGroup.Nearby) },
+                    onNotifications = { if (PermGroup.Notifications !in perms) actions.request(PermGroup.Notifications) },
+                )
+            }
             Tool.WifiDirect -> {
                 val perms by vm.permissions.collectAsStateWithLifecycle()
                 val actions = LocalActions.current

@@ -131,6 +131,17 @@ class ScreenshotTest {
     @Test fun wardrivingLight() = shot("W2_wardriving_light", nav = NavState(Network.WifiBt, Page.ToolPage(Tool.Wardriving))) { wardriveDemo(fix = false) }
     @Test fun wardrivingSettings() = shot("W3_wardriving_settings", nav = NavState(Network.WifiBt, Page.ToolPage(Tool.WardrivingSettings)))
     @Test fun wardrivingTools() = shot("W4_wardriving_tools", nav = NavState(Network.WifiBt, Page.Tools))
+    @Test fun remoteId() = shot("W5_remote_id", nav = NavState(Network.WifiBt, Page.ToolPage(Tool.RemoteId))) {
+        val now = System.currentTimeMillis()
+        val d = com.allnetworktools.data.remoteid.Drone(
+            key = "AA", id = "1581F5FKD229001234", idType = com.allnetworktools.data.remoteid.IdType.Serial,
+            uaType = com.allnetworktools.data.remoteid.UaType.Multirotor, status = com.allnetworktools.data.remoteid.Status.Airborne,
+            lat = 48.8584, lon = 2.2945, altGeoM = 152.0, heightM = 87.0, speedMs = 8.5, directionDeg = 45,
+            operatorLat = 48.8570, operatorLon = 2.2925, operatorId = "FRAoPeRaToR0001", euClass = 1, euCategory = 1,
+            rssi = -71, firstSeen = now - 60_000, lastSeen = now - 2_000,
+        )
+        com.allnetworktools.data.remoteid.RemoteIdHub.publish(com.allnetworktools.data.remoteid.RemoteIdState(running = true, drones = listOf(d), longRange = true))
+    }
 
     private fun wardriveDemo(fix: Boolean = true) {
         val now = System.currentTimeMillis()

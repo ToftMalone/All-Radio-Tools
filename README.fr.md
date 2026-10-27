@@ -109,6 +109,7 @@ Les décodeurs fonctionnent avec le **HackRF seul** : ni le Wi-Fi ni le Bluetoot
 - L'enregistrement tourne dans un **service de premier plan** : il continue écran éteint et application fermée, jusqu'à ce que vous l'arrêtiez.
 - Tout reste dans une base de données sur le téléphone. **L'envoi vers WiGLE.net** est uniquement manuel, avec le nom d'API et le jeton de votre compte (jamais votre mot de passe).
 - Excluez une adresse MAC complète ou un préfixe constructeur (OUI) : il n'est ni affiché ni enregistré, et il est effacé de la base.
+- **Détecteur de drones** : le Remote ID (signalement électronique européen et américain) diffusé en Bluetooth LE (classique et longue portée) et en Wi-Fi (balises, Wi-Fi Aware) : position, hauteur et vitesse du drone, position et identifiant du télépilote, sur une carte, avec un moteur qui continue d'écouter application fermée.
 
 ### 📤 Exports
 

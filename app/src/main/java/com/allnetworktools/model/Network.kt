@@ -117,6 +117,7 @@ enum class Tool(
     Ism(Network.Sdr, "ISM", Sym.Thermostat),
 
     Wardriving(Network.WifiBt, "Wardriving", Sym.DirectionsCar, Sym.Settings, implemented = true),
+    RemoteId(Network.WifiBt, S(R.string.drone_detector), Sym.Drone),
     WardrivingSettings(Network.WifiBt, S(R.string.wardriving_settings), Sym.Settings, parent = ToolParent.Other(Wardriving)),
     ;
 
