@@ -2295,7 +2295,7 @@
     <string name="wardriving_settings_subtitle">"Tài khoản WiGLE.net, địa chỉ bị loại trừ, cơ sở dữ liệu"</string>
     <string name="wardriving_subtitle">"Wi-Fi và Bluetooth ghi lại trên đường, cho WiGLE.net"</string>
     <string name="wardriving_recording">"Đang ghi"</string>
-    <string name="wardriving_hint">"Giữ đồng thời Wi-Fi và Bluetooth để wardriving"</string>
+    <string name="wardriving_hint">"Giữ Wi-Fi hoặc Bluetooth, rồi chạm + để ghép lại"</string>
     <string name="wardriving_notification">"Mới: %1$d Wi-Fi · %2$d Bluetooth · %3$d trong CSDL"</string>
     <string name="wardriving_waiting_gps">"Đang chờ GPS"</string>
     <string name="wardriving_running">"Đang wardriving"</string>

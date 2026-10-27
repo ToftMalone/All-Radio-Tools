@@ -2295,7 +2295,7 @@
     <string name="wardriving_settings_subtitle">"บัญชี WiGLE.net ที่อยู่ที่ยกเว้น ฐานข้อมูล"</string>
     <string name="wardriving_subtitle">"Wi-Fi และบลูทูธที่บันทึกระหว่างทาง สำหรับ WiGLE.net"</string>
     <string name="wardriving_recording">"กำลังบันทึก"</string>
-    <string name="wardriving_hint">"กด Wi-Fi และบลูทูธค้างพร้อมกันเพื่อวอร์ไดรฟ์วิง"</string>
+    <string name="wardriving_hint">"กด Wi-Fi หรือบลูทูธค้างไว้ แล้วแตะ + เพื่อรวมกัน"</string>
     <string name="wardriving_notification">"ใหม่: Wi-Fi %1$d · บลูทูธ %2$d · ในฐานข้อมูล %3$d"</string>
     <string name="wardriving_waiting_gps">"กำลังรอ GPS"</string>
     <string name="wardriving_running">"กำลังวอร์ไดรฟ์วิง"</string>

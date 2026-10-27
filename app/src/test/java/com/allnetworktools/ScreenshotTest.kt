@@ -32,6 +32,11 @@ import org.junit.Rule
 import androidx.compose.foundation.layout.size
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.background
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performTouchInput
+import androidx.compose.ui.test.longClick
+import androidx.compose.ui.test.performClick
+import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -109,6 +114,19 @@ class ScreenshotTest {
     }
     @Test fun homeSelected() = shot("03_home_wifi_selected", nav = NavState(Network.Wifi))
     @Test fun homePair() = shot("03c_home_wifi_bt_pair", nav = NavState(Network.WifiBt))
+    /** Holding Wi-Fi puts a "+" on Bluetooth; tapping it assembles the pair. */
+    @Test fun homePairing() {
+        var vm: MainViewModel? = null
+        shot("03d_home_pairing") { vm = it }
+        compose.onNodeWithText("Wi-Fi").performTouchInput { longClick() }
+        repeat(10) { compose.mainClock.advanceTimeBy(100); org.robolectric.shadows.ShadowLooper.idleMainLooper(100, java.util.concurrent.TimeUnit.MILLISECONDS) }
+        val bitmap = compose.onRoot().captureToImage().asAndroidBitmap()
+        val dir = File(System.getProperty("screenshots.dir") ?: "build/screenshots")
+        File(dir, "03e_home_pairing_plus.png").outputStream().use { bitmap.compress(Bitmap.CompressFormat.PNG, 100, it) }
+        compose.onNodeWithText("Bluetooth").performClick()
+        repeat(10) { compose.mainClock.advanceTimeBy(100); org.robolectric.shadows.ShadowLooper.idleMainLooper(100, java.util.concurrent.TimeUnit.MILLISECONDS) }
+        assertEquals(Network.WifiBt, vm!!.nav.value.network)
+    }
     @Test fun wardriving() = shot("W1_wardriving", dark = true, nav = NavState(Network.WifiBt, Page.ToolPage(Tool.Wardriving))) { wardriveDemo() }
     @Test fun wardrivingLight() = shot("W2_wardriving_light", nav = NavState(Network.WifiBt, Page.ToolPage(Tool.Wardriving))) { wardriveDemo(fix = false) }
     @Test fun wardrivingSettings() = shot("W3_wardriving_settings", nav = NavState(Network.WifiBt, Page.ToolPage(Tool.WardrivingSettings)))

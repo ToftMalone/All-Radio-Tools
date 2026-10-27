@@ -2469,7 +2469,7 @@
     <string name="wardriving_settings_subtitle">"Аккаунт WiGLE.net, исключённые адреса, база данных"</string>
     <string name="wardriving_subtitle">"Wi-Fi и Bluetooth, записанные в пути, для WiGLE.net"</string>
     <string name="wardriving_recording">"Запись"</string>
-    <string name="wardriving_hint">"Удерживайте Wi-Fi и Bluetooth вместе для вардрайвинга"</string>
+    <string name="wardriving_hint">"Удерживайте Wi-Fi или Bluetooth, затем + чтобы объединить"</string>
     <string name="wardriving_notification">"Новые: %1$d Wi-Fi · %2$d Bluetooth · %3$d в базе"</string>
     <string name="wardriving_waiting_gps">"Ожидание GPS"</string>
     <string name="wardriving_running">"Идёт вардрайвинг"</string>

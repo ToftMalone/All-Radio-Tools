@@ -103,7 +103,7 @@ The decoders work with the **HackRF alone**: neither the phone's Wi-Fi nor its B
 
 ### 🚗 Wi-Fi + Bluetooth: wardriving
 
-Hold the **Wi-Fi and Bluetooth cards together** with two fingers: both light up and a dock for the pair appears, with **Wardriving** as its featured tool.
+**Long-press the Wi-Fi card** (or Bluetooth), then tap the **+** that appears on the other one: the two cards slide together into a single tile, with a dock for the pair and **Wardriving** as its featured tool. The unlink button on the tile takes them apart again.
 
 - The WiGLE home screen: networks and devices new on this run, database total, GPS fix, last scan, then every Wi-Fi network and Bluetooth LE device heard, strongest first, with its maker (IEEE OUI register).
 - Recording runs in a **foreground service**: it goes on with the screen off and the app closed, until you stop it.

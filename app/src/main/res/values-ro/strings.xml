@@ -2411,7 +2411,7 @@
     <string name="wardriving_settings_subtitle">"Cont WiGLE.net, adrese excluse, bază de date"</string>
     <string name="wardriving_subtitle">"Wi-Fi și Bluetooth înregistrate pe drum, pentru WiGLE.net"</string>
     <string name="wardriving_recording">"Înregistrare"</string>
-    <string name="wardriving_hint">"Țineți apăsat Wi-Fi și Bluetooth împreună pentru wardriving"</string>
+    <string name="wardriving_hint">"Țineți apăsat Wi-Fi sau Bluetooth, apoi + pentru a le uni"</string>
     <string name="wardriving_notification">"%1$d Wi-Fi · %2$d Bluetooth noi · %3$d în bază"</string>
     <string name="wardriving_waiting_gps">"Se așteaptă GPS-ul"</string>
     <string name="wardriving_running">"Wardriving în curs"</string>

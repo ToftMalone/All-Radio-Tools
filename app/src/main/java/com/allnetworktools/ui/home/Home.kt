@@ -13,6 +13,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -59,16 +60,9 @@ import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.foundation.gestures.awaitEachGesture
-import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.ui.input.pointer.PointerEventPass
-import androidx.compose.ui.input.pointer.PointerId
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.boundsInRoot
 import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.allnetworktools.Blocker
@@ -135,11 +129,14 @@ fun HomeScreen(
     onDeselect: () -> Unit,
     onSettings: () -> Unit,
 ) {
+    // The card held down to assemble the pair: the other one shows a "+" until it is tapped.
+    var pairing by remember { mutableStateOf<Network?>(null) }
+    if (selected == Network.WifiBt) pairing = null
     Box(
         Modifier
             .fillMaxSize()
             .background(cs.surface)
-            .clickable(interactionSource = null, indication = null, onClick = onDeselect),
+            .clickable(interactionSource = null, indication = null) { pairing = null; onDeselect() },
     ) {
         Box(Modifier.fillMaxSize().windowInsetsPadding(WindowInsets.statusBars)) {
             Column(Modifier.fillMaxSize()) {
@@ -157,13 +154,10 @@ fun HomeScreen(
                 val rows = Network.entries.filter { it.inGrid }.chunked(2)
                 // Cards only hold an icon and a short description, so they stay compact.
                 val cardH = 184.dp
-                var gridOrigin by remember { mutableStateOf(Offset.Zero) }
-                val pair by rememberUpdatedState(onPair)
+                val haptics = AntTheme.haptics
                 Column(
                     // Padding sits inside the scroll area so the selection outline and scale are not clipped.
                     Modifier.fillMaxWidth()
-                        .onGloballyPositioned { gridOrigin = it.positionInRoot() }
-                        .pairHold({ p -> cardBounds[p] }, { gridOrigin }) { pair() }
                         .verticalScroll(rememberScrollState())
                         .padding(start = 16.dp, end = 16.dp, top = 20.dp, bottom = 16.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -177,7 +171,7 @@ fun HomeScreen(
                         val cards: @Composable () -> Unit = {
                             Row(horizontalArrangement = Arrangement.spacedBy(12.dp * (1f - m))) {
                                 pair.forEachIndexed { i, n ->
-                                    val picked = selected == n
+                                    val picked = selected == n || pairing == n
                                     // Where the two cards meet, their corners square off as they close the gap.
                                     val inner = 28.dp * (1f - m)
                                     val shape = if (i == 0) RoundedCornerShape(28.dp, inner, inner, 28.dp) else RoundedCornerShape(inner, 28.dp, 28.dp, inner)
@@ -185,8 +179,19 @@ fun HomeScreen(
                                         network = n,
                                         data = data,
                                         selected = picked,
-                                        dimmed = selected != null && !picked && !(fused && pairRow),
-                                        onClick = { if (fused && n in PairCards) onPair() else onCard(n) },
+                                        dimmed = (selected != null || pairing != null) && !picked && !(fused && pairRow) && !(pairing != null && n in PairCards),
+                                        onClick = {
+                                            val armed = pairing
+                                            pairing = null
+                                            when {
+                                                fused && n in PairCards -> onPair()
+                                                armed != null && armed != n && n in PairCards -> onPair()
+                                                armed == n -> Unit
+                                                else -> onCard(n)
+                                            }
+                                        },
+                                        onLongClick = if (n in PairCards && !fused) ({ haptics.segment(); pairing = n }) else null,
+                                        plus = pairing != null && pairing != n && n in PairCards,
                                         onAction = onBlockerAction,
                                         shape = if (pairRow) shape else RoundedCornerShape(28.dp),
                                         modifier = Modifier
@@ -203,7 +208,7 @@ fun HomeScreen(
                                 }
                             }
                         }
-                        if (!pairRow) cards() else PairTile(merge, onPair, cards)
+                        if (!pairRow) cards() else PairTile(merge, onPair, onDeselect, cards)
                     }
                     Row(Modifier.fillMaxWidth().padding(top = 4.dp), horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically) {
                         Symbol(Sym.DirectionsCar, size = 16.dp, tint = cs.onSurfaceVariant)
@@ -225,6 +230,9 @@ private fun NetworkCard(
     onAction: (Blocker) -> Unit,
     modifier: Modifier,
     shape: Shape = RoundedCornerShape(28.dp),
+    onLongClick: (() -> Unit)? = null,
+    /** The other card of the pair is held: a "+" to assemble them. */
+    plus: Boolean = false,
 ) {
     val roles = AntTheme.net[network]
     val blocker = data.blockers[network]?.takeUnless { it.soft }
@@ -251,7 +259,7 @@ private fun NetworkCard(
             .graphicsLayer { this.alpha = alpha }
             .clip(shape)
             .background(bg)
-            .clickable(onClick = onClick),
+            .combinedClickable(onLongClick = onLongClick, onClick = onClick),
     ) {
         if (blocker != null) {
             BlockedCardContent(network, blocker, onAction)
@@ -261,6 +269,16 @@ private fun NetworkCard(
                     NetworkCardContent(network)
                 }
             }
+        }
+        val plusScale by animateFloatAsState(if (plus) 1f else 0f, spring(0.5f, 500f), label = "plus")
+        if (plusScale > 0.01f) {
+            val pair = AntTheme.net.wifiBt
+            Box(
+                Modifier.align(Alignment.TopEnd).padding(12.dp).size(48.dp)
+                    .graphicsLayer { scaleX = plusScale; scaleY = plusScale }
+                    .clip(CircleShape).background(pair.accent).clickable(onClick = onClick),
+                contentAlignment = Alignment.Center,
+            ) { Symbol(Sym.Add, size = 28.dp, tint = pair.onAccent) }
         }
     }
 }
@@ -320,7 +338,7 @@ private fun CardIcon(network: Network) {
  * colours, both badges, one outline) over the two cards. [merge] runs from 0 (apart) to 1, overshooting a little.
  */
 @Composable
-private fun PairTile(merge: Float, onOpen: () -> Unit, cards: @Composable () -> Unit) {
+private fun PairTile(merge: Float, onOpen: () -> Unit, onSeparate: () -> Unit, cards: @Composable () -> Unit) {
     val net = AntTheme.net
     val m = merge.coerceIn(0f, 1f)
     // The pair's colours only once the cards touch: before that the two cards are still seen moving.
@@ -366,6 +384,12 @@ private fun PairTile(merge: Float, onOpen: () -> Unit, cards: @Composable () -> 
                         style = rf(13, 18), color = net.bt.onContainer, maxLines = 2, overflow = TextOverflow.Ellipsis,
                     )
                 }
+                // Stays while the cards are assembled: takes them apart again.
+                Box(
+                    Modifier.align(Alignment.TopEnd).padding(12.dp).size(48.dp).clip(CircleShape).background(cs.surface)
+                        .clickable(enabled = look > 0.5f, onClick = onSeparate),
+                    contentAlignment = Alignment.Center,
+                ) { Symbol(Sym.LinkOff, size = 24.dp, tint = cs.onSurface) }
             }
         }
     }
@@ -373,49 +397,6 @@ private fun PairTile(merge: Float, onOpen: () -> Unit, cards: @Composable () -> 
 
 /** The two cards held together to pick the pair of radios. */
 private val PairCards = setOf(Network.Wifi, Network.Bluetooth)
-
-/**
- * Two fingers held still for a long press, one on the Wi-Fi card and one on the Bluetooth card: [onPair]. Watched on
- * the way down (before the cards), and once it fires the rest of the gesture is swallowed so neither card sees a tap.
- */
-private fun Modifier.pairHold(bounds: (Network) -> Rect?, origin: () -> Offset, onPair: () -> Unit): Modifier = pointerInput(Unit) {
-    val hold = viewConfiguration.longPressTimeoutMillis
-    val slop = viewConfiguration.touchSlop
-    awaitEachGesture {
-        awaitFirstDown(requireUnconsumed = false, pass = PointerEventPass.Initial)
-        var since = -1L
-        var starts: Map<PointerId, Offset> = emptyMap()
-        var fired = false
-        while (true) {
-            val wait = if (since >= 0 && !fired) maxOf(1L, hold - (System.currentTimeMillis() - since)) else Long.MAX_VALUE
-            val ev = withTimeoutOrNull(wait) { awaitPointerEvent(PointerEventPass.Initial) }
-            if (ev == null) {
-                fired = true
-                onPair()
-                continue
-            }
-            val down = ev.changes.filter { it.pressed }
-            if (down.isEmpty()) {
-                if (fired) ev.changes.forEach { it.consume() }
-                break
-            }
-            if (fired) { ev.changes.forEach { it.consume() }; continue }
-            val o = origin()
-            val w = bounds(Network.Wifi)
-            val b = bounds(Network.Bluetooth)
-            val onBoth = down.size == 2 && w != null && b != null && run {
-                val p0 = down[0].position + o
-                val p1 = down[1].position + o
-                (w.contains(p0) && b.contains(p1)) || (w.contains(p1) && b.contains(p0))
-            }
-            when {
-                !onBoth -> { since = -1L; starts = emptyMap() }
-                since < 0 || down.map { it.id }.toSet() != starts.keys -> { since = System.currentTimeMillis(); starts = down.associate { it.id to it.position } }
-                down.any { c -> (c.position - starts.getValue(c.id)).getDistance() > slop } -> { since = -1L; starts = emptyMap() }
-            }
-        }
-    }
-}
 
 @Composable
 private fun ColumnScope.NetworkCardContent(network: Network) {

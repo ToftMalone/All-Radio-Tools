@@ -2353,7 +2353,7 @@
     <string name="wardriving_settings_subtitle">"WiGLE.net hesabı, hariç tutulan adresler, veritabanı"</string>
     <string name="wardriving_subtitle">"Yolda kaydedilen Wi-Fi ve Bluetooth, WiGLE.net için"</string>
     <string name="wardriving_recording">"Kaydediliyor"</string>
-    <string name="wardriving_hint">"Wardriving için Wi-Fi ve Bluetooth\'a birlikte basılı tutun"</string>
+    <string name="wardriving_hint">"Wi-Fi veya Bluetooth\'a basılı tutun, birleştirmek için +"</string>
     <string name="wardriving_notification">"Yeni: %1$d Wi-Fi · %2$d Bluetooth · veritabanında %3$d"</string>
     <string name="wardriving_waiting_gps">"GPS bekleniyor"</string>
     <string name="wardriving_running">"Wardriving sürüyor"</string>

@@ -2354,7 +2354,7 @@
     <string name="wardriving_settings_subtitle">"WiGLE.net account, excluded addresses, database"</string>
     <string name="wardriving_subtitle">"Wi-Fi and Bluetooth logged on the move, for WiGLE.net"</string>
     <string name="wardriving_recording">"Recording"</string>
-    <string name="wardriving_hint">"Hold Wi-Fi and Bluetooth together for wardriving"</string>
+    <string name="wardriving_hint">"Hold Wi-Fi or Bluetooth, then tap + to assemble them"</string>
     <string name="wardriving_notification">"%1$d new Wi-Fi · %2$d new Bluetooth · %3$d in the database"</string>
     <string name="wardriving_waiting_gps">"Waiting for GPS"</string>
     <string name="wardriving_running">"Wardriving in progress"</string>

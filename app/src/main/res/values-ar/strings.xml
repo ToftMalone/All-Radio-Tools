@@ -2585,7 +2585,7 @@
     <string name="wardriving_settings_subtitle">"حساب WiGLE.net، العناوين المستبعدة، قاعدة البيانات"</string>
     <string name="wardriving_subtitle">"شبكات Wi-Fi وبلوتوث مسجّلة أثناء التنقل، لـ WiGLE.net"</string>
     <string name="wardriving_recording">"جارٍ التسجيل"</string>
-    <string name="wardriving_hint">"اضغط مطولًا على Wi-Fi وبلوتوث معًا للتجوال اللاسلكي"</string>
+    <string name="wardriving_hint">"اضغط مطولًا على Wi-Fi أو بلوتوث ثم + لدمجهما"</string>
     <string name="wardriving_notification">"جديد: %1$d Wi-Fi · %2$d بلوتوث · %3$d في القاعدة"</string>
     <string name="wardriving_waiting_gps">"بانتظار GPS"</string>
     <string name="wardriving_running">"التجوال اللاسلكي قيد التشغيل"</string>

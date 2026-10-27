@@ -2353,7 +2353,7 @@
     <string name="wardriving_settings_subtitle">"Account WiGLE.net, indirizzi esclusi, database"</string>
     <string name="wardriving_subtitle">"Wi-Fi e Bluetooth rilevati in viaggio, per WiGLE.net"</string>
     <string name="wardriving_recording">"Registrazione"</string>
-    <string name="wardriving_hint">"Tieni premuti insieme Wi-Fi e Bluetooth per il wardriving"</string>
+    <string name="wardriving_hint">"Tieni premuto Wi-Fi o Bluetooth, poi + per unirli"</string>
     <string name="wardriving_notification">"%1$d Wi-Fi · %2$d Bluetooth nuovi · %3$d nel database"</string>
     <string name="wardriving_waiting_gps">"In attesa del GPS"</string>
     <string name="wardriving_running">"Wardriving in corso"</string>

@@ -2295,7 +2295,7 @@
     <string name="wardriving_settings_subtitle">"WiGLE.net 계정, 제외된 주소, 데이터베이스"</string>
     <string name="wardriving_subtitle">"이동 중 기록한 Wi-Fi와 블루투스(WiGLE.net용)"</string>
     <string name="wardriving_recording">"기록 중"</string>
-    <string name="wardriving_hint">"워드라이빙은 Wi-Fi와 블루투스를 함께 길게 누르세요"</string>
+    <string name="wardriving_hint">"Wi-Fi 또는 블루투스를 길게 누른 뒤 +로 합치기"</string>
     <string name="wardriving_notification">"새 Wi-Fi %1$d · 블루투스 %2$d · 데이터베이스 %3$d"</string>
     <string name="wardriving_waiting_gps">"GPS 대기 중"</string>
     <string name="wardriving_running">"워드라이빙 진행 중"</string>

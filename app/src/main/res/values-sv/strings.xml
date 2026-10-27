@@ -2353,7 +2353,7 @@
     <string name="wardriving_settings_subtitle">"WiGLE.net-konto, uteslutna adresser, databas"</string>
     <string name="wardriving_subtitle">"Wi-Fi och Bluetooth loggade på resande fot, för WiGLE.net"</string>
     <string name="wardriving_recording">"Spelar in"</string>
-    <string name="wardriving_hint">"Håll in Wi-Fi och Bluetooth samtidigt för wardriving"</string>
+    <string name="wardriving_hint">"Håll in Wi-Fi eller Bluetooth och tryck på + för att slå ihop dem"</string>
     <string name="wardriving_notification">"%1$d nya Wi-Fi · %2$d nya Bluetooth · %3$d i databasen"</string>
     <string name="wardriving_waiting_gps">"Väntar på GPS"</string>
     <string name="wardriving_running">"Wardriving pågår"</string>

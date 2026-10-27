@@ -2295,7 +2295,7 @@
     <string name="wardriving_settings_subtitle">"WiGLE.net アカウント、除外アドレス、データベース"</string>
     <string name="wardriving_subtitle">"移動中に記録した Wi-Fi と Bluetooth（WiGLE.net 用）"</string>
     <string name="wardriving_recording">"記録中"</string>
-    <string name="wardriving_hint">"ウォードライビングは Wi-Fi と Bluetooth を同時に長押し"</string>
+    <string name="wardriving_hint">"Wi-Fi か Bluetooth を長押しし、+ で結合"</string>
     <string name="wardriving_notification">"新規 Wi-Fi %1$d · Bluetooth %2$d · データベース %3$d"</string>
     <string name="wardriving_waiting_gps">"GPS を待機中"</string>
     <string name="wardriving_running">"ウォードライビング中"</string>

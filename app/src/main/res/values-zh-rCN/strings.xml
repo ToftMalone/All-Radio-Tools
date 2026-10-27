@@ -2295,7 +2295,7 @@
     <string name="wardriving_settings_subtitle">"WiGLE.net 账户、排除的地址、数据库"</string>
     <string name="wardriving_subtitle">"途中记录的 Wi-Fi 和蓝牙，用于 WiGLE.net"</string>
     <string name="wardriving_recording">"正在记录"</string>
-    <string name="wardriving_hint">"同时长按 Wi-Fi 和蓝牙即可进行驾驶扫描"</string>
+    <string name="wardriving_hint">"长按 Wi-Fi 或蓝牙，再点按 + 将其合并"</string>
     <string name="wardriving_notification">"新 Wi-Fi %1$d · 新蓝牙 %2$d · 数据库 %3$d"</string>
     <string name="wardriving_waiting_gps">"正在等待 GPS"</string>
     <string name="wardriving_running">"驾驶扫描进行中"</string>

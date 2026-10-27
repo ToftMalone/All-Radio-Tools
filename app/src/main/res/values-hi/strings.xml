@@ -2353,7 +2353,7 @@
     <string name="wardriving_settings_subtitle">"WiGLE.net खाता, बाहर रखे पते, डेटाबेस"</string>
     <string name="wardriving_subtitle">"रास्ते में दर्ज Wi-Fi और ब्लूटूथ, WiGLE.net के लिए"</string>
     <string name="wardriving_recording">"रिकॉर्ड हो रहा है"</string>
-    <string name="wardriving_hint">"वॉरड्राइविंग के लिए Wi-Fi और ब्लूटूथ को एक साथ दबाए रखें"</string>
+    <string name="wardriving_hint">"Wi-Fi या ब्लूटूथ दबाए रखें, फिर जोड़ने के लिए +"</string>
     <string name="wardriving_notification">"नए: %1$d Wi-Fi · %2$d ब्लूटूथ · डेटाबेस में %3$d"</string>
     <string name="wardriving_waiting_gps">"GPS की प्रतीक्षा"</string>
     <string name="wardriving_running">"वॉरड्राइविंग जारी है"</string>

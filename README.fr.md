@@ -103,7 +103,7 @@ Les décodeurs fonctionnent avec le **HackRF seul** : ni le Wi-Fi ni le Bluetoot
 
 ### 🚗 Wi-Fi + Bluetooth : wardriving
 
-Maintenez **les cartes Wi-Fi et Bluetooth ensemble** avec deux doigts : elles s'allument toutes les deux et un dock pour la paire apparaît, avec le **Wardriving** comme outil phare.
+**Appui long sur la carte Wi-Fi** (ou Bluetooth), puis touchez le **+** qui apparaît sur l'autre : les deux cartes glissent l'une vers l'autre et forment une seule case, avec un dock pour la paire et le **Wardriving** comme outil phare. Le bouton de séparation sur la case les désassemble.
 
 - L'écran d'accueil de WiGLE : réseaux et appareils nouveaux de la session, total de la base, position GPS, dernier scan, puis chaque réseau Wi-Fi et appareil Bluetooth LE entendu, du plus fort au plus faible, avec son constructeur (registre OUI de l'IEEE).
 - L'enregistrement tourne dans un **service de premier plan** : il continue écran éteint et application fermée, jusqu'à ce que vous l'arrêtiez.

@@ -2469,7 +2469,7 @@
     <string name="wardriving_settings_subtitle">"Účet WiGLE.net, vyloučené adresy, databáze"</string>
     <string name="wardriving_subtitle">"Wi-Fi a Bluetooth zaznamenané na cestě, pro WiGLE.net"</string>
     <string name="wardriving_recording">"Nahrávání"</string>
-    <string name="wardriving_hint">"Podržte Wi-Fi a Bluetooth současně pro wardriving"</string>
+    <string name="wardriving_hint">"Podržte Wi-Fi nebo Bluetooth a klepnutím na + je spojte"</string>
     <string name="wardriving_notification">"Nové: %1$d Wi-Fi · %2$d Bluetooth · %3$d v databázi"</string>
     <string name="wardriving_waiting_gps">"Čeká se na GPS"</string>
     <string name="wardriving_running">"Probíhá wardriving"</string>

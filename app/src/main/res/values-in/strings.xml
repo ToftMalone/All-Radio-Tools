@@ -2295,7 +2295,7 @@
     <string name="wardriving_settings_subtitle">"Akun WiGLE.net, alamat yang dikecualikan, database"</string>
     <string name="wardriving_subtitle">"Wi-Fi dan Bluetooth yang dicatat di perjalanan, untuk WiGLE.net"</string>
     <string name="wardriving_recording">"Merekam"</string>
-    <string name="wardriving_hint">"Tahan Wi-Fi dan Bluetooth bersamaan untuk wardriving"</string>
+    <string name="wardriving_hint">"Tahan Wi-Fi atau Bluetooth, lalu + untuk menggabungkannya"</string>
     <string name="wardriving_notification">"Baru: %1$d Wi-Fi · %2$d Bluetooth · %3$d di database"</string>
     <string name="wardriving_waiting_gps">"Menunggu GPS"</string>
     <string name="wardriving_running">"Wardriving berjalan"</string>
