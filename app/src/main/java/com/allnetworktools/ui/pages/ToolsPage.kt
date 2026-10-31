@@ -133,15 +133,6 @@ private fun groups(net: Network, connectedDevice: String?, servingLabel: String?
             ).sortedWith(compareBy(java.text.Collator.getInstance()) { it.title }),
         ),
     )
-    Network.WifiBt -> listOf(
-        ToolGroup(
-            S(R.string.security_2),
-            listOf(
-                ToolEntry(Tool.RemoteId, S(R.string.drone_detector), S(R.string.remote_id_subtitle)),
-                ToolEntry(Tool.HiddenCam, S(R.string.cam_title), S(R.string.cam_subtitle)),
-            ),
-        ),
-    )
 }
 
 private fun featuredSubtitle(net: Network, servingLabel: String?) = when (net) {
@@ -150,7 +141,6 @@ private fun featuredSubtitle(net: Network, servingLabel: String?) = when (net) {
     Network.Cellular -> servingLabel ?: S(R.string.identifiers_and_measurements_of_the_connected)
     Network.Gnss -> S(R.string.sky_plot_and_world_map_of)
     Network.Sdr -> S(R.string.spectrum_and_waterfall_1_mhz_to)
-    Network.WifiBt -> S(R.string.wardriving_subtitle)
 }
 
 @Composable
@@ -160,7 +150,6 @@ private fun featuredBadge(net: Network, vm: MainViewModel): String? = when (net)
     Network.Cellular -> vm.cell.collectAsStateWithLifecycle().value.state?.serving?.tech?.short
     Network.Gnss -> vm.gnss.collectAsStateWithLifecycle().value.let { "${it.used.size}/${it.visible.size} satellites" }
     Network.Sdr -> vm.tools.spectrum.let { if (it.running && it.tunedHz > 0) "%.1f MHz".format(java.util.Locale.getDefault(), it.tunedHz / 1e6) else null }
-    Network.WifiBt -> com.allnetworktools.data.Wardrive.state.collectAsStateWithLifecycle().value.let { if (it.running) S(R.string.wardriving_recording) else null }
 }
 
 @Composable

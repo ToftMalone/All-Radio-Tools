@@ -101,17 +101,6 @@ Every gain has an **automatic mode**, chosen by default, which picks the LNA and
 
 The decoders work with the **HackRF alone**: neither the phone's Wi-Fi nor its Bluetooth is used. The SDR card stays greyed out until a HackRF is plugged in over USB.
 
-### 🚗 Wi-Fi + Bluetooth: wardriving
-
-**Long-press the Wi-Fi card** (or Bluetooth), then tap the **+** that appears on the other one: the two cards slide together into a single tile, with a dock for the pair and **Wardriving** as its featured tool. The unlink button on the tile takes them apart again.
-
-- The WiGLE home screen: networks and devices new on this run, database total, GPS fix, last scan, then every Wi-Fi network and Bluetooth LE device heard, strongest first, with its maker (IEEE OUI register).
-- Recording runs in a **foreground service**: it goes on with the screen off and the app closed, until you stop it.
-- Everything stays in a database on the phone. **Upload to WiGLE.net** is manual only, with your account's API name and token (never your password).
-- Exclude a full MAC address or a maker prefix (OUI): it is neither shown nor recorded, and is erased from the database.
-- **Hidden cameras**: Wi-Fi networks and Bluetooth devices from camera makers or with camera names, a warm / cold signal to walk to one, and the video ports (RTSP, ONVIF, Hikvision, Dahua, XMEye) of the devices on the Wi-Fi network you are connected to. Clues, not proof: a wired camera sends nothing.
-- **Drone detector**: Remote ID (EU / US electronic identification) broadcast over Bluetooth LE (legacy and long range) and Wi-Fi (beacons, Wi-Fi Aware): drone position, height, speed, operator position and id, on a map, with a background engine that keeps listening with the app closed.
-
 ### 📤 Exports
 
 Only when you ask, to the location you choose:
@@ -144,7 +133,6 @@ No account, no ads, no trackers. Internet is used for updates, the speed test (C
 - The SDR is used **for reception only**. Follow your country's laws on listening to radio frequencies.
 - The Wi-Fi security tools (audit, rogue access points, man in the middle, port scan) are meant for **your own networks** or those you are allowed to test.
 - Pager messages (POCSAG) and walkie-talkie conversations (PMR446) are **private correspondence**: in many countries, France included, you may not pass on or use what you hear.
-- Wardriving records where networks are; once sent to WiGLE.net they are public. Exclude the addresses you do not want there.
 - "Unknown trackers" and "Jamming and spoofing" are there to **protect you**, not to track or disrupt others.
 
 ---
@@ -189,6 +177,5 @@ All Radio Tools is free software released under the [GNU General Public License 
 - [OnAir](https://github.com/adswill/OnAir) (GPL-3.0), whose decoders were ported for ISM sensors, FLARM, Wireless M-Bus, DSC, VDL Mode 2, DECT, DMR / dPMR, Sigfox, Horus, Mode A/C and CubeSat telemetry.
 - [gr-lora_sdr](https://github.com/tapparelj/gr-lora_sdr) (EPFL) for the LoRa receiver.
 - [mbelib](https://github.com/szechyjs/mbelib) (ISC) for the AMBE+2 voice decoder. AMBE+2 is covered by patents in some countries: the code is provided for research and education.
-- [WiGLE](https://wigle.net) for the wardriving file format and the upload API.
 - Google [GNSS Measurement Tools](https://github.com/google/gps-measurement-tools) for the pseudorange computation.
 - Roboto Flex, Google Sans Flex and Material Symbols for the interface.

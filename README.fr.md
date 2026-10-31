@@ -101,17 +101,6 @@ Chaque gain a un **mode automatique**, choisi par défaut, qui règle le LNA et 
 
 Les décodeurs fonctionnent avec le **HackRF seul** : ni le Wi-Fi ni le Bluetooth du téléphone ne sont utilisés. La carte SDR reste grisée tant qu'aucun HackRF n'est branché en USB.
 
-### 🚗 Wi-Fi + Bluetooth : wardriving
-
-**Appui long sur la carte Wi-Fi** (ou Bluetooth), puis touchez le **+** qui apparaît sur l'autre : les deux cartes glissent l'une vers l'autre et forment une seule case, avec un dock pour la paire et le **Wardriving** comme outil phare. Le bouton de séparation sur la case les désassemble.
-
-- L'écran d'accueil de WiGLE : réseaux et appareils nouveaux de la session, total de la base, position GPS, dernier scan, puis chaque réseau Wi-Fi et appareil Bluetooth LE entendu, du plus fort au plus faible, avec son constructeur (registre OUI de l'IEEE).
-- L'enregistrement tourne dans un **service de premier plan** : il continue écran éteint et application fermée, jusqu'à ce que vous l'arrêtiez.
-- Tout reste dans une base de données sur le téléphone. **L'envoi vers WiGLE.net** est uniquement manuel, avec le nom d'API et le jeton de votre compte (jamais votre mot de passe).
-- Excluez une adresse MAC complète ou un préfixe constructeur (OUI) : il n'est ni affiché ni enregistré, et il est effacé de la base.
-- **Caméras cachées** : réseaux Wi-Fi et appareils Bluetooth de fabricants de caméras ou portant un nom de caméra, un signal chaud / froid pour s'en approcher, et les ports vidéo (RTSP, ONVIF, Hikvision, Dahua, XMEye) des appareils du réseau Wi-Fi auquel vous êtes connecté. Des indices, pas des preuves : une caméra filaire n'émet rien.
-- **Détecteur de drones** : le Remote ID (signalement électronique européen et américain) diffusé en Bluetooth LE (classique et longue portée) et en Wi-Fi (balises, Wi-Fi Aware) : position, hauteur et vitesse du drone, position et identifiant du télépilote, sur une carte, avec un moteur qui continue d'écouter application fermée.
-
 ### 📤 Exports
 
 Uniquement quand vous le demandez, à l'emplacement que vous choisissez :
@@ -141,7 +130,6 @@ Aucun compte, aucune publicité, aucun traceur. Internet sert aux mises à jour,
 
 ## ⚖️ Usage responsable
 
-- Le wardriving enregistre où se trouvent les réseaux ; une fois envoyés à WiGLE.net, ils sont publics. Excluez les adresses que vous ne voulez pas y voir.
 - Le SDR est utilisé **en réception seulement**. Respectez la législation de votre pays sur l'écoute des fréquences.
 - Les outils de sécurité Wi-Fi (audit, faux points d'accès, homme du milieu, scan de ports) sont faits pour **vos propres réseaux** ou ceux que vous avez l'autorisation de tester.
 - Les messages de pagers (POCSAG) et les conversations de talkies-walkies (PMR446) sont des **correspondances privées** : dans de nombreux pays, dont la France, il est interdit de divulguer ou d'utiliser ce que vous entendez.
@@ -185,6 +173,5 @@ All Radio Tools est un logiciel libre publié sous la [licence publique généra
 - [OnAir](https://github.com/adswill/OnAir) (GPL-3.0), dont les décodeurs ont été portés pour les capteurs ISM, FLARM, Wireless M-Bus, ASN, VDL Mode 2, DECT, DMR / dPMR, Sigfox, Horus, Mode A/C et la télémesure CubeSat.
 - [gr-lora_sdr](https://github.com/tapparelj/gr-lora_sdr) (EPFL) pour le récepteur LoRa.
 - [mbelib](https://github.com/szechyjs/mbelib) (ISC) pour le décodeur vocal AMBE+2. L'AMBE+2 est couvert par des brevets dans certains pays : ce code est fourni à des fins de recherche et d'enseignement.
-- [WiGLE](https://wigle.net) pour le format de fichier du wardriving et l'API d'envoi.
 - Google [GNSS Measurement Tools](https://github.com/google/gps-measurement-tools) pour le calcul des pseudodistances.
 - Roboto Flex, Google Sans Flex et Material Symbols pour l'interface.

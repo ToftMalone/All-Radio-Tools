@@ -96,7 +96,7 @@ fun FloatingDock(
             }
         }
         val active = activeTab(page)
-        DockTab.entries.filter { (it != DockTab.Featured || network.dockShortcut != null) && (it != DockTab.Dashboard || network.hasDashboard) }.forEach { tab ->
+        DockTab.entries.filter { it != DockTab.Featured || network.dockShortcut != null }.forEach { tab ->
             val (icon, label) = when (tab) {
                 DockTab.Dashboard -> Sym.SpaceDashboard to "Dashboard"
                 DockTab.Featured -> network.dockShortcut!!.icon to network.featuredShort

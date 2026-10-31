@@ -29,7 +29,6 @@
     <!-- Handover journal: keeps watching the serving cell while the app is closed, until stopped. -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <!-- Tracker guard: keeps listening for tracker tags while the app is closed, until stopped. -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CONNECTED_DEVICE" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
@@ -78,16 +77,6 @@
 
         <service
             android:name=".data.CellWatchService"
-            android:exported="false"
-            android:foregroundServiceType="location" />
-
-        <service
-            android:name=".data.remoteid.RemoteIdService"
-            android:exported="false"
-            android:foregroundServiceType="connectedDevice" />
-
-        <service
-            android:name=".data.WardriveService"
             android:exported="false"
             android:foregroundServiceType="location" />
 

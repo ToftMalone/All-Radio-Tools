@@ -186,16 +186,6 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
                 else -> null
             },
             Network.Sdr to if (sdr == null) Blocker.SdrMissing else null,
-            // Wardriving needs both radios and the position of every sighting.
-            Network.WifiBt to when {
-                !g.radios.hasWifi || !g.radios.hasBluetooth -> Blocker.NoHardware
-                !wifi -> Blocker.WifiOff
-                !bt -> Blocker.BluetoothOff
-                !p.nearby -> Blocker.NearbyPermission
-                !p.location -> Blocker.LocationPermission
-                !loc -> Blocker.LocationOff
-                else -> null
-            },
         )
     }.stateIn(viewModelScope, SharingStarted.Eagerly, emptyMap())
 

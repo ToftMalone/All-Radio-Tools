@@ -32,11 +32,6 @@ import org.junit.Rule
 import androidx.compose.foundation.layout.size
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.background
-import androidx.compose.ui.test.onNodeWithText
-import androidx.compose.ui.test.performTouchInput
-import androidx.compose.ui.test.longClick
-import androidx.compose.ui.test.performClick
-import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -113,92 +108,6 @@ class ScreenshotTest {
         assertFalse("GNSS", Scenario.gnssStarted)
     }
     @Test fun homeSelected() = shot("03_home_wifi_selected", nav = NavState(Network.Wifi))
-    @Test fun homePair() = shot("03c_home_wifi_bt_pair", nav = NavState(Network.WifiBt))
-    /** Holding Wi-Fi puts a "+" on Bluetooth; tapping it assembles the pair. */
-    @Test fun homePairing() {
-        var vm: MainViewModel? = null
-        shot("03d_home_pairing") { vm = it }
-        compose.onNodeWithText("Wi-Fi").performTouchInput { longClick() }
-        repeat(10) { compose.mainClock.advanceTimeBy(100); org.robolectric.shadows.ShadowLooper.idleMainLooper(100, java.util.concurrent.TimeUnit.MILLISECONDS) }
-        val bitmap = compose.onRoot().captureToImage().asAndroidBitmap()
-        val dir = File(System.getProperty("screenshots.dir") ?: "build/screenshots")
-        File(dir, "03e_home_pairing_plus.png").outputStream().use { bitmap.compress(Bitmap.CompressFormat.PNG, 100, it) }
-        compose.onNodeWithText("Bluetooth").performClick()
-        repeat(10) { compose.mainClock.advanceTimeBy(100); org.robolectric.shadows.ShadowLooper.idleMainLooper(100, java.util.concurrent.TimeUnit.MILLISECONDS) }
-        assertEquals(Network.WifiBt, vm!!.nav.value.network)
-    }
-    @Test fun wardriving() = shot("W1_wardriving", dark = true, nav = NavState(Network.WifiBt, Page.ToolPage(Tool.Wardriving))) { wardriveDemo() }
-    @Test fun wardrivingLight() = shot("W2_wardriving_light", nav = NavState(Network.WifiBt, Page.ToolPage(Tool.Wardriving))) { wardriveDemo(fix = false) }
-    @Test fun wardrivingSettings() = shot("W3_wardriving_settings", nav = NavState(Network.WifiBt, Page.ToolPage(Tool.WardrivingSettings)))
-    @Test fun wardrivingTools() = shot("W4_wardriving_tools", nav = NavState(Network.WifiBt, Page.Tools))
-    @Test fun hiddenCam() {
-        runBlocking { app.settings.setTheme(ThemeMode.Light) }
-        fun s(src: com.allnetworktools.data.CamSource, addr: String, name: String, vendor: String?, rssi: Int?) = com.allnetworktools.data.HiddenCam.assess(src, addr, name, vendor, rssi)!!
-        val air = com.allnetworktools.data.HiddenCam.sort(listOf(
-            s(com.allnetworktools.data.CamSource.Wifi, "a0:11:22:33:44:55", "HDWiFiCam-8F3A", null, -47),
-            s(com.allnetworktools.data.CamSource.Wifi, "44:19:b6:12:34:56", "", "Hangzhou Hikvision Digital Technology Co.,Ltd.", -68),
-            s(com.allnetworktools.data.CamSource.Ble, "dc:23:50:75:9c:27", "TY", null, -61),
-            s(com.allnetworktools.data.CamSource.Wifi, "24:0a:c4:00:00:03", "ESP_1A2B3C", "Espressif Inc.", -79),
-        ))
-        val lan = com.allnetworktools.ui.pages.wardrive.HiddenCamController.LanState.Done(
-            "Airbnb-Guest", listOf(com.allnetworktools.data.HiddenCam.assessLan(com.allnetworktools.data.net.LanDevice("192.168.1.37", hostname = "IPC-salon"), setOf(80, 554, 8899))!!), 9,
-        )
-        val conn = com.allnetworktools.data.WifiConnection(
-            ssid = "Airbnb-Guest", bssid = null, rssi = -50, frequency = 2437, linkTx = null, linkRx = null, standard = 4, security = null,
-            ipv4 = "192.168.1.12", prefix = 24, gateway = "192.168.1.1", dns = emptyList(), ipv6 = null, connectedAtElapsed = null,
-        )
-        compose.mainClock.autoAdvance = false
-        compose.setContent {
-            com.allnetworktools.ui.theme.AntTheme(com.allnetworktools.data.AppSettings()) {
-                com.allnetworktools.ui.theme.ProvideAccent(Network.WifiBt) {
-                    androidx.compose.foundation.layout.Box(androidx.compose.ui.Modifier.background(com.allnetworktools.ui.theme.cs.surface)) {
-                        com.allnetworktools.ui.pages.wardrive.HiddenCamScreen(air, lan, conn, air.first().key, {}, {})
-                    }
-                }
-            }
-        }
-        repeat(20) { compose.mainClock.advanceTimeBy(100); org.robolectric.shadows.ShadowLooper.idleMainLooper(100, java.util.concurrent.TimeUnit.MILLISECONDS) }
-        val bitmap = compose.onRoot().captureToImage().asAndroidBitmap()
-        val dir = File(System.getProperty("screenshots.dir") ?: "build/screenshots").apply { mkdirs() }
-        File(dir, "W7_hidden_cam.png").outputStream().use { bitmap.compress(Bitmap.CompressFormat.PNG, 100, it) }
-    }
-    @Test fun remoteId() = shot("W5_remote_id", nav = NavState(Network.WifiBt, Page.ToolPage(Tool.RemoteId))) {
-        val now = System.currentTimeMillis()
-        val d = com.allnetworktools.data.remoteid.Drone(
-            key = "AA", id = "1581F5FKD229001234", idType = com.allnetworktools.data.remoteid.IdType.Serial,
-            uaType = com.allnetworktools.data.remoteid.UaType.Multirotor, status = com.allnetworktools.data.remoteid.Status.Airborne,
-            lat = 48.8584, lon = 2.2945, altGeoM = 152.0, heightM = 87.0, speedMs = 8.5, directionDeg = 45,
-            operatorLat = 48.8570, operatorLon = 2.2925, operatorId = "FRAoPeRaToR0001", euClass = 1, euCategory = 1,
-            rssi = -71, firstSeen = now - 60_000, lastSeen = now - 2_000,
-        )
-        com.allnetworktools.data.remoteid.RemoteIdHub.publish(com.allnetworktools.data.remoteid.RemoteIdState(running = true, drones = listOf(d), longRange = true))
-    }
-
-    private fun wardriveDemo(fix: Boolean = true) {
-        val now = System.currentTimeMillis()
-        fun w(name: String, mac: String, lvl: Int, f: Int, caps: String, vendor: String? = null) =
-            com.allnetworktools.data.WardriveRow(mac, name, com.allnetworktools.data.NetType.Wifi, lvl, f, com.allnetworktools.data.Wardrive.shortCaps(caps), vendor, com.allnetworktools.data.Wardrive.guardOf(caps), now)
-        fun b(name: String, mac: String, lvl: Int) =
-            com.allnetworktools.data.WardriveRow(mac, name, com.allnetworktools.data.NetType.Ble, lvl, 0, "BLE | Inconnu", null, com.allnetworktools.data.Guard.Ble, now)
-        val rows = listOf(
-            w("egym-guest", "ee:55:a8:a5:f6:5b", -39, 2412, "[WPA2-PSK-CCMP][RSN-PSK-CCMP][ESS][MFPC]"),
-            w("egym-client", "e2:55:a8:a5:f6:5b", -40, 2412, "[WPA2-PSK-CCMP][RSN-PSK-CCMP][ESS][MFPC]"),
-            w("", "da:55:88:a5:f6:5b", -47, 5700, "[WPA2-PSK-CCMP][RSN-PSK-CCMP][ESS]"),
-            b("TY", "dc:23:50:75:9c:27", -48),
-            w("Livebox-7A2C", "34:27:92:10:eb:55", -58, 5180, "[RSN-SAE-CCMP][ESS]", "Sagemcom Broadband SAS"),
-            b("DAVID-DELL", "54:c6:7c:54:ce:45", -56),
-            w("Freebox-10EB54", "e4:9e:12:12:eb:55", -66, 2437, "[WPA2-PSK-CCMP][RSN-PSK-CCMP][ESS][WPS]", "Freebox Sas"),
-            w("FreeWifi_secure", "e6:9e:12:12:eb:56", -67, 2437, "[ESS]"),
-            w("SFR_7111", "00:1d:6a:20:71:11", -78, 2462, "[WEP][ESS]", "Shenzhen SDMC Technology CO.,Ltd."),
-        ).sortedByDescending { it.level }
-        com.allnetworktools.data.Wardrive.update {
-            it.copy(
-                running = true, rows = rows, newWifi = 37, newBle = 12, db = com.allnetworktools.data.DbCounts(1_284, 316),
-                fix = if (fix) com.allnetworktools.data.WardriveFix(48.85341, 2.3488, 41.0, 4f, true) else null,
-                lastScanCount = 52, lastScanMs = 2600, queue = 0,
-            )
-        }
-    }
     @Test fun dockOnTools() = shot("06_dock_tools", nav = NavState(Network.Wifi, Page.Tools))
     @Test fun homeDark() = shot("04_home_gnss_dark", dark = true, nav = NavState(Network.Gnss))
     @Test fun homeAirplane() {

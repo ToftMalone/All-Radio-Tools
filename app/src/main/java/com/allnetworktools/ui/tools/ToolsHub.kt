@@ -19,7 +19,6 @@ class ToolsHub(private val app: AntApplication, private val scope: CoroutineScop
 
     val lan by lazy { LanController(scope, lanScanner) }
     val lanDevice by lazy { LanDeviceController(scope, lanScanner) }
-    val hiddenCam by lazy { com.allnetworktools.ui.pages.wardrive.HiddenCamController(scope, lanScanner) }
     val ping by lazy { PingController(scope) }
     val trace by lazy { TraceController(scope) }
     val ports by lazy { PortsController(scope) }

@@ -39,8 +39,6 @@ class MainActivity : ComponentActivity() {
         val tool = when (intent?.getStringExtra(EXTRA_OPEN)) {
             OPEN_TRACKERS -> Tool.UnknownTrackers
             OPEN_FAKE_CELLS -> Tool.FakeCells
-            OPEN_WARDRIVING -> Tool.Wardriving
-            OPEN_REMOTE_ID -> Tool.RemoteId
             else -> return
         }
         vm.navigate { it.copy(network = tool.network, page = Page.ToolPage(tool)) }
@@ -50,8 +48,6 @@ class MainActivity : ComponentActivity() {
         const val EXTRA_OPEN = "open"
         const val OPEN_TRACKERS = "trackers"
         const val OPEN_FAKE_CELLS = "fakecells"
-        const val OPEN_WARDRIVING = "wardriving"
-        const val OPEN_REMOTE_ID = "remoteid"
     }
 
     override fun onResume() {

@@ -14,15 +14,7 @@ enum class Network(
     Cellular(S(R.string.mobile_network), Sym.CellBars3, S(R.string.cells)),
     Gnss("GNSS", Sym.SatelliteAlt, S(R.string.sky)),
     Sdr("SDR", Sym.Antenna, S(R.string.spectrum)),
-    /** Wi-Fi and Bluetooth together, picked by holding both cards at once: no card of its own on the home grid. */
-    WifiBt("Wi-Fi + Bluetooth", Sym.DirectionsCar, "Wardriving"),
     ;
-
-    /** Has its own card on the home grid. */
-    val inGrid: Boolean get() = this != WifiBt
-
-    /** Dock tabs: the pair of radios has no dashboard of its own. */
-    val hasDashboard: Boolean get() = this != WifiBt
 
     // Getters rather than constructor arguments: Tool's entries reference Network, so eager
     // initialisation in both directions would leave one side null.
@@ -35,7 +27,6 @@ enum class Network(
             Cellular -> Tool.CellDetail
             Gnss -> Tool.Sky
             Sdr -> Tool.Spectrum
-            WifiBt -> Tool.Wardriving
         }
 
     /** Tool reachable directly from the dock. */
@@ -115,11 +106,6 @@ enum class Tool(
     Wmbus(Network.Sdr, "Wireless M-Bus", Sym.WaterDrop),
     Flarm(Network.Sdr, "FLARM", Sym.Flight),
     Ism(Network.Sdr, "ISM", Sym.Thermostat),
-
-    Wardriving(Network.WifiBt, "Wardriving", Sym.DirectionsCar, Sym.Settings, implemented = true),
-    RemoteId(Network.WifiBt, S(R.string.drone_detector), Sym.Drone),
-    HiddenCam(Network.WifiBt, S(R.string.cam_title), Sym.Videocam),
-    WardrivingSettings(Network.WifiBt, S(R.string.wardriving_settings), Sym.Settings, parent = ToolParent.Other(Wardriving)),
     ;
 
     val isDockShortcut: Boolean get() = network.dockShortcut == this

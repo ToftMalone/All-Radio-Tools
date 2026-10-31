@@ -222,7 +222,6 @@ private fun PageBody(vm: MainViewModel, net: Network, page: Page) {
             Network.Cellular -> CellDashboard(vm)
             Network.Gnss -> GnssDashboard(vm)
             Network.Sdr -> com.allnetworktools.ui.pages.sdr.SdrDashboard(vm)
-            Network.WifiBt -> ToolsPage(net, vm)
         }
         Page.Tools -> ToolsPage(net, vm)
         is Page.ToolPage -> when (page.tool) {
@@ -268,21 +267,6 @@ private fun PageBody(vm: MainViewModel, net: Network, page: Page) {
             Tool.Flarm -> com.allnetworktools.ui.pages.sdr.FlarmTool(vm)
             Tool.Ism -> com.allnetworktools.ui.pages.sdr.IsmTool(vm)
             Tool.Meteor -> com.allnetworktools.ui.pages.sdr.MeteorTool(vm)
-            Tool.Wardriving -> com.allnetworktools.ui.pages.wardrive.WardrivingTool(vm)
-            Tool.WardrivingSettings -> com.allnetworktools.ui.pages.wardrive.WardrivingSettingsTool(vm)
-            Tool.HiddenCam -> com.allnetworktools.ui.pages.wardrive.HiddenCamTool(vm)
-            Tool.RemoteId -> {
-                val perms by vm.permissions.collectAsStateWithLifecycle()
-                val positions by vm.positions.collectAsStateWithLifecycle()
-                val actions = LocalActions.current
-                val loc = positions.fused ?: positions.gnss ?: positions.network
-                com.allnetworktools.ui.pages.bt.RemoteIdTool(
-                    permitted = perms.nearby,
-                    me = loc?.let { it.latitude to it.longitude },
-                    onGrant = { actions.request(PermGroup.Nearby) },
-                    onNotifications = { if (PermGroup.Notifications !in perms) actions.request(PermGroup.Notifications) },
-                )
-            }
             Tool.WifiDirect -> {
                 val perms by vm.permissions.collectAsStateWithLifecycle()
                 val actions = LocalActions.current
