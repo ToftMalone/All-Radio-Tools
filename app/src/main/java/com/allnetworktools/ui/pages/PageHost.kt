@@ -222,6 +222,7 @@ private fun PageBody(vm: MainViewModel, net: Network, page: Page) {
             Network.Cellular -> CellDashboard(vm)
             Network.Gnss -> GnssDashboard(vm)
             Network.Sdr -> com.allnetworktools.ui.pages.sdr.SdrDashboard(vm)
+            Network.Nfc -> com.allnetworktools.ui.pages.nfc.NfcDashboard(vm)
         }
         Page.Tools -> ToolsPage(net, vm)
         is Page.ToolPage -> when (page.tool) {
@@ -267,6 +268,13 @@ private fun PageBody(vm: MainViewModel, net: Network, page: Page) {
             Tool.Flarm -> com.allnetworktools.ui.pages.sdr.FlarmTool(vm)
             Tool.Ism -> com.allnetworktools.ui.pages.sdr.IsmTool(vm)
             Tool.Meteor -> com.allnetworktools.ui.pages.sdr.MeteorTool(vm)
+            Tool.NfcRead -> com.allnetworktools.ui.pages.nfc.NfcReadTool(vm)
+            Tool.NfcWrite -> com.allnetworktools.ui.pages.nfc.NfcWriteTool(vm)
+            Tool.NfcCopy -> com.allnetworktools.ui.pages.nfc.NfcCopyTool(vm)
+            Tool.NfcErase -> com.allnetworktools.ui.pages.nfc.NfcEraseTool(vm)
+            Tool.NfcBank -> com.allnetworktools.ui.pages.nfc.NfcBankTool(vm)
+            Tool.NfcDump -> com.allnetworktools.ui.pages.nfc.NfcDumpTool(vm)
+            Tool.NfcAntenna -> com.allnetworktools.ui.pages.nfc.NfcAntennaTool(vm)
             Tool.WifiDirect -> {
                 val perms by vm.permissions.collectAsStateWithLifecycle()
                 val actions = LocalActions.current

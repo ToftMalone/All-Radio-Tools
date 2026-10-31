@@ -133,6 +133,24 @@ private fun groups(net: Network, connectedDevice: String?, servingLabel: String?
             ).sortedWith(compareBy(java.text.Collator.getInstance()) { it.title }),
         ),
     )
+    Network.Nfc -> listOf(
+        ToolGroup(
+            S(R.string.nfc_g_tags),
+            listOf(
+                ToolEntry(Tool.NfcWrite, S(R.string.nfc_write), S(R.string.nfc_write_sub)),
+                ToolEntry(Tool.NfcCopy, S(R.string.nfc_copy), S(R.string.nfc_copy_sub)),
+                ToolEntry(Tool.NfcErase, S(R.string.nfc_erase_lock), S(R.string.nfc_erase_sub)),
+            ),
+        ),
+        ToolGroup(
+            S(R.string.analysis),
+            listOf(
+                ToolEntry(Tool.NfcBank, S(R.string.nfc_bank), S(R.string.nfc_bank_sub)),
+                ToolEntry(Tool.NfcDump, S(R.string.nfc_memory), S(R.string.nfc_memory_sub)),
+                ToolEntry(Tool.NfcAntenna, S(R.string.nfc_antenna), S(R.string.nfc_antenna_sub)),
+            ),
+        ),
+    )
 }
 
 private fun featuredSubtitle(net: Network, servingLabel: String?) = when (net) {
@@ -141,6 +159,7 @@ private fun featuredSubtitle(net: Network, servingLabel: String?) = when (net) {
     Network.Cellular -> servingLabel ?: S(R.string.identifiers_and_measurements_of_the_connected)
     Network.Gnss -> S(R.string.sky_plot_and_world_map_of)
     Network.Sdr -> S(R.string.spectrum_and_waterfall_1_mhz_to)
+    Network.Nfc -> S(R.string.nfc_reader_sub)
 }
 
 @Composable
@@ -150,6 +169,7 @@ private fun featuredBadge(net: Network, vm: MainViewModel): String? = when (net)
     Network.Cellular -> vm.cell.collectAsStateWithLifecycle().value.state?.serving?.tech?.short
     Network.Gnss -> vm.gnss.collectAsStateWithLifecycle().value.let { "${it.used.size}/${it.visible.size} satellites" }
     Network.Sdr -> vm.tools.spectrum.let { if (it.running && it.tunedHz > 0) "%.1f MHz".format(java.util.Locale.getDefault(), it.tunedHz / 1e6) else null }
+    Network.Nfc -> vm.tools.nfc.history.size.takeIf { it > 0 }?.let { P(R.plurals.p_nfc_tags_read, it, it) }
 }
 
 @Composable

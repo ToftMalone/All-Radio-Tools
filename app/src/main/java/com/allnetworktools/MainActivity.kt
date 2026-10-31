@@ -53,5 +53,11 @@ class MainActivity : ComponentActivity() {
     override fun onResume() {
         super.onResume()
         vm.refreshPermissions()
+        (application as AntApplication).nfc.attach(this)
+    }
+
+    override fun onPause() {
+        (application as AntApplication).nfc.detach(this)
+        super.onPause()
     }
 }

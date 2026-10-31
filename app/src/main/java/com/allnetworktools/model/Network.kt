@@ -14,6 +14,7 @@ enum class Network(
     Cellular(S(R.string.mobile_network), Sym.CellBars3, S(R.string.cells)),
     Gnss("GNSS", Sym.SatelliteAlt, S(R.string.sky)),
     Sdr("SDR", Sym.Antenna, S(R.string.spectrum)),
+    Nfc("NFC", Sym.Nfc, S(R.string.nfc_featured_short)),
     ;
 
     // Getters rather than constructor arguments: Tool's entries reference Network, so eager
@@ -27,6 +28,7 @@ enum class Network(
             Cellular -> Tool.CellDetail
             Gnss -> Tool.Sky
             Sdr -> Tool.Spectrum
+            Nfc -> Tool.NfcRead
         }
 
     /** Tool reachable directly from the dock. */
@@ -86,6 +88,14 @@ enum class Tool(
     CompassCheck(Network.Gnss, S(R.string.compass_and_gnss_course), Sym.Explore, Sym.RestartAlt),
     GnssClock(Network.Gnss, S(R.string.atomic_clock), Sym.Schedule),
     SkyMask(Network.Gnss, S(R.string.sky_mask), Sym.Radar, Sym.RestartAlt),
+
+    NfcRead(Network.Nfc, S(R.string.nfc_reader), Sym.Nfc, implemented = true),
+    NfcWrite(Network.Nfc, S(R.string.nfc_write), Sym.Edit),
+    NfcCopy(Network.Nfc, S(R.string.nfc_copy), Sym.ContentCopy),
+    NfcErase(Network.Nfc, S(R.string.nfc_erase_lock), Sym.Delete),
+    NfcBank(Network.Nfc, S(R.string.nfc_bank), Sym.CreditCard),
+    NfcDump(Network.Nfc, S(R.string.nfc_memory), Sym.Memory),
+    NfcAntenna(Network.Nfc, S(R.string.nfc_antenna), Sym.Sensors),
 
     Spectrum(Network.Sdr, S(R.string.spectrum_analyser), Sym.BarChart),
     Adsb(Network.Sdr, "ADS-B", Sym.Flight),

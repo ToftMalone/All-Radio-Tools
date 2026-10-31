@@ -233,6 +233,7 @@ private fun description(n: Network) = when (n) {
     Network.Cellular -> S(R.string.cells_your_carrier_s_towers_and)
     Network.Gnss -> S(R.string.satellites_sky_position_comparison_and_passes)
     Network.Sdr -> S(R.string.hackrf_spectrum_aircraft_ships_radiosondes_fpv)
+    Network.Nfc -> S(R.string.nfc_home_description)
 }
 
 @Composable
@@ -269,6 +270,14 @@ private fun CardIcon(network: Network) {
                 PulseRing(roles.accent, 40.dp, periodMs = 1800)
                 Box(Modifier.size(48.dp).spinning(rememberSpin(24_000, reverse = true)).clip(RoundedCornerShape(16.dp)).background(roles.accent))
                 Symbol(Sym.Antenna, size = 26.dp, filled = true, tint = roles.onAccent)
+            }
+        }
+        Network.Nfc -> {
+            // Waves of the reader's field, around a tag that slowly turns.
+            Box(Modifier.size(56.dp), contentAlignment = Alignment.Center) {
+                PulseRing(roles.accent, 44.dp, periodMs = 1600)
+                Box(Modifier.size(46.dp).spinning(rememberSpin(20_000)).clip(cloverShape()).background(roles.accent))
+                Symbol(Sym.Nfc, size = 26.dp, filled = true, tint = roles.onAccent)
             }
         }
     }

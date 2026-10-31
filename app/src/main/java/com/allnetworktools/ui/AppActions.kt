@@ -105,6 +105,7 @@ class AppActions(
     fun openBluetoothSettings() = launch(Intent(Settings.ACTION_BLUETOOTH_SETTINGS))
     fun openAirplaneSettings() = launch(Intent(Settings.ACTION_AIRPLANE_MODE_SETTINGS))
     fun openLocationSettings() = launch(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
+    fun openNfcSettings() = launch(Intent(Settings.ACTION_NFC_SETTINGS))
     fun openNetworkSettings() = launch(Intent(Settings.ACTION_NETWORK_OPERATOR_SETTINGS))
 
     fun enableBluetooth() {
@@ -158,6 +159,7 @@ class AppActions(
         Blocker.NoSim -> openNetworkSettings()
         Blocker.LocationPermission -> request(PermGroup.Location)
         Blocker.LocationOff -> openLocationSettings()
+        Blocker.NfcOff -> openNfcSettings()
         Blocker.NoHardware, Blocker.SdrMissing -> Unit
     }
 }

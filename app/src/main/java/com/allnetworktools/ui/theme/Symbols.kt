@@ -218,4 +218,12 @@ object Sym {
     const val Deskphone = "deskphone"
     const val ConnectingAirports = "connecting_airports"
     const val SettingsInputAntenna = "settings_input_antenna"
+    const val Nfc = "nfc"
+    const val Contactless = "contactless"
+    const val CreditCard = "credit_card"
+    const val Train = "train"
+    const val Mail = "mail"
+    const val Apps = "apps"
+    const val TextFields = "text_fields"
+    const val IdCard = "id_card"
 }
