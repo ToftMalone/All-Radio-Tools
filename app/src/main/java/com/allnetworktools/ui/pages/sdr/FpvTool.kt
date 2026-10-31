@@ -179,7 +179,7 @@ class FpvController(private val repo: SdrRepository, private val scope: Coroutin
             try {
                 if (!repo.hasPermission(device) && !repo.requestPermission(device)) { error = S(R.string.usb_access_to_the_hackrf_refused); return@launch }
                 val r = withContext(Dispatchers.IO) { repo.open(device) } ?: run { error = S(R.string.could_not_open_the_hackrf); return@launch }
-                val rate = if (m == Mode.Digital || m == Mode.Rc) DIGITAL_RATE else ANALOG_RATE
+                val rate = when (m) { Mode.Digital -> DIGITAL_RATE; Mode.Rc -> RcBands.RATE; else -> ANALOG_RATE }
                 val lna = lnaGain
                 val vga = vgaGain
                 val withAmp = amp
@@ -199,8 +199,9 @@ class FpvController(private val repo: SdrRepository, private val scope: Coroutin
         }
     }
 
-    private class Pipe(val free: ArrayBlockingQueue<ByteArray>, val full: ArrayBlockingQueue<Pair<ByteArray, Int>>) {
-        fun take(ms: Long): Pair<ByteArray, Int>? = full.poll(ms, TimeUnit.MILLISECONDS)
+    /** Buffers from USB with their length and where they start in the stream (samples): when processing falls behind, buffers are dropped and the gap shows. */
+    private class Pipe(val free: ArrayBlockingQueue<ByteArray>, val full: ArrayBlockingQueue<Triple<ByteArray, Int, Long>>) {
+        fun take(ms: Long): Triple<ByteArray, Int, Long>? = full.poll(ms, TimeUnit.MILLISECONDS)
         fun give(b: ByteArray) { free.offer(b) }
 
         /** Throws away what arrived while the radio was still retuning. */
@@ -230,8 +231,8 @@ class FpvController(private val repo: SdrRepository, private val scope: Coroutin
         r.startRx(
             onSamples = { data, len ->
                 gain.feed(data, len)
-                usbBytes.addAndGet(len.toLong())
-                pipe.free.poll()?.let { b -> System.arraycopy(data, 0, b, 0, len); pipe.full.offer(b to len) }
+                val at = usbBytes.getAndAdd(len.toLong()) / 2
+                pipe.free.poll()?.let { b -> System.arraycopy(data, 0, b, 0, len); pipe.full.offer(Triple(b, len, at)) }
             },
             onError = { msg -> scope.launch { error = msg; stop() } },
         )
@@ -394,13 +395,13 @@ class FpvController(private val repo: SdrRepository, private val scope: Coroutin
                 tune(r, w.centreMhz, pipe)
                 val visit = dwell++
                 val start = System.currentTimeMillis()
-                val det = RcBurstDetector(DIGITAL_RATE.toDouble(), w.centreMhz * 1e6) { b ->
-                    rcTracker.add(w.band, visit, b, start + (b.timeS * 1000).toLong())
+                val det = RcBurstDetector(RcBands.RATE.toDouble(), w.centreMhz * 1e6) { b ->
+                    rcTracker.add(w.band, visit, b, System.currentTimeMillis())
                 }
                 val until = start + RC_DWELL_MS
                 while (dspRunning && System.currentTimeMillis() < until) {
                     val item = pipe.take(100) ?: continue
-                    det.feed(item.first, item.second)
+                    det.feed(item.first, item.second, item.third)
                     pipe.give(item.first)
                     tick()
                 }

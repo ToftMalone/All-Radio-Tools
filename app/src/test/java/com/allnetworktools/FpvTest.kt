@@ -39,7 +39,7 @@ class FpvTest {
     // ---- analogue video ------------------------------------------------------------------------------------------
 
     /** PAL-like luminance at [fs]: field sync with equalising and broad pulses, then lines with a horizontal ramp. */
-    private fun composite(fs: Double, fields: Int, lineUs: Double = 64.0): FloatArray {
+    private fun composite(fs: Double, fields: Int, lineUs: Double = 64.0, dark: IntRange = IntRange.EMPTY): FloatArray {
         val lineN = Math.round(lineUs * 1e-6 * fs).toInt()
         val half = lineN / 2
         fun us(v: Double) = Math.round(v * 1e-6 * fs).toInt()
@@ -49,11 +49,13 @@ class FpvTest {
             repeat(5) { pulseHalf(us(2.35)) }
             repeat(5) { pulseHalf(us(27.3)) }
             repeat(5) { pulseHalf(us(2.35)) }
-            repeat(305) {
+            repeat(305) { line ->
                 for (i in 0 until lineN) {
                     val t = i / fs * 1e6
                     out += when {
                         t < 4.7 -> -0.3f
+                        // A patch darker than black, as wide as a broad pulse: what an FM link shows under a dark object.
+                        line in dark && t in 20.0..45.0 -> -0.2f
                         t < 10.5 -> 0f
                         t < 62.5 -> 0.7f * ((t - 10.5) / 52.0).toFloat()
                         else -> 0f
@@ -112,6 +114,18 @@ class FpvTest {
             val good = picture.count { correlation(it.third) > 0.95 }
             assertTrue("ramp lines $good / ${picture.size}", good > picture.size * 0.9)
         }
+    }
+
+    /** Dark patches on consecutive lines look like broad pulses, but a line apart: they must not start a field. */
+    @Test fun darkPatchesDoNotRollThePicture() {
+        val fs = 16e6
+        val (d, lines, fields) = decode(fmModulate(composite(fs, 10, dark = 120..160), fs, 1, 0.0, 5.0), fs)
+        assertTrue("fields $fields", fields >= 8)
+        assertEquals("field syncs", fields + 1, d.stats.vSyncs)
+        assertTrue("lines per field ${d.stats.linesPerField}", d.stats.linesPerField in 300..312)
+        // Every field numbers its lines from its own start: the dark band sits at the same lines in each.
+        val darkLines = lines.filter { it.second in 100..200 && (it.third[150].toInt() and 0xFF) < 20 }.map { it.second }.toSet()
+        assertTrue("dark lines $darkLines", darkLines.isNotEmpty() && darkLines.all { it in 110..170 })
     }
 
     @Test fun decodesAtHalfTheInputRateToo() {

@@ -30,14 +30,15 @@ class RcBurst(
 )
 
 /**
- * Cuts complex I/Q (signed bytes) into short packets: a 256-point short-time spectrum, a noise floor tracked per bin,
+ * Cuts complex I/Q (signed bytes) into short packets: a short-time spectrum of 12.8 µs frames (256 points at 20 MS/s,
+ * 128 at 10 MS/s, so 78 kHz bins either way), a noise floor tracked per bin,
  * and bins rising [THRESHOLD_DB] above it grouped into bursts that may wander in frequency (a LoRa chirp sweeps its whole
  * band). Each burst gets its span, duration and modulation: an upward sweep that wraps around is LoRa, one narrow tone
  * that jumps is FSK or FLRC, the whole span lit at once is DSSS. Anything wider than [MAX_BW_HZ] (Wi-Fi, video) or longer
  * than [MAX_S] (a carrier) is not a remote-control packet and is dropped.
  */
 class RcBurstDetector(private val rate: Double, private val centreHz: Double, private val onBurst: (RcBurst) -> Unit) {
-    private val n = NFFT
+    private val n = if (rate <= 10.5e6) NFFT / 2 else NFFT
     private val fft = Fft(n)
     private val win = FloatArray(n) { (0.5 - 0.5 * cos(2 * PI * it / n)).toFloat() }
     private val re = FloatArray(n)
@@ -50,9 +51,17 @@ class RcBurstDetector(private val rate: Double, private val centreHz: Double, pr
     private val frameS = n / rate
     private var fill = 0
     private var frame = 0L
+    /** Position in the stream (samples) of the next sample, and of the current frame's first one. */
+    private var sampleAt = 0L
+    private var frameAt = 0L
+    private var fresh = true
+    /** First frame after samples were lost: a packet lit there began in the gap, so its length is unknown. */
+    private var resumed = -1L
+    private val order = IntArray(n) { (it + n / 2) % n }
 
-    private class Open(var lo: Int, var hi: Int, val start: Long, n: Int) {
+    private class Open(var lo: Int, var hi: Int, val start: Long, val startAt: Long, n: Int) {
         var last = start
+        var lastAt = startAt
         var widthSum = 0
         var frames = 0
         val peaks = FloatArray(MAX_PEAKS)
@@ -65,9 +74,20 @@ class RcBurstDetector(private val rate: Double, private val centreHz: Double, pr
 
     private val open = ArrayList<Open>()
 
-    fun feed(buf: ByteArray, len: Int) {
+    /**
+     * [at] is where [buf] starts in the stream, in samples. When samples were lost before it (the phone could not keep
+     * up), the frame in progress and the packets still open are dropped: a packet cut short would have a wrong length,
+     * and times stay true, so packet intervals are measured on the real clock.
+     */
+    fun feed(buf: ByteArray, len: Int, at: Long = -1) {
+        if (at >= 0 && at != sampleAt) {
+            if (frame > 0) { fill = 0; open.clear(); fresh = true; resumed = frame + 1 }
+            sampleAt = at
+        }
         var i = 0
         while (i + 1 < len) {
+            if (fill == 0) frameAt = sampleAt
+            sampleAt++
             re[fill] = buf[i] / 128f
             im[fill] = buf[i + 1] / 128f
             i += 2
@@ -81,10 +101,10 @@ class RcBurstDetector(private val rate: Double, private val centreHz: Double, pr
         // Natural order: bin 0 is the lowest frequency.
         frame++
         for (k in 0 until n) {
-            val j = (k + n / 2) % n
+            val j = order[k]
             val now = re[j] * re[j] + im[j] * im[j]
             // Two frames averaged: noise in a single bin swings too much to threshold on its own.
-            val p = 0.5f * (now + prev[k])
+            val p = if (fresh) now else 0.5f * (now + prev[k])
             prev[k] = now
             pow[k] = p
             val f = floor[k]
@@ -96,6 +116,7 @@ class RcBurstDetector(private val rate: Double, private val centreHz: Double, pr
                 else -> f + (p - f) * 0.0002f
             }
         }
+        fresh = false
         // Lit bins: well above the noise, and within 30 dB of the frame's strongest so a strong packet's spectral
         // skirts do not light the whole capture.
         var strongest = 0f
@@ -144,15 +165,14 @@ class RcBurstDetector(private val rate: Double, private val centreHz: Double, pr
         var pk = lo
         for (k in lo..hi) if (pow[k] / floor[k] > pow[pk] / floor[pk]) pk = k
         val o = open.firstOrNull { lo <= it.hi + SLACK && hi >= it.lo - SLACK }
-            ?: Open(lo, hi, frame, n).also { open += it }
-        o.lo = min(o.lo, lo); o.hi = max(o.hi, hi); o.last = frame
+            ?: Open(lo, hi, frame, frameAt, n).also { open += it }
+        o.lo = min(o.lo, lo); o.hi = max(o.hi, hi); o.last = frame; o.lastAt = frameAt
         if (o.framePeak < 0 || pow[pk] / floor[pk] > pow[o.framePeak] / floor[o.framePeak]) o.framePeak = pk
         for (k in lo..hi) o.maxRatio[k] = max(o.maxRatio[k], pow[k] / floor[k])
     }
 
     private fun close(o: Open) {
-        val frames = (o.last - o.start + 1).toInt()
-        val dur = frames * frameS
+        val dur = (o.lastAt - o.startAt) / rate + frameS
         val top = o.maxRatio.max()
         var lo = o.lo
         var hi = o.hi
@@ -161,7 +181,7 @@ class RcBurstDetector(private val rate: Double, private val centreHz: Double, pr
         while (hi > lo && o.maxRatio[hi] < top / 10) hi--
         val span = hi - lo + 1
         val bw = max(1, span - 1) * binHz
-        if (o.frames < MIN_FRAMES || dur > MAX_S || bw > MAX_BW_HZ) return
+        if (o.frames < MIN_FRAMES || dur > MAX_S || bw > MAX_BW_HZ || o.start == resumed) return
         val fill = (o.widthSum.toDouble() / o.frames / span).coerceAtMost(1.0)
         val mod = when {
             span >= 4 && chirpScore(o, span) >= CHIRP_SCORE && fill < 0.6 -> RcModulation.Chirp
@@ -169,7 +189,7 @@ class RcBurstDetector(private val rate: Double, private val centreHz: Double, pr
             else -> RcModulation.Fsk
         }
         val centre = centreHz + ((lo + hi) / 2.0 - n / 2) * binHz
-        onBurst(RcBurst(o.start * frameS, dur * 1e6, centre, bw, 10 * log10(top.toDouble()), mod))
+        onBurst(RcBurst(o.startAt / rate, dur * 1e6, centre, bw, 10 * log10(top.toDouble()), mod))
     }
 
     /**
@@ -206,15 +226,20 @@ class RcBurstDetector(private val rate: Double, private val centreHz: Double, pr
     }
 }
 
-/** Where to listen for remote-control links: 20 MS/s captures over each band. */
+/**
+ * Where to listen for remote-control links: 10 MS/s captures over each band. 20 MB/s of USB and a 128-point spectrum
+ * are what a phone keeps up with; at 20 MS/s it fell behind and lost most of the samples.
+ */
 object RcBands {
     class Window(val centreMhz: Double, val band: Int)
 
-    /** 24: 2400–2480 MHz, 868: 858–878, 915: 900–930; 0 for all. */
+    const val RATE = 10_000_000
+
+    /** 24: 2400–2480 MHz, 868: 863–873, 915: 900–930; 0 for all. */
     fun windows(band: Int): List<Window> = when (band) {
-        24 -> listOf(2410.0, 2430.0, 2450.0, 2470.0).map { Window(it, 24) }
+        24 -> (0 until 8).map { Window(2405.0 + 10 * it, 24) }
         868 -> listOf(Window(868.0, 868))
-        915 -> listOf(910.0, 920.0).map { Window(it, 915) }
+        915 -> listOf(905.0, 915.0, 925.0).map { Window(it, 915) }
         else -> windows(24) + windows(868) + windows(915)
     }
 

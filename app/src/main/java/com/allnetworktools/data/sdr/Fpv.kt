@@ -133,8 +133,11 @@ class AnalogVideoDecoder(
 
     private var polarity = 0
     private var lastHStart = -1L
+    /** Start of the last pulse taken as a line sync: half-line pulses and dark specks do not move it. */
+    private var lastLineStart = -1L
     private var broadCount = 0
-    private var lastBroadEnd = -1L
+    private var lastBroadStart = -1L
+    private var firstBroadStart = -1L
     private var fieldLine = -1
     private var field = 0
     private val pixels = ByteArray(WIDTH)
@@ -229,14 +232,23 @@ class AnalogVideoDecoder(
         val s = absStart + start
         when {
             us in 3.3..6.5 -> hSync(start, s, sgn, sHi)
-            us in 18.0..36.0 -> {
-                // The broad pulses of the field sync: three close together mean a new field.
-                if (broadCount == 0 || s - lastBroadEnd > 700) broadCount = 0
-                broadCount++
-                lastBroadEnd = s + width
+            us in 20.0..31.0 -> {
+                // The broad pulses of the field sync come every half line. A dark patch of the picture can be as wide,
+                // but it comes back a whole line later: counting it would start the field in the middle of the picture
+                // and roll the image.
+                val sinceUs = (s - lastBroadStart) / 8.0
+                if (lastBroadStart >= 0 && sinceUs in 28.0..36.0) broadCount++ else { broadCount = 1; firstBroadStart = s }
+                lastBroadStart = s
                 if (broadCount == 3) {
                     stats.vSyncs++
-                    if (fieldLine > 100) { stats.linesPerField = fieldLine; stats.fields++; field++; onField() }
+                    if (fieldLine > 100) { stats.linesPerField = fieldLine; stats.fields++; onField() }
+                    // Which field: the broad pulses start on a line boundary in one, half a line later in the other.
+                    val lineUs = if (stats.lineUs > 0) stats.lineUs else 64.0
+                    field = if (lastLineStart >= 0) {
+                        val lines = (firstBroadStart - lastLineStart) / 8.0 / lineUs
+                        val frac = lines - kotlin.math.floor(lines)
+                        if (frac in 0.25..0.75) 1 else 0
+                    } else field xor 1
                     fieldLine = -1
                 }
             }
@@ -246,17 +258,19 @@ class AnalogVideoDecoder(
     private fun hSync(start: Int, s: Long, sgn: Float, sHi: Float) {
         stats.hPulses++
         val gap = if (lastHStart >= 0) (s - lastHStart) / 8.0 else 0.0
-        val previous = lastHStart
         lastHStart = s
-        val atLine = gap in 62.0..66.0
-        if (atLine) {
+        if (gap in 62.0..66.0) {
             stats.hSpaced++
             stats.lineUs += (gap - stats.lineUs) * (if (stats.lineUs == 0.0) 1.0 else 0.02)
         }
-        // Pulses at the half-line spacing belong to the field sync, not to a picture line.
-        if (previous >= 0 && gap < 62.0) return
+        // Pulses closer than a line to the last line sync belong to the field sync (half-line pulses), or are a dark
+        // speck of the picture: neither starts a line, and neither moves the line timing.
+        val previous = lastLineStart
+        val lineGap = if (previous >= 0) (s - previous) / 8.0 else 0.0
+        if (previous >= 0 && lineGap < 62.0) return
+        lastLineStart = s
         // A lost pulse leaves a hole of a whole number of lines.
-        val missed = if (previous >= 0 && gap > 66.0 && gap < 330.0) Math.round(gap / 64.0).toInt() - 1 else 0
+        val missed = if (previous >= 0 && lineGap > 66.0 && lineGap < 330.0) Math.round(lineGap / 64.0).toInt() - 1 else 0
         fieldLine = if (fieldLine < 0) 0 else fieldLine + 1 + missed
         val first = start + (10.5 * 8).toInt()
         if (first + WIDTH > fill) return

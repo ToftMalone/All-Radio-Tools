@@ -7,6 +7,7 @@ import com.allnetworktools.data.sdr.RcLinkTracker
 import com.allnetworktools.data.sdr.RcModulation
 import java.util.Random
 import kotlin.math.PI
+import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.sin
 import org.junit.Assert.assertEquals
@@ -103,6 +104,75 @@ class RcLinkTest {
     }
 
     private val ism24 = (0 until 80).map { 2400.5e6 + it * 1e6 }
+
+    /**
+     * As the app listens: 10 MS/s, [windows] one after the other for [dwellS] each while the link goes on, and the
+     * phone keeping only [keep] buffers of 32768 samples out of every [of]: the others are lost, the rest carry their
+     * place in the stream.
+     */
+    private fun sweep(
+        windows: List<Double>, channels: List<Double>, periodS: Double, dwellS: Double, make: (Random) -> Packet,
+        keep: Int = 1, of: Int = 1, seed: Long = 11,
+    ): List<RcLink> {
+        val rate = 10e6
+        val rnd = Random(seed)
+        val tracker = RcLinkTracker()
+        val band = if (windows.first() > 2e9) 24 else if (windows.first() > 900e6) 915 else 868
+        var pktStart = 0.0
+        var pkt = make(rnd)
+        var pktCh = channels[rnd.nextInt(channels.size)]
+        var phase = 0.0
+        var at = 0L
+        val buf = ByteArray(65536)
+        var block = 0
+        windows.forEachIndexed { w, centre ->
+            val det = RcBurstDetector(rate, centre) { tracker.add(band, w, it, (it.timeS * 1000).toLong()) }
+            // The detector learns the noise floor while the radio settles on the window.
+            val end = at + (dwellS * rate).toLong()
+            while (at < end) {
+                var fill = 0
+                val first = at
+                while (fill < buf.size) {
+                    val t = at / rate
+                    while (t - pktStart >= periodS) { pktStart += periodS; pkt = make(rnd); pktCh = channels[rnd.nextInt(channels.size)] }
+                    var re = rnd.nextGaussian() * 0.02
+                    var im = rnd.nextGaussian() * 0.02
+                    val f = pkt.freq(t - pktStart)
+                    val off = pktCh - centre
+                    if (f != null && abs(off) < 4.75e6 && t > (end - dwellS * rate) / rate + 0.02) {
+                        phase += 2 * PI * (off + f) / rate
+                        re += 0.4 * cos(phase); im += 0.4 * sin(phase)
+                    }
+                    buf[fill++] = (re * 127).toInt().coerceIn(-127, 127).toByte()
+                    buf[fill++] = (im * 127).toInt().coerceIn(-127, 127).toByte()
+                    at++
+                }
+                if (block++ % of < keep) det.feed(buf, fill, first)
+            }
+        }
+        return tracker.links((at / rate * 1000).toLong())
+    }
+
+    /** What the phone does: 10 MS/s windows, and only a third of the samples processed. */
+    @Test fun expressLrsHeardThroughLostBuffers() {
+        val windows = (0 until 8).map { 2405e6 + it * 10e6 }
+        val l = sweep(windows + windows, ism24, 1 / 250.0, 1.5, { lora(812.5e3, 6, 14, it) }, keep = 1, of = 3).single()
+        assertEquals("ExpressLRS 2,4 GHz", l.protocol)
+        assertEquals("250 Hz", l.variant)
+        assertTrue(l.channels >= 8)
+    }
+
+    @Test fun flrcHeardThroughLostBuffers() {
+        val windows = (0 until 8).map { 2405e6 + it * 10e6 }
+        val l = sweep(windows, ism24, 1 / 500.0, 1.5, { fsk(1.3e6, 330e3, 120, it) }, keep = 1, of = 2).single()
+        assertEquals("F500 (FLRC)", l.variant)
+    }
+
+    @Test fun crossfireAt10MSps() {
+        val ch = (0 until 20).map { 860.2e6 + it * 0.5e6 }
+        val l = sweep(listOf(865e6, 865e6), ch, 1 / 150.0, 1.5, { fsk(85e3, 50e3, 100, it) }, keep = 2, of = 3).single()
+        assertEquals("TBS Crossfire", l.protocol)
+    }
 
     @Test fun expressLrsLora24() {
         val (bursts, links) = run(2430e6, ism24, 1 / 250.0, 1.6, { lora(812.5e3, 6, 14, it) })
