@@ -181,7 +181,7 @@ object Emv {
         // Get Processing Options, then the records of its file locator.
         val pdol = fci.find(0x9F38)?.value?.let(::dol).orEmpty()
         val data = pdolData(pdol, today, random)
-        val gpo = io.send(byteArrayOf(0x80.toByte(), 0xA8.toByte(), 0x00, 0x00, (data.size + 2).toByte(), 0x83, data.size.toByte()) + data + byteArrayOf(0x00))
+        val gpo = io.send(byteArrayOf(0x80.toByte(), 0xA8.toByte(), 0x00, 0x00, (data.size + 2).toByte(), 0x83.toByte(), data.size.toByte()) + data + byteArrayOf(0x00))
         val afl = ArrayList<IntArray>()
         if (ok(gpo)) {
             val g = body(gpo)

@@ -64,7 +64,7 @@ object Ndef {
             r.tnf == NdefRecord.TNF_WELL_KNOWN && r.type.contentEquals(NdefRecord.RTD_TEXT) -> text(r.payload)
             r.tnf == NdefRecord.TNF_WELL_KNOWN && r.type.contentEquals(NdefRecord.RTD_SMART_POSTER) ->
                 runCatching { NdefMessage(r.payload).records.map(::parse).firstOrNull { it is NdefContent.Url || it is NdefContent.Phone } }.getOrNull()
-                    ?: NdefContent.Other(r.tnf, "Sp", r.payload.size)
+                    ?: NdefContent.Other(r.tnf.toInt(), "Sp", r.payload.size)
             (r.tnf == NdefRecord.TNF_WELL_KNOWN && r.type.contentEquals(NdefRecord.RTD_URI)) || r.tnf == NdefRecord.TNF_ABSOLUTE_URI ->
                 uri(r.toUri()?.toString() ?: String(r.payload, Charsets.UTF_8))
             r.tnf == NdefRecord.TNF_MIME_MEDIA -> when (type.lowercase()) {
@@ -73,7 +73,7 @@ object Ndef {
                 else -> NdefContent.Mime(type, r.payload.size, if (type.startsWith("text/")) String(r.payload, Charsets.UTF_8).take(200) else null)
             }
             r.tnf == NdefRecord.TNF_EXTERNAL_TYPE && type == "android.com:pkg" -> NdefContent.App(String(r.payload, Charsets.UTF_8))
-            else -> NdefContent.Other(r.tnf, type, r.payload.size)
+            else -> NdefContent.Other(r.tnf.toInt(), type, r.payload.size)
         }
     }
 
