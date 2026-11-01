@@ -54,8 +54,124 @@ object Rs41 {
         return r
     }
 
-    /** Frame length announced by the byte before the first block. */
-    fun length(frame: ByteArray): Int = if ((frame[0x38].toInt() and 0xFF) == 0xF0) EXT_LEN else STD_LEN
+    /** Frame length announced by the byte before the first block: 0x0F or 0xF0, whichever is nearer bit for bit. */
+    fun length(frame: ByteArray): Int {
+        val b = frame[0x38].toInt() and 0xFF
+        return if (Integer.bitCount(b xor 0xF0) < Integer.bitCount(b xor 0x0F)) EXT_LEN else STD_LEN
+    }
+
+    // Reed-Solomon RS(255, 231) over GF(2^8) with x^8+x^4+x^3+x^2+1, roots α^0..α^23, as rs41mod uses it. Two
+    // codewords are interleaved: the even and odd bytes from 0x38 to the end of a long frame (a short one is zero
+    // padded), with their 24 parity bytes each at 0x08 and 0x20. Codeword byte i is the coefficient of x^i.
+    private const val RS_R = 24
+    private const val RS_K = 231
+    private const val MSG_POS = 0x38
+    private const val PAR_POS = 0x08
+    private val EXP = IntArray(512)
+    private val LOG = IntArray(256)
+    private val GEN: IntArray
+
+    init {
+        var x = 1
+        for (i in 0 until 255) { EXP[i] = x; LOG[x] = i; x = x shl 1; if (x and 0x100 != 0) x = x xor 0x11D }
+        for (i in 255 until 512) EXP[i] = EXP[i - 255]
+        var g = intArrayOf(1)
+        for (i in 0 until RS_R) {
+            val n = IntArray(g.size + 1)
+            for (k in g.indices) { n[k + 1] = n[k + 1] xor g[k]; n[k] = n[k] xor mul(g[k], EXP[i]) }
+            g = n
+        }
+        GEN = g
+    }
+
+    private fun mul(a: Int, b: Int) = if (a == 0 || b == 0) 0 else EXP[LOG[a] + LOG[b]]
+    private fun inv(a: Int) = EXP[255 - LOG[a]]
+    private fun pow(i: Int) = EXP[((i % 255) + 255) % 255]
+
+    /** The 24 parity bytes of a 231-byte message (for tests and for checking). */
+    fun rsParity(msg: IntArray): IntArray {
+        val r = IntArray(255)
+        for (i in 0 until RS_K) r[RS_R + i] = msg[i]
+        for (d in 254 downTo RS_R) {
+            val c = r[d]
+            if (c != 0) for (k in 0..RS_R) r[d - RS_R + k] = r[d - RS_R + k] xor mul(c, GEN[k])
+        }
+        return r.copyOf(RS_R)
+    }
+
+    /** Corrects up to 12 bad bytes of [cw] in place; returns how many were bad, or −1 if it cannot. */
+    fun rsDecode(cw: IntArray): Int {
+        val s = IntArray(RS_R) { j -> var v = 0; for (i in 0 until 255) if (cw[i] != 0) v = v xor mul(cw[i], pow(i * j)); v }
+        if (s.all { it == 0 }) return 0
+        // Berlekamp-Massey for the error locator.
+        var c = IntArray(RS_R + 1).also { it[0] = 1 }
+        var bb = IntArray(RS_R + 1).also { it[0] = 1 }
+        var l = 0
+        var m = 1
+        var bd = 1
+        for (n in 0 until RS_R) {
+            var d = s[n]
+            for (i in 1..l) d = d xor mul(c[i], s[n - i])
+            if (d == 0) { m++; continue }
+            val coef = mul(d, inv(bd))
+            val t = c.copyOf()
+            for (i in 0..RS_R - m) c[i + m] = c[i + m] xor mul(coef, bb[i])
+            if (2 * l <= n) { l = n + 1 - l; bb = t; bd = d; m = 1 } else m++
+        }
+        if (l > RS_R / 2) return -1
+        // Error evaluator Ω = S·Λ mod x^24, then Chien search and Forney (first root α^0: e = X·Ω(X⁻¹)/Λ'(X⁻¹)).
+        val om = IntArray(RS_R)
+        for (i in 0 until RS_R) for (k in 0..minOf(i, l)) om[i] = om[i] xor mul(c[k], s[i - k])
+        val pos = ArrayList<Int>()
+        val vals = ArrayList<Int>()
+        for (i in 0 until 255) {
+            val xi = pow(-i)
+            var lam = 0
+            var xp = 1
+            for (k in 0..l) { lam = lam xor mul(c[k], xp); xp = mul(xp, xi) }
+            if (lam != 0) continue
+            var o = 0
+            xp = 1
+            for (k in 0 until RS_R) { o = o xor mul(om[k], xp); xp = mul(xp, xi) }
+            var dl = 0
+            xp = 1
+            for (k in 1..l step 2) { dl = dl xor mul(c[k], xp); xp = mul(xp, mul(xi, xi)) }
+            if (dl == 0) return -1
+            pos += i
+            vals += mul(pow(i), mul(o, inv(dl)))
+        }
+        if (pos.size != l) return -1
+        val fixed = cw.copyOf()
+        for (k in pos.indices) fixed[pos[k]] = fixed[pos[k]] xor vals[k]
+        for (j in 0 until RS_R) { var v = 0; for (i in 0 until 255) if (fixed[i] != 0) v = v xor mul(fixed[i], pow(i * j)); if (v != 0) return -1 }
+        fixed.copyInto(cw)
+        return l
+    }
+
+    /**
+     * Applies the frame's Reed-Solomon correction. Returns the corrected frame and how many bytes were mended, or
+     * null if either codeword is beyond repair (the blocks' own CRCs then decide what is kept).
+     */
+    fun correct(frame: ByteArray): Pair<ByteArray, Int>? {
+        if (frame.size < STD_LEN) return null
+        val buf = frame.copyOf(EXT_LEN)
+        var total = 0
+        for (w in 0..1) {
+            val cw = IntArray(255)
+            for (i in 0 until RS_R) cw[i] = buf[PAR_POS + RS_R * w + i].toInt() and 0xFF
+            for (i in 0 until RS_K) cw[RS_R + i] = buf[MSG_POS + 2 * i + w].toInt() and 0xFF
+            val before = cw.copyOf()
+            val n = rsDecode(cw)
+            if (n < 0) return null
+            for (i in 0 until 255) if (cw[i] != before[i]) {
+                val at = if (i < RS_R) PAR_POS + RS_R * w + i else MSG_POS + 2 * (i - RS_R) + w
+                if (at >= frame.size) return null // a "fix" in the padding of a short frame: not this frame
+                buf[at] = cw[i].toByte()
+            }
+            total += n
+        }
+        return buf.copyOf(frame.size) to total
+    }
 
     private fun u16(b: ByteArray, o: Int) = (b[o].toInt() and 0xFF) or ((b[o + 1].toInt() and 0xFF) shl 8)
     private fun s16(b: ByteArray, o: Int) = u16(b, o).toShort().toInt()
@@ -75,8 +191,12 @@ object Rs41 {
         return Triple(Math.toDegrees(phi), Math.toDegrees(lam), p / cos(phi) - r)
     }
 
-    /** Parses a descrambled frame; blocks with a bad CRC are skipped. Null if no block was valid. */
-    fun parse(frame: ByteArray): SondeFrame? {
+    /**
+     * Parses a descrambled frame after its Reed-Solomon correction; blocks whose CRC still fails are skipped. Null if
+     * no block was valid.
+     */
+    fun parse(raw: ByteArray): SondeFrame? {
+        val frame = correct(raw)?.first ?: raw
         val len = minOf(length(frame), frame.size)
         var pos = 0x39
         var serial: String? = null

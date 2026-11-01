@@ -10,6 +10,7 @@ import kotlin.random.Random
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class HorusTest {
@@ -36,6 +37,52 @@ class HorusTest {
             assertEquals(4, fixed)
         }
         assertNull(Horus.parse(ByteArray(22)))
+    }
+
+    private fun hex(s: String) = ByteArray(s.length / 2) { s.substring(2 * it, 2 * it + 2).toInt(16).toByte() }
+
+    @Test fun realV1FrameFromHorusdemodlib() {
+        // The coded frame and its payload from horusdemodlib's own tests (encoder.py, CMakeLists.txt): its last Golay
+        // word holds only 8 data bits, which horus_l2.c places one bit up.
+        val coded = hex("2424C06B300D0415C5DBD332EFD7C190D7AF7F3C2891DE9F4BA1EB2B437BE1E2D8419D3DC9E44FDF78DAA07A98")
+        val payload = hex("000900071E2A000000000000000000000000259A6B14")
+        val (back, fixed) = Horus.decodeFrame(coded.copyOfRange(2, coded.size), Horus.V1_BYTES)
+        assertEquals(0, fixed)
+        assertTrue(payload.contentEquals(back))
+        assertTrue(coded.contentEquals(Horus.encodeFrame(payload)))
+        val k = Horus.parse(back)!!
+        assertEquals(9, k.seq)
+        assertEquals(37, k.tempC)
+    }
+
+    /** Frames sent back to back with no 0x1B preamble between them, as horusdemodlib's v2 sample recording has them. */
+    @Test fun framesWithoutPreamble() {
+        val fs = 10_000.0
+        val bits = ArrayList<Int>()
+        fun bytes(b: ByteArray) { for (x in b) for (k in 7 downTo 0) bits += (x.toInt() shr k) and 1 }
+        for (s in 1..4) bytes(Horus.encodeFrame(Horus.build(256, s, 48.1, -1.7, 12_000 + s, 30, 9, -20, 3.0, true)))
+        val syms = bits.chunked(2).map { (it[0] shl 1) or it[1] }
+        val rnd = Random(9)
+        val spb = (fs / 100).toInt()
+        val lead = 30_000
+        val n = lead + syms.size * spb + 5000
+        val re = FloatArray(n); val im = FloatArray(n)
+        var ph = 0.0
+        for (i in 0 until n) {
+            val j = i - lead
+            // A steady carrier before the frames lets the tones be learnt (one of them, as payloads idle on one tone).
+            val s = if (j < 0) j / spb and 3 else if (j / spb < syms.size) syms[j / spb] else -1
+            if (s >= 0) {
+                ph += 2 * PI * (-420.0 + s * 270.0) / fs
+                re[i] = cos(ph).toFloat() * 0.3f; im[i] = sin(ph).toFloat() * 0.3f
+            }
+            re[i] += (rnd.nextFloat() - 0.5f) * 0.25f; im[i] += (rnd.nextFloat() - 0.5f) * 0.25f
+        }
+        val got = ArrayList<HorusPacket>()
+        val d = HorusDemodulator(fs) { got += it }
+        var i = 0
+        while (i < n) { val k = minOf(2000, n - i); d.feed(re.copyOfRange(i, i + k), im.copyOfRange(i, i + k), k); i += k }
+        assertEquals(got.toString(), listOf(1, 2, 3, 4), got.map { it.seq })
     }
 
     /** 100 baud 4FSK, 270 Hz apart, with noise and a frequency offset, at 10 kS/s. */

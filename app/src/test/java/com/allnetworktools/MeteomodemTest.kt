@@ -77,6 +77,32 @@ class MeteomodemTest {
         assertFalse(Meteomodem.valid(bad))
     }
 
+    @Test fun m10PlusWithItsGtopReceiver() {
+        // Météo-France's current M10s: Gtop GPS, position in 1e-6 degrees, altitude in cm, velocity in cm/s.
+        val f = ByteArray(Meteomodem.M10_LEN)
+        f[0] = 0x64; f[1] = 0xAF.toByte()
+        f.be(0x04, 4, (44.8378 * 1e6).roundToInt().toLong())
+        f.be(0x08, 4, (-0.5792 * 1e6).roundToInt().toLong())
+        f.be(0x0C, 3, 2_345_678)
+        f.be(0x0F, 2, 0) // east
+        f.be(0x11, 2, -800) // 8 m/s south
+        f.be(0x13, 2, 512) // climbing 5.12 m/s
+        f[0x45] = 0x2F; f[0x46] = 0x02 // ADC 559: 3.70 V
+        byteArrayOf(0x52, 0x00, 0x85.toByte(), 0xC2.toByte(), 0x5E).copyInto(f, 0x5D)
+        val r = Meteomodem.parse(seal(f))!!
+        assertEquals("M10+", r.model)
+        assertEquals(44.8378, r.lat!!, 1e-6)
+        assertEquals(-0.5792, r.lon!!, 1e-6)
+        assertEquals(23_456.78, r.altitudeM!!, 1e-6)
+        assertEquals(8.0, r.speedMs!!, 1e-9)
+        assertEquals(180.0, r.courseDeg!!, 1e-9)
+        assertEquals(5.12, r.climbMs!!, 1e-9)
+        assertEquals(3.70, r.batteryV!!, 0.005)
+        // Before its first fix the receiver sends zeros: no position then.
+        val cold = ByteArray(Meteomodem.M10_LEN).also { it[0] = 0x64; it[1] = 0xAF.toByte() }
+        assertEquals(null, Meteomodem.parse(seal(cold))!!.lat)
+    }
+
     /** Over the air: each bit as two half-bit symbols (different for 1), FSK, noise, at 100 kS/s complex baseband. */
     private fun air(frames: List<Pair<ByteArray, Double>>, fs: Double, polarity: Int, seed: Long = 3): Pair<FloatArray, FloatArray> {
         val rnd = Random(seed)

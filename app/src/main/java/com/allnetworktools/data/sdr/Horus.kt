@@ -113,6 +113,18 @@ object Horus {
         }
     }
 
+    /**
+     * The 12 data bits of Golay word [c] over the first [n] bytes of [b], MSB first. The last word, when the payload
+     * does not fill it, carries its r bits right-aligned and shifted up one, as horus_l2.c encodes it
+     * (`golay23_syndrome(ingolay << 12)` after `ingolay >>= 1`): r bits, then a single zero.
+     */
+    private fun dataWord(b: ByteArray, n: Int, c: Int): Int {
+        val r = minOf(12, 8 * n - 12 * c)
+        var d = 0
+        for (k in 0 until r) d = (d shl 1) or bitMsb(b, c * 12 + k)
+        return if (r == 12) d else d shl 1
+    }
+
     /** Unique word, payload, Golay parity, interleaved and scrambled: what a payload sends after its preamble. */
     fun encodeFrame(payload: ByteArray): ByteArray {
         val n = payload.size
@@ -123,9 +135,7 @@ object Horus {
         payload.copyInto(f, 2)
         var pbit = (2 + n) * 8
         for (c in 0 until cw) {
-            var d = 0
-            for (k in 0 until 12) { val bi = c * 12 + k; d = (d shl 1) or (if (bi < 8 * n) bitMsb(payload, bi) else 0) }
-            val par = golayEncode(d) and 0x7FF
+            val par = golayEncode(dataWord(payload, n, c)) and 0x7FF
             for (k in 10 downTo 0) { if ((par shr k) and 1 != 0) f[pbit shr 3] = (f[pbit shr 3].toInt() or (0x80 ushr (pbit and 7))).toByte(); pbit++ }
         }
         interleave(f, 2, total - 2, false)
@@ -144,12 +154,16 @@ object Horus {
         var fixes = 0
         var pbit = n * 8
         for (c in 0 until cw) {
-            var w = 0
-            for (k in 0 until 12) { val bi = c * 12 + k; w = (w shl 1) or (if (bi < 8 * n) bitMsb(d, bi) else 0) }
+            var w = dataWord(d, n, c)
             for (k in 0 until 11) { w = (w shl 1) or bitMsb(d, pbit); pbit++ }
             val (dat, fx) = golayDecode(w)
             fixes += fx
-            for (k in 0 until 12) { val bi = c * 12 + k; if (bi < 8 * n && (dat shr (11 - k)) and 1 != 0) out[bi shr 3] = (out[bi shr 3].toInt() or (0x80 ushr (bi and 7))).toByte() }
+            val r = minOf(12, 8 * n - 12 * c)
+            for (k in 0 until r) {
+                val bi = c * 12 + k
+                val shift = if (r == 12) 11 - k else r - k // the short last word sits one bit up, as in horus_l2.c
+                if ((dat shr shift) and 1 != 0) out[bi shr 3] = (out[bi shr 3].toInt() or (0x80 ushr (bi and 7))).toByte()
+            }
         }
         return out to fixes
     }
@@ -378,7 +392,10 @@ class HorusDemodulator(private val fs: Double = 10_000.0, private val onPacket: 
             val bit = (base + syms.size - 1) * 2 + b
             for (v in 0 until 4) {
                 reg[v] = ((reg[v] shl 1) or bitOf(v, bit)) and 0xFFFFFF
-                if (Integer.bitCount(reg[v] xor 0x1B2424) <= 3 && pend.none { it.start == bit + 1 }) pend += Pend(v, bit + 1)
+                // The unique word "$$", after the 0x1B preamble when there is one (a few bit errors then), or alone
+                // (one bit error at most), as payloads sending frames back to back do.
+                val sync = Integer.bitCount(reg[v] xor 0x1B2424) <= 3 || Integer.bitCount((reg[v] and 0xFFFF) xor 0x2424) <= 1
+                if (sync && pend.none { it.start == bit + 1 }) pend += Pend(v, bit + 1)
             }
             nbits = bit + 1
         }
@@ -427,9 +444,16 @@ class HorusReceiver(onFrame: (SondeFrame) -> Unit) {
     private val demod = HorusDemodulator(10_000.0) { p ->
         val now = System.currentTimeMillis()
         val prev = last[p.payloadId]
-        last[p.payloadId] = p.altitudeM to now
+        if (p.lat != 0.0 || p.lon != 0.0) last[p.payloadId] = p.altitudeM to now
         val climb = prev?.let { (a, t) -> if (now - t in 1_000..600_000) (p.altitudeM - a) / ((now - t) / 1000.0) else null }
-        onFrame(SondeFrame("Horus", "ID ${p.payloadId}", p.seq, p.batteryV, p.lat, p.lon, p.altitudeM, p.speedKmh / 3.6, null, climb, p.sats))
+        // Before its first GPS fix a payload sends 0, 0: no position then, rather than a point off the coast of Africa.
+        val fix = p.lat != 0.0 || p.lon != 0.0
+        onFrame(
+            SondeFrame(
+                "Horus", "ID ${p.payloadId}", p.seq, p.batteryV, p.lat.takeIf { fix }, p.lon.takeIf { fix }, p.altitudeM.takeIf { fix },
+                (p.speedKmh / 3.6).takeIf { fix }, null, climb.takeIf { fix }, p.sats,
+            ),
+        )
     }
 
     fun feed(re: FloatArray, im: FloatArray, n: Int) {

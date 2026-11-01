@@ -84,12 +84,26 @@ object Meteomodem {
                 val sats = u8(f, 0x1E)
                 val ok = u8(f, 0x02) == 0x20 && lat in -90.0..90.0 && lon in -180.0..180.0 && alt in -500.0..60_000.0
                 SondeFrame(
-                    "M10", m10Serial(f), u8(f, 0x62), null,
+                    "M10", m10Serial(f), u8(f, 0x62), m10Battery(f),
                     lat.takeIf { ok }, lon.takeIf { ok }, alt.takeIf { ok },
                     sqrt(ve * ve + vn * vn).takeIf { ok }, course(ve, vn).takeIf { ok }, vu.takeIf { ok }, sats.takeIf { ok },
                 )
             }
-            0xAF -> SondeFrame("M10+", m10Serial(f), u8(f, 0x62), null, null, null, null, null, null, null, null)
+            0xAF -> {
+                // Gtop GPS: position in 1e-6 degrees, altitude in cm (24 bits, signed), ENU velocity in cm/s.
+                val lat = be32(f, 0x04) / 1e6
+                val lon = be32(f, 0x08) / 1e6
+                val alt = (be24(f, 0x0C).let { if (it and 0x800000 != 0) it - 0x1000000 else it }) / 100.0
+                val ve = be16s(f, 0x0F) / 100.0
+                val vn = be16s(f, 0x11) / 100.0
+                val vu = be16s(f, 0x13) / 100.0
+                val ok = lat in -90.0..90.0 && lon in -180.0..180.0 && (lat != 0.0 || lon != 0.0) && alt in -500.0..60_000.0
+                SondeFrame(
+                    "M10+", m10Serial(f), u8(f, 0x62), m10Battery(f),
+                    lat.takeIf { ok }, lon.takeIf { ok }, alt.takeIf { ok },
+                    sqrt(ve * ve + vn * vn).takeIf { ok }, course(ve, vn).takeIf { ok }, vu.takeIf { ok }, null,
+                )
+            }
             0x20 -> {
                 // Position in 1e-6 degrees, altitude in cm, velocities in cm/s.
                 val lat = be32(f, 0x1C) / 1e6
@@ -100,7 +114,7 @@ object Meteomodem {
                 val vu = be16s(f, 0x18) / 100.0
                 val ok = lat in -90.0..90.0 && lon in -180.0..180.0 && (lat != 0.0 || lon != 0.0) && alt < 60_000
                 SondeFrame(
-                    "M20", m20Serial(f), u8(f, 0x15), null,
+                    "M20", m20Serial(f), u8(f, 0x15), u8(f, 0x26) * 3.3 / 255, // upper 8 bits of the ADC
                     lat.takeIf { ok }, lon.takeIf { ok }, alt.takeIf { ok },
                     sqrt(ve * ve + vn * vn).takeIf { ok }, course(ve, vn).takeIf { ok }, vu.takeIf { ok }, null,
                 )
@@ -108,6 +122,9 @@ object Meteomodem {
             else -> null
         }
     }
+
+    /** Battery voltage of an M10 (four AA cells): a 10-bit ADC reading behind a 2.709 divider, 2.5 V full scale. */
+    fun m10Battery(f: ByteArray): Double = ((u8(f, 0x46) shl 8) or u8(f, 0x45)) * 2.709 * 2.5 / 1023
 
     /** Serial number as printed on the M10 label, e.g. "805-2-31234". */
     fun m10Serial(f: ByteArray): String {
