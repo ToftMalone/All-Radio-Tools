@@ -25,26 +25,32 @@ object Dect {
         fun carrierHz(n: Int) = firstHz + dir * 1_728_000L * n
     }
 
-    /** The A-field CRC: x^16 + x^10 + x^8 + x^7 + x^3 + 1 over the 48 bits, register from zero. */
-    fun crc(v48: Long): Int {
+    /**
+     * The A-field's R-CRC (EN 300 175-3, CRC-16/DECT-R): x^16 + x^10 + x^8 + x^7 + x^3 + 1 over the 48 bits, register
+     * from zero, and its last bit inverted.
+     */
+    fun crc(v48: Long): Int = crcBits(48) { i -> (v48 shr (47 - i)).toInt() and 1 }
+
+    /** R-CRC of [n] bits given most significant first by [bit]. */
+    fun crcBits(n: Int, bit: (Int) -> Int): Int {
         var reg = 0
-        for (i in 47 downTo 0) {
-            val fb = ((reg shr 15) and 1) xor ((v48 shr i).toInt() and 1)
+        for (i in 0 until n) {
+            val fb = ((reg shr 15) and 1) xor bit(i)
             reg = (reg shl 1) and 0xFFFF
             if (fb != 0) reg = reg xor 0x0589
         }
-        return reg
+        return reg xor 0x0001
     }
 
     /** Tail types: identity (Nt), system information (Qt), MAC control (Mt), paging (Pt), data (Ct). */
-    const val TA_NT = 2
-    const val TA_NT_CL = 3
+    const val TA_NT = 3
+    const val TA_NT_CL = 2
     const val TA_QT = 4
 
     class AField(val raw: Long) {
         val ta get() = ((raw ushr 61) and 7).toInt()
         val tail get() = (raw ushr 16) and 0xFFFFFFFFFFL
-        val crcOk: Boolean get() { val c = crc(raw ushr 16); val got = (raw and 0xFFFF).toInt(); return c == got || (c.inv() and 0xFFFF) == got }
+        val crcOk: Boolean get() = crc(raw ushr 16) == (raw and 0xFFFF).toInt()
     }
 
     fun makeAField(ta: Int, ba: Int, tail40: Long): Long {
@@ -53,16 +59,21 @@ object Dect {
         return (v48 shl 16) or crc(v48).toLong()
     }
 
-    /** RFPI, the base's 40-bit identity: access rights class; for class A the manufacturer (EMC) and fixed part numbers. */
+    /**
+     * RFPI, the base's 40-bit identity (EN 300 175-6, figure 8): the E bit, the access rights class, then for class A
+     * the manufacturer (EMC, 16 bits) and fixed part (FPN, 17 bits) numbers, and the radio part number (RPN, 3 bits).
+     */
     data class Rfpi(val value: Long) {
-        val arc get() = ((value shr 35) and 7).toInt()
-        val emc get() = if (arc == 0) ((value shr 19) and 0xFFFF).toInt() else null
-        val fpn get() = if (arc == 0) ((value shr 2) and 0x1FFFF).toInt() else null
+        val arc get() = ((value shr 36) and 7).toInt()
+        val emc get() = if (arc == 0) ((value shr 20) and 0xFFFF).toInt() else null
+        val fpn get() = if (arc == 0) ((value shr 3) and 0x1FFFF).toInt() else null
+        val rpn get() = if (arc == 0) (value and 7).toInt() else null
         val hex get() = "%010X".format(value and 0xFFFFFFFFFFL)
         val arcLetter get() = ('A' + arc)
     }
 
-    fun rfpiA(emc: Int, fpn: Int) = Rfpi(((emc.toLong() and 0xFFFF) shl 19) or ((fpn.toLong() and 0x1FFFF) shl 2))
+    fun rfpiA(emc: Int, fpn: Int, rpn: Int = 0) =
+        Rfpi(((emc.toLong() and 0xFFFF) shl 20) or ((fpn.toLong() and 0x1FFFF) shl 3) or (rpn.toLong() and 7))
 }
 
 /** A burst whose A-field CRC passed: from a base or a handset, its tail type and bits, its level and time. */

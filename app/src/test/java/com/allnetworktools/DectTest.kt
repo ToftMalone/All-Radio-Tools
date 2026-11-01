@@ -27,6 +27,14 @@ class DectTest {
         assertEquals(0x1234, r.emc)
         assertEquals(0x0ABCD, r.fpn)
         assertTrue(!Dect.AField(Dect.makeAField(Dect.TA_NT, 0, rfpi.value) xor (1L shl 30)).crcOk)
+        // E, ARC, EMC, FPN, RPN = 1 + 3 + 16 + 17 + 3 bits: a class A base, EMC 0x1234, FPN 0x0ABCD, RPN 5.
+        Dect.Rfpi(0x01234_55E6DL).let {
+            assertEquals(0, it.arc); assertEquals(0x1234, it.emc); assertEquals(0x0ABCD, it.fpn); assertEquals(5, it.rpn)
+        }
+        assertEquals(0x01234_55E6DL, Dect.rfpiA(0x1234, 0x0ABCD, 5).value)
+        // The R-CRC is CRC-16/DECT-R: its check value over "123456789" is 0x007E.
+        val check = "123456789".toByteArray()
+        assertEquals(0x007E, Dect.crcBits(72) { i -> (check[i / 8].toInt() shr (7 - i % 8)) and 1 })
         assertEquals(1_897_344_000L, Dect.Band.Europe.carrierHz(0))
         assertEquals(1_881_792_000L, Dect.Band.Europe.carrierHz(9))
     }
