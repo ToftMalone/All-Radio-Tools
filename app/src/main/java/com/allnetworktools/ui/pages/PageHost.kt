@@ -256,15 +256,11 @@ private fun PageBody(vm: MainViewModel, net: Network, page: Page) {
             Tool.Fpv -> com.allnetworktools.ui.pages.sdr.FpvTool(vm)
             Tool.Aprs -> com.allnetworktools.ui.pages.sdr.AprsTool(vm)
             Tool.Acars -> com.allnetworktools.ui.pages.sdr.AcarsTool(vm)
-            Tool.Tpms -> com.allnetworktools.ui.pages.sdr.TpmsTool(vm)
-            Tool.Pocsag -> com.allnetworktools.ui.pages.sdr.PocsagTool(vm)
             Tool.Cubesat -> com.allnetworktools.ui.pages.sdr.CubesatTool(vm)
             Tool.Lpwan -> com.allnetworktools.ui.pages.sdr.LpwanTool(vm)
             Tool.Pmr -> com.allnetworktools.ui.pages.sdr.PmrTool(vm)
             Tool.Dect -> com.allnetworktools.ui.pages.sdr.DectTool(vm)
-            Tool.Vdl2 -> com.allnetworktools.ui.pages.sdr.Vdl2Tool(vm)
             Tool.Dsc -> com.allnetworktools.ui.pages.sdr.DscTool(vm)
-            Tool.Wmbus -> com.allnetworktools.ui.pages.sdr.WmbusTool(vm)
             Tool.Flarm -> com.allnetworktools.ui.pages.sdr.FlarmTool(vm)
             Tool.Ism -> com.allnetworktools.ui.pages.sdr.IsmTool(vm)
             Tool.Meteor -> com.allnetworktools.ui.pages.sdr.MeteorTool(vm)
@@ -305,7 +301,7 @@ private fun PageBody(vm: MainViewModel, net: Network, page: Page) {
             }
             Tool.Lan, Tool.LanDevice, Tool.Ping, Tool.Trace, Tool.Ports, Tool.Dns, Tool.Speed,
             Tool.Whois, Tool.EvilTwin, Tool.Audit, Tool.Mitm, Tool.Coverage -> WifiToolRoute(vm, page)
-            else -> ComingSoon(page.tool)
+            else -> ComingSoon(page.tool) // includes POCSAG, TPMS, VDL Mode 2 and Wireless M-Bus for now
         }
         else -> Unit
     }
@@ -444,7 +440,7 @@ private fun ComingSoon(tool: Tool) {
         StatePanel(
             icon = tool.icon,
             title = tool.title,
-            message = S(R.string.this_tool_arrives_in_the_next),
+            message = S(R.string.coming_soon),
             primary = null,
         )
     }

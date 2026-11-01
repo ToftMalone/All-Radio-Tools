@@ -42,6 +42,9 @@ import com.allnetworktools.util.S
 import com.allnetworktools.util.P
 
 private data class ToolEntry(val tool: Tool, val title: String, val subtitle: String, val icon: String = tool.icon)
+/** SDR tools whose receivers are still being reviewed: shown greyed out, not openable. */
+private val comingSoon = setOf(Tool.Pocsag, Tool.Tpms, Tool.Vdl2, Tool.Wmbus)
+
 private data class ToolGroup(val title: String, val items: List<ToolEntry>)
 
 private fun groups(net: Network, connectedDevice: String?, servingLabel: String?): List<ToolGroup> = when (net) {
@@ -203,14 +206,15 @@ fun ToolsPage(net: Network, vm: MainViewModel) {
         groups(net, connected, servingLabel).forEach { g ->
             SectionTitle(g.title)
             TileGrid(g.items) { e, mod ->
+                val soon = e.tool in comingSoon
                 Column(
                     mod.fadeUp(60).clip(RoundedCornerShape(24.dp)).background(cs.surfaceContainerLow)
-                        .clickable { open(e.tool) }.padding(16.dp),
+                        .then(if (soon) Modifier.graphicsLayer { alpha = 0.5f } else Modifier.clickable { open(e.tool) }).padding(16.dp),
                 ) {
                     LeadingIcon(e.icon, cs.surfaceContainerHighest, acc.accent, shape = RoundedCornerShape(14.dp))
                     Spacer(Modifier.weight(1f, fill = false).heightIn(min = 12.dp))
                     Text(e.title, Modifier.padding(top = 12.dp), style = rf(15, 20, 600), maxLines = 2)
-                    Text(e.subtitle, Modifier.padding(top = 2.dp), style = rf(12, 16), color = cs.onSurfaceVariant, maxLines = 2)
+                    Text(if (soon) S(R.string.coming_soon) else e.subtitle, Modifier.padding(top = 2.dp), style = rf(12, 16, if (soon) 600 else 400), color = if (soon) acc.accent else cs.onSurfaceVariant, maxLines = 2)
                 }
             }
         }
