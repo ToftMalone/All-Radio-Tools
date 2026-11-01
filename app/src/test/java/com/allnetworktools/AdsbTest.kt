@@ -79,16 +79,18 @@ class AdsbTest {
     }
 
     /** PPM waveform of [msgs] at 2 MS/s with random carrier phase, a frequency offset and noise, as HackRF bytes. */
-    private fun waveform(msgs: List<ByteArray>, amp: Double, noise: Double, offsetHz: Double, seed: Long): ByteArray {
+    private fun waveform(msgs: List<ByteArray>, amp: Double, noise: Double, offsetHz: Double, seed: Long, blurred: Set<Pair<Int, Int>> = emptySet()): ByteArray {
         val rnd = Random(seed)
         val fs = 2_000_000.0
         val total = 4000 + msgs.size * 900
         val env = DoubleArray(total)
         var at = 1000 + 13 // odd start: frames do not land on a nice boundary
-        for (msg in msgs) {
+        msgs.forEachIndexed { k, msg ->
             for (p in intArrayOf(0, 2, 7, 9)) env[at + p] = 1.0
             for (bit in 0 until 112) {
                 val one = (msg[bit / 8].toInt() shr (7 - bit % 8)) and 1 == 1
+                // A blurred bit reads the same on both halves, as when a pulse edge falls on a sample.
+                if (k to bit in blurred) { env[at + 16 + 2 * bit] = 0.5; env[at + 17 + 2 * bit] = 0.5; continue }
                 env[at + 16 + 2 * bit + (if (one) 0 else 1)] = 1.0
             }
             at += 700 + rnd.nextInt(80)
@@ -115,6 +117,22 @@ class AdsbTest {
             i += len
         }
         assertEquals(msgs.map(ModeS::hex), got)
+    }
+
+    @Test fun uncertainBitsMendedForAKnownAircraftOnly() {
+        val klm = m("8D4840D6202CC371C32CE0576098")
+        // Bits 45 and 58 of the second copy are ones that read as uncertain: two bits to mend.
+        val iq = waveform(listOf(klm, klm), amp = 60.0, noise = 0.0, offsetHz = 0.0, seed = 2, blurred = setOf(1 to 45, 1 to 58))
+        val got = ArrayList<String>()
+        val d = AdsbDemodulator { msg, _ -> got += ModeS.hex(msg) }
+        d.feed(iq, iq.size)
+        assertEquals(listOf(ModeS.hex(klm), ModeS.hex(klm)), got)
+        assertEquals(1, d.mended)
+        // Never heard cleanly: the same uncertain copy is not trusted.
+        val lone = waveform(listOf(klm), amp = 60.0, noise = 0.0, offsetHz = 0.0, seed = 2, blurred = setOf(0 to 45))
+        val none = ArrayList<ByteArray>()
+        AdsbDemodulator { msg, _ -> none += msg }.feed(lone, lone.size)
+        assertTrue(none.isEmpty())
     }
 
     @Test fun noiseAloneDecodesNothing() {

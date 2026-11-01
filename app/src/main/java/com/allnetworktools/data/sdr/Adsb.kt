@@ -155,7 +155,9 @@ object Cpr {
 /**
  * PPM demodulator for interleaved signed 8-bit I/Q at 2 MS/s (two samples per bit): finds the four-pulse
  * preamble on the magnitude, slices 112 bits by comparing each bit's two half-samples, and keeps messages whose
- * CRC is valid.
+ * CRC is valid. At 2 MS/s a pulse edge can fall on a sample, leaving a few bits uncertain; when the CRC fails, the
+ * least certain bits are flipped, one or two at a time, and a message mended this way is kept only for an aircraft
+ * already heard without mending, so noise cannot invent one.
  */
 class AdsbDemodulator(private val onMessage: (ByteArray, Double) -> Unit) {
     // Magnitude look-up for every (I, Q) byte pair, DC is removed beforehand.
@@ -163,8 +165,16 @@ class AdsbDemodulator(private val onMessage: (ByteArray, Double) -> Unit) {
     private var carry = 0
     private var dcI = 0f
     private var dcQ = 0f
+    /** Samples read so far, the clock for [clean]. */
+    private var clock = 0L
+    /** Aircraft heard in a message that needed no mending, and when (in samples). */
+    private val clean = HashMap<Int, Long>()
+    private val conf = FloatArray(112)
+    private val order = IntArray(112)
 
     var decoded = 0
+        private set
+    var mended = 0
         private set
 
     fun feed(buf: ByteArray, len: Int) {
@@ -186,6 +196,7 @@ class AdsbDemodulator(private val onMessage: (ByteArray, Double) -> Unit) {
             dcI += (si / chunk - dcI) * 0.5f
             dcQ += (sq / chunk - dcQ) * 0.5f
             scan(carry + chunk)
+            clock += chunk
             i += chunk
         }
     }
@@ -201,11 +212,13 @@ class AdsbDemodulator(private val onMessage: (ByteArray, Double) -> Unit) {
             ) {
                 val high = (m[p] + m[p + 2] + m[p + 7] + m[p + 9]) / 6
                 if (m[p + 4] < high && m[p + 5] < high && m[p + 11] < high && m[p + 12] < high && m[p + 13] < high && m[p + 14] < high) {
-                    val msg = slice(p + 16)
+                    // When an edge of the first pulse fell on a sample, the pulse spread over the next one too: the
+                    // bits may then be read one sample later.
+                    var msg = slice(p + 16)
+                    if (msg == null && m[p + 1] > high) msg = slice(p + 17)
                     if (msg != null) {
                         decoded++
-                        val level = (m[p] + m[p + 2] + m[p + 7] + m[p + 9]) / 4 / 128.0
-                        onMessage(msg, 20 * log10(level.coerceAtLeast(1e-6)))
+                        onMessage(msg, 20 * log10((high * 1.5 / 128.0).coerceAtLeast(1e-6)))
                         p += FRAME
                         continue
                     }
@@ -225,18 +238,49 @@ class AdsbDemodulator(private val onMessage: (ByteArray, Double) -> Unit) {
             val a = mags[start + 2 * bit]
             val b = mags[start + 2 * bit + 1]
             if (a > b) msg[bit / 8] = (msg[bit / 8].toInt() or (0x80 ushr (bit % 8))).toByte()
+            conf[bit] = abs(a - b) / (a + b + 1e-3f)
             if (bit == 4) {
                 val df = (msg[0].toInt() and 0xFF) shr 3
                 if (df != 17 && df != 18) return null
             }
         }
-        return if (ModeS.parityOk(msg)) msg else null
+        if (ModeS.parityOk(msg)) {
+            clean[ModeS.icao(msg)] = clock
+            if (clean.size > 2000) clean.entries.removeAll { clock - it.value > KNOWN }
+            return msg
+        }
+        // The least certain bits after the downlink format, weakest first.
+        var k = 0
+        for (i in 5 until 112) order[k++] = i
+        val weak = order.copyOf(k).sortedBy { conf[it] }.take(WEAK)
+        fun flip(i: Int) { msg[i / 8] = (msg[i / 8].toInt() xor (0x80 ushr (i % 8))).toByte() }
+        for (x in weak.indices) {
+            flip(weak[x])
+            if (ModeS.parityOk(msg) && known(msg)) return msg
+            for (y in x + 1 until weak.size) {
+                flip(weak[y])
+                if (ModeS.parityOk(msg) && known(msg)) return msg
+                flip(weak[y])
+            }
+            flip(weak[x])
+        }
+        return null
+    }
+
+    private fun known(msg: ByteArray): Boolean {
+        val at = clean[ModeS.icao(msg)] ?: return false
+        if (clock - at > KNOWN) return false
+        mended++
+        return true
     }
 
     companion object {
         private const val MAX = 65536
         /** Preamble (16 samples) and 112 bits (224 samples). */
         private const val FRAME = 16 + 224
+        private const val WEAK = 10
+        /** A mended message is kept for an aircraft heard cleanly within the last minute. */
+        private const val KNOWN = 60L * 2_000_000
     }
 }
 
