@@ -2311,11 +2311,11 @@
     <string name="ism_channel">"Canal %1$s"</string>
     <string name="ism_subtitle">"Stații meteo, contoare, senzori"</string>
     <string name="flarm_subtitle">"Planoare și aviație ușoară"</string>
-    <string name="flarm_heard">"868,2 / 868,4 MHz · %1$d neurmărite la cerere · %2$d pe protocolul nou"</string>
+    <string name="flarm_heard">"868,2 / 868,4 MHz · %1$d neurmărite la cerere · %2$d nedecodate"</string>
     <string name="flarm_listening">"Ascultă ambele canale"</string>
     <string name="flarm_none_yet">"Încă nicio aeronavă"</string>
     <string name="flarm_none_yet_body">"Fiecare FLARM emite cam o dată pe secundă, dar doar pe câteva zeci de kilometri și mai ales în zilele de zbor, lângă aerodromurile de zbor fără motor. O antenă afară sau sus ajută mult."</string>
-    <string name="flarm_how_it_works">"FLARM avertizează planoarele și avioanele ușoare unele despre altele: fiecare difuzează poziția, altitudinea, viteza și urcarea pe 868,2 și 868,4 MHz. Aplicația decodează protocolul vechi, al cărui format și schemă de cheie sunt publice (SoftRF, Open Glider Network), cu codul OnAir; cheia se schimbă la fiecare 64 de secunde, deci ceasul telefonului trebuie să fie corect. Pozițiile sunt trimise trunchiat și completate în jurul locației telefonului. Ca Open Glider Network, aeronavele care cer să nu fie urmărite sau își ascund identitatea sunt doar numărate și nu se păstrează nimic altceva; pachetele protocolului nou, criptat, sunt doar numărate. Doar recepție."</string>
+    <string name="flarm_how_it_works">"FLARM avertizează planoarele și avioanele ușoare unele despre altele: fiecare transmite poziția, altitudinea, viteza și urcarea pe 868,2 și 868,4 MHz. Aplicația decodează ambele protocoale, cel vechi și cel adoptat de FLARM în 2024, după formatele și cheile făcute publice de SoftRF și Open Glider Network; cheile se schimbă la fiecare 16 sau 64 de secunde, deci ceasul telefonului trebuie să fie exact. Pozițiile sunt trimise trunchiate și completate în jurul locației telefonului. Ca Open Glider Network, aeronavele care cer să nu fie urmărite sau își ascund identitatea sunt doar numărate și nu se păstrează nimic altceva. Doar recepție."</string>
     <string name="flarm_types">"Necunoscut|Planor|Remorcher|Elicopter|Parașutist|Avion de lansare|Deltaplan|Parapantă|Avion cu motor|Avion cu reacție|Autogir|Balon|Dirijabil|Dronă|Rezervat|Obstacol fix"</string>
     <string name="flarm_no_position">"Activați locația pentru a vedea unde sunt aeronavele: FLARM trimite poziții trunchiate, aplicația le completează în jurul telefonului."</string>
     <string name="flarm_on_ground">"la sol"</string>

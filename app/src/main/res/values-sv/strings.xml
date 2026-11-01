@@ -2256,11 +2256,11 @@
     <string name="ism_channel">"Kanal %1$s"</string>
     <string name="ism_subtitle">"Väderstationer, mätare, sensorer"</string>
     <string name="flarm_subtitle">"Segelflyg och småflyg"</string>
-    <string name="flarm_heard">"868,2 / 868,4 MHz · %1$d spåras inte på begäran · %2$d med nyare protokoll"</string>
+    <string name="flarm_heard">"868,2 / 868,4 MHz · %1$d spåras inte på begäran · %2$d ej avkodade"</string>
     <string name="flarm_listening">"Lyssnar på båda kanalerna"</string>
     <string name="flarm_none_yet">"Inga luftfartyg ännu"</string>
     <string name="flarm_none_yet_body">"Varje FLARM sänder ungefär en gång per sekund, men bara inom några mil och mest på flygdagar nära segelflygfält. En antenn utomhus eller högt upp hjälper mycket."</string>
-    <string name="flarm_how_it_works">"FLARM varnar segelflyg och småflyg för varandra: varje luftfartyg sänder position, höjd, fart och stigning på 868,2 och 868,4 MHz. Appen avkodar det gamla protokollet, vars format och nyckelschema är offentliga (SoftRF, Open Glider Network), med OnAirs kod; nyckeln byts var 64:e sekund, så telefonens klocka måste gå rätt. Positioner sänds avkortade och kompletteras kring telefonens plats. Liksom Open Glider Network räknas luftfartyg som ber att inte spåras, eller döljer sin identitet, och inget annat sparas; paket med det nyare, krypterade protokollet räknas bara. Endast mottagning."</string>
+    <string name="flarm_how_it_works">"FLARM varnar segelflygplan och lätta flygplan för varandra: vart och ett sänder position, höjd, fart och stigning på 868,2 och 868,4 MHz. Appen avkodar båda protokollen, det gamla och det som FLARM gick över till 2024, utifrån de format och nycklar som SoftRF och Open Glider Network offentliggjort; nycklarna byts var 16:e eller 64:e sekund, så telefonens klocka måste gå rätt. Positioner skickas avkortade och kompletteras kring telefonens plats. Som Open Glider Network gör räknas luftfartyg som ber att inte spåras, eller döljer sin identitet, bara och inget annat sparas. Endast mottagning."</string>
     <string name="flarm_types">"Okänd|Segelflygplan|Bogserflygplan|Helikopter|Fallskärmshoppare|Hoppflygplan|Hängglidare|Skärmflygare|Motorflygplan|Jet|Autogiro|Ballong|Luftskepp|Drönare|Reserverad|Fast hinder"</string>
     <string name="flarm_no_position">"Slå på plats för att se var luftfartygen är: FLARM sänder avkortade positioner som appen kompletterar kring telefonen."</string>
     <string name="flarm_on_ground">"på marken"</string>

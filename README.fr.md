@@ -88,7 +88,7 @@ L'écran d'accueil propose cinq réseaux. Chacun a son tableau de bord, son outi
 | DECT | Bases de téléphones sans fil (1880–1900 MHz) : identité, porteuses, intervalles ; la voix n'est jamais touchée |
 | DSC (ASN) | Appels sélectifs numériques maritimes sur le canal VHF 70 : alertes de détresse, appels de sécurité et de routine, positions |
 | Drones | DJI (DroneID), FPV analogique et radiocommandes (ExpressLRS, Crossfire, FrSky, FlySky, Spektrum) |
-| FLARM | Planeurs et aviation légère sur 868 MHz (ancien protocole), positions autour de vous ; les aéronefs qui refusent le suivi sont seulement comptés |
+| FLARM | Planeurs et aviation légère sur 868 MHz (ancien protocole et celui de 2024), positions autour de vous ; les aéronefs qui refusent le suivi sont seulement comptés |
 | LoRaWAN / Sigfox | Objets connectés sur 868 MHz : en-têtes LoRaWAN (adresse, réseau, compteur) de SF7 à SF12, messages Sigfox |
 | Meteor-M | Images LRPT des satellites météo sur 137 MHz |
 | PMR446 | Les 16 canaux de talkies-walkies à la fois : activité, tonalité CTCSS, écoute des canaux analogiques et de la voix DMR446 / dPMR446 (décodage AMBE+2), identifiants des appels |
@@ -171,6 +171,7 @@ All Radio Tools est un logiciel libre publié sous la [licence publique généra
 - [rs1729/RS](https://github.com/rs1729/RS) pour les formats de sondes.
 - [rtl_433](https://github.com/merbanan/rtl_433) pour les formats des capteurs de pression des pneus et des capteurs ISM.
 - [OnAir](https://github.com/adswill/OnAir) (GPL-3.0), dont les décodeurs ont été portés pour les capteurs ISM, FLARM, Wireless M-Bus, ASN, VDL Mode 2, DECT, DMR / dPMR, Sigfox, Horus, Mode A/C et la télémesure CubeSat.
+- [SoftRF](https://github.com/lyusupov/SoftRF) (GPL-3.0), dont le code FLARM (CRC des trames, clés et format du protocole de 2024) a été porté.
 - [gr-lora_sdr](https://github.com/tapparelj/gr-lora_sdr) (EPFL) pour le récepteur LoRa.
 - [mbelib](https://github.com/szechyjs/mbelib) (ISC) pour le décodeur vocal AMBE+2. L'AMBE+2 est couvert par des brevets dans certains pays : ce code est fourni à des fins de recherche et d'enseignement.
 - Google [GNSS Measurement Tools](https://github.com/google/gps-measurement-tools) pour le calcul des pseudodistances.

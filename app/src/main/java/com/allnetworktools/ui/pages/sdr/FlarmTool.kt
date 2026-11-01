@@ -87,7 +87,7 @@ class FlarmController(repo: SdrRepository, scope: CoroutineScope, onAcquire: () 
 fun FlarmTool(vm: MainViewModel) {
     val c = vm.tools.flarm
     val device by vm.sdrDevice.collectAsStateWithLifecycle()
-    // The phone's position completes the aircraft's 19 and 20 low bits; it is read while this screen is open.
+    // The phone's position completes the aircraft's truncated positions; it is read while this screen is open.
     val positions by vm.positions.collectAsStateWithLifecycle()
     val loc = positions.fused ?: positions.gnss ?: positions.network
     val me = loc?.let { it.latitude to it.longitude }
@@ -167,7 +167,7 @@ private fun AircraftRow(a: FlarmAircraft, type: String, me: Pair<Double, Double>
                 style = rf(14, 20, 500, tnum = true),
             )
             val where = me?.let {
-                val (lat, lon) = Flarm.unpackPosition(a.lat19, a.lon20, it.first, it.second)
+                val (lat, lon) = Flarm.position(a, it.first, it.second)
                 val km = AdsbTracker.haversineKm(it.first, it.second, lat, lon)
                 // Farther than this is an alias of the truncated position, not the aircraft.
                 if (km < 600) "%.1f km · %d°".format(loc, km, bearing(it.first, it.second, lat, lon).roundToInt()) else null

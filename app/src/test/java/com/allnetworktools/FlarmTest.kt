@@ -142,13 +142,62 @@ class FlarmTest {
     }
 
     @Test
+    fun v7RoundTrip() {
+        assertEquals(77, Flarm.lonDiv.size) // 14° to 89°, and one spare as in SoftRF
+        for (v in listOf(0, 5, 255, 256, 300, 1000, 3000)) assertEquals(v.toDouble(), Flarm.descale(Flarm.enscale(v, 8, 2, false), 8, 2).toDouble(), v / 64.0 + 0.5)
+        for (v in listOf(-24, -3, 0, 7, 64, 200)) assertEquals(v.toDouble(), Flarm.descale(Flarm.enscale(v, 6, 2, true), 6, 2).toDouble(), maxOf(1.0, abs(v) / 16.0))
+        val b = Flarm.encodeV7(0xDD4F21, 45.3012, 5.9123, 1850, 30.0, 135.0, 2.4, ts)
+        assertEquals(2, Flarm.packetType(b))
+        val p = Flarm.decodeV7(b, ts)!!
+        assertEquals(0xDD4F21, p.addr)
+        assertEquals(1, p.aircraftType)
+        assertEquals(ts and 15, p.tstamp)
+        assertEquals(1850.0, p.alt.toDouble(), 2.0)
+        assertEquals(30.0, p.speedMs, 0.2)
+        assertEquals(2.4, p.climbMs, 0.1)
+        assertEquals(135.0, p.courseDeg, 0.01)
+        assertEquals(2, p.airborne)
+        val (lat, lon) = Flarm.unpackV7(p.lat20, p.lon20, home.first, home.second)
+        assertEquals(45.3012, lat, 1e-5)
+        assertEquals(5.9123, lon, 1e-5)
+        // Far north the longitude steps grow: still within a step of the truth.
+        val n = Flarm.decodeV7(Flarm.encodeV7(0x123456, 64.1, -21.9, 300, 20.0, 10.0, 0.0, ts), ts)!!
+        val (la2, lo2) = Flarm.unpackV7(n.lat20, n.lon20, 64.0, -22.0)
+        assertEquals(64.1, la2, 1e-5); assertEquals(-21.9, lo2, Flarm.lonDivAt(64.1) * 1e-7)
+        // Another 16 s step of the clock gives another mask: the fields no longer hold together.
+        val wrong = (1..20).count { Flarm.decodeV7(b, ts + 16 * it)?.let { q -> q.aircraftType == 1 && abs(q.alt - 1850) < 50 } == true }
+        assertTrue("$wrong", wrong <= 2)
+    }
+
+    @Test
+    fun v7AircraftNeedTwoPacketsAndNoTrackIsHonoured() {
+        val t = FlarmTracker()
+        val f1 = Flarm.encodeV7(0xDD4F21, 45.3012, 5.9123, 1850, 30.0, 135.0, 2.4, ts).copyOf(Flarm.FRAME)
+        val f2 = Flarm.encodeV7(0xDD4F21, 45.3020, 5.9130, 1856, 31.0, 136.0, 2.0, ts + 1).copyOf(Flarm.FRAME)
+        t.update(FlarmFrame(f1, 0, 20.0), now)
+        assertNull(t.aircraft[0xDD4F21])
+        assertEquals(1, t.newProtocolDevices)
+        t.update(FlarmFrame(f2, 1, 20.0), now + 1000)
+        val a = t.aircraft[0xDD4F21]!!
+        assertTrue(a.v7)
+        assertEquals(1856.0, a.altM.toDouble(), 2.0)
+        assertEquals(31.0 * 3.6, a.speedKmh, 1.0)
+        assertEquals(0, t.newProtocolDevices)
+        val (lat, lon) = Flarm.position(a, home.first, home.second)
+        assertEquals(45.3020, lat, 1e-5); assertEquals(5.9130, lon, 1e-5)
+        repeat(2) { t.update(FlarmFrame(Flarm.encodeV7(0x3E1A07, 45.25, 5.80, 900, 10.0, 90.0, 0.0, ts + it, noTrack = true).copyOf(Flarm.FRAME), 0, 20.0), now + it * 1000L) }
+        assertNull(t.aircraft[0x3E1A07])
+        assertEquals(1, t.privateCount)
+    }
+
+    @Test
     fun oneLonePacketIsNotAnAircraft() {
         val t = FlarmTracker()
         val b = Flarm.encodeV6(packet(0xABCDEF, 45.3, 5.9), ts)
         val f = b.copyOf(Flarm.FRAME)
         t.update(FlarmFrame(f, 0, 20.0), now)
         assertNull(t.aircraft[0xABCDEF])
-        // The newer protocol is counted, never decoded.
+        // A newer-protocol packet that does not decode is counted.
         val v7 = IntArray(Flarm.FRAME).also { it[3] = 0x02; it[0] = 0x11 }
         t.update(FlarmFrame(v7, 1, 20.0), now)
         assertEquals(1, t.newProtocolDevices)

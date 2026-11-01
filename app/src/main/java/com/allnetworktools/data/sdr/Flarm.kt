@@ -12,10 +12,11 @@ import kotlin.math.sqrt
 
 /**
  * FLARM, the collision warning gliders and light aircraft broadcast on 868.2 and 868.4 MHz in Europe: 2-FSK ±50 kHz,
- * 100 kchip/s Manchester, sync Manchester(0xF531FAB6), then 24 payload bytes and a CRC-16. Only the old protocol (V6),
- * whose layout and key scheme are public (SoftRF, Open Glider Network), is decoded; the newer one is only counted.
- * Ported from OnAir (core/src/flarm, GPL-3.0). Words 1 to 5 are XXTEA-scrambled with a key made from the sender's
- * address and the time in 64 s steps, so decoding needs the phone's clock.
+ * 100 kchip/s Manchester, sync Manchester(0xF531FAB6), then 24 payload bytes and a CRC-16. Both air protocols are
+ * decoded as SoftRF does (GPL-3.0; layouts and keys published by SoftRF and the Open Glider Network): the old one (V6,
+ * ported from OnAir's core/src/flarm), words 1 to 5 XXTEA-scrambled with a key made from the sender's address and the
+ * time in 64 s steps; and the one FLARM moved to in 2024 (V7), words 2 to 5 under XXTEA with a fixed key then a mask
+ * made from the header and the time in 16 s steps. Either way decoding needs the phone's clock.
  */
 object Flarm {
     const val SYNC = 0xF531FAB6.toInt()
@@ -204,6 +205,172 @@ object Flarm {
         return p.copy(smult = smult, ns = IntArray(4) { ns }, ew = IntArray(4) { ew }, vsRaw = vs)
     }
 
+    // ---- V7, the protocol since 2024 (SoftRF's legacy_v7_packet_t and legacy_decode) ----
+
+    private const val KEY4 = 0x956F6C77.toInt()
+    private val key5 = intArrayOf(0xA5F9B21C.toInt(), 0xAB3F9D12.toInt(), 0xC6F34E34.toInt(), 0xD72FA378.toInt())
+
+    /** Longitude units (1e-7 degree) by whole degree of latitude from 14°; 52 below. */
+    val lonDiv = intArrayOf(
+        53, 53, 54, 54, 55, 55,
+        56, 56, 57, 57, 58, 58, 59, 59, 60, 60,
+        61, 61, 62, 62, 63, 63, 64, 64, 65, 65,
+        67, 68, 70, 71, 73, 74, 76, 77, 79, 80,
+        82, 83, 85, 86, 88, 89, 91, 94, 98, 101,
+        105, 108, 112, 115, 119, 122, 126, 129, 137, 144,
+        152, 159, 167, 174, 190, 205, 221, 236, 252,
+        267, 299, 330, 362, 425, 489, 552, 616, 679, 743, 806, 806,
+    )
+
+    fun lonDivAt(lat: Double): Int { val i = minOf(abs(lat).toInt(), 89); return if (i < 14) 52 else lonDiv[i - 14] }
+
+    /** The mask over words 2 to 5: the header words, the time in 16 s steps and a constant, stirred by two XXTEA-like passes over the bytes. */
+    fun v7Mask(w0: Int, w1: Int, t16: Int): IntArray {
+        val k = intArrayOf(w0, w1, t16, KEY4)
+        val bk = IntArray(16) { (k[it / 4] ushr (8 * (it % 4))) and 0xFF }
+        var x = bk[15]
+        var sum = 0
+        repeat(2) {
+            sum += DELTA
+            for (p in 0 until 16) {
+                val z = x and 0xFF
+                val y = bk[(p + 1) % 16]
+                x = bk[p]
+                x += (((z shr 5) xor (y shl 2)) + ((y shr 3) xor (z shl 4))) xor (sum xor y)
+                bk[p] = x and 0xFF
+            }
+        }
+        return IntArray(4) { i -> (0 until 4).fold(0) { a, j -> a or (bk[4 * i + j] shl (8 * j)) } }
+    }
+
+    /** A value of [mbits] mantissa bits and [ebits] exponent bits (and a sign bit above them, when there is one). */
+    fun descale(v: Int, mbits: Int, ebits: Int): Int {
+        val offset = 1 shl mbits
+        val signbit = offset shl ebits
+        var x = v and (signbit - 1)
+        if (x >= offset) { val e = x ushr mbits; x = ((x and (offset - 1)) + offset shl e) - offset }
+        return if (v and signbit != 0) -x else x
+    }
+
+    fun enscale(value: Int, mbits: Int, ebits: Int, signed: Boolean): Int {
+        val offset = 1 shl mbits
+        val signbit = offset shl ebits
+        val max = signbit - 1
+        val sign = if (signed && value < 0) signbit else 0
+        val v = if (signed) abs(value) else value
+        if (v < offset) return sign or v
+        var e = 0
+        var m = offset + v
+        while (m > offset + offset - 1) { m = m ushr 1; e += offset; if (e > max) return sign or max }
+        return sign or e or (m - offset)
+    }
+
+    /** The decrypted V7 position packet; positions stay as sent (20 low bits), completed later around the phone. */
+    data class V7(
+        val addr: Int,
+        val addrType: Int,
+        val stealth: Boolean,
+        val noTrack: Boolean,
+        /** The sender's clock, its last 4 bits (seconds). */
+        val tstamp: Int,
+        val aircraftType: Int,
+        /** Metres above the ellipsoid. */
+        val alt: Int,
+        val lat20: Int,
+        val lon20: Int,
+        val speedMs: Double,
+        val climbMs: Double,
+        val courseDeg: Double,
+        /** 1 still, 2 moving, 3 circling. */
+        val airborne: Int,
+    ) {
+        val private get() = noTrack || stealth || addrType == 3
+    }
+
+    private fun bitsOf(w: IntArray, from: Int, len: Int): Int {
+        var v = 0
+        for (i in len - 1 downTo 0) { val b = from + i; v = (v shl 1) or ((w[b ushr 5] ushr (b and 31)) and 1) }
+        return v
+    }
+
+    private fun putBits(w: IntArray, from: Int, len: Int, value: Int) {
+        for (i in 0 until len) {
+            val b = from + i
+            val bit = (value ushr i) and 1
+            w[b ushr 5] = (w[b ushr 5] and (1 shl (b and 31)).inv()) or (bit shl (b and 31))
+        }
+    }
+
+    /** Null when not V7 or when the fields cannot be a real packet (which a wrong key time mostly gives). */
+    fun decodeV7(b: IntArray, ts: Int): V7? {
+        val w0 = rd32(b, 0)
+        if ((w0 ushr 24) and 15 != 2) return null
+        val w1 = rd32(b, 4)
+        val v = IntArray(4) { rd32(b, 8 + 4 * it) }
+        btea(v, -4, key5)
+        val m = v7Mask(w0, w1, ts ushr 4)
+        for (i in 0 until 4) v[i] = v[i] xor m[i]
+        // Bit fields packed from bit 0 of word 2, least significant first.
+        val type = bitsOf(v, 6, 5)
+        val airborne = bitsOf(v, 102, 2)
+        val course = bitsOf(v, 92, 10)
+        if (type > 15 || airborne == 0 || course > 720) return null
+        return V7(
+            addr = w0 and 0xFFFFFF, addrType = (w0 ushr 28) and 3,
+            stealth = (w1 ushr 22) and 1 == 1, noTrack = (w1 ushr 23) and 1 == 1,
+            tstamp = bitsOf(v, 2, 4), aircraftType = type,
+            alt = descale(bitsOf(v, 11, 13), 12, 1) - 1000,
+            lat20 = bitsOf(v, 24, 20), lon20 = bitsOf(v, 44, 20),
+            speedMs = descale(bitsOf(v, 73, 10), 8, 2) / 10.0,
+            climbMs = descale(bitsOf(v, 83, 9), 6, 2) / 10.0,
+            courseDeg = course / 2.0,
+            airborne = airborne,
+        )
+    }
+
+    /** A V7 packet as SoftRF's legacy_encode builds it. Used by the tests. */
+    fun encodeV7(addr: Int, lat: Double, lon: Double, altM: Int, speedMs: Double, courseDeg: Double, climbMs: Double, ts: Int,
+                 aircraftType: Int = 1, addrType: Int = 2, stealth: Boolean = false, noTrack: Boolean = false): IntArray {
+        val w0 = (addr and 0xFFFFFF) or (2 shl 24) or ((addrType and 3) shl 28)
+        val w1 = (if (stealth) 1 shl 22 else 0) or (if (noTrack) 1 shl 23 else 0) or (3 shl 24) or (3 shl 28)
+        val v = IntArray(4)
+        putBits(v, 2, 4, ts and 15)
+        putBits(v, 6, 5, aircraftType)
+        putBits(v, 11, 13, enscale(maxOf(0, altM + 1000), 12, 1, false))
+        val la = (lat * 1e7).toLong().toInt()
+        putBits(v, 24, 20, (la / 52 + (if (la and 0x40 != 0) (if (la < 0) -1 else 1) else 0)) and 0xFFFFF)
+        putBits(v, 44, 20, ((lon * 1e7).toLong() / lonDivAt(lat)).toInt() and 0xFFFFF)
+        putBits(v, 73, 10, enscale((speedMs * 10).roundToInt(), 8, 2, false))
+        putBits(v, 83, 9, if (stealth) 0 else enscale((climbMs * 10).roundToInt(), 6, 2, true))
+        putBits(v, 92, 10, (courseDeg * 2).toInt())
+        putBits(v, 102, 2, if (speedMs >= 2) 2 else 1)
+        putBits(v, 104, 6, 0x1d); putBits(v, 110, 5, 0x11)
+        val m = v7Mask(w0, w1, ts ushr 4)
+        for (i in 0 until 4) v[i] = v[i] xor m[i]
+        btea(v, 4, key5)
+        val b = IntArray(PAYLOAD)
+        wr32(b, 0, w0); wr32(b, 4, w1)
+        for (i in 0 until 4) wr32(b, 8 + 4 * i, v[i])
+        return b
+    }
+
+    /** Completes a V7 position (20 low bits each) around [refLat], [refLon]. */
+    fun unpackV7(lat20: Int, lon20: Int, refLat: Double, refLon: Double): Pair<Double, Double> {
+        val rl = (refLat * 1e7).toLong().toInt() / 52
+        var la = (lat20 - rl) and 0xFFFFF
+        if (la >= 0x80000) la -= 0x100000
+        val lat = (la + rl).toLong() * 52 / 1e7
+        val div = lonDivAt(lat)
+        val ro = (refLon * 1e7).toLong().toInt() / div
+        var lo = (lon20 - ro) and 0xFFFFF
+        if (lo >= 0x80000) lo -= 0x100000
+        return lat to (lo + ro).toLong() * div / 1e7
+    }
+
+    /** Where [a] is, completed around the phone at [refLat], [refLon]. */
+    fun position(a: FlarmAircraft, refLat: Double, refLon: Double) =
+        if (a.v7) unpackV7(a.lat19, a.lon20, refLat, refLon) else unpackPosition(a.lat19, a.lon20, refLat, refLon)
+
     /** Payload → air chips (0/1), sync first: a 1 bit is the chip pair 01. */
     fun chips(payload: IntArray): IntArray {
         val f = payload.copyOf(FRAME)
@@ -381,30 +548,36 @@ data class FlarmAircraft(
     val snrDb: Double,
     val packets: Int,
     val lastSeenMs: Long,
+    /** Sent on the protocol since 2024: [lat19] and [lon20] then hold its 20-bit position fields. */
+    val v7: Boolean = false,
 ) {
     val hexId get() = "%06X".format(id)
 }
 
 /**
- * Turns frames into aircraft. A wrong key time still passes the parity half of the time, and noise can set any flag,
- * so an aircraft counts only once a second packet from the same address agrees with the first (type, privacy, rough
- * position). Aircraft flagged no-track, stealth or anonymous are counted and nothing else is kept: only a salted hash
- * of their address, in memory, so they are not counted twice.
+ * Turns frames into aircraft, from either protocol. A wrong key time can still give a packet that looks right, and
+ * noise can set any flag, so an aircraft counts only once a second packet from the same address agrees with the first
+ * (type, privacy, rough position). Aircraft flagged no-track, stealth or anonymous are counted and nothing else is
+ * kept: only a salted hash of their address, in memory, so they are not counted twice.
  */
 class FlarmTracker {
-    private class Pending(val t: Long, val p: Flarm.V6, val channel: Int, val snr: Double)
+    /** One decoded packet, either protocol, reduced to what is shown and compared. */
+    private class Fix(
+        val addr: Int, val addrType: Int, val private: Boolean, val type: Int, val alt: Int, val airborne: Boolean,
+        val speedMs: Double, val trackDeg: Double, val climbMs: Double, val lat: Int, val lon: Int, val v7: Boolean,
+    )
+
+    private class Pending(val t: Long, val p: Fix, val channel: Int, val snr: Double)
 
     val aircraft = HashMap<Int, FlarmAircraft>()
     private val pending = HashMap<Long, List<Pending>>()
     private val privateSet = HashSet<Long>()
-    private val newSet = HashSet<Long>()
+    private val undecoded = HashSet<Long>()
     private val salt = java.security.SecureRandom().nextLong()
     var privateCount = 0
         private set
-    var newProtocolDevices = 0
-        private set
-    var newProtocolPackets = 0
-        private set
+    /** Senders on the newer protocol heard but not decoded yet (or whose packets never agreed: a wrong clock). */
+    val newProtocolDevices get() = undecoded.size
     var packets = 0
         private set
 
@@ -414,35 +587,49 @@ class FlarmTracker {
         return h
     }
 
-    private fun near(a: Int, b: Int, mask: Int): Boolean { val d = (a - b) and mask; return minOf(d, mask + 1 - d) < 4000 }
+    private fun near(a: Int, b: Int, mask: Int, within: Int): Boolean { val d = (a - b) and mask; return minOf(d, mask + 1 - d) < within }
 
-    private fun agrees(q: Flarm.V6, type: Int, priv: Boolean, lat19: Int, lon20: Int) =
-        q.private == priv && q.aircraftType == type && near(q.lat19, lat19, 0x7FFFF) && near(q.lon20, lon20, 0xFFFFF)
+    /** V6 positions are in 128e-7° steps (19 bits of latitude), V7 in 52e-7° or more (20 bits): about 5 km either way. */
+    private fun agrees(q: Fix, f: Fix) =
+        q.v7 == f.v7 && q.private == f.private && q.type == f.type &&
+            near(q.lat, f.lat, if (q.v7) 0xFFFFF else 0x7FFFF, if (q.v7) 10_000 else 4000) &&
+            near(q.lon, f.lon, 0xFFFFF, if (q.v7) 10_000 else 4000)
 
-    /** [unixMs] is the wall clock, which the key needs. */
+    private fun fix(p: Flarm.V6): Fix {
+        val (speed, track, climb) = Flarm.velocity(p)
+        return Fix(p.addr, p.addrType, p.private, p.aircraftType, p.alt, p.airborne, speed, track, climb, p.lat19, p.lon20, false)
+    }
+
+    private fun fix(p: Flarm.V7) =
+        Fix(p.addr, p.addrType, p.private, p.aircraftType, p.alt, p.airborne >= 2, p.speedMs, p.courseDeg, p.climbMs, p.lat20, p.lon20, true)
+
+    /** [unixMs] is the wall clock, which the keys need. */
     fun update(f: FlarmFrame, unixMs: Long) {
         val type = Flarm.packetType(f.bytes)
+        if (type != 0 && type != 2) return
         val id = Flarm.packetAddr(f.bytes)
         val h = hash(id)
-        if (type == 2) {
-            newProtocolPackets++
-            if (newSet.add(h)) newProtocolDevices = newSet.size
-            return
-        }
-        if (type != 0) return
         val ts = (unixMs / 1000).toInt()
-        val frac = ts and 63
-        val times = listOfNotNull(ts, if (frac >= 52) ts + 64 else null, if (frac < 12) ts - 64 else null)
-        val d = times.mapNotNull { Flarm.decodeV6(f.bytes, it) }
+        // Near a key change the sender's clock may already be on the next step, or still on the last one.
+        val d: List<Fix> = if (type == 0) {
+            val frac = ts and 63
+            listOfNotNull(ts, if (frac >= 52) ts + 64 else null, if (frac < 12) ts - 64 else null).mapNotNull { Flarm.decodeV6(f.bytes, it)?.let(::fix) }
+        } else {
+            val frac = ts and 15
+            listOfNotNull(ts, if (frac >= 13) ts + 16 else null, if (frac < 3) ts - 16 else null).mapNotNull { Flarm.decodeV7(f.bytes, it)?.let(::fix) }
+        }
+        if (type == 2 && h !in privateSet && id !in aircraft) undecoded.add(h)
         if (d.isEmpty()) return
         aircraft[id]?.let { a ->
-            d.firstOrNull { !it.private && agrees(it, a.type, false, a.lat19, a.lon20) }?.let { apply(it, unixMs, f.channel, f.snrDb); return }
+            val known = Fix(a.id, a.addrType, false, a.type, a.altM, a.airborne, 0.0, 0.0, 0.0, a.lat19, a.lon20, a.v7)
+            d.firstOrNull { !it.private && agrees(it, known) }?.let { apply(it, unixMs, f.channel, f.snrDb); return }
         }
         if (h in privateSet) return
         pending.values.removeAll { unixMs - it.first().t > 60_000 }
         pending[h]?.let { list ->
-            for (q in d) for (first in list) if (agrees(q, first.p.aircraftType, first.p.private, first.p.lat19, first.p.lon20)) {
+            for (q in d) for (first in list) if (agrees(q, first.p)) {
                 pending.remove(h)
+                undecoded.remove(h)
                 if (q.private) { privateSet.add(h); privateCount = privateSet.size; return }
                 apply(first.p, first.t, first.channel, first.snr)
                 apply(q, unixMs, f.channel, f.snrDb)
@@ -453,13 +640,12 @@ class FlarmTracker {
         pending[h] = d.map { Pending(unixMs, it, f.channel, f.snrDb) }
     }
 
-    private fun apply(p: Flarm.V6, t: Long, channel: Int, snr: Double) {
+    private fun apply(p: Fix, t: Long, channel: Int, snr: Double) {
         packets++
-        val (speed, track, climb) = Flarm.velocity(p)
         val prev = aircraft[p.addr]
         aircraft[p.addr] = FlarmAircraft(
-            p.addr, p.addrType, p.aircraftType, p.alt, p.airborne, speed * 3.6, track, climb,
-            p.lat19, p.lon20, channel, snr, (prev?.packets ?: 0) + 1, t,
+            p.addr, p.addrType, p.type, p.alt, p.airborne, p.speedMs * 3.6, p.trackDeg, p.climbMs,
+            p.lat, p.lon, channel, snr, (prev?.packets ?: 0) + 1, t, p.v7,
         )
     }
 

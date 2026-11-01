@@ -86,7 +86,7 @@ The home screen offers five networks. Each one has its dashboard, its main tool 
 | DECT | Cordless phone base stations (1880–1900 MHz): identity, carriers, slots; voice is never touched |
 | DSC | Maritime digital selective calls on VHF channel 70: distress alerts, safety and routine calls, positions |
 | Drones | DJI (DroneID), analogue FPV and remote controls (ExpressLRS, Crossfire, FrSky, FlySky, Spektrum) |
-| FLARM | Gliders and light aircraft on 868 MHz (old protocol), positions around you; aircraft asking not to be tracked are only counted |
+| FLARM | Gliders and light aircraft on 868 MHz (both the old protocol and the one since 2024), positions around you; aircraft asking not to be tracked are only counted |
 | ISM sensors | Weather stations, thermometers, energy monitors, door sensors, remotes on 433, 868, 315, 345 and 915 MHz (about 30 families) |
 | LoRaWAN / Sigfox | Connected objects on 868 MHz: LoRaWAN headers (device address, network, counter) on SF7 to SF12, Sigfox uplinks |
 | Meteor-M | Weather satellite LRPT images on 137 MHz |
@@ -175,6 +175,7 @@ All Radio Tools is free software released under the [GNU General Public License 
 - [rs1729/RS](https://github.com/rs1729/RS) for the radiosonde formats.
 - [rtl_433](https://github.com/merbanan/rtl_433) for the tyre pressure and ISM sensor formats.
 - [OnAir](https://github.com/adswill/OnAir) (GPL-3.0), whose decoders were ported for ISM sensors, FLARM, Wireless M-Bus, DSC, VDL Mode 2, DECT, DMR / dPMR, Sigfox, Horus, Mode A/C and CubeSat telemetry.
+- [SoftRF](https://github.com/lyusupov/SoftRF) (GPL-3.0), whose FLARM code (frame CRC, the 2024 protocol's keys and layout) was ported.
 - [gr-lora_sdr](https://github.com/tapparelj/gr-lora_sdr) (EPFL) for the LoRa receiver.
 - [mbelib](https://github.com/szechyjs/mbelib) (ISC) for the AMBE+2 voice decoder. AMBE+2 is covered by patents in some countries: the code is provided for research and education.
 - Google [GNSS Measurement Tools](https://github.com/google/gps-measurement-tools) for the pseudorange computation.
