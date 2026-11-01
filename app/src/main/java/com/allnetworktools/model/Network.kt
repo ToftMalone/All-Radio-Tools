@@ -13,8 +13,8 @@ enum class Network(
     Bluetooth("Bluetooth", Sym.Bluetooth, "BLE"),
     Cellular(S(R.string.mobile_network), Sym.CellBars3, S(R.string.cells)),
     Gnss("GNSS", Sym.SatelliteAlt, S(R.string.sky)),
-    Sdr("SDR", Sym.Antenna, S(R.string.spectrum)),
     Nfc("NFC", Sym.Nfc, S(R.string.nfc_featured_short)),
+    Sdr("SDR", Sym.Antenna, S(R.string.spectrum)),
     ;
 
     // Getters rather than constructor arguments: Tool's entries reference Network, so eager

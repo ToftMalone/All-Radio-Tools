@@ -23,25 +23,35 @@ class AcarsTest {
     }
 
     /** MSK audio at [fs]: 2400 Hz or 1200 Hz per bit, continuous phase. [differential] codes a 0 as a tone change. */
-    private fun audio(bits: IntArray, fs: Double, differential: Boolean, noise: Double, seed: Long = 1): FloatArray {
+    private fun audio(bits: IntArray, fs: Double, differential: Boolean, noise: Double, seed: Long = 1, high: Double = 1.0, start: Int = 1000): FloatArray {
         val spb = fs / 2400
         val rnd = Random(seed)
-        val out = FloatArray(((bits.size + 10) * spb).toInt() + 2000)
+        val out = FloatArray(((bits.size + 10) * spb).toInt() + 4000)
         var phase = 0.0
         var tone = 1
-        var t = 1000.0
-        for (b in bits) {
+        var t = start
+        bits.forEachIndexed { k, b ->
             tone = if (differential) (if (b == 1) tone else 1 - tone) else b
             val f = if (tone == 1) 2400.0 else 1200.0
-            val end = t + spb
+            val a = if (tone == 1) high else 1.0
+            val end = start + (k + 1) * spb
             while (t < end) {
-                val i = t.toInt()
-                out[i] = (sin(phase) + rnd.nextGaussian() * noise).toFloat()
+                out[t] = (a * sin(phase)).toFloat()
                 phase += 2 * PI * f / fs
-                t += 1.0
+                t++
             }
         }
+        // Noise everywhere, before and after the message too, as on air.
+        for (i in out.indices) out[i] += (rnd.nextGaussian() * noise).toFloat()
         return out
+    }
+
+    private fun decode(a: FloatArray): List<AcarsMessage> {
+        val got = ArrayList<AcarsMessage>()
+        val d = AcarsDecoder(48_000.0, 131.725) { got += it }
+        var i = 0
+        while (i < a.size) { val n = minOf(1000, a.size - i); d.feed(a.copyOfRange(i, i + n), n); i += n }
+        return got
     }
 
     private val sample = Acars.frame('2', ".F-GKXA", 'N', "H1", '3', "M01AAF1234#DFBPOS N48123E002456")
@@ -61,25 +71,51 @@ class AcarsTest {
 
     @Test fun decodesBothToneConventions() {
         for (diff in listOf(false, true)) {
-            val got = ArrayList<AcarsMessage>()
-            val d = AcarsDecoder(48_000.0, 131.725) { got += it }
-            val a = audio(bits(sample), 48_000.0, diff, 0.3)
-            var i = 0
-            while (i < a.size) { val n = minOf(1000, a.size - i); d.feed(a.copyOfRange(i, i + n), n); i += n }
+            val got = decode(audio(bits(sample), 48_000.0, diff, 0.3))
             assertEquals("differential=$diff", 1, got.size)
             assertEquals("AF1234", got[0].flight)
         }
     }
 
+    /** What failed on air: noise before the message, a long text, tones at different levels, a clock a little off. */
+    @Test fun longMessageInNoiseWithUnevenTones() {
+        val text = "M02AAF1234" + "/POS N4812.3 E00245.6 FL350 SPD 452 ETA 1423 FOB 0123 WIND 270/045 TEMP M54 RMK ALL NORMAL ONBOARD THANKS"
+        val frame = Acars.frame('2', ".F-HPJA", 'N', "H1", '5', text)
+        var ok = 0
+        for (s in 0 until 10) {
+            val a = audio(bits(frame), 48_000.0 * (1 + 100e-6), s % 2 == 0, 0.5, s.toLong(), high = 0.6, start = 1000 + s)
+            val got = decode(a)
+            assertTrue("seed $s: ${got.size} copies", got.size <= 1)
+            if (got.singleOrNull()?.text == text.substring(10)) ok++
+        }
+        assertTrue("$ok/10", ok >= 9)
+    }
+
+    @Test fun mendsABadCharacterWithTheBcs() {
+        val frame = sample.copyOf()
+        // A bit flipped in the text: its parity is wrong, the BCS tells which value it was.
+        frame[30] = (frame[30].toInt() xor 0x04).toByte()
+        val got = decode(audio(bits(frame), 48_000.0, false, 0.2))
+        assertEquals(1, got.size)
+        assertEquals("#DFBPOS N48123E002456", got[0].text)
+    }
+
+    @Test fun twoMessagesBackToBack() {
+        val a = audio(bits(sample), 48_000.0, false, 0.3, 1)
+        val b = audio(bits(Acars.frame('2', ".F-HBXA", 'N', "Q0", '4', null)), 48_000.0, false, 0.3, 2)
+        val got = decode(a + b)
+        assertEquals(listOf("F-GKXA", "F-HBXA"), got.map { it.registration })
+    }
+
     @Test fun receivesThroughTheHackRfChain() {
         val fs = AcarsReceiver.SAMPLE_RATE.toDouble()
         val a = audio(bits(Acars.frame('2', ".N123AB", 'N', "Q0", 'S', null)), 48_000.0, false, 0.0)
-        // AM on the 131.825 MHz channel (+200 kHz from the centre), upsampled by holding each audio sample 50 times.
+        // AM on the 131.825 MHz channel, upsampled by holding each audio sample 50 times.
         val n = a.size * 50
         val re = FloatArray(n)
         val im = FloatArray(n)
         val rnd = Random(4)
-        val w = 2 * PI * 200_000.0 / fs
+        val w = 2 * PI * (131_825_000L - Acars.CenterHz).toDouble() / fs
         for (i in 0 until n) {
             val env = 0.4 * (1 + 0.6 * a[i / 50])
             re[i] = (env * cos(w * i) + rnd.nextGaussian() * 0.02).toFloat()

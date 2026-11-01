@@ -38,9 +38,12 @@ object Acars {
     const val SYN = 0x16
     const val DEL = 0x7F
 
-    /** Channels used in Europe; one 2.4 MS/s capture centred on 131.625 MHz covers the three of them. */
+    /**
+     * Channels used in Europe; one 2.4 MS/s capture centred on 131.600 MHz covers the three of them. The centre keeps
+     * them off the receiver's DC spike, and no channel falls on another's mirror image (-75, +125 and +225 kHz).
+     */
     val EuropeHz = listOf(131_525_000L, 131_725_000L, 131_825_000L)
-    const val CenterHz = 131_625_000L
+    const val CenterHz = 131_600_000L
 
     fun crc(bytes: ByteArray, from: Int, to: Int): Int {
         var c = 0
@@ -55,6 +58,28 @@ object Acars {
 
     /** Adds the odd-parity bit to a 7-bit character. */
     fun withParity(c: Int): Int = if (Integer.bitCount(c and 0x7F) % 2 == 1) c and 0x7F else (c and 0x7F) or 0x80
+
+    /**
+     * Checks the BCS of `buf[0 until end]` (the two BCS bytes follow) and, when it fails, mends up to two characters
+     * whose parity is wrong by flipping one bit in each and checking the BCS again, as ground stations do. At most 64
+     * tries, so a wrong frame passes for mended about once in a thousand; trying every value would be one in four.
+     */
+    fun mend(buf: ByteArray, end: Int): Boolean {
+        val got = (buf[end].toInt() and 0xFF) or ((buf[end + 1].toInt() and 0xFF) shl 8)
+        if (crc(buf, 0, end) == got) return true
+        val bad = (0 until end).filter { !oddParity(buf[it].toInt()) }
+        if (bad.isEmpty() || bad.size > 2) return false
+        val keep = bad.map { buf[it] }
+        val first = keep[0].toInt()
+        for (i in 0 until 8) {
+            buf[bad[0]] = (first xor (1 shl i)).toByte()
+            if (bad.size == 1) { if (crc(buf, 0, end) == got) return true; continue }
+            val second = keep[1].toInt()
+            for (j in 0 until 8) { buf[bad[1]] = (second xor (1 shl j)).toByte(); if (crc(buf, 0, end) == got) return true }
+        }
+        bad.forEachIndexed { k, at -> buf[at] = keep[k] }
+        return false
+    }
 
     /** Common labels, for the list (ARINC 620 and usual airline use). */
     val Labels = mapOf(
@@ -110,26 +135,36 @@ object Acars {
 }
 
 /**
- * MSK demodulator and frame reader for one channel of AM audio at [audioRate]: tone energies at 1200 and 2400 Hz over one
- * bit, the bit clock taken where they differ most, then the bytes after the sync. The tone-to-bit rule is not taken for
- * granted: the sync is looked for with the tones read directly, inverted, and as changes, and the first that matches is
- * kept for the frame; the parity and the BCS then reject anything else.
+ * MSK demodulator and frame reader for one channel of AM audio at [audioRate]. The audio is mixed down by 1800 Hz, the
+ * centre between the two tones, so 1200 Hz and 2400 Hz become -600 and +600 Hz; the phase turned over one bit
+ * (a quarter turn one way or the other) gives the tone, whatever the level of each tone. The bit clock is not
+ * guessed: every sampling phase within a bit reads its own bit stream, and the one that finds the sync reads the
+ * frame. The tone-to-bit rule is not taken for granted either: the sync is looked for with the tones read directly,
+ * inverted, and as changes. Parity and the BCS then reject anything else, after trying to mend one or two bad
+ * characters with the BCS.
  */
 class AcarsDecoder(private val audioRate: Double, private val freqMhz: Double, private val onMessage: (AcarsMessage) -> Unit) {
     private val spb = Math.round(audioRate / 2400.0).toInt()
-    // One period of each tone fits a whole number of samples at 48 kS/s: 40 for 1200 Hz, 20 for 2400 Hz.
-    private val p1 = Math.round(audioRate / 1200.0).toInt()
-    private val p2 = Math.round(audioRate / 2400.0).toInt()
-    private val c1 = DoubleArray(p1) { cos(2 * PI * it / p1) }
-    private val q1 = DoubleArray(p1) { sin(2 * PI * it / p1) }
-    private val c2 = DoubleArray(p2) { cos(2 * PI * it / p2) }
-    private val q2 = DoubleArray(p2) { sin(2 * PI * it / p2) }
-    private val hist = DoubleArray(spb)
+    private val lo = 2 * PI * 1800.0 / audioRate
+    private val taps = FloatArray(LPF_TAPS).also { h ->
+        val fc = 1700.0 / audioRate
+        var sum = 0.0
+        val raw = DoubleArray(LPF_TAPS) { i ->
+            val m = i - (LPF_TAPS - 1) / 2.0
+            val s = if (m == 0.0) 2 * fc else sin(2 * PI * fc * m) / (PI * m)
+            s * (0.42 - 0.5 * cos(2 * PI * i / (LPF_TAPS - 1)) + 0.08 * cos(4 * PI * i / (LPF_TAPS - 1)))
+        }
+        sum = raw.sum()
+        for (i in h.indices) h[i] = (raw[i] / sum).toFloat()
+    }
+    private val br = FloatArray(LPF_TAPS * 2)
+    private val bi = FloatArray(LPF_TAPS * 2)
+    private var bp = 0
+    private val zr = FloatArray(spb)
+    private val zi = FloatArray(spb)
     private var n = 0L
-    private var s1r = 0.0; private var s1i = 0.0; private var s2r = 0.0; private var s2i = 0.0
-    private val phaseEnergy = DoubleArray(spb)
     private var dc = 0.0
-    private var pow = 1e-6
+    private var ph = 0.0
 
     private class Reader {
         var reg = 0L
@@ -140,60 +175,49 @@ class AcarsDecoder(private val audioRate: Double, private val freqMhz: Double, p
         var tail = -1
     }
 
-    private val readers = Array(4) { Reader() }
-    private var prevTone = 0
+    /** For each sampling phase: the four tone-to-bit rules, and the last tone read. */
+    private val readers = Array(spb) { Array(4) { Reader() } }
+    private val prevTone = IntArray(spb)
 
     fun feed(audio: FloatArray, count: Int) {
         for (k in 0 until count) {
-            // Remove the carrier (DC, corner near 40 Hz, well below the tones) and normalise the level.
+            // Remove the carrier (DC, corner near 40 Hz, well below the tones).
             if (n == 0L) dc = audio[k].toDouble()
             dc += (audio[k] - dc) * 0.005
-            val x0 = audio[k] - dc
-            pow += (x0 * x0 - pow) * 0.0005
-            val x = x0 / sqrt(pow + 1e-12)
-            val idx = (n % spb).toInt()
-            val old = hist[idx]
-            hist[idx] = x
-            // Sliding correlations over the last bit: add the new sample, drop the one a bit ago (same table index for 2400 Hz).
-            val a1 = (n % p1).toInt()
-            val o1 = ((n - spb) % p1 + p1).toInt() % p1
-            val a2 = (n % p2).toInt()
-            s1r += x * c1[a1] - old * c1[o1]; s1i -= x * q1[a1] - old * q1[o1]
-            s2r += (x - old) * c2[a2]; s2i -= (x - old) * q2[a2]
+            val x = (audio[k] - dc).toFloat()
+            br[bp] = x * cos(ph).toFloat(); br[bp + LPF_TAPS] = br[bp]
+            bi[bp] = -x * sin(ph).toFloat(); bi[bp + LPF_TAPS] = bi[bp]
+            ph += lo
+            if (ph > 2 * PI) ph -= 2 * PI
+            bp++
+            if (bp == LPF_TAPS) bp = 0
+            var r = 0f
+            var i = 0f
+            for (j in 0 until LPF_TAPS) { r += taps[j] * br[bp + j]; i += taps[j] * bi[bp + j] }
+            val slot = (n % spb).toInt()
+            // Phase turned since one bit ago: positive towards 2400 Hz.
+            val d = i * zr[slot] - r * zi[slot]
+            zr[slot] = r; zi[slot] = i
             n++
-            if (n % 4_800_000L == 0L) recompute()
-            val m = (s2r * s2r + s2i * s2i) - (s1r * s1r + s1i * s1i)
-            phaseEnergy[idx] = phaseEnergy[idx] * 0.995 + kotlin.math.abs(m) * 0.005
-            // Sample at the phase where the two tones are told apart best.
-            var best = 0
-            for (p in 1 until spb) if (phaseEnergy[p] > phaseEnergy[best]) best = p
-            if (idx == best) bit(if (m > 0) 1 else 0)
+            if (n > spb) bit(slot, if (d > 0) 1 else 0)
         }
     }
 
-    /** Running sums drift with rounding over hours: rebuild them from the last bit of history. */
-    private fun recompute() {
-        s1r = 0.0; s1i = 0.0; s2r = 0.0; s2i = 0.0
-        for (j in 0 until spb) {
-            val t = n - spb + j
-            val v = hist[(t % spb).toInt()]
-            s1r += v * c1[(t % p1).toInt()]; s1i -= v * q1[(t % p1).toInt()]
-            s2r += v * c2[(t % p2).toInt()]; s2i -= v * q2[(t % p2).toInt()]
-        }
-    }
-
-    private fun bit(tone: Int) {
-        val cand = intArrayOf(tone, 1 - tone, if (tone == prevTone) 1 else 0, if (tone != prevTone) 1 else 0)
-        prevTone = tone
-        for (h in 0 until 4) step(readers[h], cand[h])
+    private fun bit(p: Int, tone: Int) {
+        val prev = prevTone[p]
+        prevTone[p] = tone
+        val rs = readers[p]
+        step(rs[0], tone)
+        step(rs[1], 1 - tone)
+        step(rs[2], if (tone == prev) 1 else 0)
+        step(rs[3], if (tone != prev) 1 else 0)
     }
 
     private fun step(r: Reader, b: Int) {
         // Least significant bit first: each new bit enters at the top of the byte.
         r.reg = ((r.reg ushr 1) or (b.toLong() shl 39)) and 0xFF_FFFF_FFFFL
         if (!r.inFrame) {
-            val sync = (r.reg ushr 0) and 0xFF_FFFF_FFFFL
-            if (sync == SYNC) { r.inFrame = true; r.len = 0; r.bits = 0; r.tail = -1 }
+            if (r.reg == SYNC) { r.inFrame = true; r.len = 0; r.bits = 0; r.tail = -1 }
             return
         }
         if (++r.bits < 8) return
@@ -205,13 +229,17 @@ class AcarsDecoder(private val audioRate: Double, private val freqMhz: Double, p
         if (r.tail < 0 && r.len > 12 && (c == Acars.ETX || c == Acars.ETB)) r.tail = r.len
         if (r.tail >= 0 && r.len == r.tail + 2) {
             r.inFrame = false
-            val crc = Acars.crc(r.buf, 0, r.tail)
-            val got = (r.buf[r.tail].toInt() and 0xFF) or ((r.buf[r.tail + 1].toInt() and 0xFF) shl 8)
-            if (crc == got) Acars.parse(r.buf, r.tail, freqMhz, System.currentTimeMillis())?.let { m -> readers.forEach { it.inFrame = false }; onMessage(m) }
+            if (Acars.mend(r.buf, r.tail)) Acars.parse(r.buf, r.tail, freqMhz, System.currentTimeMillis())?.let { m ->
+                // The neighbouring phases read the same frame: drop their copies.
+                for (ps in readers) for (o in ps) o.inFrame = false
+                onMessage(m)
+            }
         }
     }
 
     private companion object {
+        const val LPF_TAPS = 48
+
         /** `+ * SYN SYN SOH` with parity, least significant bit first, as it ends in a 40-bit shift register. */
         val SYNC: Long = run {
             val bytes = listOf('+'.code, '*'.code, Acars.SYN, Acars.SYN, Acars.SOH).map { Acars.withParity(it).toLong() }
