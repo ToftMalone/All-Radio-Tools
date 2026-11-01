@@ -36,7 +36,8 @@ class TpmsTest {
     }
 
     /** FSK at 250 kS/s, ±40 kHz, between stretches of noise; [invert] swaps the tones. */
-    private fun fsk(raw: List<Byte>, bitUs: Double, invert: Boolean = false, seed: Int = 1): Pair<FloatArray, FloatArray> {
+    /** [spikeEvery]: one sample in that many jumps to the other tone, as noise does to a discriminator. */
+    private fun fsk(raw: List<Byte>, bitUs: Double, invert: Boolean = false, seed: Int = 1, spikeEvery: Int = 0): Pair<FloatArray, FloatArray> {
         val rate = 250_000.0
         val rnd = Random(seed)
         val spb = rate * bitUs / 1e6
@@ -50,7 +51,8 @@ class TpmsTest {
             val sig = k >= 0 && k < raw.size * spb
             if (sig) {
                 val bit = raw[(k / spb).toInt().coerceAtMost(raw.size - 1)].toInt()
-                ph += 2 * PI * (if ((bit == 1) != invert) 40_000.0 else -40_000.0) / rate
+                val spike = spikeEvery > 0 && k % spikeEvery == spikeEvery / 2
+                ph += 2 * PI * (if ((bit == 1) != invert != spike) 40_000.0 else -40_000.0) / rate
                 re[i] = 0.5f * cos(ph).toFloat(); im[i] = 0.5f * sin(ph).toFloat()
             }
             re[i] += (rnd.nextFloat() - 0.5f) * 0.03f
@@ -59,9 +61,9 @@ class TpmsTest {
         return re to im
     }
 
-    private fun receive(raw: List<Byte>, bitUs: Double, invert: Boolean = false): List<TpmsReading> {
+    private fun receive(raw: List<Byte>, bitUs: Double, invert: Boolean = false, spikeEvery: Int = 0): List<TpmsReading> {
         val out = ArrayList<TpmsReading>()
-        val (re, im) = fsk(raw, bitUs, invert)
+        val (re, im) = fsk(raw, bitUs, invert, spikeEvery = spikeEvery)
         val demod = TpmsDemodulator { out += it }
         var i = 0
         while (i < re.size) {
@@ -121,6 +123,27 @@ class TpmsTest {
         assertEquals(tmp - 40.0, r.temperatureC!!, 1e-9)
     }
 
+    private fun toyotaPacket(): List<Byte> {
+        val p = 0x90
+        val tmp = 0x3c
+        val b = intArrayOf(0x0a, 0x0b, 0x0c, 0x0d, 0x80 or (p shr 1), ((p and 1) shl 7) or (tmp shr 1), (tmp and 1) shl 7, p xor 0xff, 0)
+        b[8] = TpmsBits.crc8(b, 8, 0x07, 0x80)
+        return bitsOf("a9e0", 11) + diffManchester(bitsOf(b), 1)
+    }
+
+    @Test fun spikesOnTheDiscriminatorAreIgnored() {
+        // One sample in 29 on the wrong tone: each splits a run in two, which rounded apart would lose bits.
+        val r = receive(lead + toyotaPacket() + trailer, 52.0, spikeEvery = 29).one()
+        assertEquals("0a0b0c0d", r.id)
+    }
+
+    @Test fun packetFillingTheWholeBurst() {
+        // Nothing before the sync word but four preamble bits, nothing after the last bit: the squelch opens a
+        // little late and closes a little early, and the samples around it must still be read.
+        val r = receive(bitsOf("a0", 4) + toyotaPacket(), 52.0).one()
+        assertEquals("0a0b0c0d", r.id)
+    }
+
     @Test fun pmv107jAt100Microseconds() {
         val b = IntArray(9)
         b[0] = 0x2; b[1] = 0x34; b[2] = 0x56; b[3] = 0x78; b[4] = 0x88; b[5] = 0x60; b[6] = 0x60 xor 0xff; b[7] = 0x41
@@ -128,6 +151,7 @@ class TpmsTest {
         val data = bitsOf(intArrayOf(b[0] shl 6), 2) + bitsOf(b.copyOfRange(1, 9)) + listOf<Byte>(0)
         val r = receive(bitsOf("ff") + bitsOf("f8", 6) + diffManchester(data, 0) + trailer, 100.0).one()
         assertEquals("Toyota (PMV-107J)", r.protocol)
+        assertEquals("08d159e2", r.id) // eight digits, as rtl_433 prints it
         assertEquals((0x60 - 40.0) * 2.48, r.pressureKpa!!, 1e-9)
         assertEquals(0x41 - 40.0, r.temperatureC!!, 1e-9)
         assertEquals(true, r.batteryOk)

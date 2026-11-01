@@ -200,7 +200,7 @@ object Tpms {
         if (TpmsBits.crc8(b, 8, 0x13, 0x00) != b[8]) return@scan null
         if (b[5] != (b[6] xor 0xff)) return@scan null
         val id = (b[0] shl 26) or (b[1] shl 18) or (b[2] shl 10) or (b[3] shl 2) or (b[4] shr 6)
-        TpmsReading("Toyota (PMV-107J)", "%07x".format(id), (b[5] - 40.0) * 2.48, b[7] - 40.0, batteryOk = b[4] and 0x20 == 0)
+        TpmsReading("Toyota (PMV-107J)", "%08x".format(id), (b[5] - 40.0) * 2.48, b[7] - 40.0, batteryOk = b[4] and 0x20 == 0)
     }
 
     /** Kia Rio and some Hyundai: 50 µs bits, 0xed71 sync, 5-bit CRC-8 0x07 init 0x76. */
@@ -298,6 +298,9 @@ class TpmsDemodulator(private val sampleRate: Double = 250_000.0, private val on
     private var quiet = 0
     private val freq = FloatArray(MAX_BURST)
     private var len = 0
+    private val hist = FloatArray(PRE)
+    private var histPos = 0
+    private var head = 0
     private val recent = HashMap<String, Long>()
     private var n = 0L
 
@@ -314,14 +317,25 @@ class TpmsDemodulator(private val sampleRate: Double = 250_000.0, private val on
             pr = r; pi = q
             val loud = n > WARMUP && power > floor * SQUELCH && power > 1e-7f
             if (loud) {
-                if (!inBurst) { inBurst = true; len = 0 }
+                if (!inBurst) {
+                    // The squelch opens a little after the burst starts: begin with the samples just before it.
+                    inBurst = true
+                    len = 0
+                    val k = minOf(PRE, n.toInt())
+                    for (j in k downTo 1) freq[len++] = hist[((histPos - j) % PRE + PRE) % PRE]
+                    head = k
+                }
                 quiet = 0
             }
+            hist[histPos] = f
+            histPos = (histPos + 1) % PRE
             if (inBurst) {
                 if (len < MAX_BURST) freq[len++] = f
                 if (!loud && ++quiet > END_GAP || len == MAX_BURST) {
                     inBurst = false
-                    burst(len - quiet.coerceAtMost(len))
+                    // Likewise it closes a little before the end: keep a short tail, or the last bits come out cut.
+                    val kept = len - (quiet - TAIL).coerceIn(0, len)
+                    burst(kept, head, minOf(TAIL, quiet, kept - head))
                     // A "burst" as long as the limit is more likely a louder noise floor: let the floor catch up.
                     if (len == MAX_BURST) floor += (power - floor) * 0.5f
                 }
@@ -330,11 +344,14 @@ class TpmsDemodulator(private val sampleRate: Double = 250_000.0, private val on
         }
     }
 
-    private fun burst(count: Int) {
-        if (count < 200) return
-        val sorted = freq.copyOf(count).also { it.sort() }
-        val lo = sorted[count / 10]
-        val hi = sorted[count * 9 / 10]
+    /** [count] samples in [freq], of which the first [head] and the last [tail] are from outside the squelch. */
+    private fun burst(count: Int, head: Int, tail: Int) {
+        val core = count - head - tail
+        if (core < 200) return
+        // The two tones from the burst itself: the samples around it are noise, any frequency.
+        val sorted = freq.copyOfRange(head, head + core).also { it.sort() }
+        val lo = sorted[core / 10]
+        val hi = sorted[core * 9 / 10]
         if (hi - lo < 0.05f) return
         val mid = (lo + hi) / 2
         // Runs of one level, then rows of bits at each bit time.
@@ -347,8 +364,19 @@ class TpmsDemodulator(private val sampleRate: Double = 250_000.0, private val on
         val now = System.currentTimeMillis()
         for (us in Tpms.bitTimesUs) {
             val spb = sampleRate * us / 1e6
+            // A run much shorter than a bit is a noise spike on the discriminator: it belongs to the run it interrupts,
+            // which would otherwise come out as two short runs and lose a bit when they are rounded.
+            val mv = ArrayList<Int>()
+            val ml = ArrayList<Int>()
+            for (k in levels.indices) {
+                when {
+                    mv.isNotEmpty() && lengths[k] < spb * GLITCH -> ml[ml.lastIndex] += lengths[k]
+                    mv.isNotEmpty() && mv.last() == levels[k] -> ml[ml.lastIndex] += lengths[k]
+                    else -> { mv += levels[k]; ml += lengths[k] }
+                }
+            }
             val row = ArrayList<Byte>()
-            for (k in levels.indices) repeat((lengths[k] / spb).roundToInt().coerceAtMost(64)) { row += levels[k].toByte() }
+            for (k in mv.indices) repeat((ml[k] / spb).roundToInt().coerceAtMost(64)) { row += mv[k].toByte() }
             for (r in Tpms.decodeRow(row.toByteArray(), us)) {
                 // A sensor repeats its packet several times per burst: one reading per burst.
                 val key = "${r.protocol}/${r.id}/${r.pressureKpa}/${r.temperatureC}"
@@ -368,6 +396,11 @@ class TpmsDemodulator(private val sampleRate: Double = 250_000.0, private val on
         private const val WARMUP = 512
         /** Quiet samples that end a burst (about 0.3 ms). */
         private const val END_GAP = 80
+        /** Samples kept from before the squelch opened (0.25 ms at 250 kS/s), and after it closed. */
+        private const val PRE = 64
+        /** Runs shorter than this many bit times are spikes. */
+        private const val GLITCH = 0.4
+        private const val TAIL = 32
         /** 60 ms: longer than any sensor's packet train. */
         private const val MAX_BURST = 15_000
     }
