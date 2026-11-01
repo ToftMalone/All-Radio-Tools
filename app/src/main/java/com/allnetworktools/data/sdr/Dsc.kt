@@ -105,8 +105,8 @@ object Dsc {
             c.category == DISTRESS && c.telecmd1 == 110 -> if (c.format == ALL_SHIPS) 1 else 3
             c.category == DISTRESS && c.telecmd1 == 112 -> 2
             c.telecmd1 == 118 -> if (ack) 5 else 4
-            c.telecmd1 == 121 -> 6
-            c.telecmd1 == 103 -> if (ack) 8 else 7
+            // Telecommand 121, ship position: a request carries no position, the reply and an update do.
+            c.telecmd1 == 121 -> if (ack) 8 else if (c.position != null) 6 else 7
             ack && c.position != null -> 8
             ack -> 9
             c.category == 110 -> 10

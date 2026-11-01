@@ -68,6 +68,18 @@ class DscTest {
         assertTrue(Dsc.isCoast(c.to))
     }
 
+    /** Telecommand 121, ship position: asked without a position, answered (acknowledged) with one; 103 is polling. */
+    @Test
+    fun positionCalls() {
+        fun call(tc1: Int, eos: Int, pos: Pair<Double, Double>?) =
+            DscCall(Dsc.INDIVIDUAL, 100, "227123450", "002275300", -1, pos, null, tc1, null, null, eos, true, emptyList())
+        assertEquals(7, Dsc.kind(call(121, Dsc.EOS_ACK_RQ, null)))
+        assertEquals(8, Dsc.kind(call(121, Dsc.EOS_ACK, 48.38 to -4.49)))
+        assertEquals(6, Dsc.kind(call(121, Dsc.EOS_OTHER, 48.38 to -4.49)))
+        assertEquals(12, Dsc.kind(call(103, Dsc.EOS_ACK_RQ, null)))
+        assertEquals(9, Dsc.kind(call(103, Dsc.EOS_ACK, null)))
+    }
+
     /** HackRF bytes at 2 MS/s tuned 500 kHz below channel 70: FM ±3 kHz carrying the 1300 / 2100 Hz tones. */
     @Test
     fun receivesFromRadio() {
