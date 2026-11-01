@@ -50,6 +50,21 @@ class FlarmTest {
         assertTrue(wrong == null || wrong.alt != 1850 || wrong.lat19 != d.lat19)
     }
 
+    /** CRC-16/CCITT-FALSE (check value 0x29B1), run over the sync's last three bytes then the payload, high byte first. */
+    @Test
+    fun frameCrcCoversTheSyncAddress() {
+        assertEquals(0x29B1, Flarm.crc16("123456789".map { it.code }.toIntArray(), 9))
+        val f = Flarm.encodeV6(packet(0xDD4F21, 45.3012, 5.9123), ts).copyOf(Flarm.FRAME)
+        val c = Flarm.crc16(intArrayOf(0x31, 0xFA, 0xB6) + f.copyOf(Flarm.PAYLOAD), 27)
+        assertEquals(c, Flarm.frameCrc(f))
+        f[24] = c ushr 8; f[25] = c and 0xFF
+        assertTrue(Flarm.checkCrc(f))
+        // The payload's CRC alone, or the bytes swapped, is not a FLARM frame.
+        val alone = Flarm.crc16(f, Flarm.PAYLOAD)
+        assertTrue(!Flarm.checkCrc(f.copyOf().also { it[24] = alone ushr 8; it[25] = alone and 0xFF }))
+        assertTrue(!Flarm.checkCrc(f.copyOf().also { it[24] = c and 0xFF; it[25] = c ushr 8 }))
+    }
+
     @Test
     fun xxteaInverts() {
         val k = Flarm.key(ts, 0x123456)

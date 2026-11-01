@@ -29,8 +29,8 @@ object Flarm {
     private const val DELTA = 0x9e3779b9.toInt()
 
     /** CRC-16/CCITT-FALSE: polynomial 0x1021, start 0xFFFF, MSB first. */
-    fun crc16(b: IntArray, n: Int): Int {
-        var c = 0xFFFF
+    fun crc16(b: IntArray, n: Int, start: Int = 0xFFFF): Int {
+        var c = start
         for (i in 0 until n) {
             c = c xor (b[i] shl 8)
             repeat(8) { c = if (c and 0x8000 != 0) (c shl 1) xor 0x1021 else c shl 1 }
@@ -39,9 +39,15 @@ object Flarm {
         return c
     }
 
+    /**
+     * The frame's CRC covers the last three sync bytes (31 FA B6, the nRF905 "address" FLARM was built on) before the
+     * payload, as SoftRF computes it; it is sent high byte first.
+     */
+    fun frameCrc(f: IntArray): Int = crc16(f, PAYLOAD, crc16(intArrayOf(0x31, 0xFA, 0xB6), 3))
+
     fun checkCrc(f: IntArray): Boolean {
-        val c = crc16(f, PAYLOAD)
-        return (f[24] == c ushr 8 && f[25] == c and 0xFF) || (f[25] == c ushr 8 && f[24] == c and 0xFF)
+        val c = frameCrc(f)
+        return f[24] == c ushr 8 && f[25] == c and 0xFF
     }
 
     /** XXTEA on [n] words, 6 rounds as FLARM uses: n > 0 encrypts, n < 0 decrypts. */
@@ -201,7 +207,7 @@ object Flarm {
     /** Payload → air chips (0/1), sync first: a 1 bit is the chip pair 01. */
     fun chips(payload: IntArray): IntArray {
         val f = payload.copyOf(FRAME)
-        val c = crc16(f, PAYLOAD)
+        val c = frameCrc(f)
         f[24] = c ushr 8; f[25] = c and 0xFF
         val bytes = intArrayOf(0xF5, 0x31, 0xFA, 0xB6) + f
         val out = IntArray(bytes.size * 16)
