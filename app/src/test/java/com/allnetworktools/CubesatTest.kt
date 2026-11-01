@@ -43,6 +43,26 @@ class CubesatTest {
         return got
     }
 
+    private fun g3ruh(f: ByteArray, ppm: Double = 0.0): DoubleArray {
+        // The scrambler and NRZI undo each other in the receiver's order.
+        val air = Cubesat.nrzi(Cubesat.scramble(Cubesat.hdlcBits(listOf(f))))
+        val spb = 500_000.0 / (9600 * (1 + ppm * 1e-6))
+        val n = (air.size * spb).toInt()
+        val raw = DoubleArray(n) { if (air[(it / spb).toInt()] == 1) 3000.0 else -3000.0 }
+        val w = (spb / 2).toInt()
+        var acc = 0.0
+        return DoubleArray(n) { i -> acc += raw[i] - (if (i >= w) raw[i - w] else 0.0); acc / minOf(i + 1, w) }
+    }
+
+    /** A 240-byte telemetry frame, its sender's clock 200 ppm fast: more than 2000 bits to keep in step. */
+    @Test
+    fun longG3ruhFrameWithClockOff() {
+        val long = addr("CQ", 0, false) + addr("RS0ISS", 0, true) + byteArrayOf(0x03, 0xF0.toByte()) + ("T#" + "0123456789ABCDEF".repeat(15)).toByteArray()
+        val got = receive(Cubesat.Mode.G3ruh9600, fm(g3ruh(long, ppm = 200.0), 8_000.0))
+        assertEquals(1, got.size)
+        assertEquals(242, got[0].info.size)
+    }
+
     @Test
     fun g3ruh9600() {
         // The scrambler and NRZI undo each other in the receiver's order.
