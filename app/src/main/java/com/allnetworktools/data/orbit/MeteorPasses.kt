@@ -13,10 +13,17 @@ import com.allnetworktools.util.S
 data class MeteorSat(val name: String, val catalog: Int, val freqMhz: Double)
 
 object MeteorSats {
+    /**
+     * The two that transmit, with the frequency they were last heard on (M2-4 on 137.900 MHz in September 2026). The
+     * operator moves them between the primary and the backup frequency from time to time.
+     */
     val all = listOf(
         MeteorSat("Meteor-M2 3", 57166, 137.900),
-        MeteorSat("Meteor-M2 4", 59051, 137.100),
+        MeteorSat("Meteor-M2 4", 59051, 137.900),
     )
+
+    /** LRPT's primary and backup frequencies (MHz). */
+    val frequencies = listOf(137.900, 137.100)
 }
 
 data class MeteorPass(

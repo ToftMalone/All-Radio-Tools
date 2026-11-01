@@ -20,8 +20,8 @@ object QpskTx {
         else -> (sin(PI * t * (1 - alpha)) + 4 * alpha * t * cos(PI * t * (1 + alpha))) / (PI * t * (1 - (4 * alpha * t) * (4 * alpha * t)))
     }
 
-    /** Pairs of bits per symbol: bit 1 → +, bit 0 → −, on I then Q. */
-    fun waveform(bits: IntArray, sps: Double, offset: Double, ppm: Double, cfoHz: Double, fs: Double, snrDb: Double, seed: Long, lead: Int = 0): Pair<FloatArray, FloatArray> {
+    /** Pairs of bits per symbol: bit 1 → +, bit 0 → −, on I then Q; with [oqpsk] Q lags I by half a symbol. */
+    fun waveform(bits: IntArray, sps: Double, offset: Double, ppm: Double, cfoHz: Double, fs: Double, snrDb: Double, seed: Long, lead: Int = 0, oqpsk: Boolean = false): Pair<FloatArray, FloatArray> {
         val rnd = Random(seed)
         val ns = bits.size / 2
         val total = ((ns + 20) * sps).toInt() + lead
@@ -40,8 +40,9 @@ object QpskTx {
                 for (k in kc - 4..kc + 5) {
                     if (k < 0 || k >= ns) continue
                     val p = rrc(t / tsym - k, 0.6) * norm
+                    val pq = if (oqpsk) rrc(t / tsym - k - 0.5, 0.6) * norm else p
                     sr += p * (if (bits[2 * k] == 1) 1 else -1) * 0.7071
-                    si += p * (if (bits[2 * k + 1] == 1) 1 else -1) * 0.7071
+                    si += pq * (if (bits[2 * k + 1] == 1) 1 else -1) * 0.7071
                 }
             }
             val ph = 2 * PI * cfoHz * (i / fs)

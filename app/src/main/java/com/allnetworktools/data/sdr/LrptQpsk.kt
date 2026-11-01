@@ -25,8 +25,10 @@ fun rootRaisedCosine(alpha: Double, sps: Int, span: Int): FloatArray {
 }
 
 /**
- * QPSK demodulator for the 72 ksymbol/s Meteor-M LRPT downlink, complex baseband at an integer number of samples per
- * symbol (4 at 288 kS/s).
+ * QPSK or offset QPSK ([offsetQ]) demodulator for the 72 ksymbol/s Meteor-M LRPT downlink, complex baseband at an
+ * integer number of samples per symbol (4 at 288 kS/s). The original Meteor-M2 sent QPSK; M2-2 and later send OQPSK,
+ * whose Q branch lags I by half a symbol: I is read at the symbol centre and Q half a symbol later, each after the
+ * carrier phase is taken off, and Gardner's timing error is taken on each branch at its own instants.
  *
  * Acquisition: the matched-filtered signal is raised to the fourth power, which removes the modulation and leaves a line
  * at four times the carrier offset; an FFT locates it, only where Doppler and the clock error can put the satellite. A tone
@@ -43,6 +45,7 @@ class QpskDemodulator(
     private val ki: Double = KI,
     private val alpha: Float = ALPHA,
     private val beta: Float = BETA,
+    private val offsetQ: Boolean = false,
     private val onSymbol: (Int, Int) -> Unit,
 ) {
     private val sps = sampleRate / symbolRate
@@ -243,6 +246,7 @@ class QpskDemodulator(
 
     private val tmp = FloatArray(2)
     private val mid = FloatArray(2)
+    private val late = FloatArray(2)
 
     private fun track(yr: Float, yi: Float) {
         // Remove the carrier offset.
@@ -255,26 +259,42 @@ class QpskDemodulator(
         val slot = (n and (ring - 1).toLong()).toInt()
         rRe[slot] = xr; rIm[slot] = xi
         n++
-        while (strobe + 2 <= n - 1) {
+        val ahead = if (offsetQ) sps / 2 else 0.0
+        while (strobe + ahead + 2 <= n - 1) {
             interp(strobe, rRe, rIm, tmp)
             interp(strobe - sps / 2, rRe, rIm, mid)
             val gain = (1 / sqrt(power + 1e-12)).toFloat()
-            val symRe = tmp[0] * gain
-            val symIm = tmp[1] * gain
-            val midRe = mid[0] * gain
-            val midIm = mid[1] * gain
-            // Gardner timing error: positive when the strobe is late.
-            val e = (symRe - prevRe) * midRe + (symIm - prevIm) * midIm
-            prevRe = symRe; prevIm = symIm
+            val cr = cos(theta).toFloat()
+            val sn = sin(theta).toFloat()
+            val pr: Float
+            val pi: Float
+            val e: Float
+            if (!offsetQ) {
+                val symRe = tmp[0] * gain
+                val symIm = tmp[1] * gain
+                val midRe = mid[0] * gain
+                val midIm = mid[1] * gain
+                // Gardner timing error: positive when the strobe is late.
+                e = (symRe - prevRe) * midRe + (symIm - prevIm) * midIm
+                prevRe = symRe; prevIm = symIm
+                pr = symRe * cr + symIm * sn
+                pi = -symRe * sn + symIm * cr
+            } else {
+                // The carrier phase off first: then I is real at the strobe, Q imaginary half a symbol later, and each
+                // branch crosses zero where the other one is read.
+                interp(strobe + sps / 2, rRe, rIm, late)
+                pr = (tmp[0] * cr + tmp[1] * sn) * gain
+                pi = (-late[0] * sn + late[1] * cr) * gain
+                val iMid = (mid[0] * cr + mid[1] * sn) * gain
+                val qMid = (-tmp[0] * sn + tmp[1] * cr) * gain
+                e = (pr - prevRe) * iMid + (pi - prevIm) * qMid
+                prevRe = pr; prevIm = pi
+            }
             if (!e.isFinite()) { reset(); return }
             integ = (integ + ki * e).coerceIn(-0.1 * sps, 0.1 * sps)
             // The symbol period can wander a little, never collapse: that would stall the loop.
             strobe += (sps - (kp * e + integ)).coerceIn(0.5 * sps, 1.5 * sps)
             // Costas carrier loop.
-            val cr = cos(theta).toFloat()
-            val sn = sin(theta).toFloat()
-            val pr = symRe * cr + symIm * sn
-            val pi = -symRe * sn + symIm * cr
             val err = (if (pr > 0) 1f else -1f) * pi - (if (pi > 0) 1f else -1f) * pr
             freq += beta * err
             theta += freq + alpha * err

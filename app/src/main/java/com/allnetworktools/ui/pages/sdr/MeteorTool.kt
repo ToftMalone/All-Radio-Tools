@@ -114,7 +114,7 @@ class ChannelView(val apid: Int) {
 }
 
 /**
- * Meteor-M weather satellite images (LRPT, 72 ksymbol/s QPSK at 137.1 or 137.9 MHz). The HackRF captures 2.304 MS/s with
+ * Meteor-M weather satellite images (LRPT, 72 ksymbol/s offset QPSK at 137.1 or 137.9 MHz). The HackRF captures 2.304 MS/s with
  * the channel fs/4 above the tuned frequency.
  */
 class MeteorController(
@@ -353,11 +353,12 @@ fun MeteorTool(vm: MainViewModel) {
 
         SectionCard {
             Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                Text(S(R.string.satellite), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
+                Text(S(R.string.frequency), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    MeteorSats.all.forEach { s ->
-                        val f = "%.3f".format(Locale.US, s.freqMhz)
-                        AntFilterChip("${s.name} · ${mhz(s.freqMhz)}", c.frequencyMhz == f, { if (c.frequencyMhz != f && !c.starting) { if (c.running) c.stop(); c.frequencyMhz = f } })
+                    // Both satellites can be on either: the primary and the backup frequency, not one per satellite.
+                    MeteorSats.frequencies.forEach { mhzValue ->
+                        val f = "%.3f".format(Locale.US, mhzValue)
+                        AntFilterChip("${mhz(mhzValue)} MHz", c.frequencyMhz == f, { if (c.frequencyMhz != f && !c.starting) { if (c.running) c.stop(); c.frequencyMhz = f } })
                     }
                 }
                 if (!c.running) HostInputField(c.frequencyMhz, { c.frequencyMhz = it }, S(R.string.frequency_mhz), Sym.Stream, keyboardType = KeyboardType.Decimal)

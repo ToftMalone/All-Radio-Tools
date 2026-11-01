@@ -66,6 +66,7 @@ class MeteorPassTest {
 
     @Test fun theBroadcastFrequenciesAreTheDocumentedOnes() {
         assertEquals(137.900, MeteorSats.all.first { it.catalog == 57166 }.freqMhz, 1e-9)
-        assertEquals(137.100, MeteorSats.all.first { it.catalog == 59051 }.freqMhz, 1e-9)
+        assertEquals(137.900, MeteorSats.all.first { it.catalog == 59051 }.freqMhz, 1e-9)
+        assertEquals(listOf(137.900, 137.100), MeteorSats.frequencies)
     }
 }

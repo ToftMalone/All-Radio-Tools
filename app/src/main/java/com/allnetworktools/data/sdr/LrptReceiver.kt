@@ -7,24 +7,40 @@ import com.allnetworktools.util.S
  * Soft QPSK symbols in, 1020-byte frames out. The carrier phase is only known up to a quarter turn, and an I/Q swap is
  * possible too, so eight combinations are decoded side by side until one of them finds the frame marker twice one frame
  * apart; from then on only that one runs. If its marker disappears the search starts again.
+ *
+ * With [m2x] (Meteor-M2-2 and later, as SatDump's M2-x pipeline): the bits are NRZ-M coded after the convolutional code,
+ * so they are decoded back after Viterbi, which also makes a half turn harmless (it inverts every bit). Offset QPSK
+ * brings another ambiguity instead: which Q goes with which I, so the eight branches are two phases, the I/Q swap, and Q
+ * paired with the next I or not.
  */
-class LrptLink(private val onFrame: (ByteArray) -> Unit) {
-    private inner class Branch(val swap: Boolean, val rotation: Int) {
+class LrptLink(private val m2x: Boolean = false, private val onFrame: (ByteArray) -> Unit) {
+    private inner class Branch(val swap: Boolean, val rotation: Int, val shift: Boolean) {
         val sync = FrameSync { f -> if (active === this) onFrame(f) }
-        val viterbi = ViterbiK7 { sync.push(it) }
+        private var lastBit = 0
+        val viterbi = ViterbiK7 { b -> if (m2x) { sync.push(b xor lastBit); lastBit = b } else sync.push(b) }
+        private var prevQ = 0
+        private var primed = false
 
-        fun symbol(i: Int, q: Int) {
+        fun symbol(i0: Int, q0: Int) {
+            var i = i0
+            var q = q0
+            if (shift) {
+                val pq = prevQ; prevQ = q0
+                if (!primed) { primed = true; return }
+                i = pq; q = i0
+            }
             var a = if (swap) q else i
             var b = if (swap) i else q
             repeat(rotation) { val na = -b; b = a; a = na } // a quarter turn: (a, b) → (−b, a)
             viterbi.push(a, b)
         }
 
-        fun reset() { viterbi.reset(); sync.reset() }
-        val label: String get() = "${rotation * 90}°" + if (swap) S(R.string.i_q_swapped) else ""
+        fun reset() { viterbi.reset(); sync.reset(); lastBit = 0; prevQ = 0; primed = false }
+        val label: String get() = "${rotation * 90}°" + (if (swap) S(R.string.i_q_swapped) else "") + if (shift) " · Q+1" else ""
     }
 
-    private val branches = (0 until 8).map { Branch(it >= 4, it % 4) }
+    private val branches = if (m2x) (0 until 8).map { Branch((it shr 1) and 1 == 1, it and 1, it >= 4) }
+        else (0 until 8).map { Branch(it >= 4, it % 4, false) }
     @Volatile private var active: Branch? = null
 
     val locked: Boolean get() = active != null
@@ -81,9 +97,13 @@ data class LrptStatus(
 
 /**
  * HackRF bytes at 2.304 MS/s (the channel fs/4 above the tuned frequency) to image strips: decimation to 288 kS/s, QPSK
- * demodulation, Viterbi, frame sync, Reed-Solomon, packets, JPEG blocks.
+ * or OQPSK demodulation, Viterbi (then NRZ-M for the M2-x satellites), frame sync, Reed-Solomon, packets, JPEG blocks.
  */
-class LrptReceiver(private val onStrip: (apid: Int, row: Int, strip: ByteArray) -> Unit = { _, _, _ -> }) {
+class LrptReceiver(
+    /** Meteor-M2-2 and later (all that transmit now): offset QPSK and NRZ-M; false for the original Meteor-M2. */
+    val m2x: Boolean = true,
+    private val onStrip: (apid: Int, row: Int, strip: ByteArray) -> Unit = { _, _, _ -> },
+) {
     private val decimator = Decimator(8, 0.036, taps = 96)
     private val aRe = FloatArray(131072 / 2 / 8 + 16)
     private val aIm = FloatArray(aRe.size)
@@ -101,8 +121,8 @@ class LrptReceiver(private val onStrip: (apid: Int, row: Int, strip: ByteArray) 
     private var packets = 0
     private val apidCounts = HashMap<Int, Int>()
 
-    private val link = LrptLink { onFrame(it) }
-    private val qpsk = QpskDemodulator { i, q -> link.symbol(i, q) }
+    private val link = LrptLink(m2x) { onFrame(it) }
+    private val qpsk = QpskDemodulator(offsetQ = m2x) { i, q -> link.symbol(i, q) }
     private var wasTracking = false
     private var lastSync = 0L
 

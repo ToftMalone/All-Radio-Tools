@@ -11,12 +11,15 @@ class LrptReceiverTest {
     private val fs = 2_304_000.0
 
     /** A whole pass fragment as the HackRF would deliver it: [strips] image strips on APID 65, signed 8-bit I/Q. */
-    private fun capture(strips: Int, symbolSnrDb: Double, seed: Long, cfo: Double, ppm: Double, offset: Double, noiseOnly: Boolean = false): ByteArray {
+    private fun capture(strips: Int, symbolSnrDb: Double, seed: Long, cfo: Double, ppm: Double, offset: Double, noiseOnly: Boolean = false, m2x: Boolean = false): ByteArray {
         val packets = (0 until strips).flatMap { LrptTx.stripPackets(65, 300, it, 85) }
         val frames = LrptTx.dataUnits(packets, 5, 1).map { LrptTx.transmissionFrame(it) }
-        val coded = ConvTx.encode(LrptTx.bitStream(frames))
+        var bits = LrptTx.bitStream(frames)
+        // M2-x: NRZ-M (a 1 is a change of level) before the convolutional code, then offset QPSK.
+        if (m2x) { var level = 0; bits = IntArray(bits.size) { level = level xor bits[it]; level } }
+        val coded = ConvTx.encode(bits)
         // The wideband SNR is lower than the symbol SNR by the oversampling (2.304 MHz / 72 kHz = 32 → 15 dB).
-        val (re, im) = QpskTx.waveform(coded, 32.0, offset, ppm, fs / 4 + cfo, fs, symbolSnrDb - 15.05, seed, lead = 40_000)
+        val (re, im) = QpskTx.waveform(coded, 32.0, offset, ppm, fs / 4 + cfo, fs, symbolSnrDb - 15.05, seed, lead = 40_000, oqpsk = m2x)
         val scale = 30f
         val out = ByteArray(2 * re.size)
         val rnd = Random(seed)
@@ -27,9 +30,9 @@ class LrptReceiverTest {
         return out
     }
 
-    private fun run(iq: ByteArray): Pair<LrptReceiver, List<Triple<Int, Int, ByteArray>>> {
+    private fun run(iq: ByteArray, m2x: Boolean = false): Pair<LrptReceiver, List<Triple<Int, Int, ByteArray>>> {
         val strips = ArrayList<Triple<Int, Int, ByteArray>>()
-        val rx = LrptReceiver { apid, row, s -> strips += Triple(apid, row, s) }
+        val rx = LrptReceiver(m2x) { apid, row, s -> strips += Triple(apid, row, s) }
         var i = 0
         while (i < iq.size) {
             val len = minOf(131072, iq.size - i)
@@ -64,6 +67,22 @@ class LrptReceiverTest {
             err += Math.abs((strip[y * ChannelImage.WIDTH + x].toInt() and 0xFF) - ref); n++
         }
         assertTrue("mean error ${err / n}", err / n < 14)
+    }
+
+    /** Meteor-M2-3 and M2-4, the satellites that transmit now: offset QPSK, NRZ-M. */
+    @Test fun decodesAnM2xImage() {
+        for ((seed, cfo) in listOf(3L to 2300.0, 7L to -4100.0)) {
+            val iq = capture(strips = 12, symbolSnrDb = 9.0, seed = seed, cfo = cfo, ppm = 8.0, offset = 3.3, m2x = true)
+            val (rx, got) = run(iq, m2x = true)
+            val st = rx.status()
+            println("M2-x STATUS $st")
+            assertTrue("frames ${st.frames} rsOk ${st.rsOk}", st.rsOk >= 5 && st.rsOk >= st.frames - 2)
+            assertEquals(0, st.segmentsBad)
+            assertTrue("rows", got.map { it.second }.distinct().size >= 5)
+        }
+        // The old chain does not read them, nor the new one the old satellite: the receiver must match the satellite.
+        val m2 = capture(strips = 4, symbolSnrDb = 12.0, seed = 9, cfo = 1000.0, ppm = 0.0, offset = 1.0)
+        assertEquals(0, run(m2, m2x = true).first.status().rsOk)
     }
 
     @Test fun noiseAloneProducesNothing() {
