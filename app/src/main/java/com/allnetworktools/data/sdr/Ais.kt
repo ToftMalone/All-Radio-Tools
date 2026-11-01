@@ -53,7 +53,16 @@ object Ais {
     private fun lat(raw: Int) = if (raw == 91 * 600_000) null else (raw / 600_000.0).takeIf { it in -90.0..90.0 }
     private fun lon(raw: Int) = if (raw == 181 * 600_000) null else (raw / 600_000.0).takeIf { it in -180.0..180.0 }
 
-    /** [b] holds one bit per byte (0 or 1), in transmission order, without the CRC. */
+    /**
+     * The message bits from the bits as sent: like any HDLC frame, AIS sends each byte least significant bit first
+     * (ITU-R M.1371 annex 2), so every group of eight is put back the other way round.
+     */
+    fun fromAir(air: ByteArray, n: Int): ByteArray = ByteArray(n) { i ->
+        val j = (i and 7.inv()) + 7 - (i and 7)
+        if (j < n) air[j] else air[i]
+    }
+
+    /** [b] holds one bit per byte (0 or 1), in message order, without the CRC. */
     fun decode(b: ByteArray, n: Int): AisMessage? {
         if (n < 38) return null
         val type = u(b, 0, 6)
@@ -251,7 +260,7 @@ class AisDemodulator(private val onMessage: (AisMessage) -> Unit) {
         if (last != null && count - last < 4800) return // same frame seen on a neighbouring phase
         recent[h] = count
         if (recent.size > 64) recent.entries.removeAll { count - it.value > 48_000 }
-        Ais.decode(bits, n)?.let(onMessage)
+        Ais.decode(Ais.fromAir(bits, n), n)?.let(onMessage)
     }
 
     fun feed(re: FloatArray, im: FloatArray, len: Int) {

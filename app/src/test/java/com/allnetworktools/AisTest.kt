@@ -100,9 +100,9 @@ class AisTest {
         assertTrue(t.vessels.isEmpty())
     }
 
-    /** Message bits to the line: CRC, bit stuffing, flags, training sequence, NRZI. */
+    /** Message bits to the line: each byte least significant bit first, CRC, bit stuffing, flags, training sequence, NRZI. */
     private fun frameBits(msg: Bits): IntArray {
-        val data = ArrayList(msg.b)
+        val data = ArrayList(List(msg.b.size) { i -> msg.b[(i and 7.inv()) + 7 - (i and 7)] })
         var crc = 0xFFFF
         for (x in data) crc = if ((crc xor x) and 1 != 0) (crc ushr 1) xor 0x8408 else crc ushr 1
         crc = crc xor 0xFFFF
@@ -126,11 +126,12 @@ class AisTest {
     @Test fun hdlcRoundTrip() {
         val w = type1(227123456, 48.38, -4.49, 12.3, 87.5, 90)
         val line = frameBits(w)
-        val got = ArrayList<Int>()
-        val h = Hdlc { _, n -> got += n }
+        val got = ArrayList<List<Int>>()
+        val h = Hdlc { bits, n -> got += Ais.fromAir(bits, n).take(n).map { it.toInt() } }
         var prev = 0
         for (l in line) { h.bit(if (l == prev) 1 else 0); prev = l }
-        assertEquals(listOf(168), got)
+        // Back in message order once each byte is turned round.
+        assertEquals(listOf(w.b), got)
     }
 
     /** Two GMSK packets on the two channels, as 8-bit HackRF samples at 2.304 MS/s. */
