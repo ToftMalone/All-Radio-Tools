@@ -30,6 +30,13 @@ class LpwanTest {
         assertEquals(4, f.payloadLen)
         assertTrue(f.adr)
         assertEquals("The Things Network", LoraWan.network(f.devAddr!!))
+        // From the LoRa Alliance's NetID table: Orange 1E000000/7, Bouygues Telecom 0E000000/7 (NetID 7, not 0x0B,
+        // which is Everynet), a type 6 NetID (C00058, FC016000/22), and an unassigned range.
+        assertEquals("Orange", LoraWan.network(0x1F123456))
+        assertEquals("Bouygues Telecom", LoraWan.network(0x0E654321))
+        assertEquals("Everynet", LoraWan.network(0x16000001))
+        assertEquals("The Things Network", LoraWan.network(0xFC0161AB.toInt()))
+        assertNull(LoraWan.network(0x0A000000))
         val join = ByteArray(23) { it.toByte() }
         val j = LoraWan.parse(join)!!
         assertEquals(LoraWan.Type.JoinRequest, j.type)

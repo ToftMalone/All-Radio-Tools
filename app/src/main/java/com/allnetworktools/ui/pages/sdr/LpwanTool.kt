@@ -113,6 +113,7 @@ class LpwanController(repo: SdrRepository, scope: CoroutineScope, onAcquire: () 
         }
         return object : SdrSink {
             override fun feed(buf: ByteArray, len: Int) = rx.feed(buf, len)
+            override fun close() = rx.close()
             override fun tick(nowMs: Long) {
                 table.values.removeAll { nowMs - it.lastMs > 3_600_000 }
                 val list = if (changed) { changed = false; table.values.reversed() } else null

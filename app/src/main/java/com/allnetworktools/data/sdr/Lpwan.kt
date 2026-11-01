@@ -52,17 +52,155 @@ object LoraWan {
         }
     }
 
-    /** The network that gave out a device address, for the type 0 and 1 NetIDs the big public networks use. */
+    private class Net(val subnet: Long, val bits: Int, val name: String)
+
+    /**
+     * The networks that hold a NetID, by the device address range it gives them (LoRa Alliance NetID allocation,
+     * June 2022: NetID types 0, 3, 6 and 7). Helium's first addresses (48000000/7) predate its NetIDs.
+     */
+    private val nets = listOf(
+        Net(0x04000000L, 7, "Actility"),
+        Net(0x06000000L, 7, "Proximus"),
+        Net(0x08000000L, 7, "Swisscom"),
+        Net(0x0E000000L, 7, "Bouygues Telecom"),
+        Net(0x10000000L, 7, "Orbiwise"),
+        Net(0x12000000L, 7, "Senet"),
+        Net(0x14000000L, 7, "KPN"),
+        Net(0x16000000L, 7, "Everynet"),
+        Net(0x1A000000L, 7, "SK Telecom"),
+        Net(0x1C000000L, 7, "SagemCom"),
+        Net(0x1E000000L, 7, "Orange"),
+        Net(0x20000000L, 7, "A2A Smart City"),
+        Net(0x24000000L, 7, "Kerlink"),
+        Net(0x26000000L, 7, "The Things Network"),
+        Net(0x2A000000L, 7, "Cisco Systems"),
+        Net(0x2E000000L, 7, "MultiTech Systems"),
+        Net(0x30000000L, 7, "Loriot"),
+        Net(0x32000000L, 7, "NNNCo"),
+        Net(0x3E000000L, 7, "Axatel"),
+        Net(0x44000000L, 7, "Comcast"),
+        Net(0x46000000L, 7, "Ventia"),
+        Net(0x60000000L, 7, "SoftBank"),
+        Net(0x6A000000L, 7, "Tencent"),
+        Net(0x6C000000L, 7, "Netze BW GmbH"),
+        Net(0x6E000000L, 7, "Tektelic"),
+        Net(0x70000000L, 7, "Charter Communications"),
+        Net(0x72000000L, 7, "Amazon"),
+        Net(0xE0020000L, 15, "Digita"),
+        Net(0xE0040000L, 15, "Netmore"),
+        Net(0xE0060000L, 15, "QuaeNet Inc."),
+        Net(0xE0080000L, 15, "eleven-x"),
+        Net(0xE00A0000L, 15, "IoT Network AS"),
+        Net(0xE00E0000L, 15, "EDF"),
+        Net(0xE0100000L, 15, "Unidata"),
+        Net(0xE0140000L, 15, "Öresundskraft"),
+        Net(0xE01C0000L, 15, "Spark"),
+        Net(0xE0200000L, 15, "Senet"),
+        Net(0xE0260000L, 15, "Actility"),
+        Net(0xE0280000L, 15, "Kerlink"),
+        Net(0xE02C0000L, 15, "Cisco"),
+        Net(0xE02E0000L, 15, "Schneider Electric"),
+        Net(0xE0300000L, 15, "Minol ZENNER Connect GmbH"),
+        Net(0xE0340000L, 15, "NEC Corporation"),
+        Net(0xE0360000L, 15, "Tencent"),
+        Net(0xE0380000L, 15, "MachineQ/Comcast"),
+        Net(0xE03A0000L, 15, "NTT"),
+        Net(0xE03E0000L, 15, "KPN"),
+        Net(0xE0400000L, 15, "Spectrum"),
+        Net(0xE0420000L, 15, "Microshare Inc."),
+        Net(0xE0480000L, 15, "Netze BW GmbH"),
+        Net(0xE04A0000L, 15, "Tektelic"),
+        Net(0xE04E0000L, 15, "Birdz"),
+        Net(0xE0500000L, 15, "Charter Communications"),
+        Net(0xE0520000L, 15, "Machines Talk"),
+        Net(0xE0540000L, 15, "Neptune Technology Group"),
+        Net(0xE0560000L, 15, "Amazon"),
+        Net(0xE0580000L, 15, "myDevices"),
+        Net(0xE05A0000L, 15, "Helium (DeWi)"),
+        Net(0xE05C0000L, 15, "Eutelsat S.A."),
+        Net(0xFC000800L, 22, "ResIOT"),
+        Net(0xFC000C00L, 22, "SYSDEV"),
+        Net(0xFC001400L, 22, "Macnica"),
+        Net(0xFC002000L, 22, "Definium Technologies"),
+        Net(0xFC002800L, 22, "SenseWay"),
+        Net(0xFC002C00L, 22, "3S"),
+        Net(0xFC003400L, 22, "Packetworx"),
+        Net(0xFC003C00L, 22, "Antenna Hungaria Co"),
+        Net(0xFC004800L, 22, "Netmore"),
+        Net(0xFC004C00L, 22, "Lyse AS"),
+        Net(0xFC005000L, 22, "VTC Digicom"),
+        Net(0xFC005400L, 22, "Machines Talk"),
+        Net(0xFC005800L, 22, "Schneider Electric"),
+        Net(0xFC005C00L, 22, "Connexin"),
+        Net(0xFC006000L, 22, "Minol ZENNER Connect GmbH"),
+        Net(0xFC006400L, 22, "Telekom Srbija"),
+        Net(0xFC006800L, 22, "REQUEA"),
+        Net(0xFC006C00L, 22, "Sensor Network Services"),
+        Net(0xFC007400L, 22, "Boston Networks Limited"),
+        Net(0xFC007C00L, 22, "mcf88 SRL"),
+        Net(0xFC008000L, 22, "NEC Corporation"),
+        Net(0xFC008400L, 22, "Hiber"),
+        Net(0xFC009000L, 22, "NTT"),
+        Net(0xFC009400L, 22, "ICFOSS"),
+        Net(0xFC00A000L, 22, "Lacuna Space"),
+        Net(0xFC00A400L, 22, "Andorra Telecom"),
+        Net(0xFC00A800L, 22, "Xiamen Milesight IoT Co., Ltd."),
+        Net(0xFC00AC00L, 22, "Grenoble Alps University"),
+        Net(0xFC00B800L, 22, "Spectrum"),
+        Net(0xFC00BC00L, 22, "Afnic"),
+        Net(0xFC00C800L, 22, "Microshare Inc."),
+        Net(0xFC00CC00L, 22, "HEIG-VD"),
+        Net(0xFC00DC00L, 22, "Alperia Fiber"),
+        Net(0xFC00E000L, 22, "First Snow Co., Ltd"),
+        Net(0xFC00E400L, 22, "Acklio"),
+        Net(0xFC00E800L, 22, "Vutility"),
+        Net(0xFC00EC00L, 22, "Meshed Pty Ltd"),
+        Net(0xFC00F000L, 22, "Birdz"),
+        Net(0xFC00F400L, 22, "Arthur D Riley & Co Ltd"),
+        Net(0xFC00F800L, 22, "Komro GmbH"),
+        Net(0xFC00FC00L, 22, "RSAWEB"),
+        Net(0xFC010000L, 22, "Ceske Radiokomunikace"),
+        Net(0xFC010400L, 22, "CM Systems LLC"),
+        Net(0xFC010800L, 22, "MIOT Melita.io Technology GmbH"),
+        Net(0xFC010C00L, 22, "PROESYS S.r.l."),
+        Net(0xFC011000L, 22, "MeWe, Inc"),
+        Net(0xFC011400L, 22, "Alpha-Omega Technology GmbH & Co. KG"),
+        Net(0xFC011800L, 22, "Mayflower Smart Control"),
+        Net(0xFC011C00L, 22, "VEGA Grieshaber KG"),
+        Net(0xFC012000L, 22, "Afghan Wireless Communication Company"),
+        Net(0xFC012400L, 22, "API-K"),
+        Net(0xFC012800L, 22, "Decstream LLC"),
+        Net(0xFC012C00L, 22, "Nova Track Ltd"),
+        Net(0xFC013000L, 22, "IMT Atlantique"),
+        Net(0xFC013400L, 22, "Machines Talk"),
+        Net(0xFC013800L, 22, "Yosensi Sp. z o.o."),
+        Net(0xFC013C00L, 22, "The IoT Solutions"),
+        Net(0xFC014000L, 22, "Neptune Technology Group"),
+        Net(0xFC014400L, 22, "myDevices"),
+        Net(0xFC014800L, 22, "Savoie Mont Blanc University"),
+        Net(0xFC014C00L, 22, "Helium (DeWi)"),
+        Net(0xFC015000L, 22, "X-Telia Group Inc"),
+        Net(0xFC015400L, 22, "Deviceroy"),
+        Net(0xFC015800L, 22, "Eutelsat S.A."),
+        Net(0xFC015C00L, 22, "Bejing Dingtek Technology Corp. Ltd"),
+        Net(0xFC016000L, 22, "The Things Network"),
+        Net(0xFC016400L, 22, "Quandify AB"),
+        Net(0xFC016800L, 22, "Hutchison Drei Austria GmbH"),
+        Net(0xFC016C00L, 22, "Agrology, PBC"),
+        Net(0xFC017000L, 22, "mhascaro GmbH"),
+        Net(0xFC017400L, 22, "Log5 Data"),
+        Net(0xFC017800L, 22, "Citysens GmbH"),
+        Net(0xFE001000L, 21, "Techtenna b.v."),
+        Net(0xFE001800L, 21, "LNX Solutions"),
+        Net(0xFE002000L, 21, "Cometa Sas"),
+        Net(0xFE002800L, 21, "Senwize B.V."),
+        Net(0x48000000L, 7, "Helium"),
+    )
+
+    /** The network that gave out a device address, when its range is in the LoRa Alliance's allocation table. */
     fun network(devAddr: Int): String? {
-        val top = devAddr ushr 25
-        if (devAddr ushr 31 != 0) return null
-        return when (top) {
-            0x13 -> "The Things Network"
-            0x0F -> "Orange"
-            0x24 -> "Helium"
-            0x0B -> "Bouygues / Objenious"
-            else -> null
-        }
+        val a = devAddr.toLong() and 0xFFFFFFFFL
+        return nets.firstOrNull { (a ushr (32 - it.bits)) == (it.subnet ushr (32 - it.bits)) }?.name
     }
 
     /** The NwkID of a type 0 address (6 bits), shown when the network is not known. */
@@ -389,8 +527,16 @@ sealed class LpwanEvent {
  * HackRF bytes at 2 MS/s, 868.3 MHz at +fs/4 → 1 MS/s centred on 868.3 MHz. The three LoRaWAN channels every EU868
  * device uses (868.1, 868.3, 868.5 MHz, 125 kHz) go to LoRa receivers for SF7 to SF12; the Sigfox macro channel
  * (868.034 to 868.226 MHz) to the Sigfox receiver at 200 kS/s.
+ *
+ * On one core this is barely twice real time on a desktop, so a phone could fall behind and drop buffers: the
+ * channels and Sigfox, independent of each other, run on a small pool of threads. Their events are held and handed
+ * to [onEvent] on the caller's thread, in order, once each block is done.
  */
 class LpwanReceiver(private val onEvent: (LpwanEvent) -> Unit) {
+    private val threads = minOf(4, Runtime.getRuntime().availableProcessors())
+    private val pool: java.util.concurrent.ExecutorService? = if (threads < 2) null else
+        java.util.concurrent.Executors.newFixedThreadPool(threads) { r -> Thread(r, "lpwan-dsp").apply { isDaemon = true } }
+
     private val d1 = Decimator(2, 450_000.0 / 2_000_000.0, 32)
     private val re = FloatArray(65536 + 8)
     private val im = FloatArray(re.size)
@@ -417,14 +563,21 @@ class LpwanReceiver(private val onEvent: (LpwanEvent) -> Unit) {
     }
 
     private inner class Channel(val hz: Long) {
+        val events = ArrayList<LpwanEvent>()
         val mixer = Mixer((hz - CENTRE_HZ).toDouble(), 4, 70_000.0, 96) // steep: the next channel, 200 kHz away, must not fold in
-        val rx = (7..12).map { sf -> LoraReceiver(sf, 125_000.0, hz.toDouble()) { f -> onEvent(LpwanEvent.Lora(hz, sf, f, if (f.crcOk) LoraWan.parse(f.payload) else null)) } }
+        val rx = (7..12).map { sf -> LoraReceiver(sf, 125_000.0, hz.toDouble()) { f -> events += LpwanEvent.Lora(hz, sf, f, if (f.crcOk) LoraWan.parse(f.payload) else null) } }
+        fun run(k: Int) { val n = mixer.run(k); for (r in rx) r.feed(mixer.or, mixer.oi, n) }
     }
 
     private val channels = LORAWAN_HZ.map { Channel(it) }
     private val sigMixer = Mixer((SIGFOX_HZ - CENTRE_HZ).toDouble(), 5, 100_000.0, 48)
-    val sigfox = SigfoxReceiver(200_000.0) { up, f -> onEvent(LpwanEvent.SigfoxUp(SIGFOX_HZ + f, up)) }
+    private val sigEvents = ArrayList<LpwanEvent>()
+    val sigfox = SigfoxReceiver(200_000.0) { up, f -> sigEvents += LpwanEvent.SigfoxUp(SIGFOX_HZ + f, up) }
     val lora get() = channels.flatMap { it.rx }
+    private val jobs: List<(Int) -> Unit> = channels.map { c -> { k: Int -> c.run(k) } } + { k: Int -> sigfox.feed(sigMixer.or, sigMixer.oi, sigMixer.run(k)) }
+
+    /** Stops the worker threads (they are daemons, so this only frees them sooner). */
+    fun close() { pool?.shutdown() }
 
     fun feed(buf: ByteArray, len: Int) {
         var off = 0
@@ -437,12 +590,11 @@ class LpwanReceiver(private val onEvent: (LpwanEvent) -> Unit) {
     }
 
     private fun feedFloat(k: Int) {
-        for (c in channels) {
-            val n = c.mixer.run(k)
-            for (r in c.rx) r.feed(c.mixer.or, c.mixer.oi, n)
-        }
-        val n = sigMixer.run(k)
-        sigfox.feed(sigMixer.or, sigMixer.oi, n)
+        val p = pool
+        if (p == null || p.isShutdown) jobs.forEach { it(k) }
+        else p.invokeAll(jobs.map { j -> java.util.concurrent.Callable { j(k) } }).forEach { it.get() }
+        for (c in channels) { c.events.forEach(onEvent); c.events.clear() }
+        sigEvents.forEach(onEvent); sigEvents.clear()
     }
 
     /** Samples at 1 MS/s centred on 868.3 MHz (tests). */
