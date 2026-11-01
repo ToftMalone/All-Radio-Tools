@@ -117,8 +117,9 @@ class PmrController(repo: SdrRepository, scope: CoroutineScope, onAcquire: () ->
                     is Dmr.Burst.Other -> null
                 }
                 is PmrEvent.DmrVoice -> null
-                is PmrEvent.DpmrHeader -> PmrCall(now, e.hz, false, e.cc, e.header.callType != 0, e.header.own, e.header.called, 0, e.header.emergency, false, false)
-                is PmrEvent.DpmrEnd -> PmrCall(now, e.hz, false, null, true, e.own, null, 0, false, false, true)
+                is PmrEvent.DpmrHeader -> PmrCall(now, e.hz, false, e.cc, e.header.callType == 0, e.header.own, e.header.called, 0, e.header.emergency, false, false)
+                // The end frame names nobody: the call it closes is the last one heard on this channel.
+                is PmrEvent.DpmrEnd -> PmrCall(now, e.hz, false, null, true, log.firstOrNull { !it.dmr && it.hz == e.hz }?.src, null, 0, false, false, true)
                 is PmrEvent.Voice -> null
             }
             val ch = chOf(e.hz)

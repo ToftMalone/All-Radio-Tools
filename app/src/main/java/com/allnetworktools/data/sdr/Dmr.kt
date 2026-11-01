@@ -239,16 +239,19 @@ object Dmr {
 object Dpmr {
     private fun syms(v: Long, n: Int) = IntArray(n) { Dmr.dibitToSymbol(((v shr (2 * (n - 1 - it))) and 3).toInt()) }
     val FS1 = syms(0x57FF5F75D577, 24)
-    val FS3 = syms(0x7DFFD5F55D5F, 24)
+    /** End frame sync: 24 bits (TS 102 490 6.1.3), not the 48 of FS1 and FS4. */
+    val FS3 = syms(0x7DDFF5, 12)
     val FS4 = syms(0xFD55F5DF7FDD, 24)
     /** Payload frames 0 and 2 open with this 12-symbol sync (1 and 3 with the colour code). */
     val FS2 = syms(0x5FF77D, 12)
 
-    private val syn = intArrayOf(0x3, 0x5, 0x6, 0x7, 0x9, 0xA, 0xB, 0xC)
+    /** Parity of each data bit X7 … X0 of the shortened (12,8) Hamming code (TS 102 490 table 7.1, as DSD-FME). */
+    private val syn = intArrayOf(0xE, 0x7, 0xA, 0x5, 0xB, 0xC, 0x6, 0x3)
 
+    /** Scrambler x⁹ + x⁵ + 1 preset to ones (7.4): each new register bit is the oldest xor the fifth (as DSD-FME). */
     fun pn9(n: Int): IntArray {
         var s = 0x1FF
-        return IntArray(n) { val o = s and 1; val f = (s xor (s shr 5)) and 1; s = (s shr 1) or (f shl 8); o }
+        return IntArray(n) { val o = s and 1; val f = (s xor (s shr 4)) and 1; s = (s shr 1) or (f shl 8); o }
     }
 
     private fun crc(b: IntArray, n: Int, deg: Int, poly: Int, init: Int): Int {
@@ -258,15 +261,20 @@ object Dpmr {
         for (i in 0 until n) { val f = (r and top != 0) != (b[i] != 0); r = (r shl 1) and mask; if (f) r = r xor poly }
         return r
     }
-    fun crc8(b: IntArray, n: Int) = crc(b, n, 8, 0x07, 0)
+    fun crc8(b: IntArray, n: Int, init: Int = 0) = crc(b, n, 8, 0x07, init)
     fun crc7(b: IntArray, n: Int) = crc(b, n, 7, 0x09, 0)
 
-    fun blockEncode(info: IntArray, nw: Int): IntArray {
+    /**
+     * [nw] (12,8) words, interleaved (written in columns, read in rows: 7.5) unless [interleave] is false, then
+     * scrambled.
+     */
+    fun blockEncode(info: IntArray, nw: Int, interleave: Boolean = true): IntArray {
         val air = IntArray(12 * nw)
+        fun at(bit: Int, w: Int) = if (interleave) bit * nw + w else 12 * w + bit
         for (w in 0 until nw) {
             var p = 0
-            for (i in 0 until 8) { val d = info[8 * w + i] and 1; air[i * nw + w] = d; if (d == 1) p = p xor syn[i] }
-            for (i in 0 until 4) air[(8 + i) * nw + w] = (p shr (3 - i)) and 1
+            for (i in 0 until 8) { val d = info[8 * w + i] and 1; air[at(i, w)] = d; if (d == 1) p = p xor syn[i] }
+            for (i in 0 until 4) air[at(8 + i, w)] = (p shr (3 - i)) and 1
         }
         val pn = pn9(12 * nw)
         for (i in air.indices) air[i] = air[i] xor pn[i]
@@ -274,12 +282,12 @@ object Dpmr {
     }
 
     /** Null when a word has more than one error. */
-    fun blockDecode(air: IntArray, nw: Int): IntArray? {
+    fun blockDecode(air: IntArray, nw: Int, interleave: Boolean = true): IntArray? {
         val pn = pn9(12 * nw)
         val info = IntArray(8 * nw)
         val c = IntArray(12)
         for (w in 0 until nw) {
-            for (k in 0 until 12) c[k] = (air[k * nw + w] xor pn[k * nw + w]) and 1
+            for (k in 0 until 12) { val j = if (interleave) k * nw + w else 12 * w + k; c[k] = (air[j] xor pn[j]) and 1 }
             var s = 0
             for (i in 0 until 8) if (c[i] == 1) s = s xor syn[i]
             for (i in 0 until 4) if (c[8 + i] == 1) s = s xor (1 shl (3 - i))
@@ -292,7 +300,11 @@ object Dpmr {
         return info
     }
 
-    data class Header(val type: Int, val called: Int, val own: Int, val commMode: Int, val callType: Int, val emergency: Boolean)
+    /**
+     * Header information (TS 102 490 table 5.2): header type, called and own ids, communication mode, comms format
+     * ([callType]: 0 call all, 1 peer to peer), call information. dPMR headers carry no emergency flag.
+     */
+    data class Header(val type: Int, val called: Int, val own: Int, val commMode: Int, val callType: Int, val emergency: Boolean = false)
 
     private fun put(b: IntArray, p0: Int, v: Int, n: Int): Int { var p = p0; for (i in n - 1 downTo 0) b[p++] = (v shr i) and 1; return p }
     private fun get(b: IntArray, p: Int, n: Int): Int { var v = 0; for (i in 0 until n) v = (v shl 1) or b[p + i]; return v }
@@ -301,16 +313,20 @@ object Dpmr {
         val b = IntArray(80)
         var p = put(b, 0, h.type, 4)
         p = put(b, p, h.called, 24); p = put(b, p, h.own, 24)
-        p = put(b, p, h.commMode, 3); p = put(b, p, h.callType, 2); p = put(b, p, if (h.emergency) 1 else 0, 1)
-        p = put(b, p, 0, 14)
+        p = put(b, p, h.commMode, 3); p = put(b, p, h.callType, 4); p = put(b, p, 0, 2); p = put(b, p, 0, 11)
         put(b, p, crc8(b, 72), 8)
         return b
     }
 
+    /**
+     * The standard gives the CRC-8 polynomial but not its preset: zero, or all ones as DSD-FME has it (whose dPMR
+     * decoder never checks it); either is taken.
+     */
     fun headerParse(b: IntArray): Header? {
-        if (get(b, 72, 8) != crc8(b, 72)) return null
-        val h = Header(get(b, 0, 4), get(b, 4, 24), get(b, 28, 24), get(b, 52, 3), get(b, 55, 2), get(b, 57, 1) == 1)
-        return h.takeIf { it.type <= 5 && it.commMode <= 5 && it.callType <= 2 }
+        val crc = get(b, 72, 8)
+        if (crc != crc8(b, 72) && crc != crc8(b, 72, 0xFF)) return null
+        val h = Header(get(b, 0, 4), get(b, 4, 24), get(b, 28, 24), get(b, 52, 3), get(b, 55, 4))
+        return h.takeIf { it.type <= 8 && it.commMode <= 5 && it.callType <= 1 }
     }
 
     /** The control channel of a payload frame (48 bits: frame number, id half, modes, slow data, CRC-7). */
@@ -324,15 +340,27 @@ object Dpmr {
         return b
     }
 
-    fun endBits(own: Int): IntArray {
-        val b = IntArray(48)
-        var p = put(b, 0, 0, 2)
-        p = put(b, p, own, 24); p = put(b, p, 0, 15)
-        put(b, p, crc7(b, 41), 7)
-        return b
+    /** End information (5.3, 9.6): end type (0 normal, 1 with a status message), ack request, Tx wait, status. */
+    data class End(val type: Int, val ack: Boolean, val wait: Int, val status: Int)
+
+    /** The 72 bits after FS3: 17 bits and their CRC-7 in three (12,8) words, not interleaved, sent twice, scrambled. */
+    fun endEncode(e: End): IntArray {
+        val b = IntArray(24)
+        var p = put(b, 0, e.type, 2)
+        p = put(b, p, if (e.ack) 1 else 0, 2); p = put(b, p, e.wait, 4); p = put(b, p, e.status, 5); p = put(b, p, 0, 4)
+        put(b, p, crc7(b, 17), 7)
+        return blockEncode(b + b, 6, interleave = false)
     }
 
-    fun endParse(b: IntArray): Int? = if (get(b, 41, 7) == crc7(b, 41)) get(b, 2, 24) else null
+    /** Either copy may do. */
+    fun endDecode(air72: IntArray): End? {
+        val info = blockDecode(air72, 6, interleave = false) ?: return null
+        for (copy in 0 until 2) {
+            val b = info.copyOfRange(24 * copy, 24 * copy + 24)
+            if (get(b, 17, 7) == crc7(b, 17)) return End(get(b, 0, 2), get(b, 2, 2) == 1, get(b, 4, 4), get(b, 8, 5))
+        }
+        return null
+    }
 
     fun ccSymbols(cc: Int) = IntArray(12) { val bit = (cc shr (5 - it / 2)) and 1; if ((it % 2 == 0) == (bit == 1)) 3 else -3 }
     fun ccDecode(v: FloatArray, at: Int): Int { var cc = 0; for (i in 0 until 6) if (v[at + 2 * i] - v[at + 2 * i + 1] > 0) cc = cc or (1 shl (5 - i)); return cc }

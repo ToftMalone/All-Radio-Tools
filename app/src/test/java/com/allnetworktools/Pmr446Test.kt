@@ -45,11 +45,23 @@ class Pmr446Test {
 
     @Test
     fun dpmrCodes() {
-        val h = Dpmr.Header(0, 1, 12_345, 0, 1, false)
+        val h = Dpmr.Header(0, 1, 12_345, 0, 1)
         val air = Dpmr.blockEncode(Dpmr.headerBits(h), 10)
         air[17] = air[17] xor 1
         assertEquals(h, Dpmr.headerParse(Dpmr.blockDecode(air, 10)!!))
-        assertEquals(12_345, Dpmr.endParse(Dpmr.blockDecode(Dpmr.blockEncode(Dpmr.endBits(12_345), 6), 6)!!))
+        // Table 7.1: data X7 alone gives the parity 1110, X0 alone 0011; the scrambler (DSD-FME's) opens 111111111000001111011111.
+        val pn = Dpmr.pn9(24)
+        assertEquals("111111111000001111011111", pn.joinToString(""))
+        fun word(byte: Int) = Dpmr.blockEncode(IntArray(8) { (byte shr (7 - it)) and 1 }, 1).mapIndexed { i, x -> x xor pn[i] }.joinToString("")
+        assertEquals("100000001110", word(0x80))
+        assertEquals("000000010011", word(0x01))
+        // The end frame: 17 bits and a CRC-7, three words sent twice; a bit wrong in each copy still decodes.
+        val end = Dpmr.End(1, true, 3, 17)
+        val ea = Dpmr.endEncode(end)
+        assertEquals(72, ea.size)
+        ea[5] = ea[5] xor 1; ea[40] = ea[40] xor 1
+        assertEquals(end, Dpmr.endDecode(ea))
+        assertEquals(12, Dpmr.FS3.size)
         val cc = Dpmr.ccSymbols(37)
         assertEquals(37, Dpmr.ccDecode(FloatArray(12) { cc[it].toFloat() }, 0))
     }
@@ -77,10 +89,10 @@ class Pmr446Test {
         val dmrSyms = IntArray(0).let { var a = it; repeat(12) { a += header }; repeat(6) { a += term }; a }
         val dmrF = fsk(dmrSyms, 4800.0, 648.0, rate)
         // dPMR446 channel 5: preamble, header frame with colour code 21, end frame.
-        val h = Dpmr.Header(0, 0xFFFFFF, 4_711, 0, 1, false)
+        val h = Dpmr.Header(0, 0xFFFFFF, 4_711, 0, 0)
         val pre = IntArray(72) { if (it % 2 == 0) 3 else -3 }
         val hdr = Dpmr.FS1 + symbolsOf(Dpmr.blockEncode(Dpmr.headerBits(h), 10)) + Dpmr.ccSymbols(21) + symbolsOf(Dpmr.blockEncode(Dpmr.headerBits(h), 10))
-        val end = Dpmr.FS3 + symbolsOf(Dpmr.blockEncode(Dpmr.endBits(4_711), 6))
+        val end = Dpmr.FS3 + symbolsOf(Dpmr.endEncode(Dpmr.End(0, false, 0, 0)))
         val dpmrSyms = pre + hdr + IntArray(480) { rnd.nextInt(4).let { d -> Dmr.dibitToSymbol(d) } } + end
         val dpmrF = fsk(dpmrSyms, 2400.0, 350.0, rate)
         val out = ByteArray(2 * total)
@@ -114,7 +126,7 @@ class Pmr446Test {
         assertEquals(21, dh[0].cc)
         assertEquals(4_711, dh[0].header.own)
         assertEquals(Pmr446.dpmrHz(5), dh[0].hz)
-        assertTrue(events.filterIsInstance<PmrEvent.DpmrEnd>().any { it.own == 4_711 })
+        assertTrue(events.filterIsInstance<PmrEvent.DpmrEnd>().any { it.hz == Pmr446.dpmrHz(5) && it.end.type == 0 })
         val ch3 = rx.chains[Pmr446.analogueHz(3)]
         assertNotNull(ch3)
         assertEquals(88.5, ch3!!.ctcss()!!, 0.01)
@@ -153,15 +165,15 @@ class Pmr446Test {
         // dPMR446 channel 5: header, eight payload frames (sync FS2 or the colour code, control channel, four voice
         // frames scrambled), end.
         val dpmrVoice = voiceFrames(32, rnd)
-        val h = Dpmr.Header(0, 0xFFFFFF, 4_711, 0, 1, false)
+        val h = Dpmr.Header(0, 0xFFFFFF, 4_711, 0, 0)
         val pre = IntArray(72) { if (it % 2 == 0) 3 else -3 }
         var dpmrSyms = pre + Dpmr.FS1 + symbolsOf(Dpmr.blockEncode(Dpmr.headerBits(h), 10)) + Dpmr.ccSymbols(21) + symbolsOf(Dpmr.blockEncode(Dpmr.headerBits(h), 10))
-        val pn = Dpmr.pn9(288)
         for (k in 0 until 8) {
-            val tch = (dpmrVoice[4 * k] + dpmrVoice[4 * k + 1] + dpmrVoice[4 * k + 2] + dpmrVoice[4 * k + 3]).let { v -> IntArray(288) { v[it] xor pn[it] } }
+            // The voice frames go out as they are: TS 102 490 table 5.1a scrambles the control channel only.
+            val tch = dpmrVoice[4 * k] + dpmrVoice[4 * k + 1] + dpmrVoice[4 * k + 2] + dpmrVoice[4 * k + 3]
             dpmrSyms += (if (k % 2 == 0) Dpmr.FS2 else Dpmr.ccSymbols(21)) + symbolsOf(Dpmr.blockEncode(Dpmr.cchBits(k % 4, 4_711 shr 12, 0, 1), 6)) + symbolsOf(tch)
         }
-        dpmrSyms += Dpmr.FS3 + symbolsOf(Dpmr.blockEncode(Dpmr.endBits(4_711), 6)) + noise(60)
+        dpmrSyms += Dpmr.FS3 + symbolsOf(Dpmr.endEncode(Dpmr.End(0, false, 0, 0))) + noise(60)
         val dpmrF = fsk(dpmrSyms, 2400.0, 350.0, rate)
         val out = ByteArray(2 * total)
         var p1 = 0.0; var p2 = 0.0

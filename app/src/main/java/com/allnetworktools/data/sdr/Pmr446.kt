@@ -167,7 +167,7 @@ sealed class PmrEvent(val hz: Long) {
     class Dmr(hz: Long, val burst: com.allnetworktools.data.sdr.Dmr.Burst, val slot: Int) : PmrEvent(hz)
     class DmrVoice(hz: Long, val slot: Int) : PmrEvent(hz)
     class DpmrHeader(hz: Long, val cc: Int, val header: Dpmr.Header) : PmrEvent(hz)
-    class DpmrEnd(hz: Long, val own: Int) : PmrEvent(hz)
+    class DpmrEnd(hz: Long, val end: Dpmr.End) : PmrEvent(hz)
     /** Digital voice decoded: 160 samples at 8 kHz per 20 ms; [slot] 0 for dPMR. */
     class Voice(hz: Long, val slot: Int, val pcm: FloatArray) : PmrEvent(hz)
 }
@@ -192,7 +192,9 @@ class PmrChannel(val hz: Long, private val offHz: Double, narrow: Boolean, priva
     private var lr = 1f
     private var li = 0f
     private val dmr = FourFskSync(50_000.0, 4800.0, Dmr.SYNC.indices.map { Dmr.syncSymbols(it) }, 54, IntArray(9) { 54 }) { dmrFrame(it) }.also { s -> s.onRead = { dmrVoiceBurst(it) } }
-    private val dpmr = FourFskSync(50_000.0, 2400.0, listOf(Dpmr.FS1, Dpmr.FS3, Dpmr.FS4), 0, intArrayOf(132, 36, 132)) { dpmrFrame(it) }.also { s -> s.onRead = { dpmrPayload(it) } }
+    private val dpmr = FourFskSync(50_000.0, 2400.0, listOf(Dpmr.FS1, Dpmr.FS4), 0, intArrayOf(132, 132)) { dpmrFrame(it) }.also { s -> s.onRead = { dpmrPayload(it) } }
+    // FS3, the end frame's sync, is half as long as FS1 and FS4: its own search.
+    private val dpmrEnd = FourFskSync(50_000.0, 2400.0, listOf(Dpmr.FS3), 0, intArrayOf(36)) { dpmrEndFrame(it) }
     // AMBE+2 decoders: one per DMR time slot (0 when the slot is not known), one for dPMR.
     private val ambe = Array(3) { AmbeDecoder() }
     private val ambeDpmr = AmbeDecoder()
@@ -240,6 +242,7 @@ class PmrChannel(val hz: Long, private val offHz: Double, narrow: Boolean, priva
                 nOut++
                 dmr.push(hz)
                 dpmr.push(hz)
+                dpmrEnd.push(hz)
                 lowAcc += hz; lowCnt++
                 if (lowCnt == 50) { low[lowN % low.size] = lowAcc / 50; lowN++; lowAcc = 0f; lowCnt = 0 }
                 if (audio != null && i % 2 == 1 && nOut > digitalUntil) { aud[na++] = hz; if (na == aud.size) { audio?.invoke(aud, na); na = 0 } }
@@ -327,7 +330,7 @@ class PmrChannel(val hz: Long, private val offHz: Double, narrow: Boolean, priva
         val sym = f.symbols
         digitalUntil = nOut + 50_000
         when (f.sync) {
-            0, 2 -> {
+            0, 1 -> {
                 // HI0 then the colour code then HI1, the same header twice: either copy may do.
                 val h = Dpmr.blockDecode(dibits(sym, 24, 60), 10)?.let(Dpmr::headerParse) ?: Dpmr.blockDecode(dibits(sym, 96, 60), 10)?.let(Dpmr::headerParse) ?: return
                 dpmrCc = Dpmr.ccDecode(sym, 84)
@@ -339,11 +342,14 @@ class PmrChannel(val hz: Long, private val offHz: Double, narrow: Boolean, priva
                     dpmr.schedule(0, f.first + 156 * dpmr.samplesPerSymbol, 192, f.a, f.b, Dpmr.FS2)
                 }
             }
-            1 -> {
-                dpmr.cancelReads()
-                Dpmr.blockDecode(dibits(sym, 24, 36), 6)?.let(Dpmr::endParse)?.let { onEvent(PmrEvent.DpmrEnd(hz, it)) }
-            }
         }
+    }
+
+    private fun dpmrEndFrame(f: FourFskSync.Frame) {
+        val e = Dpmr.endDecode(dibits(f.symbols, 12, 36)) ?: return
+        digitalUntil = nOut + 50_000
+        dpmr.cancelReads()
+        onEvent(PmrEvent.DpmrEnd(hz, e))
     }
 
     /** One payload frame ([f].sync is its number in the superframe): control channel, then four voice frames. */
@@ -353,9 +359,8 @@ class PmrChannel(val hz: Long, private val offHz: Double, narrow: Boolean, priva
         dpmrBad = if (cchOk) 0 else dpmrBad + 1
         if (dpmrBad >= 3) return // the call has ended (or is lost): no more frames
         digitalUntil = nOut + 50_000
+        // Four AMBE+2 frames, not scrambled (table 5.1a scrambles the control channel only; DSD-FME reads them as they are).
         val tch = dibits(sym, 48, 144)
-        val pn = Dpmr.pn9(288)
-        for (i in 0 until 288) tch[i] = tch[i] xor pn[i]
         for (k in 0 until 4) {
             val pcm = FloatArray(160)
             ambeDpmr.decode(tch, 72 * k, pcm)
