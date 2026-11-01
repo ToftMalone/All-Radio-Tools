@@ -256,6 +256,7 @@ private fun PageBody(vm: MainViewModel, net: Network, page: Page) {
             Tool.Fpv -> com.allnetworktools.ui.pages.sdr.FpvTool(vm)
             Tool.Aprs -> com.allnetworktools.ui.pages.sdr.AprsTool(vm)
             Tool.Acars -> com.allnetworktools.ui.pages.sdr.AcarsTool(vm)
+            Tool.Pocsag -> com.allnetworktools.ui.pages.sdr.PocsagTool(vm)
             Tool.Cubesat -> com.allnetworktools.ui.pages.sdr.CubesatTool(vm)
             Tool.Lpwan -> com.allnetworktools.ui.pages.sdr.LpwanTool(vm)
             Tool.Pmr -> com.allnetworktools.ui.pages.sdr.PmrTool(vm)
@@ -301,7 +302,7 @@ private fun PageBody(vm: MainViewModel, net: Network, page: Page) {
             }
             Tool.Lan, Tool.LanDevice, Tool.Ping, Tool.Trace, Tool.Ports, Tool.Dns, Tool.Speed,
             Tool.Whois, Tool.EvilTwin, Tool.Audit, Tool.Mitm, Tool.Coverage -> WifiToolRoute(vm, page)
-            else -> ComingSoon(page.tool) // includes POCSAG, TPMS, VDL Mode 2 and Wireless M-Bus for now
+            else -> ComingSoon(page.tool) // includes TPMS, VDL Mode 2 and Wireless M-Bus for now
         }
         else -> Unit
     }

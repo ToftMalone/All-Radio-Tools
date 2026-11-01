@@ -33,7 +33,8 @@ object Pocsag {
     const val IDLE = 0x7A89C197
     /** x^10 + x^9 + x^8 + x^6 + x^5 + x^3 + 1 */
     private const val GEN = 0x769
-    private const val NUMERIC = "0123456789*U -)("
+    /** ITU-R M.584 table: 0xA is spare, B urgency, C space, D hyphen, E and F brackets (as multimon-ng shows them). */
+    private const val NUMERIC = "0123456789.U -]["
 
     /** Remainder of the 31 BCH bits (codeword bits 31 to 1) divided by the generator. */
     fun syndrome(cw: Int): Int {
@@ -77,38 +78,40 @@ object Pocsag {
         return fixed to errors
     }
 
-    /** Digits: four bits each, least significant first. */
-    fun numeric(bits: List<Boolean>): String {
+    private fun anyLost(lost: List<Boolean>?, from: Int, n: Int) = lost != null && (from until from + n).any { lost.getOrElse(it) { false } }
+
+    /** Digits: four bits each, least significant first; '?' where a codeword was lost ([lost] marks its bits). */
+    fun numeric(bits: List<Boolean>, lost: List<Boolean>? = null): String {
         val sb = StringBuilder()
         var i = 0
         while (i + 4 <= bits.size) {
             var v = 0
             for (k in 0 until 4) if (bits[i + k]) v = v or (1 shl k)
-            sb.append(NUMERIC[v])
+            sb.append(if (anyLost(lost, i, 4)) '?' else NUMERIC[v])
             i += 4
         }
         return sb.toString().trim()
     }
 
-    /** 7-bit characters, least significant bit first, running across codewords. */
-    fun alpha(bits: List<Boolean>): String {
+    /** 7-bit characters, least significant bit first, running across codewords; '·' where a codeword was lost. */
+    fun alpha(bits: List<Boolean>, lost: List<Boolean>? = null): String {
         val sb = StringBuilder()
         var i = 0
         while (i + 7 <= bits.size) {
             var v = 0
             for (k in 0 until 7) if (bits[i + k]) v = v or (1 shl k)
-            sb.append(v.toChar())
+            sb.append(if (anyLost(lost, i, 7)) '\u0001' else v.toChar())
             i += 7
         }
         // End-of-text and padding characters close the message.
-        return sb.toString().trimEnd { it.code < 32 }.map { if (it.code < 32 || it.code == 127) '·' else it }.joinToString("")
+        return sb.toString().trimEnd { it.code < 32 && it != '\u0001' }.map { if (it.code < 32 || it.code == 127) '·' else it }.joinToString("")
     }
 
     /** Numeric for function A when it reads as digits, otherwise text when it reads as text. */
-    fun content(bits: List<Boolean>, function: Int): Pair<PocsagMessage.Kind, String> {
+    fun content(bits: List<Boolean>, function: Int, lost: List<Boolean>? = null): Pair<PocsagMessage.Kind, String> {
         if (bits.isEmpty()) return PocsagMessage.Kind.Tone to ""
-        val num = numeric(bits)
-        val alpha = alpha(bits)
+        val num = numeric(bits, lost)
+        val alpha = alpha(bits, lost)
         val numClean = num.isNotEmpty() && 'U' !in num
         val alphaClean = alpha.isNotEmpty() && alpha.count { it == '·' } * 10 <= alpha.length
         return when {
@@ -139,6 +142,7 @@ class PocsagFramer(private val baud: Int, private val freqMhz: Double, private v
     private var function = 0
     private var corrected = 0
     private val data = ArrayList<Boolean>()
+    private val lost = ArrayList<Boolean>()
     private val pending = ArrayList<PocsagMessage>()
 
     fun bit(b: Boolean) {
@@ -170,7 +174,11 @@ class PocsagFramer(private val baud: Int, private val freqMhz: Double, private v
         val fixed = Pocsag.correct(raw)
         if (fixed == null) {
             batchBad++
-            if (ric >= 0) corrected += 3 // a codeword lost inside a message
+            if (ric >= 0) {
+                // A codeword lost inside a message: keep its place, so the characters after it still line up.
+                corrected += 3
+                repeat(20) { data += false; lost += true }
+            }
             return
         }
         val (cw, errors) = fixed
@@ -184,7 +192,7 @@ class PocsagFramer(private val baud: Int, private val freqMhz: Double, private v
                 corrected = errors
             }
             ric >= 0 -> {
-                for (k in 30 downTo 11) data += (cw ushr k) and 1 == 1
+                for (k in 30 downTo 11) { data += (cw ushr k) and 1 == 1; lost += false }
                 corrected += errors
             }
         }
@@ -192,9 +200,11 @@ class PocsagFramer(private val baud: Int, private val freqMhz: Double, private v
 
     private fun flush() {
         if (ric < 0) return
-        val (kind, text) = Pocsag.content(data, function)
+        // Trailing lost codewords add nothing readable.
+        while (lost.isNotEmpty() && lost.last()) { lost.removeAt(lost.lastIndex); data.removeAt(data.lastIndex) }
+        val (kind, text) = Pocsag.content(data, function, lost)
         pending += PocsagMessage(ric, function, kind, text, baud, freqMhz, corrected)
-        ric = -1; data.clear(); corrected = 0
+        ric = -1; data.clear(); lost.clear(); corrected = 0
     }
 
     /** Messages of a batch go out once the next sync word confirms the lock, or at the end if the batch read cleanly. */
@@ -223,15 +233,19 @@ class PocsagBitClock(sampleRate: Double, baud: Int, private val onBit: (Boolean)
     private var sum = 0f
     private var mean = 0f
     private var prev = 0f
+    private var nudged = false
 
     fun feed(x: FloatArray, n: Int) {
         for (i in 0 until n) {
             mean += (x[i] - mean) * meanRate
             val v = x[i] - mean
-            if ((v > 0) != (prev > 0)) {
-                // Transitions belong on bit edges: pull the clock a quarter of the way there.
+            if ((v > 0) != (prev > 0) && !nudged) {
+                // Transitions belong on bit edges: pull the clock a quarter of the way there, once per bit. On noise
+                // the level crosses zero at nearly every sample, and unlimited pulls would hold the clock still: no
+                // bits then, and the end of a transmission would never be seen.
                 val err = if (phase < 0.5) phase else phase - 1
                 phase -= err * 0.25
+                nudged = true
             }
             prev = v
             sum += v
@@ -240,6 +254,7 @@ class PocsagBitClock(sampleRate: Double, baud: Int, private val onBit: (Boolean)
                 phase -= 1
                 onBit(sum > 0)
                 sum = 0f
+                nudged = false
             }
         }
     }

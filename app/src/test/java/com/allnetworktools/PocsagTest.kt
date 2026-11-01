@@ -46,7 +46,7 @@ class PocsagTest {
     private fun alphaBits(text: String) = (text + "\u0004").flatMap { c -> (0 until 7).map { (c.code shr it) and 1 == 1 } }
 
     private fun numericBits(digits: String) = digits.flatMap { c ->
-        val v = "0123456789*U -)(".indexOf(c)
+        val v = "0123456789.U -][".indexOf(c)
         (0 until 4).map { (v shr it) and 1 == 1 }
     }
 
@@ -92,6 +92,51 @@ class PocsagTest {
             check(got)
             assertTrue(got[0].corrected > 0)
         }
+    }
+
+    @Test fun lostCodewordKeepsTheTextAligned() {
+        val got = ArrayList<PocsagMessage>()
+        val framer = PocsagFramer(1200, 466.075) { got += it }
+        val bits = transmission(pages).toMutableList()
+        // Three bit errors in the alpha page's fourth text codeword: beyond repair, and the parity bit tells.
+        val address = 576 + 32 + 32 * 14 // RIC 1 234 567 sits in frame 7: codeword 14 of the first batch
+        val fourth = address + 32 * 5 // text codewords 0 and 1 end the batch, then a sync word, then 2 and 3
+        for (k in listOf(2, 12, 25)) bits[fourth + k] = !bits[fourth + k]
+        bits.forEach { framer.bit(it) }
+        val text = got.first { it.ric == 1_234_567 }.text
+        val want = "Intervention 12 rue des Lilas, 2e etage"
+        assertEquals(want.length, text.length)
+        // Bits 60 to 79 of the text lost: characters 8 to 11 (bits 56 to 83) unreadable, everything after in place.
+        assertEquals(want.substring(0, 8), text.substring(0, 8))
+        assertEquals("····", text.substring(8, 12))
+        assertEquals(want.substring(12), text.substring(12))
+    }
+
+    /** The carrier drops after the last batch: the noise that follows must still clock bits, or the page waits. */
+    @Test fun messageComesOutWhenTheCarrierDrops() {
+        val rate = 25_000.0
+        for (baud in PocsagReceiver.BAUDS) {
+            val bits = transmission(pages).dropLast(64)
+            val spb = rate / baud
+            val n = (bits.size * spb).roundToInt()
+            val rnd = Random(baud + 1)
+            val fm = FloatArray(n + 12_500) { i ->
+                if (i < n) ((if (bits[(i / spb).toInt()]) 4500.0 else -4500.0) * 2 * PI / rate).toFloat() + (rnd.nextFloat() - 0.5f) * 0.4f
+                else (rnd.nextFloat() - 0.5f) * 2 * PI.toFloat() // an FM discriminator on noise: any angle
+            }
+            val got = ArrayList<PocsagMessage>()
+            val framer = PocsagFramer(baud, 466.075) { got += it }
+            val clock = PocsagBitClock(rate, baud) { framer.bit(it) }
+            var i = 0
+            while (i < fm.size) { val k = minOf(1000, fm.size - i); clock.feed(fm.copyOfRange(i, i + k), k); i += k }
+            check(got)
+        }
+    }
+
+    @Test fun numericTableAsInTheStandard() {
+        // ITU-R M.584: 0xA spare, 0xB urgency, 0xC space, 0xD hyphen, 0xE and 0xF brackets; four bits LSB first.
+        val bits = listOf(0xA, 0xB, 0xC, 0xD, 0xE, 0xF, 0x9).flatMap { v -> (0 until 4).map { (v shr it) and 1 == 1 } }
+        assertEquals(".U -][9", Pocsag.numeric(bits))
     }
 
     @Test fun chanceSyncInNoiseGivesNothing() {
