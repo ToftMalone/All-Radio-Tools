@@ -2632,4 +2632,9 @@
         <item quantity="many">"Прочитано %1$d меток"</item>
         <item quantity="other">"Прочитано %1$d метки"</item>
     </plurals>
+    <string name="lpwan_channels">"Каналы"</string>
+    <string name="lpwan_channels_3">"3 канала, 868 МГц"</string>
+    <string name="lpwan_channels_8">"8 каналов, больше вычислений"</string>
+    <string name="lpwan_listening_wide">"Приём на 867,1–868,5 МГц"</string>
+    <string name="lpwan_channels_note">"The Things Network, Orange и большинство сетей используют также 867,1–867,9 МГц, а устройства перескакивают по всем восьми каналам: при трёх теряется около пяти кадров из восьми. Восемь каналов требуют примерно на треть больше вычислений."</string>
 </resources>

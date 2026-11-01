@@ -2508,4 +2508,9 @@
         <item quantity="one">"%1$d Tag gelesen"</item>
         <item quantity="other">"%1$d Tags gelesen"</item>
     </plurals>
+    <string name="lpwan_channels">"Kanäle"</string>
+    <string name="lpwan_channels_3">"3 Kanäle, 868 MHz"</string>
+    <string name="lpwan_channels_8">"8 Kanäle, mehr Rechenaufwand"</string>
+    <string name="lpwan_listening_wide">"Empfang auf 867,1–868,5 MHz"</string>
+    <string name="lpwan_channels_note">"The Things Network, Orange und die meisten Netze nutzen auch 867,1 bis 867,9 MHz, und die Geräte springen über alle acht Kanäle: Mit drei werden etwa fünf von acht ihrer Frames verpasst. Acht Kanäle brauchen etwa ein Drittel mehr Rechenleistung."</string>
 </resources>

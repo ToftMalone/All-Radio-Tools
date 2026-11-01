@@ -2446,4 +2446,9 @@
     <plurals name="p_nfc_tags_read">
         <item quantity="other">"Đã đọc %1$d thẻ"</item>
     </plurals>
+    <string name="lpwan_channels">"Kênh"</string>
+    <string name="lpwan_channels_3">"3 kênh, 868 MHz"</string>
+    <string name="lpwan_channels_8">"8 kênh, xử lý nhiều hơn"</string>
+    <string name="lpwan_listening_wide">"Đang nghe 867,1–868,5 MHz"</string>
+    <string name="lpwan_channels_note">"The Things Network, Orange và hầu hết các mạng cũng dùng 867,1 đến 867,9 MHz, và thiết bị nhảy qua cả tám kênh: chỉ với ba kênh, khoảng năm trên tám khung bị bỏ lỡ. Tám kênh cần thêm khoảng một phần ba khối lượng xử lý."</string>
 </resources>

@@ -2756,4 +2756,9 @@
         <item quantity="many">"قُرئ %1$d وسمًا"</item>
         <item quantity="other">"قُرئ %1$d وسم"</item>
     </plurals>
+    <string name="lpwan_channels">"القنوات"</string>
+    <string name="lpwan_channels_3">"3 قنوات، 868 ميغاهرتز"</string>
+    <string name="lpwan_channels_8">"8 قنوات، معالجة أكثر"</string>
+    <string name="lpwan_listening_wide">"الاستماع على 867.1–868.5 ميغاهرتز"</string>
+    <string name="lpwan_channels_note">"تستخدم The Things Network وOrange ومعظم الشبكات أيضًا 867.1 إلى 867.9 ميغاهرتز، وتتنقل الأجهزة بين القنوات الثماني كلها: مع ثلاث قنوات يفوت نحو خمسة من كل ثمانية إطارات. تتطلب ثماني قنوات نحو ثلث معالجة إضافية."</string>
 </resources>

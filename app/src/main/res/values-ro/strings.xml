@@ -2570,4 +2570,9 @@
         <item quantity="few">"%1$d etichete citite"</item>
         <item quantity="other">"%1$d de etichete citite"</item>
     </plurals>
+    <string name="lpwan_channels">"Canale"</string>
+    <string name="lpwan_channels_3">"3 canale, 868 MHz"</string>
+    <string name="lpwan_channels_8">"8 canale, mai multă procesare"</string>
+    <string name="lpwan_listening_wide">"Ascultare pe 867,1–868,5 MHz"</string>
+    <string name="lpwan_channels_note">"The Things Network, Orange și majoritatea rețelelor folosesc și 867,1–867,9 MHz, iar dispozitivele sar între toate cele opt canale: cu trei se pierd cam cinci din opt cadre. Opt canale cer cu aproximativ o treime mai multă procesare."</string>
 </resources>

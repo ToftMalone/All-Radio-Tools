@@ -99,4 +99,47 @@ class LpwanTest {
         assertEquals(1234, sf[0].up.counter)
         assertEquals(868_150_000.0, sf[0].hz, 50.0)
     }
+
+    /** The wide mode: 2 MS/s HackRF bytes centred on 867.8 MHz, LoRa on 867.3 and 868.5 MHz, Sigfox on 868.150 MHz. */
+    @Test
+    fun wideModeHearsTheEightChannels() {
+        val rate = 2_000_000.0
+        val total = (rate * 2.4).toInt()
+        val sym = LoraTx.symbols(up, 9, 1, hasCrc = true)
+        val (ar, ai) = LoraTx.waveform(sym, 9, 125_000.0, rate, syncWord = 0x34, preamble = 8, delayChips = 10_000.0, cfoHz = 1_500.0, mixHz = -500_000.0, tailChips = 0.0)
+        val (br, bi) = LoraTx.waveform(sym, 9, 125_000.0, rate, syncWord = 0x34, preamble = 8, delayChips = 60_000.0, cfoHz = -2_000.0, mixHz = 700_000.0, tailChips = 0.0)
+        val sig = Sigfox.buildFrame(0x00C0FFEE, 1234, byteArrayOf(0x12, 0x34, 0x56, 0x78), 1)
+        val s = IntArray(sig.size + 1) { 1 }
+        for (i in sig.indices) s[i + 1] = if (sig[i] == 1) s[i] else -s[i]
+        val sStart = (rate * 0.6).toInt()
+        val spb = rate / 100
+        val rnd = Random(5)
+        val bytes = ByteArray(2 * total)
+        for (i in 0 until total) {
+            var a = 0.0; var b = 0.0
+            if (i < ar.size) { a += ar[i]; b += ai[i] }
+            if (i < br.size) { a += br[i]; b += bi[i] }
+            val k = i - sStart
+            if (k >= 0 && k < s.size * spb) {
+                val ph = 2 * PI * 350_000.0 * i / rate
+                val v = 0.5 * s[(k / spb).toInt()]
+                a += v * cos(ph); b += v * sin(ph)
+            }
+            bytes[2 * i] = (30 * a + 3 * rnd.nextGaussian()).toInt().coerceIn(-127, 127).toByte()
+            bytes[2 * i + 1] = (30 * b + 3 * rnd.nextGaussian()).toInt().coerceIn(-127, 127).toByte()
+        }
+        val ev = ArrayList<LpwanEvent>()
+        val rx = LpwanReceiver(wide = true) { ev += it }
+        assertEquals(8, rx.channelsHz.size)
+        var o = 0
+        while (o < bytes.size) { val k = minOf(262_144, bytes.size - o); rx.feed(bytes.copyOfRange(o, o + k), k); o += k }
+        rx.close()
+        val lora = ev.filterIsInstance<LpwanEvent.Lora>().filter { it.frame.crcOk }
+        assertEquals(listOf(867_300_000L, 868_500_000L), lora.map { it.hz }.sorted())
+        assertTrue(lora.all { it.lorawan?.devAddr == 0x26011234 })
+        val sf = ev.filterIsInstance<LpwanEvent.SigfoxUp>()
+        assertEquals(1, sf.size)
+        assertEquals("00C0FFEE", sf[0].up.idHex)
+        assertEquals(868_150_000.0, sf[0].hz, 50.0)
+    }
 }

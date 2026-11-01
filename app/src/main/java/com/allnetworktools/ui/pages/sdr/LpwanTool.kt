@@ -2,6 +2,7 @@ package com.allnetworktools.ui.pages.sdr
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -24,6 +25,7 @@ import com.allnetworktools.data.sdr.LpwanEvent
 import com.allnetworktools.data.sdr.LpwanReceiver
 import com.allnetworktools.data.sdr.SdrRepository
 import com.allnetworktools.ui.LocalActions
+import com.allnetworktools.ui.components.AntFilterChip
 import com.allnetworktools.ui.components.Hairline
 import com.allnetworktools.ui.components.LeadingIcon
 import com.allnetworktools.ui.components.SectionCard
@@ -73,15 +75,17 @@ class LpwanController(repo: SdrRepository, scope: CoroutineScope, onAcquire: () 
         private set
     var badFrames by mutableIntStateOf(0)
         private set
+    /** All eight EU868 uplink channels (867.1 to 868.5 MHz) rather than the three every device has. */
+    var wide by mutableStateOf(false)
 
     override val sampleRate = LpwanReceiver.SAMPLE_RATE
-    override fun tuneHz() = LpwanReceiver.CENTRE_HZ - sampleRate / 4
+    override fun tuneHz() = if (wide) LpwanReceiver.WIDE_CENTRE_HZ else LpwanReceiver.CENTRE_HZ - sampleRate / 4
 
     override fun newSink(): SdrSink {
         val table = LinkedHashMap<String, LpwanDevice>()
         var bad = 0
         var changed = false
-        val rx = LpwanReceiver { e ->
+        val rx = LpwanReceiver(wide) { e ->
             val now = System.currentTimeMillis()
             val d: LpwanDevice? = when (e) {
                 is LpwanEvent.Lora -> {
@@ -160,7 +164,7 @@ fun LpwanTool(vm: MainViewModel) {
                 when {
                     c.error != null -> HeroChip(c.error!!, AntTheme.net.poor)
                     c.starting -> HeroChip(S(R.string.starting_the_hackrf), AntTheme.net.fair, blink = true)
-                    c.running -> HeroChip(S(R.string.lpwan_listening), AntTheme.net.good, blink = true)
+                    c.running -> HeroChip(S(if (c.wide) R.string.lpwan_listening_wide else R.string.lpwan_listening), AntTheme.net.good, blink = true)
                     device == null -> HeroChip(S(R.string.no_hackrf_plugged_in), AntTheme.net.poor)
                     else -> HeroChip(S(R.string.ready, device!!.name), AntTheme.net.good)
                 }
@@ -182,6 +186,16 @@ fun LpwanTool(vm: MainViewModel) {
         }
         SectionCard {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text(S(R.string.lpwan_channels), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
+                FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    for (w in listOf(false, true)) {
+                        AntFilterChip(S(if (w) R.string.lpwan_channels_8 else R.string.lpwan_channels_3), c.wide == w, {
+                            // Another tuning and receiver: stopped, as when the ISM band changes.
+                            if (c.wide != w && !c.starting) { if (c.running) c.stop(); c.wide = w }
+                        })
+                    }
+                }
+                Text(S(R.string.lpwan_channels_note), style = rf(12, 16), color = cs.onSurfaceVariant)
                 GainSettings(c.gain) { c.applyGains() }
             }
         }

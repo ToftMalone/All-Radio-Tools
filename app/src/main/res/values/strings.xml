@@ -2509,4 +2509,9 @@
         <item quantity="one">"%1$d tag read"</item>
         <item quantity="other">"%1$d tags read"</item>
     </plurals>
+    <string name="lpwan_channels">"Channels"</string>
+    <string name="lpwan_channels_3">"3 channels, 868 MHz"</string>
+    <string name="lpwan_channels_8">"8 channels, more processing"</string>
+    <string name="lpwan_listening_wide">"Listening on 867.1–868.5 MHz"</string>
+    <string name="lpwan_channels_note">"The Things Network, Orange and most networks also use 867.1 to 867.9 MHz, and devices hop over all eight channels: with three, about five of their frames in eight are missed. Eight channels take about a third more processing."</string>
 </resources>

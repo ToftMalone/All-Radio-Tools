@@ -2446,4 +2446,9 @@
     <plurals name="p_nfc_tags_read">
         <item quantity="other">"%1$d 枚読み取り"</item>
     </plurals>
+    <string name="lpwan_channels">"チャンネル"</string>
+    <string name="lpwan_channels_3">"3 チャンネル、868 MHz"</string>
+    <string name="lpwan_channels_8">"8 チャンネル、処理が多め"</string>
+    <string name="lpwan_listening_wide">"867.1–868.5 MHz を受信中"</string>
+    <string name="lpwan_channels_note">"The Things Network、Orange など多くのネットワークは 867.1〜867.9 MHz も使い、デバイスは 8 チャンネルすべてを切り替えて送信します。3 チャンネルではフレームの約 8 分の 5 を取り逃します。8 チャンネルでは処理が約 3 分の 1 増えます。"</string>
 </resources>

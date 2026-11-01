@@ -2446,4 +2446,9 @@
     <plurals name="p_nfc_tags_read">
         <item quantity="other">"อ่าน %1$d แท็ก"</item>
     </plurals>
+    <string name="lpwan_channels">"ช่องสัญญาณ"</string>
+    <string name="lpwan_channels_3">"3 ช่อง, 868 MHz"</string>
+    <string name="lpwan_channels_8">"8 ช่อง, ประมวลผลมากขึ้น"</string>
+    <string name="lpwan_listening_wide">"กำลังรับฟังที่ 867.1–868.5 MHz"</string>
+    <string name="lpwan_channels_note">"The Things Network, Orange และเครือข่ายส่วนใหญ่ใช้ 867.1 ถึง 867.9 MHz ด้วย และอุปกรณ์จะสลับไปมาทั้งแปดช่อง: ฟังเพียงสามช่องจะพลาดเฟรมราวห้าในแปด แปดช่องต้องประมวลผลเพิ่มราวหนึ่งในสาม"</string>
 </resources>

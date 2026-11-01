@@ -2632,4 +2632,9 @@
         <item quantity="many">"Přečteno %1$d tagu"</item>
         <item quantity="other">"Přečteno %1$d tagů"</item>
     </plurals>
+    <string name="lpwan_channels">"Kanály"</string>
+    <string name="lpwan_channels_3">"3 kanály, 868 MHz"</string>
+    <string name="lpwan_channels_8">"8 kanálů, více výpočtů"</string>
+    <string name="lpwan_listening_wide">"Poslech na 867,1–868,5 MHz"</string>
+    <string name="lpwan_channels_note">"The Things Network, Orange a většina sítí používá také 867,1 až 867,9 MHz a zařízení přeskakují mezi všemi osmi kanály: se třemi se ztratí asi pět z osmi rámců. Osm kanálů vyžaduje zhruba o třetinu více výpočtů."</string>
 </resources>

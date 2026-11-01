@@ -2446,4 +2446,9 @@
     <plurals name="p_nfc_tags_read">
         <item quantity="other">"已读取 %1$d 个标签"</item>
     </plurals>
+    <string name="lpwan_channels">"信道"</string>
+    <string name="lpwan_channels_3">"3 个信道，868 MHz"</string>
+    <string name="lpwan_channels_8">"8 个信道，计算量更大"</string>
+    <string name="lpwan_listening_wide">"正在监听 867.1–868.5 MHz"</string>
+    <string name="lpwan_channels_note">"The Things Network、Orange 和大多数网络也使用 867.1 至 867.9 MHz，设备会在全部八个信道间跳变：只听三个信道，大约会漏掉八分之五的帧。八个信道大约多需三分之一的计算量。"</string>
 </resources>

@@ -2508,4 +2508,9 @@
         <item quantity="one">"%1$d etiket okundu"</item>
         <item quantity="other">"%1$d etiket okundu"</item>
     </plurals>
+    <string name="lpwan_channels">"Kanallar"</string>
+    <string name="lpwan_channels_3">"3 kanal, 868 MHz"</string>
+    <string name="lpwan_channels_8">"8 kanal, daha fazla işlem"</string>
+    <string name="lpwan_listening_wide">"867,1–868,5 MHz dinleniyor"</string>
+    <string name="lpwan_channels_note">"The Things Network, Orange ve çoğu ağ 867,1–867,9 MHz\'i de kullanır ve cihazlar sekiz kanalın hepsi arasında atlar: üç kanalla çerçevelerin yaklaşık sekizde beşi kaçırılır. Sekiz kanal yaklaşık üçte bir daha fazla işlem gerektirir."</string>
 </resources>

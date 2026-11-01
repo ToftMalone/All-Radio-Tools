@@ -2508,4 +2508,9 @@
         <item quantity="one">"%1$d टैग पढ़ा"</item>
         <item quantity="other">"%1$d टैग पढ़े"</item>
     </plurals>
+    <string name="lpwan_channels">"चैनल"</string>
+    <string name="lpwan_channels_3">"3 चैनल, 868 MHz"</string>
+    <string name="lpwan_channels_8">"8 चैनल, अधिक प्रोसेसिंग"</string>
+    <string name="lpwan_listening_wide">"867.1–868.5 MHz पर सुन रहा है"</string>
+    <string name="lpwan_channels_note">"The Things Network, Orange और ज़्यादातर नेटवर्क 867.1 से 867.9 MHz भी इस्तेमाल करते हैं, और डिवाइस आठों चैनलों पर बदलते रहते हैं: तीन चैनलों से लगभग आठ में से पाँच फ़्रेम छूट जाते हैं। आठ चैनलों में लगभग एक तिहाई ज़्यादा प्रोसेसिंग लगती है।"</string>
 </resources>

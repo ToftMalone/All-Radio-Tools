@@ -524,31 +524,41 @@ sealed class LpwanEvent {
 }
 
 /**
- * HackRF bytes at 2 MS/s, 868.3 MHz at +fs/4 → 1 MS/s centred on 868.3 MHz. The three LoRaWAN channels every EU868
- * device uses (868.1, 868.3, 868.5 MHz, 125 kHz) go to LoRa receivers for SF7 to SF12; the Sigfox macro channel
- * (868.034 to 868.226 MHz) to the Sigfox receiver at 200 kS/s.
+ * HackRF bytes at 2 MS/s in, LoRa frames and Sigfox uplinks out.
  *
- * On one core this is barely twice real time on a desktop, so a phone could fall behind and drop buffers: the
- * channels and Sigfox, independent of each other, run on a small pool of threads. Their events are held and handed
- * to [onEvent] on the caller's thread, in order, once each block is done.
+ * - Narrow ([wide] false): 868.3 MHz at +fs/4, brought down to 1 MS/s; the three LoRaWAN channels every EU868 device
+ *   uses (868.1, 868.3, 868.5 MHz, 125 kHz) and the Sigfox macro channel (868.034 to 868.226 MHz).
+ * - Wide: 2 MS/s centred on [WIDE_CENTRE_HZ] (867.8 MHz, between two channels), for the five more channels The Things
+ *   Network, Orange and most EU868 networks add (867.1 to 867.9 MHz): devices hop over all eight, so the narrow mode
+ *   hears about three frames in eight of theirs. Each channel first halves the rate with a short filter.
+ *
+ * Every channel goes to LoRa receivers for SF7 to SF12, Sigfox to its receiver at 200 kS/s. The channels and Sigfox are
+ * independent and run on a small pool of threads (on one core the narrow mode is barely twice real time on a desktop,
+ * so a phone could fall behind and drop buffers); their events are handed to [onEvent] on the caller's thread, in
+ * order, once each block is done.
  */
-class LpwanReceiver(private val onEvent: (LpwanEvent) -> Unit) {
-    private val threads = minOf(4, Runtime.getRuntime().availableProcessors())
+class LpwanReceiver(val wide: Boolean = false, private val onEvent: (LpwanEvent) -> Unit) {
+    private val threads = minOf(if (wide) 6 else 4, Runtime.getRuntime().availableProcessors())
     private val pool: java.util.concurrent.ExecutorService? = if (threads < 2) null else
         java.util.concurrent.Executors.newFixedThreadPool(threads) { r -> Thread(r, "lpwan-dsp").apply { isDaemon = true } }
-
     private val d1 = Decimator(2, 450_000.0 / 2_000_000.0, 32)
-    private val re = FloatArray(65536 + 8)
+    private val rate = if (wide) 2_000_000.0 else 1_000_000.0
+    private val centre = if (wide) WIDE_CENTRE_HZ else CENTRE_HZ
+    private val re = FloatArray(131072 + 8)
     private val im = FloatArray(re.size)
 
     private inner class Mixer(offHz: Double, decim: Int, cutoffHz: Double, taps: Int) {
+        /** In the wide mode, a short first stage to 1 MS/s: only what folds onto the channel must go. */
+        val pre = if (wide) FloatDecimator(2, 200_000.0 / 2_000_000.0, 16) else null
         val dec = FloatDecimator(decim, cutoffHz / 1_000_000.0, taps)
-        private val sr = cos(-2 * PI * offHz / 1_000_000.0)
-        private val sj = sin(-2 * PI * offHz / 1_000_000.0)
+        private val sr = cos(-2 * PI * offHz / rate)
+        private val sj = sin(-2 * PI * offHz / rate)
         private var pr = 1.0
         private var pi = 0.0
         val mr = FloatArray(re.size)
         val mi = FloatArray(re.size)
+        val hr = FloatArray(re.size)
+        val hi = FloatArray(re.size)
         val or = FloatArray(re.size)
         val oi = FloatArray(re.size)
         fun run(k: Int): Int {
@@ -558,19 +568,22 @@ class LpwanReceiver(private val onEvent: (LpwanEvent) -> Unit) {
                 val n = p * sr - q * sj; q = p * sj + q * sr; p = n
             }
             val g = 1 / hypot(p, q); pr = p * g; pi = q * g
-            return dec.process(mr, mi, k, or, oi)
+            val f = pre ?: return dec.process(mr, mi, k, or, oi)
+            val h = f.process(mr, mi, k, hr, hi)
+            return dec.process(hr, hi, h, or, oi)
         }
     }
 
     private inner class Channel(val hz: Long) {
         val events = ArrayList<LpwanEvent>()
-        val mixer = Mixer((hz - CENTRE_HZ).toDouble(), 4, 70_000.0, 96) // steep: the next channel, 200 kHz away, must not fold in
+        val mixer = Mixer((hz - centre).toDouble(), 4, 70_000.0, 96) // steep: the next channel, 200 kHz away, must not fold in
         val rx = (7..12).map { sf -> LoraReceiver(sf, 125_000.0, hz.toDouble()) { f -> events += LpwanEvent.Lora(hz, sf, f, if (f.crcOk) LoraWan.parse(f.payload) else null) } }
         fun run(k: Int) { val n = mixer.run(k); for (r in rx) r.feed(mixer.or, mixer.oi, n) }
     }
 
-    private val channels = LORAWAN_HZ.map { Channel(it) }
-    private val sigMixer = Mixer((SIGFOX_HZ - CENTRE_HZ).toDouble(), 5, 100_000.0, 48)
+    val channelsHz = if (wide) LORAWAN_WIDE_HZ else LORAWAN_HZ
+    private val channels = channelsHz.map { Channel(it) }
+    private val sigMixer = Mixer((SIGFOX_HZ - centre).toDouble(), 5, 100_000.0, 48)
     private val sigEvents = ArrayList<LpwanEvent>()
     val sigfox = SigfoxReceiver(200_000.0) { up, f -> sigEvents += LpwanEvent.SigfoxUp(SIGFOX_HZ + f, up) }
     val lora get() = channels.flatMap { it.rx }
@@ -583,7 +596,11 @@ class LpwanReceiver(private val onEvent: (LpwanEvent) -> Unit) {
         var off = 0
         while (off < len) {
             val m = minOf(2 * 2 * 65536, len - off)
-            val k = d1.process(buf.copyOfRange(off, off + m), m, re, im, 0)
+            val k = if (wide) {
+                val n = m / 2
+                for (i in 0 until n) { re[i] = buf[off + 2 * i].toFloat(); im[i] = buf[off + 2 * i + 1].toFloat() }
+                n
+            } else d1.process(buf.copyOfRange(off, off + m), m, re, im, 0)
             feedFloat(k)
             off += m
         }
@@ -612,6 +629,9 @@ class LpwanReceiver(private val onEvent: (LpwanEvent) -> Unit) {
         const val SAMPLE_RATE = 2_000_000
         const val CENTRE_HZ = 868_300_000L
         val LORAWAN_HZ = listOf(868_100_000L, 868_300_000L, 868_500_000L)
+        /** The eight uplink channels of The Things Network's and most operators' EU868 plans. */
+        val LORAWAN_WIDE_HZ = listOf(867_100_000L, 867_300_000L, 867_500_000L, 867_700_000L, 867_900_000L) + LORAWAN_HZ
+        const val WIDE_CENTRE_HZ = 867_800_000L
         const val SIGFOX_HZ = 868_130_000.0
     }
 }
