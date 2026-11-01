@@ -202,9 +202,12 @@ class ChannelDown(offsetHz: Double, fs: Double, decim: Int, cutoff: Double, taps
     }
 }
 
-/** HDLC deframer: NRZI-decoded bits in, frames with a valid CRC-16 out as one bit per byte (CRC removed). */
-class Hdlc(private val onFrame: (ByteArray, Int) -> Unit) {
-    private val buf = ByteArray(MAX)
+/**
+ * HDLC deframer: NRZI-decoded bits in, frames with a valid CRC-16 out as one bit per byte (CRC removed). [maxBits]
+ * bounds a frame: 1200 is plenty for AIS; an AX.25 frame with eight repeaters and 256 bytes of text needs about 2700.
+ */
+class Hdlc(private val maxBits: Int = 1200, private val onFrame: (ByteArray, Int) -> Unit) {
+    private val buf = ByteArray(maxBits)
     private var n = 0
     private var ones = 0
     private var inFrame = false
@@ -212,7 +215,7 @@ class Hdlc(private val onFrame: (ByteArray, Int) -> Unit) {
     fun bit(b: Int) {
         if (b == 1) {
             if (++ones > 6) { inFrame = false; n = 0; return } // abort
-            if (inFrame) { if (n < MAX) buf[n++] = 1 else { inFrame = false; n = 0 } }
+            if (inFrame) { if (n < maxBits) buf[n++] = 1 else { inFrame = false; n = 0 } }
             return
         }
         when (ones) {
@@ -223,7 +226,7 @@ class Hdlc(private val onFrame: (ByteArray, Int) -> Unit) {
             }
         }
         ones = 0
-        if (inFrame) { if (n < MAX) buf[n++] = 0 else { inFrame = false; n = 0 } }
+        if (inFrame) { if (n < maxBits) buf[n++] = 0 else { inFrame = false; n = 0 } }
     }
 
     private fun check() {
@@ -234,7 +237,8 @@ class Hdlc(private val onFrame: (ByteArray, Int) -> Unit) {
     }
 
     companion object {
-        private const val MAX = 1200
+        /** An AX.25 frame at its largest, as destuffed bits with the FCS. */
+        const val AX25_MAX_BITS = 2800
     }
 }
 

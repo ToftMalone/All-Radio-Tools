@@ -72,7 +72,7 @@ class G3ruhDemodulator(private val rate: Double, private val onFrame: (ByteArray
     private val next = DoubleArray(PHASES) { spb + it * spb / PHASES }
     private val prev = IntArray(PHASES)
     private val shift = IntArray(PHASES)
-    private val hdlc = Array(PHASES) { Hdlc { bits, count -> frame(bits, count) } }
+    private val hdlc = Array(PHASES) { Hdlc(Hdlc.AX25_MAX_BITS) { bits, count -> frame(bits, count) } }
     private val recent = HashMap<Int, Long>()
 
     private fun frame(bits: ByteArray, count: Int) {

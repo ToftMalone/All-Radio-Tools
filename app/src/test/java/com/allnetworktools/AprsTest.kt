@@ -179,10 +179,10 @@ class AprsTest {
         return IntArray(out.size) { if (out[it] == 0) level = 1 - level; level }
     }
 
-    private fun afsk(line: IntArray, noise: Double, seed: Long): ByteArray {
+    private fun afsk(line: IntArray, noise: Double, seed: Long, baud: Double = 1200.0): ByteArray {
         val rnd = Random(seed)
         val fs = 2_000_000.0
-        val spb = fs / 1200
+        val spb = fs / baud
         val n = ((line.size + 20) * spb).toInt()
         var psi = 0.0
         var pa = 0.0
@@ -212,6 +212,21 @@ class AprsTest {
         assertEquals(listOf("F4ABC-9", "F5XYZ"), got.map { it.src })
         assertEquals(49.0583, got[0].lat!!, 1e-4)
         assertEquals(48.8566, got[1].lat!!, 0.001)
+    }
+
+    /** What failed: a long beacon, and a tracker whose 1200 baud is 1.5% slow. */
+    @Test fun longPacketFromASlowTracker() {
+        val comment = "Telemetry 0123456789 and a long station description that goes on ".repeat(3).trim()
+        val frame = ax25("F4ABC-9", "APRS", listOf("WIDE1-1", "WIDE2-1"), "!4903.50N/07201.75W>$comment")
+        for (baud in listOf(1200.0, 1182.0, 1218.0)) {
+            val got = ArrayList<AprsReport>()
+            val rx = AprsReceiver { got += it }
+            val iq = afsk(lineBits(listOf(frame)), noise = 15.0, seed = 3, baud = baud)
+            var i = 0
+            while (i < iq.size) { val len = minOf(131072, iq.size - i); rx.feed(iq.copyOfRange(i, i + len), len); i += len }
+            assertEquals("baud $baud", 1, got.size)
+            assertEquals(comment, got[0].comment)
+        }
     }
 
     @Test fun noiseAloneDecodesNothing() {

@@ -279,11 +279,13 @@ class AprsTracker {
 
 /**
  * Bell 202 AFSK (1200 Hz mark, 2200 Hz space, 1200 baud) from FM-discriminated baseband at 50 kS/s: tone correlators over
- * one bit, an amplitude-normalised decision, NRZI, and eight HDLC decoders on bit clocks one eighth of a bit apart.
+ * one bit, an amplitude-normalised decision, NRZI and HDLC. The bit clock follows the tone changes, since a
+ * tracker's 1200 baud can be off by a percent or two; three clocks pulled harder or softer each feed their own HDLC
+ * decoder, and a frame two of them decode is passed on once.
  */
 class AfskDemodulator(private val sampleRate: Double = 50_000.0, private val onFrame: (ByteArray) -> Unit) {
     private val len = (sampleRate / BAUD).roundToInt()
-    private val spb = sampleRate / BAUD
+    private val step = BAUD / sampleRate
     private val mre = FloatArray(len)
     private val mim = FloatArray(len)
     private val sre = FloatArray(len)
@@ -302,9 +304,11 @@ class AfskDemodulator(private val sampleRate: Double = 50_000.0, private val onF
     private var peakM = 1e-9
     private var peakS = 1e-9
     private var n = 0L
-    private val next = DoubleArray(PHASES) { len + it * spb / PHASES }
-    private val prev = IntArray(PHASES)
-    private val hdlc = Array(PHASES) { Hdlc { bits, count -> frame(bits, count) } }
+    private var lastLevel = 0
+    /** Where each clock is within the bit, 0 at a bit edge; the bit is read at 0.5. */
+    private val clock = DoubleArray(GAINS.size)
+    private val prev = IntArray(GAINS.size)
+    private val hdlc = Array(GAINS.size) { Hdlc(Hdlc.AX25_MAX_BITS) { bits, count -> frame(bits, count) } }
     private val recent = HashMap<Int, Long>()
 
     private fun frame(bits: ByteArray, count: Int) {
@@ -349,19 +353,28 @@ class AfskDemodulator(private val sampleRate: Double = 50_000.0, private val onF
         peakM = maxOf(em, peakM * 0.9995)
         peakS = maxOf(es, peakS * 0.9995)
         val level = if (em / peakM - es / peakS > 0) 1 else 0
-        for (p in 0 until PHASES) {
-            if (n >= next[p]) {
-                hdlc[p].bit(if (level == prev[p]) 1 else 0) // NRZI: no change is a 1
-                prev[p] = level
-                next[p] += spb
+        val edge = level != lastLevel
+        lastLevel = level
+        for (c in GAINS.indices) {
+            var ph = clock[c]
+            // A tone change marks a bit edge: pull the clock towards it.
+            if (edge) { val err = if (ph < 0.5) ph else ph - 1; ph -= GAINS[c] * err; if (ph < 0) ph += 1 }
+            val before = ph
+            ph += step
+            if (before < 0.5 && ph >= 0.5) {
+                hdlc[c].bit(if (level == prev[c]) 1 else 0) // NRZI: no change is a 1
+                prev[c] = level
             }
+            if (ph >= 1) ph -= 1
+            clock[c] = ph
         }
         n++
     }
 
     companion object {
         const val BAUD = 1200.0
-        private const val PHASES = 8
+        /** How hard each clock is pulled to a tone change. */
+        private val GAINS = doubleArrayOf(0.15, 0.3, 0.5)
     }
 }
 
