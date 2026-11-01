@@ -87,7 +87,7 @@ The home screen offers five networks. Each one has its dashboard, its main tool 
 | DSC | Maritime digital selective calls on VHF channel 70: distress alerts, safety and routine calls, positions |
 | Drones | DJI (DroneID), analogue FPV and remote controls (ExpressLRS, Crossfire, FrSky, FlySky, Spektrum) |
 | FLARM | Gliders and light aircraft on 868 MHz (both the old protocol and the one since 2024), positions around you; aircraft asking not to be tracked are only counted |
-| ISM sensors | Weather stations, thermometers, energy monitors, door sensors, remotes on 433, 868, 315, 345 and 915 MHz (about 30 families) |
+| ISM sensors | Weather stations, thermometers, energy monitors, door sensors, remotes on 433, 868, 315, 345 and 915 MHz (about 40 families, Lidl Auriol, Oregon Scientific, Hideki, Ecowitt among them) |
 | LoRaWAN / Sigfox | Connected objects on 868 MHz: LoRaWAN headers (device address, network, counter) on SF7 to SF12, Sigfox uplinks |
 | Meteor-M | Weather satellite LRPT images on 137 MHz |
 | PMR446 | The 16 walkie-talkie channels at once: activity, CTCSS tone, listening to analogue channels and to DMR446 / dPMR446 voice (AMBE+2 decoded), their call ids |

@@ -83,7 +83,7 @@ L'écran d'accueil propose cinq réseaux. Chacun a son tableau de bord, son outi
 | AIS | Carte des navires sur 162 MHz |
 | APRS | Balises radioamateurs sur 144,800 MHz |
 | Ballons-sondes | Vaisala RS41, Meteomodem M10 / M20 et ballons amateurs Horus vers 403 et 434 MHz, avec prédiction d'atterrissage |
-| Capteurs ISM | Stations météo, thermomètres, compteurs d'énergie, détecteurs d'ouverture, télécommandes sur 433, 868, 315, 345 et 915 MHz (une trentaine de familles) |
+| Capteurs ISM | Stations météo, thermomètres, compteurs d'énergie, détecteurs d'ouverture, télécommandes sur 433, 868, 315, 345 et 915 MHz (une quarantaine de familles, dont Auriol de Lidl, Oregon Scientific, Hideki, Ecowitt) |
 | CubeSat | Télémesure AX.25 des satellites amateurs et de l'ISS (AFSK 1200, G3RUH 9600), prochains passages et correction Doppler automatique |
 | DECT | Bases de téléphones sans fil (1880–1900 MHz) : identité, porteuses, intervalles ; la voix n'est jamais touchée |
 | DSC (ASN) | Appels sélectifs numériques maritimes sur le canal VHF 70 : alertes de détresse, appels de sécurité et de routine, positions |

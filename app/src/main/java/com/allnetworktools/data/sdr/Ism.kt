@@ -187,7 +187,7 @@ object Ism {
 
     // ---------------------------------------------------------------- pulse_slicer.c
 
-    private enum class Mod { OokPwm, OokPpm, OokPcm, OokMcZero, FskPcm, FskPwm }
+    private enum class Mod { OokPwm, OokPpm, OokPcm, OokMcZero, OokDmc, FskPcm, FskPwm }
     private class Timing(val s: Float, val l: Float, val reset: Float, val gap: Float = 0f, val sync: Float = 0f, val tol: Float = 0f)
 
     /** The bit width the PCM slicer measured, for the decoders that tell two rates apart. */
@@ -278,6 +278,30 @@ object Ism {
             }
             if (k == p.size - 1 || p[k].gapUs > d.reset) { if (bits.hasData()) emit(bits); bits.clear() }
             else if (d.gap > 0 && p[k].gapUs > d.gap && bits.n.last() > 0) bits.addRow()
+        }
+    }
+
+    /** pulse_slicer_dmc: differential Manchester, two short half-bits are a 1, one long bit a 0. */
+    private fun sliceDmc(t: IsmTrain, d: Timing, emit: (IsmBits) -> Unit) {
+        val p = t.p
+        fun sym(n: Int) = if (n and 1 == 0) p[n shr 1].pulseUs else p[n shr 1].gapUs
+        val bits = IsmBits()
+        var n = 0
+        while (n < p.size * 2) {
+            val s = sym(n)
+            if (abs(s - d.s) < d.tol) {
+                bits.addBit(1)
+                val next = if (n + 1 < p.size * 2) sym(++n) else 0f
+                if (abs(next - d.s) > d.tol) {
+                    if (next >= d.reset - d.tol) n-- // the message ends: no second half
+                    else if (bits.n.last() > 0) bits.addRow()
+                }
+            } else if (abs(s - d.l) < d.tol) {
+                bits.addBit(0)
+            } else if (s >= d.reset - d.tol && bits.hasData()) {
+                emit(bits); bits.clear()
+            }
+            n++
         }
     }
 
@@ -543,7 +567,9 @@ object Ism {
                 r2.add("Temperature", osTemp(m), "C", 2)
                 r2.add("Humidity", osHum(m).toDouble(), "%", 0)
                 out += r2.build()
+                return
             }
+            oregonV2More(sid, n, m, out)
             return
         }
         if (((b[0] and 0xf) != 0x0f || b[1] != 0xff || (b[2] and 0xc0) != 0xc0) && ((b[0] and 0xf) != 0x00 || b[1] != 0x00 || (b[2] and 0xc0) != 0x00)) return
@@ -565,6 +591,82 @@ object Ism {
             r2.add("Temperature", tc, "C", 2)
             r2.add("Humidity", osHum(m).toDouble(), "%", 0)
             out += r2.build()
+            return
+        }
+        oregonV3More(sid, m, out)
+    }
+
+    private fun osBuilder(model: String, m: IntArray) = Builder(model, "Weather", "${(m[2] and 0x0f) or (m[3] and 0xf0)}", "CHECKSUM").also {
+        it.channel = (m[2] shr 4) and 0x0f
+        it.battery = (m[3] shr 2) and 1 == 0
+    }
+    private fun bcdOk(m: IntArray, vararg nibbles: Int) = nibbles.all { k -> ((if (k and 1 == 0) m[k shr 1] and 0x0f else m[k shr 1] shr 4)) <= 9 }
+
+    // oregon_scientific.c, the other v2.1 sensors: temperature only, with pressure, rain
+    private fun oregonV2More(sid: Int, n: Int, m: IntArray, out: Out) {
+        fun ok(bitsExpected: Int, idx: Int) = n == bitsExpected && osChecksum(m, idx)
+        when {
+            sid == 0x5d60 -> if (ok(92, 19)) out += osBuilder("Oregon-BHTR968", m).apply {
+                add("Temperature", osTemp(m), "C", 2); add("Humidity", osHum(m).toDouble(), "%", 0)
+                add("Pressure", (((m[7] and 0x0f) or (m[8] and 0xf0)) + 856).toDouble(), "hPa", 0)
+            }.build()
+            sid == 0x5d50 -> if (ok(84, 19)) out += osBuilder("Oregon-BTHR918", m).apply {
+                add("Temperature", osTemp(m), "C", 2); add("Humidity", osHum(m).toDouble(), "%", 0)
+                add("Pressure", (((m[7] and 0x0f) or (m[8] and 0xf0)) + 795).toDouble(), "hPa", 0)
+            }.build()
+            sid == 0x2d10 -> if (ok(80, 16)) out += osBuilder("Oregon-RGR968", m).apply {
+                add("Rain rate", ((m[4] and 0x0f) * 100 + (m[4] shr 4) * 10 + ((m[5] shr 4) and 0x0f)) / 10.0, "mm/h")
+                add("Rain", ((m[7] and 0xf) * 10000 + (m[7] shr 4) * 1000 + (m[6] and 0xf) * 100 + (m[6] shr 4) * 10 + (m[5] and 0xf)) / 10.0, "mm")
+            }.build()
+            (sid == 0xec40 || sid == 0xec41) && n == 76 -> if (ok(76, 12)) out += osBuilder(if (sid == 0xec40) "Oregon-THR228N" else "Oregon-AWR129", m).apply {
+                add("Temperature", osTemp(m), "C", 2)
+            }.build()
+            sid == 0xec40 && n == 64 -> {
+                if (!ok(64, 12) || !bcdOk(m, 11, 8, 9)) return
+                val tc = osTemp(m)
+                if (tc > 70 || tc < -50) return
+                out += osBuilder("Oregon-THN132N", m).apply { add("Temperature", tc, "C", 2) }.build()
+            }
+            (sid and 0x0fff) == 0x0cc3 && n == 80 -> if (ok(80, 15)) out += osBuilder("Oregon-RTGN129", m).apply {
+                add("Temperature", osTemp(m), "C", 2); add("Humidity", osHum(m).toDouble(), "%", 0)
+            }.build()
+            (sid and 0x0fff) == 0x0cc3 -> if (ok(76, 15)) out += osBuilder("Oregon-RTGN318", m).apply {
+                add("Temperature", osTemp(m), "C", 2); add("Humidity", osHum(m).toDouble(), "%", 0)
+            }.build()
+            sid == 0xcc43 || (sid and 0x0fff) == 0x0cd3 -> if (ok(68, 12)) out += osBuilder(if (sid == 0xcc43) "Oregon-THN129" else "Oregon-RTHN129", m).apply {
+                add("Temperature", osTemp(m), "C", 2)
+            }.build()
+            sid == 0x5d53 -> if (ok(92, 19)) out += osBuilder("Oregon-BTHGN129", m).apply {
+                add("Temperature", osTemp(m), "C", 2); add("Humidity", osHum(m).toDouble(), "%", 0)
+                add("Pressure", (((m[7] and 0x0f) or (m[8] and 0xf0)) * 2 + (m[8] and 0x01) + 600).toDouble(), "hPa", 0)
+            }.build()
+        }
+    }
+
+    // oregon_scientific.c, the other v3 sensors: wind, rain, UV, temperature
+    private fun oregonV3More(sid: Int, m: IntArray, out: Out) {
+        fun rainRate() = ((m[5] and 0x0f) * 1000 + (m[5] shr 4) * 100 + (m[4] and 0x0f) * 10 + (m[4] shr 4)) / 100.0
+        fun rainTotal() = (m[8] and 0x0f) * 100.0 + ((m[8] shr 4) and 0x0f) * 10.0 + (m[7] and 0x0f) +
+            ((m[7] shr 4) and 0x0f) / 10.0 + (m[6] and 0x0f) / 100.0 + ((m[6] shr 4) and 0x0f) / 1000.0
+        when (sid) {
+            0xc844 -> if (osChecksum(m, 12)) out += osBuilder("Oregon-THN802", m).apply { add("Temperature", osTemp(m), "C", 2) }.build()
+            0xd874 -> if (osChecksum(m, 13)) out += osBuilder("Oregon-UV800", m).apply { add("UV index", (((m[4] and 0x0f) * 10) + (m[4] shr 4)).toDouble(), "", 0) }.build()
+            0x2914, 0x2d14 -> {
+                if (!osChecksum(m, 18)) return
+                if (sid == 0x2914 && !bcdOk(m, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17)) return
+                // Inches per hour and inches on the air.
+                out += osBuilder("Oregon-PCR800", m).apply { add("Rain rate", rainRate() * 25.4, "mm/h"); add("Rain", rainTotal() * 25.4, "mm") }.build()
+            }
+            0x1984, 0x1994 -> {
+                if (!osChecksum(m, 17) || !bcdOk(m, 10, 13, 12, 15, 14, 17)) return
+                val gust = (m[5] and 0x0f) / 10.0 + ((m[6] shr 4) and 0x0f) + (m[6] and 0x0f) * 10.0
+                val avg = ((m[7] shr 4) and 0x0f) / 10.0 + (m[7] and 0x0f) + ((m[8] shr 4) and 0x0f) * 10.0
+                if (gust > 56 || avg > 56) return
+                out += osBuilder("Oregon-WGR800", m).apply {
+                    add("Wind speed", avg * 3.6, "km/h"); add("Wind gust", gust * 3.6, "km/h")
+                    add("Wind direction", ((m[4] shr 4) and 0x0f) * 22.5, "deg", 0)
+                }.build()
+            }
         }
     }
 
@@ -1121,6 +1223,177 @@ object Ism {
         }
     }
 
+    // auriol_hg02832.c: Auriol HG02832, HG05124A-DCF, Rubicson 48957 (PWM, 40 bits after a 1-bit row, CRC-8 of the xor)
+    private fun auriolHg02832(bits: IsmBits, out: Out) {
+        if (bits.rows() != 2 || bits.n[0] != 1 || bits.n[1] != 40) return
+        bits.invert()
+        val b = bits.row(1)
+        val d0 = b[0] xor b[1] xor b[2] xor b[3]
+        if (crc8(intArrayOf(d0), 1, 0x31, 0x53) xor b[4] != 0) return
+        val r = Builder("Auriol-HG02832", "Weather", "${b[0]}", "CRC")
+        r.channel = ((b[2] and 0x30) shr 4) + 1
+        r.battery = (b[2] shr 7) == 0
+        r.add("Temperature", (s16(((b[2] and 0x0f) shl 12) or (b[3] shl 4)) shr 4) * 0.1, "C")
+        r.add("Humidity", b[1].toDouble(), "%", 0)
+        out += r.build()
+    }
+
+    // auriol_afw2a1.c: Auriol AFW2A1 (PPM, 36 bits, no check: the row repeated 12 times and a constant nibble)
+    private fun auriolAfw2a1(bits: IsmBits, out: Out) {
+        val row = bits.findRepeatedRow(12, 36)
+        if (row < 0) return
+        val b = bits.row(row)
+        if ((b[3] shr 4) != 0xa) return
+        val tc = (s16(((b[1] and 0x0f) shl 12) or (b[2] shl 4)) shr 4) * 0.1
+        val hum = ((b[3] and 0x0f) shl 4) or (b[4] shr 4)
+        if (hum > 100 || tc < -51.1 || tc > 76.7) return
+        val r = Builder("Auriol-AFW2A1", "Weather", "${b[0]}", "REPEAT")
+        r.channel = ((b[1] and 0x30) shr 4) + 1
+        r.battery = (b[1] shr 7) == 1
+        r.add("Temperature", tc, "C")
+        r.add("Humidity", hum.toDouble(), "%", 0)
+        out += r.build()
+    }
+
+    // auriol_ahfl.c: Auriol AHFL (PPM, 42 bits twice, 6-bit sum of nibbles)
+    private fun auriolAhfl(bits: IsmBits, out: Out) {
+        val row = bits.findRepeatedRow(2, 42)
+        if (row < 0 || bits.n[row] != 42) return
+        val b = bits.row(row)
+        if ((b[4] and 0xF0) != 0x40 || (b[3] and 0x1) != 0) return
+        var sum = 0
+        for (i in 0 until 4) sum += (b[i] and 0xF) + (b[i] shr 4)
+        sum += b[4] shr 4
+        if ((sum and 0x3F) != (((b[4] and 0xF) shl 2) or ((b[5] and 0xC0) shr 6))) return
+        val r = Builder("Auriol-AHFL", "Weather", "${b[0]}", "CHECKSUM")
+        r.channel = ((b[1] and 0x30) shr 4) + 1
+        r.battery = (b[1] shr 7) == 1
+        r.add("Temperature", (s16(((b[1] and 0x0f) shl 12) or (b[2] shl 4)) shr 4) * 0.1, "C")
+        r.add("Humidity", (b[3] shr 1).toDouble(), "%", 0)
+        out += r.build()
+    }
+
+    // auriol_aft77b2.c: Auriol AFT 77 B2 (PPM, 68 bits: sum and LFSR digest gen 0x83 key 0xEC)
+    private fun auriolAft77b2(bits: IsmBits, out: Out) {
+        val row = (0 until bits.rows()).firstOrNull { bits.n[it] == 68 } ?: return
+        val p = bits.row(row)
+        if (p[0] != 0xA5) return
+        val f = IntArray(8) { ((p[it] shl 4) or (p[it + 1] shr 4)) and 0xff }
+        if (addBytes(f, 6) and 0xff != f[6] || lfsrDigest8(f, 6, 0x83, 0xEC) != f[7]) return
+        var traw = (p[4] shr 4) * 100 + (p[4] and 0x0F) * 10 + (p[5] shr 4)
+        if (p[3] and 0x08 != 0) traw = -traw
+        val r = Builder("Auriol-AFT77B2", "Weather", "${f[1]}", "CRC")
+        r.add("Temperature", traw * 0.1, "C")
+        out += r.build()
+    }
+
+    // auriol_4ld5661.c: Auriol 4-LD5661 / 4-LD5972 / 4-LD6313, Sempre 4-AH0423-4 (PPM, 52 bits, a constant byte)
+    private fun auriol4ld5661(bits: IsmBits, out: Out) {
+        for (i in 0 until bits.rows()) {
+            if (bits.n[i] != 52) continue
+            val b = bits.row(i)
+            if (b[3] != 0xf0 || (b[1] and 0x40) != 0) continue
+            val r = Builder("Auriol-4LD5661", "Weather", hex(b[0], 2), "CONSTANT")
+            r.battery = (b[1] shr 7) == 1
+            r.add("Temperature", (s16(((b[1] and 0x0f) shl 12) or (b[2] shl 4)) shr 4) * 0.1, "C")
+            // One tip of the bucket is about 1 mm (rtl_433 measured it, the display unit says 0.3).
+            r.add("Rain", ((b[4] shl 12) or (b[5] shl 4) or (b[6] shr 4)).toDouble(), "mm")
+            out += r.build()
+            return
+        }
+    }
+
+    // auriol_hg04641a.c: Auriol HG04641A (PPM, 36 bits twice, 4-bit sum of nibbles)
+    private fun auriolHg04641a(bits: IsmBits, out: Out) {
+        val row = bits.findRepeatedRow(2, 36)
+        if (row < 0 || bits.n[row] < 36) return
+        val b = bits.extract(row, 0, 36)
+        b[4] = b[4] shr 4
+        var sum = 0
+        for (i in 0 until 4) sum += (b[i] shr 4) + (b[i] and 0xf)
+        if ((sum and 0xf) != b[4]) return
+        val flags = b[2] shr 4
+        if ((flags and 0x6) != 0 || flags and 0x1 == 0) return
+        val dec = s16(((b[2] and 0x0f) shl 12) or (b[3] shl 4)) shr 4
+        if (dec < -400 || dec > 600) return
+        val r = Builder("Auriol-HG04641A", "Weather", hex((b[0] shl 8) or b[1], 4), "CHECKSUM")
+        r.battery = flags and 0x8 == 0
+        r.add("Temperature", dec * 0.1, "C")
+        out += r.build()
+    }
+
+    // hideki.c: Hideki TS04, TFA Nexus, Bresser 5CH, Cresta (DMC, inverted, a parity bit per byte, XOR and CRC-8 0x07)
+    private fun reflect8(x: Int): Int { var r = 0; for (i in 0 until 8) r = r or (((x shr i) and 1) shl (7 - i)); return r }
+    private fun hideki(bits: IsmBits, out: Out) {
+        for (row in 0 until bits.rows()) {
+            var len = (bits.n[row] + 4) / 9
+            val type = when (len) { 14 -> "Wind"; 10 -> "TS04"; 9 -> "Rain"; 8 -> "Temperature"; else -> continue }
+            len -= 1
+            val raw = bits.row(row)
+            var sync = (raw[0] shl 1) or (raw[1] shr 7)
+            var start = -1
+            for (i in 0 until 4) { if (sync == 0x0d) { start = 9 - i; break }; sync = sync shr 1 }
+            if (start < 0) continue
+            val b = IntArray(raw.size) { raw[it].inv() and 0xff }
+            val pk = IntArray(14)
+            var bad = false
+            for (i in 0 until len) {
+                val o = start + i * 9
+                pk[i] = ((b[o / 8] shl (o % 8)) or (b[o / 8 + 1] shr (8 - o % 8))) and 0xff
+                if ((b[o / 8 + 1] shr (7 - o % 8)) and 1 != parity8(pk[i])) { bad = true; break }
+            }
+            if (bad || xorBytes(pk, len - 1) != 0 || crc8(pk, len, 0x07, 0x00) != 0) continue
+            for (i in 0 until len) pk[i] = reflect8(pk[i])
+            if (((pk[1] shr 1) and 0x1f) + 2 != len) continue
+            var ch = (pk[0] shr 5) and 0x0F
+            if (ch >= 5) ch -= 1
+            var temp = (pk[4] and 0x0F) * 100 + ((pk[3] and 0xF0) shr 4) * 10 + (pk[3] and 0x0F)
+            if ((pk[4] shr 7) and 1 == 0) temp = -temp
+            val r = Builder("Hideki-$type", "Weather", "${pk[0] and 0x0F}", "CRC")
+            r.channel = ch
+            r.battery = (pk[4] shr 6) and 1 == 1
+            when (type) {
+                "TS04" -> { r.add("Temperature", temp / 10.0, "C"); r.add("Humidity", (((pk[5] and 0xF0) shr 4) * 10 + (pk[5] and 0x0F)).toDouble(), "%", 0) }
+                "Temperature" -> r.add("Temperature", temp / 10.0, "C")
+                "Wind" -> {
+                    val wd = intArrayOf(0, 15, 13, 14, 9, 10, 12, 11, 1, 2, 4, 3, 8, 7, 5, 6)
+                    r.add("Temperature", temp / 10.0, "C")
+                    // Miles per hour on the air.
+                    r.add("Wind speed", ((pk[8] and 0x0F) * 100 + (pk[7] shr 4) * 10 + (pk[7] and 0x0F)) * 0.1 * 1.609344, "km/h")
+                    r.add("Wind gust", ((pk[9] shr 4) * 100 + (pk[9] and 0x0F) * 10 + (pk[8] shr 4)) * 0.1 * 1.609344, "km/h")
+                    r.add("Wind direction", wd[(pk[10] and 0xF0) shr 4] * 22.5, "deg", 0)
+                }
+                "Rain" -> { r.battery = (pk[1] shr 6) and 1 == 1; r.add("Rain", ((pk[4] shl 8) or pk[3]) * 0.7, "mm") }
+            }
+            out += r.build()
+            return
+        }
+    }
+
+    // ambientweather_wh31e.c: Fine Offset / Ecowitt / Ambient Weather WH31E and WH31B (FSK, CRC-8 0x31 and sum)
+    private fun wh31e(bits: IsmBits, out: Out) {
+        for (row in 0 until bits.rows()) {
+            val sp = bits.search(row, 0, pat(0xaa, 0x2d, 0xd4), 24)
+            if (sp >= bits.n[row]) continue
+            val b = bits.extract(row, sp + 24, 18 * 8)
+            if (b[0] != 0x30 && b[0] != 0x37) continue
+            if (crc8(b, 6, 0x31, 0x00) != 0 || (addBytes(b, 6) - b[6]) and 0xff != 0) continue
+            val r = Builder(if (b[0] == 0x30) "Ecowitt-WH31E" else "Ecowitt-WH31B", "Weather", "${b[1]}", "CRC")
+            r.channel = ((b[2] and 0x70) shr 4) + 1
+            r.battery = (b[2] and 0x04) == 0
+            r.add("Temperature", ((((b[2] and 0x03) shl 8) or b[3]) - 400) * 0.1, "C")
+            r.add("Humidity", b[4].toDouble(), "%", 0)
+            out += r.build()
+        }
+    }
+
+    /** One decoder on bits already sliced. Used by the tests. */
+    internal fun decodeBits(model: String, bits: IsmBits): List<IsmReading> {
+        val out = ArrayList<IsmReading>()
+        protos.first { it.name.startsWith(model) }.fn(bits.copy(), out, ArrayList())
+        return out
+    }
+
     // ---------------------------------------------------------------- the table
 
     private class Proto(val name: String, val fsk: Boolean, val mod: Mod, val t: Timing, val fn: (IsmBits, Out, MutableList<Int>) -> Unit)
@@ -1135,7 +1408,7 @@ object Ism {
         p("Acurite 592TXR, 5-in-1", Mod.OokPwm, Timing(220f, 408f, 4000f, 500f, 620f), ::acurite),
         p("Fine Offset WH1080 / WH3080", Mod.OokPwm, Timing(544f, 1524f, 2800f), ::wh1080),
         p("Ambient Weather F007TH / TFA 30.3208", Mod.OokMcZero, Timing(500f, 0f, 2400f), ::f007th),
-        p("Oregon Scientific v2.1 / v3", Mod.OokMcZero, Timing(440f, 0f, 2400f), ::oregon),
+        p("Oregon Scientific v2.1 / v3 (THGR, THN, BTHR, RTGN, PCR, WGR, UV800…)", Mod.OokMcZero, Timing(440f, 0f, 2400f), ::oregon),
         p("Acurite 606TX / Technoline TX960", Mod.OokPpm, Timing(2000f, 4000f, 10000f, 7000f), ::acurite606),
         p("Acurite 609TXC", Mod.OokPpm, Timing(1000f, 2000f, 10000f, 3000f), ::acurite609),
         p("Prologue / FreeTec NC-7104", Mod.OokPpm, Timing(2000f, 4000f, 10000f, 7000f), ::prologue),
@@ -1152,6 +1425,13 @@ object Ism {
         p("Springfield soil moisture", Mod.OokPpm, Timing(2000f, 4000f, 9200f, 5000f), ::springfield),
         p("Schrader TPMS", Mod.OokMcZero, Timing(120f, 0f, 480f), ::schrader),
         p("Schrader EG53MA4 TPMS", Mod.OokMcZero, Timing(123f, 0f, 300f), ::schraderEg53),
+        p("Auriol HG02832 / HG05124A-DCF (Lidl)", Mod.OokPwm, Timing(252f, 612f, 62990f, 750f, 860f), ::auriolHg02832),
+        p("Auriol AFW2A1 (Lidl)", Mod.OokPpm, Timing(576f, 1536f, 3954f, 2012f), ::auriolAfw2a1),
+        p("Auriol AHFL (Lidl)", Mod.OokPpm, Timing(2100f, 4150f, 9150f, 4248f), ::auriolAhfl),
+        p("Auriol AFT 77 B2 (Lidl)", Mod.OokPpm, Timing(500f, 920f, 2275f, 1104f), ::auriolAft77b2),
+        p("Auriol 4-LD5661 / 4-LD5972 / 4-LD6313 (Lidl)", Mod.OokPpm, Timing(1000f, 2000f, 4000f, 2500f, 2500f), ::auriol4ld5661),
+        p("Auriol HG04641A (Lidl)", Mod.OokPpm, Timing(980f, 1976f, 5000f, 2500f), ::auriolHg04641a),
+        p("Hideki TS04, TFA, Bresser 5CH, Cresta", Mod.OokDmc, Timing(520f, 1040f, 4000f, tol = 240f), ::hideki),
         Proto("EV1527 / PT2262 remotes", false, Mod.OokPwm, Timing(464f, 1404f, 1800f, tol = 200f), ::genericRemote),
         p("Bresser 5-in-1", Mod.FskPcm, Timing(124f, 124f, 25000f), ::bresser5in1),
         p("Bresser 6-in-1", Mod.FskPcm, Timing(124f, 124f, 25000f), ::bresser6in1),
@@ -1161,6 +1441,7 @@ object Ism {
         p("Fine Offset / Ecowitt WH24 / WH65", Mod.FskPcm, Timing(58f, 58f, 20000f), ::wh24),
         p("Efergy e2 classic", Mod.FskPwm, Timing(64f, 136f, 400f, 200f, 500f), ::efergy),
         p("CurrentCost TX / EnviR", Mod.FskPcm, Timing(250f, 250f, 8000f), ::currentCost),
+        p("Fine Offset / Ecowitt WH31E / WH31B", Mod.FskPcm, Timing(56f, 56f, 1500f), ::wh31e),
     )
 
     /** The supported devices, for the screen. */
@@ -1179,6 +1460,7 @@ object Ism {
                 Mod.OokPpm -> slicePpm(t, pr.t, emit)
                 Mod.OokPcm, Mod.FskPcm -> slicePcm(t, pr.t, emit)
                 Mod.OokMcZero -> sliceMcZero(t, pr.t, emit)
+                Mod.OokDmc -> sliceDmc(t, pr.t, emit)
             }
         }
         // A device repeats its packet within a burst: keep one of each.
