@@ -2,7 +2,7 @@
 
 **Everything that transmits around you, in one Android app.**
 
-All Radio Tools brings together tools to explore Wi-Fi, Bluetooth, the mobile network, GNSS and, with a HackRF, the radio waves themselves: aircraft, gliders, radiosondes, ships, drones, satellites, walkie-talkies, sensors and meters.
+All Radio Tools brings together tools to explore Wi-Fi, Bluetooth, the mobile network, GNSS, NFC and, with a HackRF, the radio waves themselves: aircraft, gliders, radiosondes, ships, drones, satellites, walkie-talkies, sensors and meters. NFC tags and contactless cards too.
 
 > 🌍 Available in 22 languages (it follows the phone's language). Written in Kotlin with Jetpack Compose and Material 3.
 >
@@ -22,7 +22,7 @@ All Radio Tools brings together tools to explore Wi-Fi, Bluetooth, the mobile ne
 
 ## 🧰 Tools
 
-The home screen offers five networks. Each one has its dashboard, its main tool in the floating dock and a "Tools" page.
+The home screen offers six networks. Each one has its dashboard, its main tool in the floating dock and a "Tools" page.
 
 ### 📶 Wi-Fi
 
@@ -73,6 +73,20 @@ The home screen offers five networks. Each one has its dashboard, its main tool 
 | Jamming and spoofing | 8 indicators watched continuously (signal strength, AGC, lost satellites, signals too alike, jumps, agreement with the network, time, mock location) |
 | Raw measurements | Bands received (dual frequency L1/L5, E1/E5a, B1C/B2a…), pseudoranges, carrier phase, multipath, **RINEX 3.04** export for RTKLIB or CSRS-PPP |
 
+### 📲 NFC
+
+| Tool | What it does |
+| --- | --- |
+| Tag reader | Chip, memory, content and identity of any tag or card (NDEF link, text, contact, Wi-Fi, location, app…), readable or locked, and what the phone itself supports (reader, card emulation, secure element) |
+| Write a tag | Link, Wi-Fi, contact, text, location, phone number, SMS, email, app: every tag held to the phone while it is armed receives the content |
+| Copy a tag | The NDEF content of one tag onto another (not the identifier, nor protected memory) |
+| Erase or lock | Empty a tag, or make it read-only for good (asks for confirmation: it cannot be undone) |
+| Bank card | What a contactless card tells any terminal, without the PIN: network, application, expiry date, country, currency and the latest payments. The full card number is never shown nor kept |
+| Memory | Every page and sector the tag lets you read; MIFARE Classic sectors are opened only with the makers' public default keys |
+| Antenna and reliability | Slide a tag over the phone to find where its antenna is, and measure how reliable the link stays as it moves away |
+
+Nothing is kept once the app is closed.
+
 ### 📻 SDR (HackRF, receive only)
 
 | Tool | What it does |
@@ -88,14 +102,14 @@ The home screen offers five networks. Each one has its dashboard, its main tool 
 | Drones | DJI (DroneID), analogue FPV and remote controls (ExpressLRS, Crossfire, FrSky, FlySky, Spektrum) |
 | FLARM | Gliders and light aircraft on 868 MHz (both the old protocol and the one since 2024), positions around you; aircraft asking not to be tracked are only counted |
 | ISM sensors | Weather stations, thermometers, energy monitors, door sensors, remotes on 433, 868, 315, 345 and 915 MHz (about 40 families, Lidl Auriol, Oregon Scientific, Hideki, Ecowitt among them) |
-| LoRaWAN / Sigfox | Connected objects on 868 MHz: LoRaWAN headers (device address, network, counter) on SF7 to SF12, Sigfox uplinks |
-| Meteor-M | Weather satellite LRPT images on 137 MHz |
+| LoRaWAN / Sigfox | Connected objects on 868 MHz: LoRaWAN headers (device address, network named from the LoRa Alliance's NetID table, counter) on SF7 to SF12, with an option to listen to all eight EU868 uplink channels at once, and Sigfox uplinks |
+| Meteor-M | Weather satellite LRPT images on 137.100 and 137.900 MHz, from the older satellites and from the Meteor-M2-x that transmit with offset QPSK |
 | PMR446 | The 16 walkie-talkie channels at once: activity, CTCSS tone, listening to analogue channels and to DMR446 / dPMR446 voice (AMBE+2 decoded), their call ids |
 | POCSAG | Pager messages (e*Message France and Germany, BOS, DAPNET or any frequency): every channel of a network at once, 512, 1200 and 2400 bit/s, BCH error correction |
-| Radiosondes | Vaisala RS41, Meteomodem M10 / M20 and Horus amateur balloons around 403 and 434 MHz, with landing prediction |
+| Radiosondes | Vaisala RS41 (damaged frames repaired by their Reed-Solomon code), Meteomodem M10 / M10+ / M20 and Horus amateur balloons around 403 and 434 MHz, with landing prediction |
 | TPMS | Tyre pressure sensors of nearby cars on 433.92 MHz (or 315 MHz): pressure, temperature, battery, for Renault, PSA, Toyota, Ford, Hyundai/Kia, BMW/Audi, Porsche, Honda (TRW), Schrader (Opel/GM, Subaru/Nissan/Renault Koleos, BMW) and more |
 | VDL Mode 2 | The airliners' digital datalink on 6 channels around 136.9 MHz: ACARS carried digitally, ground stations, link set-ups |
-| Wireless M-Bus | Water, heat, gas and electricity meters on 868.95 MHz (T1, C1); readings when not encrypted |
+| Wireless M-Bus | Water, heat, gas and electricity meters on 868.95 MHz (T1, C1), even when the meter's clock is a little off; readings when not encrypted |
 
 Every gain has an **automatic mode**, chosen by default, which picks the LNA and VGA values from the signal level; the value in use is shown in its own colour.
 
@@ -120,6 +134,7 @@ The app keeps no copy: nothing is saved without your action.
 | Nearby devices | Bluetooth scanning and connection |
 | Phone | Carrier, cells, dual SIM |
 | Camera | Augmented reality coverage map (asked only when it starts) |
+| NFC | Reading and writing tags and cards (no prompt: Android only asks you to turn NFC on) |
 | Notifications | Alerts from the tracker guard and the fake cell detector, which run in the background |
 | Local network (Android 17) | LAN scan, ping, port scan |
 | Install apps | Built-in updates |
@@ -133,6 +148,8 @@ No account, no ads, no trackers. Internet is used for updates, the speed test (C
 - The SDR is used **for reception only**. Follow your country's laws on listening to radio frequencies.
 - The Wi-Fi security tools (audit, rogue access points, man in the middle, port scan) are meant for **your own networks** or those you are allowed to test.
 - Pager messages (POCSAG) and walkie-talkie conversations (PMR446) are **private correspondence**: in many countries, France included, you may not pass on or use what you hear.
+- The NFC bank card reader shows only what any terminal reads without the PIN, never the full number, and keeps nothing. Reading, writing or copying a card you do not own, or a badge you are not allowed to copy, is not what it is for.
+- Locking a tag is **permanent**: no phone can write to it again.
 - "Unknown trackers" and "Jamming and spoofing" are there to **protect you**, not to track or disrupt others.
 
 ---
@@ -156,7 +173,7 @@ English is the default language (`app/src/main/res/values/strings.xml`); each tr
 1. Update `versionCode` and `versionName` in `app/build.gradle.kts`.
 2. Write the tag in `.github/release-version` (e.g. `v1.3`) and the notes in `.github/release-notes/v1.3.md`.
    The notes are in English (that's what GitHub shows), followed by each translation in an HTML comment: `<!-- fr`, the French notes, then `-->`. The app shows the one matching the phone's language, otherwise English.
-3. Push to `main`: the GitHub Actions workflow builds the signed APK and creates the release with `AllRadioTools-v1.3.apk`.
+3. Start the GitHub Actions workflow "Release": by hand (Actions → Release → Run workflow), by pushing a `v*` tag, or by a push that **changes `.github/release-version`** (on **any** branch, not only `main`: only change that file when you mean to publish). It builds the signed APK and creates the release with `AllRadioTools-v1.3.apk`. A tag that already exists keeps pointing at its commit: delete the tag first when you publish again.
 
 The workflow needs the `KEYSTORE_BASE64`, `KEYSTORE_PASSWORD`, `KEY_ALIAS` and `KEY_PASSWORD` secrets. Editing a notes file later updates the published release automatically.
 
@@ -177,6 +194,7 @@ All Radio Tools is free software released under the [GNU General Public License 
 - [OnAir](https://github.com/adswill/OnAir) (GPL-3.0), whose decoders were ported for ISM sensors, FLARM, Wireless M-Bus, DSC, VDL Mode 2, DECT, DMR / dPMR, Sigfox, Horus, Mode A/C and CubeSat telemetry.
 - [SoftRF](https://github.com/lyusupov/SoftRF) (GPL-3.0), whose FLARM code (frame CRC, the 2024 protocol's keys and layout) was ported.
 - [gr-lora_sdr](https://github.com/tapparelj/gr-lora_sdr) (EPFL) for the LoRa receiver.
+- The recordings and sources of [rtl_433_tests](https://github.com/merbanan/rtl_433_tests), [dumpvdl2](https://github.com/szpajder/dumpvdl2), [multimon-ng](https://github.com/EliasOenal/multimon-ng), [horusdemodlib](https://github.com/projecthorus/horusdemodlib), [DSD-FME](https://github.com/lwvmobile/dsd-fme) and [SatDump](https://github.com/SatDump/SatDump), against which the decoders were checked, and sigidwiki's VDL-M2 recording.
 - [mbelib](https://github.com/szechyjs/mbelib) (ISC) for the AMBE+2 voice decoder. AMBE+2 is covered by patents in some countries: the code is provided for research and education.
 - Google [GNSS Measurement Tools](https://github.com/google/gps-measurement-tools) for the pseudorange computation.
 - Roboto Flex, Google Sans Flex and Material Symbols for the interface.

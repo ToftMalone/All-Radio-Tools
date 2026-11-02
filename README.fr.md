@@ -2,7 +2,7 @@
 
 **Tout ce qui émet autour de vous, dans une seule application Android.**
 
-All Radio Tools réunit les outils pour explorer le Wi-Fi, le Bluetooth, le réseau mobile, le GNSS et, avec un HackRF, les ondes radio : avions, planeurs, ballons-sondes, navires, drones, satellites, talkies-walkies, capteurs et compteurs.
+All Radio Tools réunit les outils pour explorer le Wi-Fi, le Bluetooth, le réseau mobile, le GNSS, le NFC et, avec un HackRF, les ondes radio : avions, planeurs, ballons-sondes, navires, drones, satellites, talkies-walkies, capteurs et compteurs. Et aussi les badges NFC et les cartes sans contact.
 
 > 🌍 Application disponible en 22 langues (elle suit la langue du téléphone), écrite en Kotlin avec Jetpack Compose et Material 3.
 >
@@ -22,7 +22,7 @@ All Radio Tools réunit les outils pour explorer le Wi-Fi, le Bluetooth, le rés
 
 ## 🧰 Les outils
 
-L'écran d'accueil propose cinq réseaux. Chacun a son tableau de bord, son outil principal dans le dock flottant et une page « Outils ».
+L'écran d'accueil propose six réseaux. Chacun a son tableau de bord, son outil principal dans le dock flottant et une page « Outils ».
 
 ### 📶 Wi-Fi
 
@@ -73,6 +73,20 @@ L'écran d'accueil propose cinq réseaux. Chacun a son tableau de bord, son outi
 | Brouillage et leurrage | 8 indices surveillés en continu (force des signaux, AGC, satellites perdus, signaux trop semblables, sauts, accord avec le réseau, heure, position simulée) |
 | Mesures brutes | Bandes captées (bi-fréquence L1/L5, E1/E5a, B1C/B2a…), pseudodistances, phase, multitrajet, export **RINEX 3.04** pour RTKLIB ou CSRS-PPP |
 
+### 📲 NFC
+
+| Outil | Contenu |
+| --- | --- |
+| Lecteur de badge | Puce, mémoire, contenu et identité de n'importe quel badge ou carte (lien, texte, contact, Wi-Fi, position, application… en NDEF), lisible ou verrouillé, et ce que le téléphone gère lui-même (lecteur, émulation de carte, élément sécurisé) |
+| Écrire un badge | Lien, Wi-Fi, contact, texte, position, téléphone, SMS, e-mail, application : chaque badge posé sur le téléphone tant que l'écriture est armée reçoit le contenu |
+| Copier un badge | Le contenu NDEF d'un badge sur un autre (pas l'identifiant, ni la mémoire protégée) |
+| Effacer ou verrouiller | Vider un badge, ou le passer en lecture seule pour toujours (demande une confirmation : c'est irréversible) |
+| Carte bancaire | Ce que votre carte sans contact dit à n'importe quel terminal, sans le code : réseau, application, date d'expiration, pays, devise et derniers paiements. Le numéro complet n'est jamais affiché ni conservé |
+| Mémoire | Chaque page et chaque secteur que le badge laisse lire ; les secteurs MIFARE Classic ne sont ouverts qu'avec les clés par défaut publiques des fabricants |
+| Antenne et fiabilité | Faire glisser un badge sur le téléphone pour trouver où est son antenne, et mesurer la fiabilité de la liaison à mesure qu'il s'éloigne |
+
+Rien n'est conservé une fois l'application fermée.
+
 ### 📻 SDR (HackRF, en réception uniquement)
 
 | Outil | Contenu |
@@ -82,20 +96,20 @@ L'écran d'accueil propose cinq réseaux. Chacun a son tableau de bord, son outi
 | ADS-B | Carte des avions sur 1090 MHz, avec les anciennes réponses Mode A/C (squawk, altitude) |
 | AIS | Carte des navires sur 162 MHz |
 | APRS | Balises radioamateurs sur 144,800 MHz |
-| Ballons-sondes | Vaisala RS41, Meteomodem M10 / M20 et ballons amateurs Horus vers 403 et 434 MHz, avec prédiction d'atterrissage |
+| Ballons-sondes | Vaisala RS41 (trames abîmées réparées par leur code Reed-Solomon), Meteomodem M10 / M10+ / M20 et ballons amateurs Horus vers 403 et 434 MHz, avec prédiction d'atterrissage |
 | Capteurs ISM | Stations météo, thermomètres, compteurs d'énergie, détecteurs d'ouverture, télécommandes sur 433, 868, 315, 345 et 915 MHz (une quarantaine de familles, dont Auriol de Lidl, Oregon Scientific, Hideki, Ecowitt) |
 | CubeSat | Télémesure AX.25 des satellites amateurs et de l'ISS (AFSK 1200, G3RUH 9600), prochains passages et correction Doppler automatique |
 | DECT | Bases de téléphones sans fil (1880–1900 MHz) : identité, porteuses, intervalles ; la voix n'est jamais touchée |
 | DSC (ASN) | Appels sélectifs numériques maritimes sur le canal VHF 70 : alertes de détresse, appels de sécurité et de routine, positions |
 | Drones | DJI (DroneID), FPV analogique et radiocommandes (ExpressLRS, Crossfire, FrSky, FlySky, Spektrum) |
 | FLARM | Planeurs et aviation légère sur 868 MHz (ancien protocole et celui de 2024), positions autour de vous ; les aéronefs qui refusent le suivi sont seulement comptés |
-| LoRaWAN / Sigfox | Objets connectés sur 868 MHz : en-têtes LoRaWAN (adresse, réseau, compteur) de SF7 à SF12, messages Sigfox |
-| Meteor-M | Images LRPT des satellites météo sur 137 MHz |
+| LoRaWAN / Sigfox | Objets connectés sur 868 MHz : en-têtes LoRaWAN (adresse, réseau nommé d'après la table NetID de la LoRa Alliance, compteur) de SF7 à SF12, avec une option pour écouter les huit canaux montants EU868 à la fois, et messages Sigfox |
+| Meteor-M | Images LRPT des satellites météo sur 137,100 et 137,900 MHz, des anciens satellites comme des Meteor-M2-x qui émettent en QPSK décalé |
 | PMR446 | Les 16 canaux de talkies-walkies à la fois : activité, tonalité CTCSS, écoute des canaux analogiques et de la voix DMR446 / dPMR446 (décodage AMBE+2), identifiants des appels |
 | POCSAG | Messages de pagers (e*Message France et Allemagne, BOS, DAPNET ou n'importe quelle fréquence) : tous les canaux d'un réseau à la fois, 512, 1200 et 2400 bit/s, correction d'erreurs BCH |
 | TPMS | Capteurs de pression des pneus des voitures alentour sur 433,92 MHz (ou 315 MHz) : pression, température, pile, pour Renault, PSA, Toyota, Ford, Hyundai/Kia, BMW/Audi, Porsche, Honda (TRW), Schrader (Opel/GM, Subaru/Nissan/Renault Koleos, BMW) et d'autres |
 | VDL Mode 2 | Liaison de données numérique des avions de ligne sur 6 canaux vers 136,9 MHz : ACARS numérique, stations sol, ouvertures de liaison |
-| Wireless M-Bus | Compteurs d'eau, de chaleur, de gaz et d'électricité sur 868,95 MHz (T1, C1) ; relevés quand ils ne sont pas chiffrés |
+| Wireless M-Bus | Compteurs d'eau, de chaleur, de gaz et d'électricité sur 868,95 MHz (T1, C1), même quand l'horloge du compteur est un peu décalée ; relevés quand ils ne sont pas chiffrés |
 
 Chaque gain a un **mode automatique**, choisi par défaut, qui règle le LNA et le VGA d'après le niveau du signal ; la valeur utilisée s'affiche dans sa propre couleur.
 
@@ -120,6 +134,7 @@ L'application ne garde aucune copie : rien n'est enregistré sans votre action.
 | Appareils à proximité | Scan et connexion Bluetooth |
 | Téléphone | Opérateur, cellules, double SIM |
 | Caméra | Carte de couverture en réalité augmentée (demandée seulement à son lancement) |
+| NFC | Lecture et écriture des badges et des cartes (sans demande : Android demande seulement d'activer le NFC) |
 | Notifications | Alertes de la garde anti-traqueurs et du détecteur de fausses antennes, qui tournent en arrière-plan |
 | Réseau local (Android 17) | Scan du LAN, ping, scan de ports |
 | Installer des applications | Mise à jour intégrée |
@@ -133,6 +148,8 @@ Aucun compte, aucune publicité, aucun traceur. Internet sert aux mises à jour,
 - Le SDR est utilisé **en réception seulement**. Respectez la législation de votre pays sur l'écoute des fréquences.
 - Les outils de sécurité Wi-Fi (audit, faux points d'accès, homme du milieu, scan de ports) sont faits pour **vos propres réseaux** ou ceux que vous avez l'autorisation de tester.
 - Les messages de pagers (POCSAG) et les conversations de talkies-walkies (PMR446) sont des **correspondances privées** : dans de nombreux pays, dont la France, il est interdit de divulguer ou d'utiliser ce que vous entendez.
+- Le lecteur de carte bancaire NFC n'affiche que ce que lit n'importe quel terminal sans le code, jamais le numéro complet, et ne garde rien. Lire, écrire ou copier une carte qui n'est pas la vôtre, ou un badge que vous n'avez pas le droit de copier, n'est pas son but.
+- Verrouiller un badge est **définitif** : plus aucun téléphone ne pourra y écrire.
 - « Traqueurs inconnus » et « Brouillage et leurrage » servent à **vous protéger**, pas à pister ou gêner les autres.
 
 ---
@@ -152,7 +169,7 @@ Il faut un JDK récent et le SDK Android (API 37). Les scripts `scripts/` serven
 1. Mettre à jour `versionCode` et `versionName` dans `app/build.gradle.kts`.
 2. Écrire le tag dans `.github/release-version` (par ex. `v1.3`) et les notes dans `.github/release-notes/v1.3.md`.
    Les notes sont en anglais (c'est ce qu'affiche GitHub), suivies de chaque traduction dans un commentaire HTML : `<!-- fr`, les notes en français, puis `-->`. L'application montre celle qui correspond à la langue du téléphone, sinon l'anglais.
-3. Pousser sur `main` : le workflow GitHub Actions construit l'APK signé et crée la release avec `AllRadioTools-v1.3.apk`.
+3. Lancer le workflow GitHub Actions « Release » : à la main (Actions → Release → Run workflow), en poussant un tag `v*`, ou par un push qui **modifie `.github/release-version`** (sur **n'importe quelle** branche, pas seulement `main` : ne touchez ce fichier que pour publier). Il construit l'APK signé et crée la release avec `AllRadioTools-v1.3.apk`. Un tag qui existe déjà reste sur son commit : supprimez-le avant de publier à nouveau.
 
 Le workflow a besoin des secrets `KEYSTORE_BASE64`, `KEYSTORE_PASSWORD`, `KEY_ALIAS` et `KEY_PASSWORD`.
 
@@ -173,6 +190,7 @@ All Radio Tools est un logiciel libre publié sous la [licence publique généra
 - [OnAir](https://github.com/adswill/OnAir) (GPL-3.0), dont les décodeurs ont été portés pour les capteurs ISM, FLARM, Wireless M-Bus, ASN, VDL Mode 2, DECT, DMR / dPMR, Sigfox, Horus, Mode A/C et la télémesure CubeSat.
 - [SoftRF](https://github.com/lyusupov/SoftRF) (GPL-3.0), dont le code FLARM (CRC des trames, clés et format du protocole de 2024) a été porté.
 - [gr-lora_sdr](https://github.com/tapparelj/gr-lora_sdr) (EPFL) pour le récepteur LoRa.
+- Les enregistrements et sources de [rtl_433_tests](https://github.com/merbanan/rtl_433_tests), [dumpvdl2](https://github.com/szpajder/dumpvdl2), [multimon-ng](https://github.com/EliasOenal/multimon-ng), [horusdemodlib](https://github.com/projecthorus/horusdemodlib), [DSD-FME](https://github.com/lwvmobile/dsd-fme) et [SatDump](https://github.com/SatDump/SatDump), contre lesquels les décodeurs ont été vérifiés, ainsi que l'enregistrement VDL-M2 de sigidwiki.
 - [mbelib](https://github.com/szechyjs/mbelib) (ISC) pour le décodeur vocal AMBE+2. L'AMBE+2 est couvert par des brevets dans certains pays : ce code est fourni à des fins de recherche et d'enseignement.
 - Google [GNSS Measurement Tools](https://github.com/google/gps-measurement-tools) pour le calcul des pseudodistances.
 - Roboto Flex, Google Sans Flex et Material Symbols pour l'interface.
