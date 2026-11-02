@@ -31,11 +31,7 @@ object DnsClient {
         DnsServer("Quad9", "9.9.9.9", "https://dns.quad9.net/dns-query"),
     )
 
-    const val PTR = 12
-
-    fun query(name: String, type: DnsType): ByteArray = query(name, type.code)
-
-    fun query(name: String, typeCode: Int): ByteArray {
+    fun query(name: String, type: DnsType): ByteArray {
         val out = ByteArrayOutputStream()
         val id = Random.nextInt(0, 0xFFFF)
         out.write(byteArrayOf((id shr 8).toByte(), id.toByte(), 0x01, 0x00, 0, 1, 0, 0, 0, 0, 0, 0))
@@ -44,46 +40,29 @@ object DnsClient {
             out.write(b.size); out.write(b)
         }
         out.write(0)
-        out.write(byteArrayOf((typeCode shr 8).toByte(), typeCode.toByte(), 0, 1))
+        out.write(byteArrayOf((type.code shr 8).toByte(), type.code.toByte(), 0, 1))
         return out.toByteArray()
     }
 
-    suspend fun resolve(name: String, type: DnsType, server: DnsServer, doh: Boolean, timeoutMs: Int = 4000, route: NetRoute = NetRoute.System): DnsAnswer = withContext(Dispatchers.IO) {
+    suspend fun resolve(name: String, type: DnsType, server: DnsServer, doh: Boolean, timeoutMs: Int = 4000): DnsAnswer = withContext(Dispatchers.IO) {
         val q = query(name, type)
         val t0 = System.nanoTime()
-        val raw = if (doh && server.dohUrl != null) viaHttps(q, server.dohUrl, timeoutMs, route) else viaUdp(q, InetAddress.getByName(server.ip), timeoutMs, route)
+        val raw = if (doh && server.dohUrl != null) viaHttps(q, server.dohUrl, timeoutMs) else viaUdp(q, server.ip, timeoutMs)
         val ms = (System.nanoTime() - t0) / 1e6f
         parse(raw, ms)
     }
 
-    /** "d.c.b.a.in-addr.arpa" (IPv4) or the nibbles of an IPv6 address under "ip6.arpa". */
-    fun ptrName(addr: InetAddress): String {
-        val b = addr.address
-        return if (b.size == 4) b.reversed().joinToString(".") { (it.toInt() and 0xFF).toString() } + ".in-addr.arpa"
-        else b.reversed().joinToString(".") { "%x.%x".format(it.toInt() and 0xF, (it.toInt() shr 4) and 0xF) } + ".ip6.arpa"
-    }
-
-    /**
-     * The name a router or host goes by, asked of [route]'s own DNS server (the system's reverse lookup would go
-     * through the default network instead). Null when there is none, or no usable server.
-     */
-    suspend fun reverse(addr: InetAddress, route: NetRoute, timeoutMs: Int = 1500): String? = withContext(Dispatchers.IO) {
-        val server = route.dns.firstOrNull { !it.isLinkLocalAddress && !it.isAnyLocalAddress } ?: return@withContext null
-        runCatching { parse(viaUdp(query(ptrName(addr), PTR), server, timeoutMs, route), 0f) }
-            .getOrNull()?.records?.firstOrNull { it.type == "PTR" }?.value?.trimEnd('.')
-    }
-
-    private fun viaUdp(q: ByteArray, server: InetAddress, timeoutMs: Int, route: NetRoute): ByteArray = route.datagram().use { s ->
+    private fun viaUdp(q: ByteArray, ip: String, timeoutMs: Int): ByteArray = DatagramSocket().use { s ->
         s.soTimeout = timeoutMs
-        s.send(DatagramPacket(q, q.size, server, 53))
+        s.send(DatagramPacket(q, q.size, InetAddress.getByName(ip), 53))
         val buf = ByteArray(4096)
         val p = DatagramPacket(buf, buf.size)
         s.receive(p)
         buf.copyOf(p.length)
     }
 
-    private fun viaHttps(q: ByteArray, url: String, timeoutMs: Int, route: NetRoute): ByteArray {
-        val c = route.open(URL(url)) as HttpURLConnection
+    private fun viaHttps(q: ByteArray, url: String, timeoutMs: Int): ByteArray {
+        val c = URL(url).openConnection() as HttpURLConnection
         try {
             c.connectTimeout = timeoutMs; c.readTimeout = timeoutMs
             c.requestMethod = "POST"; c.doOutput = true
@@ -137,7 +116,7 @@ object DnsClient {
             val value: String? = when (type) {
                 1 -> InetAddress.getByAddress(raw.copyOfRange(data, data + 4)).hostAddress
                 28 -> InetAddress.getByAddress(raw.copyOfRange(data, data + 16)).hostAddress
-                2, 5, 12 -> readName(buf, data).first
+                2, 5 -> readName(buf, data).first
                 15 -> "${buf.getShort(data).toInt() and 0xFFFF} ${readName(buf, data + 2).first}"
                 16 -> buildString {
                     var p = data
@@ -148,7 +127,7 @@ object DnsClient {
                 }.let { "\"$it\"" }
                 else -> null
             }
-            val typeName = if (type == PTR) "PTR" else DnsType.entries.firstOrNull { it.code == type }?.name
+            val typeName = DnsType.entries.firstOrNull { it.code == type }?.name
             if (value != null && typeName != null) records += DnsRecord(typeName, value, ttl)
             pos = data + len
         }

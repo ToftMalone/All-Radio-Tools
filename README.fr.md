@@ -40,7 +40,7 @@ L'écran d'accueil propose six réseaux. Chacun a son tableau de bord, son outil
 | Faux points d'accès | « Evil twin » du réseau connecté |
 | Homme du milieu | ARP spoofing et DHCP pirate |
 
-Les outils Internet (test de débit, ping, traceroute, scan de ports, DNS, whois) fonctionnent **uniquement en Wi-Fi** : ils utilisent le réseau Wi-Fi connecté même quand les données mobiles sont actives, et le disent quand vous n'êtes pas connecté au Wi-Fi.
+Les outils Internet (test de débit, ping, traceroute, scan de ports, DNS, whois) sont **disponibles uniquement en Wi-Fi** : quand le téléphone n'est pas connecté au Wi-Fi, ils sont grisés et le disent.
 
 ### 🔵 Bluetooth
 
@@ -61,7 +61,7 @@ Les outils Internet (test de débit, ping, traceroute, scan de ports, DNS, whois
 | Cellules voisines | Cellules détectées par le modem |
 | Journal de handover | Changements de cellule en trajet, lancé à la main, export CSV |
 | Carte des antennes | Antennes de votre opérateur, d'après les données ouvertes de l'ANFR |
-| Test de débit, Ping, Traceroute, DNS, Whois | Les mêmes outils qu'en Wi-Fi, mais **uniquement avec les données mobiles** : ils passent par le réseau cellulaire même quand le Wi-Fi est connecté, et le disent quand les données mobiles sont coupées (en données mobiles, un traceroute peut ne pas nommer tous les routeurs) |
+| Test de débit, Ping, Traceroute, DNS, Whois | Les mêmes outils qu'en Wi-Fi, **disponibles uniquement avec les données mobiles** : tant que le Wi-Fi est connecté, ou que les données mobiles sont coupées, ils sont grisés et le disent |
 | Détecteur de fausses antennes | Surveille le réseau, même app fermée, pour repérer les signes d'un IMSI-catcher : 2G forcée, codes de réseau de test, codes de zone incohérents, cellules sans voisines, nouvelles cellules anormalement fortes, aucune antenne ANFR correspondante à proximité |
 
 ### 🛰️ GNSS

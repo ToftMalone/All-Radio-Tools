@@ -201,12 +201,20 @@ private fun PageBody(vm: MainViewModel, net: Network, page: Page) {
         return
     }
     val blocker = vm.blockers.collectAsStateWithLifecycle().value[net]
-    // Mobile data tools need no access to the phone's state: if the network is not there, they say so themselves.
-    val mobileInternet = page is Page.ToolPage && page.tool in MobileInternetTools && blocker == Blocker.PhonePermission
+    // Mobile data tools need no access to the phone's state: if mobile data is not there, they say so themselves.
+    val mobileInternet = page is Page.ToolPage && page.tool in InternetAvailability.MobileInternet && blocker == Blocker.PhonePermission
     // Without a HackRF or a cable the dashboard and the tool list stay open; only the tools themselves are blocked.
     if (blocker != null && !mobileInternet && (!blocker.soft || page is Page.ToolPage)) {
         BlockedPage(net, blocker)
         return
+    }
+    if (page is Page.ToolPage) {
+        // The Internet tools work over Wi-Fi only, or over mobile data only: on the other network they are unavailable.
+        val why = rememberInternetAvailability(vm).why(page.tool)
+        if (why != null) {
+            UnavailableTool(page.tool, why)
+            return
+        }
     }
     if (net == Network.Wifi && page is Page.ToolPage) {
         // Android 17: ask for the local network up front, otherwise the system interrupts the scans with a device picker.
@@ -313,9 +321,14 @@ private fun PageBody(vm: MainViewModel, net: Network, page: Page) {
     }
 }
 
-/** The Internet tools of the mobile network: they leave through mobile data only. */
-private val MobileInternetTools = setOf(Tool.CellSpeed, Tool.CellPing, Tool.CellTrace, Tool.CellDns, Tool.CellWhois)
+@Composable
+private fun UnavailableTool(tool: Tool, why: Unavailable) {
+    Box(Modifier.fillMaxSize().padding(bottom = 96.dp), contentAlignment = Alignment.Center) {
+        StatePanel(icon = tool.icon, title = why.title, message = why.message, primary = null)
+    }
+}
 
+/** The Internet tools of the mobile network (the same as Wi-Fi's); only reachable while mobile data is in use. */
 @Composable
 private fun MobileInternetRoute(vm: MainViewModel, page: Page.ToolPage) {
     val tools = vm.tools
@@ -360,8 +373,13 @@ private fun WifiToolRoute(vm: MainViewModel, page: Page.ToolPage) {
             onFixLocation = { if (!perms.location) actions.request(PermGroup.Location) else actions.openLocationSettings() },
         )
         Tool.Speed -> {
-            val label = if (conn != null) listOfNotNull(conn.ssid, standardLabel(conn.standard)?.first, "${conn.band.label} GHz").joinToString(" · ") else "Wi-Fi"
-            SpeedTool(tools.speed, label, Sym.Wifi)
+            val cell = if (conn == null) vm.cell.collectAsStateWithLifecycle().value.state else null
+            val (label, icon) = when {
+                conn != null -> listOfNotNull(conn.ssid, standardLabel(conn.standard)?.first, "${conn.band.label} GHz").joinToString(" · ") to Sym.Wifi
+                cell != null -> listOfNotNull(cell.operator, cell.techLabel).joinToString(" · ") to Sym.CellBars3
+                else -> S(R.string.active_network) to Sym.Public
+            }
+            SpeedTool(tools.speed, label, icon)
         }
         else -> Unit
     }

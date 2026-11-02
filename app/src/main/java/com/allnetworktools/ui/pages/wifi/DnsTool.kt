@@ -37,10 +37,6 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
 import com.allnetworktools.data.net.DnsAnswer
 import com.allnetworktools.data.net.DnsClient
-import com.allnetworktools.data.net.NetRoute
-import com.allnetworktools.data.net.Transport
-import com.allnetworktools.ui.tools.RouteError
-import com.allnetworktools.ui.tools.RouteGate
 import com.allnetworktools.data.net.DnsServer
 import com.allnetworktools.data.net.DnsType
 import com.allnetworktools.ui.LocalActions
@@ -70,13 +66,12 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import com.allnetworktools.R
 import com.allnetworktools.util.S
 import com.allnetworktools.util.P
 
-class DnsController(private val scope: CoroutineScope, val gate: RouteGate = RouteGate()) {
+class DnsController(private val scope: CoroutineScope) {
     var host by mutableStateOf("android.com")
     var type by mutableStateOf(DnsType.A)
     var serverIndex by mutableIntStateOf(1)
@@ -99,34 +94,23 @@ class DnsController(private val scope: CoroutineScope, val gate: RouteGate = Rou
         val name = host.trim().removePrefix("https://").removePrefix("http://").substringBefore('/')
         host = name
         job = scope.launch {
-            if (!gate.run { route -> lookup(name, route) }) phase = Phase.Error
-        }
-    }
-
-    private suspend fun lookup(name: String, route: NetRoute) {
-        // On mobile data the "system" server is the mobile network's own, known once the network is up.
-        if (route.transport == Transport.Cellular) {
-            route.dns.filter { !it.isLinkLocalAddress }.let { l -> l.firstOrNull { it is java.net.Inet4Address } ?: l.firstOrNull() }
-                ?.hostAddress?.let { systemDns = it }
-        }
-        val a = runCatching { DnsClient.resolve(name, type, server, doh, route = route) }
-        a.onFailure {
-            failure = S(R.string.no_answer_from_check_the_connection, server.name, server.ip)
-            phase = Phase.Error
-            return
-        }
-        val ans = a.getOrThrow()
-        answer = ans
-        recent.push(name)
-        phase = when {
-            ans.rcode == 3 -> Phase.Error
-            ans.rcode != 0 -> { failure = S(R.string.the_server_answered, ans.rcodeName); Phase.Error }
-            ans.records.isEmpty() -> Phase.Empty
-            else -> Phase.Results
-        }
-        if (phase == Phase.Results) {
-            coroutineScope {
-                servers.map { s -> async { s.name to runCatching { DnsClient.resolve(name, type, s, doh, route = route).ms }.getOrNull() } }
+            val a = runCatching { DnsClient.resolve(name, type, server, doh) }
+            a.onFailure {
+                failure = S(R.string.no_answer_from_check_the_connection, server.name, server.ip)
+                phase = Phase.Error
+                return@launch
+            }
+            val ans = a.getOrThrow()
+            answer = ans
+            recent.push(name)
+            phase = when {
+                ans.rcode == 3 -> Phase.Error
+                ans.rcode != 0 -> { failure = S(R.string.the_server_answered, ans.rcodeName); Phase.Error }
+                ans.records.isEmpty() -> Phase.Empty
+                else -> Phase.Results
+            }
+            if (phase == Phase.Results) {
+                servers.map { s -> async { s.name to runCatching { DnsClient.resolve(name, type, s, doh).ms }.getOrNull() } }
                     .awaitAll().forEach { (n, ms) -> compare[n] = ms }
             }
         }
@@ -151,9 +135,7 @@ fun DnsTool(c: DnsController, systemDns: String?) {
     val start = { haptics.confirm(); c.start() }
     PageColumn {
         if (c.phase == Phase.Error) {
-            if (c.gate.missing) {
-                RouteError(c.gate) { c.start() }
-            } else if (c.answer?.rcode == 3) {
+            if (c.answer?.rcode == 3) {
                 ToolError(Sym.TravelExplore, S(R.string.non_existent_domain_nxdomain), S(R.string.does_not_exist_according_to_check, c.host, c.server.name, c.server.ip), S(R.string.edit)) { c.phase = Phase.Idle }
             } else {
                 ToolError(Sym.CloudOff, S(R.string.resolution_failed), c.failure ?: "", S(R.string.retry), start)

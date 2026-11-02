@@ -40,7 +40,7 @@ The home screen offers six networks. Each one has its dashboard, its main tool i
 | Rogue access points | "Evil twins" of the connected network |
 | Man in the middle | ARP spoofing and rogue DHCP |
 
-The Internet tools (speed test, ping, traceroute, port scan, DNS lookup, whois) work **over Wi-Fi only**: they use the connected Wi-Fi network even when mobile data is on, and say so when you are not connected to Wi-Fi.
+The Internet tools (speed test, ping, traceroute, port scan, DNS lookup, whois) are **available over Wi-Fi only**: when the phone is not connected to Wi-Fi, they are greyed out and say so.
 
 ### 🔵 Bluetooth
 
@@ -61,7 +61,7 @@ The Internet tools (speed test, ping, traceroute, port scan, DNS lookup, whois) 
 | Neighbouring cells | Cells seen by the modem |
 | Handover log | Cell changes while travelling, started by hand, CSV export |
 | Cell tower map | Your carrier's towers, from ANFR open data (France) |
-| Speed test, Ping, Traceroute, DNS lookup, Whois | The same tools as in Wi-Fi, but **over mobile data only**: they leave through the cellular network even while Wi-Fi is connected, and say so when mobile data is off (on mobile data, a traceroute may not name every router) |
+| Speed test, Ping, Traceroute, DNS lookup, Whois | The same tools as in Wi-Fi, **available over mobile data only**: while Wi-Fi is connected, or mobile data is off, they are greyed out and say so |
 | Fake cell detector | Watches the network, even with the app closed, for the signs of an IMSI catcher: forced 2G, test network codes, inconsistent area codes, cells without neighbours, unusually strong new cells, no matching ANFR mast nearby |
 
 ### 🛰️ GNSS

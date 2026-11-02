@@ -7,6 +7,10 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.location.LocationManager
+import android.net.ConnectivityManager
+import android.net.Network
+import android.net.NetworkCapabilities
+import android.net.NetworkRequest
 import android.net.wifi.WifiManager
 import android.provider.Settings
 import androidx.core.content.ContextCompat
@@ -44,6 +48,33 @@ open class RadiosRepository(private val context: Context) {
     open val airplaneMode: Flow<Boolean> = broadcastFlow(context, Intent.ACTION_AIRPLANE_MODE_CHANGED) {
         Settings.Global.getInt(context.contentResolver, Settings.Global.AIRPLANE_MODE_ON, 0) != 0
     }
+
+    private val connectivity = context.getSystemService(ConnectivityManager::class.java)
+
+    /** True while the phone is connected to a Wi-Fi network (a VPN over it does not change that). */
+    open val onWifi: Flow<Boolean> = callbackFlow {
+        val nets = HashSet<Network>()
+        val cb = object : ConnectivityManager.NetworkCallback() {
+            override fun onAvailable(network: Network) { synchronized(nets) { nets += network; trySend(true) } }
+            override fun onLost(network: Network) { synchronized(nets) { nets -= network; trySend(nets.isNotEmpty()) } }
+        }
+        trySend(false)
+        connectivity.registerNetworkCallback(NetworkRequest.Builder().addTransportType(NetworkCapabilities.TRANSPORT_WIFI).build(), cb)
+        awaitClose { connectivity.unregisterNetworkCallback(cb) }
+    }.distinctUntilChanged()
+
+    /** True while mobile data is what the phone is online with: Wi-Fi off, or not connected. */
+    open val onMobileData: Flow<Boolean> = callbackFlow {
+        val cb = object : ConnectivityManager.NetworkCallback() {
+            override fun onCapabilitiesChanged(network: Network, caps: NetworkCapabilities) {
+                trySend(caps.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) && !caps.hasTransport(NetworkCapabilities.TRANSPORT_WIFI))
+            }
+            override fun onLost(network: Network) { trySend(false) }
+        }
+        trySend(false)
+        connectivity.registerDefaultNetworkCallback(cb)
+        awaitClose { connectivity.unregisterNetworkCallback(cb) }
+    }.distinctUntilChanged()
 
     open val locationEnabled: Flow<Boolean> = broadcastFlow(context, LocationManager.MODE_CHANGED_ACTION, LocationManager.PROVIDERS_CHANGED_ACTION) {
         location?.isLocationEnabled == true

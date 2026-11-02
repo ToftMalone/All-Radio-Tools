@@ -194,6 +194,8 @@ fun ToolsPage(net: Network, vm: MainViewModel) {
     val serving = if (net == Network.Cellular) vm.cell.collectAsStateWithLifecycle().value.state?.serving else null
     val servingLabel = serving?.let { s -> listOfNotNull(s.pci?.let { "PCI $it" }, s.band).joinToString(" · ").ifEmpty { null } }
     val badge = featuredBadge(net, vm)
+    // The Internet tools are greyed out on the network they do not work over.
+    val internet = if (net == Network.Wifi || net == Network.Cellular) rememberInternetAvailability(vm) else null
     PageColumn {
         Column(
             Modifier.fadeUp().fillMaxWidth().clip(RoundedCornerShape(32.dp)).background(acc.container)
@@ -216,7 +218,8 @@ fun ToolsPage(net: Network, vm: MainViewModel) {
         groups(net, connected, servingLabel).forEach { g ->
             SectionTitle(g.title)
             TileGrid(g.items) { e, mod ->
-                val soon = e.tool in comingSoon
+                val note = if (e.tool in comingSoon) S(R.string.coming_soon) else internet?.why(e.tool)?.title
+                val soon = note != null
                 Column(
                     mod.fadeUp(60).clip(RoundedCornerShape(24.dp)).background(cs.surfaceContainerLow)
                         .then(if (soon) Modifier.graphicsLayer { alpha = 0.5f } else Modifier.clickable { open(e.tool) }).padding(16.dp),
@@ -224,7 +227,7 @@ fun ToolsPage(net: Network, vm: MainViewModel) {
                     LeadingIcon(e.icon, cs.surfaceContainerHighest, acc.accent, shape = RoundedCornerShape(14.dp))
                     Spacer(Modifier.weight(1f, fill = false).heightIn(min = 12.dp))
                     Text(e.title, Modifier.padding(top = 12.dp), style = rf(15, 20, 600), maxLines = 2)
-                    Text(if (soon) S(R.string.coming_soon) else e.subtitle, Modifier.padding(top = 2.dp), style = rf(12, 16, if (soon) 600 else 400), color = if (soon) acc.accent else cs.onSurfaceVariant, maxLines = 2)
+                    Text(note ?: e.subtitle, Modifier.padding(top = 2.dp), style = rf(12, 16, if (soon) 600 else 400), color = if (soon) acc.accent else cs.onSurfaceVariant, maxLines = 2)
                 }
             }
         }

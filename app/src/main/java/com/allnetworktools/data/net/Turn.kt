@@ -117,8 +117,8 @@ object Stun {
  * Minimal TURN client over UDP with long-term credentials: one allocation, permissions, and data sent and received
  * through Send and Data indications. Blocking; callers run it on an I/O thread.
  */
-class TurnClient(private val server: InetSocketAddress, private val user: String, private val pass: String, route: NetRoute = NetRoute.System) : Closeable {
-    private val socket = route.datagram().apply { soTimeout = RECEIVE_TICK_MS }
+class TurnClient(private val server: InetSocketAddress, private val user: String, private val pass: String) : Closeable {
+    private val socket = DatagramSocket().apply { soTimeout = RECEIVE_TICK_MS }
     private val buf = ByteArray(2048)
     private var realm: ByteArray? = null
     private var nonce: ByteArray? = null
@@ -207,10 +207,10 @@ class TurnClient(private val server: InetSocketAddress, private val user: String
         private val random = SecureRandom()
 
         /** "host:port" resolved, IPv4 first: the allocation asks for an IPv4 relay. */
-        fun resolve(uri: String, route: NetRoute = NetRoute.System): InetSocketAddress {
+        fun resolve(uri: String): InetSocketAddress {
             val host = uri.substringBeforeLast(':')
             val port = uri.substringAfterLast(':').toIntOrNull() ?: 3478
-            val all = route.resolveAll(host)
+            val all = InetAddress.getAllByName(host)
             return InetSocketAddress(all.firstOrNull { it is Inet4Address } ?: all.first(), port)
         }
     }

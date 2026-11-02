@@ -2517,9 +2517,9 @@
     <string name="coming_soon">"Coming soon"</string>
     <string name="internet_over_mobile_data">"Internet · mobile data only"</string>
     <string name="route_wifi_missing_title">"Not connected to Wi-Fi"</string>
-    <string name="route_wifi_missing_text">"This tool only works over Wi-Fi, even when mobile data is on. Connect to a Wi-Fi network and try again."</string>
+    <string name="route_wifi_missing_text">"This tool only works over Wi-Fi. Connect to a Wi-Fi network to use it."</string>
+    <string name="route_wifi_on_title">"Wi-Fi is connected"</string>
+    <string name="route_wifi_on_text">"This tool only works over mobile data. Turn Wi-Fi off to use it."</string>
     <string name="route_mobile_missing_title">"No mobile data"</string>
-    <string name="route_mobile_missing_text">"This tool only works over mobile data, even when Wi-Fi is connected. Turn mobile data on, check your signal and try again."</string>
-    <string name="router_address_hidden">"A router answered; this network does not give its address"</string>
-    <string name="router_hop">"Router %1$d"</string>
+    <string name="route_mobile_missing_text">"This tool only works over mobile data. Turn mobile data on and check your signal."</string>
 </resources>

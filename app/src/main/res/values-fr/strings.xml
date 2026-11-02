@@ -2578,9 +2578,9 @@
     <string name="coming_soon">"Arrive bientôt"</string>
     <string name="internet_over_mobile_data">"Internet · données mobiles uniquement"</string>
     <string name="route_wifi_missing_title">"Pas connecté au Wi-Fi"</string>
-    <string name="route_wifi_missing_text">"Cet outil ne fonctionne qu\'en Wi-Fi, même quand les données mobiles sont actives. Connectez-vous à un réseau Wi-Fi puis réessayez."</string>
+    <string name="route_wifi_missing_text">"Cet outil ne fonctionne qu\'en Wi-Fi. Connectez-vous à un réseau Wi-Fi pour l\'utiliser."</string>
+    <string name="route_wifi_on_title">"Le Wi-Fi est connecté"</string>
+    <string name="route_wifi_on_text">"Cet outil ne fonctionne qu\'avec les données mobiles. Désactivez le Wi-Fi pour l\'utiliser."</string>
     <string name="route_mobile_missing_title">"Pas de données mobiles"</string>
-    <string name="route_mobile_missing_text">"Cet outil ne fonctionne qu\'avec les données mobiles, même quand le Wi-Fi est connecté. Activez les données mobiles, vérifiez le signal puis réessayez."</string>
-    <string name="router_address_hidden">"Un routeur a répondu ; ce réseau n\'en donne pas l\'adresse"</string>
-    <string name="router_hop">"Routeur %1$d"</string>
+    <string name="route_mobile_missing_text">"Cet outil ne fonctionne qu\'avec les données mobiles. Activez-les et vérifiez le signal."</string>
 </resources>

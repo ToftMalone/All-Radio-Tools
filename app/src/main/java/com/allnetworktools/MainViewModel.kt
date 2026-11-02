@@ -118,6 +118,9 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     val wifiEnabled = g.radios.wifiEnabled.stateIn(viewModelScope, sharing, true)
     val bluetoothEnabled = g.radios.bluetoothEnabled.stateIn(viewModelScope, sharing, true)
     val airplane = g.radios.airplaneMode.stateIn(viewModelScope, sharing, false)
+    /** Which network the Internet tools can use right now: they work over Wi-Fi only, or over mobile data only. */
+    val onWifi = g.radios.onWifi.stateIn(viewModelScope, sharing, false)
+    val onMobileData = g.radios.onMobileData.stateIn(viewModelScope, sharing, false)
     val locationEnabled = g.radios.locationEnabled.stateIn(viewModelScope, sharing, true)
 
     private val _nav = MutableStateFlow(NavState())

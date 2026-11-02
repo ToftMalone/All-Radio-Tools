@@ -80,7 +80,7 @@ enum class Tool(
     Neighbors(Network.Cellular, S(R.string.neighbour_cells), Sym.CellTower, implemented = true),
     Handover(Network.Cellular, S(R.string.handover_log), Sym.SwapCalls),
     FakeCells(Network.Cellular, S(R.string.fake_cell_detector), Sym.Shield),
-    // The Wi-Fi Internet tools again, tied to mobile data.
+    // The Wi-Fi Internet tools again, for mobile data.
     CellSpeed(Network.Cellular, S(R.string.speed_test), Sym.Speed, Sym.History),
     CellPing(Network.Cellular, "Ping", Sym.NetworkPing, Sym.IosShare),
     CellTrace(Network.Cellular, "Traceroute", Sym.Route, Sym.IosShare),
