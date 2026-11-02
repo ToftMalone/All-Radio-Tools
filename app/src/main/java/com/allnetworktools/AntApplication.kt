@@ -25,6 +25,7 @@ open class AntApplication : Application() {
     open val permissions by lazy { PermissionsRepository(this) }
     open val radios by lazy { RadiosRepository(this) }
     open val wifi by lazy { WifiRepository(this) }
+    open val routes by lazy { com.allnetworktools.data.net.Routes(this) }
     open val bluetooth by lazy { BluetoothRepository(this) }
     open val cell by lazy { CellRepository(this) }
     open val gnss by lazy { GnssRepository(this) }

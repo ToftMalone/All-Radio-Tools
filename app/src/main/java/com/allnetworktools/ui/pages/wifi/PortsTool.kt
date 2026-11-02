@@ -69,6 +69,7 @@ import com.allnetworktools.util.plural
 import java.net.UnknownHostException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
@@ -80,7 +81,7 @@ enum class PortPreset(val label: String, val sub: String) { Common(S(R.string.co
 
 data class OpenPort(val port: Int, val service: String, val banner: String?, val warning: String?)
 
-class PortsController(private val scope: CoroutineScope) {
+class PortsController(private val scope: CoroutineScope, val gate: com.allnetworktools.ui.tools.RouteGate = com.allnetworktools.ui.tools.RouteGate()) {
     var host by mutableStateOf("")
     var preset by mutableStateOf(PortPreset.Common)
     var from by mutableStateOf("1")
@@ -115,19 +116,25 @@ class PortsController(private val scope: CoroutineScope) {
         phase = Phase.Running
         startedAt = System.currentTimeMillis(); endedAt = 0
         job = scope.launch {
-            val addr = try {
-                Net.resolve(host)
-            } catch (_: UnknownHostException) {
-                phase = Phase.Error; return@launch
-            }
-            recent.push(host)
-            var unreachable = 0
-            val sem = Semaphore(if (list.size > 5000) 256 else 96)
+            if (!gate.run { route -> scan(list, route) }) phase = Phase.Error
+        }
+    }
+
+    private suspend fun scan(list: List<Int>, route: com.allnetworktools.data.net.NetRoute) {
+        val addr = try {
+            Net.resolve(host, route)
+        } catch (_: UnknownHostException) {
+            phase = Phase.Error; return
+        }
+        recent.push(host)
+        var unreachable = 0
+        val sem = Semaphore(if (list.size > 5000) 256 else 96)
+        coroutineScope {
             list.map { p ->
                 launch {
                     sem.withPermit {
                         var banner: String? = null
-                        val r = Net.tcp(addr, p, timeoutMs) { s -> banner = Net.grabBanner(s, p, host) }
+                        val r = Net.tcp(addr, p, timeoutMs, route) { s -> banner = Net.grabBanner(s, p, host) }
                         when (r.state) {
                             Net.Tcp.Open -> {
                                 open += OpenPort(p, Services.name(p), banner, Services.warning(p))
@@ -141,12 +148,12 @@ class PortsController(private val scope: CoroutineScope) {
                     }
                 }
             }.forEach { it.join() }
-            endedAt = System.currentTimeMillis()
-            phase = when {
-                open.isEmpty() && closed == 0 && unreachable > 0 -> Phase.Error
-                open.isEmpty() -> Phase.Empty
-                else -> Phase.Results
-            }
+        }
+        endedAt = System.currentTimeMillis()
+        phase = when {
+            open.isEmpty() && closed == 0 && unreachable > 0 -> Phase.Error
+            open.isEmpty() -> Phase.Empty
+            else -> Phase.Results
         }
     }
 
@@ -183,7 +190,9 @@ fun PortsTool(c: PortsController, prefill: String?, gateway: String?) {
     if (c.phase == Phase.Results) TopBarAction(Sym.IosShare) { actions.share("Ports ${c.host}", c.report()) }
     val start = { haptics.confirm(); c.start() }
     PageColumn {
-        if (c.phase == Phase.Error) {
+        if (c.phase == Phase.Error && c.gate.missing) {
+            com.allnetworktools.ui.tools.RouteError(c.gate) { c.start() }
+        } else if (c.phase == Phase.Error) {
             ToolError(Sym.Block, S(R.string.host_unreachable), S(R.string.does_not_answer_over_tcp_check, c.host), S(R.string.edit)) { c.phase = Phase.Idle }
         }
         if (c.phase.form) {

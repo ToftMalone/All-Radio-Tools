@@ -22,6 +22,8 @@ data class PingReply(
     val rttMs: Float?,
     val ttlExceeded: Boolean,
     val ttl: Int?,
+    /** A router did answer "time to live exceeded", but this way out does not tell which one. */
+    val hidden: Boolean = false,
 )
 
 private val FromRegex = Regex("""[Ff]rom ([0-9a-fA-F:.]+)""")
@@ -29,23 +31,43 @@ private val TimeRegex = Regex("""time[=<]([\d.]+)\s*ms""")
 private val TtlRegex = Regex("""ttl=(\d+)""")
 
 object Net {
-    suspend fun resolve(host: String): InetAddress = withContext(Dispatchers.IO) { InetAddress.getByName(host.trim()) }
+    suspend fun resolve(host: String, route: NetRoute = NetRoute.System): InetAddress =
+        withContext(Dispatchers.IO) { runInterruptible { route.resolve(host) } }
 
-    suspend fun reverse(addr: InetAddress, timeoutMs: Long = 1500): String? = withContext(Dispatchers.IO) {
+    suspend fun reverse(addr: InetAddress, timeoutMs: Long = 1500, route: NetRoute = NetRoute.System): String? = withContext(Dispatchers.IO) {
         withTimeoutOrNull(timeoutMs) {
-            runInterruptible { addr.canonicalHostName }.takeIf { it != addr.hostAddress }
+            if (route.network == null || route.isDefault) runInterruptible { addr.canonicalHostName }.takeIf { it != addr.hostAddress }
+            else DnsClient.reverse(addr, route, timeoutMs.toInt())
         }
     }
 
     /**
      * One ICMP echo through the system `ping` binary, which apps may run without privileges.
-     * [ttl] limits the hop count (traceroute); [timeoutS] is the reply wait.
+     * [ttl] limits the hop count (traceroute); [timeoutS] is the reply wait. On [route] that is not the system's
+     * default network the binary is told which interface to use, or, if the phone does not let an app do that, an
+     * ICMP socket bound to the network does the echo (without naming the routers a traceroute meets).
      */
-    suspend fun ping(addr: InetAddress, sizeBytes: Int = 56, timeoutS: Int = 2, ttl: Int? = null): PingReply = withContext(Dispatchers.IO) {
+    suspend fun ping(addr: InetAddress, sizeBytes: Int = 56, timeoutS: Int = 2, ttl: Int? = null, route: NetRoute = NetRoute.System): PingReply = withContext(Dispatchers.IO) {
+        val network = route.network
+        if (network == null || route.isDefault) return@withContext binaryPing(addr, sizeBytes, timeoutS, ttl, null)!!
+        val iface = route.iface
+        if (iface != null && !route.binaryCannotBind) {
+            binaryPing(addr, sizeBytes, timeoutS, ttl, iface)?.let { return@withContext it }
+            route.binaryCannotBind = true
+        }
+        runInterruptible { Icmp.echo(network, addr, sizeBytes, timeoutS * 1000, ttl) }
+    }
+
+    /** Output that says the interface could not be used: the system `ping` is not allowed to bind to it. */
+    private val CannotBind = listOf("not permitted", "permission denied", "no such device", "unknown option", "usage:", "invalid option", "bind")
+
+    /** [iface] null: the default way out. Null result: the binary refused to use [iface]. */
+    private suspend fun binaryPing(addr: InetAddress, sizeBytes: Int, timeoutS: Int, ttl: Int?, iface: String?): PingReply? {
         val bin = if (addr is Inet6Address) "/system/bin/ping6" else "/system/bin/ping"
         val cmd = buildList {
             add(bin); add("-n"); add("-c"); add("1"); add("-W"); add(timeoutS.toString()); add("-s"); add(sizeBytes.toString())
             if (ttl != null) { add("-t"); add(ttl.toString()) }
+            if (iface != null) { add("-I"); add(iface) }
             add(addr.hostAddress!!.substringBefore('%'))
         }
         val process = ProcessBuilder(cmd).redirectErrorStream(true).start()
@@ -54,10 +76,14 @@ object Net {
                 process.waitFor((timeoutS + 2).toLong(), TimeUnit.SECONDS)
                 process.inputStream.bufferedReader().readText()
             }
-            val line = out.lines().firstOrNull { "from" in it.lowercase() } ?: return@withContext PingReply(null, null, false, null)
+            val low = out.lowercase()
+            val line = out.lines().firstOrNull { "from" in it.lowercase() }
+            if (line == null) {
+                return if (iface != null && CannotBind.any { it in low }) null else PingReply(null, null, false, null)
+            }
             // "Destination Host Unreachable" comes from our own stack or a router: not an answer from the target.
-            if ("unreachable" in line.lowercase()) return@withContext PingReply(null, null, false, null)
-            PingReply(
+            if ("unreachable" in line.lowercase()) return PingReply(null, null, false, null)
+            return PingReply(
                 from = FromRegex.find(line)?.groupValues?.get(1)?.trimEnd(':'),
                 rttMs = TimeRegex.find(line)?.groupValues?.get(1)?.toFloatOrNull(),
                 ttlExceeded = "exceeded" in line.lowercase(),
@@ -73,10 +99,10 @@ object Net {
     data class TcpResult(val state: Tcp, val ms: Float)
 
     /** TCP connect probe: refused = closed (host alive), timeout = filtered. */
-    suspend fun tcp(addr: InetAddress, port: Int, timeoutMs: Int, keepOpen: ((Socket) -> Unit)? = null): TcpResult = withContext(Dispatchers.IO) {
+    suspend fun tcp(addr: InetAddress, port: Int, timeoutMs: Int, route: NetRoute = NetRoute.System, keepOpen: ((Socket) -> Unit)? = null): TcpResult = withContext(Dispatchers.IO) {
         val t0 = System.nanoTime()
         fun ms() = (System.nanoTime() - t0) / 1e6f
-        val socket = Socket()
+        val socket = route.socket()
         try {
             socket.connect(InetSocketAddress(addr, port), timeoutMs)
             val r = TcpResult(Tcp.Open, ms())

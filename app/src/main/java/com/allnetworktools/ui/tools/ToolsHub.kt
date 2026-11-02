@@ -2,6 +2,7 @@ package com.allnetworktools.ui.tools
 
 import com.allnetworktools.AntApplication
 import com.allnetworktools.data.net.LanScanner
+import com.allnetworktools.data.net.Transport
 import com.allnetworktools.ui.pages.bt.GattController
 import com.allnetworktools.ui.pages.bt.TrackerController
 import com.allnetworktools.ui.pages.wifi.DnsController
@@ -20,13 +21,22 @@ class ToolsHub(private val app: AntApplication, private val scope: CoroutineScop
     val lan by lazy { LanController(scope, lanScanner) }
     val lanDevice by lazy { LanDeviceController(scope, lanScanner) }
     val nfc by lazy { com.allnetworktools.ui.pages.nfc.NfcController(app, app.nfc, scope) }
-    val ping by lazy { PingController(scope) }
-    val trace by lazy { TraceController(scope) }
-    val ports by lazy { PortsController(scope) }
-    val dns by lazy { DnsController(scope) }
-    val speed by lazy { SpeedController(scope) }
+    // The Wi-Fi tools leave through Wi-Fi only, whatever the phone browses with...
+    private val wifiGate get() = RouteGate(app.routes.wifiSource, Transport.Wifi)
+    val ping by lazy { PingController(scope, wifiGate) }
+    val trace by lazy { TraceController(scope, wifiGate) }
+    val ports by lazy { PortsController(scope, wifiGate) }
+    val dns by lazy { DnsController(scope, wifiGate) }
+    val speed by lazy { SpeedController(scope, wifiGate) }
+    // ...and their copies in the mobile network through mobile data only.
+    private val cellGate get() = RouteGate(app.routes.cellularSource, Transport.Cellular)
+    val cellPing by lazy { PingController(scope, cellGate) }
+    val cellTrace by lazy { TraceController(scope, cellGate) }
+    val cellDns by lazy { DnsController(scope, cellGate).also { it.systemDns = "" } }
+    val cellSpeed by lazy { SpeedController(scope, cellGate) }
+    val cellWhois by lazy { com.allnetworktools.ui.pages.wifi.WhoisController(scope, cellGate) }
     val coverage = com.allnetworktools.ui.pages.wifi.CoverageController()
-    val whois by lazy { com.allnetworktools.ui.pages.wifi.WhoisController(scope) }
+    val whois by lazy { com.allnetworktools.ui.pages.wifi.WhoisController(scope, wifiGate) }
     val bleFilter = com.allnetworktools.ui.pages.bt.BleFilterState()
     val gatt by lazy { GattController(app, scope, app.bluetooth.identities) }
     val bleIdentify by lazy { com.allnetworktools.ui.pages.bt.BleIdentifyController(scope, app.bluetooth) }

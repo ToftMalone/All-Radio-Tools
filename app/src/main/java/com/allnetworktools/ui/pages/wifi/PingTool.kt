@@ -30,6 +30,9 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.clipPath
 import androidx.compose.ui.unit.dp
 import com.allnetworktools.data.net.Net
+import com.allnetworktools.data.net.NetRoute
+import com.allnetworktools.ui.tools.RouteError
+import com.allnetworktools.ui.tools.RouteGate
 import com.allnetworktools.ui.LocalActions
 import com.allnetworktools.ui.components.CardHeader
 import com.allnetworktools.ui.components.Legend
@@ -84,7 +87,7 @@ class Recents(vararg initial: String) {
     }
 }
 
-class PingController(private val scope: CoroutineScope) {
+class PingController(private val scope: CoroutineScope, val gate: RouteGate = RouteGate()) {
     var host by mutableStateOf("1.1.1.1")
     /** Echoes to send; 0 means no limit, until stopped. */
     var count by mutableIntStateOf(10)
@@ -106,24 +109,28 @@ class PingController(private val scope: CoroutineScope) {
         resolved = null
         phase = Phase.Running
         job = scope.launch {
-            val addr = try {
-                Net.resolve(host)
-            } catch (_: UnknownHostException) {
-                phase = Phase.Error; return@launch
-            }
-            recent.push(host)
-            resolved = Net.reverse(addr).takeIf { it != host } ?: addr.hostAddress
-            var sent = 0
-            while (count == 0 || sent < count) {
-                val t0 = System.currentTimeMillis()
-                results += Net.ping(addr, size, 2).rttMs
-                if (results.size > keep) results.removeAt(0)
-                sent++
-                if (count != 0 && sent >= count) break
-                delay((intervalMs - (System.currentTimeMillis() - t0)).coerceAtLeast(0))
-            }
-            phase = if (results.all { it == null }) Phase.Empty else Phase.Results
+            if (!gate.run { route -> echoes(route) }) phase = Phase.Error
         }
+    }
+
+    private suspend fun echoes(route: NetRoute) {
+        val addr = try {
+            Net.resolve(host, route)
+        } catch (_: UnknownHostException) {
+            phase = Phase.Error; return
+        }
+        recent.push(host)
+        resolved = Net.reverse(addr, route = route).takeIf { it != host } ?: addr.hostAddress
+        var sent = 0
+        while (count == 0 || sent < count) {
+            val t0 = System.currentTimeMillis()
+            results += Net.ping(addr, size, 2, route = route).rttMs
+            if (results.size > keep) results.removeAt(0)
+            sent++
+            if (count != 0 && sent >= count) break
+            delay((intervalMs - (System.currentTimeMillis() - t0)).coerceAtLeast(0))
+        }
+        phase = if (results.all { it == null }) Phase.Empty else Phase.Results
     }
 
     fun stop() {
@@ -154,7 +161,8 @@ fun PingTool(c: PingController, prefill: String?) {
     val start = { haptics.confirm(); c.start() }
     PageColumn {
         if (c.phase == Phase.Error) {
-            ToolError(Sym.Dns, S(R.string.host_not_found), S(R.string.could_not_resolve_check_the_spelling, c.host), S(R.string.edit)) { c.phase = Phase.Idle }
+            if (c.gate.missing) RouteError(c.gate) { c.start() }
+            else ToolError(Sym.Dns, S(R.string.host_not_found), S(R.string.could_not_resolve_check_the_spelling, c.host), S(R.string.edit)) { c.phase = Phase.Idle }
         }
         if (c.phase.form) {
             HostInputField(c.host, { c.host = it }, S(R.string.host_or_ip_address), recent = c.recent.items, onDone = start)

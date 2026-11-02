@@ -69,6 +69,9 @@ import com.allnetworktools.ui.tools.active
 import com.allnetworktools.ui.tools.form
 import com.allnetworktools.ui.tools.mono
 import com.allnetworktools.util.fmt
+import com.allnetworktools.data.net.NetRoute
+import com.allnetworktools.ui.tools.RouteError
+import com.allnetworktools.ui.tools.RouteGate
 import java.net.InetAddress
 import java.net.UnknownHostException
 import kotlinx.coroutines.CoroutineScope
@@ -84,8 +87,10 @@ data class Hop(
     val rtts: List<Float?>,
     val tag: String,
     val destination: Boolean,
+    /** A router answered, but the way out does not give its address. */
+    val hidden: Boolean = false,
 ) {
-    val timedOut get() = ip == null
+    val timedOut get() = ip == null && !hidden
     val avg: Float? get() = rtts.filterNotNull().takeIf { it.isNotEmpty() }?.average()?.toFloat()
 }
 
@@ -96,7 +101,7 @@ private fun isPrivate(ip: String) = runCatching {
 
 private val IxHints = listOf("franceix", "ix.", "-ix", "decix", "de-cix", "ams-ix", "linx", "equinix", "peering")
 
-class TraceController(private val scope: CoroutineScope) {
+class TraceController(private val scope: CoroutineScope, val gate: RouteGate = RouteGate()) {
     var host by mutableStateOf("one.one.one.one")
     val maxHops = 30
     var phase by mutableStateOf(Phase.Idle)
@@ -115,45 +120,55 @@ class TraceController(private val scope: CoroutineScope) {
         target = null
         phase = Phase.Running
         job = scope.launch {
-            val addr = try {
-                Net.resolve(host)
-            } catch (_: UnknownHostException) {
-                phase = Phase.Error; return@launch
-            }
-            recent.push(host)
-            target = addr.hostAddress
-            var silent = 0
-            for (ttl in 1..maxHops) {
-                probingTtl = ttl
-                val reply = Net.ping(addr, 56, 1, ttl)
-                val from = reply.from
-                if (from == null) {
-                    hops += Hop(ttl, null, null, listOf(null, null, null), S(R.string.icmp_filtered_by_this_router), false)
-                    if (++silent >= 6) break
-                    continue
-                }
-                silent = 0
-                val dest = !reply.ttlExceeded
-                val hopAddr = InetAddress.getByName(from)
-                val rtts = buildList {
-                    if (dest) add(reply.rttMs)
-                    while (size < 3) add(Net.ping(hopAddr, 56, 1).rttMs)
-                }
-                val name = Net.reverse(hopAddr, 1200)
-                val tag = when {
-                    dest -> "Destination"
-                    ttl == 1 && isPrivate(from) -> S(R.string.gateway_local_network)
-                    isPrivate(from) -> S(R.string.private_carrier_network)
-                    IxHints.any { name?.lowercase()?.contains(it) == true } -> S(R.string.internet_exchange_point)
-                    else -> S(R.string.carrier_router)
-                }
-                hops += Hop(ttl, from, name, rtts, tag, dest)
-                if (dest) break
-            }
-            // Drop the trailing run of silent hops.
-            while (hops.lastOrNull()?.timedOut == true && !reached) hops.removeAt(hops.lastIndex)
-            phase = if (hops.none { !it.timedOut }) Phase.Empty else Phase.Results
+            if (!gate.run { route -> trace(route) }) phase = Phase.Error
         }
+    }
+
+    private suspend fun trace(route: NetRoute) {
+        val addr = try {
+            Net.resolve(host, route)
+        } catch (_: UnknownHostException) {
+            phase = Phase.Error; return
+        }
+        recent.push(host)
+        target = addr.hostAddress
+        var silent = 0
+        for (ttl in 1..maxHops) {
+            probingTtl = ttl
+            val reply = Net.ping(addr, 56, 1, ttl, route)
+            val from = reply.from
+            if (from == null && reply.hidden) {
+                // A router answered but this way out does not say which: the hop and its delay are still real.
+                silent = 0
+                hops += Hop(ttl, null, null, listOf(reply.rttMs, null, null), S(R.string.router_address_hidden), false, hidden = true)
+                continue
+            }
+            if (from == null) {
+                hops += Hop(ttl, null, null, listOf(null, null, null), S(R.string.icmp_filtered_by_this_router), false)
+                if (++silent >= 6) break
+                continue
+            }
+            silent = 0
+            val dest = !reply.ttlExceeded
+            val hopAddr = InetAddress.getByName(from)
+            val rtts = buildList {
+                if (dest) add(reply.rttMs)
+                while (size < 3) add(Net.ping(hopAddr, 56, 1, route = route).rttMs)
+            }
+            val name = Net.reverse(hopAddr, 1200, route)
+            val tag = when {
+                dest -> "Destination"
+                ttl == 1 && isPrivate(from) -> S(R.string.gateway_local_network)
+                isPrivate(from) -> S(R.string.private_carrier_network)
+                IxHints.any { name?.lowercase()?.contains(it) == true } -> S(R.string.internet_exchange_point)
+                else -> S(R.string.carrier_router)
+            }
+            hops += Hop(ttl, from, name, rtts, tag, dest)
+            if (dest) break
+        }
+        // Drop the trailing run of silent hops.
+        while (hops.lastOrNull()?.timedOut == true && !reached) hops.removeAt(hops.lastIndex)
+        phase = if (hops.none { !it.timedOut }) Phase.Empty else Phase.Results
     }
 
     fun stop() {
@@ -176,7 +191,8 @@ fun TraceTool(c: TraceController) {
     val start = { haptics.confirm(); c.start() }
     PageColumn {
         if (c.phase == Phase.Error) {
-            ToolError(Sym.CloudOff, S(R.string.host_not_found), S(R.string.could_not_resolve_check_the_connection, c.host), S(R.string.edit)) { c.phase = Phase.Idle }
+            if (c.gate.missing) RouteError(c.gate) { c.start() }
+            else ToolError(Sym.CloudOff, S(R.string.host_not_found), S(R.string.could_not_resolve_check_the_connection, c.host), S(R.string.edit)) { c.phase = Phase.Idle }
         }
         if (c.phase.form) {
             HostInputField(c.host, { c.host = it }, "Destination", recent = c.recent.items, onDone = start)
@@ -292,7 +308,7 @@ private fun HopRow(h: Hop, first: Boolean, last: Boolean, index: Int, probing: B
         }
         Column(Modifier.weight(1f).padding(vertical = 10.dp)) {
             Text(
-                if (h.timedOut && !probing) "* * *" else h.host ?: h.ip ?: "",
+                if (h.timedOut && !probing) "* * *" else if (h.hidden) S(R.string.router_hop, h.n) else h.host ?: h.ip ?: "",
                 style = rf(15, 20, 600).copy(fontStyle = if (probing) FontStyle.Italic else FontStyle.Normal),
                 color = if (muted) cs.onSurfaceVariant else cs.onSurface, maxLines = 1, overflow = TextOverflow.Ellipsis,
             )

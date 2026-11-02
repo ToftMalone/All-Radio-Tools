@@ -2576,4 +2576,11 @@
     <string name="lpwan_listening_wide">"Écoute sur 867,1–868,5 MHz"</string>
     <string name="lpwan_channels_note">"The Things Network, Orange et la plupart des réseaux utilisent aussi 867,1 à 867,9 MHz, et les objets sautent d\'un canal à l\'autre parmi les huit : avec trois, environ cinq de leurs trames sur huit sont manquées. Huit canaux demandent environ un tiers de calcul en plus."</string>
     <string name="coming_soon">"Arrive bientôt"</string>
+    <string name="internet_over_mobile_data">"Internet · données mobiles uniquement"</string>
+    <string name="route_wifi_missing_title">"Pas connecté au Wi-Fi"</string>
+    <string name="route_wifi_missing_text">"Cet outil ne fonctionne qu\'en Wi-Fi, même quand les données mobiles sont actives. Connectez-vous à un réseau Wi-Fi puis réessayez."</string>
+    <string name="route_mobile_missing_title">"Pas de données mobiles"</string>
+    <string name="route_mobile_missing_text">"Cet outil ne fonctionne qu\'avec les données mobiles, même quand le Wi-Fi est connecté. Activez les données mobiles, vérifiez le signal puis réessayez."</string>
+    <string name="router_address_hidden">"Un routeur a répondu ; ce réseau n\'en donne pas l\'adresse"</string>
+    <string name="router_hop">"Routeur %1$d"</string>
 </resources>

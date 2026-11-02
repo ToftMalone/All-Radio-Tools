@@ -201,9 +201,10 @@ private fun PageBody(vm: MainViewModel, net: Network, page: Page) {
         return
     }
     val blocker = vm.blockers.collectAsStateWithLifecycle().value[net]
-    val internetTool = page is Page.ToolPage && page.tool in InternetTools
+    // Mobile data tools need no access to the phone's state: if the network is not there, they say so themselves.
+    val mobileInternet = page is Page.ToolPage && page.tool in MobileInternetTools && blocker == Blocker.PhonePermission
     // Without a HackRF or a cable the dashboard and the tool list stay open; only the tools themselves are blocked.
-    if (blocker != null && !internetTool && (!blocker.soft || page is Page.ToolPage)) {
+    if (blocker != null && !mobileInternet && (!blocker.soft || page is Page.ToolPage)) {
         BlockedPage(net, blocker)
         return
     }
@@ -303,6 +304,7 @@ private fun PageBody(vm: MainViewModel, net: Network, page: Page) {
             Tool.CellDetail -> CellDetailTool(vm.cell.collectAsStateWithLifecycle().value.state, page.arg) {
                 vm.navigate { it.copy(page = Page.ToolPage(Tool.Neighbors)) }
             }
+            Tool.CellSpeed, Tool.CellPing, Tool.CellTrace, Tool.CellDns, Tool.CellWhois -> MobileInternetRoute(vm, page)
             Tool.Lan, Tool.LanDevice, Tool.Ping, Tool.Trace, Tool.Ports, Tool.Dns, Tool.Speed,
             Tool.Whois, Tool.EvilTwin, Tool.Audit, Tool.Mitm, Tool.Coverage -> WifiToolRoute(vm, page)
             else -> ComingSoon(page.tool)
@@ -311,8 +313,25 @@ private fun PageBody(vm: MainViewModel, net: Network, page: Page) {
     }
 }
 
-/** Tools that only need an Internet connection, usable over mobile data with Wi-Fi off. */
-private val InternetTools = setOf(Tool.Ping, Tool.Trace, Tool.Dns, Tool.Speed, Tool.Ports, Tool.Whois)
+/** The Internet tools of the mobile network: they leave through mobile data only. */
+private val MobileInternetTools = setOf(Tool.CellSpeed, Tool.CellPing, Tool.CellTrace, Tool.CellDns, Tool.CellWhois)
+
+@Composable
+private fun MobileInternetRoute(vm: MainViewModel, page: Page.ToolPage) {
+    val tools = vm.tools
+    when (page.tool) {
+        Tool.CellPing -> PingTool(tools.cellPing, page.arg)
+        Tool.CellTrace -> TraceTool(tools.cellTrace)
+        Tool.CellDns -> DnsTool(tools.cellDns, null)
+        Tool.CellWhois -> com.allnetworktools.ui.pages.wifi.WhoisTool(tools.cellWhois)
+        Tool.CellSpeed -> {
+            val cell = vm.cell.collectAsStateWithLifecycle().value.state
+            val label = listOfNotNull(cell?.operator, cell?.techLabel).joinToString(" · ").ifEmpty { Network.Cellular.label }
+            SpeedTool(tools.cellSpeed, label, Sym.CellBars3)
+        }
+        else -> Unit
+    }
+}
 
 @Composable
 private fun WifiToolRoute(vm: MainViewModel, page: Page.ToolPage) {
@@ -341,13 +360,8 @@ private fun WifiToolRoute(vm: MainViewModel, page: Page.ToolPage) {
             onFixLocation = { if (!perms.location) actions.request(PermGroup.Location) else actions.openLocationSettings() },
         )
         Tool.Speed -> {
-            val cell = if (conn == null) vm.cell.collectAsStateWithLifecycle().value.state else null
-            val (label, icon) = when {
-                conn != null -> listOfNotNull(conn.ssid, standardLabel(conn.standard)?.first, "${conn.band.label} GHz").joinToString(" · ") to Sym.Wifi
-                cell != null -> listOfNotNull(cell.operator, cell.techLabel).joinToString(" · ") to Sym.CellBars3
-                else -> S(R.string.active_network) to Sym.Public
-            }
-            SpeedTool(tools.speed, label, icon)
+            val label = if (conn != null) listOfNotNull(conn.ssid, standardLabel(conn.standard)?.first, "${conn.band.label} GHz").joinToString(" · ") else "Wi-Fi"
+            SpeedTool(tools.speed, label, Sym.Wifi)
         }
         else -> Unit
     }

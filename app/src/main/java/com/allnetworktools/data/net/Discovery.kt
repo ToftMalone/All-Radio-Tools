@@ -50,9 +50,9 @@ object Whois {
 
     fun isIp(q: String) = IpRegex.matches(q) && (q.count { it == '.' } == 3 || ':' in q)
 
-    private suspend fun ask(server: String, query: String): String = withContext(Dispatchers.IO) {
-        Socket().use { s ->
-            s.connect(InetSocketAddress(server, 43), 5000)
+    private suspend fun ask(server: String, query: String, route: NetRoute): String = withContext(Dispatchers.IO) {
+        route.socket().use { s ->
+            s.connect(InetSocketAddress(route.resolve(server), 43), 5000)
             s.soTimeout = 8000
             s.getOutputStream().write("$query\r\n".toByteArray())
             s.getInputStream().readBytes().toString(Charsets.UTF_8).take(100_000)
@@ -69,7 +69,7 @@ object Whois {
     }?.removePrefix("whois://")?.substringBefore(':')?.takeIf { it.contains('.') }
 
     /** Follows the referral chain from IANA to the registry, then the registrar (at most 3 servers). */
-    suspend fun lookup(input: String): WhoisResult {
+    suspend fun lookup(input: String, route: NetRoute = NetRoute.System): WhoisResult {
         val q = input.trim().lowercase().removePrefix("http://").removePrefix("https://").substringBefore('/').removePrefix("www.")
         val ip = isIp(q)
         val hops = mutableListOf<WhoisHop>()
@@ -77,7 +77,7 @@ object Whois {
         var query = if (ip) q else q.substringAfterLast('.')
         repeat(3) {
             val text = try {
-                ask(server, query)
+                ask(server, query, route)
             } catch (e: IOException) {
                 if (hops.isEmpty()) throw e else return WhoisResult(q, ip, hops)
             }

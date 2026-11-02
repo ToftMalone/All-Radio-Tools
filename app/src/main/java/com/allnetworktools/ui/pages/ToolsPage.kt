@@ -90,6 +90,16 @@ private fun groups(net: Network, connectedDevice: String?, servingLabel: String?
                 ToolEntry(Tool.Handover, S(R.string.handover_log), S(R.string.cell_changes_on_the_move_csv)),
             ),
         ),
+        ToolGroup(
+            S(R.string.internet_over_mobile_data),
+            listOf(
+                ToolEntry(Tool.CellSpeed, S(R.string.speed_test), S(R.string.ping_download_upload)),
+                ToolEntry(Tool.CellPing, "Ping", S(R.string.latency_jitter_loss)),
+                ToolEntry(Tool.CellTrace, "Traceroute", S(R.string.hops_to_the_host)),
+                ToolEntry(Tool.CellDns, "DNS Lookup", "A, AAAA, MX, TXT, NS"),
+                ToolEntry(Tool.CellWhois, "Whois", S(R.string.domain_or_ip_address)),
+            ),
+        ),
         ToolGroup(S(R.string.security_2), listOf(ToolEntry(Tool.FakeCells, S(R.string.fake_cell_detector), S(R.string.fake_cell_subtitle)))),
     )
     Network.Gnss -> listOf(

@@ -40,6 +40,8 @@ L'écran d'accueil propose six réseaux. Chacun a son tableau de bord, son outil
 | Faux points d'accès | « Evil twin » du réseau connecté |
 | Homme du milieu | ARP spoofing et DHCP pirate |
 
+Les outils Internet (test de débit, ping, traceroute, scan de ports, DNS, whois) fonctionnent **uniquement en Wi-Fi** : ils utilisent le réseau Wi-Fi connecté même quand les données mobiles sont actives, et le disent quand vous n'êtes pas connecté au Wi-Fi.
+
 ### 🔵 Bluetooth
 
 | Outil | À quoi ça sert |
@@ -59,6 +61,7 @@ L'écran d'accueil propose six réseaux. Chacun a son tableau de bord, son outil
 | Cellules voisines | Cellules détectées par le modem |
 | Journal de handover | Changements de cellule en trajet, lancé à la main, export CSV |
 | Carte des antennes | Antennes de votre opérateur, d'après les données ouvertes de l'ANFR |
+| Test de débit, Ping, Traceroute, DNS, Whois | Les mêmes outils qu'en Wi-Fi, mais **uniquement avec les données mobiles** : ils passent par le réseau cellulaire même quand le Wi-Fi est connecté, et le disent quand les données mobiles sont coupées (en données mobiles, un traceroute peut ne pas nommer tous les routeurs) |
 | Détecteur de fausses antennes | Surveille le réseau, même app fermée, pour repérer les signes d'un IMSI-catcher : 2G forcée, codes de réseau de test, codes de zone incohérents, cellules sans voisines, nouvelles cellules anormalement fortes, aucune antenne ANFR correspondante à proximité |
 
 ### 🛰️ GNSS

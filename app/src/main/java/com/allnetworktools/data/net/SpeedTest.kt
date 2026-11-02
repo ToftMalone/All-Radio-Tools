@@ -624,7 +624,7 @@ data class CfMeta(
 )
 
 /** HTTP/1.1 over TLS on a kept-alive socket per lane, timed like the browser's resource timing. */
-class CfHttp(private val host: String = CfConfig.HOST) : CfTransport {
+class CfHttp(private val host: String = CfConfig.HOST, private val route: NetRoute = NetRoute.System) : CfTransport {
     /** The site tags every request of a run with a random measurement id. */
     private val measId = (Math.random() * 1e16).toLong().toString()
 
@@ -677,11 +677,13 @@ class CfHttp(private val host: String = CfConfig.HOST) : CfTransport {
 
         /** Returns the TCP handshake time (the browser's connectStart → secureConnectionStart). */
         private fun connect(): Double {
-            val raw = Socket()
+            val raw = route.socket()
             socket = raw
             raw.tcpNoDelay = true
+            // The name is looked up on the same network the socket leaves through.
+            val ip = route.resolve(host)
             val t0 = System.nanoTime()
-            raw.connect(InetSocketAddress(host, 443), 10_000)
+            raw.connect(InetSocketAddress(ip, 443), 10_000)
             val tcp = (System.nanoTime() - t0) / 1e6
             val ssl = (SSLSocketFactory.getDefault() as SSLSocketFactory).createSocket(raw, host, 443, true) as SSLSocket
             socket = ssl
@@ -820,8 +822,8 @@ class CfHttp(private val host: String = CfConfig.HOST) : CfTransport {
         const val USER_AGENT = "Mozilla/5.0 (Linux; Android) AllRadioTools"
         private val ZEROS = ByteArray(64 * 1024) { '0'.code.toByte() }
 
-        private fun get(path: String): String {
-            val c = URL("https://${CfConfig.HOST}$path").openConnection() as HttpURLConnection
+        private fun get(path: String, route: NetRoute): String {
+            val c = route.open(URL("https://${CfConfig.HOST}$path")) as HttpURLConnection
             c.connectTimeout = 5000; c.readTimeout = 5000
             c.setRequestProperty("User-Agent", USER_AGENT)
             c.setRequestProperty("Referer", "https://${CfConfig.HOST}/")
@@ -829,9 +831,9 @@ class CfHttp(private val host: String = CfConfig.HOST) : CfTransport {
             return try { c.inputStream.bufferedReader().readText() } finally { c.disconnect() }
         }
 
-        suspend fun meta(): CfMeta? = withContext(Dispatchers.IO) {
+        suspend fun meta(route: NetRoute = NetRoute.System): CfMeta? = withContext(Dispatchers.IO) {
             runCatching {
-                val j = JSONObject(get("/meta"))
+                val j = JSONObject(get("/meta", route))
                 fun s(o: JSONObject?, k: String) = o?.optString(k)?.ifEmpty { null }
                 fun d(o: JSONObject?, k: String) = o?.optString(k)?.toDoubleOrNull()
                 val colo = j.optJSONObject("colo")
@@ -857,13 +859,13 @@ class CfHttp(private val host: String = CfConfig.HOST) : CfTransport {
          * The site's packet-loss test: 1000 numbered UDP messages, in batches of ten every 10 ms, from one TURN allocation to
          * another through turn.cloudflare.com, then 3 s of silence after the last answer before counting the missing ones.
          */
-        suspend fun packetLoss(step: CfStep.PacketLoss, onProgress: (CfPacketLoss) -> Unit): CfPacketLoss = withContext(Dispatchers.IO) {
-            val creds = runCatching { JSONObject(get("/turn-creds")) }.getOrNull()
+        suspend fun packetLoss(step: CfStep.PacketLoss, route: NetRoute, onProgress: (CfPacketLoss) -> Unit): CfPacketLoss = withContext(Dispatchers.IO) {
+            val creds = runCatching { JSONObject(get("/turn-creds", route)) }.getOrNull()
             val user = creds?.optString("username")?.ifEmpty { null }
             val pass = creds?.optString("credential")?.ifEmpty { null }
             if (creds == null || creds.has("error") || user == null || pass == null) throw IOException("unable to get turn server credentials")
-            val server = TurnClient.resolve(creds.optString("server").ifEmpty { CfConfig.TURN_URI })
-            runPacketLoss(step, TurnClient(server, user, pass), TurnClient(server, user, pass), onProgress)
+            val server = TurnClient.resolve(creds.optString("server").ifEmpty { CfConfig.TURN_URI }, route)
+            runPacketLoss(step, TurnClient(server, user, pass, route), TurnClient(server, user, pass, route), onProgress)
         }
 
         suspend fun runPacketLoss(step: CfStep.PacketLoss, sender: TurnClient, receiver: TurnClient, onProgress: (CfPacketLoss) -> Unit): CfPacketLoss = coroutineScope {

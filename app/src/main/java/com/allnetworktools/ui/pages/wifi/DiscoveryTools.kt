@@ -55,7 +55,7 @@ import com.allnetworktools.util.P
 
 // ---- Whois ----------------------------------------------------------------------------------------
 
-class WhoisController(private val scope: CoroutineScope) {
+class WhoisController(private val scope: CoroutineScope, val gate: com.allnetworktools.ui.tools.RouteGate = com.allnetworktools.ui.tools.RouteGate()) {
     var query by mutableStateOf("")
     var phase by mutableStateOf(Phase.Idle)
     var result by mutableStateOf<WhoisResult?>(null)
@@ -71,16 +71,20 @@ class WhoisController(private val scope: CoroutineScope) {
         phase = Phase.Running
         result = null; error = null; showRaw = false
         job = scope.launch {
-            try {
-                val r = Whois.lookup(query)
-                recent.push(query)
-                result = r
-                phase = if (r.text.isBlank() || r.text.contains("No match", true) || r.text.contains("NOT FOUND", true)) Phase.Empty else Phase.Results
-            } catch (e: UnknownHostException) {
-                error = S(R.string.whois_server_unreachable_check_the_internet); phase = Phase.Error
-            } catch (e: IOException) {
-                error = e.message ?: S(R.string.the_whois_server_did_not_answer); phase = Phase.Error
-            }
+            if (!gate.run { route -> ask(route) }) phase = Phase.Error
+        }
+    }
+
+    private suspend fun ask(route: com.allnetworktools.data.net.NetRoute) {
+        try {
+            val r = Whois.lookup(query, route)
+            recent.push(query)
+            result = r
+            phase = if (r.text.isBlank() || r.text.contains("No match", true) || r.text.contains("NOT FOUND", true)) Phase.Empty else Phase.Results
+        } catch (e: UnknownHostException) {
+            error = S(R.string.whois_server_unreachable_check_the_internet); phase = Phase.Error
+        } catch (e: IOException) {
+            error = e.message ?: S(R.string.the_whois_server_did_not_answer); phase = Phase.Error
         }
     }
 }
@@ -95,7 +99,10 @@ fun WhoisTool(c: WhoisController) {
     if (r != null && c.phase == Phase.Results) TopBarAction(Sym.IosShare) { actions.share("Whois ${r.query}", r.hops.joinToString("\n\n") { "# ${it.server}\n${it.text}" }) }
     val start = { haptics.confirm(); c.start() }
     PageColumn {
-        if (c.phase == Phase.Error) ToolError(Sym.CloudOff, S(R.string.query_failed), c.error ?: "", S(R.string.retry)) { c.start() }
+        if (c.phase == Phase.Error) {
+            if (c.gate.missing) com.allnetworktools.ui.tools.RouteError(c.gate) { c.start() }
+            else ToolError(Sym.CloudOff, S(R.string.query_failed), c.error ?: "", S(R.string.retry)) { c.start() }
+        }
         HostInputField(c.query, { c.query = it }, S(R.string.domain_or_ip_address), Sym.TravelExplore, c.recent.items, onDone = start)
         if (c.phase != Phase.Running) StartButton(S(R.string.look_up), Sym.Search, enabled = c.query.isNotBlank(), onClick = start)
         if (c.phase == Phase.Running) {

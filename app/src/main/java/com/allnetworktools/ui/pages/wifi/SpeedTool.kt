@@ -90,7 +90,7 @@ fun sizeLabel(bytes: Long) = if (bytes >= 1_000_000) S(R.string.mb, bytes / 1_00
 
 val levelNames = listOf(S(R.string.bad), S(R.string.poor), S(R.string.fair), S(R.string.good), S(R.string.excellent))
 
-class SpeedController(private val scope: CoroutineScope) {
+class SpeedController(private val scope: CoroutineScope, val gate: com.allnetworktools.ui.tools.RouteGate = com.allnetworktools.ui.tools.RouteGate()) {
     var phase by mutableStateOf(Phase.Idle)
     var paused by mutableStateOf(false)
     var snap by mutableStateOf(CfSnapshot.Empty)
@@ -100,23 +100,19 @@ class SpeedController(private val scope: CoroutineScope) {
     private var http: CfHttp? = null
     private var job: Job? = null
 
+    /** Where the test runs from, asked on the network the test will use (if it is there). */
     fun loadMeta() {
-        if (meta == null) scope.launch { meta = CfHttp.meta() }
+        if (meta == null) scope.launch { gate.source.use { route -> if (meta == null) meta = CfHttp.meta(route) } }
     }
 
     fun start() {
         job?.cancel()
         http?.close()
-        val h = CfHttp().also { http = it }
-        // Big final files only off metered networks (mobile data, metered Wi-Fi).
-        val metered = runCatching {
-            com.allnetworktools.util.Res.context?.getSystemService(android.net.ConnectivityManager::class.java)?.isActiveNetworkMetered
-        }.getOrNull() ?: true
-        engine = CfEngine(h, CfHttp::packetLoss, bigFiles = !metered)
+        http = null
+        engine = null
         snap = CfSnapshot.Empty
         measuredAt = 0L
-        loadMeta()
-        resume()
+        launchTest()
     }
 
     fun pause() {
@@ -125,20 +121,33 @@ class SpeedController(private val scope: CoroutineScope) {
     }
 
     fun resume() {
-        val e = engine ?: return
+        if (engine == null) start() else launchTest()
+    }
+
+    /** Runs (or carries on) the test on the network this tool is tied to. */
+    private fun launchTest() {
         paused = false
         phase = Phase.Running
         job = scope.launch {
-            try {
-                e.run { snap = it }
-                measuredAt = System.currentTimeMillis()
-                phase = Phase.Results
-                http?.close()
-            } catch (c: CancellationException) {
-                throw c
-            } catch (_: Exception) {
-                phase = Phase.Error
+            val ran = gate.run { route ->
+                val e = engine ?: run {
+                    val h = CfHttp(route = route).also { http = it }
+                    // Big final files only off metered networks (mobile data, metered Wi-Fi).
+                    CfEngine(h, { step, progress -> CfHttp.packetLoss(step, route, progress) }, bigFiles = !route.metered).also { engine = it }
+                }
+                if (meta == null) meta = CfHttp.meta(route)
+                try {
+                    e.run { snap = it }
+                    measuredAt = System.currentTimeMillis()
+                    phase = Phase.Results
+                    http?.close()
+                } catch (c: CancellationException) {
+                    throw c
+                } catch (_: Exception) {
+                    phase = Phase.Error
+                }
             }
+            if (!ran) phase = Phase.Error
         }
     }
 
@@ -172,7 +181,9 @@ fun SpeedTool(c: SpeedController, networkLabel: String, networkIcon: String) {
         SectionTitle(S(R.string.your_internet_speed))
         SpeedCards(s)
         LatencyCards(s)
-        if (c.phase == Phase.Error) {
+        if (c.phase == Phase.Error && c.gate.missing) {
+            com.allnetworktools.ui.tools.RouteError(c.gate) { c.start() }
+        } else if (c.phase == Phase.Error) {
             ToolError(Sym.SignalDisconnected, S(R.string.test_interrupted), S(R.string.the_connection_to_the_cloudflare_server), S(R.string.retry)) { c.resume() }
         }
         ProgressCard(c, start)
