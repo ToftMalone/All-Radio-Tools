@@ -60,13 +60,14 @@ class WmbusTest {
     }
 
     /** HackRF bytes at 2 MS/s, tuned 500 kHz below 868.95 MHz, the meter 8 kHz off. */
-    private fun air(list: List<Pair<IntArray, Wmbus.Mode>>, seed: Int = 5): ByteArray {
+    /** [chipRate]: the meter's chip clock relative to the nominal 100 kchip/s. */
+    private fun air(list: List<Pair<IntArray, Wmbus.Mode>>, seed: Int = 5, chipRate: Double = 1.0): ByteArray {
         val rate = 2_000_000.0
-        val spc = 20
+        val spc = 20 / chipRate
         val gap = 120_000
         val rnd = Random(seed)
         val segs = list.map { (body, mode) -> Wmbus.chips(Wmbus.buildFrame(body, mode == Wmbus.Mode.C1B), mode, preamble = 19) }
-        val n = gap + segs.sumOf { it.size * spc + 120_000 }
+        val n = gap + segs.sumOf { (it.size * spc).toInt() + 1 + 120_000 }
         val out = ByteArray(2 * n)
         var ph = 0.0
         var i = 0
@@ -77,7 +78,9 @@ class WmbusTest {
         }
         repeat(gap) { put(0.0, 0.0) }
         for (chips in segs) {
-            for (c in chips) repeat(spc) {
+            val len = (chips.size * spc).toInt()
+            for (s in 0 until len) {
+                val c = chips[(s / spc).toInt().coerceAtMost(chips.size - 1)]
                 ph += 2 * PI * (508_000.0 + if (c == 1) 50_000.0 else -50_000.0) / rate
                 put(cos(ph), sin(ph))
             }
@@ -98,6 +101,20 @@ class WmbusTest {
         assertEquals("123.456", got[0].frame.records[0].value)
         assertTrue(got[1].frame.encrypted)
         assertTrue(got.all { it.snrDb > 10 })
+    }
+
+    /** A long telegram (about 1900 chips in T1) from meters whose crystal is 2.5 % off, either way. */
+    @Test
+    fun meterClockOff() {
+        val long = body("KAM", "11223344", 0x16, 0, IntArray(30) { i -> if (i % 6 == 0) 0x0C else if (i % 6 == 1) 0x13 else 0x11 * (i % 9) } + intArrayOf(0x2F, 0x2F))
+        for ((mode, rate) in listOf(Wmbus.Mode.T1 to 1.025, Wmbus.Mode.T1 to 0.975, Wmbus.Mode.C1A to 1.02)) {
+            val got = ArrayList<WmbusTelegram>()
+            val rx = WmbusReceiver { got += it }
+            val bytes = air(listOf(long to mode), chipRate = rate)
+            var o = 0
+            while (o < bytes.size) { val k = minOf(131072, bytes.size - o); rx.feed(bytes.copyOfRange(o, o + k), k); o += k }
+            assertEquals("$mode at $rate", listOf("11223344"), got.map { it.frame.id })
+        }
     }
 
     @Test

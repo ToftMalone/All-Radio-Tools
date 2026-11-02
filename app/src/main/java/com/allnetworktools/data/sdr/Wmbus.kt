@@ -333,7 +333,13 @@ object Wmbus {
 }
 
 /** A frame that passed its CRCs, with how it came and its level over the noise. */
-class WmbusTelegram(val frame: Wmbus.Frame, val mode: Wmbus.Mode, val snrDb: Double)
+class WmbusTelegram(
+    val frame: Wmbus.Frame,
+    val mode: Wmbus.Mode,
+    val snrDb: Double,
+    /** T1 code words put right by their least certain chip, the CRCs agreeing. */
+    val mended: Int = 0,
+)
 
 /**
  * T1 and C1 from samples at 500 kS/s centred on 868.95 MHz: FM demodulation, a chip every 5 samples at each of the 5
@@ -422,7 +428,8 @@ class WmbusDemodulator(private val onTelegram: (WmbusTelegram) -> Unit) {
             }
             while (jobs.isNotEmpty()) {
                 val j = jobs.first()
-                if (n < SPS * (j.k0 + MAX_CHIPS) + j.p + 1) break
+                // Room for a sender up to 10 % slow, read in one go.
+                if (n < SPS * (j.k0 + MAX_CHIPS * 11 / 10) + j.p + 2) break
                 jobs.removeFirst()
                 decode(j)
             }
@@ -430,35 +437,102 @@ class WmbusDemodulator(private val onTelegram: (WmbusTelegram) -> Unit) {
         }
     }
 
-    private fun chip(c: Cand, i: Int) = if (soft[c.p][((c.k0 + 1 + i) and MASK).toInt()] > c.th) 1 else 0
-    private fun bits(c: Cand, from: Int, count: Int): Int { var v = 0; for (i in 0 until count) v = (v shl 1) or chip(c, from + i); return v }
+    /** The chip filter's output at sample [n] (it holds the sum of the last [SPS] discriminator samples). */
+    private fun ys(n: Long): Float = soft[(n % SPS).toInt()][((n / SPS) and MASK).toInt()]
 
+    private fun y(x: Double): Float {
+        val n0 = kotlin.math.floor(x).toLong()
+        val f = (x - n0).toFloat()
+        return ys(n0) + f * (ys(n0 + 1) - ys(n0))
+    }
+
+    /** Chip decisions after the sync word, and how far each was from the decision level. */
+    private var dec = IntArray(0)
+    private var margin = FloatArray(0)
+
+    /**
+     * Reads [count] chips after the sync word with the sender's own chip clock: a meter's crystal may be off by a
+     * fraction of a percent (T1 allows far more), which over a long telegram's thousands of chips walks a fixed
+     * sampling grid off the chips. A Gardner detector on the chip filter's output nudges the timing at every
+     * transition and learns the rate.
+     */
+    private fun track(c: Cand, count: Int, rate: Double) {
+        dec = IntArray(count)
+        margin = FloatArray(count)
+        val amp = maxOf(c.score / 24f, 1e-6f)
+        var period = SPS / rate
+        var x = (SPS.toLong() * c.k0 + c.p).toDouble()
+        var prev = y(x)
+        for (i in 0 until count) {
+            x += period
+            val cur = y(x)
+            val mid = y(x - period / 2)
+            val e = ((prev - cur) * (mid - c.th) / (amp * amp)).toDouble().coerceIn(-1.0, 1.0)
+            x += TIMING_GAIN * e
+            period = (period + RATE_GAIN * e).coerceIn(SPS * 0.9, SPS * 1.1)
+            dec[i] = if (cur > c.th) 1 else 0
+            margin[i] = abs(cur - c.th)
+            prev = cur
+        }
+    }
+
+    private fun chip(i: Int) = if (i < dec.size) dec[i] else 0
+    private fun bits(from: Int, count: Int): Int { var v = 0; for (i in 0 until count) v = (v shl 1) or chip(from + i); return v }
+
+    /** A frame is tried with the chip clock starting at the nominal rate, then a little faster and slower. */
     private fun decode(c: Cand) {
-        val marker = bits(c, 0, 16)
+        for (rate in START_RATES) if (decodeAt(c, rate)) return
+    }
+
+    private fun decodeAt(c: Cand, rate: Double): Boolean {
+        track(c, MAX_CHIPS, rate)
+        val marker = bits(0, 16)
         val (mode, start) = when (marker) {
             0x54CD -> Wmbus.Mode.C1A to 16
             0x543D -> Wmbus.Mode.C1B to 16
             else -> Wmbus.Mode.T1 to 0
         }
         val bytes = ArrayList<Int>()
+        var mended = 0
+        // A 3-of-6 code word with one chip wrong has two or four ones: the least certain chip of the wrong level is
+        // turned over, and the frame's CRCs say whether that was right.
+        fun sixlet(from: Int): Int {
+            val v = bits(from, 6)
+            Wmbus.decode36(v).let { if (it >= 0) return it }
+            val ones = Integer.bitCount(v)
+            if (ones != 2 && ones != 4) return -1
+            var weakest = -1
+            var least = Float.MAX_VALUE
+            for (j in 0 until 6) {
+                val bit = (v shr (5 - j)) and 1
+                if ((ones == 4) != (bit == 1)) continue
+                val m = margin.getOrElse(from + j) { 0f }
+                if (m < least) { least = m; weakest = j }
+            }
+            if (weakest < 0) return -1
+            val fixed = Wmbus.decode36(v xor (1 shl (5 - weakest)))
+            if (fixed >= 0) mended++
+            return fixed
+        }
         fun byteAt(i: Int): Int {
-            if (mode != Wmbus.Mode.T1) return bits(c, start + 8 * i, 8)
-            val hi = Wmbus.decode36(bits(c, start + 12 * i, 6))
-            val lo = Wmbus.decode36(bits(c, start + 12 * i + 6, 6))
+            if (mode != Wmbus.Mode.T1) return bits(start + 8 * i, 8)
+            val hi = sixlet(start + 12 * i)
+            val lo = sixlet(start + 12 * i + 6)
             return if (hi < 0 || lo < 0) -1 else (hi shl 4) or lo
         }
         val l = byteAt(0)
-        if (l < 10) return
+        if (l < 10) return false
         val formatB = mode == Wmbus.Mode.C1B
         val total = Wmbus.airLength(l, formatB)
-        for (i in 0 until total) { val b = byteAt(i); if (b < 0) return; bytes += b }
-        val f = Wmbus.parse(bytes.toIntArray(), formatB) ?: return
+        for (i in 0 until total) { val b = byteAt(i); if (b < 0) return false; bytes += b }
+        val f = Wmbus.parse(bytes.toIntArray(), formatB) ?: return false
         val chipsUsed = start + total * (if (mode == Wmbus.Mode.T1) 12 else 8)
         var pwr = 0.0
         for (k in c.k0 - 24..c.k0 + chipsUsed) pwr += pw[(k and MASK).toInt()]
         pwr /= (chipsUsed + 25).toDouble() * SPS
         val nfv = if (nf > 0) nf else 1e-12
-        onTelegram(WmbusTelegram(f, mode, 10 * log10(maxOf(pwr - nfv, nfv * 0.01) / nfv)))
+        onTelegram(WmbusTelegram(f, mode, 10 * log10(maxOf(pwr - nfv, nfv * 0.01) / nfv), mended))
+        return true
     }
 
     private fun blockEnd() {
@@ -478,6 +552,11 @@ class WmbusDemodulator(private val onTelegram: (WmbusTelegram) -> Unit) {
         /** The longest T1 frame: L = 255 in format A, 12 chips a byte. */
         private const val MAX_CHIPS = 290 * 12 + 16
         private const val BLOCK = 8192
+        /** Timing and rate corrections per chip, from the Gardner error (normalised to the preamble's level). */
+        private const val TIMING_GAIN = 0.25
+        private const val RATE_GAIN = 0.02
+        /** Chip rates the clock starts from, relative to 100 kchip/s, in the order they are tried. */
+        private val START_RATES = doubleArrayOf(1.0, 0.985, 1.015, 0.97, 1.03)
         private const val NOISE_BLOCK = 10_000
     }
 }
