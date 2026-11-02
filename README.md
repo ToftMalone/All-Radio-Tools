@@ -93,7 +93,7 @@ The home screen offers five networks. Each one has its dashboard, its main tool 
 | PMR446 | The 16 walkie-talkie channels at once: activity, CTCSS tone, listening to analogue channels and to DMR446 / dPMR446 voice (AMBE+2 decoded), their call ids |
 | POCSAG | Pager messages (e*Message France and Germany, BOS, DAPNET or any frequency): every channel of a network at once, 512, 1200 and 2400 bit/s, BCH error correction |
 | Radiosondes | Vaisala RS41, Meteomodem M10 / M20 and Horus amateur balloons around 403 and 434 MHz, with landing prediction |
-| TPMS | Tyre pressure sensors of nearby cars on 433.92 MHz (or 315 MHz): pressure, temperature, battery, for Renault, PSA, Toyota, Ford, Hyundai/Kia, BMW/Audi, Porsche and more |
+| TPMS | Tyre pressure sensors of nearby cars on 433.92 MHz (or 315 MHz): pressure, temperature, battery, for Renault, PSA, Toyota, Ford, Hyundai/Kia, BMW/Audi, Porsche, Honda (TRW), Schrader (Opel/GM, Subaru/Nissan/Renault Koleos, BMW) and more |
 | VDL Mode 2 | The airliners' digital datalink on 6 channels around 136.9 MHz: ACARS carried digitally, ground stations, link set-ups |
 | Wireless M-Bus | Water, heat, gas and electricity meters on 868.95 MHz (T1, C1); readings when not encrypted |
 

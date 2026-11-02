@@ -76,6 +76,95 @@ class TpmsTest {
 
     private fun List<TpmsReading>.one(): TpmsReading { assertEquals(toString(), 1, size); return first() }
 
+    /** On/off keying at 250 kS/s: carrier for every 1 of [halves], each [us] long, in some noise. */
+    private fun ook(halves: List<Byte>, us: Double, seed: Int = 2): List<TpmsReading> {
+        val rate = 250_000.0
+        val rnd = Random(seed)
+        val spb = rate * us / 1e6
+        val gap = 4000
+        val n = gap * 2 + (halves.size * spb).roundToInt()
+        val re = FloatArray(n)
+        val im = FloatArray(n)
+        var ph = 0.0
+        for (i in 0 until n) {
+            val k = i - gap
+            ph += 2 * PI * 30_000.0 / rate
+            if (k >= 0 && k < halves.size * spb && halves[(k / spb).toInt().coerceAtMost(halves.size - 1)].toInt() == 1) {
+                re[i] = 0.5f * cos(ph).toFloat(); im[i] = 0.5f * sin(ph).toFloat()
+            }
+            re[i] += (rnd.nextFloat() - 0.5f) * 0.03f
+            im[i] += (rnd.nextFloat() - 0.5f) * 0.03f
+        }
+        val out = ArrayList<TpmsReading>()
+        val demod = TpmsDemodulator { out += it }
+        var i = 0
+        while (i < n) { val k = minOf(4096, n - i); demod.feed(re.copyOfRange(i, i + k), im.copyOfRange(i, i + k), k); i += k }
+        return out
+    }
+
+    /**
+     * A row as rtl_433's Manchester "zero bit" slicer reads it, sent as on/off halves: a 1 falls mid-bit, a 0 rises.
+     * The row's first bit is always 0, its first half the silence before the carrier.
+     */
+    private fun zeroBitHalves(row: List<Byte>): List<Byte> {
+        assertEquals(0, row[0].toInt())
+        return row.flatMap { if (it.toInt() == 1) listOf<Byte>(1, 0) else listOf<Byte>(0, 1) }.drop(1)
+    }
+
+    @Test fun schraderOok() {
+        // The example from rtl_433's schraeder.c, with its CRC-8 from 0xf0: 7 f6 70 3a 38 b2 00 49 49.
+        val b = intArrayOf(0xf6, 0x70, 0x3a, 0x38, 0xb2, 0x00, 0x49, 0)
+        b[7] = TpmsBits.crc8(b, 7, 0x07, 0xf0)
+        assertEquals(0x49, b[7])
+        val r = ook(zeroBitHalves(bitsOf("70", 4) + bitsOf(b)), 120.0).one()
+        assertEquals("Schrader", r.protocol)
+        assertEquals("03A38B2", r.id) // as rtl_433 prints this sensor's captures
+        assertEquals(0x00 * 2.5, r.pressureKpa!!, 1e-9)
+        assertEquals(0x49 - 50.0, r.temperatureC!!, 1e-9)
+    }
+
+    @Test fun schraderEg53ma4Ook() {
+        // 40 bits ahead of the data, then flags, id 3495AC, 220 kPa, 77 °F and the byte sum.
+        val b = intArrayOf(0x4c, 0x90, 0x00, 0x70, 0x34, 0x95, 0xac, 88, 77, 0)
+        b[9] = (0 until 9).sumOf { b[it] } and 0xff
+        val head = listOf<Byte>(0) + List(39) { if (it % 2 == 0) 1.toByte() else 0.toByte() }
+        val r = ook(zeroBitHalves(head + bitsOf(b)), 123.0).one()
+        assertEquals("Schrader (EG53MA4)", r.protocol)
+        assertEquals("3495AC", r.id)
+        assertEquals(220.0, r.pressureKpa!!, 1e-9)
+        assertEquals(25.0, r.temperatureC!!, 1e-9)
+    }
+
+    @Test fun schraderSmd3ma4Ook() {
+        // Preamble 0xF5555555E, whose last two bits are the fixed first data bit; then flags 7, id 3F0650, 33 PSI.
+        val data = ArrayList<Int>()
+        data += 1
+        for (k in 2 downTo 0) data += (7 shr k) and 1
+        for (k in 23 downTo 0) data += (0x3F0650 shr k) and 1
+        for (k in 7 downTo 0) data += (165 shr k) and 1
+        // The 2-bit groups over the 38 bits and two zeros add up to 1, modulo 4.
+        val groups = (data + listOf(0, 0, 0, 0)).chunked(2).take(19).sumOf { (it[0] shl 1) or it[1] }
+        val c = (1 - groups).mod(4)
+        data += (c shr 1) and 1; data += c and 1
+        val pcm = bitsOf("f5555555e0", 36) + data.drop(1).flatMap { if (it == 1) listOf<Byte>(1, 0) else listOf<Byte>(0, 1) }
+        val r = ook(pcm, 120.0).one()
+        assertEquals("Schrader (SMD3MA4)", r.protocol)
+        assertEquals("3F0650", r.id)
+        assertEquals(33.0 * 6.894757, r.pressureKpa!!, 1e-6)
+        assertNull(r.temperatureC)
+    }
+
+    @Test fun hondaTrwFsk() {
+        // Pressure 0xA5 (33 PSI), 22 °C, id 8d3f6d67, flags e1, CRC-8 0x07; behind its 23-bit marker, 50 µs.
+        val b = intArrayOf(0xa5, 72, 0x8d, 0x3f, 0x6d, 0x67, 0xe1, 0)
+        b[7] = TpmsBits.crc8(b, 7, 0x07, 0x00)
+        val r = receive(lead + bitsOf("dae354", 23) + manchester(bitsOf(b)) + trailer, 50.0).one()
+        assertEquals("Honda (TRW)", r.protocol)
+        assertEquals("8d3f6d67", r.id)
+        assertEquals(0xa5 * 0.2 * 6.894757, r.pressureKpa!!, 1e-6)
+        assertEquals(22.0, r.temperatureC!!, 1e-9)
+    }
+
     private val lead = bitsOf("aaaaaaaa")
     private val trailer = bitsOf("7e00")
 

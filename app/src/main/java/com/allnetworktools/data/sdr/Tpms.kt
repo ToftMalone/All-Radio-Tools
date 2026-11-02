@@ -114,8 +114,18 @@ internal object TpmsBits {
     fun hex(vararg v: Int): String = v.joinToString("") { "%02x".format(it and 0xFF) }
 }
 
-/** One sensor family: the bit time it is sliced at, and its decoder over a row of bits. */
-internal class TpmsProtocol(val bitUs: Int, val decode: (ByteArray) -> List<TpmsReading>)
+/** How a sensor's bursts become rows of bits, as in rtl_433's pulse slicers. */
+internal enum class TpmsSlicer {
+    /** Frequency keyed, one bit per bit time of each tone. */
+    FskPcm,
+    /** On/off keyed, one bit per bit time of carrier or silence. */
+    OokPcm,
+    /** On/off keyed Manchester, [TpmsProtocol.bitUs] the half-bit: rtl_433's "Manchester, zero bit" slicer. */
+    OokManchesterZeroBit,
+}
+
+/** One sensor family: how it is sliced, at what bit time, and its decoder over a row of bits. */
+internal class TpmsProtocol(val bitUs: Int, val decode: (ByteArray) -> List<TpmsReading>, val slicer: TpmsSlicer = TpmsSlicer.FskPcm, val resetUs: Int = 0)
 
 object Tpms {
     private const val PSI = 6.894757
@@ -264,22 +274,159 @@ object Tpms {
         )
     }
 
+    /** Honda (TRW PPA-GF33, 315 MHz): 50 µs FSK, a 23-bit marker, Manchester, CRC-8 0x07; pressure in 0.2 PSI. */
+    private fun hondaTrw(row: ByteArray) = scan(row, TpmsBits.pattern("dae354", 23), 23 + 128, 2) { p ->
+        val (bits, _) = TpmsBits.manchester(row, p, 64)
+        if (bits.size < 64) return@scan null
+        val b = TpmsBits.bytes(bits, 0, 64)
+        if (TpmsBits.crc8(b, 7, 0x07, 0x00) != b[7]) return@scan null
+        // TRW GQ4-44T / Elantra frames can fit this layout too, and then read as a few PSI: rtl_433 refuses those.
+        if (b[0] in 1..49) return@scan null
+        TpmsReading("Honda (TRW)", TpmsBits.hex(b[2], b[3], b[4], b[5]), b[0] * 0.2 * PSI, b[1] - 50.0)
+    }
+
+    /** Schrader (FCC MRXGG4): 68 bits, the first nibble a sync, CRC-8 0x07 from 0xf0; 25 mbar a step. */
+    private fun schrader(row: ByteArray): List<TpmsReading> {
+        if (row.size != 68) return emptyList()
+        val b = TpmsBits.bytes(row, 4, 64)
+        if (TpmsBits.crc8(b, 7, 0x07, 0xf0) != b[7]) return emptyList()
+        val id = ((b[1] and 0x0f) shl 24) or (b[2] shl 16) or (b[3] shl 8) or b[4]
+        return listOf(TpmsReading("Schrader", "%07X".format(id), b[5] * 2.5, b[6] - 50.0))
+    }
+
+    /** Schrader EG53MA4 (Opel, Saab, Vauxhall, Chevrolet and GM): 120 bits, a byte sum; temperature in °F. */
+    private fun schraderEg53ma4(row: ByteArray): List<TpmsReading> {
+        if (row.size != 120) return emptyList()
+        val b = TpmsBits.bytes(row, 40, 80)
+        if (b[1] == 0 && b[2] == 0 && b[4] == 0 && b[5] == 0 && b[7] == 0 && b[8] == 0) return emptyList()
+        if ((0 until 9).sumOf { b[it] } and 0xff != b[9]) return emptyList()
+        val id = (b[4] shl 16) or (b[5] shl 8) or b[6]
+        return listOf(TpmsReading("Schrader (EG53MA4)", "%06X".format(id), b[7] * 2.5, (b[8] - 32) * 5 / 9.0))
+    }
+
+    /**
+     * Schrader SMD3MA4 (Subaru) and 3039 (Nissan, Infiniti, Renault Koleos): a 0x555e preamble, 38 Manchester bits
+     * read 10 as 1, a 2-bit sum; pressure in 0.2 PSI, no temperature. (Nissan's MRXNIS315G3 sends the same frame
+     * with 0.25 PSI steps: they cannot be told apart.)
+     */
+    private fun schraderSmd3ma4(row: ByteArray): List<TpmsReading> {
+        if (row.size < 36 / 2 + 2 * 38 || row.size >= 36 + 2 * 38 + 8) return emptyList()
+        val pos = TpmsBits.search(row, 0, TpmsBits.pattern("555e", 16))
+        if (pos >= row.size) return emptyList()
+        val start = pos + 14
+        if (start + 2 * 38 > row.size) return emptyList()
+        val (bits, end) = TpmsBits.manchester(row, start, 38)
+        if (end != start + 2 * 38) return emptyList()
+        val b = TpmsBits.bytes(ByteArray(38) { (1 - bits[it]).toByte() })
+        if (b[0] == 0 && b[1] == 0 && b[2] == 0 && b[3] == 0) return emptyList()
+        var sum = 0
+        for (i in 0 until 5) for (s in 0 until 4) sum += (b[i] shr (2 * s)) and 3
+        if (sum and 3 != 1) return emptyList()
+        val id = ((b[0] and 0x0f) shl 20) or (b[1] shl 12) or (b[2] shl 4) or (b[3] shr 4)
+        val p = ((b[3] and 0x0f) shl 4) or (b[4] shr 4)
+        return listOf(TpmsReading("Schrader (SMD3MA4)", "%06X".format(id), p * 0.2 * PSI, null))
+    }
+
+    /** Schrader MRXBC5A4 (BMW): 61 bits after a fixed 0x7fff, a 2-bit check over id and pressure; kPa. */
+    private fun schraderMrxbc5a4(row: ByteArray): List<TpmsReading> {
+        if (row.size != 61) return emptyList()
+        if (TpmsBits.search(row, 0, TpmsBits.pattern("7fff", 16)) != 0) return emptyList()
+        val b = TpmsBits.bytes(row, 16, 46)
+        val id = ((b[0] and 0x1f) shl 19) or (b[1] shl 11) or (b[2] shl 3) or (b[3] shr 5)
+        if (id == 0 || id == 0xFFFFFF) return emptyList()
+        var even = 0
+        var ones = 0
+        for (i in 3 until 38) if ((b[i / 8] shr (7 - i % 8)) and 1 == 1) { ones++; if ((i - 3) % 2 == 0) even++ }
+        if ((even + 2 * ones - 1) and 3 != (b[4] shr 2) and 3) return emptyList()
+        val p = ((b[3] and 0x1f) shl 4) or (b[4] shr 4)
+        val temp = ((b[4] and 0x03) shl 5) or (b[5] shr 3)
+        // The 2-bit check lets one noise burst in four through: a tyre's range is the second filter.
+        if (p > 450 || temp - 50 < -40 || temp - 50 > 85) return emptyList()
+        return listOf(TpmsReading("Schrader (BMW)", "%06X".format(id), p.toDouble(), temp - 50.0))
+    }
+
     /** Most specific first: when two formats accept the same packet, the CRC-checked one wins. */
     internal val protocols = listOf(
         TpmsProtocol(52, ::hyundaiVdo), TpmsProtocol(52, ::renault), TpmsProtocol(52, ::toyota), TpmsProtocol(52, ::porsche),
         TpmsProtocol(52, ::ford), TpmsProtocol(52, ::citroen), TpmsProtocol(52, ::truck),
-        TpmsProtocol(50, ::kia), TpmsProtocol(50, ::elantra), TpmsProtocol(100, ::pmv107j), TpmsProtocol(25, ::bmw),
+        TpmsProtocol(50, ::kia), TpmsProtocol(50, ::elantra), TpmsProtocol(50, ::hondaTrw), TpmsProtocol(100, ::pmv107j),
+        TpmsProtocol(25, ::bmw),
+        // On/off keyed, as rtl_433 slices them (Schrader).
+        TpmsProtocol(120, ::schrader, TpmsSlicer.OokManchesterZeroBit, 480),
+        TpmsProtocol(123, ::schraderEg53ma4, TpmsSlicer.OokManchesterZeroBit, 300),
+        TpmsProtocol(123, ::schraderMrxbc5a4, TpmsSlicer.OokManchesterZeroBit, 800),
+        TpmsProtocol(120, ::schraderSmd3ma4, TpmsSlicer.OokPcm, 480),
     )
 
-    val bitTimesUs = protocols.map { it.bitUs }.distinct()
+    val bitTimesUs = protocols.filter { it.slicer == TpmsSlicer.FskPcm }.map { it.bitUs }.distinct()
 
-    /** Every reading in a row of bits sliced at [bitUs], in both FSK polarities; one per sensor id. */
+    /** Every reading in a row of FSK bits sliced at [bitUs], in both polarities; one per sensor id. */
     fun decodeRow(row: ByteArray, bitUs: Int): List<TpmsReading> {
         val inverted = ByteArray(row.size) { (1 - row[it]).toByte() }
         val out = LinkedHashMap<String, TpmsReading>()
         for (proto in protocols) {
-            if (proto.bitUs != bitUs) continue
+            if (proto.slicer != TpmsSlicer.FskPcm || proto.bitUs != bitUs) continue
             for (r in proto.decode(row) + proto.decode(inverted)) out.putIfAbsent(r.id, r)
+        }
+        return out.values.toList()
+    }
+
+    /**
+     * rtl_433's Manchester "zero bit" slicer over on/off pulses (carrier and silence lengths, in samples): a first 0,
+     * then a data edge wherever more than one and a half half-bits have gone by since the last one: falling (end of
+     * carrier) is a 1, rising a 0. A silence longer than [reset] ends the row.
+     */
+    fun zeroBitRows(pulses: IntArray, gaps: IntArray, half: Double, reset: Double): List<ByteArray> {
+        val rows = ArrayList<ByteArray>()
+        var bits = ArrayList<Byte>().also { it += 0 }
+        var since = 0
+        for (k in pulses.indices) {
+            if (pulses[k] + since > half * 1.5) { bits += 1; since = 0 } else since += pulses[k]
+            if (k == pulses.size - 1 || gaps[k] > reset) {
+                if (bits.size > 1) rows += bits.toByteArray()
+                bits = ArrayList<Byte>().also { it += 0 }
+                since = 0
+            } else if (gaps[k] + since > half * 1.5) { bits += 0; since = 0 } else since += gaps[k]
+        }
+        return rows
+    }
+
+    /** Readings from an on/off keyed burst given as carrier and silence lengths at [sampleRate]. */
+    fun decodeOok(pulses: IntArray, gaps: IntArray, sampleRate: Double): List<TpmsReading> {
+        val out = LinkedHashMap<String, TpmsReading>()
+        for (proto in protocols) {
+            val spb = sampleRate * proto.bitUs / 1e6
+            val reset = sampleRate * proto.resetUs / 1e6
+            val rows = when (proto.slicer) {
+                TpmsSlicer.FskPcm -> continue
+                TpmsSlicer.OokManchesterZeroBit -> zeroBitRows(pulses, gaps, spb, reset)
+                TpmsSlicer.OokPcm -> {
+                    // As rtl_433's PCM slicer: the bit time is refined on the longest run of one-bit pulses and
+                    // gaps (the preamble), a silence adds at most reset / bit zeros (so a frame's last 0 is kept),
+                    // and one longer than the reset ends the row.
+                    var bit = spb
+                    var best = 0
+                    var k0 = 0
+                    while (k0 < pulses.size) {
+                        var w = 0
+                        var c = 0
+                        var k = k0
+                        while (k < pulses.size && (pulses[k] / spb).roundToInt() == 1 && (gaps[k] / spb).roundToInt() == 1) { w += pulses[k] + gaps[k]; c += 2; k++ }
+                        if (c >= 12 && c > best) { best = c; bit = w.toDouble() / c }
+                        k0 = k + 1
+                    }
+                    val maxZeros = (reset / spb).toInt()
+                    val rs = ArrayList<ByteArray>()
+                    var cur = ArrayList<Byte>()
+                    for (k in pulses.indices) {
+                        repeat(maxOf(1, (pulses[k] / bit).roundToInt()).coerceAtMost(64)) { cur += 1 }
+                        repeat(minOf((gaps[k] / bit).roundToInt(), maxZeros)) { cur += 0 }
+                        if (k == pulses.size - 1 || gaps[k] > reset) { rs += cur.toByteArray(); cur = ArrayList() }
+                    }
+                    rs
+                }
+            }
+            for (row in rows) for (r in proto.decode(row)) out.putIfAbsent(r.id, r)
         }
         return out.values.toList()
     }
@@ -297,8 +444,10 @@ class TpmsDemodulator(private val sampleRate: Double = 250_000.0, private val on
     private var inBurst = false
     private var quiet = 0
     private val freq = FloatArray(MAX_BURST)
+    private val level = FloatArray(MAX_BURST)
     private var len = 0
     private val hist = FloatArray(PRE)
+    private val histP = FloatArray(PRE)
     private var histPos = 0
     private var head = 0
     private val recent = HashMap<String, Long>()
@@ -322,15 +471,16 @@ class TpmsDemodulator(private val sampleRate: Double = 250_000.0, private val on
                     inBurst = true
                     len = 0
                     val k = minOf(PRE, n.toInt())
-                    for (j in k downTo 1) freq[len++] = hist[((histPos - j) % PRE + PRE) % PRE]
+                    for (j in k downTo 1) { val h = ((histPos - j) % PRE + PRE) % PRE; level[len] = histP[h]; freq[len++] = hist[h] }
                     head = k
                 }
                 quiet = 0
             }
             hist[histPos] = f
+            histP[histPos] = p
             histPos = (histPos + 1) % PRE
             if (inBurst) {
-                if (len < MAX_BURST) freq[len++] = f
+                if (len < MAX_BURST) { level[len] = p; freq[len++] = f }
                 if (!loud && ++quiet > END_GAP || len == MAX_BURST) {
                     inBurst = false
                     // Likewise it closes a little before the end: keep a short tail, or the last bits come out cut.
@@ -348,6 +498,8 @@ class TpmsDemodulator(private val sampleRate: Double = 250_000.0, private val on
     private fun burst(count: Int, head: Int, tail: Int) {
         val core = count - head - tail
         if (core < 200) return
+        val now = System.currentTimeMillis()
+        ook(count, head, core).forEach { emit(it, now) }
         // The two tones from the burst itself: the samples around it are noise, any frequency.
         val sorted = freq.copyOfRange(head, head + core).also { it.sort() }
         val lo = sorted[core / 10]
@@ -361,7 +513,6 @@ class TpmsDemodulator(private val sampleRate: Double = 250_000.0, private val on
             val l = if (freq[i] > mid) 1 else 0
             if (levels.isNotEmpty() && levels.last() == l) lengths[lengths.lastIndex]++ else { levels += l; lengths += 1 }
         }
-        val now = System.currentTimeMillis()
         for (us in Tpms.bitTimesUs) {
             val spb = sampleRate * us / 1e6
             // A run much shorter than a bit is a noise spike on the discriminator: it belongs to the run it interrupts,
@@ -377,16 +528,48 @@ class TpmsDemodulator(private val sampleRate: Double = 250_000.0, private val on
             }
             val row = ArrayList<Byte>()
             for (k in mv.indices) repeat((ml[k] / spb).roundToInt().coerceAtMost(64)) { row += mv[k].toByte() }
-            for (r in Tpms.decodeRow(row.toByteArray(), us)) {
-                // A sensor repeats its packet several times per burst: one reading per burst.
-                val key = "${r.protocol}/${r.id}/${r.pressureKpa}/${r.temperatureC}"
-                val last = recent[key]
-                if (last != null && n - last < sampleRate * 2) continue
-                recent[key] = n
-                onReading(r.copy(timeMs = now))
-            }
+            for (r in Tpms.decodeRow(row.toByteArray(), us)) emit(r, now)
         }
         if (recent.size > 256) recent.entries.removeAll { n - it.value > sampleRate * 10 }
+    }
+
+    private fun emit(r: TpmsReading, now: Long) {
+        // A sensor repeats its packet several times per burst: one reading per burst.
+        val key = "${r.protocol}/${r.id}/${r.pressureKpa}/${r.temperatureC}"
+        val last = recent[key]
+        if (last != null && n - last < sampleRate * 2) return
+        recent[key] = n
+        onReading(r.copy(timeMs = now))
+    }
+
+    /**
+     * The same burst read as on/off keying: carrier where the power is over the middle (in dB) between the noise
+     * floor and the burst's strong samples. A frequency keyed burst is one long pulse and decodes as nothing.
+     */
+    private fun ook(count: Int, head: Int, core: Int): List<TpmsReading> {
+        // The power of each sample over three: short and symmetric, so carrier and silence keep their lengths (the
+        // squelch's own smoothing falls far slower than it rises, and would stretch every pulse).
+        val pw = FloatArray(count) { i -> (level[maxOf(0, i - 1)] + level[i] + level[minOf(count - 1, i + 1)]) / 3 }
+        System.arraycopy(pw, 0, level, 0, count)
+        val sorted = level.copyOfRange(head, head + core).also { it.sort() }
+        val strong = sorted[core * 9 / 10]
+        if (strong < floor * SQUELCH) return emptyList()
+        val thr = kotlin.math.sqrt(strong.toDouble() * maxOf(floor, 1e-12f)).toFloat()
+        val pulses = ArrayList<Int>()
+        val gaps = ArrayList<Int>()
+        var i = 0
+        while (i < count && level[i] <= thr) i++
+        while (i < count) {
+            var on = 0
+            while (i < count && level[i] > thr) { on++; i++ }
+            var off = 0
+            while (i < count && level[i] <= thr) { off++; i++ }
+            pulses += on
+            // The burst ends in silence: as long as rtl_433's longest reset, so the last row closes.
+            gaps += if (i >= count) Int.MAX_VALUE / 2 else off
+        }
+        if (pulses.size < 8) return emptyList()
+        return Tpms.decodeOok(pulses.toIntArray(), gaps.toIntArray(), sampleRate)
     }
 
     companion object {

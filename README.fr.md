@@ -93,7 +93,7 @@ L'écran d'accueil propose cinq réseaux. Chacun a son tableau de bord, son outi
 | Meteor-M | Images LRPT des satellites météo sur 137 MHz |
 | PMR446 | Les 16 canaux de talkies-walkies à la fois : activité, tonalité CTCSS, écoute des canaux analogiques et de la voix DMR446 / dPMR446 (décodage AMBE+2), identifiants des appels |
 | POCSAG | Messages de pagers (e*Message France et Allemagne, BOS, DAPNET ou n'importe quelle fréquence) : tous les canaux d'un réseau à la fois, 512, 1200 et 2400 bit/s, correction d'erreurs BCH |
-| TPMS | Capteurs de pression des pneus des voitures alentour sur 433,92 MHz (ou 315 MHz) : pression, température, pile, pour Renault, PSA, Toyota, Ford, Hyundai/Kia, BMW/Audi, Porsche et d'autres |
+| TPMS | Capteurs de pression des pneus des voitures alentour sur 433,92 MHz (ou 315 MHz) : pression, température, pile, pour Renault, PSA, Toyota, Ford, Hyundai/Kia, BMW/Audi, Porsche, Honda (TRW), Schrader (Opel/GM, Subaru/Nissan/Renault Koleos, BMW) et d'autres |
 | VDL Mode 2 | Liaison de données numérique des avions de ligne sur 6 canaux vers 136,9 MHz : ACARS numérique, stations sol, ouvertures de liaison |
 | Wireless M-Bus | Compteurs d'eau, de chaleur, de gaz et d'électricité sur 868,95 MHz (T1, C1) ; relevés quand ils ne sont pas chiffrés |
 
