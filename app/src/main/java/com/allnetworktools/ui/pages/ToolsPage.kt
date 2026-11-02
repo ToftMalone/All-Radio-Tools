@@ -43,7 +43,7 @@ import com.allnetworktools.util.P
 
 private data class ToolEntry(val tool: Tool, val title: String, val subtitle: String, val icon: String = tool.icon)
 /** SDR tools whose receivers are still being reviewed: shown greyed out, not openable. */
-private val comingSoon = setOf(Tool.Vdl2, Tool.Wmbus)
+private val comingSoon = setOf(Tool.Wmbus)
 
 private data class ToolGroup(val title: String, val items: List<ToolEntry>)
 

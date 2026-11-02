@@ -550,10 +550,9 @@ class Vdl2Channel(val freqHz: Long, private val fs: Double, private val onMessag
                 e += sr[q] * sr[q] + si[q] * si[q]
             }
             e /= Vdl2.PREAMBLE
-            var eh = 0.0
-            var et = 0.0
-            for (q in 0 until 4) { eh += sr[q] * sr[q] + si[q] * si[q]; val z = Vdl2.PREAMBLE - 1 - q; et += sr[z] * sr[z] + si[z] * si[z] }
-            val ener = floor > 0 && e > 3.0 * floor && minOf(eh, et) > 4 * 0.3 * e
+            // Energy over the window only: a real transmitter's raised-cosine shaping takes the envelope down to almost
+            // nothing on the training sequence's half-turn steps, so its first or last symbols can be weak.
+            val ener = floor > 0 && e > 3.0 * floor
             var m = 0f
             var dr = 0.0
             var di = 0.0
@@ -684,7 +683,12 @@ class Vdl2Channel(val freqHz: Long, private val fs: Double, private val onMessag
     companion object {
         private const val RING = 1 shl 16
         private const val MASK = (RING - 1).toLong()
-        private const val DET = 0.56f
+        /**
+         * Training-sequence match that starts a burst (1 = perfect). Tuned on a real recording (sigidwiki's VDL-M2
+         * IQ): the shaped training symbols of real bursts score 0.8 to 0.95, and below about 0.75 noise between
+         * bursts starts to trigger, each false start holding the search a few symbols past where a real one began.
+         */
+        private const val DET = 0.78f
         private const val DROP = 0.88f
 
         fun lowpass(n0: Int, cutoff: Double): FloatArray {

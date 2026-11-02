@@ -64,6 +64,26 @@ class Vdl2Test {
     /** HackRF bytes at 2 MS/s tuned 500 kHz below 136.85 MHz, one burst on 136.975 MHz, 300 Hz off, in noise. */
     @Test
     fun receivesBurst() {
+        val got = air(bursts = 1, noise = 20.0)
+        assertEquals(2, got.size)
+        assertTrue(got.all { it.freqHz == 136_975_000L })
+        assertEquals("H1", got[0].acars?.label)
+        assertEquals("EDDMEDMA", got[1].airports)
+    }
+
+    /**
+     * Twelve bursts with noise about as strong as the signal's own envelope dips (the HackRF's noise spread over
+     * 2 MHz, about 17 dB under the burst in the channel): each burst's training sequence must still start it, and
+     * noise between bursts must not start false ones that hold the search past a real one.
+     */
+    @Test
+    fun receivesBurstsInNoise() {
+        val got = air(bursts = 12, noise = 110.0)
+        // Two frames per burst, every burst heard.
+        assertEquals(24, got.size)
+    }
+
+    private fun air(bursts: Int, noise: Double): List<Vdl2Message> {
         val air = Vdl2.burstBits(Vdl2.hdlcBits(frames()))
         val syms = ArrayList<Int>()
         Vdl2.preamblePhase.forEach { syms += ((it % 8) + 8) % 8 }
@@ -78,34 +98,43 @@ class Vdl2Test {
         val rate = 2_000_000.0
         val sps = rate / Vdl2.SYMBOL_RATE
         val gap = 300_000
-        val n = 2 * gap + (syms.size * sps).roundToInt()
+        // As a radio sends it: five ramp-up symbols, then every symbol shaped by a raised cosine with α = 0.6
+        // (ICAO Annex 10 Vol III), which takes the envelope down on the training sequence's half-turn steps.
+        val ramp = 5
+        val all = IntArray(ramp) { syms[0] } + syms.toIntArray()
+        val gain = DoubleArray(all.size) { if (it < ramp) (it + 1.0) / (ramp + 1) else 1.0 }
+        fun rc(x: Double): Double {
+            val alpha = 0.6
+            val sinc = if (x == 0.0) 1.0 else sin(PI * x) / (PI * x)
+            val d = 1 - (2 * alpha * x) * (2 * alpha * x)
+            return if (kotlin.math.abs(d) < 1e-9) PI / 4 * sinc else sinc * cos(PI * alpha * x) / d
+        }
+        val period = (all.size * sps).roundToInt() + gap
+        val n = gap + bursts * period
         val out = ByteArray(2 * n)
         val rnd = Random(8)
         val off = 500_000.0 + (136_975_000 - 136_850_000) + 300.0
         for (k in 0 until n) {
-            val tSym = (k - gap) / sps
+            val tSym = ((k - gap) % period + period) % period / sps - ramp - (if (k < gap) 1e9 else 0.0)
             var re = 0.0
             var im = 0.0
-            if (tSym >= 0 && tSym < syms.size - 1) {
-                val j = tSym.toInt()
-                val f = tSym - j
-                val a = syms[j] * PI / 4
-                val b = syms[j + 1] * PI / 4
-                re = (1 - f) * cos(a) + f * cos(b); im = (1 - f) * sin(a) + f * sin(b)
+            val j0 = kotlin.math.floor(tSym).toInt()
+            for (j in j0 - 5..j0 + 6) {
+                val idx = j + ramp
+                if (idx < 0 || idx >= all.size) continue
+                val h = rc(tSym - j) * gain[idx]
+                re += h * cos(all[idx] * PI / 4); im += h * sin(all[idx] * PI / 4)
             }
             val c = 2 * PI * off * k / rate
             val r = re * cos(c) - im * sin(c)
             val q = re * sin(c) + im * cos(c)
-            out[2 * k] = (r * 40 + (rnd.nextDouble() - 0.5) * 20).roundToInt().toByte()
-            out[2 * k + 1] = (q * 40 + (rnd.nextDouble() - 0.5) * 20).roundToInt().toByte()
+            out[2 * k] = (r * 40 + (rnd.nextDouble() - 0.5) * noise).roundToInt().coerceIn(-127, 127).toByte()
+            out[2 * k + 1] = (q * 40 + (rnd.nextDouble() - 0.5) * noise).roundToInt().coerceIn(-127, 127).toByte()
         }
         val got = ArrayList<Vdl2Message>()
         val rx = Vdl2Receiver { got += it }
         var o = 0
         while (o < out.size) { val k = minOf(131072, out.size - o); rx.feed(out.copyOfRange(o, o + k), k); o += k }
-        assertEquals(2, got.size)
-        assertTrue(got.all { it.freqHz == 136_975_000L })
-        assertEquals("H1", got[0].acars?.label)
-        assertEquals("EDDMEDMA", got[1].airports)
+        return got
     }
 }
