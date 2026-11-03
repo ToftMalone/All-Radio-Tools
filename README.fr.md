@@ -1,5 +1,7 @@
 # 📡 All Radio Tools
 
+☕ **Vous aimez l'application ?** [Soutenez-la sur Ko-fi](https://ko-fi.com/toftmalone)
+
 **Tout ce qui émet autour de vous, dans une seule application Android.**
 
 All Radio Tools réunit les outils pour explorer le Wi-Fi, le Bluetooth, le réseau mobile, le GNSS, le NFC et, avec un HackRF, les ondes radio : avions, planeurs, ballons-sondes, navires, drones, satellites, talkies-walkies, capteurs et compteurs. Et aussi les badges NFC et les cartes sans contact.
