@@ -110,6 +110,12 @@ Nothing is kept once the app is closed.
 | LoRaWAN / Sigfox | Connected objects on 868 MHz: LoRaWAN headers (device address, network named from the LoRa Alliance's NetID table, counter) on SF7 to SF12, with an option to listen to all eight EU868 uplink channels at once, and Sigfox uplinks |
 | Meshtastic | The LoRa mesh network on 868 MHz (869.525 MHz and its neighbours, every European preset) or 433 MHz: nodes (name, hardware, role, battery, position on a map), text messages and telemetry on the default channels, and on channels you add with their key; private messages stay encrypted |
 | MeshCore | The LoRa mesh network with repeaters on 869.618 MHz (62.5 kHz, SF7 to SF12) and 869.525 MHz: signed node adverts (name, type, position on a map), the Public channel and the #hashtag channels you add, the route each flood took |
+| LoRa APRS | Radio amateurs' APRS beacons over LoRa on 433.775 MHz (SF12) and 434.855 MHz (SF9), heard at once: stations, symbols, comments and weather on a map |
+| 406 MHz beacons | COSPAS-SARSAT distress beacons (EPIRB, ELT, PLB), first generation, 406.0 to 406.1 MHz: identity (15 hex), country, protocol, MMSI or aircraft address, GPS position when sent, self-tests marked; checked on a real PLB recording |
+| Z-Wave | Home automation on 868.40, 868.42 and 869.85 MHz (R1, R2, R3 at once): networks (home id), nodes, command classes in the clear (switch, battery, sensors…); S0 / S2 encrypted frames counted, never opened |
+| SSTV | Slow-scan TV pictures over FM, the ISS on 145.800 MHz or any frequency: VIS header, Robot, Martin, Scottie, PD (PD120 / PD180 as the ISS uses) and Wraase modes, Doppler followed, slant corrected, pictures saved as PNG |
+| Zigbee / 802.15.4 | Zigbee, Thread and other 802.15.4 networks at 2.4 GHz, one channel or all sixteen in turn: PAN IDs, addresses and chip vendors, beacons (joining open or closed), Zigbee network header and clusters when not encrypted |
+| ANT+ | Sports sensors on 2457 MHz: heart rate and R-R interval, bike power, cadence and speed, footpods, temperature, manufacturer and battery, with the public ANT+ profiles |
 | Meteor-M | Weather satellite LRPT images on 137.100 and 137.900 MHz, from the older satellites and from the Meteor-M2-x that transmit with offset QPSK |
 | PMR446 | The 16 walkie-talkie channels at once: activity, CTCSS tone, listening to analogue channels and to DMR446 / dPMR446 voice (AMBE+2 decoded), their call ids |
 | POCSAG | Pager messages (e*Message France and Germany, BOS, DAPNET or any frequency): every channel of a network at once, 512, 1200 and 2400 bit/s, BCH error correction |
@@ -125,11 +131,14 @@ The decoders work with the **HackRF alone**: neither the phone's Wi-Fi nor its B
 ### 📤 Exports
 
 Only when you ask, to the location you choose:
-- **CSV**: speed test, coverage map, aircraft, radiosondes, ships, APRS, ACARS, VDL Mode 2, POCSAG, TPMS, ISM sensors, meters, DSC calls, LoRaWAN / Sigfox, Meshtastic and MeshCore packets, handover log;
+- **CSV**: speed test, coverage map, aircraft, radiosondes, ships, APRS, ACARS, VDL Mode 2, POCSAG, TPMS, ISM sensors, meters, DSC calls, LoRaWAN / Sigfox, Meshtastic and MeshCore packets, LoRa APRS, 406 MHz beacons, Z-Wave, Zigbee, ANT+, handover log;
 - **RINEX**: GNSS raw measurements;
-- **PNG**: Meteor-M images.
+- **PNG**: Meteor-M and SSTV images;
+- **Debug log** (Settings, App): a detailed journal of the app, at most 50 MB, to share or save when reporting a bug, or to clear.
 
 The app keeps no copy: nothing is saved without your action.
+
+The debug log stays on the phone until you share or save it.
 
 ---
 
@@ -198,7 +207,7 @@ All Radio Tools is free software released under the [GNU General Public License 
 - [AirGuard](https://github.com/seemoo-lab/AirGuard) (SEEMOO, TU Darmstadt) for tracker detection and the rules that tell a tag near its owner from one following you.
 - [rs1729/RS](https://github.com/rs1729/RS) for the radiosonde formats.
 - [rtl_433](https://github.com/merbanan/rtl_433) for the tyre pressure and ISM sensor formats.
-- [OnAir](https://github.com/adswill/OnAir) (GPL-3.0), whose decoders were ported for ISM sensors, FLARM, Wireless M-Bus, DSC, VDL Mode 2, DECT, DMR / dPMR, Sigfox, Horus, Mode A/C and CubeSat telemetry.
+- [OnAir](https://github.com/adswill/OnAir) (GPL-3.0), whose decoders were ported for ISM sensors, FLARM, Wireless M-Bus, DSC, VDL Mode 2, DECT, DMR / dPMR, Sigfox, Horus, Mode A/C, CubeSat telemetry, 406 MHz beacons, Z-Wave, SSTV, Zigbee / 802.15.4 and ANT+ (its recording of a real PLB checked the 406 MHz decoder).
 - [SoftRF](https://github.com/lyusupov/SoftRF) (GPL-3.0), whose FLARM code (frame CRC, the 2024 protocol's keys and layout) was ported.
 - [gr-lora_sdr](https://github.com/tapparelj/gr-lora_sdr) (EPFL) for the LoRa receiver.
 - [Meshtastic](https://github.com/meshtastic/firmware) (firmware and protobufs, GPL-3.0) and [MeshCore](https://github.com/meshcore-dev/MeshCore) (MIT) for their packet formats; the real MeshCore packets of [meshcore-decoder](https://github.com/michaelhart/meshcore-decoder) and the reference vector of [meshtastic-sniffer](https://github.com/alphafox02/meshtastic-sniffer), against which the decoders were checked.

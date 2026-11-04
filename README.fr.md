@@ -111,6 +111,12 @@ Rien n'est conservé une fois l'application fermée.
 | LoRaWAN / Sigfox | Objets connectés sur 868 MHz : en-têtes LoRaWAN (adresse, réseau nommé d'après la table NetID de la LoRa Alliance, compteur) de SF7 à SF12, avec une option pour écouter les huit canaux montants EU868 à la fois, et messages Sigfox |
 | Meshtastic | Le réseau maillé LoRa sur 868 MHz (869,525 MHz et ses voisins, tous les préréglages européens) ou 433 MHz : nœuds (nom, matériel, rôle, batterie, position sur une carte), messages et télémétrie sur les canaux par défaut, et sur les canaux que vous ajoutez avec leur clé ; les messages privés restent chiffrés |
 | MeshCore | Le réseau maillé LoRa à répéteurs sur 869,618 MHz (62,5 kHz, SF7 à SF12) et 869,525 MHz : annonces signées des nœuds (nom, type, position sur une carte), le canal Public et les canaux #hashtag que vous ajoutez, la route de chaque inondation |
+| LoRa APRS | Les balises APRS des radioamateurs en LoRa sur 433,775 MHz (SF12) et 434,855 MHz (SF9), écoutées en même temps : stations, symboles, commentaires et météo sur une carte |
+| Balises 406 MHz | Balises de détresse COSPAS-SARSAT (EPIRB, ELT, PLB), première génération, de 406,0 à 406,1 MHz : identité (15 hexa), pays, protocole, MMSI ou adresse d'aéronef, position GPS quand elle est envoyée, auto-tests signalés ; vérifié sur un vrai enregistrement de PLB |
+| Z-Wave | La domotique sur 868,40, 868,42 et 869,85 MHz (R1, R2, R3 en même temps) : réseaux (home id), nœuds, classes de commande en clair (interrupteur, batterie, capteurs…) ; trames chiffrées S0 / S2 comptées, jamais ouvertes |
+| SSTV | Images de télévision à balayage lent en FM, l'ISS sur 145,800 MHz ou toute fréquence : en-tête VIS, modes Robot, Martin, Scottie, PD (PD120 / PD180 comme l'ISS) et Wraase, Doppler suivi, inclinaison corrigée, images enregistrées en PNG |
+| Zigbee / 802.15.4 | Les réseaux Zigbee, Thread et 802.15.4 à 2,4 GHz, un canal ou les seize à tour de rôle : PAN ID, adresses et fabricants des puces, balises (ajout ouvert ou fermé), en-tête réseau Zigbee et clusters quand ils ne sont pas chiffrés |
+| ANT+ | Les capteurs sportifs sur 2457 MHz : fréquence cardiaque et intervalle R-R, puissance, cadence et vitesse vélo, capteurs de foulée, température, fabricant et batterie, avec les profils publics ANT+ |
 | Meteor-M | Images LRPT des satellites météo sur 137,100 et 137,900 MHz, des anciens satellites comme des Meteor-M2-x qui émettent en QPSK décalé |
 | PMR446 | Les 16 canaux de talkies-walkies à la fois : activité, tonalité CTCSS, écoute des canaux analogiques et de la voix DMR446 / dPMR446 (décodage AMBE+2), identifiants des appels |
 | POCSAG | Messages de pagers (e*Message France et Allemagne, BOS, DAPNET ou n'importe quelle fréquence) : tous les canaux d'un réseau à la fois, 512, 1200 et 2400 bit/s, correction d'erreurs BCH |
@@ -125,11 +131,14 @@ Les décodeurs fonctionnent avec le **HackRF seul** : ni le Wi-Fi ni le Bluetoot
 ### 📤 Exports
 
 Uniquement quand vous le demandez, à l'emplacement que vous choisissez :
-- **CSV** : test de débit, carte de couverture, avions, ballons-sondes, navires, APRS, ACARS, VDL Mode 2, POCSAG, TPMS, capteurs ISM, compteurs, appels ASN, LoRaWAN / Sigfox, paquets Meshtastic et MeshCore, journal de handover ;
+- **CSV** : test de débit, carte de couverture, avions, ballons-sondes, navires, APRS, ACARS, VDL Mode 2, POCSAG, TPMS, capteurs ISM, compteurs, appels ASN, LoRaWAN / Sigfox, paquets Meshtastic et MeshCore, LoRa APRS, balises 406 MHz, Z-Wave, Zigbee, ANT+, journal de handover ;
 - **RINEX** : mesures brutes GNSS ;
-- **PNG** : images Meteor-M.
+- **PNG** : images Meteor-M et SSTV ;
+- **Journal de debug** (Réglages, Application) : un journal détaillé de l'app, 50 Mo au plus, à partager ou enregistrer pour signaler un bug, ou à vider.
 
 L'application ne garde aucune copie : rien n'est enregistré sans votre action.
+
+Le journal de debug reste sur le téléphone tant que vous ne le partagez ou ne l'enregistrez pas.
 
 ---
 
@@ -194,7 +203,7 @@ All Radio Tools est un logiciel libre publié sous la [licence publique généra
 - [AirGuard](https://github.com/seemoo-lab/AirGuard) (SEEMOO, TU Darmstadt) pour la détection des traqueurs et les règles qui distinguent une balise près de son propriétaire d'une balise qui vous suit.
 - [rs1729/RS](https://github.com/rs1729/RS) pour les formats de sondes.
 - [rtl_433](https://github.com/merbanan/rtl_433) pour les formats des capteurs de pression des pneus et des capteurs ISM.
-- [OnAir](https://github.com/adswill/OnAir) (GPL-3.0), dont les décodeurs ont été portés pour les capteurs ISM, FLARM, Wireless M-Bus, ASN, VDL Mode 2, DECT, DMR / dPMR, Sigfox, Horus, Mode A/C et la télémesure CubeSat.
+- [OnAir](https://github.com/adswill/OnAir) (GPL-3.0), dont les décodeurs ont été portés pour les capteurs ISM, FLARM, Wireless M-Bus, ASN, VDL Mode 2, DECT, DMR / dPMR, Sigfox, Horus, Mode A/C, la télémesure CubeSat, les balises 406 MHz, Z-Wave, le SSTV, Zigbee / 802.15.4 et ANT+ (son enregistrement d'une vraie PLB a servi à vérifier le décodeur 406 MHz).
 - [SoftRF](https://github.com/lyusupov/SoftRF) (GPL-3.0), dont le code FLARM (CRC des trames, clés et format du protocole de 2024) a été porté.
 - [gr-lora_sdr](https://github.com/tapparelj/gr-lora_sdr) (EPFL) pour le récepteur LoRa.
 - [Meshtastic](https://github.com/meshtastic/firmware) (firmware et protobufs, GPL-3.0) et [MeshCore](https://github.com/meshcore-dev/MeshCore) (MIT) pour leurs formats de paquets ; les vrais paquets MeshCore de [meshcore-decoder](https://github.com/michaelhart/meshcore-decoder) et le vecteur de référence de [meshtastic-sniffer](https://github.com/alphafox02/meshtastic-sniffer), contre lesquels les décodeurs ont été vérifiés.
