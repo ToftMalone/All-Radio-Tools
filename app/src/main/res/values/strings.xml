@@ -2587,4 +2587,21 @@
     <string name="lora_aprs_none_yet">"No station heard yet"</string>
     <string name="lora_aprs_none_yet_body">"LoRa APRS trackers and iGates beacon every few minutes. Leave the reception running, the antenna clear: SF12 carries far, but slowly."</string>
     <string name="lora_aprs_how_it_works">"LoRa APRS carries the radio amateurs\' APRS beacons (position, symbol, comment, weather) over LoRa instead of 1200 baud packet radio: small trackers, iGates and digipeaters, mostly on 433.775 MHz (SF12, 125 kHz) in Europe, and 434.855 MHz (SF9) in Poland. Both channels are heard at once from one tuning, by the same LoRa receiver as the mesh tools, and decoded by the same APRS decoder as the APRS tool. Receive only."</string>
+    <string name="sarsat_title">"406 MHz beacons"</string>
+    <string name="sarsat_subtitle">"Distress beacons EPIRB, ELT, PLB"</string>
+    <string name="sarsat_line">"%1$d bursts heard · %2$d self-tests"</string>
+    <string name="sarsat_listening">"Listening 406.0 to 406.1 MHz"</string>
+    <string name="sarsat_none_yet">"No beacon heard yet"</string>
+    <string name="sarsat_none_yet_body">"406 MHz beacons only transmit when set off, or for a few seconds during a self-test. Hearing nothing is the usual, and good, news."</string>
+    <string name="sarsat_how_it_works">"COSPAS-SARSAT distress beacons (EPIRB on ships, ELT on aircraft, PLB for people) send a half-second burst every 50 seconds on 406 MHz, picked up by satellites that alert rescue centres. The app searches 406.0 to 406.1 MHz for that burst, demodulates its 400 bit/s phase modulation and checks both BCH codes: beacon identity (15 hex digits), country, protocol, identification (MMSI, aircraft address, serial) and, when the beacon has a GPS, its position. Self-test bursts are marked as such. A real alert is already in the hands of the rescue services: do not act on it. First-generation beacons; receive only."</string>
+    <string name="sarsat_failed">"%1$d bursts that looked like beacons could not be decoded (too weak, or a second-generation beacon)."</string>
+    <string name="sarsat_self_test">"Self-test"</string>
+    <string name="sarsat_alert">"Distress message"</string>
+    <string name="sarsat_homing">"121.5 MHz homing"</string>
+    <string name="sarsat_corrected">"%1$d bits repaired"</string>
+    <string name="sarsat_open_map">"Show on a map"</string>
+    <plurals name="p_sarsat_beacons">
+        <item quantity="one">"beacon"</item>
+        <item quantity="other">"beacons"</item>
+    </plurals>
 </resources>

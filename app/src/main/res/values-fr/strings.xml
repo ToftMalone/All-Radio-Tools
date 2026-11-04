@@ -2651,4 +2651,22 @@
     <string name="lora_aprs_none_yet">"Aucune station entendue pour l\'instant"</string>
     <string name="lora_aprs_none_yet_body">"Les trackers et iGates LoRa APRS émettent toutes les quelques minutes. Laissez la réception tourner, l\'antenne dégagée : le SF12 porte loin, mais lentement."</string>
     <string name="lora_aprs_how_it_works">"LoRa APRS transporte les balises APRS des radioamateurs (position, symbole, commentaire, météo) en LoRa plutôt qu\'en packet radio 1200 bauds : petits trackers, iGates et digipeaters, surtout sur 433,775 MHz (SF12, 125 kHz) en Europe, et 434,855 MHz (SF9) en Pologne. Les deux canaux sont écoutés en même temps depuis un seul réglage, par le même récepteur LoRa que les outils maillés, et décodés par le même décodeur APRS que l\'outil APRS. Réception seule."</string>
+    <string name="sarsat_title">"Balises 406 MHz"</string>
+    <string name="sarsat_subtitle">"Balises de détresse EPIRB, ELT, PLB"</string>
+    <string name="sarsat_line">"%1$d salves entendues · %2$d auto-tests"</string>
+    <string name="sarsat_listening">"Écoute de 406,0 à 406,1 MHz"</string>
+    <string name="sarsat_none_yet">"Aucune balise entendue pour l\'instant"</string>
+    <string name="sarsat_none_yet_body">"Les balises 406 MHz n\'émettent que déclenchées, ou quelques secondes lors d\'un auto-test. Ne rien entendre est la situation normale, et la bonne nouvelle."</string>
+    <string name="sarsat_how_it_works">"Les balises de détresse COSPAS-SARSAT (EPIRB des navires, ELT des aéronefs, PLB individuelles) émettent une salve d\'une demi-seconde toutes les 50 secondes sur 406 MHz, captée par des satellites qui préviennent les centres de secours. L\'app cherche cette salve entre 406,0 et 406,1 MHz, démodule sa modulation de phase à 400 bit/s et vérifie les deux codes BCH : identité de la balise (15 chiffres hexadécimaux), pays, protocole, identification (MMSI, adresse d\'aéronef, numéro de série) et, si la balise a un GPS, sa position. Les salves d\'auto-test sont signalées comme telles. Une vraie alerte est déjà entre les mains des secours : n\'intervenez pas. Balises de première génération ; réception seule."</string>
+    <string name="sarsat_failed">"%1$d salves qui ressemblaient à des balises n\'ont pas pu être décodées (trop faibles, ou balise de seconde génération)."</string>
+    <string name="sarsat_self_test">"Auto-test"</string>
+    <string name="sarsat_alert">"Message de détresse"</string>
+    <string name="sarsat_homing">"radioralliement 121,5 MHz"</string>
+    <string name="sarsat_corrected">"%1$d bits réparés"</string>
+    <string name="sarsat_open_map">"Voir sur une carte"</string>
+    <plurals name="p_sarsat_beacons">
+        <item quantity="one">"balise"</item>
+        <item quantity="other">"balises"</item>
+        <item quantity="many">"balises"</item>
+    </plurals>
 </resources>

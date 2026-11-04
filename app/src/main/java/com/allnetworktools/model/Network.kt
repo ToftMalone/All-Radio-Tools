@@ -117,6 +117,7 @@ enum class Tool(
     Lpwan(Network.Sdr, "LoRaWAN / Sigfox", Sym.Hub),
     Meshtastic(Network.Sdr, "Meshtastic", Sym.Hub),
     MeshCore(Network.Sdr, "MeshCore", Sym.Hub),
+    Sarsat(Network.Sdr, S(R.string.sarsat_title), Sym.Campaign),
     LoraAprs(Network.Sdr, "LoRa APRS", Sym.Radio),
     Pmr(Network.Sdr, "PMR446", Sym.SettingsInputAntenna),
     Dect(Network.Sdr, "DECT", Sym.Deskphone),
