@@ -2685,4 +2685,17 @@
         <item quantity="other">"réseaux"</item>
         <item quantity="many">"réseaux"</item>
     </plurals>
+    <string name="sstv_subtitle">"Images SSTV, ISS sur 145,800 MHz"</string>
+    <string name="sstv_waiting">"En attente d\'une image"</string>
+    <string name="sstv_progress">"Ligne %1$d sur %2$d"</string>
+    <string name="sstv_complete">"Image complète, %1$d lignes sur %2$d"</string>
+    <string name="sstv_cut">"Image interrompue, %1$d lignes sur %2$d"</string>
+    <string name="sstv_frequency_line">"Sur %1$s MHz"</string>
+    <string name="sstv_receiving">"Réception d\'une image"</string>
+    <string name="sstv_listening">"Écoute · %1$s dB"</string>
+    <string name="sstv_none_yet">"Pas encore d\'image"</string>
+    <string name="sstv_none_yet_body">"Une image commence par son en-tête VIS et dure d\'une demi-minute à trois minutes. L\'ISS envoie du SSTV lors d\'événements annoncés par l\'ARISS ; entre deux passages, on n\'entend rien."</string>
+    <string name="sstv_iss">"ISS"</string>
+    <string name="sstv_2m">"SSTV 2 m"</string>
+    <string name="sstv_how_it_works">"La télévision à balayage lent envoie une image fixe sous forme de tonalités audio (1500 Hz pour le noir, 2300 Hz pour le blanc, 1200 Hz pour les synchros de ligne). L\'app reçoit la FM bande étroite, suit la porteuse quel que soit le décalage Doppler, puis décode l\'audio : l\'en-tête VIS donne le mode (Robot 36 et 72, Martin M1 et M2, Scottie S1, S2 et DX, PD50, PD90, PD120 et PD180 comme l\'ISS, Wraase SC2-180) ; sans lui, le rythme des lignes suffit. L\'inclinaison due à l\'horloge de l\'émetteur est mesurée et corrigée. Les images sont gardées pour la session et peuvent être enregistrées en PNG. Réception seule."</string>
 </resources>

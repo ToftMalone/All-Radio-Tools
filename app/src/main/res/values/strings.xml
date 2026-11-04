@@ -2619,4 +2619,17 @@
         <item quantity="one">"network"</item>
         <item quantity="other">"networks"</item>
     </plurals>
+    <string name="sstv_subtitle">"Slow-scan TV pictures, ISS on 145.800 MHz"</string>
+    <string name="sstv_waiting">"Waiting for a picture"</string>
+    <string name="sstv_progress">"Line %1$d of %2$d"</string>
+    <string name="sstv_complete">"Complete picture, %1$d of %2$d lines"</string>
+    <string name="sstv_cut">"Picture cut short, %1$d of %2$d lines"</string>
+    <string name="sstv_frequency_line">"On %1$s MHz"</string>
+    <string name="sstv_receiving">"Receiving a picture"</string>
+    <string name="sstv_listening">"Listening · %1$s dB"</string>
+    <string name="sstv_none_yet">"No picture yet"</string>
+    <string name="sstv_none_yet_body">"A picture starts with its VIS header and takes from half a minute to three minutes. The ISS sends SSTV during special events, announced by ARISS; between passes, nothing is heard."</string>
+    <string name="sstv_iss">"ISS"</string>
+    <string name="sstv_2m">"2 m SSTV"</string>
+    <string name="sstv_how_it_works">"Slow-scan television sends a still picture as audio tones (1500 Hz black, 2300 Hz white, 1200 Hz line syncs). The app receives narrowband FM, follows the carrier however the Doppler moves it, and decodes the audio: the VIS header names the mode (Robot 36 and 72, Martin M1 and M2, Scottie S1, S2 and DX, PD50, PD90, PD120 and PD180 as the ISS uses, Wraase SC2-180); without it, the line rhythm is enough. The slant of the sender\'s clock is measured and corrected. Pictures are kept for the session and can be saved as PNG. Receive only."</string>
 </resources>
