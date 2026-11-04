@@ -12,7 +12,7 @@ import com.allnetworktools.util.S
 class Unavailable(val title: String, val message: String)
 
 /**
- * The Internet tools of the Wi-Fi network work over Wi-Fi only; their copies in the mobile network work over mobile
+ * The Internet and local-network tools of the Wi-Fi network work over Wi-Fi only; their copies in the mobile network work over mobile
  * data only, and not at all while Wi-Fi is connected. Elsewhere the tool is simply unavailable, and says why.
  */
 class InternetAvailability(private val onWifi: Boolean, private val onMobileData: Boolean) {
@@ -27,7 +27,10 @@ class InternetAvailability(private val onWifi: Boolean, private val onMobileData
     }
 
     companion object {
-        val WifiInternet = setOf(Tool.Ping, Tool.Trace, Tool.Dns, Tool.Speed, Tool.Ports, Tool.Whois)
+        val WifiInternet = setOf(
+            Tool.Ping, Tool.Trace, Tool.Dns, Tool.Speed, Tool.Ports, Tool.Whois,
+            Tool.Lan, Tool.LanDevice, Tool.Coverage, Tool.Audit, Tool.EvilTwin, Tool.Mitm,
+        )
         val MobileInternet = setOf(Tool.CellSpeed, Tool.CellPing, Tool.CellTrace, Tool.CellDns, Tool.CellWhois)
     }
 }
