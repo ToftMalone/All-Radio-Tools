@@ -2698,4 +2698,33 @@
     <string name="sstv_iss">"ISS"</string>
     <string name="sstv_2m">"SSTV 2 m"</string>
     <string name="sstv_how_it_works">"La télévision à balayage lent envoie une image fixe sous forme de tonalités audio (1500 Hz pour le noir, 2300 Hz pour le blanc, 1200 Hz pour les synchros de ligne). L\'app reçoit la FM bande étroite, suit la porteuse quel que soit le décalage Doppler, puis décode l\'audio : l\'en-tête VIS donne le mode (Robot 36 et 72, Martin M1 et M2, Scottie S1, S2 et DX, PD50, PD90, PD120 et PD180 comme l\'ISS, Wraase SC2-180) ; sans lui, le rythme des lignes suffit. L\'inclinaison due à l\'horloge de l\'émetteur est mesurée et corrigée. Les images sont gardées pour la session et peuvent être enregistrées en PNG. Réception seule."</string>
+    <string name="zigbee_title">"Zigbee / 802.15.4"</string>
+    <string name="zigbee_subtitle">"Domotique et capteurs à 2,4 GHz"</string>
+    <string name="zigbee_line">"%1$d appareils · %2$d trames"</string>
+    <string name="zigbee_listening">"Canal %1$d (%2$s MHz)"</string>
+    <string name="zigbee_networks_tab">"Réseaux"</string>
+    <string name="zigbee_none_yet">"Aucune trame entendue pour l\'instant"</string>
+    <string name="zigbee_none_yet_body">"Un réseau Zigbee occupe un seul canal (souvent 11, 15, 20 ou 25, entre les canaux Wi-Fi). Le balayage de tous les canaux montre lequel est utilisé ; restez ensuite dessus."</string>
+    <string name="zigbee_pan">"PAN %1$s · canal %2$d"</string>
+    <string name="zigbee_frames_n">"%1$d trames"</string>
+    <string name="zigbee_join_open">"ajout ouvert"</string>
+    <string name="zigbee_join_closed">"ajout fermé"</string>
+    <string name="zigbee_coordinator">"Coordinateur"</string>
+    <string name="zigbee_channel_n">"canal %1$d"</string>
+    <string name="zigbee_channel">"Canal"</string>
+    <string name="zigbee_all_channels">"Tous à tour de rôle"</string>
+    <string name="zigbee_channel_note">"Les canaux 11 à 26 sont espacés de 5 MHz, de 2405 à 2480 MHz. À tour de rôle, chaque canal est écouté deux secondes."</string>
+    <string name="zigbee_how_it_works">"Zigbee, Thread et les autres réseaux IEEE 802.15.4 relient ampoules, prises, capteurs et télécommandes à 2,4 GHz, en O-QPSK à 250 kbit/s. L\'app démodule un canal de 2 MHz à la fois, associe chaque symbole à son motif de 32 puces et vérifie le CRC de la trame, puis lit ce que chaque trame dit en clair : réseau (PAN ID et PAN ID étendu), adresses courtes et étendues, fabricant de la puce, en-tête réseau Zigbee, balises (ajout ouvert ou fermé) et, pour les trames non chiffrées, le cluster et le profil Zigbee (On/Off, Température, Home Automation…). Les charges chiffrées sont comptées, jamais ouvertes. Réception seule."</string>
+    <string name="ant_subtitle">"Capteurs sportifs sur 2457 MHz"</string>
+    <string name="ant_line">"%1$d messages reçus"</string>
+    <string name="ant_listening">"Écoute de 2457 MHz"</string>
+    <string name="ant_none_yet">"Aucun capteur entendu pour l\'instant"</string>
+    <string name="ant_none_yet_body">"Les capteurs ANT+ émettent quatre fois par seconde quand ils servent : portez la ceinture cardio, faites tourner le pédalier ou la roue, et gardez l\'antenne à quelques mètres."</string>
+    <string name="ant_pairing">"appairage"</string>
+    <string name="ant_how_it_works">"ANT+ relie ceintures cardio, capteurs de vitesse, de cadence et de puissance, capteurs de foulée et de température aux montres et compteurs vélo, sur 2457 MHz à 1 Mbit/s. L\'app démodule ce canal, repère le marqueur du réseau ANT+, vérifie le CRC de chaque message et le lit avec les profils publics ANT+ : fréquence cardiaque et intervalle R-R, puissance et cadence, tours de roue et de pédalier, vitesse et foulées de course, température, fabricant et batterie. Réception seule : rien n\'est appairé ni émis."</string>
+    <plurals name="p_ant_sensors">
+        <item quantity="one">"capteur"</item>
+        <item quantity="other">"capteurs"</item>
+        <item quantity="many">"capteurs"</item>
+    </plurals>
 </resources>

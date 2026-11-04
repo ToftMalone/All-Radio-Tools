@@ -273,6 +273,8 @@ private fun PageBody(vm: MainViewModel, net: Network, page: Page) {
             Tool.Lpwan -> com.allnetworktools.ui.pages.sdr.LpwanTool(vm)
             Tool.Meshtastic -> com.allnetworktools.ui.pages.sdr.MeshtasticTool(vm)
             Tool.MeshCore -> com.allnetworktools.ui.pages.sdr.MeshCoreTool(vm)
+            Tool.AntPlus -> com.allnetworktools.ui.pages.sdr.AntTool(vm)
+            Tool.Zigbee -> com.allnetworktools.ui.pages.sdr.ZigbeeTool(vm)
             Tool.Sstv -> com.allnetworktools.ui.pages.sdr.SstvTool(vm)
             Tool.Zwave -> com.allnetworktools.ui.pages.sdr.ZwaveTool(vm)
             Tool.Sarsat -> com.allnetworktools.ui.pages.sdr.SarsatTool(vm)

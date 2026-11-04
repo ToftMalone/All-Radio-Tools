@@ -2632,4 +2632,32 @@
     <string name="sstv_iss">"ISS"</string>
     <string name="sstv_2m">"2 m SSTV"</string>
     <string name="sstv_how_it_works">"Slow-scan television sends a still picture as audio tones (1500 Hz black, 2300 Hz white, 1200 Hz line syncs). The app receives narrowband FM, follows the carrier however the Doppler moves it, and decodes the audio: the VIS header names the mode (Robot 36 and 72, Martin M1 and M2, Scottie S1, S2 and DX, PD50, PD90, PD120 and PD180 as the ISS uses, Wraase SC2-180); without it, the line rhythm is enough. The slant of the sender\'s clock is measured and corrected. Pictures are kept for the session and can be saved as PNG. Receive only."</string>
+    <string name="zigbee_title">"Zigbee / 802.15.4"</string>
+    <string name="zigbee_subtitle">"Home automation and sensors at 2.4 GHz"</string>
+    <string name="zigbee_line">"%1$d devices · %2$d frames"</string>
+    <string name="zigbee_listening">"Channel %1$d (%2$s MHz)"</string>
+    <string name="zigbee_networks_tab">"Networks"</string>
+    <string name="zigbee_none_yet">"No frame heard yet"</string>
+    <string name="zigbee_none_yet_body">"Zigbee networks sit on one channel (often 11, 15, 20 or 25, between the Wi-Fi channels). Sweeping all of them shows which one is in use; then stay on it."</string>
+    <string name="zigbee_pan">"PAN %1$s · channel %2$d"</string>
+    <string name="zigbee_frames_n">"%1$d frames"</string>
+    <string name="zigbee_join_open">"joining open"</string>
+    <string name="zigbee_join_closed">"joining closed"</string>
+    <string name="zigbee_coordinator">"Coordinator"</string>
+    <string name="zigbee_channel_n">"channel %1$d"</string>
+    <string name="zigbee_channel">"Channel"</string>
+    <string name="zigbee_all_channels">"All in turn"</string>
+    <string name="zigbee_channel_note">"Channels 11 to 26 lie 5 MHz apart from 2405 to 2480 MHz. In turn, each channel is heard for two seconds."</string>
+    <string name="zigbee_how_it_works">"Zigbee, Thread and other IEEE 802.15.4 networks link bulbs, plugs, sensors and remotes at 2.4 GHz with 250 kbit/s O-QPSK. The app demodulates one 2 MHz channel at a time, matches each symbol to its 32-chip pattern and checks the frame\'s CRC, then reads what every frame says in the clear: network (PAN ID and extended PAN ID), short and extended addresses, the chip vendor, the Zigbee network header, beacons (joining open or closed) and, for frames not encrypted, the Zigbee cluster and profile (On/Off, Temperature, Home Automation…). Encrypted payloads are counted, never opened. Receive only."</string>
+    <string name="ant_subtitle">"Sports sensors on 2457 MHz"</string>
+    <string name="ant_line">"%1$d messages received"</string>
+    <string name="ant_listening">"Listening on 2457 MHz"</string>
+    <string name="ant_none_yet">"No sensor heard yet"</string>
+    <string name="ant_none_yet_body">"ANT+ sensors send four times a second while in use: wear the heart rate strap, turn the pedals or the wheel, and keep the antenna within a few metres."</string>
+    <string name="ant_pairing">"pairing"</string>
+    <string name="ant_how_it_works">"ANT+ links heart rate straps, bike speed, cadence and power sensors, footpods and temperature sensors to watches and bike computers, on 2457 MHz at 1 Mbit/s. The app demodulates that channel, finds the ANT+ network marker, checks each message\'s CRC and reads it with the public ANT+ device profiles: heart rate and R-R interval, power and cadence, wheel and crank counts, running speed and strides, temperature, manufacturer and battery. Receive only: nothing is paired or sent."</string>
+    <plurals name="p_ant_sensors">
+        <item quantity="one">"sensor"</item>
+        <item quantity="other">"sensors"</item>
+    </plurals>
 </resources>

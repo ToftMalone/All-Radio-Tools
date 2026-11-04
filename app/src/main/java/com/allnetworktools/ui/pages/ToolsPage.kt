@@ -138,6 +138,8 @@ private fun groups(net: Network, connectedDevice: String?, servingLabel: String?
                 ToolEntry(Tool.Lpwan, "LoRaWAN / Sigfox", S(R.string.lpwan_subtitle)),
                 ToolEntry(Tool.Meshtastic, "Meshtastic", S(R.string.meshtastic_subtitle)),
                 ToolEntry(Tool.MeshCore, "MeshCore", S(R.string.meshcore_subtitle)),
+                ToolEntry(Tool.AntPlus, "ANT+", S(R.string.ant_subtitle)),
+                ToolEntry(Tool.Zigbee, S(R.string.zigbee_title), S(R.string.zigbee_subtitle)),
                 ToolEntry(Tool.Sstv, "SSTV", S(R.string.sstv_subtitle)),
                 ToolEntry(Tool.Zwave, "Z-Wave", S(R.string.zwave_subtitle)),
                 ToolEntry(Tool.Sarsat, S(R.string.sarsat_title), S(R.string.sarsat_subtitle)),

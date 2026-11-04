@@ -117,6 +117,8 @@ enum class Tool(
     Lpwan(Network.Sdr, "LoRaWAN / Sigfox", Sym.Hub),
     Meshtastic(Network.Sdr, "Meshtastic", Sym.Hub),
     MeshCore(Network.Sdr, "MeshCore", Sym.Hub),
+    AntPlus(Network.Sdr, "ANT+", Sym.Favorite),
+    Zigbee(Network.Sdr, S(R.string.zigbee_title), Sym.Hub),
     Sstv(Network.Sdr, "SSTV", Sym.PhotoCamera),
     Zwave(Network.Sdr, "Z-Wave", Sym.Lightbulb),
     Sarsat(Network.Sdr, S(R.string.sarsat_title), Sym.Campaign),
