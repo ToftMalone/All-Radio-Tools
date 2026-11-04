@@ -2604,4 +2604,19 @@
         <item quantity="one">"beacon"</item>
         <item quantity="other">"beacons"</item>
     </plurals>
+    <string name="zwave_subtitle">"Home automation on 868 MHz"</string>
+    <string name="zwave_line">"%1$d nodes · %2$d frames"</string>
+    <string name="zwave_listening">"Listening on 868.40, 868.42 and 869.85 MHz"</string>
+    <string name="zwave_none_yet">"No frame heard yet"</string>
+    <string name="zwave_none_yet_body">"Z-Wave devices talk when something happens (a switch, a sensor, a lock) and report now and then. Leave the reception running near the installation."</string>
+    <string name="zwave_network">"Network %1$s"</string>
+    <string name="zwave_controller">"Controller (node 1)"</string>
+    <string name="zwave_node">"Node %1$d"</string>
+    <string name="zwave_sent_received">"%1$d sent, %2$d received"</string>
+    <string name="zwave_encrypted_n">"%1$d encrypted"</string>
+    <string name="zwave_how_it_works">"Z-Wave links switches, sensors, locks and thermostats to their controller on 868 MHz in Europe: R1 (9.6 kbit/s) on 868.42 MHz, R2 (40 kbit/s) on 868.40 MHz and R3 (100 kbit/s) on 869.85 MHz, all heard at once. Each frame shows in the clear its network (home id), its source and destination nodes, and, unless it is encrypted with S0 or S2, the command class and command (switch on, battery 85 %, temperature 21.5 °C…). Encrypted frames are counted, never opened. Receive only."</string>
+    <plurals name="p_zwave_networks">
+        <item quantity="one">"network"</item>
+        <item quantity="other">"networks"</item>
+    </plurals>
 </resources>

@@ -2669,4 +2669,20 @@
         <item quantity="other">"balises"</item>
         <item quantity="many">"balises"</item>
     </plurals>
+    <string name="zwave_subtitle">"Domotique sur 868 MHz"</string>
+    <string name="zwave_line">"%1$d nœuds · %2$d trames"</string>
+    <string name="zwave_listening">"Écoute de 868,40, 868,42 et 869,85 MHz"</string>
+    <string name="zwave_none_yet">"Aucune trame entendue pour l\'instant"</string>
+    <string name="zwave_none_yet_body">"Les appareils Z-Wave parlent quand il se passe quelque chose (interrupteur, capteur, serrure) et donnent de leurs nouvelles de temps en temps. Laissez la réception tourner près de l\'installation."</string>
+    <string name="zwave_network">"Réseau %1$s"</string>
+    <string name="zwave_controller">"Contrôleur (nœud 1)"</string>
+    <string name="zwave_node">"Nœud %1$d"</string>
+    <string name="zwave_sent_received">"%1$d envoyées, %2$d reçues"</string>
+    <string name="zwave_encrypted_n">"%1$d chiffrées"</string>
+    <string name="zwave_how_it_works">"Z-Wave relie interrupteurs, capteurs, serrures et thermostats à leur contrôleur sur 868 MHz en Europe : R1 (9,6 kbit/s) sur 868,42 MHz, R2 (40 kbit/s) sur 868,40 MHz et R3 (100 kbit/s) sur 869,85 MHz, tous écoutés en même temps. Chaque trame montre en clair son réseau (home id), ses nœuds source et destination et, sauf si elle est chiffrée en S0 ou S2, la classe de commande et la commande (allumé, batterie 85 %, température 21,5 °C…). Les trames chiffrées sont comptées, jamais ouvertes. Réception seule."</string>
+    <plurals name="p_zwave_networks">
+        <item quantity="one">"réseau"</item>
+        <item quantity="other">"réseaux"</item>
+        <item quantity="many">"réseaux"</item>
+    </plurals>
 </resources>
