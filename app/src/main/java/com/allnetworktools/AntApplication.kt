@@ -14,12 +14,33 @@ open class AntApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         com.allnetworktools.util.Res.context = this
+        com.allnetworktools.util.DebugLog.init(this)
+        registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {
+            private fun log(a: android.app.Activity, what: String) = com.allnetworktools.util.DebugLog.d("Lifecycle", "${a.javaClass.simpleName} $what")
+            override fun onActivityCreated(a: android.app.Activity, b: android.os.Bundle?) = log(a, "created" + if (b != null) " (restored)" else "")
+            override fun onActivityStarted(a: android.app.Activity) = log(a, "started")
+            override fun onActivityResumed(a: android.app.Activity) = log(a, "resumed")
+            override fun onActivityPaused(a: android.app.Activity) = log(a, "paused")
+            override fun onActivityStopped(a: android.app.Activity) = log(a, "stopped")
+            override fun onActivitySaveInstanceState(a: android.app.Activity, b: android.os.Bundle) = Unit
+            override fun onActivityDestroyed(a: android.app.Activity) = log(a, "destroyed" + if (a.isChangingConfigurations) " (configuration change)" else "")
+        })
         startLocale = resources.configuration.locales[0]
     }
 
     /** Language the process started in: labels built once (enum titles, lists) are in this language. */
     var startLocale: java.util.Locale? = null
         private set
+
+    override fun onTrimMemory(level: Int) {
+        super.onTrimMemory(level)
+        com.allnetworktools.util.DebugLog.w("Memory", "onTrimMemory level $level")
+    }
+
+    override fun onLowMemory() {
+        super.onLowMemory()
+        com.allnetworktools.util.DebugLog.w("Memory", "onLowMemory")
+    }
 
     open val settings by lazy { SettingsRepository(this) }
     open val permissions by lazy { PermissionsRepository(this) }

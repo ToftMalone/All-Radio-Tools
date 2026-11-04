@@ -2583,4 +2583,11 @@
     <string name="route_wifi_on_text">"Cet outil ne fonctionne qu\'avec les données mobiles. Désactivez le Wi-Fi pour l\'utiliser."</string>
     <string name="route_mobile_missing_title">"Pas de données mobiles"</string>
     <string name="route_mobile_missing_text">"Cet outil ne fonctionne qu\'avec les données mobiles. Activez-les et vérifiez le signal."</string>
+    <string name="debug_log">"Journal de debug"</string>
+    <string name="debug_log_share">"Partager le journal de debug"</string>
+    <string name="debug_log_share_text">"Journal détaillé pour trouver les bugs · %1$s sur %2$s"</string>
+    <string name="debug_log_save">"Enregistrer le journal de debug"</string>
+    <string name="debug_log_clear">"Vider le journal de debug"</string>
+    <string name="debug_log_clear_text">"Tout le journal sera effacé de ce téléphone. Un nouveau journal repart aussitôt."</string>
+    <string name="debug_log_cleared">"Journal de debug vidé"</string>
 </resources>

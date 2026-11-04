@@ -2522,4 +2522,11 @@
     <string name="route_wifi_on_text">"This tool only works over mobile data. Turn Wi-Fi off to use it."</string>
     <string name="route_mobile_missing_title">"No mobile data"</string>
     <string name="route_mobile_missing_text">"This tool only works over mobile data. Turn mobile data on and check your signal."</string>
+    <string name="debug_log">"Debug log"</string>
+    <string name="debug_log_share">"Share the debug log"</string>
+    <string name="debug_log_share_text">"Detailed journal for finding bugs · %1$s of %2$s"</string>
+    <string name="debug_log_save">"Save the debug log"</string>
+    <string name="debug_log_clear">"Clear the debug log"</string>
+    <string name="debug_log_clear_text">"The whole journal will be erased from this phone. A new one starts right away."</string>
+    <string name="debug_log_cleared">"Debug log cleared"</string>
 </resources>

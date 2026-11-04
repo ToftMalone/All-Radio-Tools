@@ -82,6 +82,17 @@
             android:exported="false"
             android:foregroundServiceType="location" />
 
+        <!-- Shares the debug journal as a file (a copy kept in the cache folder). -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.files"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
         <receiver
             android:name=".update.InstallResultReceiver"
             android:exported="false" />

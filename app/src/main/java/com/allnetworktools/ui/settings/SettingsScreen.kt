@@ -25,7 +25,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -78,6 +80,7 @@ fun SettingsScreen(vm: MainViewModel) {
     val s = AntTheme.settings
     val perms by vm.permissions.collectAsStateWithLifecycle()
     val actions = LocalActions.current
+    val context = androidx.compose.ui.platform.LocalContext.current
     var dialog by remember { mutableStateOf<String?>(null) }
     val scope = rememberCoroutineScope()
     TopBarAction(Sym.Help) { dialog = "help" }
@@ -125,7 +128,7 @@ fun SettingsScreen(vm: MainViewModel) {
                 val latest by vm.updater.latest.collectAsStateWithLifecycle()
                 // Checked at every launch: this only says what was found.
                 Item(
-                    0, 3, Sym.SystemUpdate, S(R.string.updated_2),
+                    0, 6, Sym.SystemUpdate, S(R.string.updated_2),
                     when (val u = us) {
                         is com.allnetworktools.update.UpdateState.Downloading -> S(R.string.downloading_version, u.info.version)
                         is com.allnetworktools.update.UpdateState.Installing -> S(R.string.installing)
@@ -135,11 +138,25 @@ fun SettingsScreen(vm: MainViewModel) {
                     onClick = latest?.let { { vm.updater.reoffer() } },
                 )
                 Item(
-                    1, 3, Sym.NewReleases, S(R.string.changelog),
+                    1, 6, Sym.NewReleases, S(R.string.changelog),
                     trailing = { LinkIcon(Sym.ChevronRight) },
                     onClick = { vm.navigate { it.copy(network = null, page = com.allnetworktools.Page.Changelog) } },
                 )
-                Item(2, 3, Sym.Info, S(R.string.about), trailing = { LinkIcon(Sym.ChevronRight) }, onClick = { dialog = "about" })
+                Item(2, 6, Sym.Info, S(R.string.about), trailing = { LinkIcon(Sym.ChevronRight) }, onClick = { dialog = "about" })
+                // Verbose journal kept on the phone (at most 50 MB), for finding a bug afterwards.
+                var logSize by remember { mutableStateOf(com.allnetworktools.util.DebugLog.size()) }
+                val sizeText = android.text.format.Formatter.formatShortFileSize(context, logSize)
+                Item(3, 6, Sym.BugReport, S(R.string.debug_log_share), S(R.string.debug_log_share_text, sizeText, android.text.format.Formatter.formatShortFileSize(context, com.allnetworktools.util.DebugLog.MaxBytes)), trailing = { LinkIcon(Sym.ChevronRight) }, onClick = {
+                                        scope.launch {
+                        val f = withContext(Dispatchers.IO) { com.allnetworktools.util.DebugLog.shareCopy(context) }
+                        logSize = com.allnetworktools.util.DebugLog.size()
+                        actions.shareFile(S(R.string.debug_log), f)
+                    }
+                })
+                Item(4, 6, Sym.Download, S(R.string.debug_log_save), trailing = { LinkIcon(Sym.ChevronRight) }, onClick = {
+                    actions.saveStream("all-radio-tools-debug-${com.allnetworktools.util.Export.stamp(System.currentTimeMillis())}.log", "text/plain") { com.allnetworktools.util.DebugLog.writeTo(it) }
+                })
+                Item(5, 6, Sym.Delete, S(R.string.debug_log_clear), trailing = { LinkIcon(Sym.ChevronRight) }, onClick = { dialog = "clearLog" })
             }
             Text(
                 S(R.string.all_radio_tools_no_measurement_is, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE),
@@ -148,6 +165,19 @@ fun SettingsScreen(vm: MainViewModel) {
         }
     }
     when (dialog) {
+        "clearLog" -> AlertDialog(
+            onDismissRequest = { dialog = null },
+            title = { Text(S(R.string.debug_log_clear)) },
+            text = { Text(S(R.string.debug_log_clear_text), style = rf(14, 20)) },
+            confirmButton = {
+                TextButton({
+                    com.allnetworktools.util.DebugLog.clear()
+                    dialog = null
+                    actions.toast(S(R.string.debug_log_cleared))
+                }) { Text(S(R.string.debug_log_clear)) }
+            },
+            dismissButton = { TextButton({ dialog = null }) { Text(S(R.string.cancel)) } },
+        )
         "about" -> InfoDialog(
             "All Radio Tools ${BuildConfig.VERSION_NAME}",
             "Version ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE}).\n\n" +

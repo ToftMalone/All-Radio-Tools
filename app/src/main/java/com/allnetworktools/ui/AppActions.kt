@@ -59,7 +59,7 @@ class AppActions(
     private val requestPermissions: (Array<String>) -> Unit,
     private val createFile: (SaveRequest) -> Unit = {},
 ) {
-    private var pendingSave: (() -> ByteArray)? = null
+    private var pendingSave: ((java.io.OutputStream) -> Unit)? = null
     fun toast(text: String) = toaster.show(text)
 
     private fun activity(): Activity? {
@@ -121,12 +121,25 @@ class AppActions(
         launch(Intent.createChooser(send, title))
     }
 
+    /** Shares a file kept in the cache `share` folder through the system share sheet. */
+    fun shareFile(title: String, file: java.io.File, mime: String = "text/plain") {
+        val uri = androidx.core.content.FileProvider.getUriForFile(context, context.packageName + ".files", file)
+        val send = Intent(Intent.ACTION_SEND).setType(mime).putExtra(Intent.EXTRA_SUBJECT, title).putExtra(Intent.EXTRA_STREAM, uri)
+            .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        launch(Intent.createChooser(send, title))
+    }
+
     /**
      * Asks Android where to save [fileName], then writes what [content] produces there. The app keeps no copy: the bytes
      * go straight to the file the user chose. [content] runs off the main thread, so it must work on a snapshot.
      */
     fun saveFile(fileName: String, mime: String, content: () -> ByteArray) {
-        pendingSave = content
+        saveStream(fileName, mime) { it.write(content()) }
+    }
+
+    /** Same as [saveFile] for big files: [write] streams straight into the chosen file. */
+    fun saveStream(fileName: String, mime: String, write: (java.io.OutputStream) -> Unit) {
+        pendingSave = write
         runCatching { createFile(SaveRequest(fileName, mime)) }.onFailure { pendingSave = null; toast(S(R.string.saving_unavailable_on_this_device)) }
     }
 
@@ -136,7 +149,7 @@ class AppActions(
         if (uri == null) return
         vm.viewModelScope.launch {
             val ok = withContext(Dispatchers.IO) {
-                runCatching { context.contentResolver.openOutputStream(uri, "wt")!!.use { it.write(content()) } }.isSuccess
+                runCatching { context.contentResolver.openOutputStream(uri, "wt")!!.use { content(it) } }.isSuccess
             }
             toast(if (ok) S(R.string.file_saved) else S(R.string.could_not_write_the_file))
         }

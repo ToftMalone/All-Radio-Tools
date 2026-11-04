@@ -337,6 +337,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     // ---- settings -------------------------------------------------------------------------------
 
     fun updateSettings(block: suspend com.allnetworktools.data.SettingsRepository.() -> Unit) {
+        com.allnetworktools.util.DebugLog.d("Settings", "update requested")
         viewModelScope.launch { g.settings.block() }
     }
 
@@ -352,6 +353,22 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         tools.ais.stop()
         tools.aprs.stop()
         tools.meteor.stop()
+    }
+
+    init {
+        val dbg = com.allnetworktools.util.DebugLog
+        viewModelScope.launch { nav.collect { dbg.i("Nav", "network=${it.network} page=${it.page}") } }
+        viewModelScope.launch { blockers.collect { m -> dbg.i("Blockers", m.entries.joinToString { "${it.key}=${it.value}" }) } }
+        viewModelScope.launch { permissions.collect { dbg.i("Permissions", "granted=$it") } }
+        viewModelScope.launch { onWifi.collect { dbg.i("Network", "onWifi=$it") } }
+        viewModelScope.launch { onMobileData.collect { dbg.i("Network", "onMobileData=$it") } }
+        viewModelScope.launch { airplane.collect { dbg.i("Radios", "airplane=$it") } }
+        viewModelScope.launch { wifiEnabled.collect { dbg.i("Radios", "wifiEnabled=$it") } }
+        viewModelScope.launch { bluetoothEnabled.collect { dbg.i("Radios", "bluetoothEnabled=$it") } }
+        viewModelScope.launch { locationEnabled.collect { dbg.i("Radios", "locationEnabled=$it") } }
+        viewModelScope.launch { nfcEnabled.collect { dbg.i("Radios", "nfcEnabled=$it") } }
+        viewModelScope.launch { sdrDevice.collect { dbg.i("SDR", "device=${it?.let { d -> d.toString() }}") } }
+        viewModelScope.launch { settings.collect { dbg.i("Settings", "$it") } }
     }
 
     init {
