@@ -14,7 +14,7 @@ All Radio Tools brings together tools to explore Wi-Fi, Bluetooth, the mobile ne
 
 ## 📲 Install
 
-1. Download the latest `AllRadioTools-vX.Y.apk` from the [Releases](https://github.com/Thomx43/All-Radio-Tools/releases) page.
+1. Download the latest `AllRadioTools-vX.Y.apk` from the [Releases](https://github.com/ToftMalone/All-Radio-Tools/releases) page.
 2. Allow installs from this source when Android asks.
 3. Later updates are offered **inside the app**: it compares its version with the latest GitHub release.
 

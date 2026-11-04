@@ -17,7 +17,7 @@ import org.robolectric.annotation.Config
 class UpdaterTest {
     private val updater = AppUpdater(ApplicationProvider.getApplicationContext(), "0.1")
 
-    private fun release(tag: String, asset: String = "AllNetworkTools-$tag.apk", url: String = "https://github.com/Thomx43/All-Radio-Tools/releases/download/$tag/$asset", pre: Boolean = false) =
+    private fun release(tag: String, asset: String = "AllNetworkTools-$tag.apk", url: String = "https://github.com/ToftMalone/All-Radio-Tools/releases/download/$tag/$asset", pre: Boolean = false) =
         """{"tag_name":"$tag","draft":false,"prerelease":$pre,"body":"Notes","assets":[{"name":"$asset","size":4096,"browser_download_url":"$url","digest":"sha256:abc123"}]}"""
 
     @Test fun comparesVersionsNumerically() {
