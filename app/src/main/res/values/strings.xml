@@ -2581,4 +2581,10 @@
         <item quantity="one">"%1$d hop"</item>
         <item quantity="other">"%1$d hops"</item>
     </plurals>
+    <string name="lora_aprs_subtitle">"APRS beacons over LoRa, 433.775 MHz"</string>
+    <string name="lora_aprs_line">"%1$d with a position · %2$d packets"</string>
+    <string name="lora_aprs_listening">"Listening on 433.775 and 434.855 MHz"</string>
+    <string name="lora_aprs_none_yet">"No station heard yet"</string>
+    <string name="lora_aprs_none_yet_body">"LoRa APRS trackers and iGates beacon every few minutes. Leave the reception running, the antenna clear: SF12 carries far, but slowly."</string>
+    <string name="lora_aprs_how_it_works">"LoRa APRS carries the radio amateurs\' APRS beacons (position, symbol, comment, weather) over LoRa instead of 1200 baud packet radio: small trackers, iGates and digipeaters, mostly on 433.775 MHz (SF12, 125 kHz) in Europe, and 434.855 MHz (SF9) in Poland. Both channels are heard at once from one tuning, by the same LoRa receiver as the mesh tools, and decoded by the same APRS decoder as the APRS tool. Receive only."</string>
 </resources>

@@ -286,7 +286,7 @@ fun AprsTool(vm: MainViewModel) {
         val d = device
         if (c.running || c.starting) StartButton(S(R.string.stop), Sym.Stop) { c.stop() }
         else StartButton(S(R.string.start_receiving), Sym.PlayArrow, enabled = d != null && c.parsedHz() != null) { d?.let(c::start) }
-        AprsMap(c, withPos, me, Modifier.fillMaxWidth().aspectRatio(1f).clip(RoundedCornerShape(24.dp)))
+        AprsMap(c.selected, { c.selected = it }, withPos, me, Modifier.fillMaxWidth().aspectRatio(1f).clip(RoundedCornerShape(24.dp)))
         if (c.stations.isNotEmpty()) {
             SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)) {
                 c.stations.forEachIndexed { i, s ->
@@ -324,7 +324,7 @@ fun AprsTool(vm: MainViewModel) {
 }
 
 @Composable
-private fun StationRow(s: AprsInfo, me: Pair<Double, Double>?, selected: Boolean, onClick: () -> Unit) {
+internal fun StationRow(s: AprsInfo, me: Pair<Double, Double>?, selected: Boolean, onClick: () -> Unit) {
     Row(
         Modifier.fillMaxWidth().clickable(onClick = onClick).padding(vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp),
@@ -427,7 +427,7 @@ private class AprsOverlay(private val density: Float) : Overlay() {
 }
 
 @Composable
-private fun AprsMap(c: AprsController, stations: List<AprsInfo>, me: Pair<Double, Double>?, modifier: Modifier) {
+internal fun AprsMap(selected: String?, onSelect: (String?) -> Unit, stations: List<AprsInfo>, me: Pair<Double, Double>?, modifier: Modifier) {
     val context = LocalContext.current
     val lifecycle = LocalLifecycleOwner.current.lifecycle
     val dark = com.allnetworktools.ui.theme.isDarkTheme(AntTheme.settings)
@@ -473,10 +473,10 @@ private fun AprsMap(c: AprsController, stations: List<AprsInfo>, me: Pair<Double
             modifier = Modifier.fillMaxSize(),
             update = { m ->
                 overlay.stations = stations
-                overlay.selected = c.selected
+                overlay.selected = selected
                 overlay.me = me?.let { GeoPoint(it.first, it.second) }
                 overlay.accent = accent
-                overlay.onTap = { c.selected = it }
+                overlay.onTap = onSelect
                 if (overlay !in m.overlays) m.overlays += overlay
                 m.overlayManager.tilesOverlay.setColorFilter(if (dark) darkTilesFilter else null)
                 m.invalidate()

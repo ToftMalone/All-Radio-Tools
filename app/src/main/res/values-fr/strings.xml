@@ -2645,4 +2645,10 @@
         <item quantity="other">"%1$d sauts"</item>
         <item quantity="many">"%1$d sauts"</item>
     </plurals>
+    <string name="lora_aprs_subtitle">"Balises APRS en LoRa, 433,775 MHz"</string>
+    <string name="lora_aprs_line">"%1$d avec une position · %2$d paquets"</string>
+    <string name="lora_aprs_listening">"Écoute de 433,775 et 434,855 MHz"</string>
+    <string name="lora_aprs_none_yet">"Aucune station entendue pour l\'instant"</string>
+    <string name="lora_aprs_none_yet_body">"Les trackers et iGates LoRa APRS émettent toutes les quelques minutes. Laissez la réception tourner, l\'antenne dégagée : le SF12 porte loin, mais lentement."</string>
+    <string name="lora_aprs_how_it_works">"LoRa APRS transporte les balises APRS des radioamateurs (position, symbole, commentaire, météo) en LoRa plutôt qu\'en packet radio 1200 bauds : petits trackers, iGates et digipeaters, surtout sur 433,775 MHz (SF12, 125 kHz) en Europe, et 434,855 MHz (SF9) en Pologne. Les deux canaux sont écoutés en même temps depuis un seul réglage, par le même récepteur LoRa que les outils maillés, et décodés par le même décodeur APRS que l\'outil APRS. Réception seule."</string>
 </resources>

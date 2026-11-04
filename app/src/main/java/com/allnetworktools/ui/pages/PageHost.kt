@@ -273,6 +273,7 @@ private fun PageBody(vm: MainViewModel, net: Network, page: Page) {
             Tool.Lpwan -> com.allnetworktools.ui.pages.sdr.LpwanTool(vm)
             Tool.Meshtastic -> com.allnetworktools.ui.pages.sdr.MeshtasticTool(vm)
             Tool.MeshCore -> com.allnetworktools.ui.pages.sdr.MeshCoreTool(vm)
+            Tool.LoraAprs -> com.allnetworktools.ui.pages.sdr.LoraAprsTool(vm)
             Tool.Pmr -> com.allnetworktools.ui.pages.sdr.PmrTool(vm)
             Tool.Dect -> com.allnetworktools.ui.pages.sdr.DectTool(vm)
             Tool.Dsc -> com.allnetworktools.ui.pages.sdr.DscTool(vm)
