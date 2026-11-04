@@ -2529,4 +2529,56 @@
     <string name="debug_log_clear">"Clear the debug log"</string>
     <string name="debug_log_clear_text">"The whole journal will be erased from this phone. A new one starts right away."</string>
     <string name="debug_log_cleared">"Debug log cleared"</string>
+    <string name="meshtastic_subtitle">"Off-grid LoRa mesh, 868 and 433 MHz"</string>
+    <string name="meshcore_subtitle">"LoRa mesh with repeaters, 869.618 MHz"</string>
+    <string name="mesh_packets_line">"%1$d packets, %2$d readable"</string>
+    <string name="mesh_listening">"Listening around %1$s MHz"</string>
+    <string name="mesh_tab_nodes">"Nodes"</string>
+    <string name="mesh_tab_map">"Map"</string>
+    <string name="mesh_tab_messages">"Messages"</string>
+    <string name="mesh_tab_packets">"Packets"</string>
+    <string name="mesh_no_positions">"No node has sent its position yet."</string>
+    <string name="mesh_no_messages">"No message heard on a public channel yet."</string>
+    <string name="mesh_no_packets">"No packet received yet."</string>
+    <string name="mesh_clear">"Clear"</string>
+    <string name="mesh_bad_crc">"%1$d frames received with errors (too weak or overlapping) were ignored."</string>
+    <string name="mesh_direct">"direct"</string>
+    <string name="mesh_signed">"signature checked"</string>
+    <string name="mesh_encrypted_only">"private traffic only"</string>
+    <string name="mesh_powered">"on mains"</string>
+    <string name="mesh_channel_util">"Channel busy %1$s %% · own transmissions %2$s %%"</string>
+    <string name="mesh_uptime">"Running for %1$d h %2$d min"</string>
+    <string name="mesh_via_mqtt">"Relayed from the Internet (MQTT)"</string>
+    <string name="mesh_copies">"heard %1$d times"</string>
+    <string name="mesh_band">"Band"</string>
+    <string name="mesh_channels">"Channels read"</string>
+    <string name="mesh_add_channel">"Add the channel"</string>
+    <string name="mesh_channel_added">"Channel added"</string>
+    <string name="mesh_channels_note">"Channels you add are kept for this session only, never saved."</string>
+    <string name="meshtastic_none_yet">"No node heard yet"</string>
+    <string name="meshtastic_none_yet_body">"Meshtastic nodes speak every few minutes: position, telemetry, name. Leave the reception running, the antenna clear."</string>
+    <string name="meshtastic_how_it_works">"Meshtastic is an open mesh network of small LoRa radios that relay text messages, positions and telemetry without any phone network. The app runs a software LoRa receiver for each preset (LongFast, MediumFast, ShortFast, LongSlow, Narrow…) on the European channels: 869.525 MHz and its neighbours, or the 433 MHz slots. The packet header (sender, recipient, hops) is always in the clear; the content is opened only on channels anyone can read: the default key every node ships with, and channels you add with their key. Direct messages are encrypted end to end and stay so. Receive only."</string>
+    <string name="meshtastic_band_868">"868 MHz (EU)"</string>
+    <string name="meshtastic_band_433">"433 MHz (EU)"</string>
+    <string name="meshtastic_default_channels">"Default key (LongFast…)"</string>
+    <string name="meshtastic_channel_name">"Channel name"</string>
+    <string name="meshtastic_channel_key">"Key (base64, as in the app)"</string>
+    <string name="meshtastic_invalid_channel">"Name (1 to 11 characters) or key not valid"</string>
+    <string name="meshcore_none_yet">"No node heard yet"</string>
+    <string name="meshcore_none_yet_body">"MeshCore nodes announce themselves now and then (adverts), repeaters more often. Leave the reception running, the antenna clear."</string>
+    <string name="meshcore_how_it_works">"MeshCore is a LoRa mesh network built around fixed repeaters and companion radios. The app listens on 869.618 MHz at 62.5 kHz (the European default, SF7 to SF12) and on 869.525 MHz at 250 kHz. Node adverts are in the clear and signed: name, type (companion, repeater, room, sensor) and position. Messages on the Public channel and on the #hashtag channels you add are opened; their keys are public by design. Direct messages are encrypted for their recipient and stay so. Receive only."</string>
+    <string name="meshcore_hashtag">"#channel name"</string>
+    <string name="meshcore_invalid_hashtag">"Name not valid (no spaces)"</string>
+    <plurals name="p_mesh_nodes">
+        <item quantity="one">"node"</item>
+        <item quantity="other">"nodes"</item>
+    </plurals>
+    <plurals name="p_mesh_messages">
+        <item quantity="one">"%1$d message"</item>
+        <item quantity="other">"%1$d messages"</item>
+    </plurals>
+    <plurals name="p_mesh_hops">
+        <item quantity="one">"%1$d hop"</item>
+        <item quantity="other">"%1$d hops"</item>
+    </plurals>
 </resources>

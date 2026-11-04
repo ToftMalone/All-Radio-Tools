@@ -115,6 +115,8 @@ enum class Tool(
     Pocsag(Network.Sdr, "POCSAG", Sym.Sms),
     Cubesat(Network.Sdr, "CubeSat", Sym.SatelliteAlt),
     Lpwan(Network.Sdr, "LoRaWAN / Sigfox", Sym.Hub),
+    Meshtastic(Network.Sdr, "Meshtastic", Sym.Hub),
+    MeshCore(Network.Sdr, "MeshCore", Sym.Hub),
     Pmr(Network.Sdr, "PMR446", Sym.SettingsInputAntenna),
     Dect(Network.Sdr, "DECT", Sym.Deskphone),
     Vdl2(Network.Sdr, "VDL Mode 2", Sym.ConnectingAirports),

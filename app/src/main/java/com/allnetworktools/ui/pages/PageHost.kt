@@ -271,6 +271,8 @@ private fun PageBody(vm: MainViewModel, net: Network, page: Page) {
             Tool.Pocsag -> com.allnetworktools.ui.pages.sdr.PocsagTool(vm)
             Tool.Cubesat -> com.allnetworktools.ui.pages.sdr.CubesatTool(vm)
             Tool.Lpwan -> com.allnetworktools.ui.pages.sdr.LpwanTool(vm)
+            Tool.Meshtastic -> com.allnetworktools.ui.pages.sdr.MeshtasticTool(vm)
+            Tool.MeshCore -> com.allnetworktools.ui.pages.sdr.MeshCoreTool(vm)
             Tool.Pmr -> com.allnetworktools.ui.pages.sdr.PmrTool(vm)
             Tool.Dect -> com.allnetworktools.ui.pages.sdr.DectTool(vm)
             Tool.Dsc -> com.allnetworktools.ui.pages.sdr.DscTool(vm)

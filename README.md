@@ -108,6 +108,8 @@ Nothing is kept once the app is closed.
 | FLARM | Gliders and light aircraft on 868 MHz (both the old protocol and the one since 2024), positions around you; aircraft asking not to be tracked are only counted |
 | ISM sensors | Weather stations, thermometers, energy monitors, door sensors, remotes on 433, 868, 315, 345 and 915 MHz (about 40 families, Lidl Auriol, Oregon Scientific, Hideki, Ecowitt among them) |
 | LoRaWAN / Sigfox | Connected objects on 868 MHz: LoRaWAN headers (device address, network named from the LoRa Alliance's NetID table, counter) on SF7 to SF12, with an option to listen to all eight EU868 uplink channels at once, and Sigfox uplinks |
+| Meshtastic | The LoRa mesh network on 868 MHz (869.525 MHz and its neighbours, every European preset) or 433 MHz: nodes (name, hardware, role, battery, position on a map), text messages and telemetry on the default channels, and on channels you add with their key; private messages stay encrypted |
+| MeshCore | The LoRa mesh network with repeaters on 869.618 MHz (62.5 kHz, SF7 to SF12) and 869.525 MHz: signed node adverts (name, type, position on a map), the Public channel and the #hashtag channels you add, the route each flood took |
 | Meteor-M | Weather satellite LRPT images on 137.100 and 137.900 MHz, from the older satellites and from the Meteor-M2-x that transmit with offset QPSK |
 | PMR446 | The 16 walkie-talkie channels at once: activity, CTCSS tone, listening to analogue channels and to DMR446 / dPMR446 voice (AMBE+2 decoded), their call ids |
 | POCSAG | Pager messages (e*Message France and Germany, BOS, DAPNET or any frequency): every channel of a network at once, 512, 1200 and 2400 bit/s, BCH error correction |
@@ -123,7 +125,7 @@ The decoders work with the **HackRF alone**: neither the phone's Wi-Fi nor its B
 ### 📤 Exports
 
 Only when you ask, to the location you choose:
-- **CSV**: speed test, coverage map, aircraft, radiosondes, ships, APRS, ACARS, VDL Mode 2, POCSAG, TPMS, ISM sensors, meters, DSC calls, LoRaWAN / Sigfox, handover log;
+- **CSV**: speed test, coverage map, aircraft, radiosondes, ships, APRS, ACARS, VDL Mode 2, POCSAG, TPMS, ISM sensors, meters, DSC calls, LoRaWAN / Sigfox, Meshtastic and MeshCore packets, handover log;
 - **RINEX**: GNSS raw measurements;
 - **PNG**: Meteor-M images.
 
@@ -199,6 +201,7 @@ All Radio Tools is free software released under the [GNU General Public License 
 - [OnAir](https://github.com/adswill/OnAir) (GPL-3.0), whose decoders were ported for ISM sensors, FLARM, Wireless M-Bus, DSC, VDL Mode 2, DECT, DMR / dPMR, Sigfox, Horus, Mode A/C and CubeSat telemetry.
 - [SoftRF](https://github.com/lyusupov/SoftRF) (GPL-3.0), whose FLARM code (frame CRC, the 2024 protocol's keys and layout) was ported.
 - [gr-lora_sdr](https://github.com/tapparelj/gr-lora_sdr) (EPFL) for the LoRa receiver.
+- [Meshtastic](https://github.com/meshtastic/firmware) (firmware and protobufs, GPL-3.0) and [MeshCore](https://github.com/meshcore-dev/MeshCore) (MIT) for their packet formats; the real MeshCore packets of [meshcore-decoder](https://github.com/michaelhart/meshcore-decoder) and the reference vector of [meshtastic-sniffer](https://github.com/alphafox02/meshtastic-sniffer), against which the decoders were checked.
 - The recordings and sources of [rtl_433_tests](https://github.com/merbanan/rtl_433_tests), [dumpvdl2](https://github.com/szpajder/dumpvdl2), [multimon-ng](https://github.com/EliasOenal/multimon-ng), [horusdemodlib](https://github.com/projecthorus/horusdemodlib), [DSD-FME](https://github.com/lwvmobile/dsd-fme) and [SatDump](https://github.com/SatDump/SatDump), against which the decoders were checked, and sigidwiki's VDL-M2 recording.
 - [mbelib](https://github.com/szechyjs/mbelib) (ISC) for the AMBE+2 voice decoder. AMBE+2 is covered by patents in some countries: the code is provided for research and education.
 - Google [GNSS Measurement Tools](https://github.com/google/gps-measurement-tools) for the pseudorange computation.

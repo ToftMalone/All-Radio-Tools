@@ -109,6 +109,8 @@ Rien n'est conservé une fois l'application fermée.
 | Drones | DJI (DroneID), FPV analogique et radiocommandes (ExpressLRS, Crossfire, FrSky, FlySky, Spektrum) |
 | FLARM | Planeurs et aviation légère sur 868 MHz (ancien protocole et celui de 2024), positions autour de vous ; les aéronefs qui refusent le suivi sont seulement comptés |
 | LoRaWAN / Sigfox | Objets connectés sur 868 MHz : en-têtes LoRaWAN (adresse, réseau nommé d'après la table NetID de la LoRa Alliance, compteur) de SF7 à SF12, avec une option pour écouter les huit canaux montants EU868 à la fois, et messages Sigfox |
+| Meshtastic | Le réseau maillé LoRa sur 868 MHz (869,525 MHz et ses voisins, tous les préréglages européens) ou 433 MHz : nœuds (nom, matériel, rôle, batterie, position sur une carte), messages et télémétrie sur les canaux par défaut, et sur les canaux que vous ajoutez avec leur clé ; les messages privés restent chiffrés |
+| MeshCore | Le réseau maillé LoRa à répéteurs sur 869,618 MHz (62,5 kHz, SF7 à SF12) et 869,525 MHz : annonces signées des nœuds (nom, type, position sur une carte), le canal Public et les canaux #hashtag que vous ajoutez, la route de chaque inondation |
 | Meteor-M | Images LRPT des satellites météo sur 137,100 et 137,900 MHz, des anciens satellites comme des Meteor-M2-x qui émettent en QPSK décalé |
 | PMR446 | Les 16 canaux de talkies-walkies à la fois : activité, tonalité CTCSS, écoute des canaux analogiques et de la voix DMR446 / dPMR446 (décodage AMBE+2), identifiants des appels |
 | POCSAG | Messages de pagers (e*Message France et Allemagne, BOS, DAPNET ou n'importe quelle fréquence) : tous les canaux d'un réseau à la fois, 512, 1200 et 2400 bit/s, correction d'erreurs BCH |
@@ -123,7 +125,7 @@ Les décodeurs fonctionnent avec le **HackRF seul** : ni le Wi-Fi ni le Bluetoot
 ### 📤 Exports
 
 Uniquement quand vous le demandez, à l'emplacement que vous choisissez :
-- **CSV** : test de débit, carte de couverture, avions, ballons-sondes, navires, APRS, ACARS, VDL Mode 2, POCSAG, TPMS, capteurs ISM, compteurs, appels ASN, LoRaWAN / Sigfox, journal de handover ;
+- **CSV** : test de débit, carte de couverture, avions, ballons-sondes, navires, APRS, ACARS, VDL Mode 2, POCSAG, TPMS, capteurs ISM, compteurs, appels ASN, LoRaWAN / Sigfox, paquets Meshtastic et MeshCore, journal de handover ;
 - **RINEX** : mesures brutes GNSS ;
 - **PNG** : images Meteor-M.
 
@@ -195,6 +197,7 @@ All Radio Tools est un logiciel libre publié sous la [licence publique généra
 - [OnAir](https://github.com/adswill/OnAir) (GPL-3.0), dont les décodeurs ont été portés pour les capteurs ISM, FLARM, Wireless M-Bus, ASN, VDL Mode 2, DECT, DMR / dPMR, Sigfox, Horus, Mode A/C et la télémesure CubeSat.
 - [SoftRF](https://github.com/lyusupov/SoftRF) (GPL-3.0), dont le code FLARM (CRC des trames, clés et format du protocole de 2024) a été porté.
 - [gr-lora_sdr](https://github.com/tapparelj/gr-lora_sdr) (EPFL) pour le récepteur LoRa.
+- [Meshtastic](https://github.com/meshtastic/firmware) (firmware et protobufs, GPL-3.0) et [MeshCore](https://github.com/meshcore-dev/MeshCore) (MIT) pour leurs formats de paquets ; les vrais paquets MeshCore de [meshcore-decoder](https://github.com/michaelhart/meshcore-decoder) et le vecteur de référence de [meshtastic-sniffer](https://github.com/alphafox02/meshtastic-sniffer), contre lesquels les décodeurs ont été vérifiés.
 - Les enregistrements et sources de [rtl_433_tests](https://github.com/merbanan/rtl_433_tests), [dumpvdl2](https://github.com/szpajder/dumpvdl2), [multimon-ng](https://github.com/EliasOenal/multimon-ng), [horusdemodlib](https://github.com/projecthorus/horusdemodlib), [DSD-FME](https://github.com/lwvmobile/dsd-fme) et [SatDump](https://github.com/SatDump/SatDump), contre lesquels les décodeurs ont été vérifiés, ainsi que l'enregistrement VDL-M2 de sigidwiki.
 - [mbelib](https://github.com/szechyjs/mbelib) (ISC) pour le décodeur vocal AMBE+2. L'AMBE+2 est couvert par des brevets dans certains pays : ce code est fourni à des fins de recherche et d'enseignement.
 - Google [GNSS Measurement Tools](https://github.com/google/gps-measurement-tools) pour le calcul des pseudodistances.
