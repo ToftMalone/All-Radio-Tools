@@ -19,7 +19,7 @@ import java.util.concurrent.LinkedBlockingQueue
  * Besides what the app writes itself, the system log of the app's own process is copied in (lines starting with "LC").
  */
 object DebugLog {
-    const val MaxBytes = 50L * 1024 * 1024
+    const val MaxBytes = 50_000_000L
     private const val MaxFileBytes = MaxBytes / 2
     private const val QueueCapacity = 50_000
 

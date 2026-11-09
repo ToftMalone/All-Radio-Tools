@@ -2660,4 +2660,5 @@
         <item quantity="one">"sensor"</item>
         <item quantity="other">"sensors"</item>
     </plurals>
+    <string name="debug_log_text">"A detailed journal of what the app does, kept on this phone only. Share it when you report a bug."</string>
 </resources>

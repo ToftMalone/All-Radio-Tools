@@ -128,7 +128,7 @@ fun SettingsScreen(vm: MainViewModel) {
                 val latest by vm.updater.latest.collectAsStateWithLifecycle()
                 // Checked at every launch: this only says what was found.
                 Item(
-                    0, 6, Sym.SystemUpdate, S(R.string.updated_2),
+                    0, 4, Sym.SystemUpdate, S(R.string.updated_2),
                     when (val u = us) {
                         is com.allnetworktools.update.UpdateState.Downloading -> S(R.string.downloading_version, u.info.version)
                         is com.allnetworktools.update.UpdateState.Installing -> S(R.string.installing)
@@ -138,25 +138,14 @@ fun SettingsScreen(vm: MainViewModel) {
                     onClick = latest?.let { { vm.updater.reoffer() } },
                 )
                 Item(
-                    1, 6, Sym.NewReleases, S(R.string.changelog),
+                    1, 4, Sym.NewReleases, S(R.string.changelog),
                     trailing = { LinkIcon(Sym.ChevronRight) },
                     onClick = { vm.navigate { it.copy(network = null, page = com.allnetworktools.Page.Changelog) } },
                 )
-                Item(2, 6, Sym.Info, S(R.string.about), trailing = { LinkIcon(Sym.ChevronRight) }, onClick = { dialog = "about" })
-                // Verbose journal kept on the phone (at most 50 MB), for finding a bug afterwards.
-                var logSize by remember { mutableStateOf(com.allnetworktools.util.DebugLog.size()) }
-                val sizeText = android.text.format.Formatter.formatShortFileSize(context, logSize)
-                Item(3, 6, Sym.BugReport, S(R.string.debug_log_share), S(R.string.debug_log_share_text, sizeText, android.text.format.Formatter.formatShortFileSize(context, com.allnetworktools.util.DebugLog.MaxBytes)), trailing = { LinkIcon(Sym.ChevronRight) }, onClick = {
-                                        scope.launch {
-                        val f = withContext(Dispatchers.IO) { com.allnetworktools.util.DebugLog.shareCopy(context) }
-                        logSize = com.allnetworktools.util.DebugLog.size()
-                        actions.shareFile(S(R.string.debug_log), f)
-                    }
-                })
-                Item(4, 6, Sym.Download, S(R.string.debug_log_save), trailing = { LinkIcon(Sym.ChevronRight) }, onClick = {
-                    actions.saveStream("all-radio-tools-debug-${com.allnetworktools.util.Export.stamp(System.currentTimeMillis())}.log", "text/plain") { com.allnetworktools.util.DebugLog.writeTo(it) }
-                })
-                Item(5, 6, Sym.Delete, S(R.string.debug_log_clear), trailing = { LinkIcon(Sym.ChevronRight) }, onClick = { dialog = "clearLog" })
+                Item(2, 4, Sym.Info, S(R.string.about), trailing = { LinkIcon(Sym.ChevronRight) }, onClick = { dialog = "about" })
+                // One tile for the verbose journal kept on the phone (at most 50 MB): its actions open from it.
+                val sizeText = android.text.format.Formatter.formatShortFileSize(context, com.allnetworktools.util.DebugLog.size())
+                Item(3, 4, Sym.BugReport, S(R.string.debug_log), S(R.string.debug_log_share_text, sizeText, android.text.format.Formatter.formatShortFileSize(context, com.allnetworktools.util.DebugLog.MaxBytes)), trailing = { LinkIcon(Sym.ChevronRight) }, onClick = { dialog = "debugLog" })
             }
             Text(
                 S(R.string.all_radio_tools_no_measurement_is, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE),
@@ -165,6 +154,28 @@ fun SettingsScreen(vm: MainViewModel) {
         }
     }
     when (dialog) {
+        "debugLog" -> AlertDialog(
+            onDismissRequest = { dialog = null },
+            title = { Text(S(R.string.debug_log)) },
+            text = {
+                Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                    Text(S(R.string.debug_log_text), style = rf(14, 20), color = cs.onSurfaceVariant, modifier = Modifier.padding(bottom = 8.dp))
+                    LogAction(Sym.Share, S(R.string.debug_log_share)) {
+                        dialog = null
+                        scope.launch {
+                            val f = withContext(Dispatchers.IO) { com.allnetworktools.util.DebugLog.shareCopy(context) }
+                            actions.shareFile(S(R.string.debug_log), f)
+                        }
+                    }
+                    LogAction(Sym.Download, S(R.string.debug_log_save)) {
+                        dialog = null
+                        actions.saveStream("all-radio-tools-debug-${com.allnetworktools.util.Export.stamp(System.currentTimeMillis())}.log", "text/plain") { com.allnetworktools.util.DebugLog.writeTo(it) }
+                    }
+                    LogAction(Sym.Delete, S(R.string.debug_log_clear)) { dialog = "clearLog" }
+                }
+            },
+            confirmButton = { TextButton({ dialog = null }) { Text(S(R.string.close)) } },
+        )
         "clearLog" -> AlertDialog(
             onDismissRequest = { dialog = null },
             title = { Text(S(R.string.debug_log_clear)) },
@@ -274,6 +285,18 @@ private fun <T> ChoiceDialog(title: String, options: List<Pair<T, String>>, sele
         },
         confirmButton = { TextButton(onDismiss) { Text(S(R.string.close)) } },
     )
+}
+
+/** One action of the debug log menu: icon and name on a tappable row. */
+@Composable
+private fun LogAction(icon: String, label: String, onClick: () -> Unit) {
+    Row(
+        Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp)).clickable(onClick = onClick).padding(vertical = 12.dp, horizontal = 8.dp),
+        verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(16.dp),
+    ) {
+        Symbol(icon, size = 24.dp, tint = AntTheme.accent.accent)
+        Text(label, style = rf(16, 22))
+    }
 }
 
 @Composable
