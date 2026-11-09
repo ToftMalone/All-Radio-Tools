@@ -2817,4 +2817,9 @@
     <string name="ble_addr_public_note">"Public: the maker\'s fixed address, it never changes"</string>
     <string name="ble_addr_anonymous_note">"Non-resolvable private: anonymous, it changes all the time"</string>
     <string name="ble_addr_unknown_note">"Unknown kind: Android does not tell it on this phone"</string>
+    <string name="wardriving_excl_import">"Import"</string>
+    <string name="wardriving_excl_export">"Export"</string>
+    <string name="wardriving_excl_imported">"Imported: %1$d"</string>
+    <string name="wardriving_excl_nothing">"No address or OUI found in this file"</string>
+    <string name="wardriving_excluded">"Excluded"</string>
 </resources>

@@ -2666,4 +2666,9 @@
     <string name="ble_addr_public_note">"सार्वजनिक: निर्माता का स्थायी पता, यह कभी नहीं बदलता"</string>
     <string name="ble_addr_anonymous_note">"निजी, हल न होने योग्य: गुमनाम, यह लगातार बदलता है"</string>
     <string name="ble_addr_unknown_note">"अज्ञात प्रकार: इस फ़ोन पर Android यह नहीं बताता"</string>
+    <string name="wardriving_excl_import">"आयात"</string>
+    <string name="wardriving_excl_export">"निर्यात"</string>
+    <string name="wardriving_excl_imported">"आयात किए गए: %1$d"</string>
+    <string name="wardriving_excl_nothing">"इस फ़ाइल में कोई पता या OUI नहीं है"</string>
+    <string name="wardriving_excluded">"बाहर रखा गया"</string>
 </resources>

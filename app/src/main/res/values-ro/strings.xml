@@ -2735,4 +2735,9 @@
     <string name="ble_addr_public_note">"Publică: adresa fixă a producătorului, nu se schimbă niciodată"</string>
     <string name="ble_addr_anonymous_note">"Privată nerezolvabilă: anonimă, se schimbă mereu"</string>
     <string name="ble_addr_unknown_note">"Tip necunoscut: Android nu îl indică pe acest telefon"</string>
+    <string name="wardriving_excl_import">"Importă"</string>
+    <string name="wardriving_excl_export">"Exportă"</string>
+    <string name="wardriving_excl_imported">"Importate: %1$d"</string>
+    <string name="wardriving_excl_nothing">"Nicio adresă sau OUI în acest fișier"</string>
+    <string name="wardriving_excluded">"Exclus"</string>
 </resources>

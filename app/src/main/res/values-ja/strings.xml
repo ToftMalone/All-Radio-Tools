@@ -2597,4 +2597,9 @@
     <string name="ble_addr_public_note">"公開：メーカーの固定アドレスで、変わりません"</string>
     <string name="ble_addr_anonymous_note">"解決不可能なプライベート：匿名で、常に変わります"</string>
     <string name="ble_addr_unknown_note">"種類不明：この端末では Android が示しません"</string>
+    <string name="wardriving_excl_import">"読み込む"</string>
+    <string name="wardriving_excl_export">"書き出す"</string>
+    <string name="wardriving_excl_imported">"読み込み数：%1$d"</string>
+    <string name="wardriving_excl_nothing">"このファイルにアドレスや OUI がありません"</string>
+    <string name="wardriving_excluded">"除外"</string>
 </resources>

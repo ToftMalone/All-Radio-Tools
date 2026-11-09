@@ -2597,4 +2597,9 @@
     <string name="ble_addr_public_note">"공개: 제조사의 고정 주소로, 바뀌지 않습니다"</string>
     <string name="ble_addr_anonymous_note">"해석 불가 개인 주소: 익명이며 계속 바뀝니다"</string>
     <string name="ble_addr_unknown_note">"알 수 없는 유형: 이 휴대전화에서는 Android가 알려 주지 않습니다"</string>
+    <string name="wardriving_excl_import">"가져오기"</string>
+    <string name="wardriving_excl_export">"내보내기"</string>
+    <string name="wardriving_excl_imported">"가져온 항목: %1$d"</string>
+    <string name="wardriving_excl_nothing">"이 파일에 주소나 OUI가 없습니다"</string>
+    <string name="wardriving_excluded">"제외됨"</string>
 </resources>

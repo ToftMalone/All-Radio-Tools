@@ -2597,4 +2597,9 @@
     <string name="ble_addr_public_note">"สาธารณะ: ที่อยู่ถาวรของผู้ผลิต ไม่เปลี่ยนเลย"</string>
     <string name="ble_addr_anonymous_note">"ส่วนตัวที่แก้ไม่ได้: นิรนาม เปลี่ยนตลอดเวลา"</string>
     <string name="ble_addr_unknown_note">"ไม่ทราบชนิด: Android ไม่ได้บอกในโทรศัพท์เครื่องนี้"</string>
+    <string name="wardriving_excl_import">"นำเข้า"</string>
+    <string name="wardriving_excl_export">"ส่งออก"</string>
+    <string name="wardriving_excl_imported">"นำเข้าแล้ว: %1$d"</string>
+    <string name="wardriving_excl_nothing">"ไม่มีที่อยู่หรือ OUI ในไฟล์นี้"</string>
+    <string name="wardriving_excluded">"ไม่รวม"</string>
 </resources>

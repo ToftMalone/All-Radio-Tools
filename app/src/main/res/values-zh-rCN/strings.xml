@@ -2597,4 +2597,9 @@
     <string name="ble_addr_public_note">"公共：制造商的固定地址，永不改变"</string>
     <string name="ble_addr_anonymous_note">"不可解析的私有地址：匿名，不断变化"</string>
     <string name="ble_addr_unknown_note">"类型未知：此手机上 Android 未提供"</string>
+    <string name="wardriving_excl_import">"导入"</string>
+    <string name="wardriving_excl_export">"导出"</string>
+    <string name="wardriving_excl_imported">"已导入：%1$d"</string>
+    <string name="wardriving_excl_nothing">"此文件中没有地址或 OUI"</string>
+    <string name="wardriving_excluded">"已排除"</string>
 </resources>

@@ -61,6 +61,8 @@ data class WardriveRow(
     val icon: String? = null,
     /** Bluetooth: what kind of address it advertises with. */
     val addr: BleAddrKind? = null,
+    /** On the exclusion list: shown, but never recorded nor sent. */
+    val excluded: Boolean = false,
 )
 
 /** A position good enough to record with. */
@@ -166,13 +168,13 @@ object Wardrive {
 
     fun dismissUpload() = update { it.copy(upload = UploadState.Idle) }
 
-    /** New exclusions: the matching networks also leave the database and the list. */
+    /** New exclusions: the matching networks leave the database; they stay in the list, marked as excluded. */
     fun applyExclusions(c: Context, entries: Set<String>) {
         appScope.launch {
             settings(c).setExclusions(entries)
             val ex = Exclusions(entries)
             withContext(Dispatchers.IO) { db(c).purge(ex) }
-            update { st -> st.copy(rows = st.rows.filterNot { ex.excludes(it.mac) }) }
+            update { st -> st.copy(rows = st.rows.map { it.copy(excluded = ex.excludes(it.mac)) }) }
             refreshCounts(c)
         }
     }
@@ -264,9 +266,10 @@ class WardriveEngine(private val app: AntApplication, private val scope: Corouti
             app.wifi.scanResults.collect { list ->
                 val now = System.currentTimeMillis()
                 val hidden = S(R.string.hidden_network)
-                val rows = list.filter { it.bssid.isNotEmpty() && !exclusions.excludes(it.bssid) }.map { ap ->
+                val rows = list.filter { it.bssid.isNotEmpty() }.map { ap ->
                     val name = if (ap.ssid == hidden) "" else ap.ssid
-                    WardriveRow(ap.bssid, name, NetType.Wifi, ap.rssi, ap.frequency, Wardrive.shortCaps(ap.caps), oui.vendor(ap.bssid), Wardrive.guardOf(ap.caps), now)
+                    WardriveRow(ap.bssid, name, NetType.Wifi, ap.rssi, ap.frequency, Wardrive.shortCaps(ap.caps), oui.vendor(ap.bssid), Wardrive.guardOf(ap.caps), now,
+                        excluded = exclusions.excludes(ap.bssid))
                 }
                 wifiRows = rows
                 val took = if (scanStarted > 0) SystemClock.elapsedRealtime() - scanStarted else null
@@ -301,10 +304,10 @@ class WardriveEngine(private val app: AntApplication, private val scope: Corouti
                 val nowEl = SystemClock.elapsedRealtime()
                 val wall = System.currentTimeMillis()
                 val kept = devices.filter { !exclusions.excludes(it.address) }
-                bleRows = kept.map { d ->
+                bleRows = devices.map { d ->
                     WardriveRow(d.address, d.name.orEmpty(), NetType.Ble, d.rssi, 0, "BLE | " + d.kind.label, d.maker ?: oui.vendor(d.address), Guard.Ble, wall - (nowEl - d.lastSeen),
                         icon = d.icon.takeIf { d.kind != BleKind.Unknown && !d.guessed },
-                        addr = d.addressKind(oui.vendor(d.address) != null))
+                        addr = d.addressKind(oui.vendor(d.address) != null), excluded = exclusions.excludes(d.address))
                 }
                 // The list follows every packet; the database once a second.
                 if (nowEl - lastTick < 1_000) return@collect

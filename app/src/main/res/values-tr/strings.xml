@@ -2666,4 +2666,9 @@
     <string name="ble_addr_public_note">"Genel: üreticinin sabit adresi, hiç değişmez"</string>
     <string name="ble_addr_anonymous_note">"Çözümlenemez özel: anonim, sürekli değişir"</string>
     <string name="ble_addr_unknown_note">"Bilinmeyen tür: Android bu telefonda bunu belirtmiyor"</string>
+    <string name="wardriving_excl_import">"İçe aktar"</string>
+    <string name="wardriving_excl_export">"Dışa aktar"</string>
+    <string name="wardriving_excl_imported">"İçe aktarılan: %1$d"</string>
+    <string name="wardriving_excl_nothing">"Bu dosyada adres veya OUI yok"</string>
+    <string name="wardriving_excluded">"Hariç"</string>
 </resources>

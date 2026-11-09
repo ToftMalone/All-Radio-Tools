@@ -2597,4 +2597,9 @@
     <string name="ble_addr_public_note">"Công khai: địa chỉ cố định của nhà sản xuất, không bao giờ đổi"</string>
     <string name="ble_addr_anonymous_note">"Riêng tư không phân giải được: ẩn danh, đổi liên tục"</string>
     <string name="ble_addr_unknown_note">"Không rõ loại: Android không cho biết trên điện thoại này"</string>
+    <string name="wardriving_excl_import">"Nhập"</string>
+    <string name="wardriving_excl_export">"Xuất"</string>
+    <string name="wardriving_excl_imported">"Đã nhập: %1$d"</string>
+    <string name="wardriving_excl_nothing">"Không có địa chỉ hay OUI nào trong tệp này"</string>
+    <string name="wardriving_excluded">"Đã loại trừ"</string>
 </resources>

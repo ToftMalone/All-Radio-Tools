@@ -180,12 +180,12 @@ fun HomeScreen(
                                         onClick = {
                                             when {
                                                 fused && n in PairCards -> onPair()
-                                                // The "+" of the other radio: assembles the pair.
-                                                plusShown && selected != n && n in PairCards -> onPair()
                                                 else -> onCard(n)
                                             }
                                         },
                                         plus = plusShown && selected != n && n in PairCards,
+                                        // Only the "+" itself assembles the pair; the rest of the card selects it.
+                                        onPlus = onPair,
                                         onAction = onBlockerAction,
                                         shape = if (pairRow) shape else RoundedCornerShape(28.dp),
                                         modifier = Modifier
@@ -226,6 +226,7 @@ private fun NetworkCard(
     shape: Shape = RoundedCornerShape(28.dp),
     /** The other radio of the pair is selected: a "+" to assemble them. */
     plus: Boolean = false,
+    onPlus: () -> Unit = {},
 ) {
     val roles = AntTheme.net[network]
     val blocker = data.blockers[network]?.takeUnless { it.soft }
@@ -269,7 +270,7 @@ private fun NetworkCard(
             Box(
                 Modifier.align(Alignment.TopEnd).padding(12.dp).size(48.dp)
                     .graphicsLayer { scaleX = plusScale; scaleY = plusScale }
-                    .clip(CircleShape).background(pair.accent).clickable(onClick = onClick),
+                    .clip(CircleShape).background(pair.accent).clickable(onClick = onPlus),
                 contentAlignment = Alignment.Center,
             ) { Symbol(Sym.Add, size = 28.dp, tint = pair.onAccent) }
         }

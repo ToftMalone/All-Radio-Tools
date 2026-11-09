@@ -16,6 +16,8 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -133,9 +135,26 @@ private fun AccountCard(s: WardriveSettings) {
     }
 }
 
+/** Every MAC address or OUI found in a text (one per line, or separated by commas, semicolons or spaces). */
+internal fun parseExclusions(text: String): Set<String> =
+    text.lineSequence().map { it.substringBefore('#') }
+        .flatMap { it.split(',', ';', ' ', '\t') }
+        .mapNotNull { Exclusions.pretty(it.trim().trim('"')) }.toSet()
+
 @Composable
 private fun ExclusionsCard(s: WardriveSettings) {
     val context = LocalContext.current
+    val actions = LocalActions.current
+    val importer = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+        if (uri == null) return@rememberLauncherForActivityResult
+        val text = runCatching { context.contentResolver.openInputStream(uri)!!.use { it.readBytes().toString(Charsets.UTF_8) } }.getOrNull()
+        val found = parseExclusions(text.orEmpty())
+        if (found.isEmpty()) actions.toast(S(R.string.wardriving_excl_nothing))
+        else {
+            Wardrive.applyExclusions(context, s.exclusions + found)
+            actions.toast(S(R.string.wardriving_excl_imported, (found - s.exclusions).size))
+        }
+    }
     var entry by remember { mutableStateOf("") }
     val valid = Exclusions.pretty(entry)
     fun add() {
@@ -149,6 +168,18 @@ private fun ExclusionsCard(s: WardriveSettings) {
         HostInputField(entry, { entry = it }, S(R.string.wardriving_exclusion_field), icon = Sym.Block, keyboardType = KeyboardType.Ascii, onDone = ::add)
         if (entry.isNotBlank() && valid == null) Text(S(R.string.wardriving_exclusion_invalid), style = rf(12, 16), color = AntTheme.net.poor)
         PillButton(S(R.string.wardriving_add), ::add, icon = Sym.Add, height = 40.dp, enabled = valid != null)
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            PillButton(S(R.string.wardriving_excl_import), { importer.launch(arrayOf("text/*", "application/octet-stream")) }, Modifier.weight(1f), icon = Sym.Upload, height = 40.dp, outlined = true)
+            PillButton(
+                    S(R.string.wardriving_excl_export),
+                    {
+                        actions.saveFile("wardriving-exclusions.txt", "text/plain") {
+                            ("# All Radio Tools · wardriving exclusions (MAC or OUI, one per line)\n" + s.exclusions.sorted().joinToString("\n") + "\n").toByteArray()
+                        }
+                    },
+                    Modifier.weight(1f), icon = Sym.Download, height = 40.dp, outlined = true, enabled = s.exclusions.isNotEmpty(),
+                )
+        }
         if (s.exclusions.isEmpty()) {
             Text(S(R.string.wardriving_no_exclusion), style = rf(13, 18), color = cs.onSurfaceVariant)
         } else {

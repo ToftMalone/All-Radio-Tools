@@ -39,6 +39,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.allnetworktools.MainViewModel
@@ -146,10 +148,10 @@ fun WardrivingTool(vm: MainViewModel) {
                         }
                     }
                     Spacer(Modifier.height(8.dp))
-                    DialogChoice(Sym.Block, S(R.string.wardriving_exclude_mac)) {
+                    if (!row.excluded) DialogChoice(Sym.Block, S(R.string.wardriving_exclude_mac)) {
                         exclude(context, settings?.exclusions.orEmpty(), row.mac); picked = null
                     }
-                    if (canOui) DialogChoice(Sym.Block, S(R.string.wardriving_exclude_oui, vendor ?: oui, oui)) {
+                    if (canOui && !row.excluded) DialogChoice(Sym.Block, S(R.string.wardriving_exclude_oui, vendor ?: oui, oui)) {
                         exclude(context, settings?.exclusions.orEmpty(), oui); picked = null
                     }
                     DialogChoice(Sym.ContentCopy, S(R.string.copy)) {
@@ -310,15 +312,29 @@ private fun NetworkLine(r: WardriveRow, onRow: (WardriveRow) -> Unit) {
     // Compact on purpose: about as many networks on screen as a dedicated wardriving app.
     Row(
         Modifier.fillMaxWidth().clip(RoundedCornerShape(14.dp)).background(cs.surfaceContainerLow).clickable { onRow(r) }
+            // Excluded: still shown, faded, with a red mark, so it is clear it is not recorded.
+            .graphicsLayer { alpha = if (r.excluded) 0.5f else 1f }
             .padding(start = 6.dp, end = 10.dp, top = 5.dp, bottom = 5.dp),
         verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp),
     ) {
         if (ble) BleBadge(r) else GuardBadge(r.guard)
         Column(Modifier.weight(1f)) {
-            Text(
-                r.name.ifEmpty { S(if (ble) R.string.unknown_device else R.string.hidden_network) }, style = rf(14, 18, 600),
-                color = if (r.name.isEmpty()) cs.onSurfaceVariant else cs.onSurface, maxLines = 1, overflow = TextOverflow.Ellipsis,
-            )
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                if (r.excluded) {
+                    Row(
+                        Modifier.clip(RoundedCornerShape(6.dp)).background(cs.error).padding(horizontal = 5.dp),
+                        verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(2.dp),
+                    ) {
+                        Symbol(Sym.Block, size = 11.dp, tint = cs.onError)
+                        Text(S(R.string.wardriving_excluded), style = rf(10, 14, 700), color = cs.onError, maxLines = 1)
+                    }
+                }
+                Text(
+                    r.name.ifEmpty { S(if (ble) R.string.unknown_device else R.string.hidden_network) }, style = rf(14, 18, 600),
+                    color = if (r.name.isEmpty()) cs.onSurfaceVariant else cs.onSurface, maxLines = 1, overflow = TextOverflow.Ellipsis,
+                    textDecoration = if (r.excluded) TextDecoration.LineThrough else null,
+                )
+            }
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                 val addr = r.addr
                 if (addr != null) {

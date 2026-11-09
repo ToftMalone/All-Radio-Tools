@@ -2804,4 +2804,9 @@
     <string name="ble_addr_public_note">"Публичный: постоянный адрес производителя, никогда не меняется"</string>
     <string name="ble_addr_anonymous_note">"Частный неразрешимый: анонимный, постоянно меняется"</string>
     <string name="ble_addr_unknown_note">"Тип неизвестен: Android не сообщает его на этом телефоне"</string>
+    <string name="wardriving_excl_import">"Импорт"</string>
+    <string name="wardriving_excl_export">"Экспорт"</string>
+    <string name="wardriving_excl_imported">"Импортировано: %1$d"</string>
+    <string name="wardriving_excl_nothing">"В этом файле нет ни адресов, ни OUI"</string>
+    <string name="wardriving_excluded">"Исключено"</string>
 </resources>

@@ -2597,4 +2597,9 @@
     <string name="ble_addr_public_note">"Publik: alamat tetap produsen, tidak pernah berubah"</string>
     <string name="ble_addr_anonymous_note">"Privat tak dapat diurai: anonim, terus berubah"</string>
     <string name="ble_addr_unknown_note">"Jenis tidak diketahui: Android tidak menyebutkannya di ponsel ini"</string>
+    <string name="wardriving_excl_import">"Impor"</string>
+    <string name="wardriving_excl_export">"Ekspor"</string>
+    <string name="wardriving_excl_imported">"Diimpor: %1$d"</string>
+    <string name="wardriving_excl_nothing">"Tidak ada alamat atau OUI di file ini"</string>
+    <string name="wardriving_excluded">"Dikecualikan"</string>
 </resources>

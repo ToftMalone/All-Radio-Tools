@@ -2804,4 +2804,9 @@
     <string name="ble_addr_public_note">"Veřejná: pevná adresa výrobce, nikdy se nemění"</string>
     <string name="ble_addr_anonymous_note">"Soukromá nerozlišitelná: anonymní, neustále se mění"</string>
     <string name="ble_addr_unknown_note">"Neznámý typ: Android ho v tomto telefonu neuvádí"</string>
+    <string name="wardriving_excl_import">"Importovat"</string>
+    <string name="wardriving_excl_export">"Exportovat"</string>
+    <string name="wardriving_excl_imported">"Importováno: %1$d"</string>
+    <string name="wardriving_excl_nothing">"V tomto souboru není žádná adresa ani OUI"</string>
+    <string name="wardriving_excluded">"Vyloučeno"</string>
 </resources>

@@ -2942,4 +2942,9 @@
     <string name="ble_addr_public_note">"عام: العنوان الثابت للمصنّع، لا يتغير أبدًا"</string>
     <string name="ble_addr_anonymous_note">"خاص غير قابل للحل: مجهول، يتغير باستمرار"</string>
     <string name="ble_addr_unknown_note">"نوع غير معروف: لا يذكره Android على هذا الهاتف"</string>
+    <string name="wardriving_excl_import">"استيراد"</string>
+    <string name="wardriving_excl_export">"تصدير"</string>
+    <string name="wardriving_excl_imported">"تم الاستيراد: %1$d"</string>
+    <string name="wardriving_excl_nothing">"لا يوجد عنوان أو OUI في هذا الملف"</string>
+    <string name="wardriving_excluded">"مستبعد"</string>
 </resources>
