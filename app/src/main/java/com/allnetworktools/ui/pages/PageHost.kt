@@ -54,6 +54,7 @@ import com.allnetworktools.ui.components.IconCircleButton
 import com.allnetworktools.ui.components.PanelAction
 import com.allnetworktools.ui.components.StatePanel
 import com.allnetworktools.ui.home.pageBlock
+import com.allnetworktools.ui.pages.bt.AdvertGuardTool
 import com.allnetworktools.ui.pages.bt.BleScanner
 import com.allnetworktools.ui.pages.bt.BtDashboard
 import com.allnetworktools.ui.pages.bt.GattTool
@@ -333,7 +334,8 @@ private fun PageBody(vm: MainViewModel, net: Network, page: Page) {
                     onLocate = { actions.request(PermGroup.Location) },
                 )
             }
-            Tool.Gatt, Tool.Paired, Tool.Tracker, Tool.UnknownTrackers, Tool.TrackerDetail, Tool.Beacons, Tool.Earbuds -> BtToolRoute(vm, page)
+            Tool.Gatt, Tool.Paired, Tool.Tracker, Tool.UnknownTrackers, Tool.TrackerDetail, Tool.Beacons, Tool.Earbuds,
+            Tool.AdvertGuard -> BtToolRoute(vm, page)
             Tool.CellDetail -> CellDetailTool(vm.cell.collectAsStateWithLifecycle().value.state, page.arg) {
                 vm.navigate { it.copy(page = Page.ToolPage(Tool.Neighbors)) }
             }
@@ -433,6 +435,14 @@ private fun BtToolRoute(vm: MainViewModel, page: Page.ToolPage) {
                 onDispose { vm.setBleLowLatency(false) }
             }
             TrackerTool(vm.tools.tracker, ble)
+        }
+        Tool.AdvertGuard -> {
+            // A flood is counted on arrivals: the scanner has to report every packet it can.
+            DisposableEffect(Unit) {
+                vm.setBleLowLatency(true)
+                onDispose { vm.setBleLowLatency(false) }
+            }
+            AdvertGuardTool(ble)
         }
         Tool.UnknownTrackers -> {
             val positions by vm.positions.collectAsStateWithLifecycle()
