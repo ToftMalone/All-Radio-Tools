@@ -2602,4 +2602,5 @@
     <string name="wardriving_excl_imported">"已导入：%1$d"</string>
     <string name="wardriving_excl_nothing">"此文件中没有地址或 OUI"</string>
     <string name="wardriving_excluded">"已排除"</string>
+    <string name="sdr_settings_refused">"此无线电无法做到：频率或采样率超出其接收范围"</string>
 </resources>

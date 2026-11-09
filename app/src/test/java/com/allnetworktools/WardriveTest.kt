@@ -58,7 +58,11 @@ class WardriveTest {
     fun capabilitiesAsWigleShowsThem() {
         assertEquals("[WPA2][RSN][ESS][MFPC]", Wardrive.shortCaps("[WPA2-PSK-CCMP][RSN-PSK-CCMP][ESS][MFPC]"))
         assertEquals(Guard.Wpa3, Wardrive.guardOf("[RSN-SAE-CCMP][ESS]"))
-        assertEquals(Guard.Wpa, Wardrive.guardOf("[WPA2-PSK-CCMP][ESS]"))
+        assertEquals(Guard.Wpa2, Wardrive.guardOf("[WPA2-PSK-CCMP][ESS]"))
+        assertEquals(Guard.Wpa, Wardrive.guardOf("[WPA-PSK-TKIP][ESS]"))
+        assertEquals(Guard.Wpa23, Wardrive.guardOf("[RSN-PSK+SAE-CCMP][ESS]"))
+        assertEquals(Guard.Enterprise, Wardrive.guardOf("[RSN-EAP/SHA1-CCMP][ESS]"))
+        assertEquals(Guard.Owe, Wardrive.guardOf("[RSN-OWE-CCMP][ESS]"))
         assertEquals(Guard.Wep, Wardrive.guardOf("[WEP][ESS]"))
         assertEquals(Guard.Open, Wardrive.guardOf("[ESS]"))
     }

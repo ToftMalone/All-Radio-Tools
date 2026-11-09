@@ -63,6 +63,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.layout.boundsInRoot
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import com.allnetworktools.Blocker
 import com.allnetworktools.CellUi
@@ -266,7 +267,7 @@ private fun NetworkCard(
             Box(
                 Modifier.align(Alignment.TopEnd).padding(12.dp).size(48.dp)
                     .graphicsLayer { scaleX = plusScale; scaleY = plusScale }
-                    .clip(CircleShape).background(pair.accent).clickable(onClick = onPlus),
+                    .clip(CircleShape).background(pair.accent).testTag("pair_plus").clickable(onClick = onPlus),
                 contentAlignment = Alignment.Center,
             ) { Symbol(Sym.Add, size = 28.dp, tint = pair.onAccent) }
         }

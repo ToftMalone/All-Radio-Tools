@@ -2947,4 +2947,5 @@
     <string name="wardriving_excl_imported">"تم الاستيراد: %1$d"</string>
     <string name="wardriving_excl_nothing">"لا يوجد عنوان أو OUI في هذا الملف"</string>
     <string name="wardriving_excluded">"مستبعد"</string>
+    <string name="sdr_settings_refused">"لا يستطيع هذا الراديو ذلك: التردد أو معدل أخذ العينات خارج نطاق استقباله"</string>
 </resources>

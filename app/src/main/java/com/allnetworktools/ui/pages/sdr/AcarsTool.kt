@@ -23,6 +23,7 @@ import com.allnetworktools.data.sdr.AcarsMessage
 import com.allnetworktools.data.sdr.AcarsReceiver
 import com.allnetworktools.data.sdr.HackRf
 import com.allnetworktools.data.sdr.SdrDevice
+import com.allnetworktools.data.sdr.SdrRadio
 import com.allnetworktools.data.sdr.SdrRepository
 import com.allnetworktools.ui.LocalActions
 import com.allnetworktools.ui.components.Hairline
@@ -75,7 +76,7 @@ class AcarsController(private val repo: SdrRepository, private val scope: Corout
     var messages by mutableStateOf<List<AcarsMessage>>(emptyList())
         private set
 
-    private var radio: HackRf? = null
+    private var radio: SdrRadio? = null
     @Volatile private var dspRunning = false
 
     fun start(device: SdrDevice) {
@@ -95,7 +96,7 @@ class AcarsController(private val repo: SdrRepository, private val scope: Corout
                     r.setSampleRate(rate, HackRf.filterFor(rate)) && r.setFrequency(Acars.CenterHz) &&
                         r.setLnaGain(lna) && r.setVgaGain(vga) && r.setAmp(withAmp)
                 }
-                if (!ok) { r.close(); error = S(R.string.the_hackrf_did_not_accept_the); return@launch }
+                if (!ok) { r.close(); error = S(R.string.sdr_settings_refused); return@launch }
                 radio = r
                 startPipeline(r)
                 running = true
@@ -105,7 +106,7 @@ class AcarsController(private val repo: SdrRepository, private val scope: Corout
         }
     }
 
-    private fun startPipeline(r: HackRf) {
+    private fun startPipeline(r: SdrRadio) {
         val free = ArrayBlockingQueue<ByteArray>(POOL)
         val full = ArrayBlockingQueue<Pair<ByteArray, Int>>(POOL)
         repeat(POOL) { free.add(ByteArray(131072)) }

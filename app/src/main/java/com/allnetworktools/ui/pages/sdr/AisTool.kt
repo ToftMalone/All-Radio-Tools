@@ -50,6 +50,7 @@ import com.allnetworktools.data.sdr.AisReceiver
 import com.allnetworktools.data.sdr.AisTracker
 import com.allnetworktools.data.sdr.HackRf
 import com.allnetworktools.data.sdr.SdrDevice
+import com.allnetworktools.data.sdr.SdrRadio
 import com.allnetworktools.data.sdr.SdrRepository
 import com.allnetworktools.ui.LocalActions
 import com.allnetworktools.ui.components.AntFilterChip
@@ -131,7 +132,7 @@ class AisController(private val repo: SdrRepository, private val scope: Coroutin
         private set
     var selected by mutableStateOf<Int?>(null)
 
-    private var radio: HackRf? = null
+    private var radio: SdrRadio? = null
     @Volatile private var dspRunning = false
 
     fun start(device: SdrDevice) {
@@ -152,7 +153,7 @@ class AisController(private val repo: SdrRepository, private val scope: Coroutin
                     r.setSampleRate(rate, HackRf.filterFor(rate)) && r.setFrequency(AisReceiver.CENTER_HZ - rate / 4) &&
                         r.setLnaGain(lna) && r.setVgaGain(vga) && r.setAmp(withAmp)
                 }
-                if (!ok) { r.close(); error = S(R.string.the_hackrf_did_not_accept_the); return@launch }
+                if (!ok) { r.close(); error = S(R.string.sdr_settings_refused); return@launch }
                 radio = r
                 startPipeline(r)
                 running = true
@@ -162,7 +163,7 @@ class AisController(private val repo: SdrRepository, private val scope: Coroutin
         }
     }
 
-    private fun startPipeline(r: HackRf) {
+    private fun startPipeline(r: SdrRadio) {
         val free = ArrayBlockingQueue<ByteArray>(POOL)
         val full = ArrayBlockingQueue<Pair<ByteArray, Int>>(POOL)
         repeat(POOL) { free.add(ByteArray(131072)) }

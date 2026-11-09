@@ -840,8 +840,8 @@
     <string name="turn_it_on_to_receive_the">"Turn it on to receive the satellites."</string>
     <string name="not_available">"Not available"</string>
     <string name="this_device_does_not_have_this">"This device does not have this radio."</string>
-    <string name="no_hackrf">"No HackRF"</string>
-    <string name="plug_in_a_hackrf_over_usb">"Plug in a HackRF over USB-C to receive."</string>
+    <string name="no_hackrf">"No radio"</string>
+    <string name="plug_in_a_hackrf_over_usb">"Plug in a HackRF or an RTL-SDR over USB-C to receive."</string>
     <string name="turn_on_wi_fi_to_show">"Turn on Wi-Fi to show the current connection and use the local network tools."</string>
     <string name="turn_on_wi_fi">"Turn on Wi-Fi"</string>
     <string name="wi_fi_settings">"Wi-Fi settings"</string>
@@ -865,8 +865,8 @@
     <string name="turn_on_location">"Turn on location"</string>
     <string name="unavailable_2">"%1$s unavailable"</string>
     <string name="this_device_does_not_have_the">"This device does not have the hardware needed."</string>
-    <string name="plug_in_a_hackrf">"Plug in a HackRF"</string>
-    <string name="connect_a_hackrf_one_or_rad1o">"Connect a HackRF One (or rad1o, Jawbreaker, PortaPack in HackRF mode) to the phone with a USB-C OTG cable. "</string>
+    <string name="plug_in_a_hackrf">"Plug in a radio"</string>
+    <string name="connect_a_hackrf_one_or_rad1o">"Connect a HackRF One (or rad1o, Jawbreaker, PortaPack in HackRF mode) or an RTL-SDR dongle to the phone with a USB-C OTG cable. The RTL-SDR covers 24 to 1766 MHz up to about 3 MS/s: the 2.4 GHz, 5.8 GHz and 4 MS/s tools need a HackRF. "</string>
     <string name="the_app_detects_it_as_soon">"The app detects it as soon as it is plugged in."</string>
     <string name="tools">"Tools"</string>
     <string name="nearby_networks_channels_speed_wi_fi">"Nearby networks, channels, speed, Wi-Fi diagnostics and security."</string>
@@ -1343,15 +1343,15 @@
     <string name="point_below_each_satellite_computed_from">"Point below each satellite, computed from its direction and orbit · OpenStreetMap base map."</string>
     <string name="above">"Above…"</string>
     <string name="elevation">"elevation"</string>
-    <string name="usb_access_to_the_hackrf_refused">"USB access to the HackRF refused"</string>
-    <string name="could_not_open_the_hackrf">"Could not open the HackRF"</string>
+    <string name="usb_access_to_the_hackrf_refused">"USB access to the radio refused"</string>
+    <string name="could_not_open_the_hackrf">"Could not open the radio"</string>
     <string name="the_hackrf_did_not_accept_the">"The HackRF did not accept the configuration"</string>
     <string name="aircraftground">"aircraft→ground"</string>
     <string name="groundaircraft">"ground→aircraft"</string>
     <string name="n_131_525_131_725_131_825">"%1$s %2$s · 131.525 / 131.725 / 131.825 MHz"</string>
-    <string name="starting_the_hackrf">"Starting the HackRF…"</string>
+    <string name="starting_the_hackrf">"Starting the radio…"</string>
     <string name="listening_on_the_3_channels">"Listening on the 3 channels"</string>
-    <string name="no_hackrf_plugged_in">"No HackRF plugged in"</string>
+    <string name="no_hackrf_plugged_in">"No radio plugged in"</string>
     <string name="ready">"%1$s ready"</string>
     <string name="start_receiving">"Start receiving"</string>
     <string name="acars_is_the_text_messaging_between">"ACARS is the text messaging between airliners and their airline: departure and arrival times, positions, weather, maintenance. "</string>
@@ -2822,4 +2822,5 @@
     <string name="wardriving_excl_imported">"Imported: %1$d"</string>
     <string name="wardriving_excl_nothing">"No address or OUI found in this file"</string>
     <string name="wardriving_excluded">"Excluded"</string>
+    <string name="sdr_settings_refused">"This radio cannot do that: the frequency or the sample rate is outside what it can receive"</string>
 </resources>

@@ -2671,4 +2671,5 @@
     <string name="wardriving_excl_imported">"Geïmporteerd: %1$d"</string>
     <string name="wardriving_excl_nothing">"Geen adres of OUI in dit bestand"</string>
     <string name="wardriving_excluded">"Uitgesloten"</string>
+    <string name="sdr_settings_refused">"Deze radio kan dat niet: de frequentie of de samplefrequentie ligt buiten het ontvangstbereik"</string>
 </resources>

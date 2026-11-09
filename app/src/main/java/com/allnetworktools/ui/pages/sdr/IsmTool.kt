@@ -21,6 +21,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.allnetworktools.MainViewModel
 import com.allnetworktools.data.sdr.HackRf
 import com.allnetworktools.data.sdr.SdrDevice
+import com.allnetworktools.data.sdr.SdrRadio
 import com.allnetworktools.data.sdr.SdrRepository
 import com.allnetworktools.data.sdr.Ism
 import com.allnetworktools.data.sdr.IsmReading
@@ -85,7 +86,7 @@ class IsmController(private val repo: SdrRepository, private val scope: Coroutin
     var unknown by mutableIntStateOf(0)
         private set
 
-    private var radio: HackRf? = null
+    private var radio: SdrRadio? = null
     @Volatile private var dspRunning = false
 
     fun start(device: SdrDevice) {
@@ -106,7 +107,7 @@ class IsmController(private val repo: SdrRepository, private val scope: Coroutin
                     r.setSampleRate(rate, HackRf.filterFor(rate)) && r.setFrequency(hz - rate / 4) &&
                         r.setLnaGain(lna) && r.setVgaGain(vga) && r.setAmp(withAmp)
                 }
-                if (!ok) { r.close(); error = S(R.string.the_hackrf_did_not_accept_the); return@launch }
+                if (!ok) { r.close(); error = S(R.string.sdr_settings_refused); return@launch }
                 radio = r
                 startPipeline(r)
                 running = true
@@ -116,7 +117,7 @@ class IsmController(private val repo: SdrRepository, private val scope: Coroutin
         }
     }
 
-    private fun startPipeline(r: HackRf) {
+    private fun startPipeline(r: SdrRadio) {
         val free = ArrayBlockingQueue<ByteArray>(POOL)
         val full = ArrayBlockingQueue<Pair<ByteArray, Int>>(POOL)
         repeat(POOL) { free.add(ByteArray(131072)) }

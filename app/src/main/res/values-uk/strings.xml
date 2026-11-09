@@ -2809,4 +2809,5 @@
     <string name="wardriving_excl_imported">"Імпортовано: %1$d"</string>
     <string name="wardriving_excl_nothing">"У цьому файлі немає ні адрес, ні OUI"</string>
     <string name="wardriving_excluded">"Виключено"</string>
+    <string name="sdr_settings_refused">"Це радіо так не вміє: частота або частота дискретизації виходить за межі прийому"</string>
 </resources>

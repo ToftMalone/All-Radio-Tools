@@ -2671,4 +2671,5 @@
     <string name="wardriving_excl_imported">"İçe aktarılan: %1$d"</string>
     <string name="wardriving_excl_nothing">"Bu dosyada adres veya OUI yok"</string>
     <string name="wardriving_excluded">"Hariç"</string>
+    <string name="sdr_settings_refused">"Bu telsiz bunu yapamaz: frekans veya örnekleme hızı alabildiği aralığın dışında"</string>
 </resources>

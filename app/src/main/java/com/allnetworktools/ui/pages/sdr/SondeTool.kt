@@ -57,6 +57,7 @@ import com.allnetworktools.data.sdr.MeteomodemDemodulator
 import com.allnetworktools.data.sdr.Rs41
 import com.allnetworktools.data.sdr.Rs41Demodulator
 import com.allnetworktools.data.sdr.SdrDevice
+import com.allnetworktools.data.sdr.SdrRadio
 import com.allnetworktools.data.sdr.SdrRepository
 import com.allnetworktools.data.sdr.SondeTracker
 import com.allnetworktools.ui.LocalActions
@@ -147,7 +148,7 @@ class SondeController(private val repo: SdrRepository, private val scope: Corout
         private set
     var selected by mutableStateOf<String?>(null)
 
-    private var radio: HackRf? = null
+    private var radio: SdrRadio? = null
     @Volatile private var dspRunning = false
 
     /** The frequency in Hz, or why it cannot be used. */
@@ -176,7 +177,7 @@ class SondeController(private val repo: SdrRepository, private val scope: Corout
                     r.setSampleRate(SAMPLE_RATE, 1_750_000) && r.setFrequency(hz - SAMPLE_RATE / 4) &&
                         r.setLnaGain(lna) && r.setVgaGain(vga) && r.setAmp(withAmp)
                 }
-                if (!ok) { r.close(); error = S(R.string.the_hackrf_did_not_accept_the); return@launch }
+                if (!ok) { r.close(); error = S(R.string.sdr_settings_refused); return@launch }
                 radio = r
                 listeningHz = hz
                 startPipeline(r)
@@ -187,7 +188,7 @@ class SondeController(private val repo: SdrRepository, private val scope: Corout
         }
     }
 
-    private fun startPipeline(r: HackRf) {
+    private fun startPipeline(r: SdrRadio) {
         val free = ArrayBlockingQueue<ByteArray>(POOL)
         val full = ArrayBlockingQueue<Pair<ByteArray, Int>>(POOL)
         repeat(POOL) { free.add(ByteArray(131072)) }

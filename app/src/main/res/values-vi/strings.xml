@@ -2602,4 +2602,5 @@
     <string name="wardriving_excl_imported">"Đã nhập: %1$d"</string>
     <string name="wardriving_excl_nothing">"Không có địa chỉ hay OUI nào trong tệp này"</string>
     <string name="wardriving_excluded">"Đã loại trừ"</string>
+    <string name="sdr_settings_refused">"Radio này không làm được: tần số hoặc tốc độ lấy mẫu nằm ngoài phạm vi thu của nó"</string>
 </resources>

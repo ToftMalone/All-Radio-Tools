@@ -37,7 +37,8 @@ class HackRf private constructor(
     private val conn: UsbDeviceConnection,
     private val iface: UsbInterface,
     private val epIn: UsbEndpoint,
-) {
+) : SdrRadio {
+    override val caps = SdrCaps("HackRF", 1_000_000L, 6_000_000_000L, 20_000_000)
     @Volatile private var running = false
     private var thread: Thread? = null
 
@@ -56,29 +57,29 @@ class HackRf private constructor(
 
     fun version(): String? = inp(REQ_VERSION_STRING_READ, 0, 0, 255)?.toString(Charsets.US_ASCII)?.trim { it <= ' ' }
 
-    fun setFrequency(hz: Long): Boolean = out(REQ_SET_FREQ, 0, 0, le32(hz / 1_000_000, hz % 1_000_000))
+    override fun setFrequency(hz: Long): Boolean = out(REQ_SET_FREQ, 0, 0, le32(hz / 1_000_000, hz % 1_000_000))
 
     /** Sample rate with divider 1, then the narrowest baseband filter (1.75 MHz) that passes it at 2 MS/s. */
-    fun setSampleRate(hz: Int, filterHz: Int): Boolean =
+    override fun setSampleRate(hz: Int, filterHz: Int): Boolean =
         out(REQ_SAMPLE_RATE_SET, 0, 0, le32(hz.toLong(), 1)) && out(REQ_BASEBAND_FILTER_BANDWIDTH_SET, filterHz and 0xFFFF, filterHz ushr 16)
 
     /** LNA (IF) gain, 0–40 dB in 8 dB steps. */
-    fun setLnaGain(db: Int): Boolean = inp(REQ_SET_LNA_GAIN, 0, db.coerceIn(0, 40) and 0x07.inv(), 1)?.firstOrNull()?.toInt() != 0
+    override fun setLnaGain(db: Int): Boolean = inp(REQ_SET_LNA_GAIN, 0, db.coerceIn(0, 40) and 0x07.inv(), 1)?.firstOrNull()?.toInt() != 0
 
     /** VGA (baseband) gain, 0–62 dB in 2 dB steps. */
-    fun setVgaGain(db: Int): Boolean = inp(REQ_SET_VGA_GAIN, 0, db.coerceIn(0, 62) and 0x01.inv(), 1)?.firstOrNull()?.toInt() != 0
+    override fun setVgaGain(db: Int): Boolean = inp(REQ_SET_VGA_GAIN, 0, db.coerceIn(0, 62) and 0x01.inv(), 1)?.firstOrNull()?.toInt() != 0
 
     /** The 14 dB RF front-end amplifier. */
-    fun setAmp(on: Boolean): Boolean = out(REQ_AMP_ENABLE, if (on) 1 else 0, 0)
+    override fun setAmp(on: Boolean): Boolean = out(REQ_AMP_ENABLE, if (on) 1 else 0, 0)
 
     /** 3.3 V on the antenna port (bias tee), to power an active antenna such as a GNSS one. */
-    fun setAntennaPower(on: Boolean): Boolean = out(REQ_ANTENNA_ENABLE, if (on) 1 else 0, 0)
+    override fun setAntennaPower(on: Boolean): Boolean = out(REQ_ANTENNA_ENABLE, if (on) 1 else 0, 0)
 
     /**
      * Starts receiving: [onSamples] gets each USB transfer on a dedicated thread. [onError] fires once if the
      * board stops answering (unplugged).
      */
-    fun startRx(onSamples: (ByteArray, Int) -> Unit, onError: (String) -> Unit) {
+    override fun startRx(onSamples: (ByteArray, Int) -> Unit, onError: (String) -> Unit) {
         if (running) return
         if (!out(REQ_SET_TRANSCEIVER_MODE, MODE_RECEIVE, 0)) { onError(S(R.string.the_hackrf_refuses_receive_mode)); return }
         running = true
@@ -115,7 +116,7 @@ class HackRf private constructor(
         }, "hackrf-rx").apply { priority = Thread.MAX_PRIORITY; start() }
     }
 
-    fun close() {
+    override fun close() {
         running = false
         runCatching { thread?.join(1500) }
         runCatching { out(REQ_SET_TRANSCEIVER_MODE, MODE_OFF, 0) }
@@ -175,13 +176,21 @@ class HackRf private constructor(
     }
 }
 
-/** Finds HackRF boards, follows plug/unplug and asks for USB access. */
+/** Finds the supported radios (HackRF, Airspy, PlutoSDR, RTL-SDR), follows plug/unplug and asks for USB access. */
 open class SdrRepository(private val context: Context) {
     private val usb: UsbManager? = context.getSystemService(UsbManager::class.java)
 
-    private fun find(): SdrDevice? = usb?.deviceList?.values?.firstOrNull(HackRf::isHackRf)?.let { SdrDevice(HackRf.name(it), it) }
+    private fun find(): SdrDevice? {
+        val all = usb?.deviceList?.values ?: return null
+        // The HackRF first: it is the one every tool was written for.
+        all.firstOrNull(HackRf::isHackRf)?.let { return SdrDevice(HackRf.name(it), it) }
+        all.firstOrNull(Airspy::isAirspy)?.let { return SdrDevice("Airspy", it) }
+        all.firstOrNull(PlutoSdr::isPluto)?.let { return SdrDevice("PlutoSDR", it) }
+        all.firstOrNull(RtlSdr::isRtlSdr)?.let { return SdrDevice(it.productName ?: "RTL-SDR", it) }
+        return null
+    }
 
-    /** The plugged-in HackRF, or null. */
+    /** The plugged-in radio (a HackRF, an Airspy, a PlutoSDR or an RTL-SDR), or null. */
     open val device: Flow<SdrDevice?> = callbackFlow {
         val receiver = object : BroadcastReceiver() {
             override fun onReceive(c: Context, i: Intent) { trySend(find()) }
@@ -218,5 +227,13 @@ open class SdrRepository(private val context: Context) {
         cont.invokeOnCancellation { runCatching { context.unregisterReceiver(receiver) } }
     }
 
-    open fun open(d: SdrDevice): HackRf? = d.usb?.let { dev -> usb?.let { HackRf.open(it, dev) } }
+    open fun open(d: SdrDevice): SdrRadio? = d.usb?.let { dev ->
+        usb?.let { when {
+            HackRf.isHackRf(dev) -> HackRf.open(it, dev)
+            Airspy.isAirspy(dev) -> Airspy.open(it, dev)
+            PlutoSdr.isPluto(dev) -> PlutoSdr.open(it, dev)
+            RtlSdr.isRtlSdr(dev) -> RtlSdr.open(it, dev)
+            else -> null
+        } }
+    }
 }

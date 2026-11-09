@@ -839,8 +839,8 @@
     <string name="turn_it_on_to_receive_the">"Activez-la pour recevoir les satellites."</string>
     <string name="not_available">"Non disponible"</string>
     <string name="this_device_does_not_have_this">"Cet appareil n'a pas cette radio."</string>
-    <string name="no_hackrf">"Aucun HackRF"</string>
-    <string name="plug_in_a_hackrf_over_usb">"Branchez un HackRF en USB-C pour recevoir."</string>
+    <string name="no_hackrf">"Aucune radio"</string>
+    <string name="plug_in_a_hackrf_over_usb">"Branchez un HackRF ou un RTL-SDR en USB-C pour recevoir."</string>
     <string name="turn_on_wi_fi_to_show">"Activez le Wi-Fi pour afficher la connexion en cours et utiliser les outils réseau local."</string>
     <string name="turn_on_wi_fi">"Activer le Wi-Fi"</string>
     <string name="wi_fi_settings">"Paramètres Wi-Fi"</string>
@@ -864,8 +864,8 @@
     <string name="turn_on_location">"Activer la localisation"</string>
     <string name="unavailable_2">"%1$s indisponible"</string>
     <string name="this_device_does_not_have_the">"Cet appareil ne possède pas le matériel nécessaire."</string>
-    <string name="plug_in_a_hackrf">"Branchez un HackRF"</string>
-    <string name="connect_a_hackrf_one_or_rad1o">"Reliez un HackRF One (ou rad1o, Jawbreaker, PortaPack en mode HackRF) au téléphone avec un câble USB-C OTG. "</string>
+    <string name="plug_in_a_hackrf">"Branchez une radio"</string>
+    <string name="connect_a_hackrf_one_or_rad1o">"Reliez un HackRF One (ou rad1o, Jawbreaker, PortaPack en mode HackRF) ou une clé RTL-SDR au téléphone avec un câble USB-C OTG. Le RTL-SDR couvre 24 à 1766 MHz jusqu\'à environ 3 MS/s : les outils 2,4 GHz, 5,8 GHz et 4 MS/s demandent un HackRF. "</string>
     <string name="the_app_detects_it_as_soon">"L'application le détecte dès qu'il est branché."</string>
     <string name="tools">"Outils"</string>
     <string name="nearby_networks_channels_speed_wi_fi">"Réseaux alentour, canaux, débit, diagnostic et sécurité du Wi-Fi."</string>
@@ -1342,15 +1342,15 @@
     <string name="point_below_each_satellite_computed_from">"Point sous chaque satellite, calculé depuis sa direction et son orbite · fond de carte OpenStreetMap."</string>
     <string name="above">"Au-dessus de…"</string>
     <string name="elevation">"élévation"</string>
-    <string name="usb_access_to_the_hackrf_refused">"Accès USB au HackRF refusé"</string>
-    <string name="could_not_open_the_hackrf">"Impossible d'ouvrir le HackRF"</string>
+    <string name="usb_access_to_the_hackrf_refused">"Accès USB à la radio refusé"</string>
+    <string name="could_not_open_the_hackrf">"Impossible d\'ouvrir la radio"</string>
     <string name="the_hackrf_did_not_accept_the">"Le HackRF n'a pas accepté la configuration"</string>
     <string name="aircraftground">"avion→sol"</string>
     <string name="groundaircraft">"sol→avion"</string>
     <string name="n_131_525_131_725_131_825">"%1$s %2$s · 131,525 / 131,725 / 131,825 MHz"</string>
-    <string name="starting_the_hackrf">"Démarrage du HackRF…"</string>
+    <string name="starting_the_hackrf">"Démarrage de la radio…"</string>
     <string name="listening_on_the_3_channels">"Écoute des 3 canaux"</string>
-    <string name="no_hackrf_plugged_in">"Aucun HackRF branché"</string>
+    <string name="no_hackrf_plugged_in">"Aucune radio branchée"</string>
     <string name="ready">"%1$s prêt"</string>
     <string name="start_receiving">"Lancer la réception"</string>
     <string name="acars_is_the_text_messaging_between">"L'ACARS est la messagerie texte des avions de ligne avec leur compagnie : heures de départ et d'arrivée, positions, météo, maintenance. "</string>
@@ -2896,4 +2896,5 @@
     <string name="wardriving_excl_imported">"Importées : %1$d"</string>
     <string name="wardriving_excl_nothing">"Aucune adresse ni OUI dans ce fichier"</string>
     <string name="wardriving_excluded">"Exclu"</string>
+    <string name="sdr_settings_refused">"Cette radio ne peut pas le faire : la fréquence ou le taux d\'échantillonnage dépasse ce qu\'elle sait recevoir"</string>
 </resources>

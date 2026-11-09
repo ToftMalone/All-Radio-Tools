@@ -2671,4 +2671,5 @@
     <string name="wardriving_excl_imported">"Importerade: %1$d"</string>
     <string name="wardriving_excl_nothing">"Ingen adress eller OUI i den här filen"</string>
     <string name="wardriving_excluded">"Utesluten"</string>
+    <string name="sdr_settings_refused">"Den här radion klarar inte det: frekvensen eller samplingshastigheten ligger utanför dess mottagningsområde"</string>
 </resources>

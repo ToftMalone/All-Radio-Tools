@@ -2809,4 +2809,5 @@
     <string name="wardriving_excl_imported">"Zaimportowano: %1$d"</string>
     <string name="wardriving_excl_nothing">"Brak adresu ani OUI w tym pliku"</string>
     <string name="wardriving_excluded">"Wykluczony"</string>
+    <string name="sdr_settings_refused">"To radio tego nie potrafi: częstotliwość lub próbkowanie wykracza poza jego zakres odbioru"</string>
 </resources>

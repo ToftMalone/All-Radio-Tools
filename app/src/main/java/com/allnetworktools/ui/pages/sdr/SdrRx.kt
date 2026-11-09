@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import com.allnetworktools.R
 import com.allnetworktools.data.sdr.HackRf
 import com.allnetworktools.data.sdr.SdrDevice
+import com.allnetworktools.data.sdr.SdrRadio
 import com.allnetworktools.data.sdr.SdrRepository
 import com.allnetworktools.util.S
 import java.util.concurrent.ArrayBlockingQueue
@@ -42,7 +43,7 @@ abstract class SdrRxController(
     var error by mutableStateOf<String?>(null)
         private set
 
-    private var radio: HackRf? = null
+    private var radio: SdrRadio? = null
     @Volatile private var dspRunning = false
 
     protected abstract val sampleRate: Int
@@ -67,7 +68,7 @@ abstract class SdrRxController(
                     r.setSampleRate(rate, HackRf.filterFor(rate)) && r.setFrequency(hz) &&
                         r.setLnaGain(lna) && r.setVgaGain(vga) && r.setAmp(withAmp)
                 }
-                if (!ok) { r.close(); error = S(R.string.the_hackrf_did_not_accept_the); return@launch }
+                if (!ok) { r.close(); error = S(R.string.sdr_settings_refused); return@launch }
                 radio = r
                 startPipeline(r, newSink())
                 running = true
@@ -77,7 +78,7 @@ abstract class SdrRxController(
         }
     }
 
-    private fun startPipeline(r: HackRf, sink: SdrSink) {
+    private fun startPipeline(r: SdrRadio, sink: SdrSink) {
         val free = ArrayBlockingQueue<ByteArray>(POOL)
         val full = ArrayBlockingQueue<Pair<ByteArray, Int>>(POOL)
         repeat(POOL) { free.add(ByteArray(131072)) }

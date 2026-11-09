@@ -26,6 +26,7 @@ import com.allnetworktools.data.sdr.PocsagNetwork
 import com.allnetworktools.data.sdr.PocsagNetworks
 import com.allnetworktools.data.sdr.PocsagReceiver
 import com.allnetworktools.data.sdr.SdrDevice
+import com.allnetworktools.data.sdr.SdrRadio
 import com.allnetworktools.data.sdr.SdrRepository
 import com.allnetworktools.ui.LocalActions
 import com.allnetworktools.ui.components.AntFilterChip
@@ -86,7 +87,7 @@ class PocsagController(private val repo: SdrRepository, private val scope: Corou
     var listening by mutableStateOf<List<Long>>(emptyList())
         private set
 
-    private var radio: HackRf? = null
+    private var radio: SdrRadio? = null
     @Volatile private var dspRunning = false
 
     fun parsedCustomHz(): Long? = customMhz.trim().replace(',', '.').toDoubleOrNull()?.takeIf { it in 100.0..1000.0 }?.let { (it * 1e6).roundToLong() }
@@ -112,7 +113,7 @@ class PocsagController(private val repo: SdrRepository, private val scope: Corou
                     r.setSampleRate(rate, HackRf.filterFor(rate)) && r.setFrequency(centre) &&
                         r.setLnaGain(lna) && r.setVgaGain(vga) && r.setAmp(withAmp)
                 }
-                if (!ok) { r.close(); error = S(R.string.the_hackrf_did_not_accept_the); return@launch }
+                if (!ok) { r.close(); error = S(R.string.sdr_settings_refused); return@launch }
                 radio = r
                 listening = chans
                 startPipeline(r, chans)
@@ -123,7 +124,7 @@ class PocsagController(private val repo: SdrRepository, private val scope: Corou
         }
     }
 
-    private fun startPipeline(r: HackRf, chans: List<Long>) {
+    private fun startPipeline(r: SdrRadio, chans: List<Long>) {
         val free = ArrayBlockingQueue<ByteArray>(POOL)
         val full = ArrayBlockingQueue<Pair<ByteArray, Int>>(POOL)
         repeat(POOL) { free.add(ByteArray(131072)) }

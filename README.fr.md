@@ -92,7 +92,9 @@ Les outils Internet (test de débit, ping, traceroute, scan de ports, DNS, whois
 
 Rien n'est conservé une fois l'application fermée.
 
-### 📻 SDR (HackRF, en réception uniquement)
+### 📻 SDR (HackRF et autres, en réception uniquement)
+
+> **Autres radios que le HackRF (nouveau, non testé sur du vrai matériel) :** les outils SDR acceptent aussi une clé **RTL-SDR** (tuner R820T / R820T2 / R828D, de 24 à 1766 MHz, jusqu'à environ 3 MS/s), un **Airspy** (R2 ou Mini, de 24 à 1750 MHz, utilisé à 2,5 ou 3 MS/s puis rééchantillonné) et un **ADALM-Pluto / PlutoSDR** (de 70 MHz à 6 GHz, par son câble USB, rééchantillonné depuis 2,1 MS/s ou plus). Un outil dont la fréquence ou le taux d'échantillonnage dépasse ce que la radio branchée sait faire le dit au lieu de démarrer : les outils 2,4 GHz et 5,8 GHz (Zigbee, ANT+, drones, FPV) et ceux à 4 MS/s demandent un HackRF (ou un Pluto pour le 4 MS/s). Les pilotes ont été écrits d'après les bibliothèques open source et testés uniquement sur un bus USB simulé. Les radios SDRplay ne sont pas prises en charge : leur pilote est propriétaire.
 
 | Outil | Contenu |
 | --- | --- |
@@ -221,6 +223,7 @@ All Radio Tools est un logiciel libre publié sous la [licence publique généra
 - [Meshtastic](https://github.com/meshtastic/firmware) (firmware et protobufs, GPL-3.0) et [MeshCore](https://github.com/meshcore-dev/MeshCore) (MIT) pour leurs formats de paquets ; les vrais paquets MeshCore de [meshcore-decoder](https://github.com/michaelhart/meshcore-decoder) et le vecteur de référence de [meshtastic-sniffer](https://github.com/alphafox02/meshtastic-sniffer), contre lesquels les décodeurs ont été vérifiés.
 - Les enregistrements et sources de [rtl_433_tests](https://github.com/merbanan/rtl_433_tests), [dumpvdl2](https://github.com/szpajder/dumpvdl2), [multimon-ng](https://github.com/EliasOenal/multimon-ng), [horusdemodlib](https://github.com/projecthorus/horusdemodlib), [DSD-FME](https://github.com/lwvmobile/dsd-fme) et [SatDump](https://github.com/SatDump/SatDump), contre lesquels les décodeurs ont été vérifiés, ainsi que l'enregistrement VDL-M2 de sigidwiki.
 - [mbelib](https://github.com/szechyjs/mbelib) (ISC) pour le décodeur vocal AMBE+2. L'AMBE+2 est couvert par des brevets dans certains pays : ce code est fourni à des fins de recherche et d'enseignement.
+- [librtlsdr](https://github.com/osmocom/rtl-sdr) (osmocom, GPL-2.0-or-later) et [libairspy](https://github.com/airspy/airspyone_host) (BSD-3-Clause) pour les pilotes RTL-SDR et Airspy, et [libiio](https://github.com/analogdevicesinc/libiio) (LGPL-2.1-or-later) pour celui du PlutoSDR.
 - [WiGLE](https://wigle.net) pour le format de fichier du wardriving et l'API d'envoi.
 - Google [GNSS Measurement Tools](https://github.com/google/gps-measurement-tools) pour le calcul des pseudodistances.
 - Roboto Flex, Google Sans Flex et Material Symbols pour l'interface.

@@ -2671,4 +2671,5 @@
     <string name="wardriving_excl_imported">"आयात किए गए: %1$d"</string>
     <string name="wardriving_excl_nothing">"इस फ़ाइल में कोई पता या OUI नहीं है"</string>
     <string name="wardriving_excluded">"बाहर रखा गया"</string>
+    <string name="sdr_settings_refused">"यह रेडियो ऐसा नहीं कर सकता: आवृत्ति या सैंपल दर उसकी प्राप्ति सीमा से बाहर है"</string>
 </resources>

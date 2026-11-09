@@ -2602,4 +2602,5 @@
     <string name="wardriving_excl_imported">"Diimpor: %1$d"</string>
     <string name="wardriving_excl_nothing">"Tidak ada alamat atau OUI di file ini"</string>
     <string name="wardriving_excluded">"Dikecualikan"</string>
+    <string name="sdr_settings_refused">"Radio ini tidak bisa melakukannya: frekuensi atau laju sampel di luar jangkauan penerimaannya"</string>
 </resources>

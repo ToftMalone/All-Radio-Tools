@@ -49,6 +49,7 @@ import com.allnetworktools.data.sdr.RcBurstDetector
 import com.allnetworktools.data.sdr.RcLink
 import com.allnetworktools.data.sdr.RcLinkTracker
 import com.allnetworktools.data.sdr.SdrDevice
+import com.allnetworktools.data.sdr.SdrRadio
 import com.allnetworktools.data.sdr.SdrRepository
 import com.allnetworktools.data.sdr.iqPowerDb
 import com.allnetworktools.data.sdr.levelTrend
@@ -143,7 +144,7 @@ class FpvController(private val repo: SdrRepository, private val scope: Coroutin
     private val analog = AnalogDroneTracker()
     private val djiTracker = DjiTracker()
     private val rcTracker = RcLinkTracker()
-    private var radio: HackRf? = null
+    private var radio: SdrRadio? = null
     @Volatile private var dspRunning = false
     @Volatile private var mode: Any = Mode.Scan
     private val usbBytes = java.util.concurrent.atomic.AtomicLong()
@@ -186,7 +187,7 @@ class FpvController(private val repo: SdrRepository, private val scope: Coroutin
                 val ok = withContext(Dispatchers.IO) {
                     r.setSampleRate(rate, HackRf.filterFor(rate)) && r.setLnaGain(lna) && r.setVgaGain(vga) && r.setAmp(withAmp)
                 }
-                if (!ok) { r.close(); error = S(R.string.the_hackrf_did_not_accept_the); return@launch }
+                if (!ok) { r.close(); error = S(R.string.sdr_settings_refused); return@launch }
                 radio = r
                 mode = m
                 watching = (m as? Watch)?.channel
@@ -211,7 +212,7 @@ class FpvController(private val repo: SdrRepository, private val scope: Coroutin
         }
     }
 
-    private fun startPipeline(r: HackRf, rate: Int, m: Any) {
+    private fun startPipeline(r: SdrRadio, rate: Int, m: Any) {
         val pipe = Pipe(ArrayBlockingQueue(POOL), ArrayBlockingQueue(POOL))
         repeat(POOL) { pipe.free.add(ByteArray(131072)) }
         usbBytes.set(0)
@@ -238,7 +239,7 @@ class FpvController(private val repo: SdrRepository, private val scope: Coroutin
         )
     }
 
-    private fun tune(r: HackRf, mhz: Double, pipe: Pipe) {
+    private fun tune(r: SdrRadio, mhz: Double, pipe: Pipe) {
         r.setFrequency((mhz * 1e6).toLong())
         pipe.flush(SETTLE_MS)
     }
@@ -262,7 +263,7 @@ class FpvController(private val repo: SdrRepository, private val scope: Coroutin
         scope.launch { drones = list }
     }
 
-    private fun analogLoop(r: HackRf, pipe: Pipe, rate: Int) {
+    private fun analogLoop(r: SdrRadio, pipe: Pipe, rate: Int) {
         val pixels = IntArray(PIC_W * PIC_H)
         val bitmaps = arrayOf(createBitmap(PIC_W, PIC_H), createBitmap(PIC_W, PIC_H))
         var flip = 0
@@ -351,7 +352,7 @@ class FpvController(private val repo: SdrRepository, private val scope: Coroutin
         }
     }
 
-    private fun digitalLoop(r: HackRf, pipe: Pipe) {
+    private fun digitalLoop(r: SdrRadio, pipe: Pipe) {
         lastTick = System.currentTimeMillis(); lastBytes = 0L
         fun publishDji() {
             val st = djiTracker.state(System.currentTimeMillis())
@@ -385,7 +386,7 @@ class FpvController(private val repo: SdrRepository, private val scope: Coroutin
         }
     }
 
-    private fun rcLoop(r: HackRf, pipe: Pipe) {
+    private fun rcLoop(r: SdrRadio, pipe: Pipe) {
         lastTick = System.currentTimeMillis(); lastBytes = 0L
         var dwell = 0
         while (dspRunning) {

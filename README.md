@@ -92,7 +92,9 @@ The Internet tools (speed test, ping, traceroute, port scan, DNS lookup, whois) 
 
 Nothing is kept once the app is closed.
 
-### 📻 SDR (HackRF, receive only)
+### 📻 SDR (HackRF and others, receive only)
+
+> **Radios other than the HackRF (new, untested on real hardware):** the SDR tools also accept an **RTL-SDR** dongle (R820T / R820T2 / R828D tuner, 24 to 1766 MHz, up to about 3 MS/s), an **Airspy** (R2 or Mini, 24 to 1750 MHz, used at 2.5 or 3 MS/s and resampled) and an **ADALM-Pluto / PlutoSDR** (70 MHz to 6 GHz, over its USB cable, resampled from 2.1 MS/s or more). A tool whose frequency or sample rate is out of reach of the radio plugged in says so instead of starting: the 2.4 GHz and 5.8 GHz tools (Zigbee, ANT+, drones, FPV) and the 4 MS/s ones need a HackRF (or a Pluto for 4 MS/s). The drivers were written from the open source libraries and tested against a simulated USB bus only. SDRplay radios are not supported: their driver is closed source.
 
 | Tool | What it does |
 | --- | --- |
@@ -225,6 +227,7 @@ All Radio Tools is free software released under the [GNU General Public License 
 - [Meshtastic](https://github.com/meshtastic/firmware) (firmware and protobufs, GPL-3.0) and [MeshCore](https://github.com/meshcore-dev/MeshCore) (MIT) for their packet formats; the real MeshCore packets of [meshcore-decoder](https://github.com/michaelhart/meshcore-decoder) and the reference vector of [meshtastic-sniffer](https://github.com/alphafox02/meshtastic-sniffer), against which the decoders were checked.
 - The recordings and sources of [rtl_433_tests](https://github.com/merbanan/rtl_433_tests), [dumpvdl2](https://github.com/szpajder/dumpvdl2), [multimon-ng](https://github.com/EliasOenal/multimon-ng), [horusdemodlib](https://github.com/projecthorus/horusdemodlib), [DSD-FME](https://github.com/lwvmobile/dsd-fme) and [SatDump](https://github.com/SatDump/SatDump), against which the decoders were checked, and sigidwiki's VDL-M2 recording.
 - [mbelib](https://github.com/szechyjs/mbelib) (ISC) for the AMBE+2 voice decoder. AMBE+2 is covered by patents in some countries: the code is provided for research and education.
+- [librtlsdr](https://github.com/osmocom/rtl-sdr) (osmocom, GPL-2.0-or-later) and [libairspy](https://github.com/airspy/airspyone_host) (BSD-3-Clause) for the RTL-SDR and Airspy drivers, and [libiio](https://github.com/analogdevicesinc/libiio) (LGPL-2.1-or-later) for the PlutoSDR one.
 - [WiGLE](https://wigle.net) for the wardriving file format and the upload API.
 - Google [GNSS Measurement Tools](https://github.com/google/gps-measurement-tools) for the pseudorange computation.
 - Roboto Flex, Google Sans Flex and Material Symbols for the interface.

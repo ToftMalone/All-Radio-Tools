@@ -2671,4 +2671,5 @@
     <string name="wardriving_excl_imported">"Importiert: %1$d"</string>
     <string name="wardriving_excl_nothing">"Keine Adresse und kein OUI in dieser Datei"</string>
     <string name="wardriving_excluded">"Ausgeschlossen"</string>
+    <string name="sdr_settings_refused">"Dieses Funkgerät kann das nicht: Frequenz oder Abtastrate liegen außerhalb seines Empfangsbereichs"</string>
 </resources>

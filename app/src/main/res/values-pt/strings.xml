@@ -2671,4 +2671,5 @@
     <string name="wardriving_excl_imported">"Importados: %1$d"</string>
     <string name="wardriving_excl_nothing">"Nenhum endereço ou OUI neste ficheiro"</string>
     <string name="wardriving_excluded">"Excluído"</string>
+    <string name="sdr_settings_refused">"Este rádio não consegue fazê-lo: a frequência ou a taxa de amostragem está fora do que pode receber"</string>
 </resources>
