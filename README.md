@@ -54,6 +54,7 @@ The Internet tools (speed test, ping, traceroute, port scan, DNS lookup, whois) 
 | Unknown trackers | Trackers that might be following you (AirTag, Find My accessories, AirPods, Google tags, Galaxy SmartTag, Tile, Chipolo, Pebblebee), each with a **drawing faithful to the real object**, sorted by detection time, with "play sound". A **background guard** keeps watching with the app closed and alerts you when a tracker follows you; tags connected to their owner are ignored, as in AirGuard |
 | Beacons | iBeacon, Eddystone, AltBeacon |
 | Earbuds battery | AirPods and Beats: left, right, case |
+| Advertising attacks | Spots the pop-up flooding attack — pairing and setup cards pushed at your phone (Apple, Fast Pair, Swift Pair, Samsung) — told from the earbuds around you by a frame no product sends, a list of cards being cycled, or one radio behind a crowd of addresses; names a Flipper Zero nearby. Reads only, sends nothing |
 
 ### 📱 Mobile network
 

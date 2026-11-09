@@ -54,6 +54,7 @@ Les outils Internet (test de débit, ping, traceroute, scan de ports, DNS, whois
 | Traqueurs inconnus | Les traqueurs qui pourraient vous suivre (AirTag, accessoires Localiser, AirPods, tags Google, Galaxy SmartTag, Tile, Chipolo, Pebblebee), chacun avec son **dessin fidèle à l'objet**, triés par date de détection, avec « faire sonner ». Une **garde en arrière-plan** continue de surveiller app fermée et vous alerte quand un traqueur vous suit ; les balises connectées à leur propriétaire sont ignorées, comme dans AirGuard |
 | Balises | iBeacon, Eddystone, AltBeacon |
 | Batterie des écouteurs | AirPods et Beats : gauche, droite, boîtier |
+| Attaques advertising | Repère l'attaque par inondation de pop-up — cartes d'appairage et de configuration poussées vers votre téléphone (Apple, Fast Pair, Swift Pair, Samsung) — distinguée des écouteurs autour de vous par une trame qu'aucun produit n'émet, une liste de cartes qui défile, ou un seul émetteur derrière une foule d'adresses ; nomme un Flipper Zero à proximité. Lit seulement, n'émet rien |
 
 ### 📱 Réseau mobile
 
