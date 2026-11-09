@@ -2588,4 +2588,5 @@
         <item quantity="other">"%1$d อุปกรณ์ดูเหมือนกล้อง"</item>
     </plurals>
     <string name="pair_subtitle">"เครื่องมือที่ใช้วิทยุทั้งสองร่วมกัน"</string>
+    <string name="wardriving_export">"ส่งออก"</string>
 </resources>

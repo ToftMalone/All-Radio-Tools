@@ -2588,4 +2588,5 @@
         <item quantity="other">"%1$d 台がカメラの可能性"</item>
     </plurals>
     <string name="pair_subtitle">"2 つの無線を組み合わせて使うツール"</string>
+    <string name="wardriving_export">"書き出す"</string>
 </resources>

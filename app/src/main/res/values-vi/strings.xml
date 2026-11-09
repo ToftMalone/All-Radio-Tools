@@ -2588,4 +2588,5 @@
         <item quantity="other">"%1$d thiết bị giống camera"</item>
     </plurals>
     <string name="pair_subtitle">"Công cụ dùng cả hai sóng vô tuyến cùng lúc"</string>
+    <string name="wardriving_export">"Xuất"</string>
 </resources>

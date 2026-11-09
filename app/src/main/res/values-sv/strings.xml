@@ -2657,4 +2657,5 @@
         <item quantity="other">"%1$d enheter liknar kameror"</item>
     </plurals>
     <string name="pair_subtitle">"Verktyg som använder båda radioenheterna tillsammans"</string>
+    <string name="wardriving_export">"Exportera"</string>
 </resources>

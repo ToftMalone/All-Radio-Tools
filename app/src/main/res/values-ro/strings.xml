@@ -2726,4 +2726,5 @@
         <item quantity="other">"%1$d de dispozitive seamănă cu camere"</item>
     </plurals>
     <string name="pair_subtitle">"Instrumente care folosesc ambele radiouri împreună"</string>
+    <string name="wardriving_export">"Exportă"</string>
 </resources>

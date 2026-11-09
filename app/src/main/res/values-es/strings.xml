@@ -2657,4 +2657,5 @@
         <item quantity="other">"%1$d dispositivos parecen cámaras"</item>
     </plurals>
     <string name="pair_subtitle">"Herramientas que usan las dos radios a la vez"</string>
+    <string name="wardriving_export">"Exportar"</string>
 </resources>

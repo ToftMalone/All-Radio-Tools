@@ -2795,4 +2795,5 @@
         <item quantity="other">"%1$d устройства похожи на камеры"</item>
     </plurals>
     <string name="pair_subtitle">"Инструменты, использующие оба радиомодуля вместе"</string>
+    <string name="wardriving_export">"Экспорт"</string>
 </resources>

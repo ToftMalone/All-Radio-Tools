@@ -2588,4 +2588,5 @@
         <item quantity="other">"기기 %1$d대가 카메라로 보임"</item>
     </plurals>
     <string name="pair_subtitle">"두 무선을 함께 사용하는 도구"</string>
+    <string name="wardriving_export">"내보내기"</string>
 </resources>

@@ -2808,4 +2808,5 @@
         <item quantity="other">"%1$d devices look like cameras"</item>
     </plurals>
     <string name="pair_subtitle">"Tools that use both radios together"</string>
+    <string name="wardriving_export">"Export"</string>
 </resources>

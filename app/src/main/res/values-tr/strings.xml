@@ -2657,4 +2657,5 @@
         <item quantity="other">"%1$d cihaz kameraya benziyor"</item>
     </plurals>
     <string name="pair_subtitle">"İki radyoyu birlikte kullanan araçlar"</string>
+    <string name="wardriving_export">"Dışa aktar"</string>
 </resources>

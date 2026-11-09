@@ -2588,4 +2588,5 @@
         <item quantity="other">"%1$d 台设备像摄像头"</item>
     </plurals>
     <string name="pair_subtitle">"同时使用两种无线电的工具"</string>
+    <string name="wardriving_export">"导出"</string>
 </resources>

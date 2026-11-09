@@ -2795,4 +2795,5 @@
         <item quantity="other">"%1$d zařízení vypadá jako kamery"</item>
     </plurals>
     <string name="pair_subtitle">"Nástroje, které využívají obě rádia zároveň"</string>
+    <string name="wardriving_export">"Exportovat"</string>
 </resources>

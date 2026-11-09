@@ -2795,4 +2795,5 @@
         <item quantity="other">"%1$d urządzeń wygląda na kamery"</item>
     </plurals>
     <string name="pair_subtitle">"Narzędzia, które łączą oba moduły radiowe"</string>
+    <string name="wardriving_export">"Eksportuj"</string>
 </resources>

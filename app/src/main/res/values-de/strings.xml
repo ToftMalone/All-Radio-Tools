@@ -2657,4 +2657,5 @@
         <item quantity="other">"%1$d Geräte sehen wie Kameras aus"</item>
     </plurals>
     <string name="pair_subtitle">"Werkzeuge, die beide Funkmodule zusammen nutzen"</string>
+    <string name="wardriving_export">"Exportieren"</string>
 </resources>

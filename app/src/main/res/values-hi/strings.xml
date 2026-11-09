@@ -2657,4 +2657,5 @@
         <item quantity="other">"%1$d डिवाइस कैमरे जैसे हैं"</item>
     </plurals>
     <string name="pair_subtitle">"दोनों रेडियो को साथ इस्तेमाल करने वाले टूल"</string>
+    <string name="wardriving_export">"निर्यात"</string>
 </resources>

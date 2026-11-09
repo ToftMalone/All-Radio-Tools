@@ -2588,4 +2588,5 @@
         <item quantity="other">"%1$d perangkat mirip kamera"</item>
     </plurals>
     <string name="pair_subtitle">"Alat yang memakai kedua radio bersamaan"</string>
+    <string name="wardriving_export">"Ekspor"</string>
 </resources>

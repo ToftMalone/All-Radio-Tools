@@ -148,6 +148,17 @@ object Wardrive {
         }
     }
 
+    /** Number of sightings in the database (what [exportAll] writes). */
+    fun exportCount(c: Context): Long = db(c).sightingsAfter(0)
+
+    /** Writes the whole database as a WiGLE-format CSV, to be kept as a file. */
+    fun exportAll(c: Context, out: java.io.OutputStream) {
+        val w = out.bufferedWriter()
+        w.write(WigleCsv.header(BuildConfig.VERSION_NAME))
+        db(c).exportCsv(0, w)
+        w.flush()
+    }
+
     fun dismissUpload() = update { it.copy(upload = UploadState.Idle) }
 
     /** New exclusions: the matching networks also leave the database and the list. */

@@ -2933,4 +2933,5 @@
         <item quantity="other">"%1$d جهازًا تشبه كاميرات"</item>
     </plurals>
     <string name="pair_subtitle">"أدوات تستخدم الراديوين معًا"</string>
+    <string name="wardriving_export">"تصدير"</string>
 </resources>

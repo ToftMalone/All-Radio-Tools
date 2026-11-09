@@ -2657,4 +2657,5 @@
         <item quantity="other">"%1$d apparaten lijken op camera\'s"</item>
     </plurals>
     <string name="pair_subtitle">"Tools die beide radio\'s samen gebruiken"</string>
+    <string name="wardriving_export">"Exporteren"</string>
 </resources>

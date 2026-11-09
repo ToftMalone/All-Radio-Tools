@@ -2882,4 +2882,5 @@
         <item quantity="many">"%1$d appareils ressemblent à des caméras"</item>
     </plurals>
     <string name="pair_subtitle">"Des outils qui utilisent les deux radios ensemble"</string>
+    <string name="wardriving_export">"Exporter"</string>
 </resources>
