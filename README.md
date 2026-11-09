@@ -128,6 +128,17 @@ Every gain has an **automatic mode**, chosen by default, which picks the LNA and
 
 The decoders work with the **HackRF alone**: neither the phone's Wi-Fi nor its Bluetooth is used. The SDR card stays greyed out until a HackRF is plugged in over USB.
 
+### 🚗 Wi-Fi + Bluetooth: wardriving
+
+**Long-press the Wi-Fi card** (or Bluetooth), then tap the **+** that appears on the other one: the two cards slide together into a single tile, with a dock for the pair and **Wardriving** as its featured tool. The unlink button on the tile takes them apart again.
+
+- The WiGLE home screen: networks and devices new on this run, database total, GPS fix, last scan, then every Wi-Fi network and Bluetooth LE device heard, strongest first, with its maker (IEEE OUI register).
+- Recording runs in a **foreground service**: it goes on with the screen off and the app closed, until you stop it.
+- Everything stays in a database on the phone. **Upload to WiGLE.net** is manual only, with your account's API name and token (never your password).
+- Exclude a full MAC address or a maker prefix (OUI): it is neither shown nor recorded, and is erased from the database.
+- **Hidden cameras**: Wi-Fi networks and Bluetooth devices from camera makers or with camera names, a warm / cold signal to walk to one, and the video ports (RTSP, ONVIF, Hikvision, Dahua, XMEye) of the devices on the Wi-Fi network you are connected to. Clues, not proof: a wired camera sends nothing.
+- **Drone detector**: Remote ID (EU / US electronic identification) broadcast over Bluetooth LE (legacy and long range) and Wi-Fi (beacons, Wi-Fi Aware): drone position, height, speed, operator position and id, on a map, with a background engine that keeps listening with the app closed.
+
 ### 📤 Exports
 
 Only when you ask, to the location you choose:
@@ -166,6 +177,7 @@ No account, no ads, no trackers. Internet is used for updates, the speed test (C
 - Pager messages (POCSAG) and walkie-talkie conversations (PMR446) are **private correspondence**: in many countries, France included, you may not pass on or use what you hear.
 - The NFC bank card reader shows only what any terminal reads without the PIN, never the full number, and keeps nothing. Reading, writing or copying a card you do not own, or a badge you are not allowed to copy, is not what it is for.
 - Locking a tag is **permanent**: no phone can write to it again.
+- Wardriving records where networks are; once sent to WiGLE.net they are public. Exclude the addresses you do not want there.
 - "Unknown trackers" and "Jamming and spoofing" are there to **protect you**, not to track or disrupt others.
 
 ---
@@ -213,5 +225,6 @@ All Radio Tools is free software released under the [GNU General Public License 
 - [Meshtastic](https://github.com/meshtastic/firmware) (firmware and protobufs, GPL-3.0) and [MeshCore](https://github.com/meshcore-dev/MeshCore) (MIT) for their packet formats; the real MeshCore packets of [meshcore-decoder](https://github.com/michaelhart/meshcore-decoder) and the reference vector of [meshtastic-sniffer](https://github.com/alphafox02/meshtastic-sniffer), against which the decoders were checked.
 - The recordings and sources of [rtl_433_tests](https://github.com/merbanan/rtl_433_tests), [dumpvdl2](https://github.com/szpajder/dumpvdl2), [multimon-ng](https://github.com/EliasOenal/multimon-ng), [horusdemodlib](https://github.com/projecthorus/horusdemodlib), [DSD-FME](https://github.com/lwvmobile/dsd-fme) and [SatDump](https://github.com/SatDump/SatDump), against which the decoders were checked, and sigidwiki's VDL-M2 recording.
 - [mbelib](https://github.com/szechyjs/mbelib) (ISC) for the AMBE+2 voice decoder. AMBE+2 is covered by patents in some countries: the code is provided for research and education.
+- [WiGLE](https://wigle.net) for the wardriving file format and the upload API.
 - Google [GNSS Measurement Tools](https://github.com/google/gps-measurement-tools) for the pseudorange computation.
 - Roboto Flex, Google Sans Flex and Material Symbols for the interface.

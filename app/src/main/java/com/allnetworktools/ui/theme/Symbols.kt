@@ -227,4 +227,12 @@ object Sym {
     const val Apps = "apps"
     const val TextFields = "text_fields"
     const val IdCard = "id_card"
+    const val Star = "star"
+    const val Drone = "drone"
+    const val PersonPin = "person_pin_circle"
+    const val Database = "database"
+    const val GpsOff = "gps_off"
+    const val GpsFixed = "gps_fixed"
+    const val CloudUpload = "cloud_upload"
+    const val BlockFlipped = "block_flipped"
 }
