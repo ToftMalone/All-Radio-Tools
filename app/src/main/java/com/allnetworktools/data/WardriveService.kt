@@ -245,6 +245,9 @@ class WardriveEngine(private val app: AntApplication, private val scope: Corouti
             // The exclusions are read first: until then nothing is scanned, so nothing excluded can slip through
             // in the first second of a run.
             Wardrive.exclusionsNow = Exclusions(runCatching { Wardrive.settings(app).settings.first().exclusions }.getOrDefault(emptySet()))
+            // Anything excluded that an earlier version let into the database in a run's first second goes now.
+            val ex = Wardrive.exclusionsNow
+            if (!ex.isEmpty) withContext(Dispatchers.IO) { runCatching { db.purge(ex) } }
             launchAll()
         }
     }
