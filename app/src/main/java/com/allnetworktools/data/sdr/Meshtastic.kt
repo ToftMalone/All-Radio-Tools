@@ -461,8 +461,21 @@ object Meshtastic {
         ),
     )
 
+    /** A modem preset: name, bandwidth, spreading factor (firmware MeshRadio.h, modemPresetToParams, narrow-band LoRa). */
+    class Preset(val name: String, val bwHz: Double, val sf: Int)
+
+    val PRESETS = listOf(
+        Preset("LongFast", 250_000.0, 11), Preset("LongModerate", 125_000.0, 11), Preset("LongSlow", 125_000.0, 12), Preset("MediumFast", 250_000.0, 9),
+        Preset("MediumSlow", 250_000.0, 10), Preset("ShortFast", 250_000.0, 7), Preset("ShortSlow", 250_000.0, 8), Preset("ShortTurbo", 500_000.0, 7),
+        Preset("MediumTurbo", 500_000.0, 9), Preset("LongTurbo", 500_000.0, 11),
+    )
+
+    /** Any centre frequency (400 to 1000 MHz) with one preset: the US 915 MHz band, a custom channel, a shifted slot. */
+    fun custom(freqHz: Long, preset: Preset) = MeshBand(freqHz - MeshRadio.SAMPLE_RATE / 4, wide = false, listOf(MeshChannel(freqHz, preset.bwHz, listOf(preset.sf))))
+
     /** The preset a frame's modulation belongs to (names as in the apps). */
     fun presetFor(sf: Int, bwHz: Double): String? = when (bwHz.toInt()) {
+        500_000 -> when (sf) { 7 -> "ShortTurbo"; 9 -> "MediumTurbo"; 11 -> "LongTurbo"; else -> null }
         250_000 -> when (sf) { 7 -> "ShortFast"; 8 -> "ShortSlow"; 9 -> "MediumFast"; 10 -> "MediumSlow"; 11 -> "LongFast"; else -> null }
         125_000 -> when (sf) { 11 -> "LongMod"; 12 -> "LongSlow"; 9 -> "LiteFast"; 10 -> "LiteSlow"; else -> null }
         62_500 -> when (sf) { 7 -> "NarrowFast"; 8 -> "NarrowSlow"; else -> null }

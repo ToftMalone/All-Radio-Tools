@@ -169,4 +169,35 @@ class MeshtasticTest {
         assertEquals(433_875_000L, ok[0].hz)
         assertEquals("433", String(Meshtastic.decode(ok[0].frame.payload)!!.data!!.payload))
     }
+
+    /** A free frequency: the US 915 MHz band and others, each preset through the HackRF chain. */
+    @Test fun hearsOnAFreeFrequency() {
+        for ((hz, name) in listOf(906_875_000L to "LongFast", 915_000_000L to "ShortTurbo", 902_125_000L to "LongSlow", 869_525_000L to "MediumFast", 470_300_000L to "LongTurbo")) {
+            val preset = Meshtastic.PRESETS.first { it.name == name }
+            val band = Meshtastic.custom(hz, preset)
+            val raw = packet(0x0badcafe, 99, Meshtastic.PORT_TEXT, "free $name".toByteArray())
+            val ldro = LoraPhy.lowDataRate(preset.sf, preset.bwHz)
+            val cr = if (name == "LongTurbo" || name == "LongSlow" || name == "LongModerate") 4 else 1
+            val sym = LoraTx.symbols(raw, preset.sf, cr, ldro = ldro)
+            val (re, im) = LoraTx.waveform(
+                sym, preset.sf, preset.bwHz, MeshRadio.SAMPLE_RATE.toDouble(), syncWord = Meshtastic.SYNC_WORD, preamble = 16, delayChips = 400.0, cfoHz = 5_000.0,
+                ppm = 5_000.0 / hz * 1e6, mixHz = (hz - band.loHz).toDouble(), amplitude = 30.0,
+            )
+            val rnd = Random(hz)
+            val buf = ByteArray(2 * re.size)
+            for (i in re.indices) {
+                buf[2 * i] = (re[i] + 5 * rnd.nextGaussian()).roundToInt().coerceIn(-127, 127).toByte()
+                buf[2 * i + 1] = (im[i] + 5 * rnd.nextGaussian()).roundToInt().coerceIn(-127, 127).toByte()
+            }
+            val got = ArrayList<MeshFrame>()
+            val radio = MeshRadio(band) { got += it }
+            var i = 0
+            while (i < buf.size) { val k = minOf(262144, buf.size - i); radio.feed(buf.copyOfRange(i, i + k), k); i += k }
+            radio.close()
+            val ok = got.filter { it.frame.crcOk }
+            assertEquals("$name at $hz", 1, ok.size)
+            assertEquals("$name", name.replace("LongSlow", "LongSlow"), Meshtastic.presetFor(ok[0].sf, ok[0].bwHz)?.replace("LongMod", "LongModerate"))
+            assertEquals("free $name", String(Meshtastic.decode(ok[0].frame.payload)!!.data!!.payload))
+        }
+    }
 }

@@ -151,7 +151,7 @@ abstract class MeshController(repo: SdrRepository, scope: CoroutineScope, onAcqu
 
 /** The screen both mesh tools use; [settings] adds the tool's own choices (band, channels) above the gains. */
 @Composable
-fun MeshScreen(vm: MainViewModel, c: MeshController, fileName: String, emptyIcon: String, emptyTitle: String, emptyBody: String, info: String, settings: @Composable () -> Unit) {
+fun MeshScreen(vm: MainViewModel, c: MeshController, fileName: String, emptyIcon: String, emptyTitle: String, emptyBody: String, info: String, canStart: () -> Boolean = { true }, settings: @Composable () -> Unit) {
     val actions = LocalActions.current
     val device by vm.sdrDevice.collectAsStateWithLifecycle()
     val positions by vm.positions.collectAsStateWithLifecycle()
@@ -184,7 +184,7 @@ fun MeshScreen(vm: MainViewModel, c: MeshController, fileName: String, emptyIcon
         }
         val d = device
         if (c.running || c.starting) StartButton(S(R.string.stop), Sym.Stop) { c.stop() }
-        else StartButton(S(R.string.start_receiving), Sym.PlayArrow, enabled = d != null) { d?.let(c::start) }
+        else StartButton(S(R.string.start_receiving), Sym.PlayArrow, enabled = d != null && canStart()) { d?.let(c::start) }
         SegmentedRow(
             listOf(MeshTab.Nodes to S(R.string.mesh_tab_nodes), MeshTab.Map to S(R.string.mesh_tab_map), MeshTab.Messages to S(R.string.mesh_tab_messages), MeshTab.Packets to S(R.string.mesh_tab_packets)),
             c.tab, { c.tab = it }, Modifier.fillMaxWidth(),

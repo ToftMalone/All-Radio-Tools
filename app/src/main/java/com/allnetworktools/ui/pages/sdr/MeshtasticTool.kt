@@ -27,6 +27,7 @@ import com.allnetworktools.ui.tools.HostInputField
 import com.allnetworktools.ui.tools.ToolButton
 import com.allnetworktools.ui.tools.ToolButtons
 import com.allnetworktools.util.S
+import kotlin.math.roundToLong
 import kotlinx.coroutines.CoroutineScope
 
 /**
@@ -35,7 +36,17 @@ import kotlinx.coroutines.CoroutineScope
  */
 class MeshtasticController(repo: SdrRepository, scope: CoroutineScope, onAcquire: () -> Unit = {}) : MeshController(repo, scope, onAcquire, "sdr-meshtastic") {
     var bandKey by mutableStateOf("868")
-    override val band: MeshBand get() = if (bandKey == "433") Meshtastic.EU433 else Meshtastic.EU868
+    /** The free frequency (MHz, as typed) and the preset read there; used with the band "free". */
+    var frequencyMhz by mutableStateOf("906.875")
+    var presetName by mutableStateOf("LongFast")
+
+    fun parsedHz(): Long? = frequencyMhz.trim().replace(',', '.').toDoubleOrNull()?.takeIf { it in 400.0..1000.0 }?.let { (it * 1e6).roundToLong() }
+
+    override val band: MeshBand get() = when (bandKey) {
+        "433" -> Meshtastic.EU433
+        "free" -> Meshtastic.custom(parsedHz() ?: 906_875_000L, Meshtastic.PRESETS.first { it.name == presetName })
+        else -> Meshtastic.EU868
+    }
     override val tracker = MeshtasticTracker()
 
     /** Channels added by the user: name and key. */
@@ -65,11 +76,23 @@ fun MeshtasticTool(vm: MainViewModel) {
     val actions = LocalActions.current
     MeshScreen(
         vm, c, "meshtastic", Sym.Hub, S(R.string.meshtastic_none_yet), S(R.string.meshtastic_none_yet_body), S(R.string.meshtastic_how_it_works),
+        canStart = { c.bandKey != "free" || c.parsedHz() != null },
     ) {
         Text(S(R.string.mesh_band), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
-        BandChips(listOf("868" to S(R.string.meshtastic_band_868), "433" to S(R.string.meshtastic_band_433)), c.bandKey, !c.starting) {
+        BandChips(listOf("868" to S(R.string.meshtastic_band_868), "433" to S(R.string.meshtastic_band_433), "free" to S(R.string.meshtastic_band_free)), c.bandKey, !c.starting) {
             if (c.running) c.stop()
             c.bandKey = it
+        }
+        if (c.bandKey == "free") {
+            if (!c.running) HostInputField(c.frequencyMhz, { c.frequencyMhz = it }, S(R.string.frequency_mhz), Sym.Stream, keyboardType = KeyboardType.Decimal)
+            BandChips(Meshtastic.PRESETS.map { it.name to it.name }, c.presetName, !c.starting) {
+                if (c.running) c.stop()
+                c.presetName = it
+            }
+            Text(
+                S(if (c.parsedHz() != null) R.string.meshtastic_free_note else R.string.meshtastic_free_invalid, c.frequencyMhz.replace('.', ',')),
+                style = rf(12, 16), color = if (c.parsedHz() != null) cs.onSurfaceVariant else cs.error,
+            )
         }
         Text(S(R.string.mesh_channels), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
         FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {

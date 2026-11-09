@@ -2728,4 +2728,7 @@
         <item quantity="many">"capteurs"</item>
     </plurals>
     <string name="debug_log_text">"Un journal détaillé de ce que fait l\'app, gardé sur ce téléphone seulement. Partagez-le quand vous signalez un bug."</string>
+    <string name="meshtastic_band_free">"Fréquence libre"</string>
+    <string name="meshtastic_free_note">"Réglé sur %1$s MHz. Choisissez le préréglage du réseau (LongFast par défaut) ; en Amérique du Nord le canal par défaut est centré sur 906,875 MHz, les autres varient avec la région et le nom du canal."</string>
+    <string name="meshtastic_free_invalid">"Fréquence de 400 à 1000 MHz"</string>
 </resources>
