@@ -2658,4 +2658,12 @@
     </plurals>
     <string name="pair_subtitle">"Herramientas que usan las dos radios a la vez"</string>
     <string name="wardriving_export">"Exportar"</string>
+    <string name="ble_addr_public">"Pública"</string>
+    <string name="ble_addr_static">"Estática"</string>
+    <string name="ble_addr_resolvable">"Resoluble"</string>
+    <string name="ble_addr_anonymous">"Anónima"</string>
+    <string name="ble_addr_unknown">"Desconocida"</string>
+    <string name="ble_addr_public_note">"Pública: la dirección fija del fabricante, nunca cambia"</string>
+    <string name="ble_addr_anonymous_note">"Privada no resoluble: anónima, cambia constantemente"</string>
+    <string name="ble_addr_unknown_note">"Tipo desconocido: Android no lo indica en este teléfono"</string>
 </resources>

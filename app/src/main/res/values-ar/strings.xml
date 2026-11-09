@@ -2934,4 +2934,12 @@
     </plurals>
     <string name="pair_subtitle">"أدوات تستخدم الراديوين معًا"</string>
     <string name="wardriving_export">"تصدير"</string>
+    <string name="ble_addr_public">"عام"</string>
+    <string name="ble_addr_static">"ثابت"</string>
+    <string name="ble_addr_resolvable">"قابل للحل"</string>
+    <string name="ble_addr_anonymous">"مجهول"</string>
+    <string name="ble_addr_unknown">"غير معروف"</string>
+    <string name="ble_addr_public_note">"عام: العنوان الثابت للمصنّع، لا يتغير أبدًا"</string>
+    <string name="ble_addr_anonymous_note">"خاص غير قابل للحل: مجهول، يتغير باستمرار"</string>
+    <string name="ble_addr_unknown_note">"نوع غير معروف: لا يذكره Android على هذا الهاتف"</string>
 </resources>

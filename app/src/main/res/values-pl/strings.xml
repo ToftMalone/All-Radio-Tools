@@ -2796,4 +2796,12 @@
     </plurals>
     <string name="pair_subtitle">"Narzędzia, które łączą oba moduły radiowe"</string>
     <string name="wardriving_export">"Eksportuj"</string>
+    <string name="ble_addr_public">"Publiczny"</string>
+    <string name="ble_addr_static">"Statyczny"</string>
+    <string name="ble_addr_resolvable">"Rozwiązywalny"</string>
+    <string name="ble_addr_anonymous">"Anonimowy"</string>
+    <string name="ble_addr_unknown">"Nieznany"</string>
+    <string name="ble_addr_public_note">"Publiczny: stały adres producenta, nigdy się nie zmienia"</string>
+    <string name="ble_addr_anonymous_note">"Prywatny nierozwiązywalny: anonimowy, ciągle się zmienia"</string>
+    <string name="ble_addr_unknown_note">"Nieznany typ: Android nie podaje go na tym telefonie"</string>
 </resources>

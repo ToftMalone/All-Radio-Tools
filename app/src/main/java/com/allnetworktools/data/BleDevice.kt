@@ -13,6 +13,13 @@ import org.json.JSONObject
 import com.allnetworktools.R
 import com.allnetworktools.util.S
 
+/**
+ * The kind of a Bluetooth LE address. Public addresses belong to the maker (OUI) and never change; random static ones
+ * stay until the device restarts; resolvable private ones change every ~15 minutes and only paired devices can link
+ * them; non-resolvable private ones are anonymous, used once.
+ */
+enum class BleAddrKind { Public, Static, Resolvable, NonResolvable, Unknown }
+
 enum class BleVendor(val label: String) {
     Apple("Apple"), Microsoft("Microsoft"), Samsung("Samsung"), Google("Google"), Mesh("Bluetooth Mesh"), Beacon("Tag"),
 }
@@ -46,7 +53,28 @@ data class BleDevice(
     val ads: List<AdStructure> = emptyList(),
     /** The identity comes from a connection (Generic Access / Device Information). */
     val fromGatt: Boolean = false,
+    /** Android 15+: true for a public address, false for a random one, null when the system does not say. */
+    val publicAddress: Boolean? = null,
 ) {
+    /**
+     * The kind of address. A random address tells its kind in its two top bits (11 static, 01 resolvable, 00
+     * non-resolvable). Before Android 15 public and random cannot be told apart: 01 and 11 are then taken as random,
+     * 00 as public when its prefix is a known maker's ([knownOui]), and anything else is unknown.
+     */
+    fun addressKind(knownOui: Boolean): BleAddrKind {
+        val top = (address.take(2).toIntOrNull(16) ?: return BleAddrKind.Unknown) shr 6
+        return when (publicAddress) {
+            true -> BleAddrKind.Public
+            false -> when (top) { 3 -> BleAddrKind.Static; 1 -> BleAddrKind.Resolvable; 0 -> BleAddrKind.NonResolvable; else -> BleAddrKind.Unknown }
+            null -> when {
+                top == 1 -> BleAddrKind.Resolvable
+                top == 3 -> BleAddrKind.Static
+                knownOui -> BleAddrKind.Public
+                else -> BleAddrKind.Unknown
+            }
+        }
+    }
+
     /** AD structure types present in the payload (0x01 flags, 0xFF manufacturer data, 0x2A mesh…). */
     val adTypes: Set<Int> get() = ads.map { it.type }.toSet()
 
@@ -111,6 +139,7 @@ data class BleDevice(
             extended: Boolean = false,
             measuredIntervalMs: Int? = null,
             identity: BleIdentity? = null,
+            publicAddress: Boolean? = null,
         ): BleDevice {
             val id = identity ?: BleIdentify.identify(name, ads, address, gatt)
             val mfg = ads.firstOrNull { it.type == Ad.MANUFACTURER && it.data.size >= 2 }
@@ -138,6 +167,7 @@ data class BleDevice(
                 extended = extended,
                 ads = ads,
                 fromGatt = gatt != null && id.known,
+                publicAddress = publicAddress,
             )
         }
     }

@@ -2589,4 +2589,12 @@
     </plurals>
     <string name="pair_subtitle">"Công cụ dùng cả hai sóng vô tuyến cùng lúc"</string>
     <string name="wardriving_export">"Xuất"</string>
+    <string name="ble_addr_public">"Công khai"</string>
+    <string name="ble_addr_static">"Tĩnh"</string>
+    <string name="ble_addr_resolvable">"Phân giải được"</string>
+    <string name="ble_addr_anonymous">"Ẩn danh"</string>
+    <string name="ble_addr_unknown">"Không rõ"</string>
+    <string name="ble_addr_public_note">"Công khai: địa chỉ cố định của nhà sản xuất, không bao giờ đổi"</string>
+    <string name="ble_addr_anonymous_note">"Riêng tư không phân giải được: ẩn danh, đổi liên tục"</string>
+    <string name="ble_addr_unknown_note">"Không rõ loại: Android không cho biết trên điện thoại này"</string>
 </resources>

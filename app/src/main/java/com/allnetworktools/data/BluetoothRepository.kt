@@ -192,6 +192,8 @@ open class BluetoothRepository(private val context: Context) {
         var identity: BleIdentity? = null
         var idVersion = -1
         var dirty = true
+        /** Android 15+: true public, false random, null unknown. */
+        var publicAddress: Boolean? = null
     }
 
     /**
@@ -215,7 +217,7 @@ open class BluetoothRepository(private val context: Context) {
                 e.idVersion = version
                 e.dirty = false
             }
-            return BleDevice.from(addr, e.name, e.rssi, e.txPower, e.connectable, e.lastSeen, ads, gatt, e.extended, e.intervalMs, e.identity)
+            return BleDevice.from(addr, e.name, e.rssi, e.txPower, e.connectable, e.lastSeen, ads, gatt, e.extended, e.intervalMs, e.identity, e.publicAddress)
         }
         fun snapshot(): List<BleDevice> {
             val now = SystemClock.elapsedRealtime()
@@ -243,6 +245,15 @@ open class BluetoothRepository(private val context: Context) {
                     gap == null -> e.intervalMs
                     e.intervalMs == null -> gap
                     else -> (e.intervalMs!! * 0.8f + gap * 0.2f).toInt()
+                }
+                if (e.publicAddress == null && android.os.Build.VERSION.SDK_INT >= 35) {
+                    e.publicAddress = runCatching {
+                        when (result.device.addressType) {
+                            android.bluetooth.BluetoothDevice.ADDRESS_TYPE_PUBLIC -> true
+                            android.bluetooth.BluetoothDevice.ADDRESS_TYPE_RANDOM -> false
+                            else -> null
+                        }
+                    }.getOrNull()
                 }
                 e.lastSeen = now
             }

@@ -2658,4 +2658,12 @@
     </plurals>
     <string name="pair_subtitle">"Werkzeuge, die beide Funkmodule zusammen nutzen"</string>
     <string name="wardriving_export">"Exportieren"</string>
+    <string name="ble_addr_public">"Öffentlich"</string>
+    <string name="ble_addr_static">"Statisch"</string>
+    <string name="ble_addr_resolvable">"Auflösbar"</string>
+    <string name="ble_addr_anonymous">"Anonym"</string>
+    <string name="ble_addr_unknown">"Unbekannt"</string>
+    <string name="ble_addr_public_note">"Öffentlich: die feste Adresse des Herstellers, sie ändert sich nie"</string>
+    <string name="ble_addr_anonymous_note">"Nicht auflösbar privat: anonym, sie ändert sich ständig"</string>
+    <string name="ble_addr_unknown_note">"Unbekannter Typ: Android gibt ihn auf diesem Telefon nicht an"</string>
 </resources>

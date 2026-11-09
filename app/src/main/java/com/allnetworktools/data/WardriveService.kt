@@ -41,7 +41,8 @@ import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
 
 /** How a line of the list is drawn: the lock of a Wi-Fi network, or Bluetooth. */
-enum class Guard { Open, Wep, Wpa, Wpa3, Ble }
+/** How a Wi-Fi network is protected, as its capabilities tell it; [Ble] for Bluetooth devices. */
+enum class Guard { Open, Owe, Wep, Wpa, Wpa2, Wpa23, Wpa3, Enterprise, Ble }
 
 /** One network of the live list. */
 data class WardriveRow(
@@ -56,6 +57,10 @@ data class WardriveRow(
     val guard: Guard,
     /** Wall-clock time it was last heard. */
     val seenAt: Long,
+    /** Bluetooth: the device's symbol when it is identified without doubt, else null (the Bluetooth logo). */
+    val icon: String? = null,
+    /** Bluetooth: what kind of address it advertises with. */
+    val addr: BleAddrKind? = null,
 )
 
 /** A position good enough to record with. */
@@ -186,11 +191,24 @@ object Wardrive {
         "[" + m.groupValues[1].substringBefore('-') + "]"
     }
 
-    fun guardOf(caps: String): Guard = when {
-        "SAE" in caps || "WPA3" in caps || "OWE" in caps -> Guard.Wpa3
-        "WPA" in caps || "RSN" in caps -> Guard.Wpa
-        "WEP" in caps -> Guard.Wep
-        else -> Guard.Open
+    /**
+     * The protection from Android's capabilities ("[WPA2-PSK-CCMP][RSN-PSK-CCMP][ESS]", "[RSN-SAE-CCMP]",
+     * "[RSN-PSK+SAE-CCMP]" for a WPA2/WPA3 transition network, "[RSN-OWE-CCMP]", "[WPA2-EAP/SHA1-CCMP]"…).
+     */
+    fun guardOf(caps: String): Guard {
+        val c = caps.uppercase()
+        val sae = "SAE" in c || "WPA3" in c
+        val psk = "PSK" in c
+        return when {
+            "EAP" in c || "802.1X" in c -> Guard.Enterprise
+            sae && psk -> Guard.Wpa23
+            sae -> Guard.Wpa3
+            "OWE" in c -> Guard.Owe
+            "RSN" in c || "WPA2" in c -> Guard.Wpa2
+            "WPA" in c -> Guard.Wpa
+            "WEP" in c -> Guard.Wep
+            else -> Guard.Open
+        }
     }
 }
 
@@ -284,7 +302,9 @@ class WardriveEngine(private val app: AntApplication, private val scope: Corouti
                 val wall = System.currentTimeMillis()
                 val kept = devices.filter { !exclusions.excludes(it.address) }
                 bleRows = kept.map { d ->
-                    WardriveRow(d.address, d.name.orEmpty(), NetType.Ble, d.rssi, 0, "BLE | " + d.kind.label, d.maker ?: oui.vendor(d.address), Guard.Ble, wall - (nowEl - d.lastSeen))
+                    WardriveRow(d.address, d.name.orEmpty(), NetType.Ble, d.rssi, 0, "BLE | " + d.kind.label, d.maker ?: oui.vendor(d.address), Guard.Ble, wall - (nowEl - d.lastSeen),
+                        icon = d.icon.takeIf { d.kind != BleKind.Unknown && !d.guessed },
+                        addr = d.addressKind(oui.vendor(d.address) != null))
                 }
                 // The list follows every packet; the database once a second.
                 if (nowEl - lastTick < 1_000) return@collect

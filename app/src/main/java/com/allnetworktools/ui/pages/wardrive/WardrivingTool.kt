@@ -44,6 +44,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.allnetworktools.MainViewModel
 import com.allnetworktools.Page
 import com.allnetworktools.R
+import com.allnetworktools.data.BleAddrKind
 import com.allnetworktools.data.Exclusions
 import com.allnetworktools.data.Guard
 import com.allnetworktools.data.NetType
@@ -130,6 +131,20 @@ fun WardrivingTool(vm: MainViewModel) {
                 Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                     Text(row.mac.uppercase(Locale.ROOT), style = mono(14))
                     if (vendor != null) Text(vendor, style = rf(14, 20), color = cs.onSurfaceVariant)
+                    if (row.type == NetType.Wifi) {
+                        val g = guardStyle(row.guard)
+                        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                            Symbol(g.icon, size = 18.dp, filled = true, tint = g.color)
+                            Text(g.label + " · " + row.detail, style = rf(13, 18), color = cs.onSurfaceVariant)
+                        }
+                    }
+                    row.addr?.let { a ->
+                        val st = addrStyle(a)
+                        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                            Symbol(st.icon, size = 18.dp, filled = true, tint = st.color)
+                            Text(st.note, style = rf(13, 18), color = cs.onSurfaceVariant)
+                        }
+                    }
                     Spacer(Modifier.height(8.dp))
                     DialogChoice(Sym.Block, S(R.string.wardriving_exclude_mac)) {
                         exclude(context, settings?.exclusions.orEmpty(), row.mac); picked = null
@@ -169,7 +184,7 @@ fun WardrivingScreen(st: WardriveState, onUpload: () -> Unit, onExport: () -> Un
     LazyColumn(
         Modifier.fillMaxSize(),
         contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 128.dp + nav.calculateBottomPadding()),
-        verticalArrangement = Arrangement.spacedBy(6.dp),
+        verticalArrangement = Arrangement.spacedBy(3.dp),
     ) {
         item(key = "head") {
             Column(Modifier.padding(bottom = 12.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
@@ -291,57 +306,98 @@ private fun NetworkLine(r: WardriveRow, onRow: (WardriveRow) -> Unit) {
         r.level >= -75 -> net.fair
         else -> net.poor
     }
+    val ble = r.type == NetType.Ble
+    // Compact on purpose: about as many networks on screen as a dedicated wardriving app.
     Row(
-        Modifier.fillMaxWidth().clip(RoundedCornerShape(20.dp)).background(cs.surfaceContainerLow).clickable { onRow(r) }.padding(start = 14.dp, end = 14.dp, top = 10.dp, bottom = 10.dp),
-        verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp),
+        Modifier.fillMaxWidth().clip(RoundedCornerShape(14.dp)).background(cs.surfaceContainerLow).clickable { onRow(r) }
+            .padding(start = 6.dp, end = 10.dp, top = 5.dp, bottom = 5.dp),
+        verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp),
     ) {
-        SignalBars(r.level, levelColor)
+        if (ble) BleBadge(r) else GuardBadge(r.guard)
         Column(Modifier.weight(1f)) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(
-                    r.name.ifEmpty { S(R.string.hidden_network) }, Modifier.weight(1f), style = rf(15, 20, 600),
-                    color = if (r.name.isEmpty()) cs.onSurfaceVariant else cs.onSurface, maxLines = 1, overflow = TextOverflow.Ellipsis,
-                )
-                Text("${r.level} dBm", Modifier.padding(start = 8.dp), style = gs(13, 18, 700, tnum = true), color = levelColor)
-            }
             Text(
-                r.mac.lowercase(Locale.ROOT) + " · " + (if (r.type == NetType.Wifi) "${r.frequency} MHz" else "BLE"),
-                style = mono(12, 17), color = cs.onSurfaceVariant, maxLines = 1,
+                r.name.ifEmpty { S(if (ble) R.string.unknown_device else R.string.hidden_network) }, style = rf(14, 18, 600),
+                color = if (r.name.isEmpty()) cs.onSurfaceVariant else cs.onSurface, maxLines = 1, overflow = TextOverflow.Ellipsis,
             )
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(r.detail, Modifier.weight(1f), style = rf(12, 16), color = cs.onSurfaceVariant, maxLines = 1, overflow = TextOverflow.Ellipsis)
-                val time = synchronized(clock) { clock.format(Date(r.seenAt)) }
-                Text(time, Modifier.padding(start = 8.dp), style = rf(12, 16), color = cs.onSurfaceVariant)
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                val addr = r.addr
+                if (addr != null) {
+                    val st = addrStyle(addr)
+                    Symbol(st.icon, size = 13.dp, filled = true, tint = st.color)
+                }
+                Text(
+                    buildString {
+                        append(r.mac.lowercase(Locale.ROOT))
+                        if (!ble) append(" · ").append(r.frequency).append(" MHz")
+                        if (r.vendor != null) append(" · ").append(r.vendor)
+                    },
+                    style = mono(11, 15), color = cs.onSurfaceVariant, maxLines = 1, overflow = TextOverflow.Ellipsis,
+                )
             }
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
-                GuardChip(r.guard)
-                if (r.vendor != null) Text(r.vendor, style = rf(12, 16, 500), color = AntTheme.accent.accent, maxLines = 1, overflow = TextOverflow.Ellipsis)
-            }
+        }
+        Column(horizontalAlignment = Alignment.End) {
+            Text("${r.level}", style = gs(14, 18, 700, tnum = true), color = levelColor)
+            val time = synchronized(clock) { clock.format(Date(r.seenAt)) }
+            Text(time, style = rf(10, 13), color = cs.onSurfaceVariant)
         }
     }
 }
 
-/** Four bars rising, as many lit as the signal is strong. */
-@Composable
-private fun SignalBars(level: Int, color: Color) {
-    val lit = when { level >= -55 -> 4; level >= -67 -> 3; level >= -78 -> 2; else -> 1 }
-    Row(Modifier.height(24.dp), horizontalArrangement = Arrangement.spacedBy(3.dp), verticalAlignment = Alignment.Bottom) {
-        for (i in 1..4) {
-            Box(Modifier.width(5.dp).height((6 + i * 4).dp).clip(RoundedCornerShape(2.dp)).background(if (i <= lit) color else cs.outlineVariant))
-        }
-    }
-}
+/** The look of a Wi-Fi protection: symbol, short label, and how safe it is. */
+private class GuardStyle(val icon: String, val label: String, val color: Color)
 
-/** What protects a Wi-Fi network (or BLE), as a small outlined chip. */
 @Composable
-private fun GuardChip(g: Guard) {
+private fun guardStyle(g: Guard): GuardStyle {
     val net = AntTheme.net
-    val (label, color) = when (g) {
-        Guard.Wpa3 -> "WPA3" to net.good
-        Guard.Wpa -> "WPA" to net.good
-        Guard.Wep -> "WEP" to net.fair
-        Guard.Open -> S(R.string.wardriving_open) to net.poor
-        Guard.Ble -> "BLE" to net.bt.accent
+    return when (g) {
+        Guard.Open -> GuardStyle(Sym.LockOpen, S(R.string.wardriving_open), net.poor)
+        Guard.Owe -> GuardStyle(Sym.Shield, "OWE", net.fair)
+        Guard.Wep -> GuardStyle(Sym.NoEncryption, "WEP", net.poor)
+        Guard.Wpa -> GuardStyle(Sym.Lock, "WPA", net.fair)
+        Guard.Wpa2 -> GuardStyle(Sym.Lock, "WPA2", net.good)
+        Guard.Wpa23 -> GuardStyle(Sym.EnhancedEncryption, "WPA2/3", net.good)
+        Guard.Wpa3 -> GuardStyle(Sym.VerifiedUser, "WPA3", net.good)
+        Guard.Enterprise -> GuardStyle(Sym.Badge, "EAP", net.good)
+        Guard.Ble -> GuardStyle(Sym.Bluetooth, "BLE", net.bt.accent)
     }
-    Text(label, Modifier.border(1.dp, color, RoundedCornerShape(8.dp)).padding(horizontal = 6.dp, vertical = 1.dp), style = rf(10, 14, 700), color = color, maxLines = 1)
+}
+
+/** The look of a Bluetooth address kind. */
+private class AddrStyle(val icon: String, val label: String, val note: String, val color: Color)
+
+@Composable
+private fun addrStyle(a: BleAddrKind): AddrStyle {
+    val net = AntTheme.net
+    return when (a) {
+        BleAddrKind.Public -> AddrStyle(Sym.Fingerprint, S(R.string.ble_addr_public), S(R.string.ble_addr_public_note), net.poor)
+        BleAddrKind.Static -> AddrStyle(Sym.PushPin, S(R.string.ble_addr_static), S(R.string.static_random_fixed_until_the_device), net.fair)
+        BleAddrKind.Resolvable -> AddrStyle(Sym.SyncLock, S(R.string.ble_addr_resolvable), S(R.string.resolvable_private_changes_every_15_min), net.good)
+        BleAddrKind.NonResolvable -> AddrStyle(Sym.Shuffle, S(R.string.ble_addr_anonymous), S(R.string.ble_addr_anonymous_note), net.good)
+        BleAddrKind.Unknown -> AddrStyle(Sym.QuestionMark, S(R.string.ble_addr_unknown), S(R.string.ble_addr_unknown_note), cs.onSurfaceVariant)
+    }
+}
+
+/** The protection of a Wi-Fi network: its symbol over its short name, on a tinted tile. */
+@Composable
+private fun GuardBadge(g: Guard) {
+    val st = guardStyle(g)
+    Column(
+        Modifier.width(44.dp).clip(RoundedCornerShape(10.dp)).background(st.color.copy(alpha = 0.16f)).padding(vertical = 3.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Symbol(st.icon, size = 18.dp, filled = true, tint = st.color)
+        Text(st.label, style = rf(9, 11, 700), color = st.color, maxLines = 1)
+    }
+}
+
+/** A Bluetooth device: what it is when it is known without doubt, else the Bluetooth logo. */
+@Composable
+private fun BleBadge(r: WardriveRow) {
+    val c = AntTheme.net.bt.accent
+    Box(
+        Modifier.width(44.dp).height(36.dp).clip(RoundedCornerShape(10.dp)).background(c.copy(alpha = 0.16f)),
+        contentAlignment = Alignment.Center,
+    ) {
+        Symbol(r.icon ?: Sym.Bluetooth, size = 20.dp, filled = true, tint = c)
+    }
 }

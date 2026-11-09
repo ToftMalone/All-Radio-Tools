@@ -2589,4 +2589,12 @@
     </plurals>
     <string name="pair_subtitle">"2 つの無線を組み合わせて使うツール"</string>
     <string name="wardriving_export">"書き出す"</string>
+    <string name="ble_addr_public">"公開"</string>
+    <string name="ble_addr_static">"静的"</string>
+    <string name="ble_addr_resolvable">"解決可能"</string>
+    <string name="ble_addr_anonymous">"匿名"</string>
+    <string name="ble_addr_unknown">"不明"</string>
+    <string name="ble_addr_public_note">"公開：メーカーの固定アドレスで、変わりません"</string>
+    <string name="ble_addr_anonymous_note">"解決不可能なプライベート：匿名で、常に変わります"</string>
+    <string name="ble_addr_unknown_note">"種類不明：この端末では Android が示しません"</string>
 </resources>

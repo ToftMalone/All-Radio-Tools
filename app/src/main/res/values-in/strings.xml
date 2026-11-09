@@ -2589,4 +2589,12 @@
     </plurals>
     <string name="pair_subtitle">"Alat yang memakai kedua radio bersamaan"</string>
     <string name="wardriving_export">"Ekspor"</string>
+    <string name="ble_addr_public">"Publik"</string>
+    <string name="ble_addr_static">"Statis"</string>
+    <string name="ble_addr_resolvable">"Dapat diurai"</string>
+    <string name="ble_addr_anonymous">"Anonim"</string>
+    <string name="ble_addr_unknown">"Tidak diketahui"</string>
+    <string name="ble_addr_public_note">"Publik: alamat tetap produsen, tidak pernah berubah"</string>
+    <string name="ble_addr_anonymous_note">"Privat tak dapat diurai: anonim, terus berubah"</string>
+    <string name="ble_addr_unknown_note">"Jenis tidak diketahui: Android tidak menyebutkannya di ponsel ini"</string>
 </resources>

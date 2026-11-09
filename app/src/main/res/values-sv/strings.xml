@@ -2658,4 +2658,12 @@
     </plurals>
     <string name="pair_subtitle">"Verktyg som använder båda radioenheterna tillsammans"</string>
     <string name="wardriving_export">"Exportera"</string>
+    <string name="ble_addr_public">"Offentlig"</string>
+    <string name="ble_addr_static">"Statisk"</string>
+    <string name="ble_addr_resolvable">"Upplösbar"</string>
+    <string name="ble_addr_anonymous">"Anonym"</string>
+    <string name="ble_addr_unknown">"Okänd"</string>
+    <string name="ble_addr_public_note">"Offentlig: tillverkarens fasta adress, den ändras aldrig"</string>
+    <string name="ble_addr_anonymous_note">"Icke upplösbar privat: anonym, den ändras hela tiden"</string>
+    <string name="ble_addr_unknown_note">"Okänd typ: Android anger den inte på den här telefonen"</string>
 </resources>

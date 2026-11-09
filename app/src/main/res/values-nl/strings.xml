@@ -2658,4 +2658,12 @@
     </plurals>
     <string name="pair_subtitle">"Tools die beide radio\'s samen gebruiken"</string>
     <string name="wardriving_export">"Exporteren"</string>
+    <string name="ble_addr_public">"Openbaar"</string>
+    <string name="ble_addr_static">"Statisch"</string>
+    <string name="ble_addr_resolvable">"Herleidbaar"</string>
+    <string name="ble_addr_anonymous">"Anoniem"</string>
+    <string name="ble_addr_unknown">"Onbekend"</string>
+    <string name="ble_addr_public_note">"Openbaar: het vaste adres van de fabrikant, het verandert nooit"</string>
+    <string name="ble_addr_anonymous_note">"Niet-herleidbaar privé: anoniem, het verandert voortdurend"</string>
+    <string name="ble_addr_unknown_note">"Onbekend type: Android geeft het op deze telefoon niet aan"</string>
 </resources>

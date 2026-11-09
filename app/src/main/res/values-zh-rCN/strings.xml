@@ -2589,4 +2589,12 @@
     </plurals>
     <string name="pair_subtitle">"同时使用两种无线电的工具"</string>
     <string name="wardriving_export">"导出"</string>
+    <string name="ble_addr_public">"公共"</string>
+    <string name="ble_addr_static">"静态"</string>
+    <string name="ble_addr_resolvable">"可解析"</string>
+    <string name="ble_addr_anonymous">"匿名"</string>
+    <string name="ble_addr_unknown">"未知"</string>
+    <string name="ble_addr_public_note">"公共：制造商的固定地址，永不改变"</string>
+    <string name="ble_addr_anonymous_note">"不可解析的私有地址：匿名，不断变化"</string>
+    <string name="ble_addr_unknown_note">"类型未知：此手机上 Android 未提供"</string>
 </resources>

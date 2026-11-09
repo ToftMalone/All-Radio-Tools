@@ -2658,4 +2658,12 @@
     </plurals>
     <string name="pair_subtitle">"İki radyoyu birlikte kullanan araçlar"</string>
     <string name="wardriving_export">"Dışa aktar"</string>
+    <string name="ble_addr_public">"Genel"</string>
+    <string name="ble_addr_static">"Statik"</string>
+    <string name="ble_addr_resolvable">"Çözümlenebilir"</string>
+    <string name="ble_addr_anonymous">"Anonim"</string>
+    <string name="ble_addr_unknown">"Bilinmiyor"</string>
+    <string name="ble_addr_public_note">"Genel: üreticinin sabit adresi, hiç değişmez"</string>
+    <string name="ble_addr_anonymous_note">"Çözümlenemez özel: anonim, sürekli değişir"</string>
+    <string name="ble_addr_unknown_note">"Bilinmeyen tür: Android bu telefonda bunu belirtmiyor"</string>
 </resources>

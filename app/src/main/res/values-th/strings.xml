@@ -2589,4 +2589,12 @@
     </plurals>
     <string name="pair_subtitle">"เครื่องมือที่ใช้วิทยุทั้งสองร่วมกัน"</string>
     <string name="wardriving_export">"ส่งออก"</string>
+    <string name="ble_addr_public">"สาธารณะ"</string>
+    <string name="ble_addr_static">"คงที่"</string>
+    <string name="ble_addr_resolvable">"แก้ได้"</string>
+    <string name="ble_addr_anonymous">"นิรนาม"</string>
+    <string name="ble_addr_unknown">"ไม่ทราบ"</string>
+    <string name="ble_addr_public_note">"สาธารณะ: ที่อยู่ถาวรของผู้ผลิต ไม่เปลี่ยนเลย"</string>
+    <string name="ble_addr_anonymous_note">"ส่วนตัวที่แก้ไม่ได้: นิรนาม เปลี่ยนตลอดเวลา"</string>
+    <string name="ble_addr_unknown_note">"ไม่ทราบชนิด: Android ไม่ได้บอกในโทรศัพท์เครื่องนี้"</string>
 </resources>

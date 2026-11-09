@@ -2796,4 +2796,12 @@
     </plurals>
     <string name="pair_subtitle">"Інструменти, що використовують обидва радіомодулі разом"</string>
     <string name="wardriving_export">"Експорт"</string>
+    <string name="ble_addr_public">"Публічна"</string>
+    <string name="ble_addr_static">"Статична"</string>
+    <string name="ble_addr_resolvable">"Розв\'язувана"</string>
+    <string name="ble_addr_anonymous">"Анонімна"</string>
+    <string name="ble_addr_unknown">"Невідома"</string>
+    <string name="ble_addr_public_note">"Публічна: постійна адреса виробника, ніколи не змінюється"</string>
+    <string name="ble_addr_anonymous_note">"Приватна нерозв\'язувана: анонімна, постійно змінюється"</string>
+    <string name="ble_addr_unknown_note">"Тип невідомий: Android не повідомляє його на цьому телефоні"</string>
 </resources>

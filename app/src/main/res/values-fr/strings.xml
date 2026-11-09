@@ -2883,4 +2883,12 @@
     </plurals>
     <string name="pair_subtitle">"Des outils qui utilisent les deux radios ensemble"</string>
     <string name="wardriving_export">"Exporter"</string>
+    <string name="ble_addr_public">"Publique"</string>
+    <string name="ble_addr_static">"Statique"</string>
+    <string name="ble_addr_resolvable">"Résolvable"</string>
+    <string name="ble_addr_anonymous">"Anonyme"</string>
+    <string name="ble_addr_unknown">"Inconnue"</string>
+    <string name="ble_addr_public_note">"Publique : l\'adresse fixe du fabricant, elle ne change jamais"</string>
+    <string name="ble_addr_anonymous_note">"Privée non résolvable : anonyme, elle change sans arrêt"</string>
+    <string name="ble_addr_unknown_note">"Type inconnu : Android ne le donne pas sur ce téléphone"</string>
 </resources>
