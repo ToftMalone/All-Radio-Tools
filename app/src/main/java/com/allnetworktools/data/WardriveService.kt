@@ -166,10 +166,15 @@ object Wardrive {
         w.flush()
     }
 
+    /** The exclusions the capture checks; set as soon as they change. */
+    @Volatile var exclusionsNow = Exclusions(emptyList())
+
     fun dismissUpload() = update { it.copy(upload = UploadState.Idle) }
 
     /** New exclusions: the matching networks leave the database; they stay in the list, marked as excluded. */
     fun applyExclusions(c: Context, entries: Set<String>) {
+        // At once for a running capture, before the list is even saved.
+        exclusionsNow = Exclusions(entries)
         appScope.launch {
             settings(c).setExclusions(entries)
             val ex = Exclusions(entries)
@@ -227,7 +232,8 @@ class WardriveEngine(private val app: AntApplication, private val scope: Corouti
     private val queued = AtomicInteger()
     private var fix: WardriveFix? = null
     private var fixAt = 0L
-    private var exclusions = Exclusions(emptyList())
+    /** Read before any scan starts (see [start]), then kept up to date by [Wardrive.exclusionsNow]. */
+    private val exclusions get() = Wardrive.exclusionsNow
     private var wifiRows: List<WardriveRow> = emptyList()
     private var bleRows: List<WardriveRow> = emptyList()
     private val written = HashMap<String, Triple<Double, Double, Int>>()
@@ -235,11 +241,22 @@ class WardriveEngine(private val app: AntApplication, private val scope: Corouti
     private val resultsIn = Channel<Unit>(Channel.CONFLATED)
 
     fun start() {
-        scope.launch { Wardrive.settings(app).settings.collect { exclusions = Exclusions(it.exclusions) } }
+        scope.launch {
+            // The exclusions are read first: until then nothing is scanned, so nothing excluded can slip through
+            // in the first second of a run.
+            Wardrive.exclusionsNow = Exclusions(runCatching { Wardrive.settings(app).settings.first().exclusions }.getOrDefault(emptySet()))
+            launchAll()
+        }
+    }
+
+    private fun launchAll() {
+        scope.launch { Wardrive.settings(app).settings.collect { Wardrive.exclusionsNow = Exclusions(it.exclusions) } }
         scope.launch { Wardrive.refreshCounts(app) }
         scope.launch(Dispatchers.IO) {
             for (batch in queue) {
-                val fresh = runCatching { db.write(batch) }.getOrDefault(emptyMap())
+                // Checked again at the last moment, in case the list changed while the batch waited.
+                val ex = exclusions
+                val fresh = runCatching { db.write(batch.filterNot { ex.excludes(it.mac) }) }.getOrDefault(emptyMap())
                 queued.addAndGet(-batch.size)
                 Wardrive.update { it.copy(newWifi = it.newWifi + (fresh[NetType.Wifi] ?: 0), newBle = it.newBle + (fresh[NetType.Ble] ?: 0), queue = queued.get()) }
                 Wardrive.refreshCounts(app)
