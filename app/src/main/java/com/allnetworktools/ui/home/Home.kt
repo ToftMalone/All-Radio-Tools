@@ -204,10 +204,6 @@ fun HomeScreen(
                         }
                         if (!pairRow) cards() else PairTile(merge, onPair, onDeselect, cards)
                     }
-                    Row(Modifier.fillMaxWidth().padding(top = 4.dp), horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically) {
-                        Symbol(Sym.DirectionsCar, size = 16.dp, tint = cs.onSurfaceVariant)
-                        Text(S(R.string.wardriving_hint), Modifier.padding(start = 6.dp), style = rf(12, 16), color = cs.onSurfaceVariant)
-                    }
                 }
             }
         }
