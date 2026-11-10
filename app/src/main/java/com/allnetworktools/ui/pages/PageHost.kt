@@ -281,6 +281,7 @@ private fun PageBody(vm: MainViewModel, net: Network, page: Page) {
             Tool.Sarsat -> com.allnetworktools.ui.pages.sdr.SarsatTool(vm)
             Tool.LoraAprs -> com.allnetworktools.ui.pages.sdr.LoraAprsTool(vm)
             Tool.Pmr -> com.allnetworktools.ui.pages.sdr.PmrTool(vm)
+            Tool.Listen -> com.allnetworktools.ui.pages.sdr.ListenTool(vm)
             Tool.Dect -> com.allnetworktools.ui.pages.sdr.DectTool(vm)
             Tool.Dsc -> com.allnetworktools.ui.pages.sdr.DscTool(vm)
             Tool.Flarm -> com.allnetworktools.ui.pages.sdr.FlarmTool(vm)

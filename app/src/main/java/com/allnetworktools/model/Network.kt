@@ -133,6 +133,7 @@ enum class Tool(
     Sarsat(Network.Sdr, S(R.string.sarsat_title), Sym.Campaign),
     LoraAprs(Network.Sdr, "LoRa APRS", Sym.Radio),
     Pmr(Network.Sdr, "PMR446", Sym.SettingsInputAntenna),
+    Listen(Network.Sdr, S(R.string.listen_title), Sym.Headphones),
     Dect(Network.Sdr, "DECT", Sym.Deskphone),
     Vdl2(Network.Sdr, "VDL Mode 2", Sym.ConnectingAirports),
     Dsc(Network.Sdr, "DSC", Sym.Sailing),

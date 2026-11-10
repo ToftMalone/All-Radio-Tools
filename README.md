@@ -118,6 +118,7 @@ Nothing is kept once the app is closed.
 | SSTV | Slow-scan TV pictures over FM, the ISS on 145.800 MHz or any frequency: VIS header, Robot, Martin, Scottie, PD (PD120 / PD180 as the ISS uses) and Wraase modes, Doppler followed, slant corrected, pictures saved as PNG |
 | Zigbee / 802.15.4 | Zigbee, Thread and other 802.15.4 networks at 2.4 GHz, one channel or all sixteen in turn: PAN IDs, addresses and chip vendors, beacons (joining open or closed), Zigbee network header and clusters when not encrypted |
 | ANT+ | Sports sensors on 2457 MHz: heart rate and R-R interval, bike power, cadence and speed, footpods, temperature, manufacturer and battery, with the public ANT+ profiles |
+| Listen | Listen to stations: the 2 MHz around a frequency shown as a spectrum, tap or drag to tune, and the channel played as **WFM** (broadcast FM), **NFM** (walkie-talkies, marine), **AM** (aviation, shortwave) or **USB / LSB**, with volume, squelch and presets |
 | Meteor-M | Weather satellite LRPT images on 137.100 and 137.900 MHz, from the older satellites and from the Meteor-M2-x that transmit with offset QPSK |
 | PMR446 | The 16 walkie-talkie channels at once: activity, CTCSS tone, listening to analogue channels and to DMR446 / dPMR446 voice (AMBE+2 decoded), their call ids |
 | POCSAG | Pager messages (e*Message France and Germany, BOS, DAPNET or any frequency): every channel of a network at once, 512, 1200 and 2400 bit/s, BCH error correction |

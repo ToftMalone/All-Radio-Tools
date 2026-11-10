@@ -133,6 +133,15 @@ class ScreenshotTest {
         repeat(10) { compose.mainClock.advanceTimeBy(100); org.robolectric.shadows.ShadowLooper.idleMainLooper(100, java.util.concurrent.TimeUnit.MILLISECONDS) }
         assertEquals(Network.WifiBt, vm!!.nav.value.network)
     }
+    @Test fun listenTool() = shot("L1_listen", dark = true, nav = NavState(Network.Sdr, Page.ToolPage(Tool.Listen))) { vm ->
+        // A few stations over a noise floor, the channel at 250 kHz above the centre.
+        val db = FloatArray(1024) { i ->
+            val x = i - 512
+            val peaks = listOf(-300 to -35f, -90 to -45f, 128 to -28f, 330 to -50f).maxOf { (c, p) -> if (kotlin.math.abs(x - c) < 6) p - kotlin.math.abs(x - c) * 3f else -95f }
+            peaks + (if (i % 7 == 0) 3f else 0f) - 3f * kotlin.math.sin(i / 11f).toFloat()
+        }
+        vm.tools.listen.setForTest(db, -28f)
+    }
     @Test fun wardriving() = shot("W1_wardriving", dark = true, nav = NavState(Network.WifiBt, Page.ToolPage(Tool.Wardriving))) { wardriveDemo() }
     @Test fun wardrivingLight() = shot("W2_wardriving_light", nav = NavState(Network.WifiBt, Page.ToolPage(Tool.Wardriving))) { wardriveDemo(fix = false) }
     @Test fun wardrivingSettings() = shot("W3_wardriving_settings", nav = NavState(Network.WifiBt, Page.ToolPage(Tool.WardrivingSettings)))

@@ -144,6 +144,7 @@ private fun groups(net: Network, connectedDevice: String?, servingLabel: String?
                 ToolEntry(Tool.Zwave, "Z-Wave", S(R.string.zwave_subtitle)),
                 ToolEntry(Tool.Sarsat, S(R.string.sarsat_title), S(R.string.sarsat_subtitle)),
                 ToolEntry(Tool.LoraAprs, "LoRa APRS", S(R.string.lora_aprs_subtitle)),
+                ToolEntry(Tool.Listen, S(R.string.listen_title), S(R.string.listen_subtitle)),
                 ToolEntry(Tool.Pmr, "PMR446", S(R.string.pmr_subtitle)),
                 ToolEntry(Tool.Dect, "DECT", S(R.string.dect_subtitle)),
                 ToolEntry(Tool.Vdl2, "VDL Mode 2", S(R.string.vdl2_subtitle)),

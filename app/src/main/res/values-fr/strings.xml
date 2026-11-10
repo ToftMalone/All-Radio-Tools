@@ -2897,4 +2897,17 @@
     <string name="wardriving_excl_nothing">"Aucune adresse ni OUI dans ce fichier"</string>
     <string name="wardriving_excluded">"Exclu"</string>
     <string name="sdr_settings_refused">"Cette radio ne peut pas le faire : la fréquence ou le taux d\'échantillonnage dépasse ce qu\'elle sait recevoir"</string>
+    <string name="listen_title">"Écoute"</string>
+    <string name="listen_subtitle">"Écouter les stations AM, FM et BLU avec le spectre"</string>
+    <string name="listen_start">"Démarrer l\'écoute"</string>
+    <string name="listen_level">"Signal %1$s dB"</string>
+    <string name="listen_mode">"Mode"</string>
+    <string name="listen_presets">"Stations"</string>
+    <string name="listen_volume">"Volume"</string>
+    <string name="listen_squelch">"Squelch : %1$s dB"</string>
+    <string name="listen_squelch_off">"Squelch : désactivé"</string>
+    <string name="listen_marine">"VHF marine"</string>
+    <string name="gain">"Gain"</string>
+    <string name="listen_tap_hint">"Touchez ou glissez sur le spectre pour accorder. La fenêtre fait 2 MHz de large."</string>
+    <string name="listen_how_it_works">"Les 2 MHz autour de la fréquence sont affichés ci-dessus. Le canal choisi est démodulé sur le téléphone puis joué : WFM pour la radio FM, NFM pour les talkies-walkies et la radio marine, AM pour l\'aviation et les ondes courtes, USB et LSB (BLU) pour les radioamateurs. Se déplacer dans la fenêtre ne ré-accorde pas la radio. N\'écoutez que ce que la loi de votre pays permet : les conversations privées sont de la correspondance, et certains services ne doivent ni être écoutés ni être répétés. Les signaux BLU sonnent naturel quand la hauteur est juste : avancez par pas de 1 kHz."</string>
 </resources>

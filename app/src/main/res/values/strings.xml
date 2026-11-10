@@ -2823,4 +2823,17 @@
     <string name="wardriving_excl_nothing">"No address or OUI found in this file"</string>
     <string name="wardriving_excluded">"Excluded"</string>
     <string name="sdr_settings_refused">"This radio cannot do that: the frequency or the sample rate is outside what it can receive"</string>
+    <string name="listen_title">"Listen"</string>
+    <string name="listen_subtitle">"Listen to AM, FM and SSB stations with the spectrum"</string>
+    <string name="listen_start">"Start listening"</string>
+    <string name="listen_level">"Signal %1$s dB"</string>
+    <string name="listen_mode">"Mode"</string>
+    <string name="listen_presets">"Stations"</string>
+    <string name="listen_volume">"Volume"</string>
+    <string name="listen_squelch">"Squelch: %1$s dB"</string>
+    <string name="listen_squelch_off">"Squelch: off"</string>
+    <string name="listen_marine">"Marine VHF"</string>
+    <string name="gain">"Gain"</string>
+    <string name="listen_tap_hint">"Tap or drag on the spectrum to tune. The window is 2 MHz wide."</string>
+    <string name="listen_how_it_works">"The 2 MHz around the frequency are shown above. The channel you pick is demodulated on the phone and played: WFM for broadcast FM, NFM for walkie-talkies and marine radio, AM for aviation and shortwave, USB and LSB for radio amateurs. Moving inside the window does not retune the radio. Listen only to what the law of your country allows: private conversations are correspondence, and some services may not be listened to or passed on. Sideband signals sound natural when the pitch is right: move in 1 kHz steps."</string>
 </resources>
