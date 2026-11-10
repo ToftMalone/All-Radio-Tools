@@ -179,11 +179,19 @@ open class BluetoothRepository(private val context: Context) {
     /** Connects briefly, read-only, to learn what an unidentified device is. Null when it refuses or times out. */
     open suspend fun identify(address: String): GattIdentity? = BleIdentifier(context, identities).identify(address)
 
+    private companion object {
+        /** The range an HCI controller can report; anything else (127) means "no level". */
+        const val MIN_RSSI = -127
+        const val MAX_RSSI = 20
+    }
+
     private class Entry {
         val ads = LinkedHashMap<String, AdStructure>()
         var adsHash = 0
         var name: String? = null
         var rssi = 0
+        /** False until a packet with a real signal level arrived (127 means "not available"). */
+        var hasRssi = false
         var txPower: Int? = null
         var connectable = false
         var extended = false
@@ -222,7 +230,7 @@ open class BluetoothRepository(private val context: Context) {
         fun snapshot(): List<BleDevice> {
             val now = SystemClock.elapsedRealtime()
             entries.values.removeAll { now - it.lastSeen > staleMs }
-            return entries.map { (a, e) -> build(a, e) }.sortedByDescending { it.rssi }
+            return entries.filter { it.value.hasRssi }.map { (a, e) -> build(a, e) }.sortedByDescending { it.rssi }
         }
         val callback = object : ScanCallback() {
             override fun onScanResult(callbackType: Int, result: ScanResult) {
@@ -237,7 +245,13 @@ open class BluetoothRepository(private val context: Context) {
                 if (hash != e.adsHash) { e.adsHash = hash; e.dirty = true }
                 val nm = record?.deviceName ?: runCatching { result.device.name }.getOrNull()
                 if (nm != null && nm != e.name) { e.name = nm; e.dirty = true }
-                e.rssi = if (first) result.rssi else ((e.rssi * 0.6f) + result.rssi * 0.4f).toInt()
+                // Android reports 127 when the controller has no level for the packet (often on extended
+                // advertisements): it is not a signal, and averaged with real ones it gave positive values.
+                val rssi = result.rssi
+                if (rssi in MIN_RSSI..MAX_RSSI) {
+                    e.rssi = if (!e.hasRssi) rssi else ((e.rssi * 0.6f) + rssi * 0.4f).toInt()
+                    e.hasRssi = true
+                }
                 e.txPower = result.txPower.takeIf { it != ScanResult.TX_POWER_NOT_PRESENT } ?: record?.txPowerLevel?.takeIf { it != Int.MIN_VALUE } ?: e.txPower
                 e.connectable = e.connectable || result.isConnectable
                 e.extended = e.extended || !result.isLegacy

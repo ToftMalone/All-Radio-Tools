@@ -171,7 +171,9 @@ class WardriveDb(context: Context, name: String? = "wardriving.db") : SQLiteOpen
 
     /** Writes the sightings; returns how many networks were new, per type. */
     @Synchronized
-    fun write(list: List<NetSighting>): Map<NetType, Int> {
+    fun write(all: List<NetSighting>): Map<NetType, Int> {
+        // A level above 0 dBm is not a real signal (Android's 127 = "no level"): never stored.
+        val list = all.filter { it.level <= 0 }
         val fresh = HashMap<NetType, Int>()
         val db = writableDatabase
         db.beginTransaction()
@@ -257,6 +259,30 @@ class WardriveDb(context: Context, name: String? = "wardriving.db") : SQLiteOpen
             db.endTransaction()
         }
         return gone.size
+    }
+
+    /**
+     * Removes the sightings recorded with an impossible level (127 is Android's "no level", and values averaged with it
+     * came out positive): a real signal is never above 0 dBm here. Networks left without a sighting go too, and the best
+     * level of the others is recomputed. Returns the number of sightings removed.
+     */
+    @Synchronized
+    fun dropInvalidLevels(): Int {
+        val db = writableDatabase
+        db.beginTransaction()
+        try {
+            val n = db.delete("location", "level > 0", null)
+            if (n > 0) {
+                db.execSQL("DELETE FROM network WHERE bssid NOT IN (SELECT bssid FROM location)")
+                db.execSQL(
+                    "UPDATE network SET bestlevel = (SELECT MAX(level) FROM location WHERE location.bssid = network.bssid) WHERE bestlevel > 0",
+                )
+            }
+            db.setTransactionSuccessful()
+            return n
+        } finally {
+            db.endTransaction()
+        }
     }
 
     @Synchronized

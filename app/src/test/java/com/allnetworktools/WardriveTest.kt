@@ -112,4 +112,19 @@ class WardriveTest {
         db.clear()
         assertEquals(0L, db.counts().total)
     }
+
+    @Test
+    fun impossibleLevelsAreNeitherStoredNorKept() {
+        val db = WardriveDb(ApplicationProvider.getApplicationContext(), null)
+        // 127 is Android's "no level": refused at the door.
+        db.write(listOf(s("aa:00:00:00:00:01", 127, 48.85, NetType.Ble), s("aa:00:00:00:00:02", -60, 48.85, NetType.Ble)))
+        assertEquals(1L, db.counts().total)
+        // A database written by an earlier version: the impossible rows go, the networks follow, best levels are redone.
+        db.writableDatabase.execSQL("INSERT INTO location (bssid, level, lat, lon, altitude, accuracy, time) VALUES ('aa:00:00:00:00:02', 17, 48.85, 2.35, 35.0, 4.0, 1)")
+        db.writableDatabase.execSQL("UPDATE network SET bestlevel = 17 WHERE bssid = 'aa:00:00:00:00:02'")
+        assertEquals(1, db.dropInvalidLevels())
+        val best = db.readableDatabase.rawQuery("SELECT bestlevel FROM network WHERE bssid = 'aa:00:00:00:00:02'", null).use { it.moveToFirst(); it.getInt(0) }
+        assertEquals(-60, best)
+        assertEquals(0, db.dropInvalidLevels())
+    }
 }
