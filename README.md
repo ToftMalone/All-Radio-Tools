@@ -4,7 +4,7 @@
 
 **Everything that transmits around you, in one Android app.**
 
-All Radio Tools brings together tools to explore Wi-Fi, Bluetooth, the mobile network, GNSS, NFC and, with a HackRF, the radio waves themselves: aircraft, gliders, radiosondes, ships, drones, satellites, walkie-talkies, sensors and meters. NFC tags and contactless cards too.
+All Radio Tools brings together tools to explore Wi-Fi, Bluetooth, the mobile network, GNSS, NFC and, with a HackRF (or an RTL-SDR, an Airspy or a PlutoSDR), the radio waves themselves: aircraft, gliders, radiosondes, ships, drones, satellites, walkie-talkies, sensors and meters. NFC tags and contactless cards too.
 
 > 🌍 Available in 22 languages (it follows the phone's language). Written in Kotlin with Jetpack Compose and Material 3.
 >
@@ -52,7 +52,7 @@ The Internet tools (speed test, ping, traceroute, port scan, DNS lookup, whois) 
 | BLE device | GATT exploration of a device |
 | Hot/Cold | Find a device by its signal |
 | Unknown trackers | Trackers that might be following you (AirTag, Find My accessories, AirPods, Google tags, Galaxy SmartTag, Tile, Chipolo, Pebblebee), each with a **drawing faithful to the real object**, sorted by detection time, with "play sound". A **background guard** keeps watching with the app closed and alerts you when a tracker follows you; tags connected to their owner are ignored, as in AirGuard |
-| BLE spam detector | Pop-up floods (Apple AirPods / Nearby Action, Google Fast Pair, Microsoft Swift Pair, Samsung Easy Setup, Lovespouse) told from real devices by how fast new addresses appear, with a history, and the Flipper Zeros in range (body colour from their service UUID, or their name). Signatures from [Bluetooth-LE-Spam](https://github.com/simondankelmann/Bluetooth-LE-Spam) (GPL-3.0) |
+| BLE spam detector | Pairing pop-up floods (Apple AirPods and Nearby Action, the iOS 17 crash frame, Google Fast Pair, Microsoft Swift Pair, Samsung Easy Setup, Lovespouse) told from real accessories: a burst of new addresses, one address walking a list, one radio behind several addresses, or a frame no product sends. Each alert says why, a history keeps them, and the Flipper Zeros in range are listed (body colour, name or address block). Signatures from [Bluetooth-LE-Spam](https://github.com/simondankelmann/Bluetooth-LE-Spam) and [Wall of Flippers](https://github.com/K3YOMI/Wall-of-Flippers); detection ideas by Melvin Olivet |
 | Beacons | iBeacon, Eddystone, AltBeacon |
 | Earbuds battery | AirPods and Beats: left, right, case |
 
@@ -130,23 +130,23 @@ Nothing is kept once the app is closed.
 
 Every gain has an **automatic mode**, chosen by default, which picks the LNA and VGA values from the signal level; the value in use is shown in its own colour.
 
-The decoders work with the **HackRF alone**: neither the phone's Wi-Fi nor its Bluetooth is used. The SDR card stays greyed out until a HackRF is plugged in over USB.
+The decoders work with the **radio alone**: neither the phone's Wi-Fi nor its Bluetooth is used. The SDR card stays greyed out until a supported radio is plugged in over USB. No driver to install: the app talks to the radio itself through Android's USB host support (a USB-C OTG cable is enough; a powered hub helps if the phone cuts the power).
 
 ### 🚗 Wi-Fi + Bluetooth: wardriving
 
 **Select the Wi-Fi card** (or Bluetooth): a **+** appears on the other one. Tap it: the two cards slide together into a single tile, with a dock for the pair and **Wardriving** as its featured tool. The unlink button on the tile takes them apart again.
 
-- The WiGLE home screen: networks and devices new on this run, database total, GPS fix, last scan, then every Wi-Fi network and Bluetooth LE device heard, strongest first, with its maker (IEEE OUI register).
+- A recording dial with the GPS fix, counters for the run and the database, then a compact list of every Wi-Fi network and Bluetooth LE device heard, strongest first: an icon per Wi-Fi protection (open, OWE, WEP, WPA, WPA2, WPA2/3, WPA3, EAP), the device icon for Bluetooth devices identified without doubt, the kind of Bluetooth address (public, static, resolvable, anonymous) and the maker (IEEE OUI register).
 - Recording runs in a **foreground service**: it goes on with the screen off and the app closed, until you stop it.
-- Everything stays in a database on the phone. **Upload to WiGLE.net** is manual only, with your account's API name and token (never your password).
-- Exclude a full MAC address or a maker prefix (OUI): it is neither shown nor recorded, and is erased from the database.
+- Everything stays in a database on the phone. **Upload to WiGLE.net** is manual only, with your account's API name and token (never your password). **Export** saves the whole database as a WiGLE CSV file.
+- Exclude a full MAC address or a maker prefix (OUI), one by one or by importing a list (and export it): it stays in the list, faded and marked in red, but is never recorded nor sent, and is erased from the database. The list is applied before the first scan of a capture.
 - **Hidden cameras**: Wi-Fi networks and Bluetooth devices from camera makers or with camera names, a warm / cold signal to walk to one, and the video ports (RTSP, ONVIF, Hikvision, Dahua, XMEye) of the devices on the Wi-Fi network you are connected to. Clues, not proof: a wired camera sends nothing.
 - **Drone detector**: Remote ID (EU / US electronic identification) broadcast over Bluetooth LE (legacy and long range) and Wi-Fi (beacons, Wi-Fi Aware): drone position, height, speed, operator position and id, on a map, with a background engine that keeps listening with the app closed.
 
 ### 📤 Exports
 
 Only when you ask, to the location you choose:
-- **CSV**: speed test, coverage map, aircraft, radiosondes, ships, APRS, ACARS, VDL Mode 2, POCSAG, TPMS, ISM sensors, meters, DSC calls, LoRaWAN / Sigfox, Meshtastic and MeshCore packets, LoRa APRS, 406 MHz beacons, Z-Wave, Zigbee, ANT+, handover log;
+- **CSV**: speed test, coverage map, aircraft, radiosondes, ships, APRS, ACARS, VDL Mode 2, POCSAG, TPMS, ISM sensors, meters, DSC calls, LoRaWAN / Sigfox, Meshtastic and MeshCore packets, LoRa APRS, 406 MHz beacons, Z-Wave, Zigbee, ANT+, handover log, wardriving (WiGLE format);
 - **RINEX**: GNSS raw measurements;
 - **PNG**: Meteor-M and SSTV images;
 - **Debug log** (Settings, App): a detailed journal of the app, at most 50 MB, to share or save when reporting a bug, or to clear.
@@ -182,6 +182,7 @@ No account, no ads, no trackers. Internet is used for updates, the speed test (C
 - The NFC bank card reader shows only what any terminal reads without the PIN, never the full number, and keeps nothing. Reading, writing or copying a card you do not own, or a badge you are not allowed to copy, is not what it is for.
 - Locking a tag is **permanent**: no phone can write to it again.
 - Wardriving records where networks are; once sent to WiGLE.net they are public. Exclude the addresses you do not want there.
+- The BLE spam detector only listens: it is there to see an attack, never to send one.
 - "Unknown trackers" and "Jamming and spoofing" are there to **protect you**, not to track or disrupt others.
 
 ---

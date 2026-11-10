@@ -4,7 +4,7 @@
 
 **Tout ce qui émet autour de vous, dans une seule application Android.**
 
-All Radio Tools réunit les outils pour explorer le Wi-Fi, le Bluetooth, le réseau mobile, le GNSS, le NFC et, avec un HackRF, les ondes radio : avions, planeurs, ballons-sondes, navires, drones, satellites, talkies-walkies, capteurs et compteurs. Et aussi les badges NFC et les cartes sans contact.
+All Radio Tools réunit les outils pour explorer le Wi-Fi, le Bluetooth, le réseau mobile, le GNSS, le NFC et, avec un HackRF (ou un RTL-SDR, un Airspy ou un PlutoSDR), les ondes radio : avions, planeurs, ballons-sondes, navires, drones, satellites, talkies-walkies, capteurs et compteurs. Et aussi les badges NFC et les cartes sans contact.
 
 > 🌍 Application disponible en 22 langues (elle suit la langue du téléphone), écrite en Kotlin avec Jetpack Compose et Material 3.
 >
@@ -52,7 +52,7 @@ Les outils Internet (test de débit, ping, traceroute, scan de ports, DNS, whois
 | Appareil BLE | Exploration GATT d'un appareil |
 | Chaud/Froid | Retrouver un appareil au signal |
 | Traqueurs inconnus | Les traqueurs qui pourraient vous suivre (AirTag, accessoires Localiser, AirPods, tags Google, Galaxy SmartTag, Tile, Chipolo, Pebblebee), chacun avec son **dessin fidèle à l'objet**, triés par date de détection, avec « faire sonner ». Une **garde en arrière-plan** continue de surveiller app fermée et vous alerte quand un traqueur vous suit ; les balises connectées à leur propriétaire sont ignorées, comme dans AirGuard |
-| Détecteur de spam BLE | Rafales de pop-ups (AirPods / Nearby Action d'Apple, Fast Pair de Google, Swift Pair de Microsoft, Easy Setup de Samsung, Lovespouse) distinguées des vrais appareils par la vitesse d'apparition de nouvelles adresses, avec un historique, et les Flipper Zero à portée (couleur de coque par leur UUID de service, ou leur nom). Signatures issues de [Bluetooth-LE-Spam](https://github.com/simondankelmann/Bluetooth-LE-Spam) (GPL-3.0) |
+| Détecteur de spam BLE | Rafales de pop-ups d'appairage (AirPods et Nearby Action d'Apple, la trame de crash iOS 17, Fast Pair de Google, Swift Pair de Microsoft, Easy Setup de Samsung, Lovespouse) distinguées des vrais accessoires : rafale de nouvelles adresses, une adresse qui fait défiler une liste, une seule radio derrière plusieurs adresses, ou une trame qu'aucun produit n'envoie. Chaque alerte dit pourquoi, un historique les garde, et les Flipper Zero à portée sont listés (couleur de coque, nom ou bloc d'adresses). Signatures issues de [Bluetooth-LE-Spam](https://github.com/simondankelmann/Bluetooth-LE-Spam) et [Wall of Flippers](https://github.com/K3YOMI/Wall-of-Flippers) ; idées de détection de Melvin Olivet |
 | Balises | iBeacon, Eddystone, AltBeacon |
 | Batterie des écouteurs | AirPods et Beats : gauche, droite, boîtier |
 
@@ -130,23 +130,23 @@ Rien n'est conservé une fois l'application fermée.
 
 Chaque gain a un **mode automatique**, choisi par défaut, qui règle le LNA et le VGA d'après le niveau du signal ; la valeur utilisée s'affiche dans sa propre couleur.
 
-Les décodeurs fonctionnent avec le **HackRF seul** : ni le Wi-Fi ni le Bluetooth du téléphone ne sont utilisés. La carte SDR reste grisée tant qu'aucun HackRF n'est branché en USB.
+Les décodeurs fonctionnent avec la **radio seule** : ni le Wi-Fi ni le Bluetooth du téléphone ne sont utilisés. La carte SDR reste grisée tant qu'aucune radio prise en charge n'est branchée en USB. Aucun pilote à installer : l'app parle elle-même à la radio grâce à l'USB hôte d'Android (un câble USB-C OTG suffit ; un hub alimenté aide si le téléphone coupe l'alimentation).
 
 ### 🚗 Wi-Fi + Bluetooth : wardriving
 
 **Sélectionnez la carte Wi-Fi** (ou Bluetooth) : un **+** apparaît sur l'autre. Touchez-le : les deux cartes glissent l'une vers l'autre et forment une seule case, avec un dock pour la paire et le **Wardriving** comme outil phare. Le bouton de séparation sur la case les désassemble.
 
-- L'écran d'accueil de WiGLE : réseaux et appareils nouveaux de la session, total de la base, position GPS, dernier scan, puis chaque réseau Wi-Fi et appareil Bluetooth LE entendu, du plus fort au plus faible, avec son constructeur (registre OUI de l'IEEE).
+- Un cadran d'enregistrement avec la position GPS, des compteurs pour la session et la base, puis une liste compacte de chaque réseau Wi-Fi et appareil Bluetooth LE entendu, du plus fort au plus faible : une icône par protection Wi-Fi (ouvert, OWE, WEP, WPA, WPA2, WPA2/3, WPA3, EAP), l'icône de l'appareil pour les appareils Bluetooth identifiés sans doute possible, le type d'adresse Bluetooth (publique, statique, résolvable, anonyme) et le constructeur (registre OUI de l'IEEE).
 - L'enregistrement tourne dans un **service de premier plan** : il continue écran éteint et application fermée, jusqu'à ce que vous l'arrêtiez.
-- Tout reste dans une base de données sur le téléphone. **L'envoi vers WiGLE.net** est uniquement manuel, avec le nom d'API et le jeton de votre compte (jamais votre mot de passe).
-- Excluez une adresse MAC complète ou un préfixe constructeur (OUI) : il n'est ni affiché ni enregistré, et il est effacé de la base.
+- Tout reste dans une base de données sur le téléphone. **L'envoi vers WiGLE.net** est uniquement manuel, avec le nom d'API et le jeton de votre compte (jamais votre mot de passe). **Exporter** enregistre toute la base dans un fichier CSV au format WiGLE.
+- Excluez une adresse MAC complète ou un préfixe constructeur (OUI), une par une ou en important une liste (et exportez-la) : elle reste dans la liste, grisée et marquée en rouge, mais n'est jamais enregistrée ni envoyée, et elle est effacée de la base. La liste est appliquée avant le premier scan d'une capture.
 - **Caméras cachées** : réseaux Wi-Fi et appareils Bluetooth de fabricants de caméras ou portant un nom de caméra, un signal chaud / froid pour s'en approcher, et les ports vidéo (RTSP, ONVIF, Hikvision, Dahua, XMEye) des appareils du réseau Wi-Fi auquel vous êtes connecté. Des indices, pas des preuves : une caméra filaire n'émet rien.
 - **Détecteur de drones** : le Remote ID (signalement électronique européen et américain) diffusé en Bluetooth LE (classique et longue portée) et en Wi-Fi (balises, Wi-Fi Aware) : position, hauteur et vitesse du drone, position et identifiant du télépilote, sur une carte, avec un moteur qui continue d'écouter application fermée.
 
 ### 📤 Exports
 
 Uniquement quand vous le demandez, à l'emplacement que vous choisissez :
-- **CSV** : test de débit, carte de couverture, avions, ballons-sondes, navires, APRS, ACARS, VDL Mode 2, POCSAG, TPMS, capteurs ISM, compteurs, appels ASN, LoRaWAN / Sigfox, paquets Meshtastic et MeshCore, LoRa APRS, balises 406 MHz, Z-Wave, Zigbee, ANT+, journal de handover ;
+- **CSV** : test de débit, carte de couverture, avions, ballons-sondes, navires, APRS, ACARS, VDL Mode 2, POCSAG, TPMS, capteurs ISM, compteurs, appels ASN, LoRaWAN / Sigfox, paquets Meshtastic et MeshCore, LoRa APRS, balises 406 MHz, Z-Wave, Zigbee, ANT+, journal de handover, wardriving (format WiGLE) ;
 - **RINEX** : mesures brutes GNSS ;
 - **PNG** : images Meteor-M et SSTV ;
 - **Journal de debug** (Réglages, Application) : un journal détaillé de l'app, 50 Mo au plus, à partager ou enregistrer pour signaler un bug, ou à vider.
@@ -177,6 +177,7 @@ Aucun compte, aucune publicité, aucun traceur. Internet sert aux mises à jour,
 ## ⚖️ Usage responsable
 
 - Le wardriving enregistre où se trouvent les réseaux ; une fois envoyés à WiGLE.net, ils sont publics. Excluez les adresses que vous ne voulez pas y voir.
+- Le détecteur de spam BLE ne fait qu'écouter : il sert à voir une attaque, jamais à en envoyer.
 - Le SDR est utilisé **en réception seulement**. Respectez la législation de votre pays sur l'écoute des fréquences.
 - Les outils de sécurité Wi-Fi (audit, faux points d'accès, homme du milieu, scan de ports) sont faits pour **vos propres réseaux** ou ceux que vous avez l'autorisation de tester.
 - Les messages de pagers (POCSAG) et les conversations de talkies-walkies (PMR446) sont des **correspondances privées** : dans de nombreux pays, dont la France, il est interdit de divulguer ou d'utiliser ce que vous entendez.
