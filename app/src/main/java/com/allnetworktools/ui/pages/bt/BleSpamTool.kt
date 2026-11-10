@@ -1,6 +1,12 @@
 package com.allnetworktools.ui.pages.bt
 
 import android.os.SystemClock
+import androidx.compose.ui.draw.clip
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.background
+import com.allnetworktools.data.BleSpamGuard
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -50,10 +56,15 @@ private fun time(ms: Long) = synchronized(clock) { clock.format(Date(ms)) }
 
 /** BLE spam (pop-up floods) going on around, its history, and the Flipper Zeros in range. Listening only. */
 @Composable
-fun BleSpamTool(watch: BleSpamWatch, devices: List<BleDevice>) {
+fun BleSpamTool(watch: BleSpamWatch, devices: List<BleDevice>, guardRunning: Boolean = false, onGuard: (Boolean) -> Unit = {}) {
     var tick by remember { mutableIntStateOf(0) }
     LaunchedEffect(Unit) { while (true) { delay(1000); tick++ } }
-    LaunchedEffect(devices, tick) { watch.update(devices, SystemClock.elapsedRealtime(), System.currentTimeMillis()) }
+    // While the engine runs it feeds the session itself; the screen only shows it.
+    LaunchedEffect(devices, tick, guardRunning) { if (!guardRunning) watch.update(devices, SystemClock.elapsedRealtime(), System.currentTimeMillis()) }
+    DisposableEffect(Unit) {
+        BleSpamGuard.watching = true
+        onDispose { BleSpamGuard.watching = false }
+    }
     if (watch.incidents.isNotEmpty()) TopBarAction(Sym.Delete) { watch.clear() }
     val net = AntTheme.net
     PageColumn {
@@ -71,6 +82,23 @@ fun BleSpamTool(watch: BleSpamWatch, devices: List<BleDevice>) {
                 if (attacking.isNotEmpty()) HeroChip(S(R.string.blespam_spam_now), net.poor, blink = true)
                 else HeroChip(S(R.string.bluetooth_listening_in_progress), net.good, blink = true)
                 if (watch.flippers.isNotEmpty()) HeroChip(S(R.string.blespam_flipper_nearby, watch.flippers.size), net.fair)
+            }
+            // The engine keeps watching with the app closed and alerts on an attack or a Flipper Zero.
+            Row(
+                Modifier.padding(top = 14.dp).fillMaxWidth().clip(RoundedCornerShape(18.dp)).background(cs.surface.copy(alpha = 0.7f))
+                    .clickable { onGuard(!guardRunning) }.padding(start = 14.dp, end = 10.dp, top = 10.dp, bottom = 10.dp),
+                verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp),
+            ) {
+                Symbol(Sym.Shield, size = 22.dp, filled = guardRunning, tint = if (guardRunning) net.good else cs.onSurfaceVariant)
+                Column(Modifier.weight(1f)) {
+                    Text(S(R.string.blespam_guard), style = rf(15, 20, 600))
+                    Text(if (guardRunning) S(R.string.blespam_guard_on) else S(R.string.blespam_guard_off), style = rf(12, 16), color = cs.onSurfaceVariant)
+                }
+                androidx.compose.material3.Switch(
+                    checked = guardRunning, onCheckedChange = onGuard,
+                    thumbContent = if (guardRunning) ({ Symbol(Sym.Check, size = 16.dp, tint = cs.primary) }) else null,
+                    colors = androidx.compose.material3.SwitchDefaults.colors(checkedTrackColor = cs.primary, checkedThumbColor = cs.onPrimary),
+                )
             }
         }
 

@@ -49,7 +49,7 @@ class ToolsHub(private val app: AntApplication, private val scope: CoroutineScop
     val mitm by lazy { com.allnetworktools.ui.pages.wifi.MitmController(probes, links, scope) }
     val evilTwin = com.allnetworktools.ui.pages.wifi.EvilTwinController()
     // Shared with the background guard, which keeps feeding it with the app closed.
-    val bleSpam = com.allnetworktools.data.BleSpamWatch()
+    val bleSpam get() = com.allnetworktools.data.BleSpamGuard.watch
     val unknownTrackers get() = com.allnetworktools.data.TrackerGuard.controller(app)
     // One HackRF, one tool at a time: starting one stops the other.
     val spectrum: com.allnetworktools.ui.pages.sdr.SpectrumController by lazy {

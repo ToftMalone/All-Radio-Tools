@@ -454,7 +454,18 @@ private fun BtToolRoute(vm: MainViewModel, page: Page.ToolPage) {
             )
         }
         Tool.Beacons -> com.allnetworktools.ui.pages.bt.BeaconsTool(ble)
-        Tool.BleSpam -> com.allnetworktools.ui.pages.bt.BleSpamTool(vm.tools.bleSpam, ble)
+        Tool.BleSpam -> {
+            val guard by com.allnetworktools.data.BleSpamGuard.running.collectAsStateWithLifecycle()
+            val perms by vm.permissions.collectAsStateWithLifecycle()
+            val actions = LocalActions.current
+            val context = androidx.compose.ui.platform.LocalContext.current
+            com.allnetworktools.ui.pages.bt.BleSpamTool(vm.tools.bleSpam, ble, guardRunning = guard) { on ->
+                if (!on) com.allnetworktools.data.BleSpamGuard.stop(context) else {
+                    if (PermGroup.Notifications !in perms) actions.request(PermGroup.Notifications)
+                    com.allnetworktools.data.BleSpamGuard.start(context)
+                }
+            }
+        }
         Tool.Earbuds -> com.allnetworktools.ui.pages.bt.EarbudsTool(ble)
         Tool.TrackerDetail -> {
             val positions by vm.positions.collectAsStateWithLifecycle()
