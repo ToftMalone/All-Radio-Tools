@@ -113,7 +113,7 @@ class NfcTest {
                 h.startsWith("00A4040007A0000000041010") ->
                     r("6F1C" + "8407A0000000041010" + "A511" + "500A" + NfcChips.hex("MASTERCARD".toByteArray(), "") + "9F4D020B02")
                 h.startsWith("80A8") -> r("770E82021980940808010100" + "10010100")
-                h == "00B2010C00" -> r("7025" + "5A0854133300898012345F" + "5F24032810315F25032310015F280202505F2007" + NfcChips.hex("DUPONT/".toByteArray(), ""))
+                h == "00B2010C00" -> r("7025" + "5A085413330089801234" + "5F24032810315F25032310015F280202505F2007" + NfcChips.hex("DUPONT/".toByteArray(), ""))
                 h == "00B2011400" -> r("700F9F420209785F300202019F0702FF00")
                 h == "80CA9F4F00" -> r("9F4F109A039F21039F02065F2A029F1A029C01")
                 h == "00B2015C00" -> r("2610310930150000000012340978025000")
@@ -131,7 +131,7 @@ class NfcTest {
         assertEquals("MASTERCARD", c.label)
         assertEquals("1234", c.last4)
         assertEquals("10/28", c.expiry)
-        assertEquals("01/23", c.effective)
+        assertEquals("10/23", c.effective)  // 5F25 = 231001: 1 October 2023
         assertEquals("FR", c.country)
         assertEquals("EUR", c.currency)
         assertEquals("DUPONT", c.holder)
