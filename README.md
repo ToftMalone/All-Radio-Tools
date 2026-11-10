@@ -52,7 +52,6 @@ The Internet tools (speed test, ping, traceroute, port scan, DNS lookup, whois) 
 | BLE device | GATT exploration of a device |
 | Hot/Cold | Find a device by its signal |
 | Unknown trackers | Trackers that might be following you (AirTag, Find My accessories, AirPods, Google tags, Galaxy SmartTag, Tile, Chipolo, Pebblebee), each with a **drawing faithful to the real object**, sorted by detection time, with "play sound". A **background guard** keeps watching with the app closed and alerts you when a tracker follows you; tags connected to their owner are ignored, as in AirGuard |
-| BLE spam detector | Pop-up floods (Apple AirPods / Nearby Action, Google Fast Pair, Microsoft Swift Pair, Samsung Easy Setup, Lovespouse) told from real devices by how fast new addresses appear, with a history, and the Flipper Zeros in range (body colour from their service UUID, or their name). Signatures from [Bluetooth-LE-Spam](https://github.com/simondankelmann/Bluetooth-LE-Spam) (GPL-3.0) |
 | Beacons | iBeacon, Eddystone, AltBeacon |
 | Earbuds battery | AirPods and Beats: left, right, case |
 

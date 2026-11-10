@@ -80,7 +80,7 @@ private fun groups(net: Network, connectedDevice: String?, servingLabel: String?
                 ToolEntry(Tool.Beacons, S(R.string.beacons), "iBeacon, Eddystone, AltBeacon"),
             ),
         ),
-        ToolGroup(S(R.string.security_2), listOf(ToolEntry(Tool.UnknownTrackers, S(R.string.unknown_trackers), S(R.string.airtag_smarttag_tile_following_you)), ToolEntry(Tool.BleSpam, S(R.string.blespam_title), S(R.string.blespam_subtitle)))),
+        ToolGroup(S(R.string.security_2), listOf(ToolEntry(Tool.UnknownTrackers, S(R.string.unknown_trackers), S(R.string.airtag_smarttag_tile_following_you)))),
     )
     Network.Cellular -> listOf(
         ToolGroup(

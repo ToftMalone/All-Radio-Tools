@@ -52,7 +52,6 @@ Les outils Internet (test de débit, ping, traceroute, scan de ports, DNS, whois
 | Appareil BLE | Exploration GATT d'un appareil |
 | Chaud/Froid | Retrouver un appareil au signal |
 | Traqueurs inconnus | Les traqueurs qui pourraient vous suivre (AirTag, accessoires Localiser, AirPods, tags Google, Galaxy SmartTag, Tile, Chipolo, Pebblebee), chacun avec son **dessin fidèle à l'objet**, triés par date de détection, avec « faire sonner ». Une **garde en arrière-plan** continue de surveiller app fermée et vous alerte quand un traqueur vous suit ; les balises connectées à leur propriétaire sont ignorées, comme dans AirGuard |
-| Détecteur de spam BLE | Rafales de pop-ups (AirPods / Nearby Action d'Apple, Fast Pair de Google, Swift Pair de Microsoft, Easy Setup de Samsung, Lovespouse) distinguées des vrais appareils par la vitesse d'apparition de nouvelles adresses, avec un historique, et les Flipper Zero à portée (couleur de coque par leur UUID de service, ou leur nom). Signatures issues de [Bluetooth-LE-Spam](https://github.com/simondankelmann/Bluetooth-LE-Spam) (GPL-3.0) |
 | Balises | iBeacon, Eddystone, AltBeacon |
 | Batterie des écouteurs | AirPods et Beats : gauche, droite, boîtier |
 

@@ -130,7 +130,6 @@ object Sym {
     const val Share = "share"
     const val ShareLocation = "share_location"
     const val Shield = "shield"
-    const val Pets = "pets"
     const val Fingerprint = "fingerprint"
     const val PushPin = "push_pin"
     const val SyncLock = "sync_lock"

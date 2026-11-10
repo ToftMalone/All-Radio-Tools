@@ -142,7 +142,6 @@ class ScreenshotTest {
         }
         vm.tools.listen.setForTest(db, -28f)
     }
-    @Test fun bleSpam() = shot("B9_ble_spam", nav = NavState(Network.Bluetooth, Page.ToolPage(Tool.BleSpam)))
     @Test fun wardriving() = shot("W1_wardriving", dark = true, nav = NavState(Network.WifiBt, Page.ToolPage(Tool.Wardriving))) { wardriveDemo() }
     @Test fun wardrivingLight() = shot("W2_wardriving_light", nav = NavState(Network.WifiBt, Page.ToolPage(Tool.Wardriving))) { wardriveDemo(fix = false) }
     @Test fun wardrivingSettings() = shot("W3_wardriving_settings", nav = NavState(Network.WifiBt, Page.ToolPage(Tool.WardrivingSettings)))

@@ -2910,25 +2910,4 @@
     <string name="gain">"Gain"</string>
     <string name="listen_tap_hint">"Touchez ou glissez sur le spectre pour accorder. La fenêtre fait 2 MHz de large."</string>
     <string name="listen_how_it_works">"Les 2 MHz autour de la fréquence sont affichés ci-dessus. Le canal choisi est démodulé sur le téléphone puis joué : WFM pour la radio FM, NFM pour les talkies-walkies et la radio marine, AM pour l\'aviation et les ondes courtes, USB et LSB (BLU) pour les radioamateurs. Se déplacer dans la fenêtre ne ré-accorde pas la radio. N\'écoutez que ce que la loi de votre pays permet : les conversations privées sont de la correspondance, et certains services ne doivent ni être écoutés ni être répétés. Les signaux BLU sonnent naturel quand la hauteur est juste : avancez par pas de 1 kHz."</string>
-    <string name="blespam_title">"Détecteur de spam BLE"</string>
-    <string name="blespam_subtitle">"Rafales de pop-ups et Flipper Zero à proximité"</string>
-    <string name="blespam_under_attack">"Spam BLE autour de vous"</string>
-    <string name="blespam_quiet">"Aucun spam"</string>
-    <string name="blespam_quiet_body">"Rien n\'inonde les pop-ups Bluetooth des téléphones et ordinateurs autour de vous."</string>
-    <string name="blespam_spam_now">"Spam en cours"</string>
-    <string name="blespam_flipper_nearby">"Flipper Zero : %1$d"</string>
-    <string name="blespam_flippers">"Flipper Zero à portée"</string>
-    <string name="blespam_flipper_white">"coque blanche"</string>
-    <string name="blespam_flipper_black">"coque noire"</string>
-    <string name="blespam_flipper_transparent">"coque transparente"</string>
-    <string name="blespam_flipper_by_name">"par son nom"</string>
-    <string name="blespam_now">"Annonces de pop-up en ce moment"</string>
-    <string name="blespam_none">"Aucune annonce de pop-up"</string>
-    <string name="blespam_none_body">"Les pop-ups d\'appairage (AirPods, Fast Pair, Swift Pair, Galaxy) entendus dans les 10 dernières secondes s\'affichent ici."</string>
-    <string name="blespam_history">"Historique"</string>
-    <string name="blespam_kind_line">"Cible %1$s · adresses nouvelles en 10 s : %2$d sur %3$d"</string>
-    <string name="blespam_probably_real">"sans doute un vrai appareil"</string>
-    <string name="blespam_ongoing">"en cours"</string>
-    <string name="blespam_peak">"jusqu\'à %1$d adresses / 10 s"</string>
-    <string name="blespam_how_it_works">"Le spam BLE envoie en boucle des pop-ups d\'appairage (la fiche « nouveaux AirPods » sur iPhone, Fast Pair sur Android, Swift Pair sur Windows, la configuration Galaxy sur Samsung), avec une nouvelle adresse à chaque fois ; certains faisaient même planter iOS 17. Un Flipper Zero, un ESP32 ou une app de téléphone peuvent le faire. Ici, un type de pop-up compte comme une attaque quand 6 nouvelles adresses le portent en 10 secondes (3 pour les pop-ups d\'action d\'iPhone) : de vrais AirPods ou un vrai casque gardent leur adresse pendant des minutes. Un Flipper Zero est reconnu au service de la couleur de sa coque ou à son nom, mais pendant qu\'il spamme il change d\'adresse et n\'est plus reconnaissable. Les signatures viennent de l\'app Bluetooth-LE-Spam de Simon Dankelmann. Pour faire cesser les pop-ups sur votre téléphone : coupez le Bluetooth un moment ou éloignez-vous de la source (le signal le plus fort est le plus proche)."</string>
 </resources>
