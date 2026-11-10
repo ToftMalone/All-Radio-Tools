@@ -333,7 +333,7 @@ private fun PageBody(vm: MainViewModel, net: Network, page: Page) {
                     onLocate = { actions.request(PermGroup.Location) },
                 )
             }
-            Tool.Gatt, Tool.Paired, Tool.Tracker, Tool.UnknownTrackers, Tool.TrackerDetail, Tool.Beacons, Tool.Earbuds -> BtToolRoute(vm, page)
+            Tool.Gatt, Tool.Paired, Tool.Tracker, Tool.UnknownTrackers, Tool.TrackerDetail, Tool.Beacons, Tool.Earbuds, Tool.BleSpam -> BtToolRoute(vm, page)
             Tool.CellDetail -> CellDetailTool(vm.cell.collectAsStateWithLifecycle().value.state, page.arg) {
                 vm.navigate { it.copy(page = Page.ToolPage(Tool.Neighbors)) }
             }
@@ -454,6 +454,7 @@ private fun BtToolRoute(vm: MainViewModel, page: Page.ToolPage) {
             )
         }
         Tool.Beacons -> com.allnetworktools.ui.pages.bt.BeaconsTool(ble)
+        Tool.BleSpam -> com.allnetworktools.ui.pages.bt.BleSpamTool(vm.tools.bleSpam, ble)
         Tool.Earbuds -> com.allnetworktools.ui.pages.bt.EarbudsTool(ble)
         Tool.TrackerDetail -> {
             val positions by vm.positions.collectAsStateWithLifecycle()
