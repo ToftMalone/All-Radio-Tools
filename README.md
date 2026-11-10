@@ -210,12 +210,6 @@ The workflow needs the `KEYSTORE_BASE64`, `KEYSTORE_PASSWORD`, `KEY_ALIAS` and `
 
 ---
 
-## 🤝 Contributing
-
-Pull requests are welcome. [CONTRIBUTING.md](CONTRIBUTING.md) covers the project layout, how a tool is wired up, the strings and translations, the tests and the commit conventions. In short: keep the logic in `data/` and the Compose in `ui/`, add a test for logic changes, and make sure `:app:assembleDebug` and `:app:testDebugUnitTest` pass — the CI runs both on every PR.
-
----
-
 ## 📜 License
 
 All Radio Tools is free software released under the [GNU General Public License v3.0](LICENSE): you may use, study, share and modify it, provided that derived versions stay under the same license and publish their source code.

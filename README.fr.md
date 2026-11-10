@@ -206,12 +206,6 @@ Le workflow a besoin des secrets `KEYSTORE_BASE64`, `KEYSTORE_PASSWORD`, `KEY_AL
 
 ---
 
-## 🤝 Contribuer
-
-Les pull requests sont les bienvenues. [CONTRIBUTING.fr.md](CONTRIBUTING.fr.md) couvre l'organisation du code, le branchement d'un outil, les chaînes et traductions, les tests et les conventions de commit. En bref : gardez la logique dans `data/` et le Compose dans `ui/`, ajoutez un test pour tout changement de logique, et assurez-vous que `:app:assembleDebug` et `:app:testDebugUnitTest` passent — la CI lance les deux sur chaque PR.
-
----
-
 ## 📜 Licence
 
 All Radio Tools est un logiciel libre publié sous la [licence publique générale GNU v3.0](LICENSE) : vous pouvez l'utiliser, l'étudier, le partager et le modifier, à condition que les versions dérivées restent sous la même licence et publient leur code source.
