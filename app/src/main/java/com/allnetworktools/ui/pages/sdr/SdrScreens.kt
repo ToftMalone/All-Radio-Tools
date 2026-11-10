@@ -146,14 +146,46 @@ class SdrGain(val lnaSteps: List<Int>, lna: Int, val vgaSteps: List<Int>, vga: I
  */
 @Composable
 internal fun GainSettings(g: SdrGain, onChange: () -> Unit) {
+    val kind = com.allnetworktools.data.sdr.SdrSettings.kind
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        GainLine(S(R.string.lna_gain_db), g, g.lna, g.lnaSteps, onChange) { g.lna = it }
-        GainLine(S(R.string.vga_gain_db), g, g.vga, g.vgaSteps, onChange) { g.vga = it }
-        g.amp?.let { on ->
-            Text(S(R.string.preamplifier), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
-            AntFilterChip(S(R.string.amp_14_db), on, { g.amp = !on; onChange() })
+        val steps = kind?.gainSteps
+        if (steps != null) {
+            // A radio with its own gain scale: one line in its own steps instead of the HackRF's LNA / VGA / amplifier.
+            NativeGainLine(kind, steps, g, onChange)
+        } else {
+            GainLine(S(R.string.lna_gain_db), g, g.lna, g.lnaSteps, onChange) { g.lna = it }
+            GainLine(S(R.string.vga_gain_db), g, g.vga, g.vgaSteps, onChange) { g.vga = it }
+            g.amp?.let { on ->
+                Text(S(R.string.preamplifier), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
+                AntFilterChip(S(R.string.amp_14_db), on, { g.amp = !on; onChange() })
+            }
+        }
+        if (kind?.biasTee == true) BiasTeeLine()
+    }
+}
+
+@Composable
+private fun NativeGainLine(kind: com.allnetworktools.data.sdr.SdrKind, steps: List<Int>, g: SdrGain, onChange: () -> Unit) {
+    val st = com.allnetworktools.data.sdr.SdrSettings
+    Text(S(R.string.sdr_gain_of, kind.label) + if (kind.gainUnit.isNotEmpty()) " (${kind.gainUnit})" else "", style = rf(13, 18, 600), color = cs.onSurfaceVariant)
+    FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        AntFilterChip(S(R.string.auto_gain), st.nativeAuto, { if (!st.nativeAuto) { st.nativeAuto = true; g.setAuto(); onChange() } })
+        steps.forEach { v ->
+            AntFilterChip("$v", !st.nativeAuto && st.nativeGain == v, { st.nativeAuto = false; st.nativeGain = v; g.auto = false; onChange() })
         }
     }
+}
+
+/** Power on the antenna port, for an active antenna or a preamplifier. */
+@Composable
+private fun BiasTeeLine() {
+    val st = com.allnetworktools.data.sdr.SdrSettings
+    Text(S(R.string.sdr_bias_tee), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
+    AntFilterChip(S(R.string.sdr_bias_tee_chip), st.biasTee, {
+        st.biasTee = !st.biasTee
+        Thread { st.applyBiasTee() }.start()
+    })
+    if (st.biasTee) Text(S(R.string.sdr_bias_tee_warning), style = rf(12, 16), color = cs.error)
 }
 
 @Composable

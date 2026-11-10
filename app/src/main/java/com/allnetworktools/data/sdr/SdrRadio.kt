@@ -28,6 +28,9 @@ interface SdrRadio {
     /** Power on the antenna port (bias tee), when the radio has one. */
     fun setAntennaPower(on: Boolean): Boolean
 
+    /** The radio's own gain, in the steps of [SdrKind.gainSteps]; false for a radio that has none (the HackRF). */
+    fun setNativeGain(value: Int): Boolean = false
+
     /** [onSamples] gets each buffer on a dedicated thread; [onError] fires once if the radio stops answering. */
     fun startRx(onSamples: (ByteArray, Int) -> Unit, onError: (String) -> Unit)
     fun close()

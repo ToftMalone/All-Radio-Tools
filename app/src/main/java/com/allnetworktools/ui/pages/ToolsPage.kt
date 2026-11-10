@@ -216,6 +216,12 @@ fun ToolsPage(net: Network, vm: MainViewModel) {
     val badge = featuredBadge(net, vm)
     // The Internet tools are greyed out on the network they do not work over.
     val internet = if (net == Network.Wifi || net == Network.Cellular) rememberInternetAvailability(vm) else null
+    // With a radio plugged in, only the SDR tools it can run are listed; with none, all of them.
+    val radio = if (net == Network.Sdr) vm.sdrDevice.collectAsStateWithLifecycle().value else null
+    val allGroups = groups(net, connected, servingLabel)
+    val shownGroups = if (radio == null) allGroups
+    else allGroups.map { g -> g.copy(items = g.items.filter { com.allnetworktools.ui.pages.sdr.sdrCompatible(it.tool, radio) }) }.filter { it.items.isNotEmpty() }
+    val hidden = allGroups.sumOf { it.items.size } - shownGroups.sumOf { it.items.size }
     PageColumn {
         Column(
             Modifier.fadeUp().fillMaxWidth().clip(RoundedCornerShape(32.dp)).background(acc.container)
@@ -235,7 +241,13 @@ fun ToolsPage(net: Network, vm: MainViewModel) {
                 PillButton(S(R.string.launch), { open(net.featured) }, icon = Sym.PlayArrow, height = 48.dp)
             }
         }
-        groups(net, connected, servingLabel).forEach { g ->
+        if (radio != null && hidden > 0) {
+            Text(
+                P(R.plurals.p_sdr_tools_hidden, hidden, radio.name, hidden),
+                Modifier.padding(horizontal = 8.dp), style = rf(13, 18), color = cs.onSurfaceVariant,
+            )
+        }
+        shownGroups.forEach { g ->
             SectionTitle(g.title)
             TileGrid(g.items) { e, mod ->
                 val note = if (e.tool in comingSoon) S(R.string.coming_soon) else internet?.why(e.tool)?.title

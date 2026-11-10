@@ -8,6 +8,7 @@ import android.hardware.usb.UsbInterface
 import android.hardware.usb.UsbManager
 import android.hardware.usb.UsbRequest
 import com.allnetworktools.R
+import com.allnetworktools.util.DebugLog
 import com.allnetworktools.util.S
 import java.nio.ByteBuffer
 import java.util.concurrent.TimeoutException
@@ -48,10 +49,11 @@ class RtlSdr private constructor(
 
     override fun setSampleRate(hz: Int, filterHz: Int): Boolean {
         val real = rtl.setSampleRate(hz)
-        if (real <= 0.0) return false
+        if (real <= 0.0) { DebugLog.w("RTL-SDR", "Sample rate $hz refused by the RTL2832U resampler"); return false }
         rate = real.toInt()
         // The tuner filter follows the rate; the IF it picks goes to the demodulator.
         val ifFreq = tuned { tuner.setBandwidth(rate) }
+        DebugLog.i("RTL-SDR", "Rate ${real.toInt()} Hz, tuner IF $ifFreq Hz")
         if (ifFreq < 0) return false
         rtl.setIfFreq(ifFreq)
         if (freq != 0L) tuned { tuner.setFreq(freq) }
@@ -61,6 +63,7 @@ class RtlSdr private constructor(
     override fun setFrequency(hz: Long): Boolean {
         if (hz < caps.minHz || hz > caps.maxHz) return false
         val r = tuned { tuner.setFreq(hz) }
+        if (r < 0) DebugLog.w("RTL-SDR", "Tuning to $hz Hz failed ($r): ${if (!tuner.locked) "PLL not locked" else "I2C error"}")
         freq = if (r >= 0) hz else 0L
         return r >= 0
     }
@@ -70,6 +73,12 @@ class RtlSdr private constructor(
         val total = lna + vga + (if (amp) 14 else 0)
         val wanted = (total * R82xx.GAINS.last() / 116).coerceIn(0, R82xx.GAINS.last())
         val g = R82xx.GAINS.minByOrNull { Math.abs(it - wanted) } ?: 0
+        return tuned { tuner.setGain(g) } >= 0
+    }
+
+    /** [value] in dB: the nearest step the tuner can make. */
+    override fun setNativeGain(value: Int): Boolean {
+        val g = R82xx.GAINS.minByOrNull { Math.abs(it - value * 10) } ?: 0
         return tuned { tuner.setGain(g) } >= 0
     }
 
@@ -85,7 +94,7 @@ class RtlSdr private constructor(
 
     override fun startRx(onSamples: (ByteArray, Int) -> Unit, onError: (String) -> Unit) {
         if (running) return
-        val ep = epIn ?: run { onError(S(R.string.usb_error)); return }
+        val ep = epIn ?: run { DebugLog.e("RTL-SDR", "No bulk IN endpoint"); onError(S(R.string.usb_error)); return }
         rtl.resetBuffer()
         running = true
         thread = Thread({
@@ -174,7 +183,8 @@ class RtlSdr private constructor(
             }
             val rtl = Rtl2832(bus)
             // A first write that fails means the dongle needs a reset.
-            if (rtl.writeReg(Rtl2832.USBB, Rtl2832.USB_SYSCTL, 0x09, 1) < 0) { conn.close(); return null }
+            DebugLog.i("RTL-SDR", "Interfaces ${device.interfaceCount}, endpoint ${ep?.address?.let { "0x%02x".format(it) }}, max packet ${ep?.maxPacketSize}")
+            if (rtl.writeReg(Rtl2832.USBB, Rtl2832.USB_SYSCTL, 0x09, 1) < 0) { DebugLog.e("RTL-SDR", "First control write failed"); conn.close(); return null }
             rtl.initBaseband()
             val maker = device.manufacturerName.orEmpty()
             val product = device.productName.orEmpty()
@@ -189,7 +199,9 @@ class RtlSdr private constructor(
                 rtl.i2cReadReg(R82xx.R828D_I2C_ADDR, R82xx.CHECK_ADDR) == R82xx.CHECK_VAL -> "R828D"
                 else -> null
             }
+            DebugLog.i("RTL-SDR", "USB strings '$maker' / '$product' -> model $model, tuner $chip")
             if (chip == null) {
+                DebugLog.w("RTL-SDR", "No R820T / R828D tuner answered (E4000, FC0012, FC0013 and FC2580 are not supported)")
                 // E4000, FC0012, FC0013 and FC2580 sticks are not supported.
                 rtl.setI2cRepeater(false)
                 conn.releaseInterface(iface); conn.close()
@@ -205,6 +217,7 @@ class RtlSdr private constructor(
             val tuner = R82xx(rtl, r828d, tunerXtal, model)
             val rc = tuner.init()
             rtl.setI2cRepeater(false)
+            DebugLog.i("RTL-SDR", "Tuner init: $rc (xtal $tunerXtal Hz, PLL ${if (tuner.locked) "locked" else "not locked"})")
             if (rc < 0) { conn.releaseInterface(iface); conn.close(); return null }
             val label = when (model) {
                 R82xx.Model.BlogV4 -> "Blog V4"

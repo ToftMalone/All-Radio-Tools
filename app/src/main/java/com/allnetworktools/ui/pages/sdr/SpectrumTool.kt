@@ -51,12 +51,18 @@ import java.util.Locale
 import com.allnetworktools.R
 import com.allnetworktools.util.S
 
+/** The widest width the radio offers that is not wider than [wanted], or its narrowest one. */
+internal fun fitSpan(wanted: Int, spans: List<Int>?): Int =
+    if (spans.isNullOrEmpty()) wanted else spans.filter { it <= wanted }.maxOrNull() ?: spans.min()
+
 internal fun mhzLabel(hz: Double) = "%.3f".format(Locale.getDefault(), hz / 1e6)
 
 @Composable
 fun SpectrumTool(vm: MainViewModel) {
     val c = vm.tools.spectrum
     val device by vm.sdrDevice.collectAsStateWithLifecycle()
+    // The width follows the radio plugged in: an RTL-SDR shows at most 3 MHz.
+    androidx.compose.runtime.LaunchedEffect(device) { device?.let { if (!c.running && !c.starting) c.spanMhz = fitSpan(c.spanMhz, it.spectrumSpans) } }
     val db = c.spectrum
     val center = if (c.running) c.tunedHz.toDouble() else (c.parsedCenterHz() ?: 0L).toDouble()
     val span = c.spanMhz * 1e6
@@ -93,14 +99,14 @@ fun SpectrumTool(vm: MainViewModel) {
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     SpectrumPreset.entries.forEach { p ->
                         AntFilterChip(p.label, false, {
-                            if (!c.running) c.spanMhz = p.spanMhz
+                            if (!c.running) c.spanMhz = fitSpan(p.spanMhz, device?.spectrumSpans)
                             c.retune((p.centerMhz * 1e6).toLong())
                         })
                     }
                 }
                 Text(S(R.string.displayed_width_at_next_start), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    listOf(2, 5, 10, 20).forEach { s -> AntFilterChip("$s MHz", c.spanMhz == s, { if (c.spanMhz != s && !c.starting) { if (c.running) c.stop(); c.spanMhz = s } }) }
+                    (device?.spectrumSpans ?: listOf(2, 5, 10, 20)).forEach { s -> AntFilterChip("$s MHz", c.spanMhz == s, { if (c.spanMhz != s && !c.starting) { if (c.running) c.stop(); c.spanMhz = s } }) }
                 }
                 GainSettings(c.gain) { c.applyGains() }
                 Text(S(R.string.display_2), style = rf(13, 18, 600), color = cs.onSurfaceVariant)

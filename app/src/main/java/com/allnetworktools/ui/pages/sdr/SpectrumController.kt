@@ -76,6 +76,8 @@ class SpectrumController(private val repo: SdrRepository, private val scope: Cor
 
     fun start(device: SdrDevice) {
         if (running || starting) return
+        // A width the radio cannot show (20 MHz on an RTL-SDR) falls back to the widest one it can.
+        spanMhz = fitSpan(spanMhz, device.spectrumSpans)
         val hz = parsedCenterHz() ?: run { error = S(R.string.invalid_frequency_1_to_6000_mhz); return }
         onAcquire()
         error = null

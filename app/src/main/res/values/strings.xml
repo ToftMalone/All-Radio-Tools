@@ -744,7 +744,7 @@
     <string name="house_with_antenna">"House with antenna"</string>
     <string name="weather_station_nws">"Weather station (NWS)"</string>
     <string name="the_hackrf_refuses_receive_mode">"The HackRF refuses receive mode"</string>
-    <string name="no_more_samples_from_the_hackrf">"No more samples from the HackRF"</string>
+    <string name="no_more_samples_from_the_hackrf">"No more samples from the radio"</string>
     <string name="usb_link_lost">"USB link lost"</string>
     <string name="usb_error">"USB error"</string>
     <string name="i_q_swapped">" + I/Q swapped"</string>
@@ -841,7 +841,7 @@
     <string name="not_available">"Not available"</string>
     <string name="this_device_does_not_have_this">"This device does not have this radio."</string>
     <string name="no_hackrf">"No radio"</string>
-    <string name="plug_in_a_hackrf_over_usb">"Plug in a HackRF or an RTL-SDR over USB-C to receive."</string>
+    <string name="plug_in_a_hackrf_over_usb">"Plug in an SDR radio over USB-C to receive."</string>
     <string name="turn_on_wi_fi_to_show">"Turn on Wi-Fi to show the current connection and use the local network tools."</string>
     <string name="turn_on_wi_fi">"Turn on Wi-Fi"</string>
     <string name="wi_fi_settings">"Wi-Fi settings"</string>
@@ -865,15 +865,15 @@
     <string name="turn_on_location">"Turn on location"</string>
     <string name="unavailable_2">"%1$s unavailable"</string>
     <string name="this_device_does_not_have_the">"This device does not have the hardware needed."</string>
-    <string name="plug_in_a_hackrf">"Plug in a radio"</string>
-    <string name="connect_a_hackrf_one_or_rad1o">"Connect a HackRF One (or rad1o, Jawbreaker, PortaPack in HackRF mode) or an RTL-SDR dongle to the phone with a USB-C OTG cable. The RTL-SDR covers 24 to 1766 MHz up to about 3 MS/s: the 2.4 GHz, 5.8 GHz and 4 MS/s tools need a HackRF. "</string>
+    <string name="plug_in_a_hackrf">"Plug in an SDR radio"</string>
+    <string name="connect_a_hackrf_one_or_rad1o">"Connect an SDR radio to the phone with a USB-C OTG cable (HackRF One, RTL-SDR, Airspy, PlutoSDR); no driver to install. "</string>
     <string name="the_app_detects_it_as_soon">"The app detects it as soon as it is plugged in."</string>
     <string name="tools">"Tools"</string>
     <string name="nearby_networks_channels_speed_wi_fi">"Nearby networks, channels, speed, Wi-Fi diagnostics and security."</string>
     <string name="bluetooth_le_devices_unknown_trackers_and">"Bluetooth LE devices, unknown trackers and Hot/Cold search."</string>
     <string name="cells_your_carrier_s_towers_and">"Cells, your carrier's towers and mobile data."</string>
     <string name="satellites_sky_position_comparison_and_passes">"Satellites, sky, position comparison and passes."</string>
-    <string name="hackrf_spectrum_aircraft_ships_radiosondes_fpv">"HackRF: spectrum, aircraft, ships, radiosondes, FPV drones and more."</string>
+    <string name="hackrf_spectrum_aircraft_ships_radiosondes_fpv">"SDR radio: spectrum, aircraft, ships, radiosondes, drones and more."</string>
     <string name="welcome_the_airwaves_are_waiting">"Welcome! The airwaves are waiting."</string>
     <string name="good_to_see_you_again_the">"Good to see you again, the antennas are ready."</string>
     <string name="hello_which_frequency_shall_we_explore">"Hello! Which frequency shall we explore today?"</string>
@@ -1345,7 +1345,7 @@
     <string name="elevation">"elevation"</string>
     <string name="usb_access_to_the_hackrf_refused">"USB access to the radio refused"</string>
     <string name="could_not_open_the_hackrf">"Could not open the radio"</string>
-    <string name="the_hackrf_did_not_accept_the">"The HackRF did not accept the configuration"</string>
+    <string name="the_hackrf_did_not_accept_the">"The radio did not accept the configuration"</string>
     <string name="aircraftground">"aircraft→ground"</string>
     <string name="groundaircraft">"ground→aircraft"</string>
     <string name="n_131_525_131_725_131_825">"%1$s %2$s · 131.525 / 131.725 / 131.825 MHz"</string>
@@ -1511,13 +1511,13 @@
     <string name="receiver">"Receiver"</string>
     <string name="hardware">"Hardware"</string>
     <string name="receive_only_3">"Receive only"</string>
-    <string name="the_hackrf_only_receives_while_a">"The HackRF only receives while a tool is running, and stops when you leave the SDR tab. "</string>
+    <string name="the_hackrf_only_receives_while_a">"The radio only receives while a tool is running, and stops when you leave the SDR tab. "</string>
     <string name="the_app_never_transmits_decoding_is">"The app never transmits. Decoding is done by the app, on the phone."</string>
     <string name="lna_gain_db">"LNA gain (dB)"</string>
     <string name="vga_gain_db">"VGA gain (dB)"</string>
     <string name="preamplifier">"Preamplifier"</string>
     <string name="invalid_frequency">"Invalid frequency"</string>
-    <string name="the_hackrf_receives_from_1_to">"The HackRF receives from 1 to 6000 MHz"</string>
+    <string name="the_hackrf_receives_from_1_to">"Enter a frequency between 1 and 6000 MHz"</string>
     <string name="radiosondes_csv">"radiosondes-%1$s.csv"</string>
     <string name="rs41_m10_and_m20_mhz">"RS41, M10 and M20 · %1$s MHz"</string>
     <string name="received_3">"%1$s %2$s received"</string>
@@ -1538,7 +1538,7 @@
     <string name="weather_sondes">"Weather sondes"</string>
     <string name="wi_fi_2_4_ghz">"Wi-Fi 2.4 GHz"</string>
     <string name="invalid_frequency_1_to_6000_mhz">"Invalid frequency (1 to 6000 MHz)"</string>
-    <string name="frequency_refused_by_the_hackrf">"Frequency refused by the HackRF"</string>
+    <string name="frequency_refused_by_the_hackrf">"Frequency refused by the radio"</string>
     <string name="width_mhz_from_to_mhz">"Width %1$s MHz · from %2$s to %3$s MHz"</string>
     <string name="peak_mhz_dbfs">"Peak %1$s MHz · %%.0f dBFS"</string>
     <string name="start_the_analysis">"Start the analysis"</string>
@@ -1548,7 +1548,7 @@
     <string name="display_2">"Display"</string>
     <string name="peak_hold">"Peak hold"</string>
     <string name="receive_only_the_level_is_in">"Receive only. The level is in dBFS (0 = converter full scale), not dBm. "</string>
-    <string name="the_line_in_the_middle_is">"The line in the middle is the HackRF's DC residue, not a signal. Avoid the amp near strong transmitters."</string>
+    <string name="the_line_in_the_middle_is">"The line in the middle is the radio\'s DC residue, not a signal. Avoid high gain near strong transmitters."</string>
     <string name="the_spectrum_shows_here_during_the">"The spectrum shows here during the analysis"</string>
     <string name="waterfall_newest_at_the_top">"Waterfall · newest at the top"</string>
     <string name="verifying">"Verifying…"</string>
@@ -2871,4 +2871,12 @@
     <string name="blespam_alert_text">"%1$s pop-ups flood the %2$s around you"</string>
     <string name="blespam_flipper_alert_title">"Flipper Zero nearby"</string>
     <string name="blespam_flipper_alert_text">"%1$s · %2$d dBm"</string>
+    <string name="sdr_gain_of">"%1$s gain"</string>
+    <string name="sdr_bias_tee">"Antenna power (bias tee)"</string>
+    <string name="sdr_bias_tee_chip">"Bias tee on"</string>
+    <string name="sdr_bias_tee_warning">"Only with an active antenna or a preamplifier that takes its power from the cable: a short or a passive antenna wired as a short can be damaged."</string>
+    <plurals name="p_sdr_tools_hidden">
+        <item quantity="one">"%2$d tool hidden: the %1$s cannot run it"</item>
+        <item quantity="other">"%2$d tools hidden: the %1$s cannot run them"</item>
+    </plurals>
 </resources>

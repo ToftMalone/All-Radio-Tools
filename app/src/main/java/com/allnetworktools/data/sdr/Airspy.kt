@@ -119,9 +119,12 @@ class Airspy private constructor(
     private val epIn: UsbEndpoint,
     private val rates: IntArray,
 ) : SdrRadio {
-    /** Only the rates a phone can filter in real time are used (2.5 MS/s on an R2, 3 MS/s on a Mini). */
+    /**
+     * Rates that need resampling are kept to what a phone filters in real time (2.5 MS/s on an R2, 3 MS/s on a Mini); a
+     * native rate asked for exactly (10 MS/s for the spectrum) is used as it is, with no resampling.
+     */
     private val usable = rates.filter { it <= 3_000_000 }
-    override val caps = SdrCaps("Airspy", 24_000_000L, 1_750_000_000L, usable.maxOrNull() ?: 2_500_000)
+    override val caps = SdrCaps("Airspy", 24_000_000L, 1_750_000_000L, rates.maxOrNull() ?: 2_500_000)
 
     @Volatile private var running = false
     private var thread: Thread? = null
@@ -143,7 +146,9 @@ class Airspy private constructor(
 
     /** The lowest radio rate at or above [hz] (the next one up gives more samples to resample, for nothing). */
     override fun setSampleRate(hz: Int, filterHz: Int): Boolean {
-        val i = rates.indices.filter { rates[it] >= hz && rates[it] in usable }.minByOrNull { rates[it] } ?: return false
+        val i = rates.indexOf(hz).takeIf { it >= 0 }
+            ?: rates.indices.filter { rates[it] >= hz && rates[it] in usable }.minByOrNull { rates[it] }
+            ?: return false
         if (!IqResampler.possible(rates[i], hz)) return false
         rateIndex = i
         inRate = rates[i]
@@ -170,7 +175,16 @@ class Airspy private constructor(
     override fun setLnaGain(db: Int): Boolean { lna = db.coerceIn(0, 40); return applyGain() }
     override fun setVgaGain(db: Int): Boolean { vga = db.coerceIn(0, 62); return applyGain() }
     override fun setAmp(on: Boolean): Boolean { amp = on; return applyGain() }
-    override fun setAntennaPower(on: Boolean): Boolean = false
+    /** The bias tee is GPIO 13 of port 1 (libairspy's airspy_set_rf_bias). */
+    override fun setAntennaPower(on: Boolean): Boolean = outReq(REQ_GPIO_WRITE, if (on) 1 else 0, (1 shl 5) or 13)
+
+    /** [value]: libairspy's sensitivity preset, 0 (lowest) to 21 (highest). */
+    override fun setNativeGain(value: Int): Boolean {
+        val i = GAIN_COUNT - 1 - value.coerceIn(0, GAIN_COUNT - 1)
+        return inReq(REQ_SET_MIXER_AGC, 0, 0, 1) != null && inReq(REQ_SET_LNA_AGC, 0, 0, 1) != null &&
+            inReq(REQ_SET_VGA_GAIN, 0, SENS_VGA[i], 1) != null && inReq(REQ_SET_MIXER_GAIN, 0, SENS_MIXER[i], 1) != null &&
+            inReq(REQ_SET_LNA_GAIN, 0, SENS_LNA[i], 1) != null
+    }
 
     override fun startRx(onSamples: (ByteArray, Int) -> Unit, onError: (String) -> Unit) {
         if (running) return
@@ -227,6 +241,7 @@ class Airspy private constructor(
         running = false
         runCatching { thread?.join(1500) }
         runCatching { outReq(REQ_RECEIVER_MODE, MODE_OFF, 0) }
+        runCatching { setAntennaPower(false) }
         runCatching { conn.releaseInterface(iface) }
         runCatching { conn.close() }
     }
@@ -245,6 +260,7 @@ class Airspy private constructor(
         private const val REQ_SET_VGA_GAIN = 16
         private const val REQ_SET_LNA_AGC = 17
         private const val REQ_SET_MIXER_AGC = 18
+        private const val REQ_GPIO_WRITE = 21
         private const val REQ_GET_SAMPLERATES = 25
         private const val MODE_OFF = 0
         private const val MODE_RX = 1
@@ -275,6 +291,7 @@ class Airspy private constructor(
             if (count !in 1..16) { conn.close(); return null }
             val list = inReq(REQ_GET_SAMPLERATES, 0, count, count * 4) ?: run { conn.close(); return null }
             val rates = IntArray(count) { le32(list, it * 4) }
+            com.allnetworktools.util.DebugLog.i("Airspy", "Rates offered: ${rates.joinToString()}")
             return Airspy(conn, iface, ep, rates)
         }
 

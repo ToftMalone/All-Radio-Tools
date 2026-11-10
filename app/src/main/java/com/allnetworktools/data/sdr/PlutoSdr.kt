@@ -179,6 +179,10 @@ class PlutoSdr private constructor(
         return attr("voltage0", "INPUT", "gain_control_mode", "manual") && attr("voltage0", "INPUT", "hardwaregain", db.toString())
     }
 
+    /** [value] in dB, 0 to 73, manual. */
+    override fun setNativeGain(value: Int): Boolean =
+        attr("voltage0", "INPUT", "gain_control_mode", "manual") && attr("voltage0", "INPUT", "hardwaregain", value.coerceIn(0, 73).toString())
+
     override fun setLnaGain(db: Int): Boolean { lna = db.coerceIn(0, 40); return applyGain() }
     override fun setVgaGain(db: Int): Boolean { vga = db.coerceIn(0, 62); return applyGain() }
     override fun setAmp(on: Boolean): Boolean { amp = on; return applyGain() }

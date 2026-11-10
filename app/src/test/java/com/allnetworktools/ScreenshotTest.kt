@@ -143,6 +143,18 @@ class ScreenshotTest {
         vm.tools.listen.setForTest(db, -28f)
     }
     @Test fun bleSpam() = shot("B9_ble_spam", nav = NavState(Network.Bluetooth, Page.ToolPage(Tool.BleSpam)))
+    @Test fun spectrumRtl() {
+        com.allnetworktools.data.sdr.SdrSettings.kind = com.allnetworktools.data.sdr.SdrKind.RtlSdr
+        Scenario.sdrDevice.value = com.allnetworktools.data.sdr.SdrDevice("Blog V4", null, com.allnetworktools.data.sdr.SdrKind.RtlSdr)
+        try {
+            shot("S9_spectrum_rtl", nav = NavState(Network.Sdr, Page.ToolPage(Tool.Spectrum)))
+        }
+        finally { com.allnetworktools.data.sdr.SdrSettings.kind = null }
+    }
+    @Test fun sdrToolsRtl() {
+        Scenario.sdrDevice.value = com.allnetworktools.data.sdr.SdrDevice("Blog V4", null, com.allnetworktools.data.sdr.SdrKind.RtlSdr)
+        shot("S9c_sdr_tools_rtl", nav = NavState(Network.Sdr, Page.Tools))
+    }
     @Test fun wardriving() = shot("W1_wardriving", dark = true, nav = NavState(Network.WifiBt, Page.ToolPage(Tool.Wardriving))) { wardriveDemo() }
     @Test fun wardrivingLight() = shot("W2_wardriving_light", nav = NavState(Network.WifiBt, Page.ToolPage(Tool.Wardriving))) { wardriveDemo(fix = false) }
     @Test fun wardrivingSettings() = shot("W3_wardriving_settings", nav = NavState(Network.WifiBt, Page.ToolPage(Tool.WardrivingSettings)))

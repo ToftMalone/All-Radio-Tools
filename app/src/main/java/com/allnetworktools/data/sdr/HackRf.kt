@@ -26,7 +26,10 @@ import com.allnetworktools.R
 import com.allnetworktools.util.S
 
 /** A HackRF-family board on the USB bus. */
-data class SdrDevice(val name: String, val usb: UsbDevice?)
+data class SdrDevice(val name: String, val usb: UsbDevice?, val kind: SdrKind = SdrKind.HackRf) {
+    /** The widths the spectrum analyser offers for this radio. */
+    val spectrumSpans: List<Int> get() = kind.spectrumSpans(usb?.productName)
+}
 
 /**
  * HackRF USB protocol (greatscottgadgets/hackrf, host/libhackrf/src/hackrf.c): vendor control requests to
@@ -183,11 +186,16 @@ open class SdrRepository(private val context: Context) {
     private fun find(): SdrDevice? {
         val all = usb?.deviceList?.values ?: return null
         // The HackRF first: it is the one every tool was written for.
-        all.firstOrNull(HackRf::isHackRf)?.let { return SdrDevice(HackRf.name(it), it) }
-        all.firstOrNull(Airspy::isAirspy)?.let { return SdrDevice("Airspy", it) }
-        all.firstOrNull(PlutoSdr::isPluto)?.let { return SdrDevice("PlutoSDR", it) }
-        all.firstOrNull(RtlSdr::isRtlSdr)?.let { return SdrDevice(it.productName ?: "RTL-SDR", it) }
-        return null
+        val found = all.firstOrNull(HackRf::isHackRf)?.let { SdrDevice(HackRf.name(it), it, SdrKind.HackRf) }
+            ?: all.firstOrNull(Airspy::isAirspy)?.let { SdrDevice(it.productName ?: "Airspy", it, SdrKind.Airspy) }
+            ?: all.firstOrNull(PlutoSdr::isPluto)?.let { SdrDevice("PlutoSDR", it, SdrKind.Pluto) }
+            ?: all.firstOrNull(RtlSdr::isRtlSdr)?.let { SdrDevice(it.productName ?: "RTL-SDR", it, SdrKind.RtlSdr) }
+        if (found?.kind != SdrSettings.kind) {
+            SdrSettings.kind = found?.kind
+            SdrSettings.product = found?.usb?.productName
+            if (found != null) com.allnetworktools.util.DebugLog.i("SDR", "Found ${found.kind.label}: ${found.name} (${"%04x:%04x".format(found.usb?.vendorId ?: 0, found.usb?.productId ?: 0)}, ${found.usb?.manufacturerName} / ${found.usb?.productName})")
+        }
+        return found
     }
 
     /** The plugged-in radio (a HackRF, an Airspy, a PlutoSDR or an RTL-SDR), or null. */
@@ -227,13 +235,23 @@ open class SdrRepository(private val context: Context) {
         cont.invokeOnCancellation { runCatching { context.unregisterReceiver(receiver) } }
     }
 
-    open fun open(d: SdrDevice): SdrRadio? = d.usb?.let { dev ->
-        usb?.let { when {
-            HackRf.isHackRf(dev) -> HackRf.open(it, dev)
-            Airspy.isAirspy(dev) -> Airspy.open(it, dev)
-            PlutoSdr.isPluto(dev) -> PlutoSdr.open(it, dev)
-            RtlSdr.isRtlSdr(dev) -> RtlSdr.open(it, dev)
-            else -> null
-        } }
+    open fun open(d: SdrDevice): SdrRadio? {
+        val dev = d.usb ?: return null
+        val m = usb ?: return null
+        com.allnetworktools.util.DebugLog.i("SDR", "Opening ${d.kind.label} (${d.name})")
+        val raw = runCatching {
+            when (d.kind) {
+                SdrKind.HackRf -> HackRf.open(m, dev)
+                SdrKind.Airspy -> Airspy.open(m, dev)
+                SdrKind.Pluto -> PlutoSdr.open(m, dev)
+                SdrKind.RtlSdr -> RtlSdr.open(m, dev)
+            }
+        }.onFailure { com.allnetworktools.util.DebugLog.e("SDR", "Opening ${d.kind.label} failed", it) }.getOrNull()
+        if (raw == null) { com.allnetworktools.util.DebugLog.w("SDR", "${d.kind.label} could not be opened"); return null }
+        com.allnetworktools.util.DebugLog.i("SDR", "Opened: ${raw.caps}")
+        val r = ManagedRadio(raw, d.kind)
+        SdrSettings.active = r
+        if (SdrSettings.biasTee && d.kind.biasTee) SdrSettings.applyBiasTee()
+        return r
     }
 }

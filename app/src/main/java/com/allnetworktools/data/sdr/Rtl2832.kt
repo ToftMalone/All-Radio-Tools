@@ -204,6 +204,8 @@ class R82xx(private val rtl: Rtl2832, private val r828d: Boolean, private val xt
     private var filCalCode = 0
     private var input = 0
     private var hasLock = false
+    /** Whether the synthesiser locked on the last tuning. */
+    val locked get() = hasLock
     private var initDone = false
 
     // ---- I2C and shadow registers ------------------------------------------------------------------------------
