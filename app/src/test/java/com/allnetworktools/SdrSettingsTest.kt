@@ -66,3 +66,30 @@ class SdrSettingsTest {
         assertTrue(SdrKind.Pluto.biasTee.not())
     }
 }
+
+class SdrChunksTest {
+    @Test fun aBigTransferIsHandedOverInPiecesThatFitTheToolsBuffers() {
+        // 262144 bytes, as an RTL-SDR reads them: the log of the V4 that would not start.
+        val big = ByteArray(262_144) { (it % 251).toByte() }
+        val got = ArrayList<ByteArray>()
+        deliverInChunks(big, big.size) { b, n -> assertTrue(n <= SDR_MAX_CHUNK); got += b.copyOf(n) }
+        assertEquals(2, got.size)
+        assertTrue(got.all { it.size % 2 == 0 })
+        assertEquals(big.toList(), got.flatMap { it.toList() })
+    }
+
+    @Test fun aSmallTransferIsPassedAsIs() {
+        val b = ByteArray(1000)
+        var calls = 0
+        deliverInChunks(b, 1000) { x, n -> calls++; assertTrue(x === b); assertEquals(1000, n) }
+        assertEquals(1, calls)
+    }
+
+    @Test fun anOddLengthNeverSplitsAnIqPair() {
+        val b = ByteArray(SDR_MAX_CHUNK + 5)
+        val sizes = ArrayList<Int>()
+        deliverInChunks(b, b.size) { _, n -> sizes += n }
+        assertTrue(sizes.all { it % 2 == 0 })
+        assertTrue(sizes.sum() >= b.size - 1)
+    }
+}

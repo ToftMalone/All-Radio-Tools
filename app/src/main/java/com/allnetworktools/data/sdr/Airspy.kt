@@ -227,7 +227,7 @@ class Airspy private constructor(
                     conv.process(real, n)
                     val m = rs.process(real, n, resampled)
                     for (i in 0 until m) out[i] = (resampled[i].toInt() shr 8).toByte()
-                    if (m > 0) onSamples(out, m)
+                    if (m > 0) deliverInChunks(out, m, onSamples)
                 }
             } catch (e: Exception) {
                 if (running) onError(e.message ?: S(R.string.usb_error))

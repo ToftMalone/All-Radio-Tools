@@ -207,7 +207,7 @@ class PlutoSdr private constructor(
                     val m = rs.process(shorts, shorts.size, resampled)
                     // 12-bit samples in 16 bits: 4 bits down to the signed 8-bit range of the other radios.
                     for (i in 0 until m) out[i] = (resampled[i].toInt() shr 4).coerceIn(-128, 127).toByte()
-                    if (m > 0) onSamples(out, m)
+                    if (m > 0) deliverInChunks(out, m, onSamples)
                 }
             } catch (e: Exception) {
                 if (running) onError(e.message ?: S(R.string.usb_error))

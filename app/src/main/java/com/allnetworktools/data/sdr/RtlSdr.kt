@@ -121,7 +121,8 @@ class RtlSdr private constructor(
                     if (running) r.queue(b)
                     if (len > 0) {
                         unsignedToSigned(copy, len)
-                        onSamples(copy, len)
+                        // The tools' buffers hold 128 KB: a 256 KB transfer goes in two pieces.
+                        deliverInChunks(copy, len, onSamples)
                     }
                 }
             } catch (e: Exception) {
