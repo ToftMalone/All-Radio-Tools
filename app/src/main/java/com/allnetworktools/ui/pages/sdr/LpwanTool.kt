@@ -173,36 +173,43 @@ fun LpwanTool(vm: MainViewModel) {
         val d = device
         if (c.running || c.starting) StartButton(S(R.string.stop), Sym.Stop) { c.stop() }
         else StartButton(S(R.string.start_receiving), Sym.PlayArrow, enabled = d != null) { d?.let(c::start) }
-        if (c.devices.isEmpty()) {
-            if (c.running) ToolEmpty(Sym.Hub, S(R.string.lpwan_none_yet), S(R.string.lpwan_none_yet_body), null)
-        } else {
-            val now = System.currentTimeMillis()
-            SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)) {
-                c.devices.forEachIndexed { i, dev ->
-                    if (i > 0) Hairline()
-                    DeviceRow(dev, now)
-                }
-            }
-        }
-        SectionCard {
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text(S(R.string.lpwan_channels), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
-                FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    for (w in listOf(false, true)) {
-                        AntFilterChip(S(if (w) R.string.lpwan_channels_8 else R.string.lpwan_channels_3), c.wide == w, {
-                            // Another tuning and receiver: stopped, as when the ISM band changes.
-                            if (c.wide != w && !c.starting) { if (c.running) c.stop(); c.wide = w }
-                        })
+        val tab = ToolTabRow("LpwanTool0", map = false)
+        if (tab == ToolTab.Main) {
+            if (c.devices.isEmpty()) {
+                if (c.running) ToolEmpty(Sym.Hub, S(R.string.lpwan_none_yet), S(R.string.lpwan_none_yet_body), null)
+            } else {
+                val now = System.currentTimeMillis()
+                SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)) {
+                    c.devices.forEachIndexed { i, dev ->
+                        if (i > 0) Hairline()
+                        DeviceRow(dev, now)
                     }
                 }
-                Text(S(R.string.lpwan_channels_note), style = rf(12, 16), color = cs.onSurfaceVariant)
-                GainSettings(c.gain) { c.applyGains() }
             }
         }
-        SectionCard {
-            Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                Symbol(Sym.Info, size = 22.dp, tint = AntTheme.accent.accent)
-                Text(S(R.string.lpwan_how_it_works), style = rf(13, 18), color = cs.onSurfaceVariant)
+        if (tab == ToolTab.Settings) {
+            SectionCard {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Text(S(R.string.lpwan_channels), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
+                    FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        for (w in listOf(false, true)) {
+                            AntFilterChip(S(if (w) R.string.lpwan_channels_8 else R.string.lpwan_channels_3), c.wide == w, {
+                                // Another tuning and receiver: stopped, as when the ISM band changes.
+                                if (c.wide != w && !c.starting) { if (c.running) c.stop(); c.wide = w }
+                            })
+                        }
+                    }
+                    Text(S(R.string.lpwan_channels_note), style = rf(12, 16), color = cs.onSurfaceVariant)
+                    GainSettings(c.gain) { c.applyGains() }
+                }
+            }
+        }
+        if (tab == ToolTab.Settings) {
+            SectionCard {
+                Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Symbol(Sym.Info, size = 22.dp, tint = AntTheme.accent.accent)
+                    Text(S(R.string.lpwan_how_it_works), style = rf(13, 18), color = cs.onSurfaceVariant)
+                }
             }
         }
     }

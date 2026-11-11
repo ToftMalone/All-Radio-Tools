@@ -178,59 +178,68 @@ fun CubesatTool(vm: MainViewModel) {
         val d = device
         if (c.running || c.starting) StartButton(S(R.string.stop), Sym.Stop) { c.stop() }
         else StartButton(S(R.string.start_receiving), Sym.PlayArrow, enabled = d != null) { d?.let(c::start) }
-        SectionCard {
-            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                Text(S(R.string.cubesat_satellite), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
-                FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    fun pick(s: Cubesat.Sat?) { if (c.sat != s && !c.starting) { if (c.running) c.stop(); c.sat = s } }
-                    Cubesat.sats.forEach { s -> AntFilterChip(s.name, c.sat == s, { pick(s) }) }
-                    AntFilterChip(S(R.string.cubesat_custom), c.sat == null, { pick(null) })
+        val tab = ToolTabRow("CubesatTool0", map = false)
+        if (tab == ToolTab.Settings) {
+            SectionCard {
+                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                    Text(S(R.string.cubesat_satellite), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
+                    FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        fun pick(s: Cubesat.Sat?) { if (c.sat != s && !c.starting) { if (c.running) c.stop(); c.sat = s } }
+                        Cubesat.sats.forEach { s -> AntFilterChip(s.name, c.sat == s, { pick(s) }) }
+                        AntFilterChip(S(R.string.cubesat_custom), c.sat == null, { pick(null) })
+                    }
+                    if (c.sat == null) {
+                        var text by remember { mutableStateOf(c.customMhz) }
+                        HostInputField(text, { text = it; c.customMhz = it }, S(R.string.cubesat_frequency_mhz), icon = Sym.SettingsInputAntenna, keyboardType = KeyboardType.Decimal)
+                        FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                            listOf(Cubesat.Mode.Afsk1200 to "AFSK 1200", Cubesat.Mode.G3ruh9600 to "G3RUH 9600").forEach { (m, label) ->
+                                AntFilterChip(label, c.customMode == m, { if (c.customMode != m && !c.starting) { if (c.running) c.stop(); c.customMode = m } })
+                            }
+                        }
+                    }
+                    GainSettings(c.gain) { c.applyGains() }
                 }
-                if (c.sat == null) {
-                    var text by remember { mutableStateOf(c.customMhz) }
-                    HostInputField(text, { text = it; c.customMhz = it }, S(R.string.cubesat_frequency_mhz), icon = Sym.SettingsInputAntenna, keyboardType = KeyboardType.Decimal)
-                    FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        listOf(Cubesat.Mode.Afsk1200 to "AFSK 1200", Cubesat.Mode.G3ruh9600 to "G3RUH 9600").forEach { (m, label) ->
-                            AntFilterChip(label, c.customMode == m, { if (c.customMode != m && !c.starting) { if (c.running) c.stop(); c.customMode = m } })
+            }
+        }
+        if (tab == ToolTab.Main) {
+            if (c.sat != null) {
+                SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 12.dp, bottom = 4.dp)) {
+                    Text(S(R.string.next_passes), Modifier.padding(bottom = 4.dp), style = rf(14, 20, 600))
+                    when {
+                        loc == null -> Text(S(R.string.cubesat_needs_location), Modifier.padding(bottom = 8.dp), style = rf(13, 18), color = cs.onSurfaceVariant)
+                        c.passesError != null -> Text(c.passesError!!, Modifier.padding(bottom = 8.dp), style = rf(13, 18), color = cs.error)
+                        c.passes.isEmpty() -> Text(S(R.string.computing), Modifier.padding(bottom = 8.dp), style = rf(13, 18), color = cs.onSurfaceVariant)
+                        else -> c.passes.take(6).forEachIndexed { i, p ->
+                            if (i > 0) Hairline()
+                            Row(Modifier.fillMaxWidth().padding(vertical = 8.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                                Symbol(Sym.SatelliteAlt, size = 22.dp, tint = if (p.maxEl >= 40) AntTheme.net.good else if (p.maxEl >= 20) AntTheme.net.fair else cs.onSurfaceVariant)
+                                Text(
+                                    "${dayFmt.format(Date(p.riseMs))} → ${hmFmt.format(Date(p.setMs))} · ${((p.setMs - p.riseMs) / 60_000.0).roundToInt()} min · max ${p.maxEl.roundToInt()}°",
+                                    Modifier.weight(1f), style = rf(13, 18, tnum = true),
+                                )
+                                if (now in p.riseMs..p.setMs) Text(S(R.string.in_progress), style = rf(12, 16, 600), color = AntTheme.net.good)
+                            }
                         }
                     }
                 }
-                GainSettings(c.gain) { c.applyGains() }
             }
         }
-        if (c.sat != null) {
-            SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 12.dp, bottom = 4.dp)) {
-                Text(S(R.string.next_passes), Modifier.padding(bottom = 4.dp), style = rf(14, 20, 600))
-                when {
-                    loc == null -> Text(S(R.string.cubesat_needs_location), Modifier.padding(bottom = 8.dp), style = rf(13, 18), color = cs.onSurfaceVariant)
-                    c.passesError != null -> Text(c.passesError!!, Modifier.padding(bottom = 8.dp), style = rf(13, 18), color = cs.error)
-                    c.passes.isEmpty() -> Text(S(R.string.computing), Modifier.padding(bottom = 8.dp), style = rf(13, 18), color = cs.onSurfaceVariant)
-                    else -> c.passes.take(6).forEachIndexed { i, p ->
+        if (tab == ToolTab.Main) {
+            if (c.frames.isNotEmpty()) {
+                SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)) {
+                    c.frames.take(100).forEachIndexed { i, f ->
                         if (i > 0) Hairline()
-                        Row(Modifier.fillMaxWidth().padding(vertical = 8.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                            Symbol(Sym.SatelliteAlt, size = 22.dp, tint = if (p.maxEl >= 40) AntTheme.net.good else if (p.maxEl >= 20) AntTheme.net.fair else cs.onSurfaceVariant)
-                            Text(
-                                "${dayFmt.format(Date(p.riseMs))} → ${hmFmt.format(Date(p.setMs))} · ${((p.setMs - p.riseMs) / 60_000.0).roundToInt()} min · max ${p.maxEl.roundToInt()}°",
-                                Modifier.weight(1f), style = rf(13, 18, tnum = true),
-                            )
-                            if (now in p.riseMs..p.setMs) Text(S(R.string.in_progress), style = rf(12, 16, 600), color = AntTheme.net.good)
-                        }
+                        FrameRow(f)
                     }
                 }
             }
         }
-        if (c.frames.isNotEmpty()) {
-            SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)) {
-                c.frames.take(100).forEachIndexed { i, f ->
-                    if (i > 0) Hairline()
-                    FrameRow(f)
+        if (tab == ToolTab.Settings) {
+            SectionCard {
+                Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Symbol(Sym.Info, size = 22.dp, tint = AntTheme.accent.accent)
+                    Text(S(R.string.cubesat_how_it_works), style = rf(13, 18), color = cs.onSurfaceVariant)
                 }
-            }
-        }
-        SectionCard {
-            Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                Symbol(Sym.Info, size = 22.dp, tint = AntTheme.accent.accent)
-                Text(S(R.string.cubesat_how_it_works), style = rf(13, 18), color = cs.onSurfaceVariant)
             }
         }
     }

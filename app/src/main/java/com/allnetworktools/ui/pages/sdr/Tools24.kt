@@ -169,64 +169,73 @@ fun ZigbeeTool(vm: MainViewModel) {
         val d = device
         if (c.running || c.starting) StartButton(S(R.string.stop), Sym.Stop) { c.stop() }
         else StartButton(S(R.string.start_receiving), Sym.PlayArrow, enabled = d != null) { d?.let(c::start) }
-        SegmentedRow(listOf(false to S(R.string.zigbee_networks_tab), true to S(R.string.mesh_tab_packets)), c.showFrames, { c.showFrames = it }, Modifier.fillMaxWidth())
+        val tab = ToolTabRow("Tools240", map = false)
+        if (tab == ToolTab.Main) {
+            SegmentedRow(listOf(false to S(R.string.zigbee_networks_tab), true to S(R.string.mesh_tab_packets)), c.showFrames, { c.showFrames = it }, Modifier.fillMaxWidth())
+        }
         val now = System.currentTimeMillis()
-        if (c.frames.isEmpty()) {
-            if (c.running) ToolEmpty(Sym.Hub, S(R.string.zigbee_none_yet), S(R.string.zigbee_none_yet_body), null)
-        } else if (!c.showFrames) {
-            c.networks.forEach { n ->
-                SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 4.dp)) {
-                    Text(S(R.string.zigbee_pan, Zigbee.short(n.pan), n.channel) + (n.extPan?.let { " · " + Zigbee.ext(it) } ?: ""), style = rf(13, 18, 600, tnum = true), color = cs.onSurfaceVariant)
-                    Text(
-                        listOfNotNull(S(R.string.zigbee_frames_n, n.frames), if (n.encrypted > 0) S(R.string.zwave_encrypted_n, n.encrypted) else null,
-                            n.permitJoin?.let { S(if (it) R.string.zigbee_join_open else R.string.zigbee_join_closed) }, ago(now, n.lastMs)).joinToString(" · "),
-                        style = rf(12, 16, tnum = true), color = cs.onSurfaceVariant,
-                    )
-                    c.devices.filter { it.pan == n.pan }.forEachIndexed { i, dv ->
-                        Hairline()
-                        Row(Modifier.fillMaxWidth().padding(vertical = 8.dp), verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                            LeadingIcon(if (dv.short == 0) Sym.Router else Sym.Sensors, AntTheme.accent.container, AntTheme.accent.onContainer, 36.dp, RoundedCornerShape(12.dp), 20.dp)
+        if (tab == ToolTab.Main) {
+            if (c.frames.isEmpty()) {
+                if (c.running) ToolEmpty(Sym.Hub, S(R.string.zigbee_none_yet), S(R.string.zigbee_none_yet_body), null)
+            } else if (!c.showFrames) {
+                c.networks.forEach { n ->
+                    SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 4.dp)) {
+                        Text(S(R.string.zigbee_pan, Zigbee.short(n.pan), n.channel) + (n.extPan?.let { " · " + Zigbee.ext(it) } ?: ""), style = rf(13, 18, 600, tnum = true), color = cs.onSurfaceVariant)
+                        Text(
+                            listOfNotNull(S(R.string.zigbee_frames_n, n.frames), if (n.encrypted > 0) S(R.string.zwave_encrypted_n, n.encrypted) else null,
+                                n.permitJoin?.let { S(if (it) R.string.zigbee_join_open else R.string.zigbee_join_closed) }, ago(now, n.lastMs)).joinToString(" · "),
+                            style = rf(12, 16, tnum = true), color = cs.onSurfaceVariant,
+                        )
+                        c.devices.filter { it.pan == n.pan }.forEachIndexed { i, dv ->
+                            Hairline()
+                            Row(Modifier.fillMaxWidth().padding(vertical = 8.dp), verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                                LeadingIcon(if (dv.short == 0) Sym.Router else Sym.Sensors, AntTheme.accent.container, AntTheme.accent.onContainer, 36.dp, RoundedCornerShape(12.dp), 20.dp)
+                                Column(Modifier.weight(1f)) {
+                                    Text(listOfNotNull(dv.short?.let { if (it == 0) S(R.string.zigbee_coordinator) else Zigbee.short(it) }, dv.ext?.let { Zigbee.ext(it) }).joinToString(" · "), style = rf(13, 18, 600, tnum = true), maxLines = 1, overflow = TextOverflow.Ellipsis)
+                                    dv.ext?.let { Zigbee.vendor(it) }?.let { Text(it, style = rf(12, 16)) }
+                                    Text(dv.last, style = rf(12, 16), color = cs.onSurfaceVariant, maxLines = 2, overflow = TextOverflow.Ellipsis)
+                                    Text(listOf("×${dv.frames}", "SNR %.0f dB".format(Locale.getDefault(), dv.snrDb), ago(now, dv.lastMs)).joinToString(" · "), style = rf(11, 16, tnum = true), color = cs.onSurfaceVariant)
+                                }
+                            }
+                        }
+                    }
+                }
+            } else {
+                SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)) {
+                    c.frames.take(100).forEachIndexed { i, f ->
+                        if (i > 0) Hairline()
+                        Row(Modifier.fillMaxWidth().padding(vertical = 8.dp), verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                            Symbol(if (f.encrypted) Sym.Lock else Sym.LockOpen, size = 18.dp, tint = if (f.encrypted) cs.onSurfaceVariant else AntTheme.accent.accent)
                             Column(Modifier.weight(1f)) {
-                                Text(listOfNotNull(dv.short?.let { if (it == 0) S(R.string.zigbee_coordinator) else Zigbee.short(it) }, dv.ext?.let { Zigbee.ext(it) }).joinToString(" · "), style = rf(13, 18, 600, tnum = true), maxLines = 1, overflow = TextOverflow.Ellipsis)
-                                dv.ext?.let { Zigbee.vendor(it) }?.let { Text(it, style = rf(12, 16)) }
-                                Text(dv.last, style = rf(12, 16), color = cs.onSurfaceVariant, maxLines = 2, overflow = TextOverflow.Ellipsis)
-                                Text(listOf("×${dv.frames}", "SNR %.0f dB".format(Locale.getDefault(), dv.snrDb), ago(now, dv.lastMs)).joinToString(" · "), style = rf(11, 16, tnum = true), color = cs.onSurfaceVariant)
+                                Text("${f.type} · ${f.src} → ${f.dst}", style = rf(13, 18, 600, tnum = true), maxLines = 1, overflow = TextOverflow.Ellipsis)
+                                Text(f.info, style = rf(12, 16), maxLines = 3, overflow = TextOverflow.Ellipsis)
+                                Text(listOf(S(R.string.zigbee_channel_n, f.channel), "${f.len} o", ago(now, f.timeMs)).joinToString(" · "), style = rf(11, 16, tnum = true), color = cs.onSurfaceVariant)
                             }
                         }
                     }
                 }
             }
-        } else {
-            SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)) {
-                c.frames.take(100).forEachIndexed { i, f ->
-                    if (i > 0) Hairline()
-                    Row(Modifier.fillMaxWidth().padding(vertical = 8.dp), verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                        Symbol(if (f.encrypted) Sym.Lock else Sym.LockOpen, size = 18.dp, tint = if (f.encrypted) cs.onSurfaceVariant else AntTheme.accent.accent)
-                        Column(Modifier.weight(1f)) {
-                            Text("${f.type} · ${f.src} → ${f.dst}", style = rf(13, 18, 600, tnum = true), maxLines = 1, overflow = TextOverflow.Ellipsis)
-                            Text(f.info, style = rf(12, 16), maxLines = 3, overflow = TextOverflow.Ellipsis)
-                            Text(listOf(S(R.string.zigbee_channel_n, f.channel), "${f.len} o", ago(now, f.timeMs)).joinToString(" · "), style = rf(11, 16, tnum = true), color = cs.onSurfaceVariant)
+        }
+        if (tab == ToolTab.Settings) {
+            SectionCard {
+                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                    Text(S(R.string.zigbee_channel), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
+                    FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        (listOf(0) + (11..26)).forEach { ch ->
+                            AntFilterChip(if (ch == 0) S(R.string.zigbee_all_channels) else "$ch", c.channel == ch, { if (c.channel != ch && !c.starting) { if (c.running) c.stop(); c.channel = ch } })
                         }
                     }
+                    Text(S(R.string.zigbee_channel_note), style = rf(12, 16), color = cs.onSurfaceVariant)
+                    GainSettings(c.gain) { c.applyGains() }
                 }
             }
         }
-        SectionCard {
-            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                Text(S(R.string.zigbee_channel), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
-                FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    (listOf(0) + (11..26)).forEach { ch ->
-                        AntFilterChip(if (ch == 0) S(R.string.zigbee_all_channels) else "$ch", c.channel == ch, { if (c.channel != ch && !c.starting) { if (c.running) c.stop(); c.channel = ch } })
-                    }
+        if (tab == ToolTab.Settings) {
+            SectionCard {
+                Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Symbol(Sym.Info, size = 22.dp, tint = AntTheme.accent.accent)
+                    Text(S(R.string.zigbee_how_it_works), style = rf(13, 18), color = cs.onSurfaceVariant)
                 }
-                Text(S(R.string.zigbee_channel_note), style = rf(12, 16), color = cs.onSurfaceVariant)
-                GainSettings(c.gain) { c.applyGains() }
-            }
-        }
-        SectionCard {
-            Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                Symbol(Sym.Info, size = 22.dp, tint = AntTheme.accent.accent)
-                Text(S(R.string.zigbee_how_it_works), style = rf(13, 18), color = cs.onSurfaceVariant)
             }
         }
     }
@@ -317,34 +326,41 @@ fun AntTool(vm: MainViewModel) {
         val d = device
         if (c.running || c.starting) StartButton(S(R.string.stop), Sym.Stop) { c.stop() }
         else StartButton(S(R.string.start_receiving), Sym.PlayArrow, enabled = d != null) { d?.let(c::start) }
+        val tab = ToolTabRow("Tools241", map = false)
         val now = System.currentTimeMillis()
-        if (c.sensors.isEmpty()) {
-            if (c.running) ToolEmpty(Sym.Favorite, S(R.string.ant_none_yet), S(R.string.ant_none_yet_body), null)
-        } else SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)) {
-            c.sensors.forEachIndexed { i, s ->
-                if (i > 0) Hairline()
-                val sel = s.key == c.selected
-                Row(Modifier.fillMaxWidth().clickable { c.selected = if (sel) null else s.key }.padding(vertical = 10.dp), verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                    val icon = when (s.type) { Ant.HEART_RATE -> Sym.Favorite; Ant.BIKE_POWER, Ant.BIKE_SPEED, Ant.BIKE_CADENCE, Ant.BIKE_SPEED_CADENCE -> Sym.PedalBike; Ant.STRIDE -> Sym.Speed; Ant.ENVIRONMENT -> Sym.Thermostat; else -> Sym.Sensors }
-                    LeadingIcon(icon, AntTheme.accent.container, AntTheme.accent.onContainer, 40.dp, RoundedCornerShape(12.dp), 22.dp)
-                    Column(Modifier.weight(1f)) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Text("${Ant.typeName(s.type)} · ${s.number}", Modifier.weight(1f), style = rf(15, 20, 600, tnum = true), maxLines = 1, overflow = TextOverflow.Ellipsis)
-                            Text(ago(now, s.lastMs), style = rf(12, 16, tnum = true), color = cs.onSurfaceVariant)
+        if (tab == ToolTab.Main) {
+            if (c.sensors.isEmpty()) {
+                if (c.running) ToolEmpty(Sym.Favorite, S(R.string.ant_none_yet), S(R.string.ant_none_yet_body), null)
+            } else SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)) {
+                c.sensors.forEachIndexed { i, s ->
+                    if (i > 0) Hairline()
+                    val sel = s.key == c.selected
+                    Row(Modifier.fillMaxWidth().clickable { c.selected = if (sel) null else s.key }.padding(vertical = 10.dp), verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                        val icon = when (s.type) { Ant.HEART_RATE -> Sym.Favorite; Ant.BIKE_POWER, Ant.BIKE_SPEED, Ant.BIKE_CADENCE, Ant.BIKE_SPEED_CADENCE -> Sym.PedalBike; Ant.STRIDE -> Sym.Speed; Ant.ENVIRONMENT -> Sym.Thermostat; else -> Sym.Sensors }
+                        LeadingIcon(icon, AntTheme.accent.container, AntTheme.accent.onContainer, 40.dp, RoundedCornerShape(12.dp), 22.dp)
+                        Column(Modifier.weight(1f)) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Text("${Ant.typeName(s.type)} · ${s.number}", Modifier.weight(1f), style = rf(15, 20, 600, tnum = true), maxLines = 1, overflow = TextOverflow.Ellipsis)
+                                Text(ago(now, s.lastMs), style = rf(12, 16, tnum = true), color = cs.onSurfaceVariant)
+                            }
+                            val big = s.heartRate?.let { "$it bpm" } ?: s.powerW?.let { "$it W" + (s.cadence?.let { c2 -> " · $c2 rpm" } ?: "") } ?: s.temperature?.let { "%.1f °C".format(Locale.getDefault(), it) }
+                            big?.let { Text(it, style = gs(22, 28, 500, tnum = true)) }
+                            Text("${s.page}: ${s.text}", style = rf(12, 16), color = cs.onSurfaceVariant, maxLines = if (sel) 4 else 2, overflow = TextOverflow.Ellipsis)
+                            Text(listOfNotNull(s.maker, if (s.pairing) S(R.string.ant_pairing) else null, "×${s.frames}", "SNR %.0f dB".format(Locale.getDefault(), s.snrDb)).joinToString(" · "), style = rf(11, 16, tnum = true), color = cs.onSurfaceVariant)
                         }
-                        val big = s.heartRate?.let { "$it bpm" } ?: s.powerW?.let { "$it W" + (s.cadence?.let { c2 -> " · $c2 rpm" } ?: "") } ?: s.temperature?.let { "%.1f °C".format(Locale.getDefault(), it) }
-                        big?.let { Text(it, style = gs(22, 28, 500, tnum = true)) }
-                        Text("${s.page}: ${s.text}", style = rf(12, 16), color = cs.onSurfaceVariant, maxLines = if (sel) 4 else 2, overflow = TextOverflow.Ellipsis)
-                        Text(listOfNotNull(s.maker, if (s.pairing) S(R.string.ant_pairing) else null, "×${s.frames}", "SNR %.0f dB".format(Locale.getDefault(), s.snrDb)).joinToString(" · "), style = rf(11, 16, tnum = true), color = cs.onSurfaceVariant)
                     }
                 }
             }
         }
-        SectionCard { GainSettings(c.gain) { c.applyGains() } }
-        SectionCard {
-            Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                Symbol(Sym.Info, size = 22.dp, tint = AntTheme.accent.accent)
-                Text(S(R.string.ant_how_it_works), style = rf(13, 18), color = cs.onSurfaceVariant)
+        if (tab == ToolTab.Settings) {
+            SectionCard { GainSettings(c.gain) { c.applyGains() } }
+        }
+        if (tab == ToolTab.Settings) {
+            SectionCard {
+                Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Symbol(Sym.Info, size = 22.dp, tint = AntTheme.accent.accent)
+                    Text(S(R.string.ant_how_it_works), style = rf(13, 18), color = cs.onSurfaceVariant)
+                }
             }
         }
     }

@@ -323,52 +323,61 @@ fun SondeTool(vm: MainViewModel) {
         val d = device
         if (c.running || c.starting) StartButton(S(R.string.stop), Sym.Stop) { c.stop() }
         else StartButton(S(R.string.start_receiving), Sym.PlayArrow, enabled = d != null && freqError == null) { d?.let(c::start) }
-        SondeMap(c, withPos, me, Modifier.fillMaxWidth().aspectRatio(1f).clip(RoundedCornerShape(24.dp)))
-        if (c.sondes.isNotEmpty()) {
-            SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)) {
-                c.sondes.forEachIndexed { i, s ->
-                    if (i > 0) Hairline()
-                    SondeRow(s, me, s.serial == c.selected) { c.selected = if (c.selected == s.serial) null else s.serial }
+        val tab = ToolTabRow("SondeTool0", map = true)
+        if (tab == ToolTab.Map) {
+            SondeMap(c, withPos, me, Modifier.fillMaxWidth().aspectRatio(1f).clip(RoundedCornerShape(24.dp)))
+        }
+        if (tab == ToolTab.List) {
+            if (c.sondes.isNotEmpty()) {
+                SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)) {
+                    c.sondes.forEachIndexed { i, s ->
+                        if (i > 0) Hairline()
+                        SondeRow(s, me, s.serial == c.selected) { c.selected = if (c.selected == s.serial) null else s.serial }
+                    }
                 }
             }
         }
-        SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 6.dp, bottom = 6.dp)) {
-            Row(
-                Modifier.fillMaxWidth().clickable { showSettings = !showSettings }.padding(vertical = 10.dp),
-                verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp),
-            ) {
-                Symbol(Sym.Tune, size = 20.dp, tint = AntTheme.accent.accent)
-                Text(S(R.string.settings_2), Modifier.weight(1f), style = rf(14, 20, 600))
-                Text((if (c.gain.auto) S(R.string.auto_gain) + " · " else "") + "LNA ${c.lnaGain} · VGA ${c.vgaGain}${if (c.amp) S(R.string.amp) else ""}", style = rf(12, 16), color = cs.onSurfaceVariant, maxLines = 1)
-            }
-            if (showSettings) {
-                Column(Modifier.padding(bottom = 10.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                    FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                        listOf("403.000" to S(R.string.radiosondes), "434.660" to "Horus", "434.200" to "Horus").forEach { (f, l) ->
-                            AntFilterChip("${f.replace('.', ',')} · $l", c.frequencyMhz == f, { c.frequencyMhz = f })
+        if (tab == ToolTab.Settings) {
+            SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 6.dp, bottom = 6.dp)) {
+                Row(
+                    Modifier.fillMaxWidth().clickable { showSettings = !showSettings }.padding(vertical = 10.dp),
+                    verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp),
+                ) {
+                    Symbol(Sym.Tune, size = 20.dp, tint = AntTheme.accent.accent)
+                    Text(S(R.string.settings_2), Modifier.weight(1f), style = rf(14, 20, 600))
+                    Text((if (c.gain.auto) S(R.string.auto_gain) + " · " else "") + "LNA ${c.lnaGain} · VGA ${c.vgaGain}${if (c.amp) S(R.string.amp) else ""}", style = rf(12, 16), color = cs.onSurfaceVariant, maxLines = 1)
+                }
+                if (showSettings) {
+                    Column(Modifier.padding(bottom = 10.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                        FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                            listOf("403.000" to S(R.string.radiosondes), "434.660" to "Horus", "434.200" to "Horus").forEach { (f, l) ->
+                                AntFilterChip("${f.replace('.', ',')} · $l", c.frequencyMhz == f, { c.frequencyMhz = f })
+                            }
                         }
+                        HostInputField(c.frequencyMhz, { c.frequencyMhz = it }, S(R.string.frequency_mhz), Sym.Stream, keyboardType = KeyboardType.Decimal)
+                        if (freqError != null) Text(freqError, style = rf(13, 18), color = cs.error)
+                        GainSettings(c.gain) { c.applyGains() }
+                        Text(
+                            S(R.string.the_frequency_applies_at_the_next) +
+                                S(R.string.a_line_that_comes_back_every),
+                            style = rf(12, 16), color = cs.onSurfaceVariant,
+                        )
                     }
-                    HostInputField(c.frequencyMhz, { c.frequencyMhz = it }, S(R.string.frequency_mhz), Sym.Stream, keyboardType = KeyboardType.Decimal)
-                    if (freqError != null) Text(freqError, style = rf(13, 18), color = cs.error)
-                    GainSettings(c.gain) { c.applyGains() }
+                }
+            }
+        }
+        if (tab == ToolTab.Settings) {
+            SectionCard {
+                Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Symbol(Sym.Info, size = 22.dp, tint = AntTheme.accent.accent)
                     Text(
-                        S(R.string.the_frequency_applies_at_the_next) +
-                            S(R.string.a_line_that_comes_back_every),
-                        style = rf(12, 16), color = cs.onSurfaceVariant,
+                        S(R.string.weather_stations_launch_balloons_twice_a) +
+                            S(R.string.meteomodem_m10_and_m20_sondes_other) +
+                            S(R.string.gps_position_in_clear_every_second) +
+                            S(R.string.horus_info),
+                        style = rf(13, 18), color = cs.onSurfaceVariant,
                     )
                 }
-            }
-        }
-        SectionCard {
-            Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                Symbol(Sym.Info, size = 22.dp, tint = AntTheme.accent.accent)
-                Text(
-                    S(R.string.weather_stations_launch_balloons_twice_a) +
-                        S(R.string.meteomodem_m10_and_m20_sondes_other) +
-                        S(R.string.gps_position_in_clear_every_second) +
-                        S(R.string.horus_info),
-                    style = rf(13, 18), color = cs.onSurfaceVariant,
-                )
             }
         }
     }

@@ -347,35 +347,45 @@ fun MeteorTool(vm: MainViewModel) {
         val d = device
         if (c.running || c.starting) StartButton(S(R.string.stop), Sym.Stop) { c.stop() }
         else StartButton(S(R.string.start_receiving), Sym.PlayArrow, enabled = d != null && c.parsedHz() != null) { d?.let(c::start) }
+        val tab = ToolTabRow("MeteorTool0", map = false)
+        if (tab == ToolTab.Main) {
+            if (c.channels.isNotEmpty()) ImageCard(c)
+        }
+        if (tab == ToolTab.Main) {
+            StagesCard(st, c.running)
+        }
+        if (tab == ToolTab.Main) {
+            PassesCard(c, now, loc?.let { Observer(it.latitude, it.longitude, it.altitude) })
 
-        if (c.channels.isNotEmpty()) ImageCard(c)
-        StagesCard(st, c.running)
-        PassesCard(c, now, loc?.let { Observer(it.latitude, it.longitude, it.altitude) })
-
-        SectionCard {
-            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                Text(S(R.string.frequency), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
-                FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    // Both satellites can be on either: the primary and the backup frequency, not one per satellite.
-                    MeteorSats.frequencies.forEach { mhzValue ->
-                        val f = "%.3f".format(Locale.US, mhzValue)
-                        AntFilterChip("${mhz(mhzValue)} MHz", c.frequencyMhz == f, { if (c.frequencyMhz != f && !c.starting) { if (c.running) c.stop(); c.frequencyMhz = f } })
+        }
+        if (tab == ToolTab.Settings) {
+            SectionCard {
+                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                    Text(S(R.string.frequency), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
+                    FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        // Both satellites can be on either: the primary and the backup frequency, not one per satellite.
+                        MeteorSats.frequencies.forEach { mhzValue ->
+                            val f = "%.3f".format(Locale.US, mhzValue)
+                            AntFilterChip("${mhz(mhzValue)} MHz", c.frequencyMhz == f, { if (c.frequencyMhz != f && !c.starting) { if (c.running) c.stop(); c.frequencyMhz = f } })
+                        }
                     }
+                    if (!c.running) HostInputField(c.frequencyMhz, { c.frequencyMhz = it }, S(R.string.frequency_mhz), Sym.Stream, keyboardType = KeyboardType.Decimal)
+                    GainSettings(c.gain) { c.applyGains() }
                 }
-                if (!c.running) HostInputField(c.frequencyMhz, { c.frequencyMhz = it }, S(R.string.frequency_mhz), Sym.Stream, keyboardType = KeyboardType.Decimal)
-                GainSettings(c.gain) { c.applyGains() }
             }
         }
-        SectionCard {
-            Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                Symbol(Sym.Info, size = 22.dp, tint = AntTheme.accent.accent)
-                Text(
-                    S(R.string.meteor_m_satellites_broadcast_their_images) +
-                        S(R.string.above_the_horizon_a_pass_lasts) +
-                        S(R.string.a_vhf_antenna_in_the_clear) +
-                        S(R.string.this_decoding_is_experimental_if_no),
-                    style = rf(13, 18), color = cs.onSurfaceVariant,
-                )
+        if (tab == ToolTab.Settings) {
+            SectionCard {
+                Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Symbol(Sym.Info, size = 22.dp, tint = AntTheme.accent.accent)
+                    Text(
+                        S(R.string.meteor_m_satellites_broadcast_their_images) +
+                            S(R.string.above_the_horizon_a_pass_lasts) +
+                            S(R.string.a_vhf_antenna_in_the_clear) +
+                            S(R.string.this_decoding_is_experimental_if_no),
+                        style = rf(13, 18), color = cs.onSurfaceVariant,
+                    )
+                }
             }
         }
     }

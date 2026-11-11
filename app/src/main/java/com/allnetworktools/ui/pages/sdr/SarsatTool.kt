@@ -149,27 +149,34 @@ fun SarsatTool(vm: MainViewModel) {
         val d = device
         if (c.running || c.starting) StartButton(S(R.string.stop), Sym.Stop) { c.stop() }
         else StartButton(S(R.string.start_receiving), Sym.PlayArrow, enabled = d != null) { d?.let(c::start) }
-        if (c.beacons.isEmpty()) {
-            if (c.running) ToolEmpty(Sym.Campaign, S(R.string.sarsat_none_yet), S(R.string.sarsat_none_yet_body), null)
-        } else {
-            val now = System.currentTimeMillis()
-            SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)) {
-                c.beacons.forEachIndexed { i, s ->
-                    if (i > 0) Hairline()
-                    BeaconRow(s, now, s.beacon.hexId == c.selected, { c.selected = if (c.selected == s.beacon.hexId) null else s.beacon.hexId }) { lat, lon ->
-                        actions.openUrl("geo:$lat,$lon?q=$lat,$lon(${s.beacon.hexId})")
+        val tab = ToolTabRow("SarsatTool0", map = false)
+        if (tab == ToolTab.Main) {
+            if (c.beacons.isEmpty()) {
+                if (c.running) ToolEmpty(Sym.Campaign, S(R.string.sarsat_none_yet), S(R.string.sarsat_none_yet_body), null)
+            } else {
+                val now = System.currentTimeMillis()
+                SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)) {
+                    c.beacons.forEachIndexed { i, s ->
+                        if (i > 0) Hairline()
+                        BeaconRow(s, now, s.beacon.hexId == c.selected, { c.selected = if (c.selected == s.beacon.hexId) null else s.beacon.hexId }) { lat, lon ->
+                            actions.openUrl("geo:$lat,$lon?q=$lat,$lon(${s.beacon.hexId})")
+                        }
                     }
                 }
             }
         }
-        SectionCard { GainSettings(c.gain) { c.applyGains() } }
-        SectionCard {
-            Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                Symbol(Sym.Info, size = 22.dp, tint = AntTheme.accent.accent)
-                Text(
-                    S(R.string.sarsat_how_it_works) + (if (c.failed > 0) "\n\n" + S(R.string.sarsat_failed, c.failed) else ""),
-                    style = rf(13, 18), color = cs.onSurfaceVariant,
-                )
+        if (tab == ToolTab.Settings) {
+            SectionCard { GainSettings(c.gain) { c.applyGains() } }
+        }
+        if (tab == ToolTab.Settings) {
+            SectionCard {
+                Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Symbol(Sym.Info, size = 22.dp, tint = AntTheme.accent.accent)
+                    Text(
+                        S(R.string.sarsat_how_it_works) + (if (c.failed > 0) "\n\n" + S(R.string.sarsat_failed, c.failed) else ""),
+                        style = rf(13, 18), color = cs.onSurfaceVariant,
+                    )
+                }
             }
         }
     }

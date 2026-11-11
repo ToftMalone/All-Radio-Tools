@@ -2603,4 +2603,7 @@
     <string name="wardriving_excl_nothing">"ไม่มีที่อยู่หรือ OUI ในไฟล์นี้"</string>
     <string name="wardriving_excluded">"ไม่รวม"</string>
     <string name="sdr_settings_refused">"วิทยุนี้ทำไม่ได้: ความถี่หรืออัตราสุ่มตัวอย่างอยู่นอกช่วงที่รับได้"</string>
+    <string name="tool_tab_list">"รายการ"</string>
+    <string name="tool_tab_reception">"การรับ"</string>
+    <string name="tool_tab_settings">"การตั้งค่า"</string>
 </resources>

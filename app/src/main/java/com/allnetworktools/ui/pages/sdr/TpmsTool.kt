@@ -212,32 +212,39 @@ fun TpmsTool(vm: MainViewModel) {
         val d = device
         if (c.running || c.starting) StartButton(S(R.string.stop), Sym.Stop) { c.stop() }
         else StartButton(S(R.string.start_receiving), Sym.PlayArrow, enabled = d != null) { d?.let(c::start) }
-        if (c.sensors.isEmpty()) {
-            if (c.running) ToolEmpty(Sym.DirectionsCar, S(R.string.tpms_none_yet), S(R.string.tpms_none_yet_body), null)
-        } else {
-            val now = System.currentTimeMillis()
-            SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)) {
-                c.sensors.forEachIndexed { i, s ->
-                    if (i > 0) Hairline()
-                    SensorRow(s, now)
-                }
-            }
-        }
-        SectionCard {
-            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                Text(S(R.string.frequency), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
-                FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    listOf(TpmsReceiver.EUROPE_HZ to "433,92 MHz · Europe", TpmsReceiver.AMERICA_HZ to "315 MHz · " + S(R.string.americas_asia)).forEach { (hz, label) ->
-                        AntFilterChip(label, c.bandHz == hz, { if (c.bandHz != hz && !c.starting) { if (c.running) c.stop(); c.bandHz = hz } })
+        val tab = ToolTabRow("TpmsTool0", map = false)
+        if (tab == ToolTab.Main) {
+            if (c.sensors.isEmpty()) {
+                if (c.running) ToolEmpty(Sym.DirectionsCar, S(R.string.tpms_none_yet), S(R.string.tpms_none_yet_body), null)
+            } else {
+                val now = System.currentTimeMillis()
+                SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)) {
+                    c.sensors.forEachIndexed { i, s ->
+                        if (i > 0) Hairline()
+                        SensorRow(s, now)
                     }
                 }
-                GainSettings(c.gain) { c.applyGains() }
             }
         }
-        SectionCard {
-            Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                Symbol(Sym.Info, size = 22.dp, tint = AntTheme.accent.accent)
-                Text(S(R.string.tpms_how_it_works), style = rf(13, 18), color = cs.onSurfaceVariant)
+        if (tab == ToolTab.Settings) {
+            SectionCard {
+                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                    Text(S(R.string.frequency), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
+                    FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        listOf(TpmsReceiver.EUROPE_HZ to "433,92 MHz · Europe", TpmsReceiver.AMERICA_HZ to "315 MHz · " + S(R.string.americas_asia)).forEach { (hz, label) ->
+                            AntFilterChip(label, c.bandHz == hz, { if (c.bandHz != hz && !c.starting) { if (c.running) c.stop(); c.bandHz = hz } })
+                        }
+                    }
+                    GainSettings(c.gain) { c.applyGains() }
+                }
+            }
+        }
+        if (tab == ToolTab.Settings) {
+            SectionCard {
+                Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Symbol(Sym.Info, size = 22.dp, tint = AntTheme.accent.accent)
+                    Text(S(R.string.tpms_how_it_works), style = rf(13, 18), color = cs.onSurfaceVariant)
+                }
             }
         }
     }

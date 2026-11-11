@@ -220,30 +220,39 @@ fun PmrTool(vm: MainViewModel) {
         val d = device
         if (c.running || c.starting) StartButton(S(R.string.stop), Sym.Stop) { c.stop() }
         else StartButton(S(R.string.start_receiving), Sym.PlayArrow, enabled = d != null) { d?.let(c::start) }
-        SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 12.dp, bottom = 8.dp)) {
-            Text(S(R.string.pmr_tap_to_listen), Modifier.padding(bottom = 6.dp), style = rf(12, 16), color = cs.onSurfaceVariant)
-            c.channels.forEachIndexed { i, ch ->
-                if (i > 0) Hairline()
-                ChannelRow(ch, c.listening == ch.ch, c.running, now) { c.listen(ch.ch) }
-            }
-        }
-        if (c.calls.isNotEmpty()) {
-            SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)) {
-                c.calls.take(100).forEachIndexed { i, call ->
+        val tab = ToolTabRow("PmrTool0", map = false)
+        if (tab == ToolTab.Main) {
+            SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 12.dp, bottom = 8.dp)) {
+                Text(S(R.string.pmr_tap_to_listen), Modifier.padding(bottom = 6.dp), style = rf(12, 16), color = cs.onSurfaceVariant)
+                c.channels.forEachIndexed { i, ch ->
                     if (i > 0) Hairline()
-                    CallRow(call)
+                    ChannelRow(ch, c.listening == ch.ch, c.running, now) { c.listen(ch.ch) }
                 }
             }
         }
-        SectionCard {
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                GainSettings(c.gain) { c.applyGains() }
+        if (tab == ToolTab.Main) {
+            if (c.calls.isNotEmpty()) {
+                SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)) {
+                    c.calls.take(100).forEachIndexed { i, call ->
+                        if (i > 0) Hairline()
+                        CallRow(call)
+                    }
+                }
             }
         }
-        SectionCard {
-            Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                Symbol(Sym.Info, size = 22.dp, tint = AntTheme.accent.accent)
-                Text(S(R.string.pmr_how_it_works), style = rf(13, 18), color = cs.onSurfaceVariant)
+        if (tab == ToolTab.Settings) {
+            SectionCard {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    GainSettings(c.gain) { c.applyGains() }
+                }
+            }
+        }
+        if (tab == ToolTab.Settings) {
+            SectionCard {
+                Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Symbol(Sym.Info, size = 22.dp, tint = AntTheme.accent.accent)
+                    Text(S(R.string.pmr_how_it_works), style = rf(13, 18), color = cs.onSurfaceVariant)
+                }
             }
         }
     }

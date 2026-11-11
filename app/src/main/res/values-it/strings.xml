@@ -2672,4 +2672,7 @@
     <string name="wardriving_excl_nothing">"Nessun indirizzo né OUI in questo file"</string>
     <string name="wardriving_excluded">"Escluso"</string>
     <string name="sdr_settings_refused">"Questa radio non può farlo: la frequenza o la frequenza di campionamento è fuori dalla sua portata"</string>
+    <string name="tool_tab_list">"Elenco"</string>
+    <string name="tool_tab_reception">"Ricezione"</string>
+    <string name="tool_tab_settings">"Impostazioni"</string>
 </resources>

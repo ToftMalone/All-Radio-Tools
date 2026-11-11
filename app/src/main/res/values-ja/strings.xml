@@ -2603,4 +2603,7 @@
     <string name="wardriving_excl_nothing">"このファイルにアドレスや OUI がありません"</string>
     <string name="wardriving_excluded">"除外"</string>
     <string name="sdr_settings_refused">"このラジオでは対応できません：周波数またはサンプルレートが受信範囲外です"</string>
+    <string name="tool_tab_list">"リスト"</string>
+    <string name="tool_tab_reception">"受信"</string>
+    <string name="tool_tab_settings">"設定"</string>
 </resources>

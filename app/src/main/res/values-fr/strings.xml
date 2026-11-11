@@ -2953,4 +2953,7 @@
         <item quantity="one">"%2$d outil masqué : le %1$s ne peut pas le faire tourner"</item>
         <item quantity="other">"%2$d outils masqués : le %1$s ne peut pas les faire tourner"</item>
     </plurals>
+    <string name="tool_tab_list">"Liste"</string>
+    <string name="tool_tab_reception">"Réception"</string>
+    <string name="tool_tab_settings">"Réglages"</string>
 </resources>

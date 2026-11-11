@@ -123,25 +123,34 @@ fun LoraAprsTool(vm: MainViewModel) {
         val d = device
         if (c.running || c.starting) StartButton(S(R.string.stop), Sym.Stop) { c.stop() }
         else StartButton(S(R.string.start_receiving), Sym.PlayArrow, enabled = d != null) { d?.let(c::start) }
-        AprsMap(c.selected, { c.selected = it }, withPos, me, Modifier.fillMaxWidth().aspectRatio(1f).clip(RoundedCornerShape(24.dp)))
-        if (c.stations.isEmpty()) {
-            if (c.running) ToolEmpty(Sym.Radio, S(R.string.lora_aprs_none_yet), S(R.string.lora_aprs_none_yet_body), null)
-        } else {
-            SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)) {
-                c.stations.forEachIndexed { i, s ->
-                    if (i > 0) Hairline()
-                    StationRow(s, me, s.key == c.selected) { c.selected = if (c.selected == s.key) null else s.key }
+        val tab = ToolTabRow("LoraAprsTool0", map = true)
+        if (tab == ToolTab.Map) {
+            AprsMap(c.selected, { c.selected = it }, withPos, me, Modifier.fillMaxWidth().aspectRatio(1f).clip(RoundedCornerShape(24.dp)))
+        }
+        if (tab == ToolTab.List) {
+            if (c.stations.isEmpty()) {
+                if (c.running) ToolEmpty(Sym.Radio, S(R.string.lora_aprs_none_yet), S(R.string.lora_aprs_none_yet_body), null)
+            } else {
+                SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)) {
+                    c.stations.forEachIndexed { i, s ->
+                        if (i > 0) Hairline()
+                        StationRow(s, me, s.key == c.selected) { c.selected = if (c.selected == s.key) null else s.key }
+                    }
                 }
             }
         }
-        SectionCard { GainSettings(c.gain) { c.applyGains() } }
-        SectionCard {
-            Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                Symbol(Sym.Info, size = 22.dp, tint = AntTheme.accent.accent)
-                Text(
-                    S(R.string.lora_aprs_how_it_works) + (if (c.badFrames > 0) "\n\n" + S(R.string.mesh_bad_crc, c.badFrames) else ""),
-                    style = rf(13, 18), color = cs.onSurfaceVariant,
-                )
+        if (tab == ToolTab.Settings) {
+            SectionCard { GainSettings(c.gain) { c.applyGains() } }
+        }
+        if (tab == ToolTab.Settings) {
+            SectionCard {
+                Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Symbol(Sym.Info, size = 22.dp, tint = AntTheme.accent.accent)
+                    Text(
+                        S(R.string.lora_aprs_how_it_works) + (if (c.badFrames > 0) "\n\n" + S(R.string.mesh_bad_crc, c.badFrames) else ""),
+                        style = rf(13, 18), color = cs.onSurfaceVariant,
+                    )
+                }
             }
         }
     }

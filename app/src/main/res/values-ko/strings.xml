@@ -2603,4 +2603,7 @@
     <string name="wardriving_excl_nothing">"이 파일에 주소나 OUI가 없습니다"</string>
     <string name="wardriving_excluded">"제외됨"</string>
     <string name="sdr_settings_refused">"이 라디오는 지원하지 않습니다: 주파수나 샘플레이트가 수신 범위를 벗어납니다"</string>
+    <string name="tool_tab_list">"목록"</string>
+    <string name="tool_tab_reception">"수신"</string>
+    <string name="tool_tab_settings">"설정"</string>
 </resources>

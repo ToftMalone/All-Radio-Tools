@@ -21,6 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.allnetworktools.ui.components.SegmentedRow
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
@@ -202,4 +203,28 @@ private fun GainLine(label: String, g: SdrGain, value: Int, steps: List<Int>, on
             }
         }
     }
+}
+
+/** The tabs of an SDR tool: its map (when it has one), what it receives, and its settings. */
+enum class ToolTab { Map, List, Main, Settings }
+
+/** The tab picked in each tool, kept for the session so coming back to a tool shows the same tab. */
+internal object ToolTabMemory {
+    val chosen = androidx.compose.runtime.mutableStateMapOf<String, ToolTab>()
+}
+
+/**
+ * The tab row under a tool's start button, as in the mesh tools: Map, List and Settings for a tool with a map; what it
+ * receives and Settings otherwise. Settings holds the frequency, the gains, the bias tee and the explanation.
+ */
+@Composable
+internal fun ToolTabRow(key: String, map: Boolean): ToolTab {
+    val tabs = buildList {
+        if (map) add(ToolTab.Map to S(R.string.mesh_tab_map))
+        add((if (map) ToolTab.List else ToolTab.Main) to S(if (map) R.string.tool_tab_list else R.string.tool_tab_reception))
+        add(ToolTab.Settings to S(R.string.tool_tab_settings))
+    }
+    val current = ToolTabMemory.chosen[key]?.takeIf { t -> tabs.any { it.first == t } } ?: tabs.first().first
+    SegmentedRow(tabs, current, { ToolTabMemory.chosen[key] = it }, Modifier.fillMaxWidth())
+    return current
 }

@@ -261,29 +261,38 @@ fun AisTool(vm: MainViewModel) {
         val d = device
         if (c.running || c.starting) StartButton(S(R.string.stop), Sym.Stop) { c.stop() }
         else StartButton(S(R.string.start_receiving), Sym.PlayArrow, enabled = d != null) { d?.let(c::start) }
-        ShipMap(c, withPos, me, Modifier.fillMaxWidth().aspectRatio(1f).clip(RoundedCornerShape(24.dp)))
-        if (c.ships.isNotEmpty()) {
-            SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)) {
-                c.ships.forEachIndexed { i, s ->
-                    if (i > 0) Hairline()
-                    ShipRow(s, me, s.mmsi == c.selected) { c.selected = if (c.selected == s.mmsi) null else s.mmsi }
+        val tab = ToolTabRow("AisTool0", map = true)
+        if (tab == ToolTab.Map) {
+            ShipMap(c, withPos, me, Modifier.fillMaxWidth().aspectRatio(1f).clip(RoundedCornerShape(24.dp)))
+        }
+        if (tab == ToolTab.List) {
+            if (c.ships.isNotEmpty()) {
+                SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)) {
+                    c.ships.forEachIndexed { i, s ->
+                        if (i > 0) Hairline()
+                        ShipRow(s, me, s.mmsi == c.selected) { c.selected = if (c.selected == s.mmsi) null else s.mmsi }
+                    }
                 }
             }
         }
-        SectionCard {
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                GainSettings(c.gain) { c.applyGains() }
+        if (tab == ToolTab.Settings) {
+            SectionCard {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    GainSettings(c.gain) { c.applyGains() }
+                }
             }
         }
-        SectionCard {
-            Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                Symbol(Sym.Info, size = 22.dp, tint = AntTheme.accent.accent)
-                Text(
-                    S(R.string.ships_broadcast_their_identity_position_heading) +
-                        S(R.string.reception_is_line_of_sight_from) +
-                        S(R.string.expect_20_to_60_km_buoys),
-                    style = rf(13, 18), color = cs.onSurfaceVariant,
-                )
+        if (tab == ToolTab.Settings) {
+            SectionCard {
+                Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Symbol(Sym.Info, size = 22.dp, tint = AntTheme.accent.accent)
+                    Text(
+                        S(R.string.ships_broadcast_their_identity_position_heading) +
+                            S(R.string.reception_is_line_of_sight_from) +
+                            S(R.string.expect_20_to_60_km_buoys),
+                        style = rf(13, 18), color = cs.onSurfaceVariant,
+                    )
+                }
             }
         }
     }

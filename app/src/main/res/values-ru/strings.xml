@@ -2810,4 +2810,7 @@
     <string name="wardriving_excl_nothing">"В этом файле нет ни адресов, ни OUI"</string>
     <string name="wardriving_excluded">"Исключено"</string>
     <string name="sdr_settings_refused">"Это радио так не умеет: частота или частота дискретизации выходит за пределы приёма"</string>
+    <string name="tool_tab_list">"Список"</string>
+    <string name="tool_tab_reception">"Приём"</string>
+    <string name="tool_tab_settings">"Настройки"</string>
 </resources>

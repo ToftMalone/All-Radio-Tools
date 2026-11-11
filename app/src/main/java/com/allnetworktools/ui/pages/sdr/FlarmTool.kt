@@ -111,28 +111,35 @@ fun FlarmTool(vm: MainViewModel) {
         val d = device
         if (c.running || c.starting) StartButton(S(R.string.stop), Sym.Stop) { c.stop() }
         else StartButton(S(R.string.start_receiving), Sym.PlayArrow, enabled = d != null) { d?.let(c::start) }
-        if (c.aircraft.isEmpty()) {
-            if (c.running) ToolEmpty(Sym.Flight, S(R.string.flarm_none_yet), S(R.string.flarm_none_yet_body), null)
-        } else {
-            val now = System.currentTimeMillis()
-            val types = S(R.string.flarm_types).split('|')
-            if (me == null) Empty(S(R.string.flarm_no_position))
-            SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)) {
-                c.aircraft.forEachIndexed { i, a ->
-                    if (i > 0) Hairline()
-                    AircraftRow(a, types.getOrElse(a.type) { "?" }, me, now)
+        val tab = ToolTabRow("FlarmTool0", map = false)
+        if (tab == ToolTab.Main) {
+            if (c.aircraft.isEmpty()) {
+                if (c.running) ToolEmpty(Sym.Flight, S(R.string.flarm_none_yet), S(R.string.flarm_none_yet_body), null)
+            } else {
+                val now = System.currentTimeMillis()
+                val types = S(R.string.flarm_types).split('|')
+                if (me == null) Empty(S(R.string.flarm_no_position))
+                SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)) {
+                    c.aircraft.forEachIndexed { i, a ->
+                        if (i > 0) Hairline()
+                        AircraftRow(a, types.getOrElse(a.type) { "?" }, me, now)
+                    }
                 }
             }
         }
-        SectionCard {
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                GainSettings(c.gain) { c.applyGains() }
+        if (tab == ToolTab.Settings) {
+            SectionCard {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    GainSettings(c.gain) { c.applyGains() }
+                }
             }
         }
-        SectionCard {
-            Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                Symbol(Sym.Info, size = 22.dp, tint = AntTheme.accent.accent)
-                Text(S(R.string.flarm_how_it_works), style = rf(13, 18), color = cs.onSurfaceVariant)
+        if (tab == ToolTab.Settings) {
+            SectionCard {
+                Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Symbol(Sym.Info, size = 22.dp, tint = AntTheme.accent.accent)
+                    Text(S(R.string.flarm_how_it_works), style = rf(13, 18), color = cs.onSurfaceVariant)
+                }
             }
         }
     }

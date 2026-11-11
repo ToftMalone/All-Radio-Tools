@@ -295,39 +295,50 @@ fun AdsbTool(vm: MainViewModel) {
         val d = device
         if (c.running || c.starting) StartButton(S(R.string.stop), Sym.Stop) { c.stop() }
         else StartButton(S(R.string.start_receiving), Sym.PlayArrow, enabled = d != null) { d?.let(c::start) }
-        AdsbMap(c, withPos, me, Modifier.fillMaxWidth().aspectRatio(1f).clip(RoundedCornerShape(24.dp)))
-        if (c.planes.isNotEmpty()) {
-            SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)) {
-                c.planes.forEachIndexed { i, p ->
-                    if (i > 0) Hairline()
-                    PlaneRow(p, me, p.icao == c.selected) { c.selected = if (c.selected == p.icao) null else p.icao }
+        val tab = ToolTabRow("AdsbTool0", map = true)
+        if (tab == ToolTab.Map) {
+            AdsbMap(c, withPos, me, Modifier.fillMaxWidth().aspectRatio(1f).clip(RoundedCornerShape(24.dp)))
+        }
+        if (tab == ToolTab.List) {
+            if (c.planes.isNotEmpty()) {
+                SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)) {
+                    c.planes.forEachIndexed { i, p ->
+                        if (i > 0) Hairline()
+                        PlaneRow(p, me, p.icao == c.selected) { c.selected = if (c.selected == p.icao) null else p.icao }
+                    }
                 }
             }
         }
-        if (c.modeAc.isNotEmpty()) {
-            SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 12.dp, bottom = 4.dp)) {
-                Text("Mode A/C", Modifier.padding(bottom = 4.dp), style = rf(14, 20, 600), color = AntTheme.accent.accent)
-                c.modeAc.forEach { m ->
-                    Hairline()
-                    ModeAcRow(m) { m.match?.let { p -> c.selected = p.icao } }
+        if (tab == ToolTab.List) {
+            if (c.modeAc.isNotEmpty()) {
+                SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 12.dp, bottom = 4.dp)) {
+                    Text("Mode A/C", Modifier.padding(bottom = 4.dp), style = rf(14, 20, 600), color = AntTheme.accent.accent)
+                    c.modeAc.forEach { m ->
+                        Hairline()
+                        ModeAcRow(m) { m.match?.let { p -> c.selected = p.icao } }
+                    }
                 }
             }
         }
-        SectionCard {
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                GainSettings(c.gain) { c.applyGains() }
+        if (tab == ToolTab.Settings) {
+            SectionCard {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    GainSettings(c.gain) { c.applyGains() }
+                }
             }
         }
-        SectionCard {
-            Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                Symbol(Sym.Info, size = 22.dp, tint = AntTheme.accent.accent)
-                Text(
-                    S(R.string.aircraft_broadcast_their_identity_altitude_speed) +
-                        S(R.string.a_position_needs_two_frames_even) +
-                        S(R.string.mode_ac_info) +
-                        S(R.string.receive_only),
-                    style = rf(13, 18), color = cs.onSurfaceVariant,
-                )
+        if (tab == ToolTab.Settings) {
+            SectionCard {
+                Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Symbol(Sym.Info, size = 22.dp, tint = AntTheme.accent.accent)
+                    Text(
+                        S(R.string.aircraft_broadcast_their_identity_altitude_speed) +
+                            S(R.string.a_position_needs_two_frames_even) +
+                            S(R.string.mode_ac_info) +
+                            S(R.string.receive_only),
+                        style = rf(13, 18), color = cs.onSurfaceVariant,
+                    )
+                }
             }
         }
     }

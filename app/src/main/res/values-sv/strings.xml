@@ -2672,4 +2672,7 @@
     <string name="wardriving_excl_nothing">"Ingen adress eller OUI i den här filen"</string>
     <string name="wardriving_excluded">"Utesluten"</string>
     <string name="sdr_settings_refused">"Den här radion klarar inte det: frekvensen eller samplingshastigheten ligger utanför dess mottagningsområde"</string>
+    <string name="tool_tab_list">"Lista"</string>
+    <string name="tool_tab_reception">"Mottagning"</string>
+    <string name="tool_tab_settings">"Inställningar"</string>
 </resources>

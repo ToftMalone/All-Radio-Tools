@@ -2672,4 +2672,7 @@
     <string name="wardriving_excl_nothing">"Nenhum endereço ou OUI neste ficheiro"</string>
     <string name="wardriving_excluded">"Excluído"</string>
     <string name="sdr_settings_refused">"Este rádio não consegue fazê-lo: a frequência ou a taxa de amostragem está fora do que pode receber"</string>
+    <string name="tool_tab_list">"Lista"</string>
+    <string name="tool_tab_reception">"Receção"</string>
+    <string name="tool_tab_settings">"Definições"</string>
 </resources>

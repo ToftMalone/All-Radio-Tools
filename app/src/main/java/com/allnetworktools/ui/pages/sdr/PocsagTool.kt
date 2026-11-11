@@ -211,34 +211,41 @@ fun PocsagTool(vm: MainViewModel) {
         val d = device
         if (c.running || c.starting) StartButton(S(R.string.stop), Sym.Stop) { c.stop() }
         else StartButton(S(R.string.start_receiving), Sym.PlayArrow, enabled = d != null && c.channels() != null) { d?.let(c::start) }
-        if (c.messages.isEmpty()) {
-            if (c.running) ToolEmpty(Sym.Sms, S(R.string.pocsag_none_yet), S(R.string.pocsag_none_yet_body), null)
-        } else {
-            SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)) {
-                c.messages.take(200).forEachIndexed { i, m ->
-                    if (i > 0) Hairline()
-                    PageRow(m)
-                }
-            }
-        }
-        SectionCard {
-            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                Text(S(R.string.pocsag_network), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
-                FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    (PocsagNetworks.all + listOf(null)).forEach { net ->
-                        AntFilterChip(net?.name ?: S(R.string.pocsag_custom), c.network == net, {
-                            if (c.network != net && !c.starting) { if (c.running) c.stop(); c.network = net }
-                        })
+        val tab = ToolTabRow("PocsagTool0", map = false)
+        if (tab == ToolTab.Main) {
+            if (c.messages.isEmpty()) {
+                if (c.running) ToolEmpty(Sym.Sms, S(R.string.pocsag_none_yet), S(R.string.pocsag_none_yet_body), null)
+            } else {
+                SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)) {
+                    c.messages.take(200).forEachIndexed { i, m ->
+                        if (i > 0) Hairline()
+                        PageRow(m)
                     }
                 }
-                if (c.network == null && !c.running) HostInputField(c.customMhz, { c.customMhz = it }, S(R.string.frequency_mhz), Sym.Stream, keyboardType = KeyboardType.Decimal)
-                GainSettings(c.gain) { c.applyGains() }
             }
         }
-        SectionCard {
-            Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                Symbol(Sym.Info, size = 22.dp, tint = AntTheme.accent.accent)
-                Text(S(R.string.pocsag_how_it_works), style = rf(13, 18), color = cs.onSurfaceVariant)
+        if (tab == ToolTab.Settings) {
+            SectionCard {
+                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                    Text(S(R.string.pocsag_network), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
+                    FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        (PocsagNetworks.all + listOf(null)).forEach { net ->
+                            AntFilterChip(net?.name ?: S(R.string.pocsag_custom), c.network == net, {
+                                if (c.network != net && !c.starting) { if (c.running) c.stop(); c.network = net }
+                            })
+                        }
+                    }
+                    if (c.network == null && !c.running) HostInputField(c.customMhz, { c.customMhz = it }, S(R.string.frequency_mhz), Sym.Stream, keyboardType = KeyboardType.Decimal)
+                    GainSettings(c.gain) { c.applyGains() }
+                }
+            }
+        }
+        if (tab == ToolTab.Settings) {
+            SectionCard {
+                Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Symbol(Sym.Info, size = 22.dp, tint = AntTheme.accent.accent)
+                    Text(S(R.string.pocsag_how_it_works), style = rf(13, 18), color = cs.onSurfaceVariant)
+                }
             }
         }
     }

@@ -2879,4 +2879,7 @@
         <item quantity="one">"%2$d tool hidden: the %1$s cannot run it"</item>
         <item quantity="other">"%2$d tools hidden: the %1$s cannot run them"</item>
     </plurals>
+    <string name="tool_tab_list">"List"</string>
+    <string name="tool_tab_reception">"Reception"</string>
+    <string name="tool_tab_settings">"Settings"</string>
 </resources>

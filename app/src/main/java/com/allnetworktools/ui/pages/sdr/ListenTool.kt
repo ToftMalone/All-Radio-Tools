@@ -221,54 +221,64 @@ fun ListenTool(vm: MainViewModel) {
         val d = device
         if (c.running || c.starting) StartButton(S(R.string.stop), Sym.Stop) { c.stop() }
         else StartButton(S(R.string.listen_start), Sym.Headphones, enabled = d != null && c.parsedHz() != null) { d?.let { c.typedFrequency(); c.start(it) } }
-
-        SectionCard {
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                SpectrumPicker(c)
-                Text(S(R.string.listen_tap_hint), style = rf(12, 16), color = cs.onSurfaceVariant)
+        val tab = ToolTabRow("ListenTool0", map = false)
+        if (tab == ToolTab.Main) {
+            SectionCard {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    SpectrumPicker(c)
+                    Text(S(R.string.listen_tap_hint), style = rf(12, 16), color = cs.onSurfaceVariant)
+                }
             }
         }
-        SectionCard {
-            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                Text(S(R.string.frequency), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
-                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    DialButton(Sym.Remove) { c.step(-1) }
-                    Box(Modifier.weight(1f)) {
-                        HostInputField(c.frequencyText, { c.frequencyText = it }, S(R.string.frequency_mhz), Sym.Stream, keyboardType = KeyboardType.Decimal, onDone = c::typedFrequency)
+        if (tab == ToolTab.Main) {
+            SectionCard {
+                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                    Text(S(R.string.frequency), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
+                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        DialButton(Sym.Remove) { c.step(-1) }
+                        Box(Modifier.weight(1f)) {
+                            HostInputField(c.frequencyText, { c.frequencyText = it }, S(R.string.frequency_mhz), Sym.Stream, keyboardType = KeyboardType.Decimal, onDone = c::typedFrequency)
+                        }
+                        DialButton(Sym.Add) { c.step(1) }
                     }
-                    DialButton(Sym.Add) { c.step(1) }
-                }
-                Text(S(R.string.listen_mode), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
-                FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    ListenMode.entries.forEach { m -> AntFilterChip(m.label, c.mode == m, { c.chooseMode(m) }) }
-                }
-                Text(S(R.string.listen_presets), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
-                FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    presets().forEach { p -> AntFilterChip("${p.label} · ${"%.3f".format(Locale.getDefault(), p.hz / 1e6)}", c.frequencyHz == p.hz && c.mode == p.mode, { c.preset(p) }) }
+                    Text(S(R.string.listen_mode), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
+                    FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        ListenMode.entries.forEach { m -> AntFilterChip(m.label, c.mode == m, { c.chooseMode(m) }) }
+                    }
+                    Text(S(R.string.listen_presets), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
+                    FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        presets().forEach { p -> AntFilterChip("${p.label} · ${"%.3f".format(Locale.getDefault(), p.hz / 1e6)}", c.frequencyHz == p.hz && c.mode == p.mode, { c.preset(p) }) }
+                    }
                 }
             }
         }
-        SectionCard {
-            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                Text(S(R.string.listen_volume), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
-                Slider(c.volume, { c.setVolumeLevel(it) }, valueRange = 0f..1f)
-                Text(
-                    if (c.squelch <= ListenController.SQUELCH_MIN) S(R.string.listen_squelch_off) else S(R.string.listen_squelch, "%.0f".format(Locale.getDefault(), c.squelch)),
-                    style = rf(13, 18, 600), color = cs.onSurfaceVariant,
-                )
-                Slider(c.squelch, { c.setSquelchLevel(it) }, valueRange = ListenController.SQUELCH_MIN..-5f)
+        if (tab == ToolTab.Main) {
+            SectionCard {
+                Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                    Text(S(R.string.listen_volume), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
+                    Slider(c.volume, { c.setVolumeLevel(it) }, valueRange = 0f..1f)
+                    Text(
+                        if (c.squelch <= ListenController.SQUELCH_MIN) S(R.string.listen_squelch_off) else S(R.string.listen_squelch, "%.0f".format(Locale.getDefault(), c.squelch)),
+                        style = rf(13, 18, 600), color = cs.onSurfaceVariant,
+                    )
+                    Slider(c.squelch, { c.setSquelchLevel(it) }, valueRange = ListenController.SQUELCH_MIN..-5f)
+                }
             }
         }
-        SectionCard {
-            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                Text(S(R.string.gain), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
-                GainSettings(c.gain) { c.applyGains() }
+        if (tab == ToolTab.Settings) {
+            SectionCard {
+                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                    Text(S(R.string.gain), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
+                    GainSettings(c.gain) { c.applyGains() }
+                }
             }
         }
-        SectionCard {
-            Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                Symbol(Sym.Info, size = 22.dp, tint = AntTheme.accent.accent)
-                Text(S(R.string.listen_how_it_works), style = rf(13, 18), color = cs.onSurfaceVariant)
+        if (tab == ToolTab.Settings) {
+            SectionCard {
+                Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Symbol(Sym.Info, size = 22.dp, tint = AntTheme.accent.accent)
+                    Text(S(R.string.listen_how_it_works), style = rf(13, 18), color = cs.onSurfaceVariant)
+                }
             }
         }
     }

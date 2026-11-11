@@ -2810,4 +2810,7 @@
     <string name="wardriving_excl_nothing">"V tomto souboru není žádná adresa ani OUI"</string>
     <string name="wardriving_excluded">"Vyloučeno"</string>
     <string name="sdr_settings_refused">"Toto rádio to neumí: frekvence nebo vzorkovací rychlost je mimo jeho rozsah příjmu"</string>
+    <string name="tool_tab_list">"Seznam"</string>
+    <string name="tool_tab_reception">"Příjem"</string>
+    <string name="tool_tab_settings">"Nastavení"</string>
 </resources>

@@ -194,26 +194,33 @@ fun AcarsTool(vm: MainViewModel) {
         val d = device
         if (c.running || c.starting) StartButton(S(R.string.stop), Sym.Stop) { c.stop() }
         else StartButton(S(R.string.start_receiving), Sym.PlayArrow, enabled = d != null) { d?.let(c::start) }
-        if (c.messages.isNotEmpty()) {
-            SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)) {
-                c.messages.take(200).forEachIndexed { i, m ->
-                    if (i > 0) Hairline()
-                    MessageRow(m)
+        val tab = ToolTabRow("AcarsTool0", map = false)
+        if (tab == ToolTab.Main) {
+            if (c.messages.isNotEmpty()) {
+                SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)) {
+                    c.messages.take(200).forEachIndexed { i, m ->
+                        if (i > 0) Hairline()
+                        MessageRow(m)
+                    }
                 }
             }
         }
-        SectionCard {
-            GainSettings(c.gain) { c.applyGains() }
+        if (tab == ToolTab.Settings) {
+            SectionCard {
+                GainSettings(c.gain) { c.applyGains() }
+            }
         }
-        SectionCard {
-            Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                Symbol(Sym.Info, size = 22.dp, tint = AntTheme.accent.accent)
-                Text(
-                    S(R.string.acars_is_the_text_messaging_between) +
-                        S(R.string.messages_are_short_and_spread_out) +
-                        S(R.string.the_3_european_channels_are_monitored),
-                    style = rf(13, 18), color = cs.onSurfaceVariant,
-                )
+        if (tab == ToolTab.Settings) {
+            SectionCard {
+                Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Symbol(Sym.Info, size = 22.dp, tint = AntTheme.accent.accent)
+                    Text(
+                        S(R.string.acars_is_the_text_messaging_between) +
+                            S(R.string.messages_are_short_and_spread_out) +
+                            S(R.string.the_3_european_channels_are_monitored),
+                        style = rf(13, 18), color = cs.onSurfaceVariant,
+                    )
+                }
             }
         }
     }

@@ -129,26 +129,33 @@ fun WmbusTool(vm: MainViewModel) {
         val d = device
         if (c.running || c.starting) StartButton(S(R.string.stop), Sym.Stop) { c.stop() }
         else StartButton(S(R.string.start_receiving), Sym.PlayArrow, enabled = d != null) { d?.let(c::start) }
-        if (c.meters.isEmpty()) {
-            if (c.running) ToolEmpty(Sym.WaterDrop, S(R.string.wmbus_none_yet), S(R.string.wmbus_none_yet_body), null)
-        } else {
-            val now = System.currentTimeMillis()
-            SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)) {
-                c.meters.forEachIndexed { i, m ->
-                    if (i > 0) Hairline()
-                    MeterRow(m, types, quantities, now)
+        val tab = ToolTabRow("WmbusTool0", map = false)
+        if (tab == ToolTab.Main) {
+            if (c.meters.isEmpty()) {
+                if (c.running) ToolEmpty(Sym.WaterDrop, S(R.string.wmbus_none_yet), S(R.string.wmbus_none_yet_body), null)
+            } else {
+                val now = System.currentTimeMillis()
+                SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)) {
+                    c.meters.forEachIndexed { i, m ->
+                        if (i > 0) Hairline()
+                        MeterRow(m, types, quantities, now)
+                    }
                 }
             }
         }
-        SectionCard {
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                GainSettings(c.gain) { c.applyGains() }
+        if (tab == ToolTab.Settings) {
+            SectionCard {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    GainSettings(c.gain) { c.applyGains() }
+                }
             }
         }
-        SectionCard {
-            Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                Symbol(Sym.Info, size = 22.dp, tint = AntTheme.accent.accent)
-                Text(S(R.string.wmbus_how_it_works), style = rf(13, 18), color = cs.onSurfaceVariant)
+        if (tab == ToolTab.Settings) {
+            SectionCard {
+                Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Symbol(Sym.Info, size = 22.dp, tint = AntTheme.accent.accent)
+                    Text(S(R.string.wmbus_how_it_works), style = rf(13, 18), color = cs.onSurfaceVariant)
+                }
             }
         }
     }

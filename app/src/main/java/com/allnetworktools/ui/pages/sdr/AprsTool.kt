@@ -287,38 +287,47 @@ fun AprsTool(vm: MainViewModel) {
         val d = device
         if (c.running || c.starting) StartButton(S(R.string.stop), Sym.Stop) { c.stop() }
         else StartButton(S(R.string.start_receiving), Sym.PlayArrow, enabled = d != null && c.parsedHz() != null) { d?.let(c::start) }
-        AprsMap(c.selected, { c.selected = it }, withPos, me, Modifier.fillMaxWidth().aspectRatio(1f).clip(RoundedCornerShape(24.dp)))
-        if (c.stations.isNotEmpty()) {
-            SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)) {
-                c.stations.forEachIndexed { i, s ->
-                    if (i > 0) Hairline()
-                    StationRow(s, me, s.key == c.selected) { c.selected = if (c.selected == s.key) null else s.key }
-                }
-            }
+        val tab = ToolTabRow("AprsTool0", map = true)
+        if (tab == ToolTab.Map) {
+            AprsMap(c.selected, { c.selected = it }, withPos, me, Modifier.fillMaxWidth().aspectRatio(1f).clip(RoundedCornerShape(24.dp)))
         }
-        SectionCard {
-            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                Text(S(R.string.frequency), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
-                FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    listOf("144.800" to "Europe", "144.390" to S(R.string.north_america), "145.825" to S(R.string.satellites_iss)).forEach { (f, l) ->
-                        AntFilterChip("${f.replace('.', ',')} · $l", c.frequencyMhz == f, { if (c.frequencyMhz != f && !c.starting) { if (c.running) c.stop(); c.frequencyMhz = f } })
+        if (tab == ToolTab.List) {
+            if (c.stations.isNotEmpty()) {
+                SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)) {
+                    c.stations.forEachIndexed { i, s ->
+                        if (i > 0) Hairline()
+                        StationRow(s, me, s.key == c.selected) { c.selected = if (c.selected == s.key) null else s.key }
                     }
                 }
-                if (!c.running) HostInputField(c.frequencyMhz, { c.frequencyMhz = it }, S(R.string.frequency_mhz), Sym.Stream, keyboardType = KeyboardType.Decimal)
-                GainSettings(c.gain) { c.applyGains() }
             }
         }
-        SectionCard {
-            Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                Symbol(Sym.Info, size = 22.dp, tint = AntTheme.accent.accent)
-                Text(
-                    S(R.string.aprs_is_the_radio_amateurs_beacon) +
-                        S(R.string.stations_transmit_every_1_to_30) +
-                        S(R.string.text_messages_between_operators_are_never) +
-                        (if (heardMessages > 0) P(R.plurals.p_messages_heard_ignored, heardMessages, heardMessages) else "") +
-                        S(R.string.receive_only_2),
-                    style = rf(13, 18), color = cs.onSurfaceVariant,
-                )
+        if (tab == ToolTab.Settings) {
+            SectionCard {
+                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                    Text(S(R.string.frequency), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
+                    FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        listOf("144.800" to "Europe", "144.390" to S(R.string.north_america), "145.825" to S(R.string.satellites_iss)).forEach { (f, l) ->
+                            AntFilterChip("${f.replace('.', ',')} · $l", c.frequencyMhz == f, { if (c.frequencyMhz != f && !c.starting) { if (c.running) c.stop(); c.frequencyMhz = f } })
+                        }
+                    }
+                    if (!c.running) HostInputField(c.frequencyMhz, { c.frequencyMhz = it }, S(R.string.frequency_mhz), Sym.Stream, keyboardType = KeyboardType.Decimal)
+                    GainSettings(c.gain) { c.applyGains() }
+                }
+            }
+        }
+        if (tab == ToolTab.Settings) {
+            SectionCard {
+                Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Symbol(Sym.Info, size = 22.dp, tint = AntTheme.accent.accent)
+                    Text(
+                        S(R.string.aprs_is_the_radio_amateurs_beacon) +
+                            S(R.string.stations_transmit_every_1_to_30) +
+                            S(R.string.text_messages_between_operators_are_never) +
+                            (if (heardMessages > 0) P(R.plurals.p_messages_heard_ignored, heardMessages, heardMessages) else "") +
+                            S(R.string.receive_only_2),
+                        style = rf(13, 18), color = cs.onSurfaceVariant,
+                    )
+                }
             }
         }
     }

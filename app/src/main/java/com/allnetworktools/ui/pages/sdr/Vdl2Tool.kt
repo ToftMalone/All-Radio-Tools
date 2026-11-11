@@ -136,23 +136,30 @@ fun Vdl2Tool(vm: MainViewModel) {
         val d = device
         if (c.running || c.starting) StartButton(S(R.string.stop), Sym.Stop) { c.stop() }
         else StartButton(S(R.string.start_receiving), Sym.PlayArrow, enabled = d != null) { d?.let(c::start) }
-        if (c.messages.isEmpty()) {
-            if (c.running) ToolEmpty(Sym.ConnectingAirports, S(R.string.vdl2_none_yet), S(R.string.vdl2_none_yet_body), null)
-        } else {
-            SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)) {
-                c.messages.take(200).forEachIndexed { i, m ->
-                    if (i > 0) Hairline()
-                    Vdl2Row(m)
+        val tab = ToolTabRow("Vdl2Tool0", map = false)
+        if (tab == ToolTab.Main) {
+            if (c.messages.isEmpty()) {
+                if (c.running) ToolEmpty(Sym.ConnectingAirports, S(R.string.vdl2_none_yet), S(R.string.vdl2_none_yet_body), null)
+            } else {
+                SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)) {
+                    c.messages.take(200).forEachIndexed { i, m ->
+                        if (i > 0) Hairline()
+                        Vdl2Row(m)
+                    }
                 }
             }
         }
-        SectionCard {
-            GainSettings(c.gain) { c.applyGains() }
+        if (tab == ToolTab.Settings) {
+            SectionCard {
+                GainSettings(c.gain) { c.applyGains() }
+            }
         }
-        SectionCard {
-            Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                Symbol(Sym.Info, size = 22.dp, tint = AntTheme.accent.accent)
-                Text(S(R.string.vdl2_how_it_works), style = rf(13, 18), color = cs.onSurfaceVariant)
+        if (tab == ToolTab.Settings) {
+            SectionCard {
+                Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Symbol(Sym.Info, size = 22.dp, tint = AntTheme.accent.accent)
+                    Text(S(R.string.vdl2_how_it_works), style = rf(13, 18), color = cs.onSurfaceVariant)
+                }
             }
         }
     }

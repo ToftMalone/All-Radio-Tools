@@ -147,40 +147,49 @@ fun SstvTool(vm: MainViewModel) {
         val d = device
         if (c.running || c.starting) StartButton(S(R.string.stop), Sym.Stop) { c.stop() }
         else StartButton(S(R.string.start_receiving), Sym.PlayArrow, enabled = d != null && c.parsedHz() != null) { d?.let(c::start) }
+        val tab = ToolTabRow("SstvTool0", map = false)
         val p = c.current
-        if (p != null) {
-            Image(
-                p.bitmap, p.image.mode, Modifier.fillMaxWidth().aspectRatio(p.image.width.toFloat() / p.image.height).clip(RoundedCornerShape(24.dp)),
-                contentScale = ContentScale.FillBounds,
-            )
-        } else if (c.running) ToolEmpty(Sym.PhotoCamera, S(R.string.sstv_none_yet), S(R.string.sstv_none_yet_body), null)
-        if (c.history.size > 1 || (c.history.size == 1 && c.history[0] !== p)) {
-            Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                c.history.forEach { h ->
-                    Image(
-                        h.bitmap, h.image.mode,
-                        Modifier.height(72.dp).aspectRatio(h.image.width.toFloat() / h.image.height).clip(RoundedCornerShape(12.dp)).clickable { c.select(h) },
-                        contentScale = ContentScale.FillBounds,
-                    )
-                }
-            }
+        if (tab == ToolTab.Main) {
+            if (p != null) {
+                Image(
+                    p.bitmap, p.image.mode, Modifier.fillMaxWidth().aspectRatio(p.image.width.toFloat() / p.image.height).clip(RoundedCornerShape(24.dp)),
+                    contentScale = ContentScale.FillBounds,
+                )
+            } else if (c.running) ToolEmpty(Sym.PhotoCamera, S(R.string.sstv_none_yet), S(R.string.sstv_none_yet_body), null)
         }
-        SectionCard {
-            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                Text(S(R.string.frequency), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
-                FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    listOf("145.800" to S(R.string.sstv_iss), "144.500" to S(R.string.sstv_2m), "433.400" to "70 cm").forEach { (f, l) ->
-                        AntFilterChip("${f.replace('.', ',')} · $l", c.frequencyMhz == f, { if (c.frequencyMhz != f && !c.starting) { if (c.running) c.stop(); c.frequencyMhz = f } })
+        if (tab == ToolTab.Main) {
+            if (c.history.size > 1 || (c.history.size == 1 && c.history[0] !== p)) {
+                Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    c.history.forEach { h ->
+                        Image(
+                            h.bitmap, h.image.mode,
+                            Modifier.height(72.dp).aspectRatio(h.image.width.toFloat() / h.image.height).clip(RoundedCornerShape(12.dp)).clickable { c.select(h) },
+                            contentScale = ContentScale.FillBounds,
+                        )
                     }
                 }
-                if (!c.running) HostInputField(c.frequencyMhz, { c.frequencyMhz = it }, S(R.string.frequency_mhz), Sym.Stream, keyboardType = KeyboardType.Decimal)
-                GainSettings(c.gain) { c.applyGains() }
             }
         }
-        SectionCard {
-            Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                Symbol(Sym.Info, size = 22.dp, tint = AntTheme.accent.accent)
-                Text(S(R.string.sstv_how_it_works), style = rf(13, 18), color = cs.onSurfaceVariant)
+        if (tab == ToolTab.Settings) {
+            SectionCard {
+                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                    Text(S(R.string.frequency), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
+                    FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        listOf("145.800" to S(R.string.sstv_iss), "144.500" to S(R.string.sstv_2m), "433.400" to "70 cm").forEach { (f, l) ->
+                            AntFilterChip("${f.replace('.', ',')} · $l", c.frequencyMhz == f, { if (c.frequencyMhz != f && !c.starting) { if (c.running) c.stop(); c.frequencyMhz = f } })
+                        }
+                    }
+                    if (!c.running) HostInputField(c.frequencyMhz, { c.frequencyMhz = it }, S(R.string.frequency_mhz), Sym.Stream, keyboardType = KeyboardType.Decimal)
+                    GainSettings(c.gain) { c.applyGains() }
+                }
+            }
+        }
+        if (tab == ToolTab.Settings) {
+            SectionCard {
+                Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Symbol(Sym.Info, size = 22.dp, tint = AntTheme.accent.accent)
+                    Text(S(R.string.sstv_how_it_works), style = rf(13, 18), color = cs.onSurfaceVariant)
+                }
             }
         }
     }

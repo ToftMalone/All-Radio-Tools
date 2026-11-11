@@ -2741,4 +2741,7 @@
     <string name="wardriving_excl_nothing">"Nicio adresă sau OUI în acest fișier"</string>
     <string name="wardriving_excluded">"Exclus"</string>
     <string name="sdr_settings_refused">"Acest radio nu poate face asta: frecvența sau rata de eșantionare depășește ce poate recepționa"</string>
+    <string name="tool_tab_list">"Listă"</string>
+    <string name="tool_tab_reception">"Recepție"</string>
+    <string name="tool_tab_settings">"Setări"</string>
 </resources>

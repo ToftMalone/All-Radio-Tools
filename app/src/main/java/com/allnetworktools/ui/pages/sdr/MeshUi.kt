@@ -85,7 +85,7 @@ import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Overlay
 
-enum class MeshTab { Nodes, Map, Messages, Packets }
+enum class MeshTab { Nodes, Map, Messages, Packets, Settings }
 
 /**
  * What the Meshtastic and MeshCore tools share: one tuning, a [MeshRadio] on the band's channels and a tracker kept for
@@ -186,7 +186,7 @@ fun MeshScreen(vm: MainViewModel, c: MeshController, fileName: String, emptyIcon
         if (c.running || c.starting) StartButton(S(R.string.stop), Sym.Stop) { c.stop() }
         else StartButton(S(R.string.start_receiving), Sym.PlayArrow, enabled = d != null && canStart()) { d?.let(c::start) }
         SegmentedRow(
-            listOf(MeshTab.Nodes to S(R.string.mesh_tab_nodes), MeshTab.Map to S(R.string.mesh_tab_map), MeshTab.Messages to S(R.string.mesh_tab_messages), MeshTab.Packets to S(R.string.mesh_tab_packets)),
+            listOf(MeshTab.Nodes to S(R.string.mesh_tab_nodes), MeshTab.Map to S(R.string.mesh_tab_map), MeshTab.Messages to S(R.string.mesh_tab_messages), MeshTab.Packets to S(R.string.mesh_tab_packets), MeshTab.Settings to "⚙️"),
             c.tab, { c.tab = it }, Modifier.fillMaxWidth(),
         )
         val now = System.currentTimeMillis()
@@ -215,6 +215,7 @@ fun MeshScreen(vm: MainViewModel, c: MeshController, fileName: String, emptyIcon
                     MessageRow(m, now)
                 }
             }
+            MeshTab.Settings -> Unit
             MeshTab.Packets -> if (s.packets.isEmpty()) {
                 Text(S(R.string.mesh_no_packets), Modifier.padding(horizontal = 4.dp), style = rf(13, 18), color = cs.onSurfaceVariant)
             } else SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)) {
@@ -224,17 +225,19 @@ fun MeshScreen(vm: MainViewModel, c: MeshController, fileName: String, emptyIcon
                 }
             }
         }
-        if (s.total > 0 && !c.running) ToolButtons(ToolButton(S(R.string.mesh_clear), Sym.Delete, BtnKind.OutlineOnSurface) { c.clear() })
-        SectionCard {
-            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                settings()
-                GainSettings(c.gain) { c.applyGains() }
+        if (s.total > 0 && !c.running && c.tab != MeshTab.Settings) ToolButtons(ToolButton(S(R.string.mesh_clear), Sym.Delete, BtnKind.OutlineOnSurface) { c.clear() })
+        if (c.tab == MeshTab.Settings) {
+            SectionCard {
+                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                    settings()
+                    GainSettings(c.gain) { c.applyGains() }
+                }
             }
-        }
-        SectionCard {
-            Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                Symbol(Sym.Info, size = 22.dp, tint = AntTheme.accent.accent)
-                Text(info + (if (s.badCrc > 0) "\n\n" + S(R.string.mesh_bad_crc, s.badCrc) else ""), style = rf(13, 18), color = cs.onSurfaceVariant)
+            SectionCard {
+                Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Symbol(Sym.Info, size = 22.dp, tint = AntTheme.accent.accent)
+                    Text(info + (if (s.badCrc > 0) "\n\n" + S(R.string.mesh_bad_crc, s.badCrc) else ""), style = rf(13, 18), color = cs.onSurfaceVariant)
+                }
             }
         }
     }

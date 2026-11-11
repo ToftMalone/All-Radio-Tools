@@ -137,52 +137,61 @@ fun ZwaveTool(vm: MainViewModel) {
         val d = device
         if (c.running || c.starting) StartButton(S(R.string.stop), Sym.Stop) { c.stop() }
         else StartButton(S(R.string.start_receiving), Sym.PlayArrow, enabled = d != null) { d?.let(c::start) }
-        SegmentedRow(listOf(false to S(R.string.mesh_tab_nodes), true to S(R.string.mesh_tab_packets)), c.showFrames, { c.showFrames = it }, Modifier.fillMaxWidth())
+        val tab = ToolTabRow("ZwaveTool0", map = false)
+        if (tab == ToolTab.Main) {
+            SegmentedRow(listOf(false to S(R.string.mesh_tab_nodes), true to S(R.string.mesh_tab_packets)), c.showFrames, { c.showFrames = it }, Modifier.fillMaxWidth())
+        }
         val now = System.currentTimeMillis()
-        if (c.frames.isEmpty()) {
-            if (c.running) ToolEmpty(Sym.Lightbulb, S(R.string.zwave_none_yet), S(R.string.zwave_none_yet_body), null)
-        } else if (!c.showFrames) {
-            homes.forEach { (home, list) ->
-                SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 4.dp)) {
-                    Text(S(R.string.zwave_network, home), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
-                    list.forEachIndexed { i, n ->
+        if (tab == ToolTab.Main) {
+            if (c.frames.isEmpty()) {
+                if (c.running) ToolEmpty(Sym.Lightbulb, S(R.string.zwave_none_yet), S(R.string.zwave_none_yet_body), null)
+            } else if (!c.showFrames) {
+                homes.forEach { (home, list) ->
+                    SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 4.dp)) {
+                        Text(S(R.string.zwave_network, home), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
+                        list.forEachIndexed { i, n ->
+                            if (i > 0) Hairline()
+                            Row(Modifier.fillMaxWidth().padding(vertical = 8.dp), verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                                LeadingIcon(if (n.id == 1) Sym.Router else Sym.Lightbulb, AntTheme.accent.container, AntTheme.accent.onContainer, 36.dp, RoundedCornerShape(12.dp), 20.dp)
+                                Column(Modifier.weight(1f)) {
+                                    Text(if (n.id == 1) S(R.string.zwave_controller) else S(R.string.zwave_node, n.id), style = rf(14, 20, 600))
+                                    n.last?.let { Text(it, style = rf(12, 16), maxLines = 2, overflow = TextOverflow.Ellipsis) }
+                                    Text(
+                                        listOfNotNull(S(R.string.zwave_sent_received, n.sent, n.received), n.rate?.let { Zwave.rateName(it) }, n.snrDb?.let { "SNR %.0f dB".format(Locale.getDefault(), it) },
+                                            if (n.encrypted > 0) S(R.string.zwave_encrypted_n, n.encrypted) else null).joinToString(" · "),
+                                        style = rf(11, 16, tnum = true), color = cs.onSurfaceVariant,
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+            } else {
+                SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)) {
+                    c.frames.take(100).forEachIndexed { i, f ->
                         if (i > 0) Hairline()
-                        Row(Modifier.fillMaxWidth().padding(vertical = 8.dp), verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                            LeadingIcon(if (n.id == 1) Sym.Router else Sym.Lightbulb, AntTheme.accent.container, AntTheme.accent.onContainer, 36.dp, RoundedCornerShape(12.dp), 20.dp)
+                        Row(Modifier.fillMaxWidth().padding(vertical = 8.dp), verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                            Symbol(if (f.encrypted) Sym.Lock else Sym.LockOpen, size = 18.dp, tint = if (f.encrypted) cs.onSurfaceVariant else AntTheme.accent.accent)
                             Column(Modifier.weight(1f)) {
-                                Text(if (n.id == 1) S(R.string.zwave_controller) else S(R.string.zwave_node, n.id), style = rf(14, 20, 600))
-                                n.last?.let { Text(it, style = rf(12, 16), maxLines = 2, overflow = TextOverflow.Ellipsis) }
-                                Text(
-                                    listOfNotNull(S(R.string.zwave_sent_received, n.sent, n.received), n.rate?.let { Zwave.rateName(it) }, n.snrDb?.let { "SNR %.0f dB".format(Locale.getDefault(), it) },
-                                        if (n.encrypted > 0) S(R.string.zwave_encrypted_n, n.encrypted) else null).joinToString(" · "),
-                                    style = rf(11, 16, tnum = true), color = cs.onSurfaceVariant,
-                                )
+                                Text("${f.home} · ${f.src} → ${f.dst}", style = rf(13, 18, 600, tnum = true))
+                                Text(f.text.ifEmpty { "—" }, style = rf(13, 18), maxLines = 2, overflow = TextOverflow.Ellipsis)
+                                val ago = ((now - f.timeMs) / 1000).coerceAtLeast(0)
+                                Text(listOf(Zwave.rateName(f.rate), "${f.len} o", "SNR %.0f dB".format(Locale.getDefault(), f.snrDb), if (ago < 60) S(R.string.s_ago, ago.toString()) else S(R.string.min_ago, (ago / 60).toString())).joinToString(" · "), style = rf(11, 16, tnum = true), color = cs.onSurfaceVariant)
                             }
                         }
                     }
                 }
             }
-        } else {
-            SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)) {
-                c.frames.take(100).forEachIndexed { i, f ->
-                    if (i > 0) Hairline()
-                    Row(Modifier.fillMaxWidth().padding(vertical = 8.dp), verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                        Symbol(if (f.encrypted) Sym.Lock else Sym.LockOpen, size = 18.dp, tint = if (f.encrypted) cs.onSurfaceVariant else AntTheme.accent.accent)
-                        Column(Modifier.weight(1f)) {
-                            Text("${f.home} · ${f.src} → ${f.dst}", style = rf(13, 18, 600, tnum = true))
-                            Text(f.text.ifEmpty { "—" }, style = rf(13, 18), maxLines = 2, overflow = TextOverflow.Ellipsis)
-                            val ago = ((now - f.timeMs) / 1000).coerceAtLeast(0)
-                            Text(listOf(Zwave.rateName(f.rate), "${f.len} o", "SNR %.0f dB".format(Locale.getDefault(), f.snrDb), if (ago < 60) S(R.string.s_ago, ago.toString()) else S(R.string.min_ago, (ago / 60).toString())).joinToString(" · "), style = rf(11, 16, tnum = true), color = cs.onSurfaceVariant)
-                        }
-                    }
-                }
-            }
         }
-        SectionCard { GainSettings(c.gain) { c.applyGains() } }
-        SectionCard {
-            Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                Symbol(Sym.Info, size = 22.dp, tint = AntTheme.accent.accent)
-                Text(S(R.string.zwave_how_it_works) + (if (c.bad > 0) "\n\n" + S(R.string.mesh_bad_crc, c.bad) else ""), style = rf(13, 18), color = cs.onSurfaceVariant)
+        if (tab == ToolTab.Settings) {
+            SectionCard { GainSettings(c.gain) { c.applyGains() } }
+        }
+        if (tab == ToolTab.Settings) {
+            SectionCard {
+                Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Symbol(Sym.Info, size = 22.dp, tint = AntTheme.accent.accent)
+                    Text(S(R.string.zwave_how_it_works) + (if (c.bad > 0) "\n\n" + S(R.string.mesh_bad_crc, c.bad) else ""), style = rf(13, 18), color = cs.onSurfaceVariant)
+                }
             }
         }
     }
