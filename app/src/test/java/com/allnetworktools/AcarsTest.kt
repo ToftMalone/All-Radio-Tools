@@ -130,4 +130,19 @@ class AcarsTest {
         assertEquals(131.825, got[0].freqMhz, 1e-9)
         assertEquals("Q0", got[0].label)
     }
+
+    /**
+     * The "+ *" bit-sync characters go out while the transmitter keys up and often arrive damaged on real signals
+     * (issue #6: a HackRF heard nothing that BrowSDR decoded on 131.725 MHz). The frame must be read from SYN SYN SOH.
+     */
+    @Test fun damagedBitSyncCharactersDoNotLoseTheMessage() {
+        val f = Acars.frame('2', "RA89047", 'N', "Q0", '5', null)
+        // "+" and "*" replaced by garbage, as when the carrier is still rising.
+        f[0] = 0x55; f[1] = 0x00
+        assertEquals(listOf("RA89047"), decode(audio(bits(f), 48_000.0, false, 0.2)).map { it.registration })
+        // And with no bit-sync characters at all.
+        val g = Acars.frame('2', ".JY-RAC", 'N', "Q0", '6', null)
+        val bare = g.copyOfRange(2, g.size)
+        assertEquals(listOf("JY-RAC"), decode(audio(bits(bare), 48_000.0, false, 0.2)).map { it.registration })
+    }
 }

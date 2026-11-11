@@ -217,7 +217,9 @@ class AcarsDecoder(private val audioRate: Double, private val freqMhz: Double, p
         // Least significant bit first: each new bit enters at the top of the byte.
         r.reg = ((r.reg ushr 1) or (b.toLong() shl 39)) and 0xFF_FFFF_FFFFL
         if (!r.inFrame) {
-            if (r.reg == SYNC) { r.inFrame = true; r.len = 0; r.bits = 0; r.tail = -1 }
+            // Only SYN SYN SOH, as acarsdec: the "+ *" bit-sync characters go out while the transmitter is still
+            // keying up and often arrive damaged, so asking for them lost the start of real messages.
+            if ((r.reg ushr 16) == SYNC) { r.inFrame = true; r.len = 0; r.bits = 0; r.tail = -1 }
             return
         }
         if (++r.bits < 8) return
@@ -240,9 +242,9 @@ class AcarsDecoder(private val audioRate: Double, private val freqMhz: Double, p
     private companion object {
         const val LPF_TAPS = 48
 
-        /** `+ * SYN SYN SOH` with parity, least significant bit first, as it ends in a 40-bit shift register. */
+        /** `SYN SYN SOH` with parity, least significant bit first, as it ends in the top 24 bits of the shift register. */
         val SYNC: Long = run {
-            val bytes = listOf('+'.code, '*'.code, Acars.SYN, Acars.SYN, Acars.SOH).map { Acars.withParity(it).toLong() }
+            val bytes = listOf(Acars.SYN, Acars.SYN, Acars.SOH).map { Acars.withParity(it).toLong() }
             bytes.foldIndexed(0L) { i, acc, b -> acc or (b shl (8 * i)) }
         }
     }
