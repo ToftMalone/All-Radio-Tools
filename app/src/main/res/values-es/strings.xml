@@ -2685,4 +2685,10 @@
     <string name="listen_pinch_hint">"Pellizca con dos dedos para acercar o alejar."</string>
     <string name="listen_step">"Paso"</string>
     <string name="listen_step_auto">"Auto (%1$s)"</string>
+    <string name="sdr_cat_general">"General"</string>
+    <string name="sdr_cat_sea">"Mar y rescate"</string>
+    <string name="sdr_cat_mesh">"Mesh y LoRa"</string>
+    <string name="sdr_cat_space">"Satélites y meteo"</string>
+    <string name="sdr_cat_home">"Hogar y sensores"</string>
+    <string name="sdr_cat_voice">"Voz y buscas"</string>
 </resources>

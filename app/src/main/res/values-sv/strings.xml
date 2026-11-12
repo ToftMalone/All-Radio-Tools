@@ -2685,4 +2685,10 @@
     <string name="listen_pinch_hint">"Nyp med två fingrar för att zooma in eller ut."</string>
     <string name="listen_step">"Steg"</string>
     <string name="listen_step_auto">"Auto (%1$s)"</string>
+    <string name="sdr_cat_general">"Allmänt"</string>
+    <string name="sdr_cat_sea">"Sjö &amp; räddning"</string>
+    <string name="sdr_cat_mesh">"Mesh &amp; LoRa"</string>
+    <string name="sdr_cat_space">"Satelliter &amp; väder"</string>
+    <string name="sdr_cat_home">"Hem &amp; sensorer"</string>
+    <string name="sdr_cat_voice">"Röst &amp; personsökare"</string>
 </resources>

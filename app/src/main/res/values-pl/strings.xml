@@ -2823,4 +2823,10 @@
     <string name="listen_pinch_hint">"Zsuń lub rozsuń dwa palce, aby przybliżyć lub oddalić."</string>
     <string name="listen_step">"Krok"</string>
     <string name="listen_step_auto">"Auto (%1$s)"</string>
+    <string name="sdr_cat_general">"Ogólne"</string>
+    <string name="sdr_cat_sea">"Morze i ratownictwo"</string>
+    <string name="sdr_cat_mesh">"Mesh i LoRa"</string>
+    <string name="sdr_cat_space">"Satelity i pogoda"</string>
+    <string name="sdr_cat_home">"Dom i czujniki"</string>
+    <string name="sdr_cat_voice">"Głos i pagery"</string>
 </resources>

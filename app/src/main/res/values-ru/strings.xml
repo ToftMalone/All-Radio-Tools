@@ -2823,4 +2823,10 @@
     <string name="listen_pinch_hint">"Сведите или разведите два пальца, чтобы изменить масштаб."</string>
     <string name="listen_step">"Шаг"</string>
     <string name="listen_step_auto">"Авто (%1$s)"</string>
+    <string name="sdr_cat_general">"Общее"</string>
+    <string name="sdr_cat_sea">"Море и спасение"</string>
+    <string name="sdr_cat_mesh">"Mesh и LoRa"</string>
+    <string name="sdr_cat_space">"Спутники и погода"</string>
+    <string name="sdr_cat_home">"Дом и датчики"</string>
+    <string name="sdr_cat_voice">"Голос и пейджеры"</string>
 </resources>

@@ -2754,4 +2754,10 @@
     <string name="listen_pinch_hint">"Ciupiți cu două degete pentru a mări sau micșora."</string>
     <string name="listen_step">"Pas"</string>
     <string name="listen_step_auto">"Auto (%1$s)"</string>
+    <string name="sdr_cat_general">"General"</string>
+    <string name="sdr_cat_sea">"Mare și salvare"</string>
+    <string name="sdr_cat_mesh">"Mesh și LoRa"</string>
+    <string name="sdr_cat_space">"Sateliți și meteo"</string>
+    <string name="sdr_cat_home">"Casă și senzori"</string>
+    <string name="sdr_cat_voice">"Voce și pagere"</string>
 </resources>

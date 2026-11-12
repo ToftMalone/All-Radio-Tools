@@ -2616,4 +2616,10 @@
     <string name="listen_pinch_hint">"2本指でピンチしてズームイン・アウトします。"</string>
     <string name="listen_step">"ステップ"</string>
     <string name="listen_step_auto">"自動 (%1$s)"</string>
+    <string name="sdr_cat_general">"一般"</string>
+    <string name="sdr_cat_sea">"海上・救難"</string>
+    <string name="sdr_cat_mesh">"メッシュ・LoRa"</string>
+    <string name="sdr_cat_space">"衛星・気象"</string>
+    <string name="sdr_cat_home">"家庭・センサー"</string>
+    <string name="sdr_cat_voice">"音声・ページャー"</string>
 </resources>

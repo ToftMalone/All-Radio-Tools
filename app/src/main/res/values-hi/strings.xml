@@ -2685,4 +2685,10 @@
     <string name="listen_pinch_hint">"ज़ूम इन या आउट करने के लिए दो उंगलियों से पिंच करें।"</string>
     <string name="listen_step">"चरण"</string>
     <string name="listen_step_auto">"स्वतः (%1$s)"</string>
+    <string name="sdr_cat_general">"सामान्य"</string>
+    <string name="sdr_cat_sea">"समुद्र और बचाव"</string>
+    <string name="sdr_cat_mesh">"Mesh और LoRa"</string>
+    <string name="sdr_cat_space">"उपग्रह और मौसम"</string>
+    <string name="sdr_cat_home">"घर और सेंसर"</string>
+    <string name="sdr_cat_voice">"आवाज़ और पेजर"</string>
 </resources>

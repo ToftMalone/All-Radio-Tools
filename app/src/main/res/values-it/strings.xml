@@ -2685,4 +2685,10 @@
     <string name="listen_pinch_hint">"Pizzica con due dita per ingrandire o ridurre."</string>
     <string name="listen_step">"Passo"</string>
     <string name="listen_step_auto">"Auto (%1$s)"</string>
+    <string name="sdr_cat_general">"Generale"</string>
+    <string name="sdr_cat_sea">"Mare e soccorso"</string>
+    <string name="sdr_cat_mesh">"Mesh e LoRa"</string>
+    <string name="sdr_cat_space">"Satelliti e meteo"</string>
+    <string name="sdr_cat_home">"Casa e sensori"</string>
+    <string name="sdr_cat_voice">"Voce e cercapersone"</string>
 </resources>

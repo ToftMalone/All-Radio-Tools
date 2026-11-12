@@ -2892,4 +2892,10 @@
     <string name="listen_pinch_hint">"Pinch with two fingers to zoom in or out."</string>
     <string name="listen_step">"Step"</string>
     <string name="listen_step_auto">"Auto (%1$s)"</string>
+    <string name="sdr_cat_general">"General"</string>
+    <string name="sdr_cat_sea">"Sea &amp; rescue"</string>
+    <string name="sdr_cat_mesh">"Mesh &amp; LoRa"</string>
+    <string name="sdr_cat_space">"Satellites &amp; weather"</string>
+    <string name="sdr_cat_home">"Home &amp; sensors"</string>
+    <string name="sdr_cat_voice">"Voice &amp; pagers"</string>
 </resources>

@@ -2616,4 +2616,10 @@
     <string name="listen_pinch_hint">"ใช้สองนิ้วบีบเพื่อซูมเข้าหรือออก"</string>
     <string name="listen_step">"ขั้น"</string>
     <string name="listen_step_auto">"อัตโนมัติ (%1$s)"</string>
+    <string name="sdr_cat_general">"ทั่วไป"</string>
+    <string name="sdr_cat_sea">"ทะเลและกู้ภัย"</string>
+    <string name="sdr_cat_mesh">"Mesh และ LoRa"</string>
+    <string name="sdr_cat_space">"ดาวเทียมและอากาศ"</string>
+    <string name="sdr_cat_home">"บ้านและเซ็นเซอร์"</string>
+    <string name="sdr_cat_voice">"เสียงและเพจเจอร์"</string>
 </resources>

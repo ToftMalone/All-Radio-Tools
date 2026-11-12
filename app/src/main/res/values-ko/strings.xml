@@ -2616,4 +2616,10 @@
     <string name="listen_pinch_hint">"두 손가락으로 오므리거나 벌려 확대/축소합니다."</string>
     <string name="listen_step">"간격"</string>
     <string name="listen_step_auto">"자동 (%1$s)"</string>
+    <string name="sdr_cat_general">"일반"</string>
+    <string name="sdr_cat_sea">"해상·구조"</string>
+    <string name="sdr_cat_mesh">"메시·LoRa"</string>
+    <string name="sdr_cat_space">"위성·기상"</string>
+    <string name="sdr_cat_home">"가정·센서"</string>
+    <string name="sdr_cat_voice">"음성·호출기"</string>
 </resources>

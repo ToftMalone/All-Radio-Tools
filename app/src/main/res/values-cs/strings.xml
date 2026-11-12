@@ -2823,4 +2823,10 @@
     <string name="listen_pinch_hint">"Roztažením nebo stažením dvou prstů přiblížíte nebo oddálíte."</string>
     <string name="listen_step">"Krok"</string>
     <string name="listen_step_auto">"Auto (%1$s)"</string>
+    <string name="sdr_cat_general">"Obecné"</string>
+    <string name="sdr_cat_sea">"Moře a záchrana"</string>
+    <string name="sdr_cat_mesh">"Mesh a LoRa"</string>
+    <string name="sdr_cat_space">"Družice a počasí"</string>
+    <string name="sdr_cat_home">"Domácnost a čidla"</string>
+    <string name="sdr_cat_voice">"Hlas a pagery"</string>
 </resources>

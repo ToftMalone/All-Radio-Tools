@@ -2616,4 +2616,10 @@
     <string name="listen_pinch_hint">"双指捏合即可放大或缩小。"</string>
     <string name="listen_step">"步进"</string>
     <string name="listen_step_auto">"自动 (%1$s)"</string>
+    <string name="sdr_cat_general">"常用"</string>
+    <string name="sdr_cat_sea">"海事与救援"</string>
+    <string name="sdr_cat_mesh">"Mesh 与 LoRa"</string>
+    <string name="sdr_cat_space">"卫星与气象"</string>
+    <string name="sdr_cat_home">"家居与传感器"</string>
+    <string name="sdr_cat_voice">"语音与寻呼"</string>
 </resources>

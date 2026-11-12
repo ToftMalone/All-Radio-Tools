@@ -2961,4 +2961,10 @@
     <string name="listen_pinch_hint">"قرّب إصبعين أو باعد بينهما للتكبير أو التصغير."</string>
     <string name="listen_step">"الخطوة"</string>
     <string name="listen_step_auto">"تلقائي (%1$s)"</string>
+    <string name="sdr_cat_general">"عام"</string>
+    <string name="sdr_cat_sea">"البحر والإنقاذ"</string>
+    <string name="sdr_cat_mesh">"Mesh وLoRa"</string>
+    <string name="sdr_cat_space">"الأقمار والطقس"</string>
+    <string name="sdr_cat_home">"المنزل والمستشعرات"</string>
+    <string name="sdr_cat_voice">"الصوت والنداء"</string>
 </resources>

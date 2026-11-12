@@ -2685,4 +2685,10 @@
     <string name="listen_pinch_hint">"Yakınlaştırmak veya uzaklaştırmak için iki parmakla sıkıştırın."</string>
     <string name="listen_step">"Adım"</string>
     <string name="listen_step_auto">"Otomatik (%1$s)"</string>
+    <string name="sdr_cat_general">"Genel"</string>
+    <string name="sdr_cat_sea">"Deniz ve kurtarma"</string>
+    <string name="sdr_cat_mesh">"Mesh ve LoRa"</string>
+    <string name="sdr_cat_space">"Uydular ve hava"</string>
+    <string name="sdr_cat_home">"Ev ve sensörler"</string>
+    <string name="sdr_cat_voice">"Ses ve çağrı cihazları"</string>
 </resources>

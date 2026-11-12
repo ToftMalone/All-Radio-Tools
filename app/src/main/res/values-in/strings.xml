@@ -2616,4 +2616,10 @@
     <string name="listen_pinch_hint">"Cubit dengan dua jari untuk memperbesar atau memperkecil."</string>
     <string name="listen_step">"Langkah"</string>
     <string name="listen_step_auto">"Otomatis (%1$s)"</string>
+    <string name="sdr_cat_general">"Umum"</string>
+    <string name="sdr_cat_sea">"Laut &amp; penyelamatan"</string>
+    <string name="sdr_cat_mesh">"Mesh &amp; LoRa"</string>
+    <string name="sdr_cat_space">"Satelit &amp; cuaca"</string>
+    <string name="sdr_cat_home">"Rumah &amp; sensor"</string>
+    <string name="sdr_cat_voice">"Suara &amp; pager"</string>
 </resources>

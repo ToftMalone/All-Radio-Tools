@@ -24,6 +24,7 @@ import com.allnetworktools.MainViewModel
 import com.allnetworktools.Page
 import com.allnetworktools.model.Network
 import com.allnetworktools.model.Tool
+import com.allnetworktools.ui.components.AntFilterChip
 import com.allnetworktools.ui.components.LeadingIcon
 import com.allnetworktools.ui.components.PillButton
 import com.allnetworktools.ui.components.SectionTitle
@@ -47,20 +48,38 @@ private val comingSoon = emptySet<Tool>()
 
 private data class ToolGroup(val title: String, val items: List<ToolEntry>)
 
+private fun sdrGroup(title: Int, vararg items: ToolEntry) =
+    ToolGroup(S(title), items.sortedWith(compareBy(java.text.Collator.getInstance()) { it.title }))
+
+/** Networks whose tools are sorted in category tabs; the others keep one list. */
+private val tabbed = setOf(Network.Wifi, Network.Bluetooth, Network.Sdr)
+
+/** The category tab chosen on each network, for this run of the app only. */
+private object CategoryMemory {
+    val chosen = androidx.compose.runtime.mutableStateMapOf<Network, String>()
+}
+
 private fun groups(net: Network, connectedDevice: String?, servingLabel: String?): List<ToolGroup> = when (net) {
     Network.Wifi -> listOf(
-        ToolGroup(S(R.string.analysis), listOf(ToolEntry(Tool.Speed, S(R.string.speed_test), S(R.string.ping_download_upload)), ToolEntry(Tool.Coverage, S(R.string.coverage_map), S(R.string.the_signal_room_by_room)))),
-        ToolGroup(S(R.string.local_network), listOf(ToolEntry(Tool.Lan, S(R.string.lan_devices), S(R.string.host_discovery)), ToolEntry(Tool.Ports, S(R.string.port_scan), S(R.string.tcp_common_ports)))),
         ToolGroup(
-            S(R.string.discovery),
+            S(R.string.analysis),
             listOf(
+                ToolEntry(Tool.Speed, S(R.string.speed_test), S(R.string.ping_download_upload)),
+                ToolEntry(Tool.Coverage, S(R.string.coverage_map), S(R.string.the_signal_room_by_room)),
+                ToolEntry(Tool.Lan, S(R.string.lan_devices), S(R.string.host_discovery)),
                 ToolEntry(Tool.WifiDirect, "Wi-Fi Direct", S(R.string.devices_connected_directly)),
                 ToolEntry(Tool.WifiAware, "Wi-Fi Aware", S(R.string.wi_fi_aware_subtitle)),
             ),
         ),
         ToolGroup(
             S(R.string.diagnostics),
-            listOf(ToolEntry(Tool.Ping, "Ping", S(R.string.latency_jitter_loss)), ToolEntry(Tool.Trace, "Traceroute", S(R.string.hops_to_the_host)), ToolEntry(Tool.Dns, "DNS Lookup", "A, AAAA, MX, TXT, NS"), ToolEntry(Tool.Whois, "Whois", S(R.string.domain_or_ip_address))),
+            listOf(
+                ToolEntry(Tool.Ping, "Ping", S(R.string.latency_jitter_loss)),
+                ToolEntry(Tool.Trace, "Traceroute", S(R.string.hops_to_the_host)),
+                ToolEntry(Tool.Ports, S(R.string.port_scan), S(R.string.tcp_common_ports)),
+                ToolEntry(Tool.Dns, "DNS Lookup", "A, AAAA, MX, TXT, NS"),
+                ToolEntry(Tool.Whois, "Whois", S(R.string.domain_or_ip_address)),
+            ),
         ),
         ToolGroup(
             S(R.string.security_2),
@@ -121,38 +140,54 @@ private fun groups(net: Network, connectedDevice: String?, servingLabel: String?
         ),
     )
     Network.Sdr -> listOf(
-        // Named after the protocol they decode, in alphabetical order (in the phone's language).
-        ToolGroup(
-            S(R.string.tools),
-            listOf(
-                ToolEntry(Tool.Adsb, "ADS-B", S(R.string.map_of_aircraft_on_1090_mhz)),
-                ToolEntry(Tool.Sonde, S(R.string.radiosondes), S(R.string.rs41_m10_and_m20_sondes_around)),
-                ToolEntry(Tool.Ais, "AIS", S(R.string.map_of_ships_on_162_mhz)),
-                ToolEntry(Tool.Meteor, "Meteor-M", S(R.string.lrpt_images_on_137_mhz)),
-                ToolEntry(Tool.Aprs, "APRS", S(R.string.beacons_on_144_800_mhz)),
-                ToolEntry(Tool.Acars, "ACARS", S(R.string.airliner_messaging_131_mhz)),
-                ToolEntry(Tool.Fpv, S(R.string.drones), S(R.string.analog_fpv_dji_and_rc_links)),
-                ToolEntry(Tool.Tpms, "TPMS", S(R.string.tyre_pressure_sensors_433_mhz)),
-                ToolEntry(Tool.Pocsag, "POCSAG", S(R.string.pagers_e_message_dapnet)),
-                ToolEntry(Tool.Cubesat, "CubeSat", S(R.string.cubesat_subtitle)),
-                ToolEntry(Tool.Lpwan, "LoRaWAN / Sigfox", S(R.string.lpwan_subtitle)),
-                ToolEntry(Tool.Meshtastic, "Meshtastic", S(R.string.meshtastic_subtitle)),
-                ToolEntry(Tool.MeshCore, "MeshCore", S(R.string.meshcore_subtitle)),
-                ToolEntry(Tool.AntPlus, "ANT+", S(R.string.ant_subtitle)),
-                ToolEntry(Tool.Zigbee, S(R.string.zigbee_title), S(R.string.zigbee_subtitle)),
-                ToolEntry(Tool.Sstv, "SSTV", S(R.string.sstv_subtitle)),
-                ToolEntry(Tool.Zwave, "Z-Wave", S(R.string.zwave_subtitle)),
-                ToolEntry(Tool.Sarsat, S(R.string.sarsat_title), S(R.string.sarsat_subtitle)),
-                ToolEntry(Tool.LoraAprs, "LoRa APRS", S(R.string.lora_aprs_subtitle)),
-                ToolEntry(Tool.Listen, S(R.string.listen_title), S(R.string.listen_subtitle)),
-                ToolEntry(Tool.Pmr, "PMR446", S(R.string.pmr_subtitle)),
-                ToolEntry(Tool.Dect, "DECT", S(R.string.dect_subtitle)),
-                ToolEntry(Tool.Vdl2, "VDL Mode 2", S(R.string.vdl2_subtitle)),
-                ToolEntry(Tool.Dsc, "DSC", S(R.string.dsc_subtitle)),
-                ToolEntry(Tool.Wmbus, "Wireless M-Bus", S(R.string.wmbus_subtitle)),
-                ToolEntry(Tool.Flarm, "FLARM", S(R.string.flarm_subtitle)),
-                ToolEntry(Tool.Ism, "ISM", S(R.string.ism_subtitle)),
-            ).sortedWith(compareBy(java.text.Collator.getInstance()) { it.title }),
+        // One category per kind of use; inside each, named after the protocol, in alphabetical order (in the phone's language).
+        sdrGroup(
+            R.string.sdr_cat_general,
+            ToolEntry(Tool.Listen, S(R.string.listen_title), S(R.string.listen_subtitle)),
+        ),
+        sdrGroup(
+            R.string.aviation,
+            ToolEntry(Tool.Adsb, "ADS-B", S(R.string.map_of_aircraft_on_1090_mhz)),
+            ToolEntry(Tool.Acars, "ACARS", S(R.string.airliner_messaging_131_mhz)),
+            ToolEntry(Tool.Vdl2, "VDL Mode 2", S(R.string.vdl2_subtitle)),
+            ToolEntry(Tool.Flarm, "FLARM", S(R.string.flarm_subtitle)),
+            ToolEntry(Tool.Fpv, S(R.string.drones), S(R.string.analog_fpv_dji_and_rc_links)),
+        ),
+        sdrGroup(
+            R.string.sdr_cat_sea,
+            ToolEntry(Tool.Ais, "AIS", S(R.string.map_of_ships_on_162_mhz)),
+            ToolEntry(Tool.Dsc, "DSC", S(R.string.dsc_subtitle)),
+            ToolEntry(Tool.Sarsat, S(R.string.sarsat_title), S(R.string.sarsat_subtitle)),
+        ),
+        sdrGroup(
+            R.string.sdr_cat_mesh,
+            ToolEntry(Tool.Meshtastic, "Meshtastic", S(R.string.meshtastic_subtitle)),
+            ToolEntry(Tool.MeshCore, "MeshCore", S(R.string.meshcore_subtitle)),
+            ToolEntry(Tool.LoraAprs, "LoRa APRS", S(R.string.lora_aprs_subtitle)),
+            ToolEntry(Tool.Lpwan, "LoRaWAN / Sigfox", S(R.string.lpwan_subtitle)),
+            ToolEntry(Tool.Aprs, "APRS", S(R.string.beacons_on_144_800_mhz)),
+        ),
+        sdrGroup(
+            R.string.sdr_cat_space,
+            ToolEntry(Tool.Meteor, "Meteor-M", S(R.string.lrpt_images_on_137_mhz)),
+            ToolEntry(Tool.Sstv, "SSTV", S(R.string.sstv_subtitle)),
+            ToolEntry(Tool.Cubesat, "CubeSat", S(R.string.cubesat_subtitle)),
+            ToolEntry(Tool.Sonde, S(R.string.radiosondes), S(R.string.rs41_m10_and_m20_sondes_around)),
+        ),
+        sdrGroup(
+            R.string.sdr_cat_home,
+            ToolEntry(Tool.Ism, "ISM", S(R.string.ism_subtitle)),
+            ToolEntry(Tool.Tpms, "TPMS", S(R.string.tyre_pressure_sensors_433_mhz)),
+            ToolEntry(Tool.Wmbus, "Wireless M-Bus", S(R.string.wmbus_subtitle)),
+            ToolEntry(Tool.Zwave, "Z-Wave", S(R.string.zwave_subtitle)),
+            ToolEntry(Tool.Zigbee, S(R.string.zigbee_title), S(R.string.zigbee_subtitle)),
+            ToolEntry(Tool.AntPlus, "ANT+", S(R.string.ant_subtitle)),
+        ),
+        sdrGroup(
+            R.string.sdr_cat_voice,
+            ToolEntry(Tool.Pmr, "PMR446", S(R.string.pmr_subtitle)),
+            ToolEntry(Tool.Pocsag, "POCSAG", S(R.string.pagers_e_message_dapnet)),
+            ToolEntry(Tool.Dect, "DECT", S(R.string.dect_subtitle)),
         ),
     )
     Network.Nfc -> listOf(
@@ -247,7 +282,20 @@ fun ToolsPage(net: Network, vm: MainViewModel) {
                 Modifier.padding(horizontal = 8.dp), style = rf(13, 18), color = cs.onSurfaceVariant,
             )
         }
-        shownGroups.forEach { g ->
+        // Category tabs: "All" first; a category with no tool for the radio plugged in is not offered.
+        val visibleGroups = if (net in tabbed && shownGroups.size > 1) {
+            val all = S(R.string.all)
+            val current = CategoryMemory.chosen[net]?.takeIf { c -> shownGroups.any { it.title == c } }
+            androidx.compose.foundation.lazy.LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                item { AntFilterChip(all, current == null, { CategoryMemory.chosen.remove(net) }) }
+                items(shownGroups.size) { i ->
+                    val t = shownGroups[i].title
+                    AntFilterChip(t, current == t, { CategoryMemory.chosen[net] = t }, trailing = shownGroups[i].items.size.toString())
+                }
+            }
+            if (current == null) shownGroups else shownGroups.filter { it.title == current }
+        } else shownGroups
+        visibleGroups.forEach { g ->
             SectionTitle(g.title)
             TileGrid(g.items) { e, mod ->
                 val note = if (e.tool in comingSoon) S(R.string.coming_soon) else internet?.why(e.tool)?.title

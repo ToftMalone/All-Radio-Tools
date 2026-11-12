@@ -2685,4 +2685,10 @@
     <string name="listen_pinch_hint">"Knijp met twee vingers om in of uit te zoomen."</string>
     <string name="listen_step">"Stap"</string>
     <string name="listen_step_auto">"Auto (%1$s)"</string>
+    <string name="sdr_cat_general">"Algemeen"</string>
+    <string name="sdr_cat_sea">"Zee &amp; redding"</string>
+    <string name="sdr_cat_mesh">"Mesh &amp; LoRa"</string>
+    <string name="sdr_cat_space">"Satellieten &amp; weer"</string>
+    <string name="sdr_cat_home">"Huis &amp; sensoren"</string>
+    <string name="sdr_cat_voice">"Spraak &amp; pagers"</string>
 </resources>

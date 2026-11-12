@@ -2616,4 +2616,10 @@
     <string name="listen_pinch_hint">"Chụm hoặc mở hai ngón tay để phóng to hoặc thu nhỏ."</string>
     <string name="listen_step">"Bước"</string>
     <string name="listen_step_auto">"Tự động (%1$s)"</string>
+    <string name="sdr_cat_general">"Chung"</string>
+    <string name="sdr_cat_sea">"Biển &amp; cứu nạn"</string>
+    <string name="sdr_cat_mesh">"Mesh &amp; LoRa"</string>
+    <string name="sdr_cat_space">"Vệ tinh &amp; thời tiết"</string>
+    <string name="sdr_cat_home">"Nhà &amp; cảm biến"</string>
+    <string name="sdr_cat_voice">"Thoại &amp; nhắn tin"</string>
 </resources>
