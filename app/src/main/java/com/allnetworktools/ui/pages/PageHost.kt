@@ -297,16 +297,6 @@ private fun PageBody(vm: MainViewModel, net: Network, page: Page) {
             Tool.Wardriving -> com.allnetworktools.ui.pages.wardrive.WardrivingTool(vm)
             Tool.WardrivingSettings -> com.allnetworktools.ui.pages.wardrive.WardrivingSettingsTool(vm)
             Tool.HiddenCam -> com.allnetworktools.ui.pages.wardrive.HiddenCamTool(vm)
-            Tool.BitChat -> {
-                val perms by vm.permissions.collectAsStateWithLifecycle()
-                val actions = LocalActions.current
-                com.allnetworktools.ui.pages.bt.BitchatTool(
-                    permitted = PermGroup.Mesh in perms,
-                    bluetoothOn = true,
-                    onGrant = { actions.request(PermGroup.Mesh) },
-                    onEnableBluetooth = { actions.enableBluetooth() },
-                )
-            }
             Tool.RemoteId -> {
                 val perms by vm.permissions.collectAsStateWithLifecycle()
                 val positions by vm.positions.collectAsStateWithLifecycle()

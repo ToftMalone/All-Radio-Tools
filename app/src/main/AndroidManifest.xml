@@ -23,7 +23,6 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
-    <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -73,11 +72,6 @@
             android:name=".data.HandoverService"
             android:exported="false"
             android:foregroundServiceType="location" />
-
-        <service
-            android:name=".data.bitchat.BitchatService"
-            android:exported="false"
-            android:foregroundServiceType="connectedDevice" />
 
         <service
             android:name=".data.TrackerGuardService"
