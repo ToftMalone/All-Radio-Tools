@@ -22,16 +22,21 @@ class AcarsTest {
         return out.toIntArray()
     }
 
-    /** MSK audio at [fs]: 2400 Hz or 1200 Hz per bit, continuous phase. [differential] codes a 0 as a tone change. */
-    private fun audio(bits: IntArray, fs: Double, differential: Boolean, noise: Double, seed: Long = 1, high: Double = 1.0, start: Int = 1000): FloatArray {
+    /**
+     * MSK audio at [fs] as aircraft send it (acarsdec reads it this way): continuous phase, 2400 Hz when a bit repeats
+     * the previous one and 1200 Hz when it inverts it. [flipped] starts from the other polarity.
+     */
+    private fun audio(bits: IntArray, fs: Double, flipped: Boolean, noise: Double, seed: Long = 1, high: Double = 1.0, start: Int = 1000): FloatArray {
         val spb = fs / 2400
         val rnd = Random(seed)
         val out = FloatArray(((bits.size + 10) * spb).toInt() + 4000)
         var phase = 0.0
-        var tone = 1
+        var tone: Int
+        var prev = if (flipped) 0 else 1
         var t = start
         bits.forEachIndexed { k, b ->
-            tone = if (differential) (if (b == 1) tone else 1 - tone) else b
+            tone = if (b == prev) 1 else 0
+            prev = b
             val f = if (tone == 1) 2400.0 else 1200.0
             val a = if (tone == 1) high else 1.0
             val end = start + (k + 1) * spb
@@ -70,9 +75,9 @@ class AcarsTest {
     }
 
     @Test fun decodesBothToneConventions() {
-        for (diff in listOf(false, true)) {
-            val got = decode(audio(bits(sample), 48_000.0, diff, 0.3))
-            assertEquals("differential=$diff", 1, got.size)
+        for (flip in listOf(false, true)) {
+            val got = decode(audio(bits(sample), 48_000.0, flip, 0.3))
+            assertEquals("flipped=$flip", 1, got.size)
             assertEquals("AF1234", got[0].flight)
         }
     }

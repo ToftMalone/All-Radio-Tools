@@ -136,12 +136,12 @@ object Acars {
 
 /**
  * MSK demodulator and frame reader for one channel of AM audio at [audioRate]. The audio is mixed down by 1800 Hz, the
- * centre between the two tones, so 1200 Hz and 2400 Hz become -600 and +600 Hz; the phase turned over one bit
- * (a quarter turn one way or the other) gives the tone, whatever the level of each tone. The bit clock is not
- * guessed: every sampling phase within a bit reads its own bit stream, and the one that finds the sync reads the
- * frame. The tone-to-bit rule is not taken for granted either: the sync is looked for with the tones read directly,
- * inverted, and as changes. Parity and the BCS then reject anything else, after trying to mend one or two bad
- * characters with the BCS.
+ * centre between the two tones, so 1200 Hz and 2400 Hz become -600 and +600 Hz and the phase turns a quarter turn per
+ * bit. Undoing that quarter turn leaves two opposite points, read coherently as in acarsdec: the data bit is that
+ * point, so a 2400 Hz bit repeats the previous bit and a 1200 Hz bit inverts it. The reference axis follows the
+ * signal, so a tone a little off frequency does no harm, and both polarities are read. The bit clock is not guessed:
+ * every sampling phase within a bit reads its own bit stream, and the one that finds the sync reads the frame. Parity
+ * and the BCS then reject anything else, after trying to mend one or two bad characters with the BCS.
  */
 class AcarsDecoder(private val audioRate: Double, private val freqMhz: Double, private val onMessage: (AcarsMessage) -> Unit) {
     private val spb = Math.round(audioRate / 2400.0).toInt()
@@ -160,8 +160,10 @@ class AcarsDecoder(private val audioRate: Double, private val freqMhz: Double, p
     private val br = FloatArray(LPF_TAPS * 2)
     private val bi = FloatArray(LPF_TAPS * 2)
     private var bp = 0
-    private val zr = FloatArray(spb)
-    private val zi = FloatArray(spb)
+    /** For each sampling phase: bits read so far (for the quarter turn) and the reference axis. */
+    private val count = IntArray(spb)
+    private val axisR = FloatArray(spb) { 1f }
+    private val axisI = FloatArray(spb)
     private var n = 0L
     private var dc = 0.0
     private var ph = 0.0
@@ -175,9 +177,8 @@ class AcarsDecoder(private val audioRate: Double, private val freqMhz: Double, p
         var tail = -1
     }
 
-    /** For each sampling phase: the four tone-to-bit rules, and the last tone read. */
-    private val readers = Array(spb) { Array(4) { Reader() } }
-    private val prevTone = IntArray(spb)
+    /** For each sampling phase: the bits as read, and inverted. */
+    private val readers = Array(spb) { Array(2) { Reader() } }
 
     fun feed(audio: FloatArray, count: Int) {
         for (k in 0 until count) {
@@ -195,22 +196,28 @@ class AcarsDecoder(private val audioRate: Double, private val freqMhz: Double, p
             var i = 0f
             for (j in 0 until LPF_TAPS) { r += taps[j] * br[bp + j]; i += taps[j] * bi[bp + j] }
             val slot = (n % spb).toInt()
-            // Phase turned since one bit ago: positive towards 2400 Hz.
-            val d = i * zr[slot] - r * zi[slot]
-            zr[slot] = r; zi[slot] = i
             n++
-            if (n > spb) bit(slot, if (d > 0) 1 else 0)
+            if (n > LPF_TAPS) bit(slot, r, i)
         }
     }
 
-    private fun bit(p: Int, tone: Int) {
-        val prev = prevTone[p]
-        prevTone[p] = tone
-        val rs = readers[p]
-        step(rs[0], tone)
-        step(rs[1], 1 - tone)
-        step(rs[2], if (tone == prev) 1 else 0)
-        step(rs[3], if (tone != prev) 1 else 0)
+    private fun bit(p: Int, r: Float, i: Float) {
+        // Undo the quarter turn per bit: what is left lies on one axis, one way for 1 and the other for 0.
+        val (wr, wi) = when (count[p] and 3) { 0 -> r to i; 1 -> i to -r; 2 -> -r to -i; else -> -i to r }
+        count[p]++
+        val mag = sqrt(wr * wr + wi * wi)
+        if (mag < 1e-9f) return
+        val dot = wr * axisR[p] + wi * axisI[p]
+        val b = if (dot > 0) 1 else 0
+        // Follow the axis with each decision, so it never jumps half a turn.
+        val s = if (b == 1) 1f else -1f
+        var ar = 0.9f * axisR[p] + 0.1f * s * wr / mag
+        var ai = 0.9f * axisI[p] + 0.1f * s * wi / mag
+        val am = sqrt(ar * ar + ai * ai)
+        if (am > 1e-6f) { ar /= am; ai /= am } else { ar = wr / mag; ai = wi / mag }
+        axisR[p] = ar; axisI[p] = ai
+        step(readers[p][0], b)
+        step(readers[p][1], 1 - b)
     }
 
     private fun step(r: Reader, b: Int) {
