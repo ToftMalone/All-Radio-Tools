@@ -216,6 +216,7 @@ private fun groups(net: Network, connectedDevice: String?, servingLabel: String?
                 ToolEntry(Tool.HiddenCam, S(R.string.cam_title), S(R.string.cam_subtitle)),
             ),
         ),
+        ToolGroup(S(R.string.messaging), listOf(ToolEntry(Tool.BitChat, S(R.string.bitchat), S(R.string.bluetooth_mesh_chat_and_relay)))),
     )
 }
 
