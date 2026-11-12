@@ -2606,4 +2606,14 @@
     <string name="tool_tab_list">"リスト"</string>
     <string name="tool_tab_reception">"受信"</string>
     <string name="tool_tab_settings">"設定"</string>
+    <string name="listen_cat_ham">"アマチュア無線"</string>
+    <string name="listen_cat_broadcast">"放送"</string>
+    <string name="listen_cat_air_sea">"航空・海上"</string>
+    <string name="listen_cat_utility">"実用"</string>
+    <string name="listen_cat_space">"宇宙"</string>
+    <string name="listen_mw">"中波"</string>
+    <string name="listen_zoom">"ズーム"</string>
+    <string name="listen_pinch_hint">"2本指でピンチしてズームイン・アウトします。"</string>
+    <string name="listen_step">"ステップ"</string>
+    <string name="listen_step_auto">"自動 (%1$s)"</string>
 </resources>

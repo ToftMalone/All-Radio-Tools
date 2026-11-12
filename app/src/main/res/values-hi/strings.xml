@@ -2675,4 +2675,14 @@
     <string name="tool_tab_list">"सूची"</string>
     <string name="tool_tab_reception">"रिसेप्शन"</string>
     <string name="tool_tab_settings">"सेटिंग्स"</string>
+    <string name="listen_cat_ham">"रेडियो शौकिया"</string>
+    <string name="listen_cat_broadcast">"प्रसारण"</string>
+    <string name="listen_cat_air_sea">"वायु और समुद्र"</string>
+    <string name="listen_cat_utility">"उपयोगी"</string>
+    <string name="listen_cat_space">"अंतरिक्ष"</string>
+    <string name="listen_mw">"MW"</string>
+    <string name="listen_zoom">"ज़ूम"</string>
+    <string name="listen_pinch_hint">"ज़ूम इन या आउट करने के लिए दो उंगलियों से पिंच करें।"</string>
+    <string name="listen_step">"चरण"</string>
+    <string name="listen_step_auto">"स्वतः (%1$s)"</string>
 </resources>

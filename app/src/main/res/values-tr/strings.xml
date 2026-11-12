@@ -2675,4 +2675,14 @@
     <string name="tool_tab_list">"Liste"</string>
     <string name="tool_tab_reception">"Alım"</string>
     <string name="tool_tab_settings">"Ayarlar"</string>
+    <string name="listen_cat_ham">"Amatör telsiz"</string>
+    <string name="listen_cat_broadcast">"Yayın"</string>
+    <string name="listen_cat_air_sea">"Hava ve deniz"</string>
+    <string name="listen_cat_utility">"Diğer"</string>
+    <string name="listen_cat_space">"Uzay"</string>
+    <string name="listen_mw">"OD"</string>
+    <string name="listen_zoom">"Yakınlaştır"</string>
+    <string name="listen_pinch_hint">"Yakınlaştırmak veya uzaklaştırmak için iki parmakla sıkıştırın."</string>
+    <string name="listen_step">"Adım"</string>
+    <string name="listen_step_auto">"Otomatik (%1$s)"</string>
 </resources>

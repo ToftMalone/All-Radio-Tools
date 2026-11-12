@@ -2606,4 +2606,14 @@
     <string name="tool_tab_list">"Danh sách"</string>
     <string name="tool_tab_reception">"Thu"</string>
     <string name="tool_tab_settings">"Cài đặt"</string>
+    <string name="listen_cat_ham">"Vô tuyến nghiệp dư"</string>
+    <string name="listen_cat_broadcast">"Phát thanh"</string>
+    <string name="listen_cat_air_sea">"Hàng không &amp; hàng hải"</string>
+    <string name="listen_cat_utility">"Tiện ích"</string>
+    <string name="listen_cat_space">"Không gian"</string>
+    <string name="listen_mw">"Sóng trung"</string>
+    <string name="listen_zoom">"Thu phóng"</string>
+    <string name="listen_pinch_hint">"Chụm hoặc mở hai ngón tay để phóng to hoặc thu nhỏ."</string>
+    <string name="listen_step">"Bước"</string>
+    <string name="listen_step_auto">"Tự động (%1$s)"</string>
 </resources>

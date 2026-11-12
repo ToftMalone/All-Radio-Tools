@@ -2606,4 +2606,14 @@
     <string name="tool_tab_list">"列表"</string>
     <string name="tool_tab_reception">"接收"</string>
     <string name="tool_tab_settings">"设置"</string>
+    <string name="listen_cat_ham">"业余无线电"</string>
+    <string name="listen_cat_broadcast">"广播"</string>
+    <string name="listen_cat_air_sea">"航空与海事"</string>
+    <string name="listen_cat_utility">"实用"</string>
+    <string name="listen_cat_space">"太空"</string>
+    <string name="listen_mw">"中波"</string>
+    <string name="listen_zoom">"缩放"</string>
+    <string name="listen_pinch_hint">"双指捏合即可放大或缩小。"</string>
+    <string name="listen_step">"步进"</string>
+    <string name="listen_step_auto">"自动 (%1$s)"</string>
 </resources>

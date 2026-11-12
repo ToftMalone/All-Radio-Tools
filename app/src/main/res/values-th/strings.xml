@@ -2606,4 +2606,14 @@
     <string name="tool_tab_list">"รายการ"</string>
     <string name="tool_tab_reception">"การรับ"</string>
     <string name="tool_tab_settings">"การตั้งค่า"</string>
+    <string name="listen_cat_ham">"วิทยุสมัครเล่น"</string>
+    <string name="listen_cat_broadcast">"กระจายเสียง"</string>
+    <string name="listen_cat_air_sea">"อากาศและทะเล"</string>
+    <string name="listen_cat_utility">"ทั่วไป"</string>
+    <string name="listen_cat_space">"อวกาศ"</string>
+    <string name="listen_mw">"MW"</string>
+    <string name="listen_zoom">"ซูม"</string>
+    <string name="listen_pinch_hint">"ใช้สองนิ้วบีบเพื่อซูมเข้าหรือออก"</string>
+    <string name="listen_step">"ขั้น"</string>
+    <string name="listen_step_auto">"อัตโนมัติ (%1$s)"</string>
 </resources>

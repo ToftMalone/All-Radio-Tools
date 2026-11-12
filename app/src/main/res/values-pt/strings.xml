@@ -2675,4 +2675,14 @@
     <string name="tool_tab_list">"Lista"</string>
     <string name="tool_tab_reception">"Receção"</string>
     <string name="tool_tab_settings">"Definições"</string>
+    <string name="listen_cat_ham">"Radioamador"</string>
+    <string name="listen_cat_broadcast">"Radiodifusão"</string>
+    <string name="listen_cat_air_sea">"Ar e mar"</string>
+    <string name="listen_cat_utility">"Utilidades"</string>
+    <string name="listen_cat_space">"Espaço"</string>
+    <string name="listen_mw">"OM"</string>
+    <string name="listen_zoom">"Zoom"</string>
+    <string name="listen_pinch_hint">"Belisque com dois dedos para ampliar ou reduzir."</string>
+    <string name="listen_step">"Passo"</string>
+    <string name="listen_step_auto">"Auto (%1$s)"</string>
 </resources>

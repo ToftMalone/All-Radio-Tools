@@ -18,6 +18,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.foundation.gestures.awaitEachGesture
+import androidx.compose.foundation.gestures.awaitFirstDown
+import androidx.compose.foundation.gestures.calculateZoom
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
@@ -57,6 +61,31 @@ internal fun fitSpan(wanted: Int, spans: List<Int>?): Int =
 
 internal fun mhzLabel(hz: Double) = "%.3f".format(Locale.getDefault(), hz / 1e6)
 
+/** A width in MHz without useless decimals: "10", "2.5", "0.125". */
+internal fun widthLabel(hz: Double): String {
+    val mhz = hz / 1e6
+    return java.math.BigDecimal(mhz).setScale(3, java.math.RoundingMode.HALF_UP).stripTrailingZeros().toPlainString().let {
+        if (Locale.getDefault().let { l -> java.text.DecimalFormatSymbols.getInstance(l).decimalSeparator } == ',') it.replace('.', ',') else it
+    }
+}
+
+/** Two fingers zoom in or out one step each time the pinch doubles or halves; one finger is left alone. */
+internal fun Modifier.pinchZoom(zoom: Int, onZoom: (Int) -> Unit): Modifier = pointerInput(zoom) {
+    awaitEachGesture {
+        awaitFirstDown(requireUnconsumed = false)
+        var pinch = 1f
+        do {
+            val event = awaitPointerEvent()
+            if (event.changes.count { it.pressed } >= 2) {
+                pinch *= event.calculateZoom()
+                if (pinch > 1.6f) { onZoom(zoom * 2); pinch = 1f }
+                if (pinch < 0.62f) { onZoom(zoom / 2); pinch = 1f }
+                event.changes.forEach { it.consume() }
+            }
+        } while (event.changes.any { it.pressed })
+    }
+}
+
 @Composable
 fun SpectrumTool(vm: MainViewModel) {
     val c = vm.tools.spectrum
@@ -65,13 +94,13 @@ fun SpectrumTool(vm: MainViewModel) {
     androidx.compose.runtime.LaunchedEffect(device) { device?.let { if (!c.running && !c.starting) c.spanMhz = fitSpan(c.spanMhz, it.spectrumSpans) } }
     val db = c.spectrum
     val center = if (c.running) c.tunedHz.toDouble() else (c.parsedCenterHz() ?: 0L).toDouble()
-    val span = c.spanMhz * 1e6
+    val span = c.spanMhz * 1e6 / c.zoom
     val peakIdx = db?.let { a -> a.indices.maxBy { a[it] } }
     val peakHz = peakIdx?.let { center - span / 2 + (it + 0.5) * span / db.size }
     PageColumn {
         HeroCard {
             Text("${mhzLabel(center)} MHz", style = gs(30, 36, 500, tnum = true))
-            Text(S(R.string.width_mhz_from_to_mhz, c.spanMhz, mhzLabel(center - span / 2), mhzLabel(center + span / 2)), Modifier.padding(top = 2.dp), style = rf(14, 20))
+            Text(S(R.string.width_mhz_from_to_mhz, widthLabel(span), mhzLabel(center - span / 2), mhzLabel(center + span / 2)), Modifier.padding(top = 2.dp), style = rf(14, 20))
             Row(Modifier.padding(top = 12.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 when {
                     c.error != null -> HeroChip(c.error!!, AntTheme.net.poor)
@@ -82,11 +111,16 @@ fun SpectrumTool(vm: MainViewModel) {
                 }
             }
         }
-        SpectrumView(db, c.hold, peakIdx)
-        WaterfallView(c)
+        Column(Modifier.pinchZoom(c.zoom, c::chooseZoom), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            SpectrumView(db, c.hold, peakIdx)
+            WaterfallView(c)
+        }
+        FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            SpectrumController.Zooms.forEach { z -> AntFilterChip(widthLabel(c.spanMhz * 1e6 / z) + " MHz", c.zoom == z, { c.chooseZoom(z) }) }
+        }
         ToolButtons(
-            ToolButton("− ${c.spanMhz / 2} MHz", Sym.ChevronLeft, BtnKind.OutlineOnSurface) { c.retune((center - span / 2).toLong()) },
-            ToolButton("+ ${c.spanMhz / 2} MHz", Sym.ChevronRight, BtnKind.OutlineOnSurface) { c.retune((center + span / 2).toLong()) },
+            ToolButton("− ${widthLabel(span / 2)} MHz", Sym.ChevronLeft, BtnKind.OutlineOnSurface) { c.retune((center - span / 2).toLong()) },
+            ToolButton("+ ${widthLabel(span / 2)} MHz", Sym.ChevronRight, BtnKind.OutlineOnSurface) { c.retune((center + span / 2).toLong()) },
         )
         if (c.running || c.starting) StartButton(S(R.string.stop), Sym.Stop) { c.stop() }
         else StartButton(S(R.string.start_the_analysis), Sym.PlayArrow, enabled = device != null && c.parsedCenterHz() != null) { device?.let(c::start) }

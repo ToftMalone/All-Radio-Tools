@@ -2675,4 +2675,14 @@
     <string name="tool_tab_list">"Lista"</string>
     <string name="tool_tab_reception">"Mottagning"</string>
     <string name="tool_tab_settings">"Inställningar"</string>
+    <string name="listen_cat_ham">"Amatörradio"</string>
+    <string name="listen_cat_broadcast">"Rundradio"</string>
+    <string name="listen_cat_air_sea">"Flyg &amp; sjö"</string>
+    <string name="listen_cat_utility">"Övrigt"</string>
+    <string name="listen_cat_space">"Rymden"</string>
+    <string name="listen_mw">"MV"</string>
+    <string name="listen_zoom">"Zoom"</string>
+    <string name="listen_pinch_hint">"Nyp med två fingrar för att zooma in eller ut."</string>
+    <string name="listen_step">"Steg"</string>
+    <string name="listen_step_auto">"Auto (%1$s)"</string>
 </resources>

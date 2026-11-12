@@ -2813,4 +2813,14 @@
     <string name="tool_tab_list">"Список"</string>
     <string name="tool_tab_reception">"Прийом"</string>
     <string name="tool_tab_settings">"Налаштування"</string>
+    <string name="listen_cat_ham">"Радіоаматори"</string>
+    <string name="listen_cat_broadcast">"Мовлення"</string>
+    <string name="listen_cat_air_sea">"Авіація і море"</string>
+    <string name="listen_cat_utility">"Інше"</string>
+    <string name="listen_cat_space">"Космос"</string>
+    <string name="listen_mw">"СХ"</string>
+    <string name="listen_zoom">"Масштаб"</string>
+    <string name="listen_pinch_hint">"Зведіть або розведіть два пальці, щоб змінити масштаб."</string>
+    <string name="listen_step">"Крок"</string>
+    <string name="listen_step_auto">"Авто (%1$s)"</string>
 </resources>

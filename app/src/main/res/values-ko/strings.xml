@@ -2606,4 +2606,14 @@
     <string name="tool_tab_list">"목록"</string>
     <string name="tool_tab_reception">"수신"</string>
     <string name="tool_tab_settings">"설정"</string>
+    <string name="listen_cat_ham">"아마추어 무선"</string>
+    <string name="listen_cat_broadcast">"방송"</string>
+    <string name="listen_cat_air_sea">"항공·해상"</string>
+    <string name="listen_cat_utility">"유틸리티"</string>
+    <string name="listen_cat_space">"우주"</string>
+    <string name="listen_mw">"중파"</string>
+    <string name="listen_zoom">"확대"</string>
+    <string name="listen_pinch_hint">"두 손가락으로 오므리거나 벌려 확대/축소합니다."</string>
+    <string name="listen_step">"간격"</string>
+    <string name="listen_step_auto">"자동 (%1$s)"</string>
 </resources>

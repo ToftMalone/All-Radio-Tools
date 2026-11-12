@@ -6,7 +6,9 @@ import android.media.AudioTrack
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.detectHorizontalDragGestures
+import androidx.compose.foundation.gestures.awaitEachGesture
+import androidx.compose.foundation.gestures.awaitFirstDown
+import androidx.compose.foundation.gestures.calculateZoom
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -24,6 +26,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -35,6 +39,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.input.pointer.positionChanged
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -61,8 +66,17 @@ import java.util.Locale
 import kotlin.math.roundToLong
 import kotlinx.coroutines.CoroutineScope
 
-/** A frequency worth one tap: where it is, how it is modulated. */
-class ListenPreset(val label: String, val hz: Long, val mode: ListenMode)
+/** The groups the stations are sorted in, one tab each. */
+enum class ListenBand(val label: Int) {
+    Ham(R.string.listen_cat_ham),
+    Broadcast(R.string.listen_cat_broadcast),
+    AirSea(R.string.listen_cat_air_sea),
+    Utility(R.string.listen_cat_utility),
+    Space(R.string.listen_cat_space),
+}
+
+/** A frequency worth one tap: where it is, how it is modulated, which group it belongs to. */
+class ListenPreset(val label: String, val hz: Long, val mode: ListenMode, val band: ListenBand = ListenBand.Utility)
 
 /**
  * Listens to a station: the 2 MHz around the frequency are shown as a spectrum, and the channel picked in it (by tapping
@@ -83,24 +97,62 @@ class ListenController(repo: SdrRepository, scope: CoroutineScope, onAcquire: ()
         private set
     var levelDb by mutableFloatStateOf(-120f)
         private set
-    /** Where the radio is tuned (the middle of the spectrum shown). */
+    /** Where the radio is tuned (the middle of the 2 MHz window). */
     var centerHz by mutableLongStateOf(99_750_000L)
         private set
+    /** The step of the dial; null follows the mode (100 kHz in WFM, 12.5 kHz in NFM…). */
+    var stepChoice by mutableStateOf<Long?>(null)
+    val stepHz: Long get() = stepChoice ?: mode.stepHz
+    /** How much of the window the spectrum shows: 1 for all of it, 16 for an eighth of a megahertz. */
+    var zoom by mutableIntStateOf(1)
+        private set
+    /** The middle of what the spectrum shows, while zoomed in; it follows the channel when the channel leaves it. */
+    var viewHz by mutableLongStateOf(100_000_000L)
+        private set
+    /** The middle of the spectrum frame shown, as an offset from [centerHz]: what the frame was cut around. */
+    var frameOffsetHz by mutableLongStateOf(0L)
+        private set
+    var stationBand by mutableStateOf(ListenBand.Broadcast)
 
     @Volatile private var wantOffset = OFFSET_HZ.toDouble()
     @Volatile private var wantMode = ListenMode.Wfm
     @Volatile private var wantVolume = 0.8f
     @Volatile private var wantSquelch: Double? = null
+    @Volatile private var wantZoom = 1
+    @Volatile private var wantView = 0L
 
     override val sampleRate = ListenReceiver.SAMPLE_RATE
     override fun tuneHz(): Long {
         // The channel sits 250 kHz off the centre, away from the radio's own DC spike.
         centerHz = frequencyHz - OFFSET_HZ
         wantOffset = OFFSET_HZ.toDouble()
+        follow(force = true)
         return centerHz
     }
 
-    fun parsedHz(): Long? = frequencyText.trim().replace(',', '.').toDoubleOrNull()?.takeIf { it in 0.5..6000.0 }?.let { (it * 1e6).roundToLong() }
+    /** Width of the spectrum shown, in Hz. */
+    val viewSpanHz: Long get() = ListenReceiver.SAMPLE_RATE.toLong() / zoom
+
+    /** The middle of the view as an offset from the window's centre, kept inside the window. */
+    fun viewOffsetHz(): Long {
+        val room = (ListenReceiver.SAMPLE_RATE - viewSpanHz) / 2
+        return (viewHz - centerHz).coerceIn(-room, room)
+    }
+
+    fun chooseZoom(z: Int) {
+        zoom = z.coerceIn(1, MAX_ZOOM)
+        wantZoom = zoom
+        follow(force = true)
+    }
+
+    /** Recentres the view on the channel when it is forced to or when the channel left it. */
+    private fun follow(force: Boolean) {
+        val half = viewSpanHz / 2
+        if (force || kotlin.math.abs(frequencyHz - (centerHz + viewOffsetHz())) > half * 9 / 10) viewHz = frequencyHz
+        wantView = viewOffsetHz()
+    }
+
+    fun parsedHz(): Long? = frequencyText.trim().replace(',', '.').toDoubleOrNull()?.takeIf { it in 0.1..6000.0 }?.let { (it * 1e6).roundToLong() }
 
     fun typedFrequency() { parsedHz()?.let { tune(it) } }
 
@@ -116,27 +168,31 @@ class ListenController(repo: SdrRepository, scope: CoroutineScope, onAcquire: ()
     /** Tunes to [hz]: inside the window only the digital tuner moves, outside the radio follows. */
     fun tune(hz: Long) {
         frequencyHz = hz
-        frequencyText = "%.3f".format(Locale.US, hz / 1e6)
-        if (!running && !starting) return
+        frequencyText = mhz(hz)
+        if (!running && !starting) { viewHz = hz; return }
         val off = hz - centerHz
         if (kotlin.math.abs(off) <= MAX_OFFSET_HZ) {
             wantOffset = off.toDouble()
+            follow(force = false)
         } else {
             centerHz = hz - OFFSET_HZ
             wantOffset = OFFSET_HZ.toDouble()
+            follow(force = true)
             retune(centerHz)
         }
     }
 
-    /** A step on the dial, in the mode's channel width. */
-    fun step(direction: Int) = tune(snap(frequencyHz + direction * mode.stepHz))
+    /** A step on the dial, in the chosen step. */
+    fun step(direction: Int) = tune(snap(frequencyHz + direction * stepHz))
 
-    private fun snap(hz: Long): Long = ((hz + mode.stepHz / 2) / mode.stepHz) * mode.stepHz
+    private fun snap(hz: Long): Long = ((hz + stepHz / 2) / stepHz) * stepHz
 
-    /** [fraction] is the position along the spectrum, 0 on the left edge and 1 on the right one. */
+    /** [fraction] is the position along the spectrum shown, 0 on the left edge and 1 on the right one. */
     fun tuneFraction(fraction: Float) {
-        val hz = centerHz + ((fraction.coerceIn(0.02f, 0.98f) - 0.5f) * ListenReceiver.SAMPLE_RATE).toLong()
-        tune(snap(hz))
+        val hz = centerHz + viewOffsetHz() + ((fraction.coerceIn(0.01f, 0.99f) - 0.5f) * viewSpanHz).toLong()
+        // Never past the edges of the window, where the filters cut.
+        val lim = MAX_OFFSET_HZ + 100_000L
+        tune(snap(hz.coerceIn(centerHz - lim, centerHz + lim)))
     }
 
     fun preset(p: ListenPreset) {
@@ -156,7 +212,7 @@ class ListenController(repo: SdrRepository, scope: CoroutineScope, onAcquire: ()
             for (i in 0 until n) scaled[i] = b[i] * v
             track.write(scaled, 0, n, AudioTrack.WRITE_NON_BLOCKING)
         }
-        val analyzer = SpectrumAnalyzer(1024)
+        var analyzer = SpectrumAnalyzer(BINS)
         var lastFrame = 0L
         return object : SdrSink {
             override fun feed(buf: ByteArray, len: Int) {
@@ -164,13 +220,17 @@ class ListenController(repo: SdrRepository, scope: CoroutineScope, onAcquire: ()
                 rx.offsetHz = wantOffset
                 rx.squelchDb = wantSquelch
                 rx.feed(buf, len)
+                // Zoomed in, a longer FFT keeps BINS points across the narrower view.
+                val z = wantZoom
+                if (analyzer.size != BINS * z) analyzer = SpectrumAnalyzer(BINS * z)
                 analyzer.accumulate(buf, len, 2)
                 val now = System.currentTimeMillis()
                 if (now - lastFrame >= 100) {
                     lastFrame = now
-                    val f = analyzer.frame()
+                    val view = wantView
+                    val f = analyzer.frame()?.let { cutView(it, z, view) }
                     val level = rx.levelDb.toFloat()
-                    post { if (f != null) spectrum = f; levelDb = level }
+                    post { if (f != null) { spectrum = f; frameOffsetHz = view }; levelDb = level }
                 }
             }
 
@@ -184,21 +244,84 @@ class ListenController(repo: SdrRepository, scope: CoroutineScope, onAcquire: ()
     internal fun setForTest(db: FloatArray, level: Float) { spectrum = db; levelDb = level; markRunningForTest() }
 
     companion object {
+        const val BINS = 1024
+        const val MAX_ZOOM = 16
+        val Zooms = listOf(1, 2, 4, 8, 16)
+        val Steps = listOf(100L, 500L, 1_000L, 5_000L, 12_500L, 25_000L, 100_000L)
+
+        /** The frequency in MHz down to 100 Hz, as typed in the field. */
+        fun mhz(hz: Long): String = "%.4f".format(Locale.US, hz / 1e6)
+
+        /** The [BINS] points of a frame from an FFT [z] times longer, around [viewOffsetHz] from its centre. */
+        fun cutView(frame: FloatArray, z: Int, viewOffsetHz: Long): FloatArray {
+            if (z == 1) return frame
+            val mid = frame.size / 2 + (viewOffsetHz.toDouble() / ListenReceiver.SAMPLE_RATE * frame.size).toInt()
+            val from = (mid - BINS / 2).coerceIn(0, frame.size - BINS)
+            return frame.copyOfRange(from, from + BINS)
+        }
+
         const val SQUELCH_MIN = -70f
         private const val OFFSET_HZ = 250_000L
         private const val MAX_OFFSET_HZ = 800_000L
     }
 }
 
-private fun presets() = listOf(
-    ListenPreset(S(R.string.fm_radio), 100_000_000L, ListenMode.Wfm),
-    ListenPreset(S(R.string.aviation), 121_500_000L, ListenMode.Am),
-    ListenPreset(S(R.string.listen_marine), 156_800_000L, ListenMode.Nfm),
-    ListenPreset("PMR446", 446_006_250L, ListenMode.Nfm),
-    ListenPreset(S(R.string.n_2_m_amateur_radio), 145_500_000L, ListenMode.Nfm),
-    ListenPreset("20 m", 14_200_000L, ListenMode.Usb),
-    ListenPreset("40 m", 7_100_000L, ListenMode.Lsb),
-)
+private fun presets(): List<ListenPreset> {
+    val ham = ListenBand.Ham
+    val bc = ListenBand.Broadcast
+    val air = ListenBand.AirSea
+    val ut = ListenBand.Utility
+    val sp = ListenBand.Space
+    return listOf(
+        // Radio amateurs: the voice part of each band, lower sideband below 10 MHz and upper above.
+        ListenPreset("160 m", 1_840_000L, ListenMode.Lsb, ham),
+        ListenPreset("80 m", 3_700_000L, ListenMode.Lsb, ham),
+        ListenPreset("40 m", 7_100_000L, ListenMode.Lsb, ham),
+        ListenPreset("20 m", 14_200_000L, ListenMode.Usb, ham),
+        ListenPreset("FT8 20 m", 14_074_000L, ListenMode.Usb, ham),
+        ListenPreset("17 m", 18_130_000L, ListenMode.Usb, ham),
+        ListenPreset("15 m", 21_250_000L, ListenMode.Usb, ham),
+        ListenPreset("12 m", 24_950_000L, ListenMode.Usb, ham),
+        ListenPreset("10 m", 28_500_000L, ListenMode.Usb, ham),
+        ListenPreset("6 m", 50_150_000L, ListenMode.Usb, ham),
+        ListenPreset("2 m", 145_500_000L, ListenMode.Nfm, ham),
+        ListenPreset("70 cm", 433_500_000L, ListenMode.Nfm, ham),
+        // Broadcasting: FM, medium wave and the shortwave broadcast bands, named by their wavelength.
+        ListenPreset(S(R.string.fm_radio), 100_000_000L, ListenMode.Wfm, bc),
+        ListenPreset(S(R.string.listen_mw), 1_215_000L, ListenMode.Am, bc),
+        ListenPreset("90 m", 3_250_000L, ListenMode.Am, bc),
+        ListenPreset("75 m", 3_950_000L, ListenMode.Am, bc),
+        ListenPreset("60 m", 4_900_000L, ListenMode.Am, bc),
+        ListenPreset("49 m", 6_000_000L, ListenMode.Am, bc),
+        ListenPreset("41 m", 7_300_000L, ListenMode.Am, bc),
+        ListenPreset("31 m", 9_650_000L, ListenMode.Am, bc),
+        ListenPreset("25 m", 11_850_000L, ListenMode.Am, bc),
+        ListenPreset("22 m", 13_700_000L, ListenMode.Am, bc),
+        ListenPreset("19 m", 15_400_000L, ListenMode.Am, bc),
+        ListenPreset("16 m", 17_700_000L, ListenMode.Am, bc),
+        ListenPreset("13 m", 21_600_000L, ListenMode.Am, bc),
+        ListenPreset("11 m", 25_900_000L, ListenMode.Am, bc),
+        // Aviation and sea.
+        ListenPreset(S(R.string.aviation), 121_500_000L, ListenMode.Am, air),
+        ListenPreset("VOLMET", 5_505_000L, ListenMode.Usb, air),
+        ListenPreset(S(R.string.listen_marine), 156_800_000L, ListenMode.Nfm, air),
+        // Everyday radios and time signals.
+        ListenPreset("PMR446", 446_006_250L, ListenMode.Nfm, ut),
+        ListenPreset("CB 19", 27_185_000L, ListenMode.Am, ut),
+        ListenPreset("LPD 433", 433_075_000L, ListenMode.Nfm, ut),
+        ListenPreset("WWV", 10_000_000L, ListenMode.Am, ut),
+        ListenPreset("WWV", 15_000_000L, ListenMode.Am, ut),
+        // Satellites and the space station.
+        ListenPreset("ISS", 145_800_000L, ListenMode.Nfm, sp),
+        ListenPreset("ISS APRS", 145_825_000L, ListenMode.Nfm, sp),
+        ListenPreset("SO-50", 436_795_000L, ListenMode.Nfm, sp),
+        ListenPreset("Meteor-M", 137_900_000L, ListenMode.Wfm, sp),
+    )
+}
+
+/** Hz as a short label: "500 Hz", "12.5 kHz". */
+private fun stepLabel(hz: Long): String =
+    if (hz < 1_000) "$hz Hz" else "%s kHz".format(Locale.getDefault(), if (hz % 1_000 == 0L) (hz / 1_000).toString() else "%.1f".format(Locale.getDefault(), hz / 1e3))
 
 @Composable
 fun ListenTool(vm: MainViewModel) {
@@ -206,7 +329,7 @@ fun ListenTool(vm: MainViewModel) {
     val device by vm.sdrDevice.collectAsStateWithLifecycle()
     PageColumn {
         HeroCard {
-            Text("%.3f MHz".format(Locale.getDefault(), c.frequencyHz / 1e6), style = rf(32, 38, 600, tnum = true))
+            Text("%.4f MHz".format(Locale.getDefault(), c.frequencyHz / 1e6), style = rf(32, 38, 600, tnum = true))
             Text(c.mode.label, style = rf(14, 20))
             Row(Modifier.padding(top = 12.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 when {
@@ -226,7 +349,14 @@ fun ListenTool(vm: MainViewModel) {
             SectionCard {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     SpectrumPicker(c)
-                    Text(S(R.string.listen_tap_hint), style = rf(12, 16), color = cs.onSurfaceVariant)
+                    Text(S(R.string.listen_zoom), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
+                    FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        ListenController.Zooms.forEach { z ->
+                            val w = ListenReceiver.SAMPLE_RATE / z
+                            AntFilterChip(if (w >= 1_000_000) "%d MHz".format(Locale.getDefault(), w / 1_000_000) else "%d kHz".format(Locale.getDefault(), w / 1_000), c.zoom == z, { c.chooseZoom(z) })
+                        }
+                    }
+                    Text(S(R.string.listen_tap_hint) + " " + S(R.string.listen_pinch_hint), style = rf(12, 16), color = cs.onSurfaceVariant)
                 }
             }
         }
@@ -241,13 +371,34 @@ fun ListenTool(vm: MainViewModel) {
                         }
                         DialButton(Sym.Add) { c.step(1) }
                     }
+                    Text(S(R.string.listen_step), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
+                    FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        AntFilterChip(S(R.string.listen_step_auto, stepLabel(c.mode.stepHz)), c.stepChoice == null, { c.stepChoice = null })
+                        ListenController.Steps.forEach { st -> AntFilterChip(stepLabel(st), c.stepChoice == st, { c.stepChoice = st }) }
+                    }
                     Text(S(R.string.listen_mode), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
                     FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                         ListenMode.entries.forEach { m -> AntFilterChip(m.label, c.mode == m, { c.chooseMode(m) }) }
                     }
+                }
+            }
+        }
+        if (tab == ToolTab.Main) {
+            SectionCard {
+                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                     Text(S(R.string.listen_presets), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
+                    // One tab per group; stations the radio cannot tune are left out.
+                    val range = d?.let { it.kind.minHz(it.usb?.productName)..it.kind.maxHz() }
+                    val all = presets().filter { range == null || it.hz in range }
+                    val bands = ListenBand.entries.filter { b -> all.any { it.band == b } }
+                    val band = if (c.stationBand in bands) c.stationBand else bands.firstOrNull()
+                    androidx.compose.foundation.lazy.LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        items(bands.size) { i -> val b = bands[i]; AntFilterChip(S(b.label), b == band, { c.stationBand = b }) }
+                    }
                     FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                        presets().forEach { p -> AntFilterChip("${p.label} · ${"%.3f".format(Locale.getDefault(), p.hz / 1e6)}", c.frequencyHz == p.hz && c.mode == p.mode, { c.preset(p) }) }
+                        all.filter { it.band == band }.forEach { p ->
+                            AntFilterChip("${p.label} · ${"%.3f".format(Locale.getDefault(), p.hz / 1e6)}", c.frequencyHz == p.hz && c.mode == p.mode, { c.preset(p) })
+                        }
                     }
                 }
             }
@@ -291,18 +442,40 @@ private fun DialButton(icon: String, onClick: () -> Unit) {
     }
 }
 
-/** The spectrum of the window, with the tuned channel marked; a tap or a drag tunes. */
+/** The spectrum shown (all the window, or part of it when zoomed in), with the channel marked; a tap or a drag tunes, a pinch zooms. */
 @Composable
 private fun SpectrumPicker(c: ListenController) {
     val db = c.spectrum
     val accent = AntTheme.accent.accent
     val grid = cs.outlineVariant
-    val off = c.frequencyHz - c.centerHz
+    val span = c.viewSpanHz.toFloat()
+    // Where the channel is in the frame drawn, which was cut around frameOffsetHz.
+    val off = c.frequencyHz - c.centerHz - (if (c.running) c.frameOffsetHz else c.viewOffsetHz())
     val bw = c.mode.bandwidthHz
+    var pinch by remember { mutableFloatStateOf(1f) }
     Canvas(
         Modifier.fillMaxWidth().height(160.dp).clip(RoundedCornerShape(16.dp)).background(cs.surfaceContainerHigh)
             .pointerInput(Unit) { detectTapGestures { p -> c.tuneFraction(p.x / size.width) } }
-            .pointerInput(Unit) { detectHorizontalDragGestures { change, _ -> c.tuneFraction(change.position.x / size.width) } },
+            .pointerInput(Unit) {
+                // One finger tunes, two fingers zoom: each doubling of the pinch is one zoom step.
+                awaitEachGesture {
+                    awaitFirstDown(requireUnconsumed = false)
+                    pinch = 1f
+                    do {
+                        val event = awaitPointerEvent()
+                        val pressed = event.changes.filter { it.pressed }
+                        if (pressed.size >= 2) {
+                            pinch *= event.calculateZoom()
+                            if (pinch > 1.6f) { c.chooseZoom(c.zoom * 2); pinch = 1f }
+                            if (pinch < 0.62f) { c.chooseZoom(c.zoom / 2); pinch = 1f }
+                            event.changes.forEach { it.consume() }
+                        } else if (pressed.size == 1 && pressed[0].positionChanged()) {
+                            c.tuneFraction(pressed[0].position.x / size.width)
+                            pressed[0].consume()
+                        }
+                    } while (event.changes.any { it.pressed })
+                }
+            },
     ) {
         val minDb = -100f
         val maxDb = -10f
@@ -321,8 +494,8 @@ private fun SpectrumPicker(c: ListenController) {
             drawPath(line, accent, style = Stroke(2f))
         }
         // The channel: its width as a band, its middle as a line.
-        val x = size.width * (0.5f + off.toFloat() / ListenReceiver.SAMPLE_RATE)
-        val w = size.width * bw / ListenReceiver.SAMPLE_RATE
+        val x = size.width * (0.5f + off.toFloat() / span)
+        val w = size.width * bw / span
         drawRect(accent.copy(alpha = 0.18f), Offset(x - w / 2, 0f), Size(w.coerceAtLeast(3f), size.height))
         drawLine(accent, Offset(x, 0f), Offset(x, size.height), 3f)
     }

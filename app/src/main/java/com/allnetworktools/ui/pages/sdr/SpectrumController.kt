@@ -49,6 +49,18 @@ class SpectrumController(private val repo: SdrRepository, private val scope: Cor
         get() = gain.amp == true
         set(v) { gain.amp = v }
     var peakHold by mutableStateOf(false)
+    /** How much of the span is shown, around its centre: 1 for all of it, up to [MAX_ZOOM]. */
+    var zoom by mutableIntStateOf(1)
+        private set
+    @Volatile private var wantZoom = 1
+
+    fun chooseZoom(z: Int) {
+        val v = z.coerceIn(1, MAX_ZOOM)
+        if (v == zoom) return
+        zoom = v
+        wantZoom = v
+        hold = null
+    }
 
     var running by mutableStateOf(false)
         private set
@@ -127,18 +139,21 @@ class SpectrumController(private val repo: SdrRepository, private val scope: Cor
         val free = ArrayBlockingQueue<ByteArray>(POOL)
         val full = ArrayBlockingQueue<Pair<ByteArray, Int>>(POOL)
         repeat(POOL) { free.add(ByteArray(131072)) }
-        val analyzer = SpectrumAnalyzer(FFT)
+        var analyzer = SpectrumAnalyzer(FFT)
         dspRunning = true
         dsp = Thread({
             var last = System.nanoTime()
             while (dspRunning) {
                 val (buf, len) = full.poll(200, TimeUnit.MILLISECONDS) ?: continue
+                // Zoomed in, a longer FFT keeps FFT points across the narrower view.
+                val z = wantZoom
+                if (analyzer.size != FFT * z) analyzer = SpectrumAnalyzer(FFT * z)
                 analyzer.accumulate(buf, len)
                 free.offer(buf)
                 val now = System.nanoTime()
                 if (now - last >= FRAME_NS) {
                     last = now
-                    analyzer.frame()?.let(::publish)
+                    analyzer.frame()?.let { f -> publish(if (f.size == FFT) f else f.copyOfRange((f.size - FFT) / 2, (f.size + FFT) / 2)) }
                 }
             }
         }, "sdr-spectrum").apply { start() }
@@ -191,6 +206,8 @@ class SpectrumController(private val repo: SdrRepository, private val scope: Cor
 
     companion object {
         const val FFT = 1024
+        const val MAX_ZOOM = 16
+        val Zooms = listOf(1, 2, 4, 8, 16)
         const val WIDTH = 512
         const val HEIGHT = 160
         private const val POOL = 16

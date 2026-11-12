@@ -2675,4 +2675,14 @@
     <string name="tool_tab_list">"Liste"</string>
     <string name="tool_tab_reception">"Empfang"</string>
     <string name="tool_tab_settings">"Einstellungen"</string>
+    <string name="listen_cat_ham">"Amateurfunk"</string>
+    <string name="listen_cat_broadcast">"Rundfunk"</string>
+    <string name="listen_cat_air_sea">"Luft &amp; See"</string>
+    <string name="listen_cat_utility">"Alltag"</string>
+    <string name="listen_cat_space">"Weltraum"</string>
+    <string name="listen_mw">"MW"</string>
+    <string name="listen_zoom">"Zoom"</string>
+    <string name="listen_pinch_hint">"Mit zwei Fingern auf- oder zuziehen zum Zoomen."</string>
+    <string name="listen_step">"Schritt"</string>
+    <string name="listen_step_auto">"Auto (%1$s)"</string>
 </resources>

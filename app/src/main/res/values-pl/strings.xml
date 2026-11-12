@@ -2813,4 +2813,14 @@
     <string name="tool_tab_list">"Lista"</string>
     <string name="tool_tab_reception">"Odbiór"</string>
     <string name="tool_tab_settings">"Ustawienia"</string>
+    <string name="listen_cat_ham">"Krótkofalowcy"</string>
+    <string name="listen_cat_broadcast">"Radiofonia"</string>
+    <string name="listen_cat_air_sea">"Lotnictwo i morze"</string>
+    <string name="listen_cat_utility">"Użytkowe"</string>
+    <string name="listen_cat_space">"Kosmos"</string>
+    <string name="listen_mw">"AM fale średnie"</string>
+    <string name="listen_zoom">"Powiększenie"</string>
+    <string name="listen_pinch_hint">"Zsuń lub rozsuń dwa palce, aby przybliżyć lub oddalić."</string>
+    <string name="listen_step">"Krok"</string>
+    <string name="listen_step_auto">"Auto (%1$s)"</string>
 </resources>

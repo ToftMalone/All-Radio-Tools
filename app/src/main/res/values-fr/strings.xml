@@ -2956,4 +2956,14 @@
     <string name="tool_tab_list">"Liste"</string>
     <string name="tool_tab_reception">"Réception"</string>
     <string name="tool_tab_settings">"Réglages"</string>
+    <string name="listen_cat_ham">"Radioamateur"</string>
+    <string name="listen_cat_broadcast">"Radiodiffusion"</string>
+    <string name="listen_cat_air_sea">"Air et mer"</string>
+    <string name="listen_cat_utility">"Utilitaires"</string>
+    <string name="listen_cat_space">"Espace"</string>
+    <string name="listen_mw">"PO"</string>
+    <string name="listen_zoom">"Zoom"</string>
+    <string name="listen_pinch_hint">"Pincez à deux doigts pour zoomer ou dézoomer."</string>
+    <string name="listen_step">"Pas"</string>
+    <string name="listen_step_auto">"Auto (%1$s)"</string>
 </resources>

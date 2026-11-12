@@ -127,4 +127,26 @@ class ListenTest {
         // 100/128 of full scale is -2.1 dB.
         assertEquals(-2.1, a.levelDb, 1.0)
     }
+
+    /** Zoomed in, the frame is the 1024 points of a longer FFT around the view, kept inside the window. */
+    @Test fun zoomCutsTheViewOutOfALongerFft() {
+        val z = 8
+        val frame = FloatArray(1024 * z) { it.toFloat() }
+        val mid = com.allnetworktools.ui.pages.sdr.ListenController.cutView(frame, z, 0)
+        assertEquals(1024, mid.size)
+        assertEquals((frame.size / 2 - 512).toFloat(), mid[0])
+        // 250 kHz to the right of the centre is 1024 points further on in a 2 MHz FFT of 8192 points.
+        val right = com.allnetworktools.ui.pages.sdr.ListenController.cutView(frame, z, 250_000)
+        assertEquals((frame.size / 2 - 512 + 1024).toFloat(), right[0])
+        // Past the edge, the view stops at the last points.
+        val edge = com.allnetworktools.ui.pages.sdr.ListenController.cutView(frame, z, 2_000_000)
+        assertEquals((frame.size - 1024).toFloat(), edge[0])
+        assertTrue(com.allnetworktools.ui.pages.sdr.ListenController.cutView(frame, 1, 0) === frame)
+    }
+
+    /** The frequency is written down to 100 Hz, for radio amateurs tuning SSB. */
+    @Test fun frequencyShowsHundredsOfHertz() {
+        assertEquals("14.2001", com.allnetworktools.ui.pages.sdr.ListenController.mhz(14_200_100L))
+        assertEquals("446.0063", com.allnetworktools.ui.pages.sdr.ListenController.mhz(446_006_250L))
+    }
 }

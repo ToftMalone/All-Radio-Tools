@@ -2813,4 +2813,14 @@
     <string name="tool_tab_list">"Seznam"</string>
     <string name="tool_tab_reception">"Příjem"</string>
     <string name="tool_tab_settings">"Nastavení"</string>
+    <string name="listen_cat_ham">"Radioamatéři"</string>
+    <string name="listen_cat_broadcast">"Rozhlas"</string>
+    <string name="listen_cat_air_sea">"Letectví a moře"</string>
+    <string name="listen_cat_utility">"Užitkové"</string>
+    <string name="listen_cat_space">"Vesmír"</string>
+    <string name="listen_mw">"SV"</string>
+    <string name="listen_zoom">"Přiblížení"</string>
+    <string name="listen_pinch_hint">"Roztažením nebo stažením dvou prstů přiblížíte nebo oddálíte."</string>
+    <string name="listen_step">"Krok"</string>
+    <string name="listen_step_auto">"Auto (%1$s)"</string>
 </resources>

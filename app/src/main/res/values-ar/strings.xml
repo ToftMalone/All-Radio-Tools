@@ -2951,4 +2951,14 @@
     <string name="tool_tab_list">"القائمة"</string>
     <string name="tool_tab_reception">"الاستقبال"</string>
     <string name="tool_tab_settings">"الإعدادات"</string>
+    <string name="listen_cat_ham">"هواة الراديو"</string>
+    <string name="listen_cat_broadcast">"البث الإذاعي"</string>
+    <string name="listen_cat_air_sea">"الجو والبحر"</string>
+    <string name="listen_cat_utility">"خدمات"</string>
+    <string name="listen_cat_space">"الفضاء"</string>
+    <string name="listen_mw">"الموجة المتوسطة"</string>
+    <string name="listen_zoom">"تكبير"</string>
+    <string name="listen_pinch_hint">"قرّب إصبعين أو باعد بينهما للتكبير أو التصغير."</string>
+    <string name="listen_step">"الخطوة"</string>
+    <string name="listen_step_auto">"تلقائي (%1$s)"</string>
 </resources>

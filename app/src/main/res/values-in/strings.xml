@@ -2606,4 +2606,14 @@
     <string name="tool_tab_list">"Daftar"</string>
     <string name="tool_tab_reception">"Penerimaan"</string>
     <string name="tool_tab_settings">"Setelan"</string>
+    <string name="listen_cat_ham">"Radio amatir"</string>
+    <string name="listen_cat_broadcast">"Siaran"</string>
+    <string name="listen_cat_air_sea">"Udara &amp; laut"</string>
+    <string name="listen_cat_utility">"Utilitas"</string>
+    <string name="listen_cat_space">"Antariksa"</string>
+    <string name="listen_mw">"MW"</string>
+    <string name="listen_zoom">"Zoom"</string>
+    <string name="listen_pinch_hint">"Cubit dengan dua jari untuk memperbesar atau memperkecil."</string>
+    <string name="listen_step">"Langkah"</string>
+    <string name="listen_step_auto">"Otomatis (%1$s)"</string>
 </resources>
