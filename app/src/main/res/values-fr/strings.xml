@@ -3014,4 +3014,14 @@
     <string name="aprs_beacon_off">"Désactivée"</string>
     <string name="aprs_beacon_every">"Toutes les %1$d min"</string>
     <string name="aprs_beacon_last">"Dernière balise à %1$s"</string>
+    <string name="mesh_node_title">"Agir comme un nœud Meshtastic"</string>
+    <string name="mesh_node_hint">"La radio rejoint le maillage en tant que %1$s sur %2$s MHz, sur le canal LongFast par défaut : elle s\'annonce au démarrage puis toutes les trois heures, et envoie la position du téléphone."</string>
+    <string name="mesh_node_name">"Nom du nœud (%1$s)"</string>
+    <string name="mesh_node_every">"Position toutes les"</string>
+    <string name="mesh_node_precision">"Précision de la position"</string>
+    <string name="mesh_node_exact">"Exacte"</string>
+    <string name="mesh_node_no_position">"Pas de position"</string>
+    <string name="mesh_node_start">"Démarrer le nœud"</string>
+    <string name="mesh_node_stop">"Arrêter le nœud"</string>
+    <string name="mesh_node_sent">"%1$d paquets envoyés, le dernier à %2$s"</string>
 </resources>

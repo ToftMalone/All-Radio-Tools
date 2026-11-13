@@ -2940,4 +2940,14 @@
     <string name="aprs_beacon_off">"Off"</string>
     <string name="aprs_beacon_every">"Every %1$d min"</string>
     <string name="aprs_beacon_last">"Last beacon at %1$s"</string>
+    <string name="mesh_node_title">"Act as a Meshtastic node"</string>
+    <string name="mesh_node_hint">"The radio joins the mesh as %1$s on %2$s MHz, on the default LongFast channel: it announces itself when started and every three hours, and sends the phone\'s position."</string>
+    <string name="mesh_node_name">"Node name (%1$s)"</string>
+    <string name="mesh_node_every">"Position every"</string>
+    <string name="mesh_node_precision">"Position precision"</string>
+    <string name="mesh_node_exact">"Exact"</string>
+    <string name="mesh_node_no_position">"No position"</string>
+    <string name="mesh_node_start">"Start the node"</string>
+    <string name="mesh_node_stop">"Stop the node"</string>
+    <string name="mesh_node_sent">"%1$d packets sent, the last at %2$s"</string>
 </resources>
