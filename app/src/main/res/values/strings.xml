@@ -1508,9 +1508,9 @@
     <string name="listening_3">"Listening"</string>
     <string name="receiver">"Receiver"</string>
     <string name="hardware">"Hardware"</string>
-    <string name="receive_only_3">"Receive only"</string>
+    <string name="receive_only_3">"Receive; transmit with a HackRF"</string>
     <string name="the_hackrf_only_receives_while_a">"The radio only receives while a tool is running, and stops when you leave the SDR tab. "</string>
-    <string name="the_app_never_transmits_decoding_is">"The app never transmits. Decoding is done by the app, on the phone."</string>
+    <string name="the_app_never_transmits_decoding_is">"The app only transmits when you ask it to, with a HackRF: talking in Listen, your APRS beacon, a picture in SSTV, the Meshtastic node. Decoding is done by the app, on the phone."</string>
     <string name="lna_gain_db">"LNA gain (dB)"</string>
     <string name="vga_gain_db">"VGA gain (dB)"</string>
     <string name="preamplifier">"Preamplifier"</string>
@@ -2555,7 +2555,7 @@
     <string name="mesh_channels_note">"Channels you add are kept for this session only, never saved."</string>
     <string name="meshtastic_none_yet">"No node heard yet"</string>
     <string name="meshtastic_none_yet_body">"Meshtastic nodes speak every few minutes: position, telemetry, name. Leave the reception running, the antenna clear."</string>
-    <string name="meshtastic_how_it_works">"Meshtastic is an open mesh network of small LoRa radios that relay text messages, positions and telemetry without any phone network. The app runs a software LoRa receiver for each preset (LongFast, MediumFast, ShortFast, LongSlow, Narrow…) on the European channels: 869.525 MHz and its neighbours, or the 433 MHz slots. The packet header (sender, recipient, hops) is always in the clear; the content is opened only on channels anyone can read: the default key every node ships with, and channels you add with their key. Direct messages are encrypted end to end and stay so. Receive only."</string>
+    <string name="meshtastic_how_it_works">"Meshtastic is an open mesh network of small LoRa radios that relay text messages, positions and telemetry without any phone network. The app runs a software LoRa receiver for each preset (LongFast, MediumFast, ShortFast, LongSlow, Narrow…) on the European channels: 869.525 MHz and its neighbours, or the 433 MHz slots. The packet header (sender, recipient, hops) is always in the clear; the content is opened only on channels anyone can read: the default key every node ships with, and channels you add with their key. Direct messages are encrypted end to end and stay so."</string>
     <string name="meshtastic_band_868">"868 MHz (EU)"</string>
     <string name="meshtastic_band_433">"433 MHz (EU)"</string>
     <string name="meshtastic_default_channels">"Default key (LongFast…)"</string>
@@ -2629,7 +2629,7 @@
     <string name="sstv_none_yet_body">"A picture starts with its VIS header and takes from half a minute to three minutes. The ISS sends SSTV during special events, announced by ARISS; between passes, nothing is heard."</string>
     <string name="sstv_iss">"ISS"</string>
     <string name="sstv_2m">"2 m SSTV"</string>
-    <string name="sstv_how_it_works">"Slow-scan television sends a still picture as audio tones (1500 Hz black, 2300 Hz white, 1200 Hz line syncs). The app receives narrowband FM, follows the carrier however the Doppler moves it, and decodes the audio: the VIS header names the mode (Robot 36 and 72, Martin M1 and M2, Scottie S1, S2 and DX, PD50, PD90, PD120 and PD180 as the ISS uses, Wraase SC2-180); without it, the line rhythm is enough. The slant of the sender\'s clock is measured and corrected. Pictures are kept for the session and can be saved as PNG. Receive only."</string>
+    <string name="sstv_how_it_works">"Slow-scan television sends a still picture as audio tones (1500 Hz black, 2300 Hz white, 1200 Hz line syncs). The app receives narrowband FM, follows the carrier however the Doppler moves it, and decodes the audio: the VIS header names the mode (Robot 36 and 72, Martin M1 and M2, Scottie S1, S2 and DX, PD50, PD90, PD120 and PD180 as the ISS uses, Wraase SC2-180); without it, the line rhythm is enough. The slant of the sender\'s clock is measured and corrected. Pictures are kept for the session and can be saved as PNG."</string>
     <string name="zigbee_title">"Zigbee / 802.15.4"</string>
     <string name="zigbee_subtitle">"Home automation and sensors at 2.4 GHz"</string>
     <string name="zigbee_line">"%1$d devices · %2$d frames"</string>
@@ -2950,4 +2950,11 @@
     <string name="mesh_node_start">"Start the node"</string>
     <string name="mesh_node_stop">"Stop the node"</string>
     <string name="mesh_node_sent">"%1$d packets sent, the last at %2$s"</string>
+    <string name="sstv_send_title">"Send a picture"</string>
+    <string name="sstv_send_pick">"Choose a photo"</string>
+    <string name="sstv_send_mode">"SSTV mode"</string>
+    <string name="sstv_send_go">"Send the picture"</string>
+    <string name="sstv_tx_note">"With a HackRF and an amateur licence, a picture from the phone can be sent from Settings, with your call sign written on it."</string>
+    <string name="mesh_tx_note">"With a HackRF, the radio can also join the mesh as a node, from Settings."</string>
+    <string name="listen_tx_note">"With a HackRF and an amateur licence, hold Talk to transmit the microphone on the amateur bands, in NFM, AM, USB or LSB."</string>
 </resources>

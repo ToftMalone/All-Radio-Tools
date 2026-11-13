@@ -180,7 +180,7 @@ fun MeshtasticTool(vm: MainViewModel) {
     val c = vm.tools.meshtastic
     val actions = LocalActions.current
     MeshScreen(
-        vm, c, "meshtastic", Sym.Hub, S(R.string.meshtastic_none_yet), S(R.string.meshtastic_none_yet_body), S(R.string.meshtastic_how_it_works),
+        vm, c, "meshtastic", Sym.Hub, S(R.string.meshtastic_none_yet), S(R.string.meshtastic_none_yet_body), S(R.string.meshtastic_how_it_works) + "\n\n" + S(R.string.mesh_tx_note),
         canStart = { c.bandKey != "free" || c.parsedHz() != null },
         cards = {
             val device by vm.sdrDevice.collectAsStateWithLifecycle()

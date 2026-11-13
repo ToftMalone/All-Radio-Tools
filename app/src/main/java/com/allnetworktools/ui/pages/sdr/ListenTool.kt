@@ -480,7 +480,7 @@ fun ListenTool(vm: MainViewModel) {
             SectionCard {
                 Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                     Symbol(Sym.Info, size = 22.dp, tint = AntTheme.accent.accent)
-                    Text(S(R.string.listen_how_it_works), style = rf(13, 18), color = cs.onSurfaceVariant)
+                    Text(S(R.string.listen_how_it_works) + "\n\n" + S(R.string.listen_tx_note), style = rf(13, 18), color = cs.onSurfaceVariant)
                 }
             }
         }

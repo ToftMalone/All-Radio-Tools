@@ -49,6 +49,9 @@ import com.allnetworktools.ui.tools.HeroCard
 import com.allnetworktools.ui.tools.HeroChip
 import com.allnetworktools.ui.tools.HostInputField
 import com.allnetworktools.ui.tools.StartButton
+import com.allnetworktools.ui.tools.ToolButton
+import com.allnetworktools.ui.tools.ToolButtons
+import com.allnetworktools.ui.tools.BtnKind
 import com.allnetworktools.ui.tools.ToolEmpty
 import com.allnetworktools.util.Export
 import com.allnetworktools.util.S
@@ -108,6 +111,71 @@ class SstvController(repo: SdrRepository, scope: CoroutineScope, onAcquire: () -
     }
 
     fun select(p: SstvPicture) { current = p }
+
+    // ---- sending a picture ----
+
+    /** Where and how a picture goes out: the SSTV calling frequencies. */
+    class SendChannel(val label: String, val hz: Long, val mode: com.allnetworktools.data.sdr.TxMode)
+
+    val sendChannels = listOf(
+        SendChannel("2 m FM · 144.500", 144_500_000L, com.allnetworktools.data.sdr.TxMode.Fm),
+        SendChannel("20 m · 14.230 USB", 14_230_000L, com.allnetworktools.data.sdr.TxMode.Usb),
+        SendChannel("40 m · 7.171 LSB", 7_171_000L, com.allnetworktools.data.sdr.TxMode.Lsb),
+        SendChannel("80 m · 3.735 LSB", 3_735_000L, com.allnetworktools.data.sdr.TxMode.Lsb),
+    )
+    var sendChannel by mutableStateOf(sendChannels[0])
+    var sendMode by mutableStateOf("Robot 36")
+    /** The picture chosen, as picked (any size). */
+    var photo by mutableStateOf<android.graphics.Bitmap?>(null)
+
+    fun sendEmission(ch: SendChannel = sendChannel): com.allnetworktools.data.sdr.Emission {
+        val (below, above) = when (ch.mode) {
+            com.allnetworktools.data.sdr.TxMode.Fm -> 6_000 to 6_000
+            com.allnetworktools.data.sdr.TxMode.Usb -> 0 to 3_000
+            com.allnetworktools.data.sdr.TxMode.Lsb -> 3_000 to 0
+            com.allnetworktools.data.sdr.TxMode.Am -> 3_000 to 3_000
+        }
+        return com.allnetworktools.data.sdr.Emission.around(ch.hz, below, above, com.allnetworktools.data.sdr.TxUse.Amateur)
+    }
+
+    /** Sends the chosen photo, with the call sign written on it, in [sendMode] on [sendChannel] (reception pauses). */
+    fun sendPicture(device: com.allnetworktools.data.sdr.SdrDevice?) {
+        val bmp = photo ?: return
+        val m = com.allnetworktools.data.sdr.Sstv.modes.first { it.name == sendMode }
+        val pixels = sstvPixels(bmp, m.width, m.height, com.allnetworktools.data.sdr.TxSettings.callsign)
+        val ch = sendChannel
+        val audio = com.allnetworktools.data.sdr.SstvEncoder(m, pixels, AUDIO_RATE)
+        val stream = com.allnetworktools.data.sdr.TxStream(com.allnetworktools.data.sdr.AudioModulator(audio, ch.mode, 3_000.0, voice = false), TX_RATE, TX_SHIFT.toDouble())
+        tx.send(device, this, sendEmission(ch), TX_RATE, ch.hz - TX_SHIFT, stream)
+    }
+
+    private companion object {
+        const val AUDIO_RATE = 48_000
+        const val TX_RATE = 2_400_000
+        const val TX_SHIFT = 300_000L
+    }
+}
+
+/** [src] scaled to cover [w]×[h], centre-cropped, with [label] (the call sign) written in the top left corner, as 0xRRGGBB. */
+internal fun sstvPixels(src: android.graphics.Bitmap, w: Int, h: Int, label: String): IntArray {
+    val scale = maxOf(w.toFloat() / src.width, h.toFloat() / src.height)
+    val out = android.graphics.Bitmap.createBitmap(w, h, android.graphics.Bitmap.Config.ARGB_8888)
+    val canvas = android.graphics.Canvas(out)
+    val dst = android.graphics.RectF((w - src.width * scale) / 2, (h - src.height * scale) / 2, (w + src.width * scale) / 2, (h + src.height * scale) / 2)
+    canvas.drawBitmap(src, null, dst, android.graphics.Paint(android.graphics.Paint.FILTER_BITMAP_FLAG))
+    if (label.isNotBlank()) {
+        val size = h / 9f
+        val text = android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG).apply { textSize = size; typeface = android.graphics.Typeface.DEFAULT_BOLD; color = android.graphics.Color.WHITE }
+        val back = android.graphics.Paint().apply { color = android.graphics.Color.argb(170, 0, 0, 0) }
+        val tw = text.measureText(label)
+        canvas.drawRect(0f, 0f, tw + size * 0.8f, size * 1.4f, back)
+        canvas.drawText(label, size * 0.4f, size * 1.05f, text)
+    }
+    val px = IntArray(w * h)
+    out.getPixels(px, 0, w, 0, 0, w, h)
+    for (i in px.indices) px[i] = px[i] and 0xFFFFFF
+    out.recycle()
+    return px
 }
 
 @Composable
@@ -170,6 +238,10 @@ fun SstvTool(vm: MainViewModel) {
                 }
             }
         }
+        if (tab == ToolTab.Settings && device?.kind == com.allnetworktools.data.sdr.SdrKind.HackRf) {
+            TxSettingsCard()
+            SendPictureCard(c, device)
+        }
         if (tab == ToolTab.Settings) {
             SectionCard {
                 Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
@@ -188,9 +260,60 @@ fun SstvTool(vm: MainViewModel) {
             SectionCard {
                 Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                     Symbol(Sym.Info, size = 22.dp, tint = AntTheme.accent.accent)
-                    Text(S(R.string.sstv_how_it_works), style = rf(13, 18), color = cs.onSurfaceVariant)
+                    Text(S(R.string.sstv_how_it_works) + "\n\n" + S(R.string.sstv_tx_note), style = rf(13, 18), color = cs.onSurfaceVariant)
                 }
             }
+        }
+    }
+}
+
+/** Sends a photo from the phone as SSTV, with the call sign written on it. */
+@Composable
+private fun SendPictureCard(c: SstvController, device: com.allnetworktools.data.sdr.SdrDevice?) {
+    val context = androidx.compose.ui.platform.LocalContext.current
+    val pick = androidx.activity.compose.rememberLauncherForActivityResult(androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia()) { uri ->
+        if (uri != null) c.photo = runCatching {
+            val src = android.graphics.ImageDecoder.createSource(context.contentResolver, uri)
+            android.graphics.ImageDecoder.decodeBitmap(src) { d, info, _ ->
+                // Small enough to work with: the largest mode is 640×496.
+                val s = maxOf(1, minOf(info.size.width / 640, info.size.height / 496))
+                d.setTargetSize(info.size.width / s, info.size.height / s)
+                d.allocator = android.graphics.ImageDecoder.ALLOCATOR_SOFTWARE
+            }
+        }.getOrNull()
+    }
+    val why = com.allnetworktools.data.sdr.TxPolicy.refuse(c.sendEmission())
+    val mode = com.allnetworktools.data.sdr.Sstv.modes.first { it.name == c.sendMode }
+    SectionCard {
+        Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+            Text(S(R.string.sstv_send_title), style = rf(15, 20, 600))
+            val preview = remember(c.photo, c.sendMode, com.allnetworktools.data.sdr.TxSettings.callsign) {
+                c.photo?.let { b ->
+                    val px = sstvPixels(b, mode.width, mode.height, com.allnetworktools.data.sdr.TxSettings.callsign)
+                    android.graphics.Bitmap.createBitmap(IntArray(px.size) { px[it] or (0xFF shl 24) }, mode.width, mode.height, android.graphics.Bitmap.Config.ARGB_8888).asImageBitmap()
+                }
+            }
+            if (preview != null) {
+                androidx.compose.foundation.Image(preview, null, Modifier.fillMaxWidth().aspectRatio(mode.width.toFloat() / mode.height).clip(RoundedCornerShape(16.dp)))
+            }
+            ToolButtons(ToolButton(S(R.string.sstv_send_pick), Sym.PhotoCamera, BtnKind.Outline) {
+                pick.launch(androidx.activity.result.PickVisualMediaRequest(androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia.ImageOnly))
+            })
+            Text(S(R.string.sstv_send_mode), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
+            FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                com.allnetworktools.data.sdr.SstvEncoder.SendModes.forEach { n ->
+                    val m = com.allnetworktools.data.sdr.Sstv.modes.first { it.name == n }
+                    AntFilterChip("$n · ${Math.round(m.totalLines * m.lineMs / 1000)} s", c.sendMode == n, { c.sendMode = n })
+                }
+            }
+            Text(S(R.string.frequency), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
+            FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                c.sendChannels.forEach { ch -> AntFilterChip(ch.label, c.sendChannel == ch, { c.sendChannel = ch }) }
+            }
+            if (c.tx.transmitting) StartButton(S(R.string.stop), Sym.Stop) { c.tx.stop() }
+            else StartButton(S(R.string.sstv_send_go), Sym.Antenna, enabled = why == null && c.photo != null) { c.sendPicture(device) }
+            if (why != null) Text(why, style = rf(12, 16), color = cs.onSurfaceVariant)
+            TxStatus(c.tx)
         }
     }
 }

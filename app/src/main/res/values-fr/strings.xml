@@ -1507,9 +1507,9 @@
     <string name="listening_3">"En écoute"</string>
     <string name="receiver">"Récepteur"</string>
     <string name="hardware">"Matériel"</string>
-    <string name="receive_only_3">"Réception uniquement"</string>
+    <string name="receive_only_3">"Réception ; émission avec un HackRF"</string>
     <string name="the_hackrf_only_receives_while_a">"La radio ne reçoit que pendant qu\'un outil tourne, et s\'arrête quand vous quittez l\'onglet SDR. "</string>
-    <string name="the_app_never_transmits_decoding_is">"L'application n'émet jamais. Le décodage est fait par l'application, sur le téléphone."</string>
+    <string name="the_app_never_transmits_decoding_is">"L\'app n\'émet que lorsque vous le demandez, avec un HackRF : parler dans l\'Écoute, votre balise APRS, une image en SSTV, le nœud Meshtastic. Le décodage est fait par l\'app, sur le téléphone."</string>
     <string name="lna_gain_db">"Gain LNA (dB)"</string>
     <string name="vga_gain_db">"Gain VGA (dB)"</string>
     <string name="preamplifier">"Préamplificateur"</string>
@@ -2616,7 +2616,7 @@
     <string name="mesh_channels_note">"Les canaux ajoutés ne sont gardés que pour cette session, jamais enregistrés."</string>
     <string name="meshtastic_none_yet">"Aucun nœud entendu pour l\'instant"</string>
     <string name="meshtastic_none_yet_body">"Les nœuds Meshtastic parlent toutes les quelques minutes : position, télémétrie, nom. Laissez la réception tourner, l\'antenne dégagée."</string>
-    <string name="meshtastic_how_it_works">"Meshtastic est un réseau maillé ouvert de petites radios LoRa qui relaient messages, positions et télémétrie sans réseau mobile. L\'app fait tourner un récepteur LoRa logiciel par préréglage (LongFast, MediumFast, ShortFast, LongSlow, Narrow…) sur les canaux européens : 869,525 MHz et ses voisins, ou les créneaux 433 MHz. L\'en-tête des paquets (expéditeur, destinataire, sauts) est toujours en clair ; le contenu n\'est ouvert que sur les canaux lisibles par tous : la clé par défaut que chaque nœud a d\'origine, et les canaux que vous ajoutez avec leur clé. Les messages privés sont chiffrés de bout en bout et le restent. Réception seule."</string>
+    <string name="meshtastic_how_it_works">"Meshtastic est un réseau maillé ouvert de petites radios LoRa qui relaient messages, positions et télémétrie sans réseau mobile. L\'app fait tourner un récepteur LoRa logiciel par préréglage (LongFast, MediumFast, ShortFast, LongSlow, Narrow…) sur les canaux européens : 869,525 MHz et ses voisins, ou les créneaux 433 MHz. L\'en-tête des paquets (expéditeur, destinataire, sauts) est toujours en clair ; le contenu n\'est ouvert que sur les canaux lisibles par tous : la clé par défaut que chaque nœud a d\'origine, et les canaux que vous ajoutez avec leur clé. Les messages privés sont chiffrés de bout en bout et le restent."</string>
     <string name="meshtastic_band_868">"868 MHz (UE)"</string>
     <string name="meshtastic_band_433">"433 MHz (UE)"</string>
     <string name="meshtastic_default_channels">"Clé par défaut (LongFast…)"</string>
@@ -2695,7 +2695,7 @@
     <string name="sstv_none_yet_body">"Une image commence par son en-tête VIS et dure d\'une demi-minute à trois minutes. L\'ISS envoie du SSTV lors d\'événements annoncés par l\'ARISS ; entre deux passages, on n\'entend rien."</string>
     <string name="sstv_iss">"ISS"</string>
     <string name="sstv_2m">"SSTV 2 m"</string>
-    <string name="sstv_how_it_works">"La télévision à balayage lent envoie une image fixe sous forme de tonalités audio (1500 Hz pour le noir, 2300 Hz pour le blanc, 1200 Hz pour les synchros de ligne). L\'app reçoit la FM bande étroite, suit la porteuse quel que soit le décalage Doppler, puis décode l\'audio : l\'en-tête VIS donne le mode (Robot 36 et 72, Martin M1 et M2, Scottie S1, S2 et DX, PD50, PD90, PD120 et PD180 comme l\'ISS, Wraase SC2-180) ; sans lui, le rythme des lignes suffit. L\'inclinaison due à l\'horloge de l\'émetteur est mesurée et corrigée. Les images sont gardées pour la session et peuvent être enregistrées en PNG. Réception seule."</string>
+    <string name="sstv_how_it_works">"La télévision à balayage lent envoie une image fixe sous forme de tonalités audio (1500 Hz pour le noir, 2300 Hz pour le blanc, 1200 Hz pour les synchros de ligne). L\'app reçoit la FM bande étroite, suit la porteuse quel que soit le décalage Doppler, puis décode l\'audio : l\'en-tête VIS donne le mode (Robot 36 et 72, Martin M1 et M2, Scottie S1, S2 et DX, PD50, PD90, PD120 et PD180 comme l\'ISS, Wraase SC2-180) ; sans lui, le rythme des lignes suffit. L\'inclinaison due à l\'horloge de l\'émetteur est mesurée et corrigée. Les images sont gardées pour la session et peuvent être enregistrées en PNG."</string>
     <string name="zigbee_title">"Zigbee / 802.15.4"</string>
     <string name="zigbee_subtitle">"Domotique et capteurs à 2,4 GHz"</string>
     <string name="zigbee_line">"%1$d appareils · %2$d trames"</string>
@@ -3024,4 +3024,11 @@
     <string name="mesh_node_start">"Démarrer le nœud"</string>
     <string name="mesh_node_stop">"Arrêter le nœud"</string>
     <string name="mesh_node_sent">"%1$d paquets envoyés, le dernier à %2$s"</string>
+    <string name="sstv_send_title">"Envoyer une image"</string>
+    <string name="sstv_send_pick">"Choisir une photo"</string>
+    <string name="sstv_send_mode">"Mode SSTV"</string>
+    <string name="sstv_send_go">"Envoyer l\'image"</string>
+    <string name="sstv_tx_note">"Avec un HackRF et une licence radioamateur, une photo du téléphone peut être envoyée depuis Réglages, avec votre indicatif écrit dessus."</string>
+    <string name="mesh_tx_note">"Avec un HackRF, la radio peut aussi rejoindre le maillage comme un nœud, depuis Réglages."</string>
+    <string name="listen_tx_note">"Avec un HackRF et une licence radioamateur, maintenez Parler pour émettre le micro sur les bandes radioamateur, en NFM, AM, USB ou LSB."</string>
 </resources>
