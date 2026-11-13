@@ -2837,4 +2837,6 @@
     <string name="sdr_converter_none">"Brak"</string>
     <string name="sdr_converter_mhz">"Przesunięcie konwertera (MHz)"</string>
     <string name="sdr_converter_hint">"Dla konwertera przed radiem: o ile zmienia częstotliwość (125 dla Ham It Up, ujemne dla konwertera w dół). Narzędzia nadal pokazują prawdziwą częstotliwość."</string>
+    <string name="sdr_categories">"Kategorie"</string>
+    <string name="sdr_all_categories">"Wszystkie kategorie"</string>
 </resources>

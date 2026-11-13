@@ -2980,4 +2980,6 @@
     <string name="sdr_converter_none">"Aucun"</string>
     <string name="sdr_converter_mhz">"Décalage du convertisseur (MHz)"</string>
     <string name="sdr_converter_hint">"Pour un convertisseur placé devant la radio : ce qu\'il ajoute à la fréquence (125 pour un Ham It Up, négatif pour un convertisseur abaisseur). Les outils affichent toujours la vraie fréquence."</string>
+    <string name="sdr_categories">"Catégories"</string>
+    <string name="sdr_all_categories">"Toutes les catégories"</string>
 </resources>

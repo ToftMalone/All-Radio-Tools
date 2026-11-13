@@ -2630,4 +2630,6 @@
     <string name="sdr_converter_none">"无"</string>
     <string name="sdr_converter_mhz">"变频器偏移 (MHz)"</string>
     <string name="sdr_converter_hint">"用于接在接收机前的上/下变频器：它加到频率上的值（Ham It Up 为 125，下变频器为负值）。各工具仍显示真实频率。"</string>
+    <string name="sdr_categories">"类别"</string>
+    <string name="sdr_all_categories">"全部类别"</string>
 </resources>

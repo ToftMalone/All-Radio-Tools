@@ -2837,4 +2837,6 @@
     <string name="sdr_converter_none">"Žádný"</string>
     <string name="sdr_converter_mhz">"Posun konvertoru (MHz)"</string>
     <string name="sdr_converter_hint">"Pro konvertor před rádiem: o kolik posouvá kmitočet (125 pro Ham It Up, záporně pro konvertor dolů). Nástroje dál ukazují skutečný kmitočet."</string>
+    <string name="sdr_categories">"Kategorie"</string>
+    <string name="sdr_all_categories">"Všechny kategorie"</string>
 </resources>

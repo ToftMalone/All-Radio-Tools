@@ -2699,4 +2699,6 @@
     <string name="sdr_converter_none">"कोई नहीं"</string>
     <string name="sdr_converter_mhz">"कनवर्टर ऑफ़सेट (MHz)"</string>
     <string name="sdr_converter_hint">"रेडियो के आगे लगे अप- या डाउन-कनवर्टर के लिए: यह फ़्रीक्वेंसी में कितना जोड़ता है (Ham It Up के लिए 125, डाउन-कनवर्टर के लिए ऋणात्मक)। टूल असली फ़्रीक्वेंसी ही दिखाते हैं।"</string>
+    <string name="sdr_categories">"श्रेणियाँ"</string>
+    <string name="sdr_all_categories">"सभी श्रेणियाँ"</string>
 </resources>

@@ -46,13 +46,13 @@ private data class ToolEntry(val tool: Tool, val title: String, val subtitle: St
 /** SDR tools whose receivers are still being reviewed: shown greyed out, not openable. */
 private val comingSoon = emptySet<Tool>()
 
-private data class ToolGroup(val title: String, val items: List<ToolEntry>)
+private data class ToolGroup(val title: String, val items: List<ToolEntry>, val icon: String? = null)
 
-private fun sdrGroup(title: Int, vararg items: ToolEntry) =
-    ToolGroup(S(title), items.sortedWith(compareBy(java.text.Collator.getInstance()) { it.title }))
+private fun sdrGroup(title: Int, icon: String, vararg items: ToolEntry) =
+    ToolGroup(S(title), items.sortedWith(compareBy(java.text.Collator.getInstance()) { it.title }), icon)
 
-/** Networks whose tools are sorted in category tabs; the others keep one list. */
-private val tabbed = setOf(Network.Wifi, Network.Bluetooth, Network.Sdr)
+/** Networks whose tools are sorted in category tabs; the others keep one list. The SDR shows a card per category. */
+private val tabbed = setOf(Network.Wifi, Network.Bluetooth)
 
 /** The category tab chosen on each network, for this run of the app only. */
 private object CategoryMemory {
@@ -142,11 +142,11 @@ private fun groups(net: Network, connectedDevice: String?, servingLabel: String?
     Network.Sdr -> listOf(
         // One category per kind of use; inside each, named after the protocol, in alphabetical order (in the phone's language).
         sdrGroup(
-            R.string.sdr_cat_general,
+            R.string.sdr_cat_general, Sym.Headphones,
             ToolEntry(Tool.Listen, S(R.string.listen_title), S(R.string.listen_subtitle)),
         ),
         sdrGroup(
-            R.string.aviation,
+            R.string.aviation, Sym.Flight,
             ToolEntry(Tool.Adsb, "ADS-B", S(R.string.map_of_aircraft_on_1090_mhz)),
             ToolEntry(Tool.Acars, "ACARS", S(R.string.airliner_messaging_131_mhz)),
             ToolEntry(Tool.Vdl2, "VDL Mode 2", S(R.string.vdl2_subtitle)),
@@ -154,13 +154,13 @@ private fun groups(net: Network, connectedDevice: String?, servingLabel: String?
             ToolEntry(Tool.Fpv, S(R.string.drones), S(R.string.analog_fpv_dji_and_rc_links)),
         ),
         sdrGroup(
-            R.string.sdr_cat_sea,
+            R.string.sdr_cat_sea, Sym.Boat,
             ToolEntry(Tool.Ais, "AIS", S(R.string.map_of_ships_on_162_mhz)),
             ToolEntry(Tool.Dsc, "DSC", S(R.string.dsc_subtitle)),
             ToolEntry(Tool.Sarsat, S(R.string.sarsat_title), S(R.string.sarsat_subtitle)),
         ),
         sdrGroup(
-            R.string.sdr_cat_mesh,
+            R.string.sdr_cat_mesh, Sym.Hub,
             ToolEntry(Tool.Meshtastic, "Meshtastic", S(R.string.meshtastic_subtitle)),
             ToolEntry(Tool.MeshCore, "MeshCore", S(R.string.meshcore_subtitle)),
             ToolEntry(Tool.LoraAprs, "LoRa APRS", S(R.string.lora_aprs_subtitle)),
@@ -168,14 +168,14 @@ private fun groups(net: Network, connectedDevice: String?, servingLabel: String?
             ToolEntry(Tool.Aprs, "APRS", S(R.string.beacons_on_144_800_mhz)),
         ),
         sdrGroup(
-            R.string.sdr_cat_space,
+            R.string.sdr_cat_space, Sym.SatelliteAlt,
             ToolEntry(Tool.Meteor, "Meteor-M", S(R.string.lrpt_images_on_137_mhz)),
             ToolEntry(Tool.Sstv, "SSTV", S(R.string.sstv_subtitle)),
             ToolEntry(Tool.Cubesat, "CubeSat", S(R.string.cubesat_subtitle)),
             ToolEntry(Tool.Sonde, S(R.string.radiosondes), S(R.string.rs41_m10_and_m20_sondes_around)),
         ),
         sdrGroup(
-            R.string.sdr_cat_home,
+            R.string.sdr_cat_home, Sym.Thermostat,
             ToolEntry(Tool.Ism, "ISM", S(R.string.ism_subtitle)),
             ToolEntry(Tool.Tpms, "TPMS", S(R.string.tyre_pressure_sensors_433_mhz)),
             ToolEntry(Tool.Wmbus, "Wireless M-Bus", S(R.string.wmbus_subtitle)),
@@ -184,7 +184,7 @@ private fun groups(net: Network, connectedDevice: String?, servingLabel: String?
             ToolEntry(Tool.AntPlus, "ANT+", S(R.string.ant_subtitle)),
         ),
         sdrGroup(
-            R.string.sdr_cat_voice,
+            R.string.sdr_cat_voice, Sym.SettingsInputAntenna,
             ToolEntry(Tool.Pmr, "PMR446", S(R.string.pmr_subtitle)),
             ToolEntry(Tool.Pocsag, "POCSAG", S(R.string.pagers_e_message_dapnet)),
             ToolEntry(Tool.Dect, "DECT", S(R.string.dect_subtitle)),
@@ -295,7 +295,39 @@ fun ToolsPage(net: Network, vm: MainViewModel) {
             }
             if (current == null) shownGroups else shownGroups.filter { it.title == current }
         } else shownGroups
-        visibleGroups.forEach { g ->
+        // SDR: one card per category; opening one lists its tools, and Back returns to the cards.
+        val sdrOpen = if (net == Network.Sdr) CategoryMemory.chosen[net]?.let { c -> shownGroups.firstOrNull { it.title == c } } else null
+        if (net == Network.Sdr && sdrOpen == null) {
+            SectionTitle(S(R.string.sdr_categories))
+            TileGrid(shownGroups) { g, mod ->
+                Column(
+                    mod.fadeUp(60).clip(RoundedCornerShape(24.dp)).background(cs.surfaceContainerLow)
+                        .clickable { CategoryMemory.chosen[net] = g.title }.padding(16.dp),
+                ) {
+                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.Top) {
+                        LeadingIcon(g.icon ?: Sym.Apps, cs.surfaceContainerHighest, acc.accent, shape = RoundedCornerShape(14.dp))
+                        Box(Modifier.clip(RoundedCornerShape(10.dp)).background(acc.container).padding(horizontal = 8.dp, vertical = 3.dp)) {
+                            Text(g.items.size.toString(), style = rf(12, 16, 600), color = acc.onContainer)
+                        }
+                    }
+                    Spacer(Modifier.weight(1f, fill = false).heightIn(min = 12.dp))
+                    Text(g.title, Modifier.padding(top = 12.dp), style = rf(15, 20, 600), maxLines = 2)
+                    Text(g.items.joinToString(", ") { it.title }, Modifier.padding(top = 2.dp), style = rf(12, 16), color = cs.onSurfaceVariant, maxLines = 3)
+                }
+            }
+            return@PageColumn
+        }
+        if (sdrOpen != null) {
+            androidx.activity.compose.BackHandler { CategoryMemory.chosen.remove(net) }
+            Row(
+                Modifier.clip(RoundedCornerShape(16.dp)).clickable { CategoryMemory.chosen.remove(net) }.padding(horizontal = 8.dp, vertical = 6.dp),
+                verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                com.allnetworktools.ui.components.Symbol(Sym.ArrowBack, size = 22.dp, tint = acc.accent)
+                Text(S(R.string.sdr_all_categories), style = rf(14, 20, 600), color = acc.accent)
+            }
+        }
+        (if (sdrOpen != null) listOf(sdrOpen) else visibleGroups).forEach { g ->
             SectionTitle(g.title)
             TileGrid(g.items) { e, mod ->
                 val note = if (e.tool in comingSoon) S(R.string.coming_soon) else internet?.why(e.tool)?.title

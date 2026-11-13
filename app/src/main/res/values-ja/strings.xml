@@ -2630,4 +2630,6 @@
     <string name="sdr_converter_none">"なし"</string>
     <string name="sdr_converter_mhz">"コンバーターのオフセット (MHz)"</string>
     <string name="sdr_converter_hint">"受信機の前に付けるアップ/ダウンコンバーター用：周波数に加える値 (Ham It Up は 125、ダウンコンバーターは負の値)。ツールは実際の周波数を表示し続けます。"</string>
+    <string name="sdr_categories">"カテゴリ"</string>
+    <string name="sdr_all_categories">"すべてのカテゴリ"</string>
 </resources>

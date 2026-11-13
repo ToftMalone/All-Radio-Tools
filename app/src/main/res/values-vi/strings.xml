@@ -2630,4 +2630,6 @@
     <string name="sdr_converter_none">"Không có"</string>
     <string name="sdr_converter_mhz">"Độ lệch bộ chuyển đổi (MHz)"</string>
     <string name="sdr_converter_hint">"Cho bộ chuyển đổi lên hoặc xuống đặt trước radio: lượng nó cộng vào tần số (125 cho Ham It Up, âm cho bộ chuyển đổi xuống). Các công cụ vẫn hiển thị tần số thật."</string>
+    <string name="sdr_categories">"Danh mục"</string>
+    <string name="sdr_all_categories">"Tất cả danh mục"</string>
 </resources>

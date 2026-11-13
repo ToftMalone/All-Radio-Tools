@@ -2630,4 +2630,6 @@
     <string name="sdr_converter_none">"Tidak ada"</string>
     <string name="sdr_converter_mhz">"Offset konverter (MHz)"</string>
     <string name="sdr_converter_hint">"Untuk konverter naik atau turun di depan radio: yang ditambahkannya ke frekuensi (125 untuk Ham It Up, negatif untuk konverter turun). Alat tetap menampilkan frekuensi sebenarnya."</string>
+    <string name="sdr_categories">"Kategori"</string>
+    <string name="sdr_all_categories">"Semua kategori"</string>
 </resources>

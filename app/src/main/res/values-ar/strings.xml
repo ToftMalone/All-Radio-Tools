@@ -2975,4 +2975,6 @@
     <string name="sdr_converter_none">"لا شيء"</string>
     <string name="sdr_converter_mhz">"إزاحة المحوّل (ميغاهرتز)"</string>
     <string name="sdr_converter_hint">"لمحوّل رافع أو خافض أمام الراديو: ما يضيفه إلى التردد (125 لـ Ham It Up، وقيمة سالبة للمحوّل الخافض). تبقى الأدوات تعرض التردد الحقيقي."</string>
+    <string name="sdr_categories">"الفئات"</string>
+    <string name="sdr_all_categories">"كل الفئات"</string>
 </resources>

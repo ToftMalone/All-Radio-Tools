@@ -2699,4 +2699,6 @@
     <string name="sdr_converter_none">"Yok"</string>
     <string name="sdr_converter_mhz">"Dönüştürücü kayması (MHz)"</string>
     <string name="sdr_converter_hint">"Radyonun önündeki yukarı veya aşağı dönüştürücü için: frekansa eklediği değer (Ham It Up için 125, aşağı dönüştürücü için negatif). Araçlar gerçek frekansı göstermeye devam eder."</string>
+    <string name="sdr_categories">"Kategoriler"</string>
+    <string name="sdr_all_categories">"Tüm kategoriler"</string>
 </resources>

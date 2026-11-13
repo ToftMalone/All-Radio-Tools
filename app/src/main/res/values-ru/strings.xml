@@ -2837,4 +2837,6 @@
     <string name="sdr_converter_none">"Нет"</string>
     <string name="sdr_converter_mhz">"Сдвиг конвертера (МГц)"</string>
     <string name="sdr_converter_hint">"Для конвертера перед приёмником: сколько он добавляет к частоте (125 для Ham It Up, отрицательно для понижающего). Инструменты по-прежнему показывают реальную частоту."</string>
+    <string name="sdr_categories">"Категории"</string>
+    <string name="sdr_all_categories">"Все категории"</string>
 </resources>

@@ -2768,4 +2768,6 @@
     <string name="sdr_converter_none">"Niciunul"</string>
     <string name="sdr_converter_mhz">"Decalajul convertorului (MHz)"</string>
     <string name="sdr_converter_hint">"Pentru un convertor pus înaintea radioului: cât adaugă la frecvență (125 pentru un Ham It Up, negativ pentru un convertor coborâtor). Instrumentele arată în continuare frecvența reală."</string>
+    <string name="sdr_categories">"Categorii"</string>
+    <string name="sdr_all_categories">"Toate categoriile"</string>
 </resources>

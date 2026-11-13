@@ -2699,4 +2699,6 @@
     <string name="sdr_converter_none">"Geen"</string>
     <string name="sdr_converter_mhz">"Converter-offset (MHz)"</string>
     <string name="sdr_converter_hint">"Voor een op- of neerconverter vóór de radio: wat hij bij de frequentie optelt (125 voor een Ham It Up, negatief voor een neerconverter). De tools tonen steeds de echte frequentie."</string>
+    <string name="sdr_categories">"Categorieën"</string>
+    <string name="sdr_all_categories">"Alle categorieën"</string>
 </resources>

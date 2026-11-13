@@ -2699,4 +2699,6 @@
     <string name="sdr_converter_none">"Ingen"</string>
     <string name="sdr_converter_mhz">"Konverterns förskjutning (MHz)"</string>
     <string name="sdr_converter_hint">"För en upp- eller nedkonverter före radion: vad den lägger till frekvensen (125 för en Ham It Up, negativt för en nedkonverter). Verktygen visar alltid den verkliga frekvensen."</string>
+    <string name="sdr_categories">"Kategorier"</string>
+    <string name="sdr_all_categories">"Alla kategorier"</string>
 </resources>

@@ -2699,4 +2699,6 @@
     <string name="sdr_converter_none">"Keiner"</string>
     <string name="sdr_converter_mhz">"Konverter-Versatz (MHz)"</string>
     <string name="sdr_converter_hint">"Für einen Auf- oder Abwärtskonverter vor dem Radio: was er zur Frequenz addiert (125 für einen Ham It Up, negativ für einen Abwärtskonverter). Die Werkzeuge zeigen weiter die echte Frequenz."</string>
+    <string name="sdr_categories">"Kategorien"</string>
+    <string name="sdr_all_categories">"Alle Kategorien"</string>
 </resources>

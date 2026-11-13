@@ -2630,4 +2630,6 @@
     <string name="sdr_converter_none">"ไม่มี"</string>
     <string name="sdr_converter_mhz">"ออฟเซ็ตคอนเวอร์เตอร์ (MHz)"</string>
     <string name="sdr_converter_hint">"สำหรับคอนเวอร์เตอร์ขึ้นหรือลงที่อยู่หน้าวิทยุ: ค่าที่บวกเข้ากับความถี่ (125 สำหรับ Ham It Up ค่าลบสำหรับคอนเวอร์เตอร์ลง) เครื่องมือยังคงแสดงความถี่จริง"</string>
+    <string name="sdr_categories">"หมวดหมู่"</string>
+    <string name="sdr_all_categories">"หมวดหมู่ทั้งหมด"</string>
 </resources>
