@@ -333,7 +333,7 @@ private fun PageBody(vm: MainViewModel, net: Network, page: Page) {
                     onLocate = { actions.request(PermGroup.Location) },
                 )
             }
-            Tool.Gatt, Tool.Paired, Tool.Tracker, Tool.UnknownTrackers, Tool.TrackerDetail, Tool.Beacons, Tool.Earbuds, Tool.BleSpam -> BtToolRoute(vm, page)
+            Tool.Gatt, Tool.Paired, Tool.Tracker, Tool.UnknownTrackers, Tool.TrackerDetail, Tool.Beacons, Tool.Earbuds, Tool.BleSpam, Tool.Glasses -> BtToolRoute(vm, page)
             Tool.CellDetail -> CellDetailTool(vm.cell.collectAsStateWithLifecycle().value.state, page.arg) {
                 vm.navigate { it.copy(page = Page.ToolPage(Tool.Neighbors)) }
             }
@@ -463,6 +463,18 @@ private fun BtToolRoute(vm: MainViewModel, page: Page.ToolPage) {
                 if (!on) com.allnetworktools.data.BleSpamGuard.stop(context) else {
                     if (PermGroup.Notifications !in perms) actions.request(PermGroup.Notifications)
                     com.allnetworktools.data.BleSpamGuard.start(context)
+                }
+            }
+        }
+        Tool.Glasses -> {
+            val guard by com.allnetworktools.data.GlassesGuard.running.collectAsStateWithLifecycle()
+            val perms by vm.permissions.collectAsStateWithLifecycle()
+            val actions = LocalActions.current
+            val context = androidx.compose.ui.platform.LocalContext.current
+            com.allnetworktools.ui.pages.bt.GlassesTool(com.allnetworktools.data.GlassesGuard.watch, ble, guardRunning = guard) { on ->
+                if (!on) com.allnetworktools.data.GlassesGuard.stop(context) else {
+                    if (PermGroup.Notifications !in perms) actions.request(PermGroup.Notifications)
+                    com.allnetworktools.data.GlassesGuard.start(context)
                 }
             }
         }

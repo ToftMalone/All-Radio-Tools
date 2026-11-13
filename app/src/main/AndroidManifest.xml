@@ -86,6 +86,11 @@
             android:foregroundServiceType="connectedDevice" />
 
         <service
+            android:name=".data.GlassesGuardService"
+            android:exported="false"
+            android:foregroundServiceType="connectedDevice" />
+
+        <service
             android:name=".data.CellWatchService"
             android:exported="false"
             android:foregroundServiceType="location" />

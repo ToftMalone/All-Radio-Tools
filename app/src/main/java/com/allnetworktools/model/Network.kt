@@ -82,6 +82,7 @@ enum class Tool(
     Tracker(Network.Bluetooth, S(R.string.hot_cold), Sym.MyLocation),
     UnknownTrackers(Network.Bluetooth, S(R.string.unknown_trackers), Sym.GppMaybe, Sym.RestartAlt),
     BleSpam(Network.Bluetooth, S(R.string.blespam_title), Sym.Warning),
+    Glasses(Network.Bluetooth, S(R.string.glasses_title), Sym.Eyeglasses),
     TrackerDetail(Network.Bluetooth, S(R.string.tracker_2), Sym.Sell, parent = ToolParent.Other(UnknownTrackers)),
     Beacons(Network.Bluetooth, S(R.string.beacons), Sym.Sensors),
     Earbuds(Network.Bluetooth, S(R.string.earbuds_battery), Sym.Headphones),

@@ -42,6 +42,7 @@ class MainActivity : ComponentActivity() {
             OPEN_WARDRIVING -> Tool.Wardriving
             OPEN_REMOTE_ID -> Tool.RemoteId
             OPEN_BLE_SPAM -> Tool.BleSpam
+            OPEN_GLASSES -> Tool.Glasses
             else -> return
         }
         vm.navigate { it.copy(network = tool.network, page = Page.ToolPage(tool)) }
@@ -54,6 +55,7 @@ class MainActivity : ComponentActivity() {
         const val OPEN_WARDRIVING = "wardriving"
         const val OPEN_REMOTE_ID = "remoteid"
         const val OPEN_BLE_SPAM = "blespam"
+        const val OPEN_GLASSES = "glasses"
     }
 
     override fun onResume() {

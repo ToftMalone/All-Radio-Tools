@@ -53,6 +53,7 @@ The Internet tools (speed test, ping, traceroute, port scan, DNS lookup, whois) 
 | Hot/Cold | Find a device by its signal |
 | Unknown trackers | Trackers that might be following you (AirTag, Find My accessories, AirPods, Google tags, Galaxy SmartTag, Tile, Chipolo, Pebblebee), each with a **drawing faithful to the real object**, sorted by detection time, with "play sound". A **background guard** keeps watching with the app closed and alerts you when a tracker follows you; tags connected to their owner are ignored, as in AirGuard |
 | BLE spam detector | Pairing pop-up floods (Apple AirPods and Nearby Action, the iOS 17 crash frame, Google Fast Pair, Microsoft Swift Pair, Samsung Easy Setup, Lovespouse) told from real accessories: a burst of new addresses, one address walking a list, one radio behind several addresses, or a frame no product sends. Each alert says why, a history keeps them, and the Flipper Zeros in range are listed (body colour, name or address block). Signatures from [Bluetooth-LE-Spam](https://github.com/simondankelmann/Bluetooth-LE-Spam) and [Wall of Flippers](https://github.com/K3YOMI/Wall-of-Flippers); detection ideas by Melvin Olivet |
+| Smart glasses | Camera glasses nearby: Ray-Ban Meta and Oakley Meta (Luxottica 0x0D53), Snap Spectacles (0x03C2, service 0xFE45), Meta glasses or Quest headsets (0x058E, 0x01AB, services 0xFD5F, 0xFEB7, 0xFEB8), HeyCyan-based glasses (Nilox…), Vuzix, and display-only glasses (Even Realities) told apart. Each match shows its evidence, a confidence and a rough distance; an alert distance (close, room, far) and a **background watch** that alerts with the app closed. Identifiers checked against the Bluetooth SIG's assigned numbers; findings of [Nearby Glasses](https://github.com/yjeanrenaud/yj_nearbyglasses), [NoPeek](https://github.com/getnopeek/nopeek-android) and ZuckOff |
 | Beacons | iBeacon, Eddystone, AltBeacon |
 | Earbuds battery | AirPods and Beats: left, right, case |
 
@@ -197,6 +198,7 @@ No account, no ads, no trackers. Internet is used for updates, the speed test (C
 - Locking a tag is **permanent**: no phone can write to it again.
 - Wardriving records where networks are; once sent to WiGLE.net they are public. Exclude the addresses you do not want there.
 - The BLE spam detector only listens: it is there to see an attack, never to send one.
+- The smart glasses detector says camera-capable glasses are in range, not that they are recording nor who wears them: never harass anyone because of an alert.
 - "Unknown trackers" and "Jamming and spoofing" are there to **protect you**, not to track or disrupt others.
 
 ---

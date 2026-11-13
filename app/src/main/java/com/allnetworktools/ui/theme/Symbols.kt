@@ -243,4 +243,5 @@ object Sym {
     const val GpsFixed = "gps_fixed"
     const val CloudUpload = "cloud_upload"
     const val BlockFlipped = "block_flipped"
+    const val Eyeglasses = "eyeglasses"
 }

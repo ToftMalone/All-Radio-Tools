@@ -157,6 +157,16 @@ class ScreenshotTest {
         try { shot("T1_aprs_beacon", nav = NavState(Network.Sdr, Page.ToolPage(Tool.Aprs))) }
         finally { com.allnetworktools.ui.pages.sdr.ToolTabMemory.chosen.remove("AprsTool0"); com.allnetworktools.data.sdr.TxSettings.setForTest("", false) }
     }
+    @Test fun smartGlasses() = shot("B10_glasses", nav = NavState(Network.Bluetooth, Page.ToolPage(Tool.Glasses))) {
+        val now = System.currentTimeMillis()
+        fun d(raw: String, name: String?, rssi: Int, a: String) = com.allnetworktools.data.BleDevice(a, name, rssi, null, com.allnetworktools.data.BleKind.Unknown, null, true, now, raw = raw)
+        com.allnetworktools.data.GlassesGuard.watch.clear()
+        com.allnetworktools.data.GlassesGuard.watch.update(listOf(
+            d("02010607FF530D0102030405", null, -58, "C4:7C:8D:1E:2B:3F"),
+            d("02010607FF8E050102030405", null, -81, "7A:11:42:90:0C:D1"),
+            d("02010607FFF9100102030405", "Even G1_42_L", -70, "E0:3A:1C:55:02:9B"),
+        ), now)
+    }
     @Test fun sdrToolsRtl() {
         Scenario.sdrDevice.value = com.allnetworktools.data.sdr.SdrDevice("Blog V4", null, com.allnetworktools.data.sdr.SdrKind.RtlSdr)
         shot("S9c_sdr_tools_rtl", nav = NavState(Network.Sdr, Page.Tools))
