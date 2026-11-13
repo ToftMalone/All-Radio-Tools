@@ -8,7 +8,7 @@ import kotlin.math.pow
 
 /**
  * Wireless M-Bus (EN 13757-3 and -4), the radio utility meters use: water, heat, gas, electricity, heat cost
- * allocators. Ported from OnAir (core/src/wmbus, GPL-3.0, itself written from the public standard). Modes T1 and C1
+ * allocators. Ported from OnAir (core/src/wmbus, GPL-3.0-or-later, itself written from the public standard). Modes T1 and C1
  * on 868.95 MHz, 100 kchip/s FSK, are received: by far the most common for water and heat meters. Frames whose payload
  * is encrypted are listed with their clear link-layer fields; their readings are never decoded.
  */

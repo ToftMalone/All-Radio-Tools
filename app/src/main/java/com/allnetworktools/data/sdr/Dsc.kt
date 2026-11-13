@@ -9,7 +9,7 @@ import kotlin.math.sin
 
 /**
  * Digital Selective Calling (ITU-R M.493) on VHF channel 70, 156.525 MHz: 1200 baud FSK on FM, 1300 Hz for Y (1) and
- * 2100 Hz for B (0). Ported from OnAir (core/src/marine, GPL-3.0). A symbol is 7 bits LSB first plus 3 bits counting
+ * 2100 Hz for B (0). Ported from OnAir (core/src/marine, GPL-3.0-or-later). A symbol is 7 bits LSB first plus 3 bits counting
  * its zeros; each one is sent twice, five places apart, and an even-parity check character closes the call.
  */
 object Dsc {

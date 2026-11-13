@@ -5,7 +5,7 @@ import kotlin.math.roundToInt
 
 /*
  * ISM band sensors (315 / 345 / 433.92 / 868 / 915 MHz): weather stations, thermometers, energy monitors, utility meters,
- * door and motion sensors, fixed-code remotes and OOK tyre sensors. Ported from OnAir (core/src/ism, GPL-3.0), itself
+ * door and motion sensors, fixed-code remotes and OOK tyre sensors. Ported from OnAir (core/src/ism, GPL-3.0-or-later), itself
  * written from rtl_433 (GPL-2.0-or-later): the slicers follow its pulse_slicer.c and bitbuffer.c, every decoder names the
  * src/devices/ file it comes from, and a reading only leaves when its CRC, checksum or repetition check passed.
  */

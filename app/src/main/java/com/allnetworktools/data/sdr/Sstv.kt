@@ -9,7 +9,7 @@ import kotlin.math.sin
 import kotlin.math.sqrt
 
 /**
- * SSTV, ported from OnAir (core/src/hfdig/hfdig_sstv*, GPL-3.0). Mode timings are the published ones (J. L. Barber
+ * SSTV, ported from OnAir (core/src/hfdig/hfdig_sstv*, GPL-3.0-or-later). Mode timings are the published ones (J. L. Barber
  * N7CXI, "Proposal for SSTV Mode Specifications", 2000, cross-checked against MMSSTV and slowrx). Tones: sync 1200 Hz,
  * black 1500 Hz, white 2300 Hz.
  */

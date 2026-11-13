@@ -73,6 +73,7 @@ private val Licenses = listOf(
     "Kotlin, kotlinx.coroutines" to "Apache 2.0",
     "Roboto Flex, Google Sans Flex" to "SIL Open Font License 1.1",
     "Material Symbols" to "Apache 2.0",
+    "OnAir (decoders, auto-gain design)" to "GPL-3.0-or-later",
 )
 
 @Composable
@@ -194,7 +195,9 @@ fun SettingsScreen(vm: MainViewModel) {
             "Version ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE}).\n\n" +
                 S(R.string.privacy_measurements_are_processed_in_memory) +
                 S(R.string.and_the_app_contains_no_tracker) +
-                S(R.string.open_source_licences_n) + Licenses.joinToString("\n") { (lib, lic) -> "$lib · $lic" },
+                S(R.string.open_source_licences_n) + Licenses.joinToString("\n") { (lib, lic) -> "$lib · $lic" } +
+                // OnAir's section 7 terms: this attribution, unchanged, in the program's legal notices.
+                "\n\nBased on OnAir by Kristijonas Adomaitis - https://on-air.dev\nOnAir contributors: https://github.com/adswill/OnAir/blob/main/CONTRIBUTORS.md",
         ) { dialog = null }
         "help" -> InfoDialog(
             S(R.string.help),

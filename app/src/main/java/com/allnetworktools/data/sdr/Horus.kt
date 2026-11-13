@@ -10,7 +10,7 @@ import kotlin.math.sin
 
 /*
  * Project Horus amateur high-altitude balloons (usually 434.2 - 434.9 MHz): Horus Binary v1 and v2, 100 baud 4FSK, Golay
- * (23,12), interleaver, scrambler and CRC16. Ported from OnAir (core/src/horus, GPL-3.0), whose layer 2 constants follow
+ * (23,12), interleaver, scrambler and CRC16. Ported from OnAir (core/src/horus, GPL-3.0-or-later), whose layer 2 constants follow
  * horusdemodlib's horus_l2.c / golay23.c (David Rowe, Tomas Härdin).
  */
 

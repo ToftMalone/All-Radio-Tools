@@ -6,7 +6,7 @@ import kotlin.math.roundToInt
 
 /*
  * Mode A/C, the old secondary-radar replies most transponders still send beside Mode S on 1090 MHz: the squawk (four
- * octal digits) and the pressure altitude (Gillham code, 100 ft steps). Ported from OnAir (core/src/modeac, GPL-3.0).
+ * octal digits) and the pressure altitude (Gillham code, 100 ft steps). Ported from OnAir (core/src/modeac, GPL-3.0-or-later).
  * A reply is 15 pulse positions 1.45 µs apart, 0.45 µs wide: F1, C1 A1 C2 A2 C4 A4 X B1 D1 B2 D2 B4 D4, F2; the ident
  * (SPI) pulse follows F2 by 4.35 µs.
  */

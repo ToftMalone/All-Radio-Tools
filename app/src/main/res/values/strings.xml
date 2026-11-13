@@ -1891,7 +1891,7 @@
     <string name="all_radio_tools_no_measurement_is">"All Radio Tools %1$s (%2$s) · No measurement is kept."</string>
     <string name="privacy_measurements_are_processed_in_memory">"Privacy: measurements are processed in memory, on this device, for the session. Nothing is saved or sent to a server, "</string>
     <string name="and_the_app_contains_no_tracker">"and the app contains no tracker. Only your settings are remembered.\\n\\n"</string>
-    <string name="open_source_licences_n">"Open source licences:\\n"</string>
+    <string name="open_source_licences_n">"Open source licences:\n"</string>
     <string name="help">"Help"</string>
     <string name="tap_a_home_card_to_select">"Tap a home card to select it, then tap it again or use the dock to open the network's dashboard, "</string>
     <string name="tools_or_main_tool_the_dock">"tools or main tool. The dock's left button switches network."</string>

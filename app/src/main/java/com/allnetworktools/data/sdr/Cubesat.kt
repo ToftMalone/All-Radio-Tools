@@ -8,7 +8,7 @@ import kotlin.math.sin
 
 /**
  * Amateur satellites' AX.25 telemetry, the framing most CubeSats and the ISS use: 1200 baud AFSK, or 9600 baud
- * G3RUH (FSK, scrambled with x^17 + x^12 + 1, NRZI). After OnAir's CubeSat mode (core/src/cubesat, GPL-3.0).
+ * G3RUH (FSK, scrambled with x^17 + x^12 + 1, NRZI). After OnAir's CubeSat mode (core/src/cubesat, GPL-3.0-or-later).
  */
 object Cubesat {
     enum class Mode(val baud: Int) { Afsk1200(1200), G3ruh9600(9600) }

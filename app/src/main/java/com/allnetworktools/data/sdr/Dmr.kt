@@ -5,7 +5,7 @@ package com.allnetworktools.data.sdr
  * 30 ms bursts of 132 symbols, a 48-bit sync or embedded signalling in the middle. What is read here is the signalling
  * every radio sends in the clear: the slot type (Golay 20,8), voice call headers and terminators (BPTC 196,96, then
  * Reed-Solomon 12,9) with their group or unit ids, and control blocks (CSBK, CRC-CCITT). Voice is never decoded.
- * Ported from OnAir (rust/onair_dmr, GPL-3.0).
+ * Ported from OnAir (rust/onair_dmr, GPL-3.0-or-later).
  */
 object Dmr {
     /** BS voice, BS data, MS voice, MS data, RC, direct slot 1 voice, slot 1 data, slot 2 voice, slot 2 data. */
@@ -234,7 +234,7 @@ object Dmr {
 /**
  * dPMR mode 1 (ETSI TS 102 490), the FDMA digital PMR446: 4FSK at 2400 symbols/s on 6.25 kHz. Read here: the header
  * frame (colour code, called and own ids, call type) and the end frame. Every block is Hamming (12,8) words written in
- * rows, read in columns and scrambled with PN9. Ported from OnAir (core/src/dpmr, GPL-3.0).
+ * rows, read in columns and scrambled with PN9. Ported from OnAir (core/src/dpmr, GPL-3.0-or-later).
  */
 object Dpmr {
     private fun syms(v: Long, n: Int) = IntArray(n) { Dmr.dibitToSymbol(((v shr (2 * (n - 1 - it))) and 3).toInt()) }

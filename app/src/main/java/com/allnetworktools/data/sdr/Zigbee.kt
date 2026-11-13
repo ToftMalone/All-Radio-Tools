@@ -1,7 +1,7 @@
 package com.allnetworktools.data.sdr
 
 /**
- * IEEE 802.15.4 / Zigbee frames, receive only, ported from OnAir (core/src/zigbee/zigbee_proto, GPL-3.0): the MAC header
+ * IEEE 802.15.4 / Zigbee frames, receive only, ported from OnAir (core/src/zigbee/zigbee_proto, GPL-3.0-or-later): the MAC header
  * (frame type, security, PAN ID, short and extended addresses, sequence number), MAC commands, the Zigbee beacon payload,
  * the Zigbee NWK header and the APS header where the NWK payload is not encrypted. Encrypted payloads are only named.
  */

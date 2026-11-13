@@ -12,7 +12,7 @@ import kotlin.math.sin
 
 /**
  * COSPAS-SARSAT 406 MHz distress beacons, first generation (specification C/S T.001, public), ported from OnAir
- * (core/src/sarsat, GPL-3.0). A burst is 24 sync bits (15 ones, then 9 frame-sync bits: normal or self-test) and a 112-bit
+ * (core/src/sarsat, GPL-3.0-or-later). A burst is 24 sync bits (15 ones, then 9 frame-sync bits: normal or self-test) and a 112-bit
  * (short) or 144-bit (long) message. Bits are numbered from 1 as in the specification: bit n is at index n − 1. Bits 25
  * to 85 are protected by a BCH(82,61) check in 86 to 106; a long message adds bits 107 to 132 with a BCH(38,26) check.
  */

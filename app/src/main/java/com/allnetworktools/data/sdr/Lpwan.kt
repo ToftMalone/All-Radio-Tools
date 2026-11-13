@@ -211,7 +211,7 @@ object LoraWan {
  * Sigfox uplink frames (EP-SPECS Rev. 1.3, the public radio specification): 19 preamble bits, a 13-bit frame type that
  * gives the container size and the frame's rank among three repetitions, then the container (length indicator,
  * message counter, device ID, payload, authentication) and a CRC, convolution-coded by rank. The authentication needs
- * the device's secret key and is never checked. Ported from OnAir (core/src/sigfox, GPL-3.0).
+ * the device's secret key and is never checked. Ported from OnAir (core/src/sigfox, GPL-3.0-or-later).
  */
 object Sigfox {
     const val PREAMBLE = 19

@@ -240,7 +240,7 @@ All Radio Tools is free software released under the [GNU General Public License 
 - [AirGuard](https://github.com/seemoo-lab/AirGuard) (SEEMOO, TU Darmstadt) for tracker detection and the rules that tell a tag near its owner from one following you.
 - [rs1729/RS](https://github.com/rs1729/RS) for the radiosonde formats.
 - [rtl_433](https://github.com/merbanan/rtl_433) for the tyre pressure and ISM sensor formats.
-- [OnAir](https://github.com/adswill/OnAir) (GPL-3.0), whose decoders were ported for ISM sensors, FLARM, Wireless M-Bus, DSC, VDL Mode 2, DECT, DMR / dPMR, Sigfox, Horus, Mode A/C, CubeSat telemetry, 406 MHz beacons, Z-Wave, SSTV, Zigbee / 802.15.4 and ANT+ (its recording of a real PLB checked the 406 MHz decoder).
+- [OnAir](https://github.com/adswill/OnAir) (GPL-3.0-or-later, Copyright (C) 2026 Kristijonas Adomaitis and OnAir contributors), whose decoders were ported for ISM sensors, FLARM, Wireless M-Bus, DSC, VDL Mode 2, DECT, DMR / dPMR, Sigfox, Horus, Mode A/C, CubeSat telemetry, 406 MHz beacons, Z-Wave, SSTV, Zigbee / 802.15.4 and ANT+ (its recording of a real PLB checked the 406 MHz decoder).
 - [SoftRF](https://github.com/lyusupov/SoftRF) (GPL-3.0), whose FLARM code (frame CRC, the 2024 protocol's keys and layout) was ported.
 - [gr-lora_sdr](https://github.com/tapparelj/gr-lora_sdr) (EPFL) for the LoRa receiver.
 - [Meshtastic](https://github.com/meshtastic/firmware) (firmware and protobufs, GPL-3.0) and [MeshCore](https://github.com/meshcore-dev/MeshCore) (MIT) for their packet formats; the real MeshCore packets of [meshcore-decoder](https://github.com/michaelhart/meshcore-decoder) and the reference vector of [meshtastic-sniffer](https://github.com/alphafox02/meshtastic-sniffer), against which the decoders were checked.

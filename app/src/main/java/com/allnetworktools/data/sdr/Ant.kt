@@ -3,7 +3,7 @@ package com.allnetworktools.data.sdr
 import java.util.Locale
 
 /**
- * ANT / ANT+ over the air, ported from OnAir (core/src/ant, GPL-3.0). The air format is Nordic ShockBurst as sniffed
+ * ANT / ANT+ over the air, ported from OnAir (core/src/ant, GPL-3.0-or-later). The air format is Nordic ShockBurst as sniffed
  * with SDRs (not published by Garmin; two independent reverse-engineering efforts agree): 1 Mbit/s GFSK, about 160 kHz
  * deviation, bytes most significant bit first: preamble 0xAA or 0x55, network marker (0xA6C5 for ANT+), device number
  * (low byte first), device type, transmission type, length 0x0A, 8 payload bytes, CRC-16/CCITT-FALSE over the marker

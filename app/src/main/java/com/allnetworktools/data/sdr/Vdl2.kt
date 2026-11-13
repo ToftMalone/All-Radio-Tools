@@ -15,7 +15,7 @@ import kotlin.math.sin
  * VDL Mode 2, the digital datalink of airliners on 136.725 to 136.975 MHz: D8PSK at 10.5 ksymbol/s, bursts with a
  * training sequence, a (25,20)-coded length header, Reed-Solomon (255,249) blocks interleaved column by column, an
  * x^15 + x + 1 scrambler, then HDLC frames (AVLC) carrying ACARS, XID link management and ATN (X.25) packets. Ported
- * from OnAir (core/src/vdl2 and rust/onair_vdl2, GPL-3.0; facts from ICAO Annex 10 Vol III and Doc 9776).
+ * from OnAir (core/src/vdl2 and rust/onair_vdl2, GPL-3.0-or-later; facts from ICAO Annex 10 Vol III and Doc 9776).
  */
 object Vdl2 {
     const val SYMBOL_RATE = 10_500.0

@@ -9,7 +9,7 @@ import kotlin.math.roundToInt
 import kotlin.math.sin
 
 /**
- * Z-Wave (ITU-T G.9959 MAC), ported from OnAir (core/src/zwave, GPL-3.0): FSK at R1 9.6 kbit/s Manchester, R2 40 kbit/s
+ * Z-Wave (ITU-T G.9959 MAC), ported from OnAir (core/src/zwave, GPL-3.0-or-later): FSK at R1 9.6 kbit/s Manchester, R2 40 kbit/s
  * NRZ (868.40 / 868.42 MHz in Europe) and R3 100 kbit/s (869.85 MHz). The frame header is in the clear: home id (the
  * network), source and destination nodes, frame control, length, then the command class and command; S0 and S2
  * payloads are encrypted and only named. A checksum (R1, R2) or a CRC-16 (R3) closes the frame.

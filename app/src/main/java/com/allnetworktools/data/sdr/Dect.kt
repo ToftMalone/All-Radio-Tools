@@ -8,7 +8,7 @@ import kotlin.math.sqrt
  * DECT cordless phones (EN 300 175): what every base station broadcasts in the clear. Carriers 1.728 MHz apart,
  * 1.152 Mbit/s GFSK, 10 ms frames of 24 slots; a slot opens with 16 preamble bits and the sync word (0xE98A from a base,
  * 0x1675 from a handset), then the 64-bit A-field: header, 40 tail bits (identity, system information, paging…) and a
- * CRC. The B-field (voice, encrypted once a call has keys) is never touched. Ported from OnAir (core/src/dect, GPL-3.0).
+ * CRC. The B-field (voice, encrypted once a call has keys) is never touched. Ported from OnAir (core/src/dect, GPL-3.0-or-later).
  */
 object Dect {
     const val BIT_RATE = 1_152_000
