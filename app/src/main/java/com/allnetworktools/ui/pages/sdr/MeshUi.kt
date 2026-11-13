@@ -39,6 +39,7 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.allnetworktools.MainViewModel
 import com.allnetworktools.R
+import com.allnetworktools.data.sdr.MeshFrame
 import com.allnetworktools.data.sdr.AdsbTracker
 import com.allnetworktools.data.sdr.MeshBand
 import com.allnetworktools.data.sdr.MeshMessage
@@ -101,12 +102,15 @@ abstract class MeshController(repo: SdrRepository, scope: CoroutineScope, onAcqu
     abstract val band: MeshBand
     protected abstract val tracker: MeshTracker
 
+    /** Every frame heard, on the DSP thread, after the tracker has it. */
+    protected open fun onFrame(f: MeshFrame) {}
+
     override val sampleRate = MeshRadio.SAMPLE_RATE
     override fun tuneHz() = band.loHz
 
     override fun newSink(): SdrSink {
         val t = tracker
-        val radio = MeshRadio(band) { f -> synchronized(t) { t.update(f, System.currentTimeMillis()) } }
+        val radio = MeshRadio(band) { f -> synchronized(t) { t.update(f, System.currentTimeMillis()) }; onFrame(f) }
         return object : SdrSink {
             override fun feed(buf: ByteArray, len: Int) = radio.feed(buf, len)
             override fun close() = radio.close()

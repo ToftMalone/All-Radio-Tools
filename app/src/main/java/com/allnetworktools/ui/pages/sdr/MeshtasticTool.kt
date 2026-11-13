@@ -120,12 +120,63 @@ class MeshtasticController(repo: SdrRepository, scope: CoroutineScope, onAcquire
         com.allnetworktools.data.sdr.Emission.around(it.hz, (it.bwHz / 2).toInt(), (it.bwHz / 2).toInt(), com.allnetworktools.data.sdr.TxUse.Ism)
     }
 
-    /** Sends one packet on the node's channel (reception pauses meanwhile). */
-    private fun sendPacket(device: com.allnetworktools.data.sdr.SdrDevice?, port: Int, payload: ByteArray): Boolean {
+    /** What the node was asked and answers once the channel is free: the packet's port, payload and who gets it. */
+    private class Reply(val to: Int, val port: Int, val payload: ByteArray, val requestId: Int)
+    private val replies = java.util.concurrent.ConcurrentLinkedQueue<Reply>()
+    private val answered = LinkedHashMap<Long, Long>()
+    private val lastInfoTo = HashMap<Int, Long>()
+    var answeredCount by mutableStateOf(0)
+        private set
+
+    /**
+     * A real node answers what is asked of it: a traceroute, a request for its NodeInfo or its position, and an
+     * acknowledgement for a message that asks for one. Only what is addressed to this node (or a NodeInfo request to
+     * everyone) on the channel it transmits on, and only what the channel key opens: direct messages encrypted for this
+     * node alone (PKI) stay unreadable, so they get no answer.
+     */
+    override fun onFrame(f: com.allnetworktools.data.sdr.MeshFrame) {
+        if (!nodeOn || !f.frame.crcOk || f.frame.syncWord != Meshtastic.SYNC_WORD) return
+        val ch = txChannel() ?: return
+        if (kotlin.math.abs(f.hz - ch.hz) > 50_000 || f.sf != ch.sf) return
+        val p = Meshtastic.decode(f.frame.payload, tracker.channels) ?: return
+        val h = p.header
+        val d = p.data ?: return
+        if (h.from == nodeNum || h.from == 0 || h.from == Meshtastic.BROADCAST) return
+        // Only the channel this node transmits on, so the answer is read by the one who asked.
+        if (p.channel?.name != ch.name || !p.channel.key.contentEquals(Meshtastic.DEFAULT_PSK)) return
+        val toUs = h.to == nodeNum
+        if (!toUs && !(h.broadcast && d.port == Meshtastic.PORT_NODEINFO && d.wantResponse)) return
+        val now = System.currentTimeMillis()
+        synchronized(answered) {
+            val k = (h.from.toLong() shl 32) or (h.id.toLong() and 0xFFFFFFFFL)
+            if (answered.containsKey(k)) return
+            answered[k] = now
+            while (answered.size > 200) answered.remove(answered.keys.first())
+        }
+        val reply: Reply? = when {
+            d.port == Meshtastic.PORT_TRACEROUTE && d.wantResponse && toUs ->
+                Reply(h.from, Meshtastic.PORT_TRACEROUTE, com.allnetworktools.data.sdr.MeshtasticTx.routeDiscovery(Meshtastic.route(d.payload)?.towards ?: emptyList()), h.id)
+            d.port == Meshtastic.PORT_NODEINFO && d.wantResponse && (toUs || h.broadcast) -> {
+                // Not more than one NodeInfo every few minutes to the same node, as the firmware does.
+                val last = synchronized(lastInfoTo) { lastInfoTo[h.from] ?: 0L }
+                if (now - last < 5 * 60_000L) null else {
+                    synchronized(lastInfoTo) { lastInfoTo[h.from] = now }
+                    Reply(h.from, Meshtastic.PORT_NODEINFO, com.allnetworktools.data.sdr.MeshtasticTx.user(nodeNum, longName, shortName), h.id)
+                }
+            }
+            d.port == Meshtastic.PORT_POSITION && d.wantResponse && toUs -> positionPayload()?.let { Reply(h.from, Meshtastic.PORT_POSITION, it, h.id) }
+            // A message that asks for an acknowledgement (and is not itself an answer) gets one.
+            toUs && h.wantAck && d.port != Meshtastic.PORT_ROUTING -> Reply(h.from, Meshtastic.PORT_ROUTING, com.allnetworktools.data.sdr.MeshtasticTx.routingAck(), h.id)
+            else -> null
+        }
+        if (reply != null && replies.size < 8) replies.add(reply)
+    }
+
+    private fun sendPacket(device: com.allnetworktools.data.sdr.SdrDevice?, port: Int, payload: ByteArray, to: Int = Meshtastic.BROADCAST, requestId: Int = 0): Boolean {
         val ch = txChannel() ?: return false
         val e = txEmission() ?: return false
         val id = kotlin.random.Random.nextInt(1, Int.MAX_VALUE)
-        val pkt = com.allnetworktools.data.sdr.MeshtasticTx.packet(nodeNum, id, ch.name, Meshtastic.DEFAULT_PSK, com.allnetworktools.data.sdr.MeshtasticTx.data(port, payload))
+        val pkt = com.allnetworktools.data.sdr.MeshtasticTx.packet(nodeNum, id, ch.name, Meshtastic.DEFAULT_PSK, com.allnetworktools.data.sdr.MeshtasticTx.data(port, payload, requestId = requestId), to = to)
         val symbols = com.allnetworktools.data.sdr.LoraEncoder.symbols(pkt, ch.sf, cr = 1, hasCrc = true, ldro = com.allnetworktools.data.sdr.LoraPhy.lowDataRate(ch.sf, ch.bwHz))
         val stream = com.allnetworktools.data.sdr.TxStream(com.allnetworktools.data.sdr.LoraModulator(symbols, ch.sf, ch.bwHz, TX_RATE), TX_RATE, TX_SHIFT.toDouble())
         return tx.send(device, this, e, TX_RATE, ch.hz - TX_SHIFT, stream) {
@@ -133,9 +184,9 @@ class MeshtasticController(repo: SdrRepository, scope: CoroutineScope, onAcquire
         }
     }
 
-    private suspend fun sendWhenFree(device: com.allnetworktools.data.sdr.SdrDevice?, port: Int, payload: ByteArray) {
+    private suspend fun sendWhenFree(device: com.allnetworktools.data.sdr.SdrDevice?, port: Int, payload: ByteArray, to: Int = Meshtastic.BROADCAST, requestId: Int = 0) {
         while (tx.transmitting) kotlinx.coroutines.delay(200)
-        sendPacket(device, port, payload)
+        sendPacket(device, port, payload, to, requestId)
         kotlinx.coroutines.delay(300)
         while (tx.transmitting) kotlinx.coroutines.delay(200)
     }
@@ -153,6 +204,9 @@ class MeshtasticController(repo: SdrRepository, scope: CoroutineScope, onAcquire
         if (nodeOn) return
         nodeOn = true
         tx.error = null
+        replies.clear()
+        // A node listens: it answers what the others ask of it, so reception runs as long as it does.
+        if (device != null && !running && !starting) { start(device); startedByNode = true }
         nodeJob = scope.launch {
             val user = com.allnetworktools.data.sdr.MeshtasticTx.user(nodeNum, longName, shortName)
             var lastInfo = 0L
@@ -164,12 +218,25 @@ class MeshtasticController(repo: SdrRepository, scope: CoroutineScope, onAcquire
                     positionPayload()?.let { sendWhenFree(device, Meshtastic.PORT_POSITION, it); lastPos = System.currentTimeMillis() }
                 }
                 if (tx.error != null) { nodeOn = false; break }
-                kotlinx.coroutines.delay(5_000)
+                // Wait for the next announcement, answering what is asked meanwhile (a short pause, as a node waits for a free channel).
+                val until = System.currentTimeMillis() + 5_000
+                while (nodeOn && System.currentTimeMillis() < until) {
+                    val r = replies.poll()
+                    if (r == null) { kotlinx.coroutines.delay(250); continue }
+                    kotlinx.coroutines.delay(400 + kotlin.random.Random.nextLong(0, 600))
+                    sendWhenFree(device, r.port, r.payload, r.to, r.requestId)
+                    answeredCount++
+                }
             }
         }
     }
 
-    fun stopNode() { nodeOn = false; nodeJob?.cancel(); nodeJob = null }
+    private var startedByNode = false
+
+    fun stopNode() {
+        nodeOn = false; nodeJob?.cancel(); nodeJob = null; replies.clear()
+        if (startedByNode) { startedByNode = false; stop() }
+    }
 
     private companion object {
         const val TX_RATE = 2_000_000

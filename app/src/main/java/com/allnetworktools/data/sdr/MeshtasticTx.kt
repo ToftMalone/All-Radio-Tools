@@ -45,17 +45,26 @@ object MeshtasticTx {
     }
 
     /** `Data`: the application port and its payload. */
-    fun data(port: Int, payload: ByteArray, wantResponse: Boolean = false): ByteArray = Pb().apply {
+    fun data(port: Int, payload: ByteArray, wantResponse: Boolean = false, requestId: Int = 0): ByteArray = Pb().apply {
         int(1, port.toLong())
         bytes(2, payload)
         if (wantResponse) int(3, 1)
+        if (requestId != 0) fixed32(6, requestId)
     }.done()
 
-    /** A whole broadcast packet from [from] on the channel ([channelName], [key]): header, then encrypted [data]. */
-    fun packet(from: Int, id: Int, channelName: String, key: ByteArray, data: ByteArray, hopLimit: Int = 3): ByteArray {
+    /** `RouteDiscovery` of a traceroute reply: the nodes the request went through, as it carried them. */
+    fun routeDiscovery(towards: List<Int>): ByteArray = Pb().apply {
+        if (towards.isNotEmpty()) bytes(1, ByteArray(towards.size * 4).also { b -> towards.forEachIndexed { i, n -> for (k in 0 until 4) b[4 * i + k] = (n ushr (8 * k)).toByte() } })
+    }.done()
+
+    /** `Routing` with no error: the payload of an acknowledgement. */
+    fun routingAck(): ByteArray = Pb().apply { int(3, 0) }.done()
+
+    /** A whole packet (a broadcast unless [to] is set) from [from] on the channel ([channelName], [key]): header, then encrypted [data]. */
+    fun packet(from: Int, id: Int, channelName: String, key: ByteArray, data: ByteArray, hopLimit: Int = 3, to: Int = Meshtastic.BROADCAST): ByteArray {
         val h = ByteArray(16)
         fun le32(o: Int, v: Int) { for (i in 0 until 4) h[o + i] = (v ushr (8 * i)).toByte() }
-        le32(0, Meshtastic.BROADCAST)
+        le32(0, to)
         le32(4, from)
         le32(8, id)
         h[12] = ((hopLimit and 7) or ((hopLimit and 7) shl 5)).toByte() // hop limit, hop start

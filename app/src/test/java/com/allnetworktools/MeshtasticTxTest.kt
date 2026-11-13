@@ -44,6 +44,22 @@ class MeshtasticTxTest {
         assertEquals(MeshtasticTx.HW_PRIVATE, u.hwModel)
     }
 
+    /** A reply is a directed packet whose Data carries the request's id; a traceroute reply keeps the route it was given. */
+    @Test fun repliesAreDirectedAndAnswerTheRequest() {
+        val asker = 0x1234abcd
+        val route = MeshtasticTx.routeDiscovery(listOf(0x11111111, 0x22222222))
+        val pkt = MeshtasticTx.packet(node, 77, "LongFast", Meshtastic.DEFAULT_PSK, MeshtasticTx.data(Meshtastic.PORT_TRACEROUTE, route, requestId = 555), to = asker)
+        val p = Meshtastic.decode(pkt)!!
+        assertEquals(asker, p.header.to)
+        assertEquals(node, p.header.from)
+        assertEquals(Meshtastic.PORT_TRACEROUTE, p.data!!.port)
+        assertEquals(555, p.data!!.requestId)
+        assertEquals(listOf(0x11111111, 0x22222222), Meshtastic.route(p.data!!.payload)!!.towards)
+        val ack = Meshtastic.decode(MeshtasticTx.packet(node, 78, "LongFast", Meshtastic.DEFAULT_PSK, MeshtasticTx.data(Meshtastic.PORT_ROUTING, MeshtasticTx.routingAck(), requestId = 9), to = asker))!!
+        assertEquals(0, Meshtastic.routingError(ack.data!!.payload))
+        assertEquals(9, ack.data!!.requestId)
+    }
+
     @Test fun positionPrecision() {
         val exact = Meshtastic.position(MeshtasticTx.position(48.8566, 2.3522, 35, 1_700_000_000, 32))!!
         assertEquals(48.8566, exact.lat!!, 1e-6)
