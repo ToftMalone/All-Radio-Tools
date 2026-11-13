@@ -68,6 +68,9 @@ internal fun markerLevel(db: FloatArray, at: Float): Float {
     return (maxOf(0, i - 1)..minOf(db.size - 1, i + 1)).maxOf { db[it] }
 }
 
+/** A step in Hz as "2.5 kHz" or "100 kHz". */
+internal fun markerStepLabel(hz: Long): String = if (hz >= 1_000_000L) "${widthLabel(hz.toDouble())} MHz" else "${java.math.BigDecimal(hz / 1000.0).setScale(1, java.math.RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()} kHz"
+
 /** A width in MHz without useless decimals: "10", "2.5", "0.125". */
 internal fun widthLabel(hz: Double): String {
     val mhz = hz / 1e6
@@ -132,6 +135,10 @@ fun SpectrumTool(vm: MainViewModel) {
                     Text(
                         S(R.string.spectrum_marker, mhzLabel(marker.toDouble())) + (level?.let { " · " + "%.0f dBFS".format(Locale.getDefault(), it) } ?: ""),
                         style = rf(15, 20, 600, tnum = true),
+                    )
+                    ToolButtons(
+                        ToolButton("− ${markerStepLabel(c.markerStepHz())}", Sym.ChevronLeft, BtnKind.OutlineOnSurface) { c.nudgeMarker(-1, center.toLong()) },
+                        ToolButton("+ ${markerStepLabel(c.markerStepHz())}", Sym.ChevronRight, BtnKind.OutlineOnSurface) { c.nudgeMarker(1, center.toLong()) },
                     )
                     ToolButtons(
                         ToolButton(S(R.string.spectrum_listen_here), Sym.Headphones) {
@@ -199,8 +206,29 @@ internal fun SpectrumView(db: FloatArray?, hold: FloatArray?, peakIdx: Int?, mar
     val holdColor = AntTheme.net.fair
     val markerColor = cs.tertiary
     Box(Modifier.fillMaxWidth().height(180.dp).clip(RoundedCornerShape(24.dp)).background(cs.surfaceContainerHigh)) {
+        // The handler is read again at every gesture: it holds the centre and the width shown now, not those of the first frame.
+        val current by androidx.compose.runtime.rememberUpdatedState(onTap)
         val tap = if (onTap != null) Modifier.pointerInput(Unit) {
-            detectTapGestures { p -> onTap((p.x / size.width).coerceIn(0f, 1f)) }
+            awaitEachGesture {
+                val down = awaitFirstDown(requireUnconsumed = false)
+                fun at(x: Float) = (x / size.width).coerceIn(0f, 1f)
+                var moved = false
+                var scrolling = false
+                while (true) {
+                    val event = awaitPointerEvent()
+                    // Two fingers are a pinch (the zoom), not a marker.
+                    if (event.changes.count { it.pressed } > 1) { scrolling = true; break }
+                    val ch = event.changes.firstOrNull() ?: break
+                    if (!ch.pressed) break
+                    val dx = ch.position.x - down.position.x
+                    val dy = ch.position.y - down.position.y
+                    if (!moved && kotlin.math.abs(dy) > viewConfiguration.touchSlop && kotlin.math.abs(dy) > kotlin.math.abs(dx)) { scrolling = true; break }
+                    if (kotlin.math.abs(dx) > viewConfiguration.touchSlop) moved = true
+                    // One finger sliding along the spectrum moves the marker, as the dial of the Listen tool.
+                    if (moved) { current?.invoke(at(ch.position.x)); ch.consume() }
+                }
+                if (!moved && !scrolling) current?.invoke(at(down.position.x))
+            }
         } else Modifier
         Canvas(Modifier.fillMaxSize().padding(horizontal = 8.dp, vertical = 12.dp).then(tap)) {
             val minDb = -110f

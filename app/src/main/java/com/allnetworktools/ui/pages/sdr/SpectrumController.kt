@@ -62,6 +62,32 @@ class SpectrumController(private val repo: SdrRepository, private val scope: Cor
         zoom = v
         wantZoom = v
         hold = null
+        dropMarkerOutside(if (running) tunedHz else parsedCenterHz() ?: 0L)
+    }
+
+    /** The marker is a frequency: it stays while it is in the view around [centerHz], and goes when the view moves away from it. */
+    private fun dropMarkerOutside(centerHz: Long) {
+        val m = markerHz ?: return
+        val half = spanMhz * 1e6 / zoom / 2
+        if (m < centerHz - half || m > centerHz + half) markerHz = null
+    }
+
+    /** Moves the marker by [steps] of [markerStepHz], on the grid of that step, kept inside the view around [centerHz]. */
+    fun nudgeMarker(steps: Int, centerHz: Long) {
+        val m = markerHz ?: return
+        val step = markerStepHz()
+        val half = spanMhz * 1e6 / zoom / 2
+        val moved = (Math.round(m.toDouble() / step) + steps) * step
+        markerHz = moved.coerceIn((centerHz - half).toLong(), (centerHz + half).toLong())
+    }
+
+    /** About 1 % of the view, rounded to 1, 2.5 or 5 times a power of ten (10 kHz for 1 MHz, 100 kHz for 10 MHz). */
+    fun markerStepHz(): Long {
+        val raw = spanMhz * 1e6 / zoom / 100
+        val p = Math.pow(10.0, Math.floor(Math.log10(raw)))
+        val m = raw / p
+        val nice = when { m < 1.75 -> 1.0; m < 3.5 -> 2.5; m < 7.5 -> 5.0; else -> 10.0 }
+        return maxOf(1L, Math.round(nice * p))
     }
 
     var running by mutableStateOf(false)
@@ -93,6 +119,7 @@ class SpectrumController(private val repo: SdrRepository, private val scope: Cor
         // A width the radio cannot show (20 MHz on an RTL-SDR) falls back to the widest one it can.
         spanMhz = fitSpan(spanMhz, device.spectrumSpans)
         val hz = parsedCenterHz() ?: run { error = S(R.string.invalid_frequency_1_to_6000_mhz); return }
+        dropMarkerOutside(hz)
         onAcquire()
         error = null
         starting = true
@@ -121,6 +148,7 @@ class SpectrumController(private val repo: SdrRepository, private val scope: Cor
 
     /** Changes the centre frequency without restarting the stream. */
     fun retune(hz: Long) {
+        dropMarkerOutside(hz)
         val r = radio ?: run { centerMhz = "%.3f".format(java.util.Locale.US, hz / 1e6); return }
         centerMhz = "%.3f".format(java.util.Locale.US, hz / 1e6)
         hold = null

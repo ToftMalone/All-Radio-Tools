@@ -137,8 +137,6 @@ The HackRF can also transmit, only when you ask it to and only where it is allow
   - **Listen**: hold **Talk** to send the microphone in NFM, AM, USB or LSB (never in WFM); reception pauses while you talk.
   - **APRS**: your own **position beacon** (AX.25, 1200 baud AFSK, FM) with SSID, symbol and comment, once or every 10 to 30 minutes.
   - **SSTV**: a **photo** from the phone, with your call sign written on it, in Robot 36, Martin M1, Scottie S1 or PD120, on 144.500 MHz FM or 14.230 / 7.171 / 3.735 MHz SSB.
-- **Licence-free mesh band** (863–870 MHz, 433 MHz, 902–928 MHz):
-  - **Meshtastic**: the radio joins the mesh as a **node** on the default LongFast channel: it announces itself (NodeInfo) when started and every three hours, and sends the phone's position every 15 to 60 minutes, at the precision you choose.
 
 Every transmission is checked against these bands before it starts (and again in the radio driver), never goes out through a converter, and each transmitter was checked in tests by the app's own receivers. Transmit gain and the 14 dB amplifier are set in the transmit settings.
 

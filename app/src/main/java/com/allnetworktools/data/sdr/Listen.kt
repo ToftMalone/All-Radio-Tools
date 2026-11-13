@@ -18,9 +18,9 @@ enum class ListenMode(val label: String, val stepHz: Long, val bandwidthHz: Int)
     /** Amplitude modulation (aviation, shortwave broadcasts, CB). */
     Am("AM", 25_000, 10_000),
     /** Upper sideband (radio amateurs above 10 MHz). */
-    Usb("USB", 1_000, 2_400),
+    Usb("USB", 500, 2_400),
     /** Lower sideband (radio amateurs below 10 MHz). */
-    Lsb("LSB", 1_000, 2_400);
+    Lsb("LSB", 500, 2_400);
 
     companion object {
         /** Amateur bands where voice is single sideband: lower below 10 MHz, upper above. */

@@ -39,7 +39,6 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.allnetworktools.MainViewModel
 import com.allnetworktools.R
-import com.allnetworktools.data.sdr.MeshFrame
 import com.allnetworktools.data.sdr.AdsbTracker
 import com.allnetworktools.data.sdr.MeshBand
 import com.allnetworktools.data.sdr.MeshMessage
@@ -102,15 +101,12 @@ abstract class MeshController(repo: SdrRepository, scope: CoroutineScope, onAcqu
     abstract val band: MeshBand
     protected abstract val tracker: MeshTracker
 
-    /** Every frame heard, on the DSP thread, after the tracker has it. */
-    protected open fun onFrame(f: MeshFrame) {}
-
     override val sampleRate = MeshRadio.SAMPLE_RATE
     override fun tuneHz() = band.loHz
 
     override fun newSink(): SdrSink {
         val t = tracker
-        val radio = MeshRadio(band) { f -> synchronized(t) { t.update(f, System.currentTimeMillis()) }; onFrame(f) }
+        val radio = MeshRadio(band) { f -> synchronized(t) { t.update(f, System.currentTimeMillis()) } }
         return object : SdrSink {
             override fun feed(buf: ByteArray, len: Int) = radio.feed(buf, len)
             override fun close() = radio.close()
@@ -155,7 +151,7 @@ abstract class MeshController(repo: SdrRepository, scope: CoroutineScope, onAcqu
 
 /** The screen both mesh tools use; [settings] adds the tool's own choices (band, channels) above the gains. */
 @Composable
-fun MeshScreen(vm: MainViewModel, c: MeshController, fileName: String, emptyIcon: String, emptyTitle: String, emptyBody: String, info: String, canStart: () -> Boolean = { true }, txPage: (@Composable () -> Unit)? = null, settings: @Composable () -> Unit) {
+fun MeshScreen(vm: MainViewModel, c: MeshController, fileName: String, emptyIcon: String, emptyTitle: String, emptyBody: String, info: String, canStart: () -> Boolean = { true }, settings: @Composable () -> Unit) {
     val actions = LocalActions.current
     val device by vm.sdrDevice.collectAsStateWithLifecycle()
     val positions by vm.positions.collectAsStateWithLifecycle()
@@ -167,8 +163,6 @@ fun MeshScreen(vm: MainViewModel, c: MeshController, fileName: String, emptyIcon
         actions.saveFile("$fileName-${Export.stamp(System.currentTimeMillis())}.csv", "text/csv") { snapshot.toByteArray() }
     }
     PageColumn {
-        // A tool that also transmits: reception and transmission are two pages.
-        if (txPage != null && RxTxRow(fileName) == RxTx.Tx) { txPage(); return@PageColumn }
         HeroCard {
             Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                 Text("${s.nodes.size}", style = gs(56, 60, 500, -1.5f, tnum = true))
