@@ -1386,7 +1386,7 @@
     <string name="aprs_is_the_radio_amateurs_beacon">"L'APRS est le réseau de balises des radioamateurs : position, route, vitesse, météo, état. "</string>
     <string name="stations_transmit_every_1_to_30">"Les stations émettent toutes les 1 à 30 minutes, il faut donc laisser tourner quelques minutes. "</string>
     <string name="text_messages_between_operators_are_never">"Les messages texte entre opérateurs ne sont jamais affichés"</string>
-    <string name="receive_only_2">". Réception seule."</string>
+    <string name="receive_only_2">". Avec un HackRF et une licence radioamateur, votre propre balise de position peut être envoyée d\'ici."</string>
     <string name="no_position">"Pas de position"</string>
     <string name="amp_14_db">"Ampli +14 dB"</string>
     <string name="analog">"Analogique"</string>
@@ -3002,4 +3002,16 @@
     <string name="tx_talk_title">"Parler"</string>
     <string name="tx_talk_hold">"Maintenir pour parler"</string>
     <string name="tx_talk_release">"Relâcher pour écouter"</string>
+    <string name="aprs_tx_no_fix">"Pas encore de position : activez la localisation."</string>
+    <string name="aprs_beacon_title">"Votre balise"</string>
+    <string name="aprs_beacon_hint">"Votre position en tant que %1$s, sur %2$s MHz, via WIDE1-1,WIDE2-1."</string>
+    <string name="aprs_beacon_no_ssid">"Sans SSID"</string>
+    <string name="aprs_beacon_symbol">"Symbole"</string>
+    <string name="aprs_beacon_portable">"Portable"</string>
+    <string name="aprs_beacon_comment">"Commentaire"</string>
+    <string name="aprs_beacon_send">"Envoyer une balise maintenant"</string>
+    <string name="aprs_beacon_auto">"Balise automatique"</string>
+    <string name="aprs_beacon_off">"Désactivée"</string>
+    <string name="aprs_beacon_every">"Toutes les %1$d min"</string>
+    <string name="aprs_beacon_last">"Dernière balise à %1$s"</string>
 </resources>

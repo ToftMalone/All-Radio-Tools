@@ -1387,7 +1387,7 @@
     <string name="aprs_is_the_radio_amateurs_beacon">"APRS is the radio amateurs' beacon network: position, course, speed, weather, status. "</string>
     <string name="stations_transmit_every_1_to_30">"Stations transmit every 1 to 30 minutes, so let it run for a few minutes. "</string>
     <string name="text_messages_between_operators_are_never">"Text messages between operators are never shown"</string>
-    <string name="receive_only_2">". Receive only."</string>
+    <string name="receive_only_2">". With a HackRF and an amateur licence, your own position beacon can be sent from here."</string>
     <string name="no_position">"No position"</string>
     <string name="amp_14_db">"Amp +14 dB"</string>
     <string name="analog">"Analog"</string>
@@ -2928,4 +2928,16 @@
     <string name="tx_talk_title">"Talk"</string>
     <string name="tx_talk_hold">"Hold to talk"</string>
     <string name="tx_talk_release">"Release to listen"</string>
+    <string name="aprs_tx_no_fix">"No position yet: turn on location."</string>
+    <string name="aprs_beacon_title">"Your beacon"</string>
+    <string name="aprs_beacon_hint">"Your position as %1$s, on %2$s MHz, via WIDE1-1,WIDE2-1."</string>
+    <string name="aprs_beacon_no_ssid">"No SSID"</string>
+    <string name="aprs_beacon_symbol">"Symbol"</string>
+    <string name="aprs_beacon_portable">"Portable"</string>
+    <string name="aprs_beacon_comment">"Comment"</string>
+    <string name="aprs_beacon_send">"Send a beacon now"</string>
+    <string name="aprs_beacon_auto">"Automatic beacon"</string>
+    <string name="aprs_beacon_off">"Off"</string>
+    <string name="aprs_beacon_every">"Every %1$d min"</string>
+    <string name="aprs_beacon_last">"Last beacon at %1$s"</string>
 </resources>

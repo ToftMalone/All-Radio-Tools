@@ -123,7 +123,7 @@ data class AprsInfo(
  * APRS beacons from amateur radio operators: 1200 baud packet radio on 144,800 MHz in Europe. The channel sits fs/4 above
  * the tuning, the HackRF's DC spike falls outside it. Text messages between operators are counted, never shown.
  */
-class AprsController(private val repo: SdrRepository, private val scope: CoroutineScope, private val onAcquire: () -> Unit = {}) {
+class AprsController(private val repo: SdrRepository, private val scope: CoroutineScope, private val onAcquire: () -> Unit = {}) : RxHost {
     var frequencyMhz by mutableStateOf("144.800")
     val gain = SdrGain(listOf(16, 24, 32, 40), 32, listOf(20, 30, 40), 30, amp = false)
     var lnaGain by gain::lna
@@ -147,6 +147,72 @@ class AprsController(private val repo: SdrRepository, private val scope: Corouti
 
     private var radio: SdrRadio? = null
     @Volatile private var dspRunning = false
+    private var rxSamples: ((ByteArray, Int) -> Unit)? = null
+    private var rxError: ((String) -> Unit)? = null
+
+    // Beacon: the operator's own position, sent on the tool's frequency.
+    val tx by lazy { SdrTransmitter(repo, scope) }
+    var beaconSsid by mutableStateOf(com.allnetworktools.data.sdr.TxSettings.string("aprs_ssid", "9"))
+        private set
+    var beaconSymbol by mutableStateOf(com.allnetworktools.data.sdr.TxSettings.string("aprs_symbol", "/["))
+        private set
+    var beaconComment by mutableStateOf(com.allnetworktools.data.sdr.TxSettings.string("aprs_comment", "All Radio Tools"))
+        private set
+    var autoMinutes by mutableIntStateOf(0)
+        private set
+    var lastBeaconMs by mutableStateOf(0L)
+        private set
+    /** The phone's latest fix, kept up to date by the screen. */
+    @Volatile var fix: android.location.Location? = null
+    private var autoJob: kotlinx.coroutines.Job? = null
+
+    fun updateSsid(v: String) { beaconSsid = v; com.allnetworktools.data.sdr.TxSettings.putString("aprs_ssid", v) }
+    fun updateSymbol(v: String) { beaconSymbol = v; com.allnetworktools.data.sdr.TxSettings.putString("aprs_symbol", v) }
+    fun updateComment(v: String) { beaconComment = v.take(40); com.allnetworktools.data.sdr.TxSettings.putString("aprs_comment", beaconComment) }
+
+    /** The call sign with the chosen SSID, as the beacon's source. */
+    val beaconSource: String get() = com.allnetworktools.data.sdr.TxSettings.callsign.substringBefore('-') + if (beaconSsid != "0") "-$beaconSsid" else ""
+
+    /** Sends one position beacon now (reception pauses meanwhile). */
+    fun sendBeacon(device: SdrDevice?): Boolean {
+        val f = fix ?: run { tx.error = S(R.string.aprs_tx_no_fix); return false }
+        val hz = parsedHz() ?: return false
+        val info = com.allnetworktools.data.sdr.AprsTx.positionInfo(f.latitude, f.longitude, beaconSymbol, beaconComment, if (f.hasAltitude()) f.altitude else null)
+        val audio = com.allnetworktools.data.sdr.AprsTx.beaconAudio(beaconSource, info, AUDIO_RATE)
+        val stream = com.allnetworktools.data.sdr.TxStream(
+            com.allnetworktools.data.sdr.AudioModulator(com.allnetworktools.data.sdr.BufferAudio(audio, AUDIO_RATE), com.allnetworktools.data.sdr.TxMode.Fm, 3_000.0, voice = false),
+            TX_RATE, TX_SHIFT.toDouble(),
+        )
+        val e = com.allnetworktools.data.sdr.Emission.around(hz, 8_000, 8_000, com.allnetworktools.data.sdr.TxUse.Amateur)
+        return tx.send(device, this, e, TX_RATE, hz - TX_SHIFT, stream) { if (tx.error == null) lastBeaconMs = System.currentTimeMillis() }
+    }
+
+    /** A beacon every [minutes] (0 stops), the first one now. */
+    fun setAuto(minutes: Int, device: SdrDevice?) {
+        autoJob?.cancel()
+        autoMinutes = minutes
+        if (minutes <= 0) return
+        autoJob = scope.launch {
+            while (true) {
+                sendBeacon(device)
+                kotlinx.coroutines.delay(minutes * 60_000L)
+            }
+        }
+    }
+
+    override val activeRadio: SdrRadio? get() = radio
+    override fun pauseRx() { radio?.stopStreaming() }
+    override fun resumeRx() {
+        val r = radio ?: return
+        val hz = listeningHz ?: return
+        val rate = AprsReceiver.SAMPLE_RATE
+        r.setSampleRate(rate, HackRf.filterFor(rate))
+        r.setFrequency(hz - rate / 4)
+        r.setLnaGain(lnaGain); r.setVgaGain(vgaGain); r.setAmp(amp)
+        val s = rxSamples ?: return
+        val e = rxError ?: return
+        r.startRx(s, e)
+    }
 
     fun parsedHz(): Long? = frequencyMhz.trim().replace(',', '.').toDoubleOrNull()?.takeIf { it in 100.0..1000.0 }?.let { (it * 1e6).roundToLong() }
 
@@ -208,10 +274,11 @@ class AprsController(private val repo: SdrRepository, private val scope: Corouti
             }
         }, "sdr-aprs").start()
         gain.attach { applyGains() }
-        r.startRx(
-            onSamples = { data, len -> gain.feed(data, len); free.poll()?.let { b -> System.arraycopy(data, 0, b, 0, len); full.offer(b to len) } },
-            onError = { msg -> scope.launch { error = msg; stop() } },
-        )
+        val samples: (ByteArray, Int) -> Unit = { data, len -> gain.feed(data, len); free.poll()?.let { b -> System.arraycopy(data, 0, b, 0, len); full.offer(b to len) } }
+        val failed: (String) -> Unit = { msg -> scope.launch { error = msg; stop() } }
+        rxSamples = samples
+        rxError = failed
+        r.startRx(samples, failed)
     }
 
     fun applyGains() {
@@ -237,6 +304,9 @@ class AprsController(private val repo: SdrRepository, private val scope: Corouti
 
     companion object {
         private const val POOL = 32
+        private const val AUDIO_RATE = 48_000
+        private const val TX_RATE = 2_400_000
+        private const val TX_SHIFT = 300_000L
     }
 }
 
@@ -261,6 +331,7 @@ fun AprsTool(vm: MainViewModel) {
     val device by vm.sdrDevice.collectAsStateWithLifecycle()
     val positions by vm.positions.collectAsStateWithLifecycle()
     val loc = positions.fused ?: positions.gnss ?: positions.network
+    c.fix = loc
     val me = loc?.let { it.latitude to it.longitude }
     val withPos = c.stations.filter { it.lat != null }
     val heardMessages = c.stations.sumOf { it.messages }
@@ -314,6 +385,10 @@ fun AprsTool(vm: MainViewModel) {
                     GainSettings(c.gain) { c.applyGains() }
                 }
             }
+        }
+        if (tab == ToolTab.Settings && d?.kind == com.allnetworktools.data.sdr.SdrKind.HackRf) {
+            TxSettingsCard()
+            BeaconCard(c, d)
         }
         if (tab == ToolTab.Settings) {
             SectionCard {
@@ -503,5 +578,37 @@ internal fun AprsMap(selected: String?, onSelect: (String?) -> Unit, stations: L
             Modifier.align(Alignment.BottomStart).padding(6.dp).clip(RoundedCornerShape(6.dp)).background(cs.surface.copy(alpha = 0.85f)).padding(horizontal = 6.dp, vertical = 2.dp),
             style = rf(10, 12), color = cs.onSurfaceVariant,
         )
+    }
+}
+
+/** The operator's own position beacon: SSID, symbol, comment, once now or every few minutes. */
+@Composable
+private fun BeaconCard(c: AprsController, device: SdrDevice) {
+    val hz = c.parsedHz()
+    val why = hz?.let { com.allnetworktools.data.sdr.TxPolicy.refuse(com.allnetworktools.data.sdr.Emission.around(it, 8_000, 8_000, com.allnetworktools.data.sdr.TxUse.Amateur)) }
+    SectionCard {
+        Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+            Text(S(R.string.aprs_beacon_title), style = rf(15, 20, 600))
+            Text(S(R.string.aprs_beacon_hint, c.beaconSource.ifEmpty { "—" }, c.frequencyMhz), style = rf(12, 16), color = cs.onSurfaceVariant)
+            Text("SSID", style = rf(13, 18, 600), color = cs.onSurfaceVariant)
+            FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                listOf("0", "5", "7", "9", "10").forEach { s -> AntFilterChip(if (s == "0") S(R.string.aprs_beacon_no_ssid) else "-$s", c.beaconSsid == s, { c.updateSsid(s) }) }
+            }
+            Text(S(R.string.aprs_beacon_symbol), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
+            FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                com.allnetworktools.data.sdr.AprsTx.Symbols.forEach { s -> AntFilterChip(Aprs.symbolName(s) ?: S(R.string.aprs_beacon_portable), c.beaconSymbol == s, { c.updateSymbol(s) }) }
+            }
+            HostInputField(c.beaconComment, { c.updateComment(it) }, S(R.string.aprs_beacon_comment), Sym.Edit, keyboardType = KeyboardType.Ascii)
+            com.allnetworktools.ui.tools.StartButton(S(R.string.aprs_beacon_send), Sym.Antenna, enabled = why == null && !c.tx.transmitting) { c.sendBeacon(device) }
+            Text(S(R.string.aprs_beacon_auto), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
+            FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                listOf(0, 10, 20, 30).forEach { m ->
+                    AntFilterChip(if (m == 0) S(R.string.aprs_beacon_off) else S(R.string.aprs_beacon_every, m), c.autoMinutes == m, { if (m == 0 || why == null) c.setAuto(m, device) })
+                }
+            }
+            if (c.lastBeaconMs > 0) Text(S(R.string.aprs_beacon_last, java.text.DateFormat.getTimeInstance(java.text.DateFormat.SHORT).format(java.util.Date(c.lastBeaconMs))), style = rf(12, 16), color = cs.onSurfaceVariant)
+            if (why != null) Text(why, style = rf(12, 16), color = cs.onSurfaceVariant)
+            TxStatus(c.tx)
+        }
     }
 }
