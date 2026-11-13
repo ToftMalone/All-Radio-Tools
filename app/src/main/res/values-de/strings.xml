@@ -2733,4 +2733,6 @@
     <string name="tx_licence_confirm">"Bestätigen"</string>
     <string name="tx_callsign_line">"Rufzeichen: %1$s"</string>
     <string name="tx_callsign_change">"Ändern"</string>
+    <string name="sdr_amp_dead">"Der Verstärker scheint defekt: mehrmals viel weniger Signal mit ihm als ohne. Er bleibt für diese Sitzung aus."</string>
+    <string name="sdr_amp_retry">"Verstärker erneut versuchen"</string>
 </resources>

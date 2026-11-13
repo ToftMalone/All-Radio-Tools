@@ -2664,4 +2664,6 @@
     <string name="tx_licence_confirm">"确认"</string>
     <string name="tx_callsign_line">"呼号：%1$s"</string>
     <string name="tx_callsign_change">"更改"</string>
+    <string name="sdr_amp_dead">"放大器似乎已损坏：多次出现开启时信号比关闭时弱得多。本次会话中保持关闭。"</string>
+    <string name="sdr_amp_retry">"再次尝试放大器"</string>
 </resources>

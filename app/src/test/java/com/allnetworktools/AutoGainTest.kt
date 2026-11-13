@@ -23,6 +23,8 @@ class FakeFrontEnd(seed: Long = 1) {
     var lna = 24
     var vga = 20
     var amp = false
+    /** A dead amplifier: with it on, the receive path loses 40 dB instead of gaining 14. */
+    var ampDead = false
     /** Antenna noise over the captured band, dBm (2 MHz at room temperature). */
     var noiseDbm = -111.0
     /** Tones: power in dBm and frequency as a share of the sample rate. */
@@ -39,7 +41,7 @@ class FakeFrontEnd(seed: Long = 1) {
     fun nf() = 6 + 0.4 * (40 - lna)
 
     /** dBm at the antenna to dBFS at the converter. */
-    fun gainDb() = lna + vga + (if (amp) 14 else 0) - 10.0
+    fun gainDb() = lna + vga + (if (amp) (if (ampDead) -40 else 14) else 0) - 10.0
 
     fun buffer(samples: Int = 4096): ByteArray {
         val g = gainDb()

@@ -2802,4 +2802,6 @@
     <string name="tx_licence_confirm">"Confirmă"</string>
     <string name="tx_callsign_line">"Indicativ: %1$s"</string>
     <string name="tx_callsign_change">"Modifică"</string>
+    <string name="sdr_amp_dead">"Amplificatorul pare defect: de mai multe ori mult mai puțin semnal cu el decât fără. Rămâne oprit în această sesiune."</string>
+    <string name="sdr_amp_retry">"Încearcă din nou amplificatorul"</string>
 </resources>

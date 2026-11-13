@@ -98,7 +98,7 @@ class FpvController(private val repo: SdrRepository, private val scope: Coroutin
     var lnaGain by gain::lna
     var vgaGain by gain::vga
     var amp: Boolean
-        get() = gain.amp == true
+        get() = gain.ampOn
         set(v) { gain.amp = v }
     var band by mutableIntStateOf(0) // DroneID: 24, 58 or 0 for both
     var rcBand by mutableIntStateOf(0) // remote controls: 24, 868, 915 or 0 for all

@@ -2871,4 +2871,6 @@
     <string name="tx_licence_confirm">"Підтвердити"</string>
     <string name="tx_callsign_line">"Позивний: %1$s"</string>
     <string name="tx_callsign_change">"Змінити"</string>
+    <string name="sdr_amp_dead">"Підсилювач, схоже, несправний: кілька разів сигнал з ним набагато слабший, ніж без нього. У цьому сеансі він лишається вимкненим."</string>
+    <string name="sdr_amp_retry">"Знову спробувати підсилювач"</string>
 </resources>

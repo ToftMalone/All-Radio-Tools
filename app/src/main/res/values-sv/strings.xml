@@ -2733,4 +2733,6 @@
     <string name="tx_licence_confirm">"Bekräfta"</string>
     <string name="tx_callsign_line">"Anropssignal: %1$s"</string>
     <string name="tx_callsign_change">"Ändra"</string>
+    <string name="sdr_amp_dead">"Förstärkaren verkar trasig: flera gånger mycket svagare signal med den än utan. Den förblir av under den här sessionen."</string>
+    <string name="sdr_amp_retry">"Prova förstärkaren igen"</string>
 </resources>

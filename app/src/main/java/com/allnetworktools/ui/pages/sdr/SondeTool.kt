@@ -132,7 +132,7 @@ class SondeController(private val repo: SdrRepository, private val scope: Corout
     var lnaGain by gain::lna
     var vgaGain by gain::vga
     var amp: Boolean
-        get() = gain.amp == true
+        get() = gain.ampOn
         set(v) { gain.amp = v }
     var running by mutableStateOf(false)
         private set
@@ -299,7 +299,6 @@ fun SondeTool(vm: MainViewModel) {
     val me = loc?.let { it.latitude to it.longitude }
     val (_, freqError) = c.parsedHz()
     val withPos = c.sondes.filter { it.lat != null }
-    var showSettings by remember { mutableStateOf(false) }
     PageColumn {
         HeroCard {
             Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
@@ -338,31 +337,23 @@ fun SondeTool(vm: MainViewModel) {
             }
         }
         if (tab == ToolTab.Settings) {
-            SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 6.dp, bottom = 6.dp)) {
-                Row(
-                    Modifier.fillMaxWidth().clickable { showSettings = !showSettings }.padding(vertical = 10.dp),
-                    verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp),
-                ) {
-                    Symbol(Sym.Tune, size = 20.dp, tint = AntTheme.accent.accent)
-                    Text(S(R.string.settings_2), Modifier.weight(1f), style = rf(14, 20, 600))
-                    Text((if (c.gain.auto) S(R.string.auto_gain) + " · " else "") + "LNA ${c.lnaGain} · VGA ${c.vgaGain}${if (c.amp) S(R.string.amp) else ""}", style = rf(12, 16), color = cs.onSurfaceVariant, maxLines = 1)
-                }
-                if (showSettings) {
-                    Column(Modifier.padding(bottom = 10.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                        FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                            listOf("403.000" to S(R.string.radiosondes), "434.660" to "Horus", "434.200" to "Horus").forEach { (f, l) ->
-                                AntFilterChip("${f.replace('.', ',')} · $l", c.frequencyMhz == f, { c.frequencyMhz = f })
-                            }
+            // The Settings tab shows its settings straight away: nothing to unfold.
+            SectionCard {
+                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                    Text(S(R.string.frequency), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
+                    FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        listOf("403.000" to S(R.string.radiosondes), "434.660" to "Horus", "434.200" to "Horus").forEach { (f, l) ->
+                            AntFilterChip("${f.replace('.', ',')} · $l", c.frequencyMhz == f, { c.frequencyMhz = f })
                         }
-                        HostInputField(c.frequencyMhz, { c.frequencyMhz = it }, S(R.string.frequency_mhz), Sym.Antenna, keyboardType = KeyboardType.Decimal)
-                        if (freqError != null) Text(freqError, style = rf(13, 18), color = cs.error)
-                        GainSettings(c.gain) { c.applyGains() }
-                        Text(
-                            S(R.string.the_frequency_applies_at_the_next) +
-                                S(R.string.a_line_that_comes_back_every),
-                            style = rf(12, 16), color = cs.onSurfaceVariant,
-                        )
                     }
+                    HostInputField(c.frequencyMhz, { c.frequencyMhz = it }, S(R.string.frequency_mhz), Sym.Antenna, keyboardType = KeyboardType.Decimal)
+                    if (freqError != null) Text(freqError, style = rf(13, 18), color = cs.error)
+                    GainSettings(c.gain) { c.applyGains() }
+                    Text(
+                        S(R.string.the_frequency_applies_at_the_next) +
+                            S(R.string.a_line_that_comes_back_every),
+                        style = rf(12, 16), color = cs.onSurfaceVariant,
+                    )
                 }
             }
         }

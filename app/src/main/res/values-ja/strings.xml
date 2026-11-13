@@ -2664,4 +2664,6 @@
     <string name="tx_licence_confirm">"確認"</string>
     <string name="tx_callsign_line">"コールサイン：%1$s"</string>
     <string name="tx_callsign_change">"変更"</string>
+    <string name="sdr_amp_dead">"アンプが故障しているようです：何度かオンのときのほうがオフよりずっと信号が弱くなりました。このセッションではオフのままにします。"</string>
+    <string name="sdr_amp_retry">"アンプをもう一度試す"</string>
 </resources>

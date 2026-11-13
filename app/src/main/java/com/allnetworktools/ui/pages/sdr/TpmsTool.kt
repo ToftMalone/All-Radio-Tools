@@ -71,7 +71,7 @@ class TpmsController(private val repo: SdrRepository, private val scope: Corouti
     var lnaGain by gain::lna
     var vgaGain by gain::vga
     var amp: Boolean
-        get() = gain.amp == true
+        get() = gain.ampOn
         set(v) { gain.amp = v }
     var running by mutableStateOf(false)
         private set

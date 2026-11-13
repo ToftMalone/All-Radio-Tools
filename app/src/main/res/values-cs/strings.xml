@@ -2871,4 +2871,6 @@
     <string name="tx_licence_confirm">"Potvrdit"</string>
     <string name="tx_callsign_line">"Volací značka: %1$s"</string>
     <string name="tx_callsign_change">"Změnit"</string>
+    <string name="sdr_amp_dead">"Zesilovač se zdá vadný: opakovaně mnohem slabší signál s ním než bez něj. Pro tuto relaci zůstane vypnutý."</string>
+    <string name="sdr_amp_retry">"Zkusit zesilovač znovu"</string>
 </resources>

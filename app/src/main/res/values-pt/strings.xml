@@ -2733,4 +2733,6 @@
     <string name="tx_licence_confirm">"Confirmar"</string>
     <string name="tx_callsign_line">"Indicativo: %1$s"</string>
     <string name="tx_callsign_change">"Alterar"</string>
+    <string name="sdr_amp_dead">"O amplificador parece avariado: muito menos sinal com ele do que sem ele, várias vezes. Fica desligado nesta sessão."</string>
+    <string name="sdr_amp_retry">"Tentar de novo o amplificador"</string>
 </resources>

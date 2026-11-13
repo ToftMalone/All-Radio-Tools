@@ -2664,4 +2664,6 @@
     <string name="tx_licence_confirm">"Konfirmasi"</string>
     <string name="tx_callsign_line">"Tanda panggil: %1$s"</string>
     <string name="tx_callsign_change">"Ubah"</string>
+    <string name="sdr_amp_dead">"Penguat tampaknya rusak: beberapa kali sinyal jauh lebih lemah saat aktif dibanding mati. Penguat tetap mati untuk sesi ini."</string>
+    <string name="sdr_amp_retry">"Coba penguat lagi"</string>
 </resources>

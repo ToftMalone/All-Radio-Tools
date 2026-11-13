@@ -2664,4 +2664,6 @@
     <string name="tx_licence_confirm">"확인"</string>
     <string name="tx_callsign_line">"호출부호: %1$s"</string>
     <string name="tx_callsign_change">"변경"</string>
+    <string name="sdr_amp_dead">"증폭기가 고장 난 것 같습니다: 여러 번 켰을 때가 껐을 때보다 신호가 훨씬 약했습니다. 이번 세션에서는 꺼 둡니다."</string>
+    <string name="sdr_amp_retry">"증폭기 다시 시도"</string>
 </resources>

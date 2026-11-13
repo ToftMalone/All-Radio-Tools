@@ -2733,4 +2733,6 @@
     <string name="tx_licence_confirm">"Onayla"</string>
     <string name="tx_callsign_line">"Çağrı işareti: %1$s"</string>
     <string name="tx_callsign_change">"Değiştir"</string>
+    <string name="sdr_amp_dead">"Yükselteç arızalı görünüyor: birkaç kez açıkken kapalıya göre çok daha az sinyal. Bu oturum boyunca kapalı kalır."</string>
+    <string name="sdr_amp_retry">"Yükselteci yeniden dene"</string>
 </resources>

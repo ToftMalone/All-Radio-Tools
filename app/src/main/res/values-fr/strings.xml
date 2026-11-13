@@ -3075,4 +3075,6 @@
     <string name="tx_licence_confirm">"Confirmer"</string>
     <string name="tx_callsign_line">"Indicatif : %1$s"</string>
     <string name="tx_callsign_change">"Modifier"</string>
+    <string name="sdr_amp_dead">"L\'ampli semble HS : beaucoup moins de signal avec lui qu\'sans lui, à plusieurs reprises. Il reste éteint pour cette session."</string>
+    <string name="sdr_amp_retry">"Réessayer l\'ampli"</string>
 </resources>

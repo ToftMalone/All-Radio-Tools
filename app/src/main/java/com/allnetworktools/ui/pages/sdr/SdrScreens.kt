@@ -119,8 +119,15 @@ class SdrGain(
     /** Null when the tool does not offer the amplifier. */
     var amp by mutableStateOf(amp)
 
+    /** Off for a moment while [AmpCheck] measures without it. */
+    @Volatile private var probeOff = false
+
+    /** What the radio's amplifier must be: the user's choice, unless found dead or briefly off for a check. */
+    val ampOn: Boolean get() = amp == true && !probeOff && !com.allnetworktools.data.sdr.AmpHealth.dead
+
     private val main = Handler(Looper.getMainLooper())
     @Volatile private var loop: AutoGain? = null
+    private val ampCheck = com.allnetworktools.data.sdr.AmpCheck()
     private var onAdjust: () -> Unit = {}
 
     /** Called when reception starts: from then on, in automatic mode, [onAdjust] pushes each new step to the radio. */
@@ -131,6 +138,21 @@ class SdrGain(
 
     /** Samples as they arrive from the radio, on its thread. */
     fun feed(buf: ByteArray, len: Int) {
+        // The amplifier check runs whatever the gain mode, on the HackRF only (the other radios have no such switch).
+        val kind = com.allnetworktools.data.sdr.SdrSettings.kind
+        if (amp != null && (kind == null || kind == com.allnetworktools.data.sdr.SdrKind.HackRf)) {
+            val nowS = System.nanoTime() / 1e9
+            when (ampCheck.feed(buf, len, nowS, ampOn, lna, vga)) {
+                com.allnetworktools.data.sdr.AmpCheck.Action.ProbeOff -> { probeOff = true; main.post { onAdjust() } }
+                com.allnetworktools.data.sdr.AmpCheck.Action.Restore -> { probeOff = false; main.post { onAdjust() } }
+                com.allnetworktools.data.sdr.AmpCheck.Action.Dead -> {
+                    probeOff = false
+                    com.allnetworktools.util.DebugLog.w("SDR", "Amplifier found dead: much less signal with it on than off, ${com.allnetworktools.data.sdr.AmpCheck.STRIKES} times")
+                    main.post { onAdjust() }
+                }
+                com.allnetworktools.data.sdr.AmpCheck.Action.None -> Unit
+            }
+        }
         if (!auto) return
         val l = loop ?: return
         val step = l.feed(buf, len, System.nanoTime()) ?: return
@@ -165,7 +187,13 @@ internal fun GainSettings(g: SdrGain, onChange: () -> Unit) {
             GainSlider(S(R.string.vga_gain_db), g.vga, 0, 62, 2, g.auto, onChange) { g.auto = false; g.vga = it }
             g.amp?.let { on ->
                 Text(S(R.string.preamplifier), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
-                AntFilterChip(S(R.string.amp_14_db), on, { g.amp = !on; onChange() })
+                if (com.allnetworktools.data.sdr.AmpHealth.dead) {
+                    // Found dead this session: kept off, and the user may try it again.
+                    Text(S(R.string.sdr_amp_dead), style = rf(12, 16), color = cs.error)
+                    androidx.compose.material3.TextButton({ com.allnetworktools.data.sdr.AmpHealth.reset(); onChange() }) { Text(S(R.string.sdr_amp_retry)) }
+                } else {
+                    AntFilterChip(S(R.string.amp_14_db), on, { g.amp = !on; onChange() })
+                }
             }
         }
         if (kind?.biasTee == true) BiasTeeLine()

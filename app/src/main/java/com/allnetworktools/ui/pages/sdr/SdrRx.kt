@@ -62,7 +62,7 @@ abstract class SdrRxController(
         val rate = sampleRate
         r.setSampleRate(rate, HackRf.filterFor(rate))
         r.setFrequency(tunedHz)
-        r.setLnaGain(gain.lna); r.setVgaGain(gain.vga); r.setAmp(gain.amp == true)
+        r.setLnaGain(gain.lna); r.setVgaGain(gain.vga); r.setAmp(gain.ampOn)
         val s = rxSamples ?: return
         val e = rxError ?: return
         r.startRx(s, e)
@@ -83,7 +83,7 @@ abstract class SdrRxController(
                 val r = withContext(Dispatchers.IO) { repo.open(device) } ?: run { error = S(R.string.could_not_open_the_hackrf); return@launch }
                 val lna = gain.lna
                 val vga = gain.vga
-                val withAmp = gain.amp == true
+                val withAmp = gain.ampOn
                 val rate = sampleRate
                 val hz = tuneHz()
                 tunedHz = hz
@@ -131,7 +131,7 @@ abstract class SdrRxController(
         val r = radio ?: return
         val lna = gain.lna
         val vga = gain.vga
-        val withAmp = gain.amp == true
+        val withAmp = gain.ampOn
         scope.launch(Dispatchers.IO) { r.setLnaGain(lna); r.setVgaGain(vga); r.setAmp(withAmp) }
     }
 

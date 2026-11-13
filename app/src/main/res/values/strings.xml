@@ -3001,4 +3001,6 @@
     <string name="tx_licence_confirm">"Confirm"</string>
     <string name="tx_callsign_line">"Call sign: %1$s"</string>
     <string name="tx_callsign_change">"Change"</string>
+    <string name="sdr_amp_dead">"The amplifier seems dead: far less signal with it on than off, several times. It stays off for this session."</string>
+    <string name="sdr_amp_retry">"Try the amplifier again"</string>
 </resources>

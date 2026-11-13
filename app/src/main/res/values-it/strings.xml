@@ -2733,4 +2733,6 @@
     <string name="tx_licence_confirm">"Conferma"</string>
     <string name="tx_callsign_line">"Nominativo: %1$s"</string>
     <string name="tx_callsign_change">"Modifica"</string>
+    <string name="sdr_amp_dead">"L\'amplificatore sembra guasto: molto meno segnale con esso che senza, più volte. Resta spento per questa sessione."</string>
+    <string name="sdr_amp_retry">"Riprova l\'amplificatore"</string>
 </resources>

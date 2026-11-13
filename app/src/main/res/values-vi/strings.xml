@@ -2664,4 +2664,6 @@
     <string name="tx_licence_confirm">"Xác nhận"</string>
     <string name="tx_callsign_line">"Hô hiệu: %1$s"</string>
     <string name="tx_callsign_change">"Đổi"</string>
+    <string name="sdr_amp_dead">"Bộ khuếch đại có vẻ hỏng: nhiều lần tín hiệu khi bật yếu hơn hẳn khi tắt. Nó sẽ được tắt trong phiên này."</string>
+    <string name="sdr_amp_retry">"Thử lại bộ khuếch đại"</string>
 </resources>
