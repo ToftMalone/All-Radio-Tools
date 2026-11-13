@@ -2660,4 +2660,8 @@
     <string name="aprs_beacon_every">"每 %1$d 分钟"</string>
     <string name="aprs_beacon_last">"上次信标于 %1$s"</string>
     <string name="sdr_auto_now">"自动：LNA %1$d dB · VGA %2$d dB"</string>
+    <string name="tx_licence_title">"业余无线电执照"</string>
+    <string name="tx_licence_confirm">"确认"</string>
+    <string name="tx_callsign_line">"呼号：%1$s"</string>
+    <string name="tx_callsign_change">"更改"</string>
 </resources>

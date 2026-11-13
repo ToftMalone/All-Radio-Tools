@@ -2729,4 +2729,8 @@
     <string name="aprs_beacon_every">"Cada %1$d min"</string>
     <string name="aprs_beacon_last">"Última baliza a las %1$s"</string>
     <string name="sdr_auto_now">"Automático: LNA %1$d dB · VGA %2$d dB"</string>
+    <string name="tx_licence_title">"Licencia de radioaficionado"</string>
+    <string name="tx_licence_confirm">"Confirmar"</string>
+    <string name="tx_callsign_line">"Indicativo: %1$s"</string>
+    <string name="tx_callsign_change">"Cambiar"</string>
 </resources>

@@ -3071,4 +3071,8 @@
     <string name="glasses_conf_low">"ne filme probablement pas"</string>
     <string name="glasses_min_ago">"il y a %1$d min"</string>
     <string name="glasses_how_it_works">"Les lunettes connectées émettent sans arrêt des annonces Bluetooth LE, et chaque annonce porte l\'identifiant du fabricant attribué par le Bluetooth SIG, impossible à masquer : 0x0D53 pour Luxottica (Ray-Ban Meta, Oakley Meta), 0x03C2 et le service 0xFE45 pour Snap (Spectacles), 0x058E, 0x01AB et les services 0xFD5F, 0xFEB7, 0xFEB8 pour Meta, et le service HeyCyan pour les lunettes qui reposent dessus (Nilox…). Les noms (Ray-Ban, Spectacles, HeyCyan…) sont un indice plus faible. Un identifiant Meta seul peut aussi être un casque Quest, qui filme aussi. Une détection dit que des lunettes capables de filmer sont à portée, pas qu\'elles filment, ni qui les porte ; certains modèles se taisent une fois portés. La distance est approximative (force du signal). Identifiants vérifiés dans les numéros attribués du Bluetooth SIG ; travaux de Nearby Glasses (Yves Jeanrenaud), NoPeek et ZuckOff. Écoute seulement. N\'importunez jamais quelqu\'un à cause d\'une alerte : vous pouvez vous tromper, et le harcèlement est un délit dans de nombreux pays."</string>
+    <string name="tx_licence_title">"Licence radioamateur"</string>
+    <string name="tx_licence_confirm">"Confirmer"</string>
+    <string name="tx_callsign_line">"Indicatif : %1$s"</string>
+    <string name="tx_callsign_change">"Modifier"</string>
 </resources>

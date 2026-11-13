@@ -2729,4 +2729,8 @@
     <string name="aprs_beacon_every">"Elke %1$d min"</string>
     <string name="aprs_beacon_last">"Laatste baken om %1$s"</string>
     <string name="sdr_auto_now">"Automatisch: LNA %1$d dB · VGA %2$d dB"</string>
+    <string name="tx_licence_title">"Zendamateurvergunning"</string>
+    <string name="tx_licence_confirm">"Bevestigen"</string>
+    <string name="tx_callsign_line">"Roepnaam: %1$s"</string>
+    <string name="tx_callsign_change">"Wijzigen"</string>
 </resources>

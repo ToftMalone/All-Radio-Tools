@@ -2729,4 +2729,8 @@
     <string name="aprs_beacon_every">"Var %1$d:e min"</string>
     <string name="aprs_beacon_last">"Senaste fyr kl. %1$s"</string>
     <string name="sdr_auto_now">"Automatiskt: LNA %1$d dB · VGA %2$d dB"</string>
+    <string name="tx_licence_title">"Amatörradiocertifikat"</string>
+    <string name="tx_licence_confirm">"Bekräfta"</string>
+    <string name="tx_callsign_line">"Anropssignal: %1$s"</string>
+    <string name="tx_callsign_change">"Ändra"</string>
 </resources>

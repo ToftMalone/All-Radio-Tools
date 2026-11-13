@@ -2729,4 +2729,8 @@
     <string name="aprs_beacon_every">"Alle %1$d min"</string>
     <string name="aprs_beacon_last">"Letzte Bake um %1$s"</string>
     <string name="sdr_auto_now">"Automatisch: LNA %1$d dB · VGA %2$d dB"</string>
+    <string name="tx_licence_title">"Amateurfunklizenz"</string>
+    <string name="tx_licence_confirm">"Bestätigen"</string>
+    <string name="tx_callsign_line">"Rufzeichen: %1$s"</string>
+    <string name="tx_callsign_change">"Ändern"</string>
 </resources>

@@ -2660,4 +2660,8 @@
     <string name="aprs_beacon_every">"ทุก %1$d นาที"</string>
     <string name="aprs_beacon_last">"บีคอนล่าสุดเวลา %1$s"</string>
     <string name="sdr_auto_now">"อัตโนมัติ: LNA %1$d dB · VGA %2$d dB"</string>
+    <string name="tx_licence_title">"ใบอนุญาตวิทยุสมัครเล่น"</string>
+    <string name="tx_licence_confirm">"ยืนยัน"</string>
+    <string name="tx_callsign_line">"สัญญาณเรียกขาน: %1$s"</string>
+    <string name="tx_callsign_change">"เปลี่ยน"</string>
 </resources>

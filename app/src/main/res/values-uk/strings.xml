@@ -2867,4 +2867,8 @@
     <string name="aprs_beacon_every">"Кожні %1$d хв"</string>
     <string name="aprs_beacon_last">"Останній маяк о %1$s"</string>
     <string name="sdr_auto_now">"Автоматично: LNA %1$d дБ · VGA %2$d дБ"</string>
+    <string name="tx_licence_title">"Ліцензія радіоаматора"</string>
+    <string name="tx_licence_confirm">"Підтвердити"</string>
+    <string name="tx_callsign_line">"Позивний: %1$s"</string>
+    <string name="tx_callsign_change">"Змінити"</string>
 </resources>

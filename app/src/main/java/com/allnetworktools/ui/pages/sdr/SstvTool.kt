@@ -239,8 +239,9 @@ fun SstvTool(vm: MainViewModel) {
             }
         }
         if (tab == ToolTab.Settings && device?.kind == com.allnetworktools.data.sdr.SdrKind.HackRf) {
-            TxSettingsCard()
-            SendPictureCard(c, device)
+            val gate = rememberLicenceGate()
+            TxSettingsCard(gate = gate)
+            SendPictureCard(c, device, gate)
         }
         if (tab == ToolTab.Settings) {
             SectionCard {
@@ -269,7 +270,7 @@ fun SstvTool(vm: MainViewModel) {
 
 /** Sends a photo from the phone as SSTV, with the call sign written on it. */
 @Composable
-private fun SendPictureCard(c: SstvController, device: com.allnetworktools.data.sdr.SdrDevice?) {
+private fun SendPictureCard(c: SstvController, device: com.allnetworktools.data.sdr.SdrDevice?, gate: LicenceGate) {
     val context = androidx.compose.ui.platform.LocalContext.current
     val pick = androidx.activity.compose.rememberLauncherForActivityResult(androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia()) { uri ->
         if (uri != null) c.photo = runCatching {
@@ -282,7 +283,7 @@ private fun SendPictureCard(c: SstvController, device: com.allnetworktools.data.
             }
         }.getOrNull()
     }
-    val why = com.allnetworktools.data.sdr.TxPolicy.refuse(c.sendEmission())
+    val why = com.allnetworktools.data.sdr.TxPolicy.refuse(c.sendEmission(), ignoreLicence = true)
     val mode = com.allnetworktools.data.sdr.Sstv.modes.first { it.name == c.sendMode }
     SectionCard {
         Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
@@ -311,7 +312,7 @@ private fun SendPictureCard(c: SstvController, device: com.allnetworktools.data.
                 c.sendChannels.forEach { ch -> AntFilterChip(ch.label, c.sendChannel == ch, { c.sendChannel = ch }) }
             }
             if (c.tx.transmitting) StartButton(S(R.string.stop), Sym.Stop) { c.tx.stop() }
-            else StartButton(S(R.string.sstv_send_go), Sym.Antenna, enabled = why == null && c.photo != null) { c.sendPicture(device) }
+            else StartButton(S(R.string.sstv_send_go), Sym.Antenna, enabled = why == null && c.photo != null) { gate.run { c.sendPicture(device) } }
             if (why != null) Text(why, style = rf(12, 16), color = cs.onSurfaceVariant)
             TxStatus(c.tx)
         }

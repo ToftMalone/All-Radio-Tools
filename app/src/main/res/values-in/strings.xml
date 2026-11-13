@@ -2660,4 +2660,8 @@
     <string name="aprs_beacon_every">"Setiap %1$d mnt"</string>
     <string name="aprs_beacon_last">"Beacon terakhir pukul %1$s"</string>
     <string name="sdr_auto_now">"Otomatis: LNA %1$d dB · VGA %2$d dB"</string>
+    <string name="tx_licence_title">"Izin radio amatir"</string>
+    <string name="tx_licence_confirm">"Konfirmasi"</string>
+    <string name="tx_callsign_line">"Tanda panggil: %1$s"</string>
+    <string name="tx_callsign_change">"Ubah"</string>
 </resources>

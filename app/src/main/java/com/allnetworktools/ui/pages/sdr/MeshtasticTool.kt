@@ -231,7 +231,9 @@ fun MeshtasticTool(vm: MainViewModel) {
 /** The radio as a Meshtastic node: on or off, its name, how often and how precisely it sends its position. */
 @Composable
 private fun NodeCard(c: MeshtasticController, device: com.allnetworktools.data.sdr.SdrDevice?) {
-    val why = c.txEmission()?.let { com.allnetworktools.data.sdr.TxPolicy.refuse(it) } ?: S(R.string.tx_out_of_band)
+    // No channel (an invalid free frequency) is out of band; otherwise the policy decides, and null means it may go out.
+    val emission = c.txEmission()
+    val why = if (emission == null) S(R.string.tx_out_of_band) else com.allnetworktools.data.sdr.TxPolicy.refuse(emission)
     SectionCard {
         Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
             Text(S(R.string.mesh_node_title), style = rf(15, 20, 600))

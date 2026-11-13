@@ -467,8 +467,9 @@ fun ListenTool(vm: MainViewModel) {
                 }
             }
         }
-        if (tab == ToolTab.Main && d?.kind == com.allnetworktools.data.sdr.SdrKind.HackRf) TalkCard(c, d)
-        if (tab == ToolTab.Settings && d?.kind == com.allnetworktools.data.sdr.SdrKind.HackRf) TxSettingsCard()
+        val gate = rememberLicenceGate()
+        if (tab == ToolTab.Main && d?.kind == com.allnetworktools.data.sdr.SdrKind.HackRf) TalkCard(c, d, gate)
+        if (tab == ToolTab.Settings && d?.kind == com.allnetworktools.data.sdr.SdrKind.HackRf) TxSettingsCard(gate = gate)
         if (tab == ToolTab.Settings) {
             SectionCard {
                 Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
@@ -558,10 +559,10 @@ private fun SpectrumPicker(c: ListenController) {
 
 /** Push to talk: hold the button to transmit the microphone on the tuned frequency, in the tuned mode. */
 @Composable
-private fun TalkCard(c: ListenController, device: com.allnetworktools.data.sdr.SdrDevice) {
+private fun TalkCard(c: ListenController, device: com.allnetworktools.data.sdr.SdrDevice, gate: LicenceGate) {
     val vmPerms = com.allnetworktools.ui.LocalActions.current
     val e = com.allnetworktools.data.sdr.Emission.around(c.frequencyHz, 3_000, 3_000, com.allnetworktools.data.sdr.TxUse.Amateur)
-    val why = if (c.txMode == null) S(R.string.tx_not_in_wfm) else com.allnetworktools.data.sdr.TxPolicy.refuse(e)
+    val why = if (c.txMode == null) S(R.string.tx_not_in_wfm) else com.allnetworktools.data.sdr.TxPolicy.refuse(e, ignoreLicence = true)
     val red = cs.error
     SectionCard {
         Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
@@ -577,6 +578,8 @@ private fun TalkCard(c: ListenController, device: com.allnetworktools.data.sdr.S
                                 vmPerms.request(com.allnetworktools.data.PermGroup.Microphone)
                                 return@detectTapGestures
                             }
+                            // No call sign or licence yet: the press opens the dialog instead of transmitting.
+                            if (!com.allnetworktools.data.sdr.TxSettings.amateurReady) { gate.run { }; return@detectTapGestures }
                             c.pushToTalk(device)
                             tryAwaitRelease()
                             c.releaseTalk()

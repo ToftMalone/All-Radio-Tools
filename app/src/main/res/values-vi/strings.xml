@@ -2660,4 +2660,8 @@
     <string name="aprs_beacon_every">"Mỗi %1$d phút"</string>
     <string name="aprs_beacon_last">"Beacon gần nhất lúc %1$s"</string>
     <string name="sdr_auto_now">"Tự động: LNA %1$d dB · VGA %2$d dB"</string>
+    <string name="tx_licence_title">"Giấy phép vô tuyến nghiệp dư"</string>
+    <string name="tx_licence_confirm">"Xác nhận"</string>
+    <string name="tx_callsign_line">"Hô hiệu: %1$s"</string>
+    <string name="tx_callsign_change">"Đổi"</string>
 </resources>

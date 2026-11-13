@@ -2997,4 +2997,8 @@
     <string name="glasses_conf_low">"unlikely to film"</string>
     <string name="glasses_min_ago">"%1$d min ago"</string>
     <string name="glasses_how_it_works">"Smart glasses keep advertising over Bluetooth LE, and each advertisement carries the maker\'s identifier assigned by the Bluetooth SIG, which cannot be hidden: 0x0D53 for Luxottica (Ray-Ban Meta, Oakley Meta), 0x03C2 and service 0xFE45 for Snap (Spectacles), 0x058E, 0x01AB and services 0xFD5F, 0xFEB7, 0xFEB8 for Meta, and the HeyCyan service for the glasses built on it (Nilox…). Names (Ray-Ban, Spectacles, HeyCyan…) are a weaker sign. A Meta identifier alone may also be a Quest headset, which films too. A match says camera-capable glasses are in range, not that they are recording, nor who wears them; some models stay silent while worn. Distance is rough (signal strength). Identifiers checked against the Bluetooth SIG\'s assigned numbers; findings of Nearby Glasses (Yves Jeanrenaud), NoPeek and ZuckOff. Listening only. Never harass someone because of an alert: you may be wrong, and harassment is an offence in many countries."</string>
+    <string name="tx_licence_title">"Amateur radio licence"</string>
+    <string name="tx_licence_confirm">"Confirm"</string>
+    <string name="tx_callsign_line">"Call sign: %1$s"</string>
+    <string name="tx_callsign_change">"Change"</string>
 </resources>

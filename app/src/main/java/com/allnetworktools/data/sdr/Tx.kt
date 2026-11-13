@@ -100,11 +100,14 @@ object TxPolicy {
 
     fun inBands(e: Emission, bands: List<LongRange>) = bands.any { e.lowHz >= it.first && e.highHz <= it.last }
 
-    /** Null when [e] may go out, else why not, in the user's language. */
-    fun refuse(e: Emission): String? = when {
+    /**
+     * Null when [e] may go out, else why not, in the user's language. [ignoreLicence] leaves out the call sign and the
+     * licence box, which the licence dialog asks for when the user transmits.
+     */
+    fun refuse(e: Emission, ignoreLicence: Boolean = false): String? = when {
         SdrSettings.converterHz != 0L -> S(R.string.tx_no_converter)
-        e.use == TxUse.Amateur && !TxSettings.validCallsign -> S(R.string.tx_need_callsign)
-        e.use == TxUse.Amateur && !TxSettings.licensed -> S(R.string.tx_need_licence)
+        !ignoreLicence && e.use == TxUse.Amateur && !TxSettings.validCallsign -> S(R.string.tx_need_callsign)
+        !ignoreLicence && e.use == TxUse.Amateur && !TxSettings.licensed -> S(R.string.tx_need_licence)
         e.use == TxUse.Amateur && !inBands(e, AmateurBands) -> S(R.string.tx_out_of_band)
         e.use == TxUse.Ism && !inBands(e, IsmBands) -> S(R.string.tx_out_of_band)
         else -> null

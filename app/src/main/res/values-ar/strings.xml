@@ -3005,4 +3005,8 @@
     <string name="aprs_beacon_every">"كل %1$d دقيقة"</string>
     <string name="aprs_beacon_last">"آخر منارة في %1$s"</string>
     <string name="sdr_auto_now">"تلقائي: LNA %1$d dB · VGA %2$d dB"</string>
+    <string name="tx_licence_title">"رخصة راديو الهواة"</string>
+    <string name="tx_licence_confirm">"تأكيد"</string>
+    <string name="tx_callsign_line">"النداء المميز: %1$s"</string>
+    <string name="tx_callsign_change">"تغيير"</string>
 </resources>

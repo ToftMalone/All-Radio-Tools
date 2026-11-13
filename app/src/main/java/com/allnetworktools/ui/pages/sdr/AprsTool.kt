@@ -387,8 +387,9 @@ fun AprsTool(vm: MainViewModel) {
             }
         }
         if (tab == ToolTab.Settings && d?.kind == com.allnetworktools.data.sdr.SdrKind.HackRf) {
-            TxSettingsCard()
-            BeaconCard(c, d)
+            val gate = rememberLicenceGate()
+            TxSettingsCard(gate = gate)
+            BeaconCard(c, d, gate)
         }
         if (tab == ToolTab.Settings) {
             SectionCard {
@@ -583,9 +584,9 @@ internal fun AprsMap(selected: String?, onSelect: (String?) -> Unit, stations: L
 
 /** The operator's own position beacon: SSID, symbol, comment, once now or every few minutes. */
 @Composable
-private fun BeaconCard(c: AprsController, device: SdrDevice) {
+private fun BeaconCard(c: AprsController, device: SdrDevice, gate: LicenceGate) {
     val hz = c.parsedHz()
-    val why = hz?.let { com.allnetworktools.data.sdr.TxPolicy.refuse(com.allnetworktools.data.sdr.Emission.around(it, 8_000, 8_000, com.allnetworktools.data.sdr.TxUse.Amateur)) }
+    val why = hz?.let { com.allnetworktools.data.sdr.TxPolicy.refuse(com.allnetworktools.data.sdr.Emission.around(it, 8_000, 8_000, com.allnetworktools.data.sdr.TxUse.Amateur), ignoreLicence = true) }
     SectionCard {
         Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
             Text(S(R.string.aprs_beacon_title), style = rf(15, 20, 600))
@@ -599,11 +600,11 @@ private fun BeaconCard(c: AprsController, device: SdrDevice) {
                 com.allnetworktools.data.sdr.AprsTx.Symbols.forEach { s -> AntFilterChip(Aprs.symbolName(s) ?: S(R.string.aprs_beacon_portable), c.beaconSymbol == s, { c.updateSymbol(s) }) }
             }
             HostInputField(c.beaconComment, { c.updateComment(it) }, S(R.string.aprs_beacon_comment), Sym.Edit, keyboardType = KeyboardType.Ascii)
-            com.allnetworktools.ui.tools.StartButton(S(R.string.aprs_beacon_send), Sym.Antenna, enabled = why == null && !c.tx.transmitting) { c.sendBeacon(device) }
+            com.allnetworktools.ui.tools.StartButton(S(R.string.aprs_beacon_send), Sym.Antenna, enabled = why == null && !c.tx.transmitting) { gate.run { c.sendBeacon(device) } }
             Text(S(R.string.aprs_beacon_auto), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 listOf(0, 10, 20, 30).forEach { m ->
-                    AntFilterChip(if (m == 0) S(R.string.aprs_beacon_off) else S(R.string.aprs_beacon_every, m), c.autoMinutes == m, { if (m == 0 || why == null) c.setAuto(m, device) })
+                    AntFilterChip(if (m == 0) S(R.string.aprs_beacon_off) else S(R.string.aprs_beacon_every, m), c.autoMinutes == m, { if (m == 0) c.setAuto(0, device) else if (why == null) gate.run { c.setAuto(m, device) } })
                 }
             }
             if (c.lastBeaconMs > 0) Text(S(R.string.aprs_beacon_last, java.text.DateFormat.getTimeInstance(java.text.DateFormat.SHORT).format(java.util.Date(c.lastBeaconMs))), style = rf(12, 16), color = cs.onSurfaceVariant)

@@ -2729,4 +2729,8 @@
     <string name="aprs_beacon_every">"हर %1$d मिनट"</string>
     <string name="aprs_beacon_last">"अंतिम बीकन %1$s पर"</string>
     <string name="sdr_auto_now">"स्वचालित: LNA %1$d dB · VGA %2$d dB"</string>
+    <string name="tx_licence_title">"शौकिया रेडियो लाइसेंस"</string>
+    <string name="tx_licence_confirm">"पुष्टि करें"</string>
+    <string name="tx_callsign_line">"कॉल साइन: %1$s"</string>
+    <string name="tx_callsign_change">"बदलें"</string>
 </resources>

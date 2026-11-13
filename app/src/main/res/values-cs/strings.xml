@@ -2867,4 +2867,8 @@
     <string name="aprs_beacon_every">"Každých %1$d min"</string>
     <string name="aprs_beacon_last">"Poslední majáček v %1$s"</string>
     <string name="sdr_auto_now">"Automaticky: LNA %1$d dB · VGA %2$d dB"</string>
+    <string name="tx_licence_title">"Radioamatérská licence"</string>
+    <string name="tx_licence_confirm">"Potvrdit"</string>
+    <string name="tx_callsign_line">"Volací značka: %1$s"</string>
+    <string name="tx_callsign_change">"Změnit"</string>
 </resources>
