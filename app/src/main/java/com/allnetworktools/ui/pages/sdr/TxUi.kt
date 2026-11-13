@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.allnetworktools.R
@@ -40,11 +42,15 @@ internal fun TxSettingsCard(amateur: Boolean = true) {
                 if (t.callsign.isNotEmpty() && !t.validCallsign) Text(S(R.string.tx_callsign_invalid), style = rf(12, 16), color = cs.error)
                 AntFilterChip(S(R.string.tx_licence_box), t.licensed, { t.updateLicensed(!t.licensed) })
             }
-            Text(S(R.string.tx_gain_label), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
-            FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                listOf(0, 10, 20, 30, 40, 47).forEach { g -> AntFilterChip("$g dB", t.txGain == g, { t.updateGain(g) }) }
-                AntFilterChip(S(R.string.tx_amp), t.txAmp, { t.updateAmp(!t.txAmp) })
+            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                Text(S(R.string.tx_gain_label), Modifier.weight(1f), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
+                Text("${t.txGain} dB", style = rf(14, 18, 700, tnum = true))
             }
+            androidx.compose.material3.Slider(
+                value = t.txGain.toFloat(), onValueChange = { t.updateGain(Math.round(it)) },
+                valueRange = 0f..47f, steps = 46, colors = sliderColors(false, ticks = false),
+            )
+            AntFilterChip(S(R.string.tx_amp), t.txAmp, { t.updateAmp(!t.txAmp) })
             Text(S(if (amateur) R.string.tx_rules_amateur else R.string.tx_rules_ism), style = rf(12, 16), color = cs.onSurfaceVariant)
         }
     }

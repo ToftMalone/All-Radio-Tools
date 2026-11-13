@@ -51,10 +51,7 @@ private data class ToolGroup(val title: String, val items: List<ToolEntry>, val 
 private fun sdrGroup(title: Int, icon: String, vararg items: ToolEntry) =
     ToolGroup(S(title), items.sortedWith(compareBy(java.text.Collator.getInstance()) { it.title }), icon)
 
-/** Networks whose tools are sorted in category tabs; the others keep one list. The SDR shows a card per category. */
-private val tabbed = setOf(Network.Wifi, Network.Bluetooth)
-
-/** The category tab chosen on each network, for this run of the app only. */
+/** The category opened on each radio, for this run of the app only. */
 private object CategoryMemory {
     val chosen = androidx.compose.runtime.mutableStateMapOf<Network, String>()
 }
@@ -282,22 +279,10 @@ fun ToolsPage(net: Network, vm: MainViewModel) {
                 Modifier.padding(horizontal = 8.dp), style = rf(13, 18), color = cs.onSurfaceVariant,
             )
         }
-        // Category tabs: "All" first; a category with no tool for the radio plugged in is not offered.
-        val visibleGroups = if (net in tabbed && shownGroups.size > 1) {
-            val all = S(R.string.all)
-            val current = CategoryMemory.chosen[net]?.takeIf { c -> shownGroups.any { it.title == c } }
-            androidx.compose.foundation.lazy.LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                item { AntFilterChip(all, current == null, { CategoryMemory.chosen.remove(net) }) }
-                items(shownGroups.size) { i ->
-                    val t = shownGroups[i].title
-                    AntFilterChip(t, current == t, { CategoryMemory.chosen[net] = t }, trailing = shownGroups[i].items.size.toString())
-                }
-            }
-            if (current == null) shownGroups else shownGroups.filter { it.title == current }
-        } else shownGroups
-        // SDR: one card per category; opening one lists its tools, and Back returns to the cards.
-        val sdrOpen = if (net == Network.Sdr) CategoryMemory.chosen[net]?.let { c -> shownGroups.firstOrNull { it.title == c } } else null
-        if (net == Network.Sdr && sdrOpen == null) {
+        // One card per category (when a radio has more than one); opening one lists its tools, and Back returns to the cards.
+        val carded = shownGroups.size > 1
+        val sdrOpen = if (carded) CategoryMemory.chosen[net]?.let { c -> shownGroups.firstOrNull { it.title == c } } else null
+        if (carded && sdrOpen == null) {
             SectionTitle(S(R.string.sdr_categories))
             TileGrid(shownGroups) { g, mod ->
                 Column(
@@ -305,7 +290,7 @@ fun ToolsPage(net: Network, vm: MainViewModel) {
                         .clickable { CategoryMemory.chosen[net] = g.title }.padding(16.dp),
                 ) {
                     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.Top) {
-                        LeadingIcon(g.icon ?: Sym.Apps, cs.surfaceContainerHighest, acc.accent, shape = RoundedCornerShape(14.dp))
+                        LeadingIcon(g.icon ?: g.items.first().icon, cs.surfaceContainerHighest, acc.accent, shape = RoundedCornerShape(14.dp))
                         Box(Modifier.clip(RoundedCornerShape(10.dp)).background(acc.container).padding(horizontal = 8.dp, vertical = 3.dp)) {
                             Text(g.items.size.toString(), style = rf(12, 16, 600), color = acc.onContainer)
                         }
@@ -327,7 +312,7 @@ fun ToolsPage(net: Network, vm: MainViewModel) {
                 Text(S(R.string.sdr_all_categories), style = rf(14, 20, 600), color = acc.accent)
             }
         }
-        (if (sdrOpen != null) listOf(sdrOpen) else visibleGroups).forEach { g ->
+        (if (sdrOpen != null) listOf(sdrOpen) else shownGroups).forEach { g ->
             SectionTitle(g.title)
             TileGrid(g.items) { e, mod ->
                 val note = if (e.tool in comingSoon) S(R.string.coming_soon) else internet?.why(e.tool)?.title

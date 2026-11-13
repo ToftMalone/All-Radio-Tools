@@ -148,8 +148,8 @@ class SdrGain(
 }
 
 /**
- * Each gain on its own line: Auto first, then the values. Auto is shared, picking it on one line sets both; while it
- * runs, the value in use is lit in its own colour. Picking a value goes back to manual for both.
+ * The gains as sliders over the radio's whole range, with one Auto switch for all of them. While Auto runs, the sliders
+ * follow the values it picks, in its own colour; moving one goes back to manual.
  */
 @Composable
 internal fun GainSettings(g: SdrGain, onChange: () -> Unit) {
@@ -157,13 +157,12 @@ internal fun GainSettings(g: SdrGain, onChange: () -> Unit) {
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         val steps = kind?.gainSteps
         if (steps != null) {
-            // A radio with its own gain scale: one line in its own steps instead of the HackRF's LNA / VGA / amplifier.
+            // A radio with its own gain scale: one slider in its own steps instead of the HackRF's LNA / VGA / amplifier.
             NativeGainLine(kind, steps, g, onChange)
         } else {
-            GainLine(S(R.string.lna_gain_db), g, g.lna, g.lnaSteps, onChange) { g.lna = it }
-            GainLine(S(R.string.vga_gain_db), g, g.vga, g.vgaSteps, onChange) { g.vga = it }
-            // In automatic mode the gains go anywhere in the radio's range, not only on the chips: the values in use.
-            if (g.auto) Text(S(R.string.sdr_auto_now, g.lna, g.vga), style = rf(12, 16), color = cs.tertiary)
+            AntFilterChip(S(R.string.auto_gain), g.auto, { if (!g.auto) { g.setAuto(); onChange() } else { g.auto = false } })
+            GainSlider(S(R.string.lna_gain_db), g.lna, 0, 40, 8, g.auto, onChange) { g.auto = false; g.lna = it }
+            GainSlider(S(R.string.vga_gain_db), g.vga, 0, 62, 2, g.auto, onChange) { g.auto = false; g.vga = it }
             g.amp?.let { on ->
                 Text(S(R.string.preamplifier), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
                 AntFilterChip(S(R.string.amp_14_db), on, { g.amp = !on; onChange() })
@@ -202,13 +201,20 @@ private fun converterText(hz: Long): String =
 @Composable
 private fun NativeGainLine(kind: com.allnetworktools.data.sdr.SdrKind, steps: List<Int>, g: SdrGain, onChange: () -> Unit) {
     val st = com.allnetworktools.data.sdr.SdrSettings
-    Text(S(R.string.sdr_gain_of, kind.label) + if (kind.gainUnit.isNotEmpty()) " (${kind.gainUnit})" else "", style = rf(13, 18, 600), color = cs.onSurfaceVariant)
-    FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        AntFilterChip(S(R.string.auto_gain), st.nativeAuto, { if (!st.nativeAuto) { st.nativeAuto = true; g.setAuto(); onChange() } })
-        steps.forEach { v ->
-            AntFilterChip("$v", !st.nativeAuto && st.nativeGain == v, { st.nativeAuto = false; st.nativeGain = v; g.auto = false; onChange() })
-        }
-    }
+    AntFilterChip(S(R.string.auto_gain), st.nativeAuto, {
+        if (!st.nativeAuto) { st.nativeAuto = true; g.setAuto(); onChange() } else { st.nativeAuto = false; g.auto = false; onChange() }
+    })
+    val index = steps.indexOf(st.nativeGain).takeIf { it >= 0 } ?: steps.indices.minBy { kotlin.math.abs(steps[it] - st.nativeGain) }
+    val label = S(R.string.sdr_gain_of, kind.label)
+    GainSliderRow(label, if (st.nativeAuto) S(R.string.auto_gain) else "${steps[index]}" + if (kind.gainUnit.isNotEmpty()) " ${kind.gainUnit}" else "", st.nativeAuto)
+    androidx.compose.material3.Slider(
+        value = index.toFloat(),
+        onValueChange = { v -> st.nativeAuto = false; g.auto = false; st.nativeGain = steps[Math.round(v).coerceIn(0, steps.size - 1)] },
+        onValueChangeFinished = onChange,
+        valueRange = 0f..(steps.size - 1).toFloat(),
+        steps = (steps.size - 2).coerceAtLeast(0),
+        colors = sliderColors(st.nativeAuto, ticks = steps.size <= 11),
+    )
 }
 
 /** Power on the antenna port, for an active antenna or a preamplifier. */
@@ -223,20 +229,38 @@ private fun BiasTeeLine() {
     if (st.biasTee) Text(S(R.string.sdr_bias_tee_warning), style = rf(12, 16), color = cs.error)
 }
 
+/** A gain's name, and its value on the right (in the automatic colour while Auto picks it). */
 @Composable
-private fun GainLine(label: String, g: SdrGain, value: Int, steps: List<Int>, onChange: () -> Unit, onPick: (Int) -> Unit) {
-    Text(label, style = rf(13, 18, 600), color = cs.onSurfaceVariant)
-    FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        AntFilterChip(S(R.string.auto_gain), g.auto, { if (!g.auto) { g.setAuto(); onChange() } })
-        steps.forEach { v ->
-            if (g.auto) {
-                // The value automatic mode is using right now, in the tertiary colour.
-                AntFilterChip("$v", value == v, { g.auto = false; onPick(v); onChange() }, color = cs.tertiaryContainer, onColor = cs.onTertiaryContainer, leadingDot = if (value == v) cs.tertiary else null)
-            } else {
-                AntFilterChip("$v", value == v, { onPick(v); onChange() })
-            }
-        }
+private fun GainSliderRow(label: String, value: String, auto: Boolean) {
+    androidx.compose.foundation.layout.Row(androidx.compose.ui.Modifier.fillMaxWidth(), verticalAlignment = androidx.compose.ui.Alignment.CenterVertically) {
+        Text(label, androidx.compose.ui.Modifier.weight(1f), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
+        Text(value, style = rf(14, 18, 700, tnum = true), color = if (auto) cs.tertiary else cs.onSurface)
     }
+}
+
+/** Slider colours: the automatic colour while Auto picks the value; no tick marks when there are too many to read. */
+@Composable
+internal fun sliderColors(auto: Boolean, ticks: Boolean = true): androidx.compose.material3.SliderColors {
+    val none = androidx.compose.ui.graphics.Color.Transparent
+    return if (auto) androidx.compose.material3.SliderDefaults.colors(
+        thumbColor = cs.tertiary, activeTrackColor = cs.tertiary, inactiveTrackColor = cs.tertiaryContainer,
+        activeTickColor = if (ticks) cs.onTertiary else none, inactiveTickColor = if (ticks) cs.tertiary else none,
+    ) else if (ticks) androidx.compose.material3.SliderDefaults.colors()
+    else androidx.compose.material3.SliderDefaults.colors(activeTickColor = none, inactiveTickColor = none)
+}
+
+/** One gain stage as a slider from [min] to [max] in steps of [step] dB; the radio is set when the finger lifts. */
+@Composable
+private fun GainSlider(label: String, value: Int, min: Int, max: Int, step: Int, auto: Boolean, onChange: () -> Unit, onPick: (Int) -> Unit) {
+    GainSliderRow(label, "$value dB", auto)
+    androidx.compose.material3.Slider(
+        value = value.toFloat().coerceIn(min.toFloat(), max.toFloat()),
+        onValueChange = { v -> val snapped = min + Math.round((v - min) / step) * step; if (snapped != value || auto) onPick(snapped.coerceIn(min, max)) },
+        onValueChangeFinished = onChange,
+        valueRange = min.toFloat()..max.toFloat(),
+        steps = ((max - min) / step - 1).coerceAtLeast(0),
+        colors = sliderColors(auto, ticks = (max - min) / step <= 10),
+    )
 }
 
 /** The tabs of an SDR tool: its map (when it has one), what it receives, and its settings. */
