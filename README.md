@@ -93,7 +93,7 @@ The Internet tools (speed test, ping, traceroute, port scan, DNS lookup, whois) 
 
 Nothing is kept once the app is closed.
 
-### 📻 SDR (HackRF and others, receive only)
+### 📻 SDR (HackRF and others)
 
 > **Radios other than the HackRF (new, untested on real hardware):** the SDR tools also accept an **RTL-SDR** dongle (R820T / R820T2 / R828D tuner, 24 to 1766 MHz, up to about 3 MS/s), an **Airspy** (R2 or Mini, 24 to 1750 MHz, used at 2.5 or 3 MS/s and resampled) and an **ADALM-Pluto / PlutoSDR** (70 MHz to 6 GHz, over its USB cable, resampled from 2.1 MS/s or more). A tool whose frequency or sample rate is out of reach of the radio plugged in says so instead of starting: the 2.4 GHz and 5.8 GHz tools (Zigbee, ANT+, drones, FPV) and the 4 MS/s ones need a HackRF (or a Pluto for 4 MS/s). The drivers were written from the open source libraries and tested against a simulated USB bus only. SDRplay radios are not supported: their driver is closed source.
 
@@ -127,6 +127,19 @@ Nothing is kept once the app is closed.
 | TPMS | Tyre pressure sensors of nearby cars on 433.92 MHz (or 315 MHz): pressure, temperature, battery, for Renault, PSA, Toyota, Ford, Hyundai/Kia, BMW/Audi, Porsche, Honda (TRW), Schrader (Opel/GM, Subaru/Nissan/Renault Koleos, BMW) and more |
 | VDL Mode 2 | The airliners' digital datalink on 6 channels around 136.9 MHz: ACARS carried digitally, ground stations, link set-ups |
 | Wireless M-Bus | Water, heat, gas and electricity meters on 868.95 MHz (T1, C1), even when the meter's clock is a little off; readings when not encrypted |
+
+#### 📡 Transmitting (HackRF only)
+
+The HackRF can also transmit, only when you ask it to and only where it is allowed:
+
+- **Amateur bands** (all three ITU regions together), with your **call sign** and the box confirming you hold an **amateur radio licence**, both in the transmit settings of each tool:
+  - **Listen**: hold **Talk** to send the microphone in NFM, AM, USB or LSB (never in WFM); reception pauses while you talk.
+  - **APRS**: your own **position beacon** (AX.25, 1200 baud AFSK, FM) with SSID, symbol and comment, once or every 10 to 30 minutes.
+  - **SSTV**: a **photo** from the phone, with your call sign written on it, in Robot 36, Martin M1, Scottie S1 or PD120, on 144.500 MHz FM or 14.230 / 7.171 / 3.735 MHz SSB.
+- **Licence-free mesh band** (863–870 MHz, 433 MHz, 902–928 MHz):
+  - **Meshtastic**: the radio joins the mesh as a **node** on the default LongFast channel: it announces itself (NodeInfo) when started and every three hours, and sends the phone's position every 15 to 60 minutes, at the precision you choose.
+
+Every transmission is checked against these bands before it starts (and again in the radio driver), never goes out through a converter, and each transmitter was checked in tests by the app's own receivers. Transmit gain and the 14 dB amplifier are set in the transmit settings.
 
 Every gain has an **automatic mode**, chosen by default, which picks the LNA and VGA values from the signal level; the value in use is shown in its own colour.
 
@@ -176,7 +189,8 @@ No account, no ads, no trackers. Internet is used for updates, the speed test (C
 
 ## ⚖️ Responsible use
 
-- The SDR is used **for reception only**. Follow your country's laws on listening to radio frequencies.
+- The SDR transmits **only from the four transmit features above**, on the amateur bands with your call sign and licence, or on the licence-free mesh band. You answer for what you transmit: follow your country's band plan, power and time-on-air limits, and use a suitable antenna or filter, as the HackRF also emits harmonics. Jamming, spoofing (GPS, ADS-B, AIS), distress beacons, broadcast and replaying other people's remotes are not offered and never will be.
+- Follow your country's laws on listening to radio frequencies.
 - The Wi-Fi security tools (audit, rogue access points, man in the middle, port scan) are meant for **your own networks** or those you are allowed to test.
 - Pager messages (POCSAG) and walkie-talkie conversations (PMR446) are **private correspondence**: in many countries, France included, you may not pass on or use what you hear.
 - The NFC bank card reader shows only what any terminal reads without the PIN, never the full number, and keeps nothing. Reading, writing or copying a card you do not own, or a badge you are not allowed to copy, is not what it is for.
