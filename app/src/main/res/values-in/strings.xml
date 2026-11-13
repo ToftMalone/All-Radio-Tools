@@ -2659,4 +2659,5 @@
     <string name="aprs_beacon_off">"Mati"</string>
     <string name="aprs_beacon_every">"Setiap %1$d mnt"</string>
     <string name="aprs_beacon_last">"Beacon terakhir pukul %1$s"</string>
+    <string name="sdr_auto_now">"Otomatis: LNA %1$d dB · VGA %2$d dB"</string>
 </resources>

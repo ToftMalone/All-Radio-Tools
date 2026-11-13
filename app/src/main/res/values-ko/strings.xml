@@ -2659,4 +2659,5 @@
     <string name="aprs_beacon_off">"끔"</string>
     <string name="aprs_beacon_every">"%1$d분마다"</string>
     <string name="aprs_beacon_last">"마지막 비컨 %1$s"</string>
+    <string name="sdr_auto_now">"자동: LNA %1$d dB · VGA %2$d dB"</string>
 </resources>

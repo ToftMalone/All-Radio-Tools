@@ -50,7 +50,7 @@ import kotlinx.coroutines.CoroutineScope
  * the bases are told apart by the identity they broadcast. Kept in memory for the session only.
  */
 class DectController(repo: SdrRepository, scope: CoroutineScope, onAcquire: () -> Unit = {}) :
-    SdrRxController(repo, scope, onAcquire, SdrGain(listOf(16, 24, 32, 40), 32, listOf(20, 30, 40), 30, amp = true), "sdr-dect") {
+    SdrRxController(repo, scope, onAcquire, SdrGain(listOf(16, 24, 32, 40), 32, listOf(20, 30, 40), 30, amp = true, profile = com.allnetworktools.data.sdr.GainProfile.Wideband), "sdr-dect") {
     var band by mutableStateOf(Dect.Band.Europe)
     var bases by mutableStateOf<List<DectBase>>(emptyList())
         private set

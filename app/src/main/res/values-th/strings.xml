@@ -2659,4 +2659,5 @@
     <string name="aprs_beacon_off">"ปิด"</string>
     <string name="aprs_beacon_every">"ทุก %1$d นาที"</string>
     <string name="aprs_beacon_last">"บีคอนล่าสุดเวลา %1$s"</string>
+    <string name="sdr_auto_now">"อัตโนมัติ: LNA %1$d dB · VGA %2$d dB"</string>
 </resources>

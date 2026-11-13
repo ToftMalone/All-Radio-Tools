@@ -2866,4 +2866,5 @@
     <string name="aprs_beacon_off">"Вимк."</string>
     <string name="aprs_beacon_every">"Кожні %1$d хв"</string>
     <string name="aprs_beacon_last">"Останній маяк о %1$s"</string>
+    <string name="sdr_auto_now">"Автоматично: LNA %1$d дБ · VGA %2$d дБ"</string>
 </resources>

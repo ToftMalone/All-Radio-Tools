@@ -2659,4 +2659,5 @@
     <string name="aprs_beacon_off">"オフ"</string>
     <string name="aprs_beacon_every">"%1$d 分ごと"</string>
     <string name="aprs_beacon_last">"最後のビーコン %1$s"</string>
+    <string name="sdr_auto_now">"自動：LNA %1$d dB · VGA %2$d dB"</string>
 </resources>

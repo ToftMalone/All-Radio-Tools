@@ -69,7 +69,7 @@ data class ZbRow(val timeMs: Long, val channel: Int, val src: String, val dst: S
 
 /** Zigbee and other IEEE 802.15.4 networks at 2.4 GHz: one channel, or all sixteen in turn. */
 class ZigbeeController(repo: SdrRepository, scope: CoroutineScope, onAcquire: () -> Unit = {}) :
-    SdrRxController(repo, scope, onAcquire, SdrGain(listOf(16, 24, 32, 40), 32, listOf(20, 30, 40), 30, amp = true), "sdr-zigbee") {
+    SdrRxController(repo, scope, onAcquire, SdrGain(listOf(16, 24, 32, 40), 32, listOf(20, 30, 40), 30, amp = true, profile = com.allnetworktools.data.sdr.GainProfile.Wideband), "sdr-zigbee") {
     /** 11 to 26, or 0 to go through all of them. */
     var channel by mutableIntStateOf(0)
     var listening by mutableIntStateOf(11)
@@ -247,7 +247,7 @@ data class AntSensor(val key: String, val number: Int, val type: Int, val transT
 
 /** ANT+ sports and fitness sensors on 2457 MHz: heart rate straps, bike speed, cadence and power, footpods, temperature. */
 class AntController(repo: SdrRepository, scope: CoroutineScope, onAcquire: () -> Unit = {}) :
-    SdrRxController(repo, scope, onAcquire, SdrGain(listOf(16, 24, 32, 40), 32, listOf(20, 30, 40), 30, amp = true), "sdr-ant") {
+    SdrRxController(repo, scope, onAcquire, SdrGain(listOf(16, 24, 32, 40), 32, listOf(20, 30, 40), 30, amp = true, profile = com.allnetworktools.data.sdr.GainProfile.Wideband), "sdr-ant") {
     var sensors by mutableStateOf<List<AntSensor>>(emptyList())
         private set
     var total by mutableIntStateOf(0)

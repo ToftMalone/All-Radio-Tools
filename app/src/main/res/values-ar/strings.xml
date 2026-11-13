@@ -3004,4 +3004,5 @@
     <string name="aprs_beacon_off">"متوقفة"</string>
     <string name="aprs_beacon_every">"كل %1$d دقيقة"</string>
     <string name="aprs_beacon_last">"آخر منارة في %1$s"</string>
+    <string name="sdr_auto_now">"تلقائي: LNA %1$d dB · VGA %2$d dB"</string>
 </resources>

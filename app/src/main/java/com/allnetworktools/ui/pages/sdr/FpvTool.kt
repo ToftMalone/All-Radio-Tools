@@ -94,7 +94,7 @@ enum class FpvTab(val label: String) { Dji("DJI"), Analog(S(R.string.analog)), R
  */
 class FpvController(private val repo: SdrRepository, private val scope: CoroutineScope, private val onAcquire: () -> Unit = {}) {
     var tab by mutableStateOf(FpvTab.Dji)
-    val gain = SdrGain(listOf(0, 8, 16, 24, 32, 40), 24, listOf(10, 20, 30, 40), 24, amp = false)
+    val gain = SdrGain(listOf(0, 8, 16, 24, 32, 40), 24, listOf(10, 20, 30, 40), 24, amp = false, profile = com.allnetworktools.data.sdr.GainProfile.Wideband)
     var lnaGain by gain::lna
     var vgaGain by gain::vga
     var amp: Boolean

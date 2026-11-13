@@ -42,7 +42,7 @@ enum class SpectrumPreset(val label: String, val centerMhz: Double, val spanMhz:
 class SpectrumController(private val repo: SdrRepository, private val scope: CoroutineScope, private val onAcquire: () -> Unit = {}) {
     var centerMhz by mutableStateOf("98.000")
     var spanMhz by mutableIntStateOf(10)
-    val gain = SdrGain(listOf(0, 8, 16, 24, 32, 40), 24, listOf(10, 20, 30, 40), 20, amp = false)
+    val gain = SdrGain(listOf(0, 8, 16, 24, 32, 40), 24, listOf(10, 20, 30, 40), 20, amp = false, profile = com.allnetworktools.data.sdr.GainProfile.Wideband)
     var lnaGain by gain::lna
     var vgaGain by gain::vga
     var amp: Boolean

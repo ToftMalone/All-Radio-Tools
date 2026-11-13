@@ -2728,4 +2728,5 @@
     <string name="aprs_beacon_off">"बंद"</string>
     <string name="aprs_beacon_every">"हर %1$d मिनट"</string>
     <string name="aprs_beacon_last">"अंतिम बीकन %1$s पर"</string>
+    <string name="sdr_auto_now">"स्वचालित: LNA %1$d dB · VGA %2$d dB"</string>
 </resources>

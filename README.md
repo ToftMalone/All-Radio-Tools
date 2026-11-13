@@ -141,7 +141,7 @@ The HackRF can also transmit, only when you ask it to and only where it is allow
 
 Every transmission is checked against these bands before it starts (and again in the radio driver), never goes out through a converter, and each transmitter was checked in tests by the app's own receivers. Transmit gain and the 14 dB amplifier are set in the transmit settings.
 
-Every gain has an **automatic mode**, chosen by default, which picks the LNA and VGA values from the signal level; the value in use is shown in its own colour.
+Every gain has an **automatic mode**, chosen by default, modelled on [OnAir](https://github.com/adswill/OnAir)'s auto-gain guide: it moves over the radio's whole range (LNA first for the best noise figure, then the VGA in 2 dB steps) to keep the receiver's noise well above the 8-bit converter's own, cuts at once on clipping and climbs back slowly, with a profile per tool (narrow signals, wide channels, ADS-B pulses, broadcast FM that spares the LNA). It was tuned against a simulated HackRF front end in the tests; the values in use are shown under the gain chips.
 
 The decoders work with the **radio alone**: neither the phone's Wi-Fi nor its Bluetooth is used. The SDR card stays greyed out until a supported radio is plugged in over USB. No driver to install: the app talks to the radio itself through Android's USB host support (a USB-C OTG cable is enough; a powered hub helps if the phone cuts the power).
 

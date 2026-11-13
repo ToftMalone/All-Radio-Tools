@@ -84,7 +84,7 @@ class ListenPreset(val label: String, val hz: Long, val mode: ListenMode, val ba
  * only moves the digital tuner; the radio is retuned only when the frequency leaves it.
  */
 class ListenController(repo: SdrRepository, scope: CoroutineScope, onAcquire: () -> Unit = {}) :
-    SdrRxController(repo, scope, onAcquire, SdrGain(listOf(0, 8, 16, 24, 32, 40), 24, listOf(10, 20, 30, 40), 30, amp = false), "sdr-listen") {
+    SdrRxController(repo, scope, onAcquire, SdrGain(listOf(0, 8, 16, 24, 32, 40), 24, listOf(10, 20, 30, 40), 30, amp = false, profile = com.allnetworktools.data.sdr.GainProfile.Strong), "sdr-listen") {
     var frequencyHz by mutableLongStateOf(100_000_000L)
         private set
     var mode by mutableStateOf(ListenMode.Wfm)
@@ -161,6 +161,7 @@ class ListenController(repo: SdrRepository, scope: CoroutineScope, onAcquire: ()
     fun chooseMode(m: ListenMode) {
         mode = m
         wantMode = m
+        gain.profile = if (m == ListenMode.Wfm) com.allnetworktools.data.sdr.GainProfile.Strong else com.allnetworktools.data.sdr.GainProfile.Narrow
     }
 
     fun setVolumeLevel(v: Float) { volume = v; wantVolume = v }

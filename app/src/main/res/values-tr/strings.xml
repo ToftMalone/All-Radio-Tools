@@ -2728,4 +2728,5 @@
     <string name="aprs_beacon_off">"Kapalı"</string>
     <string name="aprs_beacon_every">"Her %1$d dk"</string>
     <string name="aprs_beacon_last">"Son işaret %1$s"</string>
+    <string name="sdr_auto_now">"Otomatik: LNA %1$d dB · VGA %2$d dB"</string>
 </resources>

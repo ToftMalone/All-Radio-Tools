@@ -2957,4 +2957,5 @@
     <string name="sstv_tx_note">"With a HackRF and an amateur licence, a picture from the phone can be sent from Settings, with your call sign written on it."</string>
     <string name="mesh_tx_note">"With a HackRF, the radio can also join the mesh as a node, from Settings."</string>
     <string name="listen_tx_note">"With a HackRF and an amateur licence, hold Talk to transmit the microphone on the amateur bands, in NFM, AM, USB or LSB."</string>
+    <string name="sdr_auto_now">"Automatic: LNA %1$d dB · VGA %2$d dB"</string>
 </resources>

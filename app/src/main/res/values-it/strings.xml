@@ -2728,4 +2728,5 @@
     <string name="aprs_beacon_off">"Spento"</string>
     <string name="aprs_beacon_every">"Ogni %1$d min"</string>
     <string name="aprs_beacon_last">"Ultimo beacon alle %1$s"</string>
+    <string name="sdr_auto_now">"Automatico: LNA %1$d dB · VGA %2$d dB"</string>
 </resources>

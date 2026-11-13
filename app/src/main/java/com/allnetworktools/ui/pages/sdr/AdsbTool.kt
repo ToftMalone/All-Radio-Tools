@@ -125,7 +125,7 @@ data class ModeAcInfo(
 
 /** ADS-B receiver on 1090 MHz, 2 MS/s, the rate dump1090 was designed around. */
 class AdsbController(private val repo: SdrRepository, private val scope: CoroutineScope, private val onAcquire: () -> Unit = {}) {
-    val gain = SdrGain(listOf(16, 24, 32, 40), 32, listOf(20, 30, 40), 30, amp = false)
+    val gain = SdrGain(listOf(16, 24, 32, 40), 32, listOf(20, 30, 40), 30, amp = false, profile = com.allnetworktools.data.sdr.GainProfile.Pulsed)
     var lnaGain by gain::lna
     var vgaGain by gain::vga
     var amp: Boolean

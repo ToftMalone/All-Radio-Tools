@@ -2866,4 +2866,5 @@
     <string name="aprs_beacon_off">"Vypnuto"</string>
     <string name="aprs_beacon_every">"Každých %1$d min"</string>
     <string name="aprs_beacon_last">"Poslední majáček v %1$s"</string>
+    <string name="sdr_auto_now">"Automaticky: LNA %1$d dB · VGA %2$d dB"</string>
 </resources>

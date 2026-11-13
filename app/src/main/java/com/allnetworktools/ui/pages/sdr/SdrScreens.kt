@@ -103,10 +103,16 @@ internal fun ListCard(content: @Composable () -> Unit) {
 }
 
 /**
- * The HackRF's gains for one tool: the LNA and VGA values it offers, the +14 dB amplifier when it has one, and the
- * automatic mode, on by default, which picks among those same values from the level of the samples.
+ * The HackRF's gains for one tool: the LNA and VGA values it offers by hand, the +14 dB amplifier when it has one, and
+ * the automatic mode, on by default, which moves over the radio's whole range ([AutoGain]) for the tool's [profile].
  */
-class SdrGain(val lnaSteps: List<Int>, lna: Int, val vgaSteps: List<Int>, vga: Int, amp: Boolean? = null) {
+class SdrGain(
+    val lnaSteps: List<Int>, lna: Int, val vgaSteps: List<Int>, vga: Int, amp: Boolean? = null,
+    profile: com.allnetworktools.data.sdr.GainProfile = com.allnetworktools.data.sdr.GainProfile.Narrow,
+) {
+    /** What the tool's signals ask of the automatic gain; a tool whose mode changes (Listen) sets it again. */
+    var profile = profile
+        set(v) { field = v; loop?.reprofile(v) }
     var auto by mutableStateOf(true)
     var lna by mutableIntStateOf(lna)
     var vga by mutableIntStateOf(vga)
@@ -120,7 +126,7 @@ class SdrGain(val lnaSteps: List<Int>, lna: Int, val vgaSteps: List<Int>, vga: I
     /** Called when reception starts: from then on, in automatic mode, [onAdjust] pushes each new step to the radio. */
     fun attach(onAdjust: () -> Unit) {
         this.onAdjust = onAdjust
-        loop = AutoGain(lnaSteps, vgaSteps, lna, vga)
+        loop = AutoGain(profile, lna, vga)
     }
 
     /** Samples as they arrive from the radio, on its thread. */
@@ -137,7 +143,7 @@ class SdrGain(val lnaSteps: List<Int>, lna: Int, val vgaSteps: List<Int>, vga: I
 
     fun setAuto() {
         auto = true
-        loop = AutoGain(lnaSteps, vgaSteps, lna, vga)
+        loop = AutoGain(profile, lna, vga)
     }
 }
 
@@ -156,6 +162,8 @@ internal fun GainSettings(g: SdrGain, onChange: () -> Unit) {
         } else {
             GainLine(S(R.string.lna_gain_db), g, g.lna, g.lnaSteps, onChange) { g.lna = it }
             GainLine(S(R.string.vga_gain_db), g, g.vga, g.vgaSteps, onChange) { g.vga = it }
+            // In automatic mode the gains go anywhere in the radio's range, not only on the chips: the values in use.
+            if (g.auto) Text(S(R.string.sdr_auto_now, g.lna, g.vga), style = rf(12, 16), color = cs.tertiary)
             g.amp?.let { on ->
                 Text(S(R.string.preamplifier), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
                 AntFilterChip(S(R.string.amp_14_db), on, { g.amp = !on; onChange() })

@@ -2659,4 +2659,5 @@
     <string name="aprs_beacon_off">"Tắt"</string>
     <string name="aprs_beacon_every">"Mỗi %1$d phút"</string>
     <string name="aprs_beacon_last">"Beacon gần nhất lúc %1$s"</string>
+    <string name="sdr_auto_now">"Tự động: LNA %1$d dB · VGA %2$d dB"</string>
 </resources>

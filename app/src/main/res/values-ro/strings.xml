@@ -2797,4 +2797,5 @@
     <string name="aprs_beacon_off">"Oprită"</string>
     <string name="aprs_beacon_every">"La fiecare %1$d min"</string>
     <string name="aprs_beacon_last">"Ultima baliză la %1$s"</string>
+    <string name="sdr_auto_now">"Automat: LNA %1$d dB · VGA %2$d dB"</string>
 </resources>
