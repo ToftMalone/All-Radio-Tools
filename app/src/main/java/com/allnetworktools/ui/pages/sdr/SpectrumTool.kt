@@ -19,6 +19,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.foundation.gestures.awaitEachGesture
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.calculateZoom
 import androidx.compose.ui.input.pointer.pointerInput
@@ -60,6 +61,12 @@ internal fun fitSpan(wanted: Int, spans: List<Int>?): Int =
     if (spans.isNullOrEmpty()) wanted else spans.filter { it <= wanted }.maxOrNull() ?: spans.min()
 
 internal fun mhzLabel(hz: Double) = "%.3f".format(Locale.getDefault(), hz / 1e6)
+
+/** The level under the marker: the highest of the points around it, so a narrow signal is not missed. */
+internal fun markerLevel(db: FloatArray, at: Float): Float {
+    val i = Math.round(at * (db.size - 1))
+    return (maxOf(0, i - 1)..minOf(db.size - 1, i + 1)).maxOf { db[it] }
+}
 
 /** A width in MHz without useless decimals: "10", "2.5", "0.125". */
 internal fun widthLabel(hz: Double): String {
@@ -111,9 +118,34 @@ fun SpectrumTool(vm: MainViewModel) {
                 }
             }
         }
+        // The marker, as a place along the spectrum shown (null when off it).
+        val marker = c.markerHz
+        val markerAt = marker?.let { ((it - (center - span / 2)) / span).toFloat() }?.takeIf { it in 0f..1f }
         Column(Modifier.pinchZoom(c.zoom, c::chooseZoom), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            SpectrumView(db, c.hold, peakIdx)
+            SpectrumView(db, c.hold, peakIdx, markerAt) { f -> c.markerHz = (center - span / 2 + f * span).toLong() }
             WaterfallView(c)
+        }
+        if (marker != null) {
+            val level = if (db != null && markerAt != null) markerLevel(db, markerAt) else null
+            SectionCard {
+                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                    Text(
+                        S(R.string.spectrum_marker, mhzLabel(marker.toDouble())) + (level?.let { " · " + "%.0f dBFS".format(Locale.getDefault(), it) } ?: ""),
+                        style = rf(15, 20, 600, tnum = true),
+                    )
+                    ToolButtons(
+                        ToolButton(S(R.string.spectrum_listen_here), Sym.Headphones) {
+                            // The radio goes to the Listen tool, tuned on the marker in the mode of its band.
+                            if (c.running || c.starting) c.stop()
+                            vm.tools.listen.listenAt(marker)
+                            vm.navigate { it.copy(page = com.allnetworktools.Page.ToolPage(com.allnetworktools.model.Tool.Listen)) }
+                        },
+                        ToolButton(S(R.string.spectrum_marker_clear), Sym.Close, BtnKind.OutlineOnSurface) { c.markerHz = null },
+                    )
+                }
+            }
+        } else if (db != null) {
+            Text(S(R.string.spectrum_marker_hint), Modifier.padding(horizontal = 8.dp), style = rf(12, 16), color = cs.onSurfaceVariant)
         }
         FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             SpectrumController.Zooms.forEach { z -> AntFilterChip(widthLabel(c.spanMhz * 1e6 / z) + " MHz", c.zoom == z, { c.chooseZoom(z) }) }
@@ -126,7 +158,7 @@ fun SpectrumTool(vm: MainViewModel) {
         else StartButton(S(R.string.start_the_analysis), Sym.PlayArrow, enabled = device != null && c.parsedCenterHz() != null) { device?.let(c::start) }
         SectionCard {
             Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                HostInputField(c.centerMhz, { c.centerMhz = it }, S(R.string.centre_frequency_mhz), Sym.Stream, keyboardType = KeyboardType.Decimal) {
+                HostInputField(c.centerMhz, { c.centerMhz = it }, S(R.string.centre_frequency_mhz), Sym.Antenna, keyboardType = KeyboardType.Decimal) {
                     c.parsedCenterHz()?.let(c::retune)
                 }
                 Text(S(R.string.bands), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
@@ -161,12 +193,16 @@ fun SpectrumTool(vm: MainViewModel) {
 }
 
 @Composable
-internal fun SpectrumView(db: FloatArray?, hold: FloatArray?, peakIdx: Int?) {
+internal fun SpectrumView(db: FloatArray?, hold: FloatArray?, peakIdx: Int?, markerAt: Float? = null, onTap: ((Float) -> Unit)? = null) {
     val line = AntTheme.accent.accent
     val grid = cs.outlineVariant
     val holdColor = AntTheme.net.fair
+    val markerColor = cs.tertiary
     Box(Modifier.fillMaxWidth().height(180.dp).clip(RoundedCornerShape(24.dp)).background(cs.surfaceContainerHigh)) {
-        Canvas(Modifier.fillMaxSize().padding(horizontal = 8.dp, vertical = 12.dp)) {
+        val tap = if (onTap != null) Modifier.pointerInput(Unit) {
+            detectTapGestures { p -> onTap((p.x / size.width).coerceIn(0f, 1f)) }
+        } else Modifier
+        Canvas(Modifier.fillMaxSize().padding(horizontal = 8.dp, vertical = 12.dp).then(tap)) {
             val minDb = -110f
             val maxDb = -10f
             fun y(v: Float) = size.height * (1 - ((v - minDb) / (maxDb - minDb)).coerceIn(0f, 1f))
@@ -182,6 +218,11 @@ internal fun SpectrumView(db: FloatArray?, hold: FloatArray?, peakIdx: Int?) {
             if (db != null) {
                 drawPath(path(db), line, style = Stroke(2f))
                 peakIdx?.let { drawCircle(line, 5f, Offset(size.width * it / (db.size - 1), y(db[it]))) }
+            }
+            markerAt?.let { m ->
+                val x = size.width * m
+                drawLine(markerColor, Offset(x, 0f), Offset(x, size.height), 3f)
+                if (db != null) drawCircle(markerColor, 7f, Offset(x, y(markerLevel(db, m))))
             }
         }
         if (db == null) Text(S(R.string.the_spectrum_shows_here_during_the), Modifier.align(Alignment.Center), style = rf(13, 18), color = cs.onSurfaceVariant)

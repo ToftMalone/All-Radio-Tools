@@ -20,7 +20,25 @@ enum class ListenMode(val label: String, val stepHz: Long, val bandwidthHz: Int)
     /** Upper sideband (radio amateurs above 10 MHz). */
     Usb("USB", 1_000, 2_400),
     /** Lower sideband (radio amateurs below 10 MHz). */
-    Lsb("LSB", 1_000, 2_400),
+    Lsb("LSB", 1_000, 2_400);
+
+    companion object {
+        /** Amateur bands where voice is single sideband: lower below 10 MHz, upper above. */
+        private val SsbBands = listOf(
+            1_810_000L..2_000_000L, 3_500_000L..4_000_000L, 7_000_000L..7_300_000L, 10_100_000L..10_150_000L,
+            14_000_000L..14_350_000L, 18_068_000L..18_168_000L, 21_000_000L..21_450_000L, 24_890_000L..24_990_000L,
+            28_000_000L..29_700_000L, 50_000_000L..54_000_000L,
+        )
+
+        /** The mode a frequency is usually heard in. */
+        fun guess(hz: Long): ListenMode = when {
+            SsbBands.any { hz in it } -> if (hz < 10_000_000L) Lsb else Usb
+            hz < 30_000_000L -> Am
+            hz in 87_500_000L..108_000_000L -> Wfm
+            hz in 108_000_000L..137_000_000L -> Am
+            else -> Nfm
+        }
+    }
 }
 
 /**

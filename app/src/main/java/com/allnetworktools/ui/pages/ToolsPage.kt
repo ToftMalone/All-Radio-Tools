@@ -219,12 +219,12 @@ private fun groups(net: Network, connectedDevice: String?, servingLabel: String?
     )
 }
 
-private fun featuredSubtitle(net: Network, servingLabel: String?) = when (net) {
+private fun featuredSubtitle(net: Network, servingLabel: String?, radio: com.allnetworktools.data.sdr.SdrDevice? = null) = when (net) {
     Network.Wifi -> S(R.string.nearby_networks_and_channel_use)
     Network.Bluetooth -> S(R.string.nearby_devices_live_with_filters)
     Network.Cellular -> servingLabel ?: S(R.string.identifiers_and_measurements_of_the_connected)
     Network.Gnss -> S(R.string.sky_plot_and_world_map_of)
-    Network.Sdr -> S(R.string.spectrum_and_waterfall_1_mhz_to)
+    Network.Sdr -> com.allnetworktools.ui.pages.sdr.spectrumSubtitle(radio)
     Network.Nfc -> S(R.string.nfc_reader_sub)
     Network.WifiBt -> S(R.string.wardriving_subtitle)
 }
@@ -271,7 +271,7 @@ fun ToolsPage(net: Network, vm: MainViewModel) {
                 }
             }
             Text(net.featured.title, Modifier.padding(top = 16.dp), style = gs(26, 32, 500), color = acc.onContainer)
-            Text(featuredSubtitle(net, servingLabel), Modifier.padding(top = 2.dp).graphicsLayer { alpha = 0.85f }, style = rf(14, 20), color = acc.onContainer)
+            Text(featuredSubtitle(net, servingLabel, radio), Modifier.padding(top = 2.dp).graphicsLayer { alpha = 0.85f }, style = rf(14, 20), color = acc.onContainer)
             Row(Modifier.fillMaxWidth().padding(top = 14.dp), horizontalArrangement = Arrangement.End) {
                 PillButton(S(R.string.launch), { open(net.featured) }, icon = Sym.PlayArrow, height = 48.dp)
             }

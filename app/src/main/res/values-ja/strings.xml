@@ -959,7 +959,6 @@
     <string name="nearby_devices_live_with_filters">"付近のデバイスをリアルタイムで、フィルター付き"</string>
     <string name="identifiers_and_measurements_of_the_connected">"接続中のセルの識別子と測定値"</string>
     <string name="sky_plot_and_world_map_of">"衛星のスカイプロットと世界地図"</string>
-    <string name="spectrum_and_waterfall_1_mhz_to">"スペクトラムとウォーターフォール、1 MHz～6 GHz"</string>
     <string name="launch">"起動"</string>
     <string name="ibeacon_eddystone_and_altbeacon_shops_museums">"iBeacon、Eddystone、AltBeacon：店舗、美術館、施設、スマートデバイス"</string>
     <string name="bluetooth_listening_in_progress">"Bluetooth受信中"</string>
@@ -1504,7 +1503,6 @@
     <string name="in_progress">"通過中"</string>
     <string name="in_text">"あと "</string>
     <string name="listening_3">"受信中"</string>
-    <string name="spectrum_and_waterfall_1_mhz_to_2">"スペクトラムとウォーターフォール、1 MHz～6 GHz、バンドプリセット付き。"</string>
     <string name="receiver">"受信機"</string>
     <string name="hardware">"ハードウェア"</string>
     <string name="receive_only_3">"受信のみ"</string>
@@ -2622,4 +2620,14 @@
     <string name="sdr_cat_space">"衛星・気象"</string>
     <string name="sdr_cat_home">"家庭・センサー"</string>
     <string name="sdr_cat_voice">"音声・ページャー"</string>
+    <string name="spectrum_and_waterfall">"スペクトラムとウォーターフォール"</string>
+    <string name="spectrum_and_waterfall_range">"スペクトラムとウォーターフォール、%1$s〜%2$s"</string>
+    <string name="spectrum_marker">"マーカー %1$s MHz"</string>
+    <string name="spectrum_listen_here">"ここを聴く"</string>
+    <string name="spectrum_marker_clear">"削除"</string>
+    <string name="spectrum_marker_hint">"スペクトラムをタップしてマーカーを置きます。"</string>
+    <string name="sdr_converter">"コンバーター"</string>
+    <string name="sdr_converter_none">"なし"</string>
+    <string name="sdr_converter_mhz">"コンバーターのオフセット (MHz)"</string>
+    <string name="sdr_converter_hint">"受信機の前に付けるアップ/ダウンコンバーター用：周波数に加える値 (Ham It Up は 125、ダウンコンバーターは負の値)。ツールは実際の周波数を表示し続けます。"</string>
 </resources>

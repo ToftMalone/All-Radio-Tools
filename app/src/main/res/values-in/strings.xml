@@ -959,7 +959,6 @@
     <string name="nearby_devices_live_with_filters">"Perangkat sekitar, langsung, dengan filter"</string>
     <string name="identifiers_and_measurements_of_the_connected">"Pengenal dan pengukuran sel yang terhubung"</string>
     <string name="sky_plot_and_world_map_of">"Plot langit dan peta dunia satelit"</string>
-    <string name="spectrum_and_waterfall_1_mhz_to">"Spektrum dan waterfall, 1 MHz hingga 6 GHz"</string>
     <string name="launch">"Jalankan"</string>
     <string name="ibeacon_eddystone_and_altbeacon_shops_museums">"iBeacon, Eddystone, dan AltBeacon: toko, museum, tempat, perangkat pintar"</string>
     <string name="bluetooth_listening_in_progress">"Mendengarkan Bluetooth"</string>
@@ -1504,7 +1503,6 @@
     <string name="in_progress">"berlangsung"</string>
     <string name="in_text">"dalam "</string>
     <string name="listening_3">"Mendengarkan"</string>
-    <string name="spectrum_and_waterfall_1_mhz_to_2">"Spektrum dan waterfall, 1 MHz hingga 6 GHz, dengan preset pita."</string>
     <string name="receiver">"Penerima"</string>
     <string name="hardware">"Perangkat keras"</string>
     <string name="receive_only_3">"Hanya menerima"</string>
@@ -2622,4 +2620,14 @@
     <string name="sdr_cat_space">"Satelit &amp; cuaca"</string>
     <string name="sdr_cat_home">"Rumah &amp; sensor"</string>
     <string name="sdr_cat_voice">"Suara &amp; pager"</string>
+    <string name="spectrum_and_waterfall">"Spektrum dan air terjun"</string>
+    <string name="spectrum_and_waterfall_range">"Spektrum dan air terjun, %1$s sampai %2$s"</string>
+    <string name="spectrum_marker">"Penanda %1$s MHz"</string>
+    <string name="spectrum_listen_here">"Dengarkan di sini"</string>
+    <string name="spectrum_marker_clear">"Hapus"</string>
+    <string name="spectrum_marker_hint">"Ketuk spektrum untuk menaruh penanda."</string>
+    <string name="sdr_converter">"Konverter"</string>
+    <string name="sdr_converter_none">"Tidak ada"</string>
+    <string name="sdr_converter_mhz">"Offset konverter (MHz)"</string>
+    <string name="sdr_converter_hint">"Untuk konverter naik atau turun di depan radio: yang ditambahkannya ke frekuensi (125 untuk Ham It Up, negatif untuk konverter turun). Alat tetap menampilkan frekuensi sebenarnya."</string>
 </resources>

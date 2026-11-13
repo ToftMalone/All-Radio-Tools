@@ -68,7 +68,7 @@ fun SdrDashboard(vm: MainViewModel) {
             }
             Text(S(R.string.spectrum_analyser), Modifier.padding(top = 16.dp), style = gs(24, 30, 500), color = roles.onContainer)
             Text(
-                S(R.string.spectrum_and_waterfall_1_mhz_to_2),
+                spectrumSubtitle(device),
                 Modifier.padding(top = 4.dp).graphicsLayer { alpha = 0.85f }, style = rf(14, 20), color = roles.onContainer,
             )
             Row(Modifier.fillMaxWidth().padding(top = 14.dp), horizontalArrangement = Arrangement.End) {
@@ -162,8 +162,34 @@ internal fun GainSettings(g: SdrGain, onChange: () -> Unit) {
             }
         }
         if (kind?.biasTee == true) BiasTeeLine()
+        ConverterLine()
     }
 }
+
+/** An up- or down-converter in front of the radio: what it adds to the frequency, in MHz. */
+@Composable
+private fun ConverterLine() {
+    val st = com.allnetworktools.data.sdr.SdrSettings
+    var text by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(converterText(st.converterHz)) }
+    Text(S(R.string.sdr_converter), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
+    FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        AntFilterChip(S(R.string.sdr_converter_none), st.converterHz == 0L, { st.converterHz = 0L; text = "0" })
+        AntFilterChip("Ham It Up +125 MHz", st.converterHz == 125_000_000L, { st.converterHz = 125_000_000L; text = "125" })
+        AntFilterChip("SpyVerter +120 MHz", st.converterHz == 120_000_000L, { st.converterHz = 120_000_000L; text = "120" })
+    }
+    com.allnetworktools.ui.tools.HostInputField(
+        text,
+        { v ->
+            text = v
+            v.trim().replace(',', '.').toDoubleOrNull()?.takeIf { kotlin.math.abs(it) < 100_000.0 }?.let { st.converterHz = Math.round(it * 1e6) }
+        },
+        S(R.string.sdr_converter_mhz), Sym.Antenna, keyboardType = androidx.compose.ui.text.input.KeyboardType.Decimal,
+    )
+    Text(S(R.string.sdr_converter_hint), style = rf(12, 16), color = cs.onSurfaceVariant)
+}
+
+private fun converterText(hz: Long): String =
+    java.math.BigDecimal(hz).divide(java.math.BigDecimal(1_000_000)).stripTrailingZeros().toPlainString()
 
 @Composable
 private fun NativeGainLine(kind: com.allnetworktools.data.sdr.SdrKind, steps: List<Int>, g: SdrGain, onChange: () -> Unit) {
@@ -227,4 +253,23 @@ internal fun ToolTabRow(key: String, map: Boolean): ToolTab {
     val current = ToolTabMemory.chosen[key]?.takeIf { t -> tabs.any { it.first == t } } ?: tabs.first().first
     SegmentedRow(tabs, current, { ToolTabMemory.chosen[key] = it }, Modifier.fillMaxWidth())
     return current
+}
+
+/** "Spectrum and waterfall, 24 MHz to 1.766 GHz" for the radio plugged in (through its converter); no range without one. */
+internal fun spectrumSubtitle(device: com.allnetworktools.data.sdr.SdrDevice?): String =
+    device?.let {
+        val r = com.allnetworktools.data.sdr.SdrSettings.tunable(it.kind, it.usb?.productName)
+        S(R.string.spectrum_and_waterfall_range, hzLabel(r.first), hzLabel(r.last))
+    } ?: S(R.string.spectrum_and_waterfall)
+
+/** A frequency in the unit that reads best, without useless decimals: "500 kHz", "24 MHz", "1.766 GHz". */
+internal fun hzLabel(hz: Long): String {
+    val (div, unit) = when {
+        hz >= 1_000_000_000L -> 1_000_000_000L to "GHz"
+        hz >= 1_000_000L -> 1_000_000L to "MHz"
+        else -> 1_000L to "kHz"
+    }
+    val n = java.math.BigDecimal(hz).divide(java.math.BigDecimal(div)).setScale(3, java.math.RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()
+    val sep = java.text.DecimalFormatSymbols.getInstance(java.util.Locale.getDefault()).decimalSeparator
+    return "${if (sep == ',') n.replace('.', ',') else n} $unit"
 }

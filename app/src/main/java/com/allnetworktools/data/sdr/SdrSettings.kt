@@ -2,6 +2,7 @@ package com.allnetworktools.data.sdr
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.allnetworktools.util.DebugLog
@@ -48,7 +49,7 @@ enum class SdrKind(
 
     /** Whether a tool needing [rate] on one of [bands] can run on this radio. */
     fun canRun(rate: Int, bands: List<LongRange>, product: String?): Boolean =
-        canRate(rate, product) && (bands.isEmpty() || bands.any { it.first >= minHz(product) && it.last <= maxHz() })
+        canRate(rate, product) && (bands.isEmpty() || bands.any { b -> SdrSettings.tunable(this, product).let { b.first >= it.first && b.last <= it.last } })
 
     /** The spectrum widths, in MHz, this radio can show without resampling a wide stream on the phone. */
     fun spectrumSpans(product: String?): List<Int> = when (this) {
@@ -77,6 +78,17 @@ object SdrSettings {
     /** Power on the antenna port, for an active antenna or a preamplifier. Off at every start of the app. */
     var biasTee by mutableStateOf(false)
 
+    /**
+     * What an up- or down-converter in front of the radio adds to the frequency, in Hz: +125 MHz for a Ham It Up,
+     * the converter's LO taken away for a downconverter. The tools keep showing the real frequency; the radio is tuned
+     * this much higher. 0 without a converter, at every start of the app.
+     */
+    var converterHz by mutableLongStateOf(0L)
+
+    /** The real frequencies the radio reaches through the converter. */
+    fun tunable(kind: SdrKind, product: String?): LongRange =
+        (kind.minHz(product) - converterHz).coerceAtLeast(0L)..(kind.maxHz() - converterHz).coerceAtLeast(0L)
+
     @Volatile internal var active: SdrRadio? = null
 
     /** Applies [biasTee] to the radio in use, if any. Call off the main thread. */
@@ -102,8 +114,10 @@ internal class ManagedRadio(private val inner: SdrRadio, private val kind: SdrKi
     override fun setSampleRate(hz: Int, filterHz: Int): Boolean =
         inner.setSampleRate(hz, filterHz).also { DebugLog.i("SDR", "${inner.caps.name}: sample rate $hz -> $it") }
 
-    override fun setFrequency(hz: Long): Boolean =
-        inner.setFrequency(hz).also { if (!it) DebugLog.w("SDR", "${inner.caps.name}: frequency $hz refused") }
+    override fun setFrequency(hz: Long): Boolean {
+        val tuned = hz + SdrSettings.converterHz
+        return inner.setFrequency(tuned).also { if (!it) DebugLog.w("SDR", "${inner.caps.name}: frequency $tuned refused") }
+    }
 
     override fun startRx(onSamples: (ByteArray, Int) -> Unit, onError: (String) -> Unit) {
         DebugLog.i("SDR", "${inner.caps.name}: start receiving")

@@ -49,6 +49,8 @@ class SpectrumController(private val repo: SdrRepository, private val scope: Cor
         get() = gain.amp == true
         set(v) { gain.amp = v }
     var peakHold by mutableStateOf(false)
+    /** The frequency marked by a tap on the spectrum, shown with its level; null for none. */
+    var markerHz by mutableStateOf<Long?>(null)
     /** How much of the span is shown, around its centre: 1 for all of it, up to [MAX_ZOOM]. */
     var zoom by mutableIntStateOf(1)
         private set

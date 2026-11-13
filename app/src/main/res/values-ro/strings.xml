@@ -961,7 +961,6 @@
     <string name="nearby_devices_live_with_filters">"Dispozitive din apropiere, în timp real, cu filtre"</string>
     <string name="identifiers_and_measurements_of_the_connected">"Identificatori și măsurători ai celulei conectate"</string>
     <string name="sky_plot_and_world_map_of">"Sky plot și hartă a lumii a sateliților"</string>
-    <string name="spectrum_and_waterfall_1_mhz_to">"Spectru și cascadă, de la 1 MHz la 6 GHz"</string>
     <string name="launch">"Pornește"</string>
     <string name="ibeacon_eddystone_and_altbeacon_shops_museums">"iBeacon, Eddystone și AltBeacon: magazine, muzee, locații, dispozitive inteligente"</string>
     <string name="bluetooth_listening_in_progress">"Ascultare Bluetooth în curs"</string>
@@ -1506,7 +1505,6 @@
     <string name="in_progress">"în curs"</string>
     <string name="in_text">"peste "</string>
     <string name="listening_3">"Ascultare"</string>
-    <string name="spectrum_and_waterfall_1_mhz_to_2">"Spectru și cascadă, de la 1 MHz la 6 GHz, cu presetări de benzi."</string>
     <string name="receiver">"Receptor"</string>
     <string name="hardware">"Hardware"</string>
     <string name="receive_only_3">"Doar recepție"</string>
@@ -2760,4 +2758,14 @@
     <string name="sdr_cat_space">"Sateliți și meteo"</string>
     <string name="sdr_cat_home">"Casă și senzori"</string>
     <string name="sdr_cat_voice">"Voce și pagere"</string>
+    <string name="spectrum_and_waterfall">"Spectru și cascadă"</string>
+    <string name="spectrum_and_waterfall_range">"Spectru și cascadă, de la %1$s la %2$s"</string>
+    <string name="spectrum_marker">"Marcaj %1$s MHz"</string>
+    <string name="spectrum_listen_here">"Ascultă aici"</string>
+    <string name="spectrum_marker_clear">"Elimină"</string>
+    <string name="spectrum_marker_hint">"Atingeți spectrul pentru a plasa un marcaj."</string>
+    <string name="sdr_converter">"Convertor"</string>
+    <string name="sdr_converter_none">"Niciunul"</string>
+    <string name="sdr_converter_mhz">"Decalajul convertorului (MHz)"</string>
+    <string name="sdr_converter_hint">"Pentru un convertor pus înaintea radioului: cât adaugă la frecvență (125 pentru un Ham It Up, negativ pentru un convertor coborâtor). Instrumentele arată în continuare frecvența reală."</string>
 </resources>

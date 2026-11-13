@@ -149,4 +149,34 @@ class ListenTest {
         assertEquals("14.2001", com.allnetworktools.ui.pages.sdr.ListenController.mhz(14_200_100L))
         assertEquals("446.0063", com.allnetworktools.ui.pages.sdr.ListenController.mhz(446_006_250L))
     }
+
+    /** "Auto" steps by the broadcast channel spacing in AM: 9 kHz on long and medium wave, 5 kHz on shortwave. */
+    @Test fun autoStepFollowsTheBroadcastBands() {
+        val c = com.allnetworktools.ui.pages.sdr.ListenController
+        assertEquals(9_000L, c.autoStep(ListenMode.Am, 1_215_000))
+        assertEquals(9_000L, c.autoStep(ListenMode.Am, 198_000))
+        assertEquals(5_000L, c.autoStep(ListenMode.Am, 6_000_000))
+        assertEquals(25_000L, c.autoStep(ListenMode.Am, 121_500_000))
+        assertEquals(12_500L, c.autoStep(ListenMode.Nfm, 6_000_000))
+    }
+
+    /** The marker on the spectrum opens Listen in the mode its band usually uses. */
+    @Test fun modeGuessedFromTheFrequency() {
+        assertEquals(ListenMode.Lsb, ListenMode.guess(7_100_000))
+        assertEquals(ListenMode.Usb, ListenMode.guess(14_200_000))
+        assertEquals(ListenMode.Am, ListenMode.guess(9_650_000))
+        assertEquals(ListenMode.Wfm, ListenMode.guess(100_000_000))
+        assertEquals(ListenMode.Am, ListenMode.guess(121_500_000))
+        assertEquals(ListenMode.Nfm, ListenMode.guess(145_500_000))
+    }
+
+    @Test fun frequencyLabelsAndMarkerLevel() {
+        java.util.Locale.setDefault(java.util.Locale.US)
+        assertEquals("24 MHz", com.allnetworktools.ui.pages.sdr.hzLabel(24_000_000))
+        assertEquals("1.766 GHz", com.allnetworktools.ui.pages.sdr.hzLabel(1_766_000_000))
+        assertEquals("500 kHz", com.allnetworktools.ui.pages.sdr.hzLabel(500_000))
+        val db = FloatArray(101) { -90f }.also { it[50] = -30f }
+        // A narrow peak next to the marker still counts.
+        assertEquals(-30f, com.allnetworktools.ui.pages.sdr.markerLevel(db, 0.51f), 0f)
+    }
 }

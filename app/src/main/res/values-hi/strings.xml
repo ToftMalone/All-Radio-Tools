@@ -959,7 +959,6 @@
     <string name="nearby_devices_live_with_filters">"आस-पास के डिवाइस, लाइव, फ़िल्टर के साथ"</string>
     <string name="identifiers_and_measurements_of_the_connected">"जुड़े सेल के पहचानकर्ता और माप"</string>
     <string name="sky_plot_and_world_map_of">"उपग्रहों का आकाश प्लॉट और विश्व मानचित्र"</string>
-    <string name="spectrum_and_waterfall_1_mhz_to">"स्पेक्ट्रम और वॉटरफ़ॉल, 1 MHz से 6 GHz"</string>
     <string name="launch">"लॉन्च करें"</string>
     <string name="ibeacon_eddystone_and_altbeacon_shops_museums">"iBeacon, Eddystone और AltBeacon: दुकानें, संग्रहालय, स्थल, स्मार्ट डिवाइस"</string>
     <string name="bluetooth_listening_in_progress">"Bluetooth सुना जा रहा है"</string>
@@ -1504,7 +1503,6 @@
     <string name="in_progress">"जारी"</string>
     <string name="in_text">"बाकी "</string>
     <string name="listening_3">"सुन रहे हैं"</string>
-    <string name="spectrum_and_waterfall_1_mhz_to_2">"स्पेक्ट्रम और वॉटरफ़ॉल, 1 MHz से 6 GHz, बैंड प्रीसेट के साथ।"</string>
     <string name="receiver">"रिसीवर"</string>
     <string name="hardware">"हार्डवेयर"</string>
     <string name="receive_only_3">"केवल प्राप्ति"</string>
@@ -2691,4 +2689,14 @@
     <string name="sdr_cat_space">"उपग्रह और मौसम"</string>
     <string name="sdr_cat_home">"घर और सेंसर"</string>
     <string name="sdr_cat_voice">"आवाज़ और पेजर"</string>
+    <string name="spectrum_and_waterfall">"स्पेक्ट्रम और वॉटरफ़ॉल"</string>
+    <string name="spectrum_and_waterfall_range">"स्पेक्ट्रम और वॉटरफ़ॉल, %1$s से %2$s"</string>
+    <string name="spectrum_marker">"मार्कर %1$s MHz"</string>
+    <string name="spectrum_listen_here">"यहाँ सुनें"</string>
+    <string name="spectrum_marker_clear">"हटाएँ"</string>
+    <string name="spectrum_marker_hint">"मार्कर लगाने के लिए स्पेक्ट्रम पर टैप करें।"</string>
+    <string name="sdr_converter">"कनवर्टर"</string>
+    <string name="sdr_converter_none">"कोई नहीं"</string>
+    <string name="sdr_converter_mhz">"कनवर्टर ऑफ़सेट (MHz)"</string>
+    <string name="sdr_converter_hint">"रेडियो के आगे लगे अप- या डाउन-कनवर्टर के लिए: यह फ़्रीक्वेंसी में कितना जोड़ता है (Ham It Up के लिए 125, डाउन-कनवर्टर के लिए ऋणात्मक)। टूल असली फ़्रीक्वेंसी ही दिखाते हैं।"</string>
 </resources>

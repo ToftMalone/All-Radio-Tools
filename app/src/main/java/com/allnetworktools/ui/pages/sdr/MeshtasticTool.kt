@@ -84,7 +84,7 @@ fun MeshtasticTool(vm: MainViewModel) {
             c.bandKey = it
         }
         if (c.bandKey == "free") {
-            if (!c.running) HostInputField(c.frequencyMhz, { c.frequencyMhz = it }, S(R.string.frequency_mhz), Sym.Stream, keyboardType = KeyboardType.Decimal)
+            if (!c.running) HostInputField(c.frequencyMhz, { c.frequencyMhz = it }, S(R.string.frequency_mhz), Sym.Antenna, keyboardType = KeyboardType.Decimal)
             BandChips(Meshtastic.PRESETS.map { it.name to it.name }, c.presetName, !c.starting) {
                 if (c.running) c.stop()
                 c.presetName = it

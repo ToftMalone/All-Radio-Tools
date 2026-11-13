@@ -235,7 +235,7 @@ fun PocsagTool(vm: MainViewModel) {
                             })
                         }
                     }
-                    if (c.network == null && !c.running) HostInputField(c.customMhz, { c.customMhz = it }, S(R.string.frequency_mhz), Sym.Stream, keyboardType = KeyboardType.Decimal)
+                    if (c.network == null && !c.running) HostInputField(c.customMhz, { c.customMhz = it }, S(R.string.frequency_mhz), Sym.Antenna, keyboardType = KeyboardType.Decimal)
                     GainSettings(c.gain) { c.applyGains() }
                 }
             }

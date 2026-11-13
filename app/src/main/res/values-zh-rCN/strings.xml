@@ -959,7 +959,6 @@
     <string name="nearby_devices_live_with_filters">"附近设备，实时，带筛选"</string>
     <string name="identifiers_and_measurements_of_the_connected">"所连小区的标识和测量值"</string>
     <string name="sky_plot_and_world_map_of">"卫星天空图和世界地图"</string>
-    <string name="spectrum_and_waterfall_1_mhz_to">"频谱和瀑布图，1 MHz 至 6 GHz"</string>
     <string name="launch">"启动"</string>
     <string name="ibeacon_eddystone_and_altbeacon_shops_museums">"iBeacon、Eddystone 和 AltBeacon：商店、博物馆、场馆、智能设备"</string>
     <string name="bluetooth_listening_in_progress">"正在监听蓝牙"</string>
@@ -1504,7 +1503,6 @@
     <string name="in_progress">"进行中"</string>
     <string name="in_text">"还有 "</string>
     <string name="listening_3">"监听中"</string>
-    <string name="spectrum_and_waterfall_1_mhz_to_2">"频谱和瀑布图，1 MHz 至 6 GHz，带频段预设。"</string>
     <string name="receiver">"接收机"</string>
     <string name="hardware">"硬件"</string>
     <string name="receive_only_3">"仅接收"</string>
@@ -2622,4 +2620,14 @@
     <string name="sdr_cat_space">"卫星与气象"</string>
     <string name="sdr_cat_home">"家居与传感器"</string>
     <string name="sdr_cat_voice">"语音与寻呼"</string>
+    <string name="spectrum_and_waterfall">"频谱与瀑布图"</string>
+    <string name="spectrum_and_waterfall_range">"频谱与瀑布图，%1$s 至 %2$s"</string>
+    <string name="spectrum_marker">"标记 %1$s MHz"</string>
+    <string name="spectrum_listen_here">"在此收听"</string>
+    <string name="spectrum_marker_clear">"移除"</string>
+    <string name="spectrum_marker_hint">"点按频谱放置标记。"</string>
+    <string name="sdr_converter">"变频器"</string>
+    <string name="sdr_converter_none">"无"</string>
+    <string name="sdr_converter_mhz">"变频器偏移 (MHz)"</string>
+    <string name="sdr_converter_hint">"用于接在接收机前的上/下变频器：它加到频率上的值（Ham It Up 为 125，下变频器为负值）。各工具仍显示真实频率。"</string>
 </resources>

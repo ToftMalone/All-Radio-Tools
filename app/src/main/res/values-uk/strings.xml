@@ -961,7 +961,6 @@
     <string name="nearby_devices_live_with_filters">"Пристрої поблизу, в реальному часі, з фільтрами"</string>
     <string name="identifiers_and_measurements_of_the_connected">"Ідентифікатори й вимірювання під'єднаної соти"</string>
     <string name="sky_plot_and_world_map_of">"Карта неба й карта світу із супутниками"</string>
-    <string name="spectrum_and_waterfall_1_mhz_to">"Спектр і водоспад, від 1 МГц до 6 ГГц"</string>
     <string name="launch">"Запустити"</string>
     <string name="ibeacon_eddystone_and_altbeacon_shops_museums">"iBeacon, Eddystone і AltBeacon: магазини, музеї, майданчики, розумні пристрої"</string>
     <string name="bluetooth_listening_in_progress">"Триває прослуховування Bluetooth"</string>
@@ -1506,7 +1505,6 @@
     <string name="in_progress">"триває"</string>
     <string name="in_text">"через "</string>
     <string name="listening_3">"Прослуховування"</string>
-    <string name="spectrum_and_waterfall_1_mhz_to_2">"Спектр і водоспад, від 1 МГц до 6 ГГц, із передустановками діапазонів."</string>
     <string name="receiver">"Приймач"</string>
     <string name="hardware">"Обладнання"</string>
     <string name="receive_only_3">"Лише приймання"</string>
@@ -2829,4 +2827,14 @@
     <string name="sdr_cat_space">"Супутники і погода"</string>
     <string name="sdr_cat_home">"Дім і датчики"</string>
     <string name="sdr_cat_voice">"Голос і пейджери"</string>
+    <string name="spectrum_and_waterfall">"Спектр і водоспад"</string>
+    <string name="spectrum_and_waterfall_range">"Спектр і водоспад, від %1$s до %2$s"</string>
+    <string name="spectrum_marker">"Маркер %1$s МГц"</string>
+    <string name="spectrum_listen_here">"Слухати тут"</string>
+    <string name="spectrum_marker_clear">"Прибрати"</string>
+    <string name="spectrum_marker_hint">"Торкніться спектра, щоб поставити маркер."</string>
+    <string name="sdr_converter">"Конвертер"</string>
+    <string name="sdr_converter_none">"Немає"</string>
+    <string name="sdr_converter_mhz">"Зсув конвертера (МГц)"</string>
+    <string name="sdr_converter_hint">"Для конвертера перед приймачем: скільки він додає до частоти (125 для Ham It Up, від\'ємне для понижувального). Інструменти й надалі показують справжню частоту."</string>
 </resources>

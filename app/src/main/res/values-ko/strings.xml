@@ -959,7 +959,6 @@
     <string name="nearby_devices_live_with_filters">"주변 기기, 실시간, 필터 포함"</string>
     <string name="identifiers_and_measurements_of_the_connected">"연결된 셀의 식별자와 측정값"</string>
     <string name="sky_plot_and_world_map_of">"위성 스카이 플롯과 세계 지도"</string>
-    <string name="spectrum_and_waterfall_1_mhz_to">"스펙트럼과 폭포수, 1 MHz~6 GHz"</string>
     <string name="launch">"실행"</string>
     <string name="ibeacon_eddystone_and_altbeacon_shops_museums">"iBeacon, Eddystone, AltBeacon: 매장, 박물관, 장소, 스마트 기기"</string>
     <string name="bluetooth_listening_in_progress">"Bluetooth 수신 중"</string>
@@ -1504,7 +1503,6 @@
     <string name="in_progress">"진행 중"</string>
     <string name="in_text">"남은 시간 "</string>
     <string name="listening_3">"수신 중"</string>
-    <string name="spectrum_and_waterfall_1_mhz_to_2">"스펙트럼과 폭포수, 1 MHz~6 GHz, 대역 프리셋 포함."</string>
     <string name="receiver">"수신기"</string>
     <string name="hardware">"하드웨어"</string>
     <string name="receive_only_3">"수신 전용"</string>
@@ -2622,4 +2620,14 @@
     <string name="sdr_cat_space">"위성·기상"</string>
     <string name="sdr_cat_home">"가정·센서"</string>
     <string name="sdr_cat_voice">"음성·호출기"</string>
+    <string name="spectrum_and_waterfall">"스펙트럼과 워터폴"</string>
+    <string name="spectrum_and_waterfall_range">"스펙트럼과 워터폴, %1$s ~ %2$s"</string>
+    <string name="spectrum_marker">"마커 %1$s MHz"</string>
+    <string name="spectrum_listen_here">"여기서 듣기"</string>
+    <string name="spectrum_marker_clear">"제거"</string>
+    <string name="spectrum_marker_hint">"스펙트럼을 탭해 마커를 놓습니다."</string>
+    <string name="sdr_converter">"컨버터"</string>
+    <string name="sdr_converter_none">"없음"</string>
+    <string name="sdr_converter_mhz">"컨버터 오프셋 (MHz)"</string>
+    <string name="sdr_converter_hint">"수신기 앞의 업/다운 컨버터용: 주파수에 더하는 값 (Ham It Up은 125, 다운 컨버터는 음수). 도구는 계속 실제 주파수를 표시합니다."</string>
 </resources>

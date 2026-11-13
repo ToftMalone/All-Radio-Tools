@@ -354,7 +354,7 @@ fun SondeTool(vm: MainViewModel) {
                                 AntFilterChip("${f.replace('.', ',')} · $l", c.frequencyMhz == f, { c.frequencyMhz = f })
                             }
                         }
-                        HostInputField(c.frequencyMhz, { c.frequencyMhz = it }, S(R.string.frequency_mhz), Sym.Stream, keyboardType = KeyboardType.Decimal)
+                        HostInputField(c.frequencyMhz, { c.frequencyMhz = it }, S(R.string.frequency_mhz), Sym.Antenna, keyboardType = KeyboardType.Decimal)
                         if (freqError != null) Text(freqError, style = rf(13, 18), color = cs.error)
                         GainSettings(c.gain) { c.applyGains() }
                         Text(

@@ -369,7 +369,7 @@ fun MeteorTool(vm: MainViewModel) {
                             AntFilterChip("${mhz(mhzValue)} MHz", c.frequencyMhz == f, { if (c.frequencyMhz != f && !c.starting) { if (c.running) c.stop(); c.frequencyMhz = f } })
                         }
                     }
-                    if (!c.running) HostInputField(c.frequencyMhz, { c.frequencyMhz = it }, S(R.string.frequency_mhz), Sym.Stream, keyboardType = KeyboardType.Decimal)
+                    if (!c.running) HostInputField(c.frequencyMhz, { c.frequencyMhz = it }, S(R.string.frequency_mhz), Sym.Antenna, keyboardType = KeyboardType.Decimal)
                     GainSettings(c.gain) { c.applyGains() }
                 }
             }

@@ -102,7 +102,9 @@ class ListenController(repo: SdrRepository, scope: CoroutineScope, onAcquire: ()
         private set
     /** The step of the dial; null follows the mode (100 kHz in WFM, 12.5 kHz in NFM…). */
     var stepChoice by mutableStateOf<Long?>(null)
-    val stepHz: Long get() = stepChoice ?: mode.stepHz
+    val stepHz: Long get() = stepChoice ?: autoStepHz
+    /** The step "Auto" picks: in AM, 9 kHz on long and medium wave, 5 kHz on shortwave, the mode's step above. */
+    val autoStepHz: Long get() = autoStep(mode, frequencyHz)
     /** How much of the window the spectrum shows: 1 for all of it, 16 for an eighth of a megahertz. */
     var zoom by mutableIntStateOf(1)
         private set
@@ -195,6 +197,12 @@ class ListenController(repo: SdrRepository, scope: CoroutineScope, onAcquire: ()
         tune(snap(hz.coerceIn(centerHz - lim, centerHz + lim)))
     }
 
+    /** Tunes to [hz] in the mode its band usually uses (from the spectrum's marker). */
+    fun listenAt(hz: Long) {
+        chooseMode(ListenMode.guess(hz))
+        tune(hz)
+    }
+
     fun preset(p: ListenPreset) {
         chooseMode(p.mode)
         tune(p.hz)
@@ -248,6 +256,13 @@ class ListenController(repo: SdrRepository, scope: CoroutineScope, onAcquire: ()
         const val MAX_ZOOM = 16
         val Zooms = listOf(1, 2, 4, 8, 16)
         val Steps = listOf(100L, 500L, 1_000L, 5_000L, 12_500L, 25_000L, 100_000L)
+
+        fun autoStep(mode: ListenMode, hz: Long): Long = when {
+            mode != ListenMode.Am -> mode.stepHz
+            hz < 1_710_000L -> 9_000L
+            hz < 30_000_000L -> 5_000L
+            else -> mode.stepHz
+        }
 
         /** The frequency in MHz down to 100 Hz, as typed in the field. */
         fun mhz(hz: Long): String = "%.4f".format(Locale.US, hz / 1e6)
@@ -367,13 +382,13 @@ fun ListenTool(vm: MainViewModel) {
                     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         DialButton(Sym.Remove) { c.step(-1) }
                         Box(Modifier.weight(1f)) {
-                            HostInputField(c.frequencyText, { c.frequencyText = it }, S(R.string.frequency_mhz), Sym.Stream, keyboardType = KeyboardType.Decimal, onDone = c::typedFrequency)
+                            HostInputField(c.frequencyText, { c.frequencyText = it }, S(R.string.frequency_mhz), Sym.Antenna, keyboardType = KeyboardType.Decimal, onDone = c::typedFrequency)
                         }
                         DialButton(Sym.Add) { c.step(1) }
                     }
                     Text(S(R.string.listen_step), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
                     FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                        AntFilterChip(S(R.string.listen_step_auto, stepLabel(c.mode.stepHz)), c.stepChoice == null, { c.stepChoice = null })
+                        AntFilterChip(S(R.string.listen_step_auto, stepLabel(c.autoStepHz)), c.stepChoice == null, { c.stepChoice = null })
                         ListenController.Steps.forEach { st -> AntFilterChip(stepLabel(st), c.stepChoice == st, { c.stepChoice = st }) }
                     }
                     Text(S(R.string.listen_mode), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
@@ -388,7 +403,7 @@ fun ListenTool(vm: MainViewModel) {
                 Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                     Text(S(R.string.listen_presets), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
                     // One tab per group; stations the radio cannot tune are left out.
-                    val range = d?.let { it.kind.minHz(it.usb?.productName)..it.kind.maxHz() }
+                    val range = d?.let { com.allnetworktools.data.sdr.SdrSettings.tunable(it.kind, it.usb?.productName) }
                     val all = presets().filter { range == null || it.hz in range }
                     val bands = ListenBand.entries.filter { b -> all.any { it.band == b } }
                     val band = if (c.stationBand in bands) c.stationBand else bands.firstOrNull()
@@ -493,10 +508,12 @@ private fun SpectrumPicker(c: ListenController) {
             for (i in 0 until n) { val x = size.width * i / (n - 1); if (i == 0) line.moveTo(x, y(db[i])) else line.lineTo(x, y(db[i])) }
             drawPath(line, accent, style = Stroke(2f))
         }
-        // The channel: its width as a band, its middle as a line.
+        // The channel: what the demodulator lets through as a band (on one side of the carrier in USB and LSB), its
+        // carrier as a line. Never narrower than a few pixels, so it shows on the full 2 MHz too.
         val x = size.width * (0.5f + off.toFloat() / span)
-        val w = size.width * bw / span
-        drawRect(accent.copy(alpha = 0.18f), Offset(x - w / 2, 0f), Size(w.coerceAtLeast(3f), size.height))
+        val w = (size.width * bw / span).coerceAtLeast(8f)
+        val left = when (c.mode) { ListenMode.Usb -> x; ListenMode.Lsb -> x - w; else -> x - w / 2 }
+        drawRect(accent.copy(alpha = 0.25f), Offset(left, 0f), Size(w, size.height))
         drawLine(accent, Offset(x, 0f), Offset(x, size.height), 3f)
     }
 }
