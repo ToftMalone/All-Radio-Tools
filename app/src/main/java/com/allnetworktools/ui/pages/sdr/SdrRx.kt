@@ -35,7 +35,7 @@ abstract class SdrRxController(
     private val onAcquire: () -> Unit,
     val gain: SdrGain,
     private val threadName: String,
-) {
+) : RxHost {
     var running by mutableStateOf(false)
         private set
     var starting by mutableStateOf(false)
@@ -45,6 +45,28 @@ abstract class SdrRxController(
 
     private var radio: SdrRadio? = null
     @Volatile private var dspRunning = false
+    @Volatile private var tunedHz = 0L
+    private var rxSamples: ((ByteArray, Int) -> Unit)? = null
+    private var rxError: ((String) -> Unit)? = null
+
+    /** Transmissions from this tool, with its radio lent while receiving. */
+    val tx by lazy { SdrTransmitter(repo, scope) }
+
+    override val activeRadio: SdrRadio? get() = radio
+
+    override fun pauseRx() { radio?.stopStreaming() }
+
+    /** Back to receiving after a transmission: the rate, frequency and gains are set again. */
+    override fun resumeRx() {
+        val r = radio ?: return
+        val rate = sampleRate
+        r.setSampleRate(rate, HackRf.filterFor(rate))
+        r.setFrequency(tunedHz)
+        r.setLnaGain(gain.lna); r.setVgaGain(gain.vga); r.setAmp(gain.amp == true)
+        val s = rxSamples ?: return
+        val e = rxError ?: return
+        r.startRx(s, e)
+    }
 
     protected abstract val sampleRate: Int
     protected abstract fun tuneHz(): Long
@@ -64,6 +86,7 @@ abstract class SdrRxController(
                 val withAmp = gain.amp == true
                 val rate = sampleRate
                 val hz = tuneHz()
+                tunedHz = hz
                 val ok = withContext(Dispatchers.IO) {
                     r.setSampleRate(rate, HackRf.filterFor(rate)) && r.setFrequency(hz) &&
                         r.setLnaGain(lna) && r.setVgaGain(vga) && r.setAmp(withAmp)
@@ -97,10 +120,11 @@ abstract class SdrRxController(
             sink.close()
         }, threadName).start()
         gain.attach { applyGains() }
-        r.startRx(
-            onSamples = { data, len -> gain.feed(data, len); free.poll()?.let { b -> System.arraycopy(data, 0, b, 0, len); full.offer(b to len) } },
-            onError = { msg -> scope.launch { error = msg; stop() } },
-        )
+        val samples: (ByteArray, Int) -> Unit = { data, len -> gain.feed(data, len); free.poll()?.let { b -> System.arraycopy(data, 0, b, 0, len); full.offer(b to len) } }
+        val failed: (String) -> Unit = { msg -> scope.launch { error = msg; stop() } }
+        rxSamples = samples
+        rxError = failed
+        r.startRx(samples, failed)
     }
 
     fun applyGains() {
@@ -113,11 +137,13 @@ abstract class SdrRxController(
 
     /** Retunes while running, for tools that hop between channels. */
     protected fun retune(hz: Long) {
+        tunedHz = hz
         val r = radio ?: return
         scope.launch(Dispatchers.IO) { r.setFrequency(hz) }
     }
 
     fun stop() {
+        if (tx.transmitting) tx.stop()
         dspRunning = false
         val r = radio
         radio = null

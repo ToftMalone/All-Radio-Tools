@@ -33,13 +33,14 @@ data class SdrDevice(val name: String, val usb: UsbDevice?, val kind: SdrKind = 
 
 /**
  * HackRF USB protocol (greatscottgadgets/hackrf, host/libhackrf/src/hackrf.c): vendor control requests to
- * configure the radio, then interleaved signed 8-bit I/Q on bulk endpoint 0x81 while in receive mode.
- * Receive only: the transmit mode is never requested.
+ * configure the radio, then interleaved signed 8-bit I/Q on bulk endpoint 0x81 while in receive mode, and on the bulk
+ * OUT endpoint while in transmit mode. Transmitting is only started by the tools that check the licence and the band.
  */
 class HackRf private constructor(
     private val conn: UsbDeviceConnection,
     private val iface: UsbInterface,
     private val epIn: UsbEndpoint,
+    private val epOut: UsbEndpoint?,
 ) : SdrRadio {
     override val caps = SdrCaps("HackRF", 1_000_000L, 6_000_000_000L, 20_000_000)
     @Volatile private var running = false
@@ -119,6 +120,49 @@ class HackRf private constructor(
         }, "hackrf-rx").apply { priority = Thread.MAX_PRIORITY; start() }
     }
 
+    override val canTransmit: Boolean get() = epOut != null
+
+    override fun setTxGain(db: Int): Boolean = inp(REQ_SET_TXVGA_GAIN, 0, db.coerceIn(0, 47), 1)?.firstOrNull()?.toInt() != 0
+
+    /** Transmits [fill]'s buffers, four queued at a time on the bulk OUT endpoint, until [stopStreaming]. */
+    override fun startTx(fill: (ByteArray) -> Unit, onError: (String) -> Unit): Boolean {
+        val ep = epOut ?: return false
+        if (running) return false
+        if (!out(REQ_SET_TRANSCEIVER_MODE, MODE_TRANSMIT, 0)) { onError(S(R.string.tx_refused)); return false }
+        running = true
+        thread = Thread({
+            val reqs = List(TRANSFERS) { UsbRequest().apply { initialize(conn, ep) } }
+            val bufs = List(TRANSFERS) { ByteBuffer.allocateDirect(TRANSFER_SIZE) }
+            val data = ByteArray(TRANSFER_SIZE)
+            fun send(i: Int) {
+                fill(data)
+                val b = bufs[i]
+                b.clear(); b.put(data); b.flip()
+                reqs[i].queue(b)
+            }
+            try {
+                reqs.forEachIndexed { i, r -> r.clientData = i; send(i) }
+                while (running) {
+                    val r = try { conn.requestWait(1000) } catch (e: TimeoutException) { onError(S(R.string.usb_link_lost)); break }
+                    if (r == null) { onError(S(R.string.usb_link_lost)); break }
+                    if (running) send(r.clientData as Int)
+                }
+            } catch (e: Exception) {
+                if (running) onError(e.message ?: S(R.string.usb_error))
+            } finally {
+                reqs.forEach { runCatching { it.cancel(); it.close() } }
+            }
+        }, "hackrf-tx").apply { priority = Thread.MAX_PRIORITY; start() }
+        return true
+    }
+
+    override fun stopStreaming() {
+        running = false
+        runCatching { thread?.join(1500) }
+        thread = null
+        runCatching { out(REQ_SET_TRANSCEIVER_MODE, MODE_OFF, 0) }
+    }
+
     override fun close() {
         running = false
         runCatching { thread?.join(1500) }
@@ -144,9 +188,11 @@ class HackRf private constructor(
         private const val REQ_AMP_ENABLE = 17
         private const val REQ_SET_LNA_GAIN = 19
         private const val REQ_SET_VGA_GAIN = 20
+        private const val REQ_SET_TXVGA_GAIN = 21
         private const val REQ_ANTENNA_ENABLE = 23
         private const val MODE_OFF = 0
         private const val MODE_RECEIVE = 1
+        private const val MODE_TRANSMIT = 2
         private const val TRANSFERS = 4
         private const val TRANSFER_SIZE = 131072
 
@@ -172,9 +218,11 @@ class HackRf private constructor(
             val iface = (0 until device.interfaceCount).map(device::getInterface).firstOrNull() ?: return null
             val ep = (0 until iface.endpointCount).map(iface::getEndpoint)
                 .firstOrNull { it.direction == UsbConstants.USB_DIR_IN && it.type == UsbConstants.USB_ENDPOINT_XFER_BULK } ?: return null
+            val epOut = (0 until iface.endpointCount).map(iface::getEndpoint)
+                .firstOrNull { it.direction == UsbConstants.USB_DIR_OUT && it.type == UsbConstants.USB_ENDPOINT_XFER_BULK }
             val conn = manager.openDevice(device) ?: return null
             if (!conn.claimInterface(iface, true)) { conn.close(); return null }
-            return HackRf(conn, iface, ep)
+            return HackRf(conn, iface, ep, epOut)
         }
     }
 }

@@ -114,7 +114,30 @@ internal class ManagedRadio(private val inner: SdrRadio, private val kind: SdrKi
     override fun setSampleRate(hz: Int, filterHz: Int): Boolean =
         inner.setSampleRate(hz, filterHz).also { DebugLog.i("SDR", "${inner.caps.name}: sample rate $hz -> $it") }
 
+    /** The real frequency last asked for, which a transmission is checked against. */
+    @Volatile private var lastHz = 0L
+
+    /** Never past the licence and the band, whichever tool asks: see [TxPolicy]. */
+    override fun startTx(fill: (ByteArray) -> Unit, onError: (String) -> Unit): Boolean {
+        val e = TxPolicy.declared
+        val why = when {
+            e == null -> "no emission declared"
+            // The signal must lie in what the radio is tuned to, so the declaration is the real one.
+            kotlin.math.abs((e.lowHz + e.highHz) / 2 - lastHz) > 1_200_000L -> "emission away from the tuned frequency"
+            else -> TxPolicy.refuse(e)
+        }
+        if (why != null) { DebugLog.w("SDR", "TX refused (LO $lastHz Hz, $e): $why"); onError(why); return false }
+        DebugLog.i("SDR", "${inner.caps.name}: transmitting $e")
+        return inner.startTx(fill, onError)
+    }
+
+    override fun stopStreaming() {
+        DebugLog.i("SDR", "${inner.caps.name}: idle")
+        inner.stopStreaming()
+    }
+
     override fun setFrequency(hz: Long): Boolean {
+        lastHz = hz
         val tuned = hz + SdrSettings.converterHz
         return inner.setFrequency(tuned).also { if (!it) DebugLog.w("SDR", "${inner.caps.name}: frequency $tuned refused") }
     }

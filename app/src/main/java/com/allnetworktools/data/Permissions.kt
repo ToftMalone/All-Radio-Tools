@@ -20,6 +20,9 @@ enum class PermGroup(val permissions: List<String>) {
     ),
     Phone(listOf(Manifest.permission.READ_PHONE_STATE)),
 
+    /** Talking over the SDR's transmitter. */
+    Microphone(listOf(Manifest.permission.RECORD_AUDIO)),
+
     /** Android 17 blocks the local network (LAN scan, ping, ports…) without it, and shows a device picker instead. */
     LocalNetwork(if (Build.VERSION.SDK_INT >= 37) listOf(Manifest.permission.ACCESS_LOCAL_NETWORK) else emptyList()),
 

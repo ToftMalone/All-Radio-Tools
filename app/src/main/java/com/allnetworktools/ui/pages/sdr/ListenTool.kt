@@ -249,10 +249,45 @@ class ListenController(repo: SdrRepository, scope: CoroutineScope, onAcquire: ()
         }
     }
 
+    private var mic: com.allnetworktools.data.sdr.MicSource? = null
+
+    /** What the current mode transmits as; WFM (broadcast) never. */
+    val txMode: com.allnetworktools.data.sdr.TxMode? get() = when (mode) {
+        ListenMode.Nfm -> com.allnetworktools.data.sdr.TxMode.Fm
+        ListenMode.Am -> com.allnetworktools.data.sdr.TxMode.Am
+        ListenMode.Usb -> com.allnetworktools.data.sdr.TxMode.Usb
+        ListenMode.Lsb -> com.allnetworktools.data.sdr.TxMode.Lsb
+        ListenMode.Wfm -> null
+    }
+
+    /** Push to talk: the microphone goes out on the tuned frequency, in the tuned mode, until [releaseTalk]. */
+    fun pushToTalk(device: com.allnetworktools.data.sdr.SdrDevice?) {
+        if (tx.transmitting) return
+        val m = txMode ?: return
+        val src = com.allnetworktools.data.sdr.MicSource()
+        if (!src.start()) { tx.error = S(R.string.tx_mic_failed); return }
+        val (below, above) = when (m) {
+            com.allnetworktools.data.sdr.TxMode.Fm -> 6_000 to 6_000
+            com.allnetworktools.data.sdr.TxMode.Am -> 3_000 to 3_000
+            com.allnetworktools.data.sdr.TxMode.Usb -> 0 to 3_000
+            com.allnetworktools.data.sdr.TxMode.Lsb -> 3_000 to 0
+        }
+        val e = com.allnetworktools.data.sdr.Emission.around(frequencyHz, below, above, com.allnetworktools.data.sdr.TxUse.Amateur)
+        val stream = com.allnetworktools.data.sdr.TxStream(com.allnetworktools.data.sdr.AudioModulator(src, m), TX_RATE, TX_SHIFT.toDouble())
+        mic = src
+        if (!tx.send(device, this, e, TX_RATE, frequencyHz - TX_SHIFT, stream) { src.close() }) { src.close(); mic = null }
+    }
+
+    fun releaseTalk() { mic?.close(); mic = null }
+
     internal fun setForTest(db: FloatArray, level: Float) { spectrum = db; levelDb = level; markRunningForTest() }
 
     companion object {
         const val BINS = 1024
+        /** Transmit rate: 50 times the microphone's 48 kHz. */
+        const val TX_RATE = 2_400_000
+        /** The signal goes out this far above the tuned frequency of the radio, clear of its carrier leak. */
+        const val TX_SHIFT = 300_000L
         const val MAX_ZOOM = 16
         val Zooms = listOf(1, 2, 4, 8, 16)
         val Steps = listOf(100L, 500L, 1_000L, 5_000L, 12_500L, 25_000L, 100_000L)
@@ -431,6 +466,8 @@ fun ListenTool(vm: MainViewModel) {
                 }
             }
         }
+        if (tab == ToolTab.Main && d?.kind == com.allnetworktools.data.sdr.SdrKind.HackRf) TalkCard(c, d)
+        if (tab == ToolTab.Settings && d?.kind == com.allnetworktools.data.sdr.SdrKind.HackRf) TxSettingsCard()
         if (tab == ToolTab.Settings) {
             SectionCard {
                 Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
@@ -515,5 +552,47 @@ private fun SpectrumPicker(c: ListenController) {
         val left = when (c.mode) { ListenMode.Usb -> x; ListenMode.Lsb -> x - w; else -> x - w / 2 }
         drawRect(accent.copy(alpha = 0.25f), Offset(left, 0f), Size(w, size.height))
         drawLine(accent, Offset(x, 0f), Offset(x, size.height), 3f)
+    }
+}
+
+/** Push to talk: hold the button to transmit the microphone on the tuned frequency, in the tuned mode. */
+@Composable
+private fun TalkCard(c: ListenController, device: com.allnetworktools.data.sdr.SdrDevice) {
+    val vmPerms = com.allnetworktools.ui.LocalActions.current
+    val e = com.allnetworktools.data.sdr.Emission.around(c.frequencyHz, 3_000, 3_000, com.allnetworktools.data.sdr.TxUse.Amateur)
+    val why = if (c.txMode == null) S(R.string.tx_not_in_wfm) else com.allnetworktools.data.sdr.TxPolicy.refuse(e)
+    val red = cs.error
+    SectionCard {
+        Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+            Text(S(R.string.tx_talk_title), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
+            val on = c.tx.transmitting
+            Box(
+                Modifier.fillMaxWidth().height(64.dp).clip(RoundedCornerShape(32.dp))
+                    .background(if (why != null) cs.surfaceContainerHigh else if (on) red else AntTheme.accent.container)
+                    .pointerInput(why) {
+                        if (why != null) return@pointerInput
+                        detectTapGestures(onPress = {
+                            if (!androidx.core.content.ContextCompat.checkSelfPermission(com.allnetworktools.util.Res.context!!, android.Manifest.permission.RECORD_AUDIO).let { it == android.content.pm.PackageManager.PERMISSION_GRANTED }) {
+                                vmPerms.request(com.allnetworktools.data.PermGroup.Microphone)
+                                return@detectTapGestures
+                            }
+                            c.pushToTalk(device)
+                            tryAwaitRelease()
+                            c.releaseTalk()
+                        })
+                    },
+                contentAlignment = Alignment.Center,
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                    Symbol(Sym.Mic, size = 24.dp, tint = if (on) cs.onError else if (why != null) cs.onSurfaceVariant else AntTheme.accent.onContainer)
+                    Text(
+                        S(if (on) R.string.tx_talk_release else R.string.tx_talk_hold),
+                        style = rf(16, 22, 600), color = if (on) cs.onError else if (why != null) cs.onSurfaceVariant else AntTheme.accent.onContainer,
+                    )
+                }
+            }
+            if (why != null) Text(why, style = rf(12, 16), color = cs.onSurfaceVariant)
+            TxStatus(c.tx)
+        }
     }
 }

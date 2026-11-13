@@ -2982,4 +2982,24 @@
     <string name="sdr_converter_hint">"Pour un convertisseur placé devant la radio : ce qu\'il ajoute à la fréquence (125 pour un Ham It Up, négatif pour un convertisseur abaisseur). Les outils affichent toujours la vraie fréquence."</string>
     <string name="sdr_categories">"Catégories"</string>
     <string name="sdr_all_categories">"Toutes les catégories"</string>
+    <string name="tx_refused">"La radio refuse d\'émettre"</string>
+    <string name="tx_no_converter">"Pas d\'émission à travers un convertisseur : remettez le décalage du convertisseur sur Aucun."</string>
+    <string name="tx_need_callsign">"Entrez votre indicatif pour émettre sur les bandes radioamateur."</string>
+    <string name="tx_need_licence">"Cochez la case confirmant que vous êtes titulaire d\'une licence radioamateur."</string>
+    <string name="tx_out_of_band">"Cette fréquence est en dehors des bandes où vous pouvez émettre."</string>
+    <string name="tx_radio_cannot">"Cette radio ne peut pas émettre : seul le HackRF le peut."</string>
+    <string name="tx_title">"Émission"</string>
+    <string name="tx_callsign">"Votre indicatif"</string>
+    <string name="tx_callsign_invalid">"Ceci ne ressemble pas à un indicatif."</string>
+    <string name="tx_licence_box">"Je suis titulaire d\'une licence radioamateur"</string>
+    <string name="tx_gain_label">"Gain d\'émission"</string>
+    <string name="tx_amp">"Amplificateur +14 dB"</string>
+    <string name="tx_rules_amateur">"L\'émission n\'est possible que sur les bandes radioamateur, avec votre indicatif et votre licence. Vous êtes responsable de ce que vous émettez : respectez le plan de bande et les limites de puissance de votre pays, et utilisez une antenne ou un filtre adapté, car le HackRF émet aussi des harmoniques."</string>
+    <string name="tx_rules_ism">"Aucune licence n\'est nécessaire sur cette bande, mais ses limites de puissance et de temps d\'émission s\'appliquent (en Europe 25 mW et 1 % ou 10 % du temps selon la sous-bande). Le HackRF n\'est pas certifié pour cela ; vous êtes responsable de ce que vous émettez."</string>
+    <string name="tx_on_air">"● En émission"</string>
+    <string name="tx_mic_failed">"Le micro n\'a pas pu être ouvert."</string>
+    <string name="tx_not_in_wfm">"Pas d\'émission en WFM (radiodiffusion) : choisissez NFM, AM, USB ou LSB."</string>
+    <string name="tx_talk_title">"Parler"</string>
+    <string name="tx_talk_hold">"Maintenir pour parler"</string>
+    <string name="tx_talk_release">"Relâcher pour écouter"</string>
 </resources>

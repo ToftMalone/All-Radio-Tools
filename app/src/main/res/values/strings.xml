@@ -2908,4 +2908,24 @@
     <string name="sdr_converter_hint">"For an up- or down-converter in front of the radio: what it adds to the frequency (125 for a Ham It Up, negative for a downconverter). The tools keep showing the real frequency."</string>
     <string name="sdr_categories">"Categories"</string>
     <string name="sdr_all_categories">"All categories"</string>
+    <string name="tx_refused">"The radio refuses to transmit"</string>
+    <string name="tx_no_converter">"No transmitting through a converter: set the converter offset back to none."</string>
+    <string name="tx_need_callsign">"Enter your call sign to transmit on the amateur bands."</string>
+    <string name="tx_need_licence">"Tick the box confirming you hold an amateur radio licence."</string>
+    <string name="tx_out_of_band">"This frequency is outside the bands you may transmit on."</string>
+    <string name="tx_radio_cannot">"This radio cannot transmit: only the HackRF can."</string>
+    <string name="tx_title">"Transmit"</string>
+    <string name="tx_callsign">"Your call sign"</string>
+    <string name="tx_callsign_invalid">"This does not look like a call sign."</string>
+    <string name="tx_licence_box">"I hold an amateur radio licence"</string>
+    <string name="tx_gain_label">"Transmit gain"</string>
+    <string name="tx_amp">"Amplifier +14 dB"</string>
+    <string name="tx_rules_amateur">"Transmitting is only possible on the amateur bands, with your call sign and licence. You answer for what you transmit: follow your country's band plan and power limits, and use a suitable antenna or filter, as the HackRF also emits harmonics."</string>
+    <string name="tx_rules_ism">"No licence is needed on this band, but its power and time-on-air limits apply (in Europe 25 mW and 1 % or 10 % of the time depending on the sub-band). The HackRF is not certified for it; you answer for what you transmit."</string>
+    <string name="tx_on_air">"● On air"</string>
+    <string name="tx_mic_failed">"The microphone could not be opened."</string>
+    <string name="tx_not_in_wfm">"No transmitting in WFM (broadcast): pick NFM, AM, USB or LSB."</string>
+    <string name="tx_talk_title">"Talk"</string>
+    <string name="tx_talk_hold">"Hold to talk"</string>
+    <string name="tx_talk_release">"Release to listen"</string>
 </resources>

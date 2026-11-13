@@ -15,6 +15,7 @@ open class AntApplication : Application() {
         super.onCreate()
         com.allnetworktools.util.Res.context = this
         com.allnetworktools.util.DebugLog.init(this)
+        com.allnetworktools.data.sdr.TxSettings.init(this)
         registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {
             private fun log(a: android.app.Activity, what: String) = com.allnetworktools.util.DebugLog.d("Lifecycle", "${a.javaClass.simpleName} $what")
             override fun onActivityCreated(a: android.app.Activity, b: android.os.Bundle?) = log(a, "created" + if (b != null) " (restored)" else "")

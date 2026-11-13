@@ -10,8 +10,9 @@ data class SdrCaps(
 )
 
 /**
- * A receive-only software defined radio on the USB bus, whatever its make. Every driver hands the tools the same thing:
- * interleaved signed 8-bit I/Q at the requested rate, so the decoders do not care which radio is plugged in.
+ * A software defined radio on the USB bus, whatever its make. Every driver hands the tools the same thing:
+ * interleaved signed 8-bit I/Q at the requested rate, so the decoders do not care which radio is plugged in. The radios
+ * that can transmit (the HackRF) take the same format back; the others only receive.
  */
 interface SdrRadio {
     val caps: SdrCaps
@@ -34,6 +35,21 @@ interface SdrRadio {
     /** [onSamples] gets each buffer on a dedicated thread; [onError] fires once if the radio stops answering. */
     fun startRx(onSamples: (ByteArray, Int) -> Unit, onError: (String) -> Unit)
     fun close()
+
+    /** Whether the radio can transmit at all. */
+    val canTransmit: Boolean get() = false
+
+    /** Transmit gain, 0 to 47 dB on the HackRF. */
+    fun setTxGain(db: Int): Boolean = false
+
+    /**
+     * Starts transmitting at the rate and frequency set: [fill] writes the next buffer of interleaved signed 8-bit I/Q
+     * (all of it) on the USB thread. False when the radio cannot or will not transmit. [onError] fires once on failure.
+     */
+    fun startTx(fill: (ByteArray) -> Unit, onError: (String) -> Unit): Boolean = false
+
+    /** Stops receiving or transmitting and leaves the radio idle and open, ready to start again in either direction. */
+    fun stopStreaming() {}
 }
 
 /** The most bytes of samples a driver hands the tools at once: the size of the buffers they prepare. */
