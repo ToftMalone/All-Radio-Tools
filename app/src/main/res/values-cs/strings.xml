@@ -2873,4 +2873,5 @@
     <string name="tx_callsign_change">"Změnit"</string>
     <string name="sdr_amp_dead">"Zesilovač se zdá vadný: opakovaně mnohem slabší signál s ním než bez něj. Pro tuto relaci zůstane vypnutý."</string>
     <string name="sdr_amp_retry">"Zkusit zesilovač znovu"</string>
+    <string name="tx_ready">"Připraveno k vysílání"</string>
 </resources>

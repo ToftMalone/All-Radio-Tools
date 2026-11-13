@@ -2873,4 +2873,5 @@
     <string name="tx_callsign_change">"Zmień"</string>
     <string name="sdr_amp_dead">"Wzmacniacz wydaje się uszkodzony: kilka razy dużo słabszy sygnał z nim niż bez niego. Zostaje wyłączony w tej sesji."</string>
     <string name="sdr_amp_retry">"Spróbuj ponownie wzmacniacza"</string>
+    <string name="tx_ready">"Gotowe do nadawania"</string>
 </resources>

@@ -379,6 +379,8 @@ fun ListenTool(vm: MainViewModel) {
     val c = vm.tools.listen
     val device by vm.sdrDevice.collectAsStateWithLifecycle()
     PageColumn {
+        // Reception and transmission are two pages of the same tool.
+        if (RxTxRow("ListenTool") == RxTx.Tx) { ListenTxPage(c, device); return@PageColumn }
         HeroCard {
             Text("%.4f MHz".format(Locale.getDefault(), c.frequencyHz / 1e6), style = rf(32, 38, 600, tnum = true))
             Text(c.mode.label, style = rf(14, 20))
@@ -395,7 +397,7 @@ fun ListenTool(vm: MainViewModel) {
         val d = device
         if (c.running || c.starting) StartButton(S(R.string.stop), Sym.Stop) { c.stop() }
         else StartButton(S(R.string.listen_start), Sym.Headphones, enabled = d != null && c.parsedHz() != null) { d?.let { c.typedFrequency(); c.start(it) } }
-        val tab = ToolTabRow("ListenTool0", map = false)
+        val tab = ToolTabRow("ListenTool0", map = false, mainLabel = S(R.string.listen_title))
         if (tab == ToolTab.Main) {
             SectionCard {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -411,29 +413,7 @@ fun ListenTool(vm: MainViewModel) {
                 }
             }
         }
-        if (tab == ToolTab.Main) {
-            SectionCard {
-                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                    Text(S(R.string.frequency), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
-                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        DialButton(Sym.Remove) { c.step(-1) }
-                        Box(Modifier.weight(1f)) {
-                            HostInputField(c.frequencyText, { c.frequencyText = it }, S(R.string.frequency_mhz), Sym.Antenna, keyboardType = KeyboardType.Decimal, onDone = c::typedFrequency)
-                        }
-                        DialButton(Sym.Add) { c.step(1) }
-                    }
-                    Text(S(R.string.listen_step), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
-                    FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                        AntFilterChip(S(R.string.listen_step_auto, stepLabel(c.autoStepHz)), c.stepChoice == null, { c.stepChoice = null })
-                        ListenController.Steps.forEach { st -> AntFilterChip(stepLabel(st), c.stepChoice == st, { c.stepChoice = st }) }
-                    }
-                    Text(S(R.string.listen_mode), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
-                    FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                        ListenMode.entries.forEach { m -> AntFilterChip(m.label, c.mode == m, { c.chooseMode(m) }) }
-                    }
-                }
-            }
-        }
+        if (tab == ToolTab.Main) FrequencyCard(c, transmit = false)
         if (tab == ToolTab.Main) {
             SectionCard {
                 Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
@@ -467,9 +447,6 @@ fun ListenTool(vm: MainViewModel) {
                 }
             }
         }
-        val gate = rememberLicenceGate()
-        if (tab == ToolTab.Main && d?.kind == com.allnetworktools.data.sdr.SdrKind.HackRf) TalkCard(c, d, gate)
-        if (tab == ToolTab.Settings && d?.kind == com.allnetworktools.data.sdr.SdrKind.HackRf) TxSettingsCard(gate = gate)
         if (tab == ToolTab.Settings) {
             SectionCard {
                 Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
@@ -482,7 +459,7 @@ fun ListenTool(vm: MainViewModel) {
             SectionCard {
                 Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                     Symbol(Sym.Info, size = 22.dp, tint = AntTheme.accent.accent)
-                    Text(S(R.string.listen_how_it_works) + "\n\n" + S(R.string.listen_tx_note), style = rf(13, 18), color = cs.onSurfaceVariant)
+                    Text(S(R.string.listen_how_it_works), style = rf(13, 18), color = cs.onSurfaceVariant)
                 }
             }
         }
@@ -597,6 +574,52 @@ private fun TalkCard(c: ListenController, device: com.allnetworktools.data.sdr.S
             }
             if (why != null) Text(why, style = rf(12, 16), color = cs.onSurfaceVariant)
             TxStatus(c.tx)
+        }
+    }
+}
+
+/** The tuned frequency, the dial and its step, and the mode; on the transmit page, only the modes that transmit. */
+@Composable
+private fun FrequencyCard(c: ListenController, transmit: Boolean) {
+    SectionCard {
+        Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+            Text(S(R.string.frequency), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                DialButton(Sym.Remove) { c.step(-1) }
+                Box(Modifier.weight(1f)) {
+                    HostInputField(c.frequencyText, { c.frequencyText = it }, S(R.string.frequency_mhz), Sym.Antenna, keyboardType = KeyboardType.Decimal, onDone = c::typedFrequency)
+                }
+                DialButton(Sym.Add) { c.step(1) }
+            }
+            Text(S(R.string.listen_step), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
+            FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                AntFilterChip(S(R.string.listen_step_auto, stepLabel(c.autoStepHz)), c.stepChoice == null, { c.stepChoice = null })
+                ListenController.Steps.forEach { st -> AntFilterChip(stepLabel(st), c.stepChoice == st, { c.stepChoice = st }) }
+            }
+            Text(S(R.string.listen_mode), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
+            FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                ListenMode.entries.filter { !transmit || it != ListenMode.Wfm }.forEach { m -> AntFilterChip(m.label, c.mode == m, { c.chooseMode(m) }) }
+            }
+        }
+    }
+}
+
+/** The transmit page: the frequency and mode to talk on, push to talk, and the transmit power. */
+@Composable
+private fun ListenTxPage(c: ListenController, device: com.allnetworktools.data.sdr.SdrDevice?) {
+    val gate = rememberLicenceGate()
+    val e = com.allnetworktools.data.sdr.Emission.around(c.frequencyHz, 3_000, 3_000, com.allnetworktools.data.sdr.TxUse.Amateur)
+    val why = if (c.txMode == null) S(R.string.tx_not_in_wfm) else com.allnetworktools.data.sdr.TxPolicy.refuse(e, ignoreLicence = true)
+    TxHero("%.4f MHz".format(Locale.getDefault(), c.frequencyHz / 1e6), c.mode.label + " · " + S(R.string.tx_talk_title), c.tx, device, why)
+    FrequencyCard(c, transmit = true)
+    if (canTransmitWith(device)) {
+        TalkCard(c, device!!, gate)
+        TxSettingsCard(gate = gate)
+    }
+    SectionCard {
+        Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            Symbol(Sym.Info, size = 22.dp, tint = AntTheme.accent.accent)
+            Text(S(R.string.listen_tx_note), style = rf(13, 18), color = cs.onSurfaceVariant)
         }
     }
 }

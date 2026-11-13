@@ -304,14 +304,31 @@ internal object ToolTabMemory {
  * receives and Settings otherwise. Settings holds the frequency, the gains, the bias tee and the explanation.
  */
 @Composable
-internal fun ToolTabRow(key: String, map: Boolean): ToolTab {
+internal fun ToolTabRow(key: String, map: Boolean, mainLabel: String? = null): ToolTab {
     val tabs = buildList {
         if (map) add(ToolTab.Map to S(R.string.mesh_tab_map))
-        add((if (map) ToolTab.List else ToolTab.Main) to S(if (map) R.string.tool_tab_list else R.string.tool_tab_reception))
+        // A tool with Reception / Transmission above names its main tab otherwise, so "Reception" is not there twice.
+        add((if (map) ToolTab.List else ToolTab.Main) to (mainLabel ?: S(if (map) R.string.tool_tab_list else R.string.tool_tab_reception)))
         add(ToolTab.Settings to S(R.string.tool_tab_settings))
     }
     val current = ToolTabMemory.chosen[key]?.takeIf { t -> tabs.any { it.first == t } } ?: tabs.first().first
     SegmentedRow(tabs, current, { ToolTabMemory.chosen[key] = it }, Modifier.fillMaxWidth())
+    return current
+}
+
+/** The two sides of a tool that can transmit, chosen at the top of its page. */
+enum class RxTx { Rx, Tx }
+
+/** The side picked in each tool, for the session. */
+internal object RxTxMemory {
+    val chosen = androidx.compose.runtime.mutableStateMapOf<String, RxTx>()
+}
+
+/** Reception or transmission, at the very top of a tool that can do both: each side is its own page. */
+@Composable
+internal fun RxTxRow(key: String): RxTx {
+    val current = RxTxMemory.chosen[key] ?: RxTx.Rx
+    SegmentedRow(listOf(RxTx.Rx to S(R.string.tool_tab_reception), RxTx.Tx to S(R.string.tx_title)), current, { RxTxMemory.chosen[key] = it }, Modifier.fillMaxWidth())
     return current
 }
 

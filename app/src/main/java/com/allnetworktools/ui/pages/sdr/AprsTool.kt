@@ -336,6 +336,8 @@ fun AprsTool(vm: MainViewModel) {
     val withPos = c.stations.filter { it.lat != null }
     val heardMessages = c.stations.sumOf { it.messages }
     PageColumn {
+        // Reception and transmission are two pages of the same tool.
+        if (RxTxRow("AprsTool") == RxTx.Tx) { AprsTxPage(c, device); return@PageColumn }
         HeroCard {
             Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                 Text("${c.stations.size}", style = gs(56, 60, 500, -1.5f, tnum = true))
@@ -385,11 +387,6 @@ fun AprsTool(vm: MainViewModel) {
                     GainSettings(c.gain) { c.applyGains() }
                 }
             }
-        }
-        if (tab == ToolTab.Settings && d?.kind == com.allnetworktools.data.sdr.SdrKind.HackRf) {
-            val gate = rememberLicenceGate()
-            TxSettingsCard(gate = gate)
-            BeaconCard(c, d, gate)
         }
         if (tab == ToolTab.Settings) {
             SectionCard {
@@ -611,5 +608,35 @@ private fun BeaconCard(c: AprsController, device: SdrDevice, gate: LicenceGate) 
             if (why != null) Text(why, style = rf(12, 16), color = cs.onSurfaceVariant)
             TxStatus(c.tx)
         }
+    }
+}
+
+/** The transmit page: your beacon, the frequency it goes out on, and the transmit power. */
+@Composable
+private fun AprsTxPage(c: AprsController, device: SdrDevice?) {
+    val gate = rememberLicenceGate()
+    val hz = c.parsedHz()
+    // No valid frequency is out of band; otherwise the policy decides (null: it may go out).
+    val why = if (hz == null) S(R.string.tx_out_of_band)
+    else com.allnetworktools.data.sdr.TxPolicy.refuse(com.allnetworktools.data.sdr.Emission.around(hz, 8_000, 8_000, com.allnetworktools.data.sdr.TxUse.Amateur), ignoreLicence = true)
+    TxHero(
+        c.beaconSource.ifEmpty { S(R.string.aprs_beacon_title) },
+        "${c.frequencyMhz.replace('.', ',')} MHz" + if (c.lastBeaconMs > 0) " · " + S(R.string.aprs_beacon_last, java.text.DateFormat.getTimeInstance(java.text.DateFormat.SHORT).format(java.util.Date(c.lastBeaconMs))) else "",
+        c.tx, device, why,
+    )
+    SectionCard {
+        Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+            Text(S(R.string.frequency), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
+            FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                listOf("144.800" to "Europe", "144.390" to S(R.string.north_america)).forEach { (f, l) ->
+                    AntFilterChip("${f.replace('.', ',')} · $l", c.frequencyMhz == f, { if (c.frequencyMhz != f && !c.starting) { if (c.running) c.stop(); c.frequencyMhz = f } })
+                }
+            }
+            if (!c.running) HostInputField(c.frequencyMhz, { c.frequencyMhz = it }, S(R.string.frequency_mhz), Sym.Antenna, keyboardType = KeyboardType.Decimal)
+        }
+    }
+    if (canTransmitWith(device)) {
+        BeaconCard(c, device!!, gate)
+        TxSettingsCard(gate = gate)
     }
 }

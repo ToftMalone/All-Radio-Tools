@@ -12,6 +12,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.allnetworktools.R
@@ -134,3 +135,29 @@ private fun LicenceDialog(gate: LicenceGate) {
         dismissButton = { androidx.compose.material3.TextButton(close) { Text(S(R.string.cancel)) } },
     )
 }
+
+/**
+ * The top of a transmit page: what goes out ([title], [subtitle]) and whether it can: on air, ready, or what stands in
+ * the way (no HackRF, a radio that only receives, the band, the last error).
+ */
+@Composable
+internal fun TxHero(title: String, subtitle: String, tx: SdrTransmitter?, device: com.allnetworktools.data.sdr.SdrDevice?, why: String?) {
+    val net = AntTheme.net
+    com.allnetworktools.ui.tools.HeroCard {
+        Text(title, style = rf(28, 34, 600, tnum = true))
+        Text(subtitle, style = rf(14, 20))
+        Row(Modifier.padding(top = 12.dp)) {
+            when {
+                tx?.transmitting == true -> com.allnetworktools.ui.tools.HeroChip(S(R.string.tx_on_air), net.poor, blink = true)
+                device == null -> com.allnetworktools.ui.tools.HeroChip(S(R.string.no_hackrf_plugged_in), net.poor)
+                device.kind != com.allnetworktools.data.sdr.SdrKind.HackRf -> com.allnetworktools.ui.tools.HeroChip(S(R.string.tx_radio_cannot), net.poor)
+                tx?.error != null -> com.allnetworktools.ui.tools.HeroChip(tx.error!!, net.poor)
+                why != null -> com.allnetworktools.ui.tools.HeroChip(why, net.fair)
+                else -> com.allnetworktools.ui.tools.HeroChip(S(R.string.tx_ready), net.good)
+            }
+        }
+    }
+}
+
+/** Whether the transmit cards apply: a HackRF is plugged in. */
+internal fun canTransmitWith(device: com.allnetworktools.data.sdr.SdrDevice?) = device?.kind == com.allnetworktools.data.sdr.SdrKind.HackRf

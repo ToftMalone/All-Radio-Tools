@@ -151,7 +151,7 @@ abstract class MeshController(repo: SdrRepository, scope: CoroutineScope, onAcqu
 
 /** The screen both mesh tools use; [settings] adds the tool's own choices (band, channels) above the gains. */
 @Composable
-fun MeshScreen(vm: MainViewModel, c: MeshController, fileName: String, emptyIcon: String, emptyTitle: String, emptyBody: String, info: String, canStart: () -> Boolean = { true }, cards: @Composable () -> Unit = {}, settings: @Composable () -> Unit) {
+fun MeshScreen(vm: MainViewModel, c: MeshController, fileName: String, emptyIcon: String, emptyTitle: String, emptyBody: String, info: String, canStart: () -> Boolean = { true }, txPage: (@Composable () -> Unit)? = null, settings: @Composable () -> Unit) {
     val actions = LocalActions.current
     val device by vm.sdrDevice.collectAsStateWithLifecycle()
     val positions by vm.positions.collectAsStateWithLifecycle()
@@ -163,6 +163,8 @@ fun MeshScreen(vm: MainViewModel, c: MeshController, fileName: String, emptyIcon
         actions.saveFile("$fileName-${Export.stamp(System.currentTimeMillis())}.csv", "text/csv") { snapshot.toByteArray() }
     }
     PageColumn {
+        // A tool that also transmits: reception and transmission are two pages.
+        if (txPage != null && RxTxRow(fileName) == RxTx.Tx) { txPage(); return@PageColumn }
         HeroCard {
             Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                 Text("${s.nodes.size}", style = gs(56, 60, 500, -1.5f, tnum = true))
@@ -233,7 +235,6 @@ fun MeshScreen(vm: MainViewModel, c: MeshController, fileName: String, emptyIcon
                     GainSettings(c.gain) { c.applyGains() }
                 }
             }
-            cards()
             SectionCard {
                 Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                     Symbol(Sym.Info, size = 22.dp, tint = AntTheme.accent.accent)

@@ -2735,4 +2735,5 @@
     <string name="tx_callsign_change">"Değiştir"</string>
     <string name="sdr_amp_dead">"Yükselteç arızalı görünüyor: birkaç kez açıkken kapalıya göre çok daha az sinyal. Bu oturum boyunca kapalı kalır."</string>
     <string name="sdr_amp_retry">"Yükselteci yeniden dene"</string>
+    <string name="tx_ready">"Yayına hazır"</string>
 </resources>

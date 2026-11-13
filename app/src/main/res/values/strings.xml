@@ -3003,4 +3003,6 @@
     <string name="tx_callsign_change">"Change"</string>
     <string name="sdr_amp_dead">"The amplifier seems dead: far less signal with it on than off, several times. It stays off for this session."</string>
     <string name="sdr_amp_retry">"Try the amplifier again"</string>
+    <string name="tx_ready">"Ready to transmit"</string>
+    <string name="sstv_tab_pictures">"Pictures"</string>
 </resources>

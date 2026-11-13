@@ -190,6 +190,8 @@ fun SstvTool(vm: MainViewModel) {
         }
     }
     PageColumn {
+        // Reception and transmission are two pages of the same tool.
+        if (RxTxRow("SstvTool") == RxTx.Tx) { SstvTxPage(c, device); return@PageColumn }
         HeroCard {
             val p = c.current
             Text(c.receiving ?: p?.image?.mode ?: S(R.string.sstv_waiting), style = rf(24, 30, 600))
@@ -215,7 +217,7 @@ fun SstvTool(vm: MainViewModel) {
         val d = device
         if (c.running || c.starting) StartButton(S(R.string.stop), Sym.Stop) { c.stop() }
         else StartButton(S(R.string.start_receiving), Sym.PlayArrow, enabled = d != null && c.parsedHz() != null) { d?.let(c::start) }
-        val tab = ToolTabRow("SstvTool0", map = false)
+        val tab = ToolTabRow("SstvTool0", map = false, mainLabel = S(R.string.sstv_tab_pictures))
         val p = c.current
         if (tab == ToolTab.Main) {
             if (p != null) {
@@ -238,11 +240,6 @@ fun SstvTool(vm: MainViewModel) {
                 }
             }
         }
-        if (tab == ToolTab.Settings && device?.kind == com.allnetworktools.data.sdr.SdrKind.HackRf) {
-            val gate = rememberLicenceGate()
-            TxSettingsCard(gate = gate)
-            SendPictureCard(c, device, gate)
-        }
         if (tab == ToolTab.Settings) {
             SectionCard {
                 Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
@@ -261,7 +258,7 @@ fun SstvTool(vm: MainViewModel) {
             SectionCard {
                 Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                     Symbol(Sym.Info, size = 22.dp, tint = AntTheme.accent.accent)
-                    Text(S(R.string.sstv_how_it_works) + "\n\n" + S(R.string.sstv_tx_note), style = rf(13, 18), color = cs.onSurfaceVariant)
+                    Text(S(R.string.sstv_how_it_works), style = rf(13, 18), color = cs.onSurfaceVariant)
                 }
             }
         }
@@ -315,6 +312,24 @@ private fun SendPictureCard(c: SstvController, device: com.allnetworktools.data.
             else StartButton(S(R.string.sstv_send_go), Sym.Antenna, enabled = why == null && c.photo != null) { gate.run { c.sendPicture(device) } }
             if (why != null) Text(why, style = rf(12, 16), color = cs.onSurfaceVariant)
             TxStatus(c.tx)
+        }
+    }
+}
+
+/** The transmit page: the picture, its mode and frequency, and the transmit power. */
+@Composable
+private fun SstvTxPage(c: SstvController, device: com.allnetworktools.data.sdr.SdrDevice?) {
+    val gate = rememberLicenceGate()
+    val why = com.allnetworktools.data.sdr.TxPolicy.refuse(c.sendEmission(), ignoreLicence = true)
+    TxHero(S(R.string.sstv_send_title), c.sendMode + " · " + c.sendChannel.label, c.tx, device, why)
+    if (canTransmitWith(device)) {
+        SendPictureCard(c, device, gate)
+        TxSettingsCard(gate = gate)
+    }
+    SectionCard {
+        Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            Symbol(Sym.Info, size = 22.dp, tint = AntTheme.accent.accent)
+            Text(S(R.string.sstv_tx_note), style = rf(13, 18), color = cs.onSurfaceVariant)
         }
     }
 }

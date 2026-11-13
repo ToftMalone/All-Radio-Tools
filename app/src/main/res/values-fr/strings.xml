@@ -3077,4 +3077,6 @@
     <string name="tx_callsign_change">"Modifier"</string>
     <string name="sdr_amp_dead">"L\'ampli semble HS : beaucoup moins de signal avec lui qu\'sans lui, à plusieurs reprises. Il reste éteint pour cette session."</string>
     <string name="sdr_amp_retry">"Réessayer l\'ampli"</string>
+    <string name="tx_ready">"Prêt à émettre"</string>
+    <string name="sstv_tab_pictures">"Images"</string>
 </resources>

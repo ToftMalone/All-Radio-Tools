@@ -2735,4 +2735,5 @@
     <string name="tx_callsign_change">"Wijzigen"</string>
     <string name="sdr_amp_dead">"De versterker lijkt kapot: meermaals veel minder signaal met dan zonder. Hij blijft uit voor deze sessie."</string>
     <string name="sdr_amp_retry">"Versterker opnieuw proberen"</string>
+    <string name="tx_ready">"Klaar om te zenden"</string>
 </resources>

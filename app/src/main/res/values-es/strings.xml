@@ -2735,4 +2735,5 @@
     <string name="tx_callsign_change">"Cambiar"</string>
     <string name="sdr_amp_dead">"El amplificador parece averiado: mucha menos señal con él que sin él, varias veces. Queda apagado en esta sesión."</string>
     <string name="sdr_amp_retry">"Probar de nuevo el amplificador"</string>
+    <string name="tx_ready">"Listo para transmitir"</string>
 </resources>

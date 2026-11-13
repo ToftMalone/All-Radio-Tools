@@ -2735,4 +2735,5 @@
     <string name="tx_callsign_change">"Ändra"</string>
     <string name="sdr_amp_dead">"Förstärkaren verkar trasig: flera gånger mycket svagare signal med den än utan. Den förblir av under den här sessionen."</string>
     <string name="sdr_amp_retry">"Prova förstärkaren igen"</string>
+    <string name="tx_ready">"Redo att sända"</string>
 </resources>

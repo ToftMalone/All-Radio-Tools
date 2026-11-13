@@ -153,9 +153,9 @@ class ScreenshotTest {
     }
     @Test fun aprsTransmitSettings() {
         com.allnetworktools.data.sdr.TxSettings.setForTest("F4ABC", true)
-        com.allnetworktools.ui.pages.sdr.ToolTabMemory.chosen["AprsTool0"] = com.allnetworktools.ui.pages.sdr.ToolTab.Settings
+        com.allnetworktools.ui.pages.sdr.RxTxMemory.chosen["AprsTool"] = com.allnetworktools.ui.pages.sdr.RxTx.Tx
         try { shot("T1_aprs_beacon", nav = NavState(Network.Sdr, Page.ToolPage(Tool.Aprs))) }
-        finally { com.allnetworktools.ui.pages.sdr.ToolTabMemory.chosen.remove("AprsTool0"); com.allnetworktools.data.sdr.TxSettings.setForTest("", false) }
+        finally { com.allnetworktools.ui.pages.sdr.RxTxMemory.chosen.remove("AprsTool"); com.allnetworktools.data.sdr.TxSettings.setForTest("", false) }
     }
     @Test fun smartGlasses() = shot("B10_glasses", nav = NavState(Network.Bluetooth, Page.ToolPage(Tool.Glasses))) {
         val now = System.currentTimeMillis()

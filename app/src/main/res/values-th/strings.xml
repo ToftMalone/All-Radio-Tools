@@ -2666,4 +2666,5 @@
     <string name="tx_callsign_change">"เปลี่ยน"</string>
     <string name="sdr_amp_dead">"แอมป์ดูเหมือนเสีย: หลายครั้งที่เปิดแล้วสัญญาณอ่อนกว่าปิดมาก จะปิดไว้ตลอดเซสชันนี้"</string>
     <string name="sdr_amp_retry">"ลองแอมป์อีกครั้ง"</string>
+    <string name="tx_ready">"พร้อมส่ง"</string>
 </resources>

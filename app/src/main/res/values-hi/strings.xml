@@ -2735,4 +2735,5 @@
     <string name="tx_callsign_change">"बदलें"</string>
     <string name="sdr_amp_dead">"एम्पलीफ़ायर ख़राब लगता है: कई बार इसके चालू होने पर बंद से बहुत कम सिग्नल। इस सत्र में यह बंद रहेगा।"</string>
     <string name="sdr_amp_retry">"एम्पलीफ़ायर फिर आज़माएँ"</string>
+    <string name="tx_ready">"प्रसारण के लिए तैयार"</string>
 </resources>

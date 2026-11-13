@@ -30,6 +30,8 @@ import com.allnetworktools.util.S
 import kotlin.math.roundToLong
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import androidx.compose.foundation.layout.Row
+import androidx.compose.ui.Alignment
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.allnetworktools.ui.components.SectionCard
 
@@ -180,17 +182,9 @@ fun MeshtasticTool(vm: MainViewModel) {
     val c = vm.tools.meshtastic
     val actions = LocalActions.current
     MeshScreen(
-        vm, c, "meshtastic", Sym.Hub, S(R.string.meshtastic_none_yet), S(R.string.meshtastic_none_yet_body), S(R.string.meshtastic_how_it_works) + "\n\n" + S(R.string.mesh_tx_note),
+        vm, c, "meshtastic", Sym.Hub, S(R.string.meshtastic_none_yet), S(R.string.meshtastic_none_yet_body), S(R.string.meshtastic_how_it_works),
         canStart = { c.bandKey != "free" || c.parsedHz() != null },
-        cards = {
-            val device by vm.sdrDevice.collectAsStateWithLifecycle()
-            val positions by vm.positions.collectAsStateWithLifecycle()
-            c.fix = positions.fused ?: positions.gnss ?: positions.network
-            if (device?.kind == com.allnetworktools.data.sdr.SdrKind.HackRf) {
-                NodeCard(c, device)
-                TxSettingsCard(amateur = false)
-            }
-        },
+        txPage = { MeshtasticTxPage(vm, c) },
     ) {
         Text(S(R.string.mesh_band), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
         BandChips(listOf("868" to S(R.string.meshtastic_band_868), "433" to S(R.string.meshtastic_band_433), "free" to S(R.string.meshtastic_band_free)), c.bandKey, !c.starting) {
@@ -257,6 +251,40 @@ private fun NodeCard(c: MeshtasticController, device: com.allnetworktools.data.s
             )
             if (why != null) Text(why, style = rf(12, 16), color = cs.onSurfaceVariant)
             TxStatus(c.tx)
+        }
+    }
+}
+
+/** The transmit page: the node, the band it joins, and the transmit power. */
+@Composable
+private fun MeshtasticTxPage(vm: MainViewModel, c: MeshtasticController) {
+    val device by vm.sdrDevice.collectAsStateWithLifecycle()
+    val positions by vm.positions.collectAsStateWithLifecycle()
+    c.fix = positions.fused ?: positions.gnss ?: positions.network
+    val emission = c.txEmission()
+    val why = if (emission == null) S(R.string.tx_out_of_band) else com.allnetworktools.data.sdr.TxPolicy.refuse(emission)
+    TxHero(
+        c.longName,
+        Meshtastic.nodeId(c.nodeNum) + (c.txChannel()?.let { " · %.3f MHz".format(java.util.Locale.getDefault(), it.hz / 1e6) } ?: ""),
+        c.tx, device, why,
+    )
+    SectionCard {
+        Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+            Text(S(R.string.mesh_band), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
+            BandChips(listOf("868" to S(R.string.meshtastic_band_868), "433" to S(R.string.meshtastic_band_433), "free" to S(R.string.meshtastic_band_free)), c.bandKey, !c.starting && !c.nodeOn) {
+                if (c.running) c.stop()
+                c.bandKey = it
+            }
+        }
+    }
+    if (canTransmitWith(device)) {
+        NodeCard(c, device)
+        TxSettingsCard(amateur = false)
+    }
+    SectionCard {
+        Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            com.allnetworktools.ui.components.Symbol(Sym.Info, size = 22.dp, tint = com.allnetworktools.ui.theme.AntTheme.accent.accent)
+            Text(S(R.string.mesh_tx_note), style = rf(13, 18), color = cs.onSurfaceVariant)
         }
     }
 }

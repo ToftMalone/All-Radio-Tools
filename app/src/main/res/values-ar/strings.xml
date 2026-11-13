@@ -3011,4 +3011,5 @@
     <string name="tx_callsign_change">"تغيير"</string>
     <string name="sdr_amp_dead">"يبدو أن المضخّم معطّل: إشارة أضعف بكثير عند تشغيله منها عند إيقافه، عدة مرات. يبقى متوقفًا في هذه الجلسة."</string>
     <string name="sdr_amp_retry">"جرّب المضخّم مجددًا"</string>
+    <string name="tx_ready">"جاهز للإرسال"</string>
 </resources>

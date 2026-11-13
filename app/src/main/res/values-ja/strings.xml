@@ -2666,4 +2666,5 @@
     <string name="tx_callsign_change">"変更"</string>
     <string name="sdr_amp_dead">"アンプが故障しているようです：何度かオンのときのほうがオフよりずっと信号が弱くなりました。このセッションではオフのままにします。"</string>
     <string name="sdr_amp_retry">"アンプをもう一度試す"</string>
+    <string name="tx_ready">"送信準備完了"</string>
 </resources>
