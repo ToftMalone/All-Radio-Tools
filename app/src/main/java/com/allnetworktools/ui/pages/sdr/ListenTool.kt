@@ -64,6 +64,7 @@ import com.allnetworktools.ui.tools.StartButton
 import com.allnetworktools.util.S
 import java.util.Locale
 import kotlin.math.roundToLong
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.CoroutineScope
 
 /** The groups the stations are sorted in, one tab each. */
@@ -170,6 +171,8 @@ class ListenController(repo: SdrRepository, scope: CoroutineScope, onAcquire: ()
 
     /** Tunes to [hz]: inside the window only the digital tuner moves, outside the radio follows. */
     fun tune(hz: Long) {
+        // Not while transmitting: the radio stays where the transmission was checked.
+        if (tx.transmitting) return
         frequencyHz = hz
         frequencyText = mhz(hz)
         if (!running && !starting) { viewHz = hz; return }
@@ -276,10 +279,15 @@ class ListenController(repo: SdrRepository, scope: CoroutineScope, onAcquire: ()
         val e = com.allnetworktools.data.sdr.Emission.around(frequencyHz, below, above, com.allnetworktools.data.sdr.TxUse.Amateur)
         val stream = com.allnetworktools.data.sdr.TxStream(com.allnetworktools.data.sdr.AudioModulator(src, m), TX_RATE, TX_SHIFT.toDouble())
         mic = src
-        if (!tx.send(device, this, e, TX_RATE, frequencyHz - TX_SHIFT, stream) { src.close() }) { src.close(); mic = null }
+        if (!tx.send(device, this, e, TX_RATE, frequencyHz - TX_SHIFT, stream) { src.close() }) { src.close(); mic = null; return }
+        // A transmission never outlives a press by accident: it is cut after [MAX_TALK_MS], as a radio's time-out timer does.
+        talkTimer?.cancel()
+        talkTimer = scope.launch(block = { kotlinx.coroutines.delay(MAX_TALK_MS); releaseTalk() })
     }
 
-    fun releaseTalk() { mic?.close(); mic = null }
+    private var talkTimer: kotlinx.coroutines.Job? = null
+
+    fun releaseTalk() { talkTimer?.cancel(); talkTimer = null; mic?.close(); mic = null }
 
     internal fun setForTest(db: FloatArray, level: Float) { spectrum = db; levelDb = level; markRunningForTest() }
 
@@ -289,6 +297,8 @@ class ListenController(repo: SdrRepository, scope: CoroutineScope, onAcquire: ()
         const val TX_RATE = 2_400_000
         /** The signal goes out this far above the tuned frequency of the radio, clear of its carrier leak. */
         const val TX_SHIFT = 300_000L
+        /** The longest one press may transmit. */
+        const val MAX_TALK_MS = 180_000L
         const val MAX_ZOOM = 16
         val Zooms = listOf(1, 2, 4, 8, 16)
         val Steps = listOf(100L, 500L, 1_000L, 5_000L, 12_500L, 25_000L, 100_000L)
@@ -558,8 +568,9 @@ private fun TalkCard(c: ListenController, device: com.allnetworktools.data.sdr.S
                             // No call sign or licence yet: the press opens the dialog instead of transmitting.
                             if (!com.allnetworktools.data.sdr.TxSettings.amateurReady) { gate.run { }; return@detectTapGestures }
                             c.pushToTalk(device)
-                            tryAwaitRelease()
-                            c.releaseTalk()
+                            // Whatever ends the press (the finger lifted, the page left, the screen redrawn, the app
+                            // in the background), the transmission ends with it.
+                            try { tryAwaitRelease() } finally { c.releaseTalk() }
                         })
                     },
                 contentAlignment = Alignment.Center,

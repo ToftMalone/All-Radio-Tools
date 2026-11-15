@@ -293,7 +293,7 @@ class FpvController(private val repo: SdrRepository, private val scope: Coroutin
             var sum = 0.0
             var n = 0
             val until = System.currentTimeMillis() + ms
-            while (dspRunning && mode === m && System.currentTimeMillis() < until) {
+            while (dspRunning && mode === m && System.currentTimeMillis() < until) dspStep {
                 val item = pipe.take(100) ?: continue
                 sum += iqPowerDb(item.first, item.second); n++
                 dec.feed(item.first, item.second)
@@ -306,7 +306,7 @@ class FpvController(private val repo: SdrRepository, private val scope: Coroutin
         lastTick = System.currentTimeMillis(); lastBytes = 0L
         var tunedTo: Any? = null
         var decoder = newDecoder(true)
-        while (dspRunning) {
+        while (dspRunning) dspStep {
             val m = mode
             if (m is Watch) {
                 if (tunedTo !== m) {
@@ -318,7 +318,7 @@ class FpvController(private val repo: SdrRepository, private val scope: Coroutin
                 var sum = 0.0
                 var n = 0
                 val until = System.currentTimeMillis() + 500
-                while (dspRunning && mode === m && System.currentTimeMillis() < until) {
+                while (dspRunning && mode === m && System.currentTimeMillis() < until) dspStep {
                     val item = pipe.take(100) ?: continue
                     sum += iqPowerDb(item.first, item.second); n++
                     decoder.feed(item.first, item.second)
@@ -358,7 +358,7 @@ class FpvController(private val repo: SdrRepository, private val scope: Coroutin
             val st = djiTracker.state(System.currentTimeMillis())
             scope.launch { dji = st }
         }
-        while (dspRunning) {
+        while (dspRunning) dspStep {
             for (centre in DroneBands.windows(band)) {
                 if (!dspRunning) return
                 scope.launch { windowMhz = centre }
@@ -371,7 +371,7 @@ class FpvController(private val repo: SdrRepository, private val scope: Coroutin
                 }
                 var until = System.currentTimeMillis() + DIGITAL_DWELL_MS
                 var extended = false
-                while (dspRunning && System.currentTimeMillis() < until) {
+                while (dspRunning && System.currentTimeMillis() < until) dspStep {
                     val item = pipe.take(100) ?: continue
                     det.feed(item.first, item.second)
                     pipe.give(item.first)
@@ -389,7 +389,7 @@ class FpvController(private val repo: SdrRepository, private val scope: Coroutin
     private fun rcLoop(r: SdrRadio, pipe: Pipe) {
         lastTick = System.currentTimeMillis(); lastBytes = 0L
         var dwell = 0
-        while (dspRunning) {
+        while (dspRunning) dspStep {
             for (w in RcBands.windows(rcBand)) {
                 if (!dspRunning) return
                 scope.launch { windowMhz = w.centreMhz }
@@ -400,7 +400,7 @@ class FpvController(private val repo: SdrRepository, private val scope: Coroutin
                     rcTracker.add(w.band, visit, b, System.currentTimeMillis())
                 }
                 val until = start + RC_DWELL_MS
-                while (dspRunning && System.currentTimeMillis() < until) {
+                while (dspRunning && System.currentTimeMillis() < until) dspStep {
                     val item = pipe.take(100) ?: continue
                     det.feed(item.first, item.second, item.third)
                     pipe.give(item.first)

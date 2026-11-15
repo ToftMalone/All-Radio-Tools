@@ -26,10 +26,18 @@ class MicSource(override val rate: Int = 48_000) : AudioSource {
         rec.startRecording()
         Thread({
             val pcm = ShortArray(rate / 50)
-            while (open) {
-                val n = rec.read(pcm, 0, pcm.size)
-                if (n <= 0) continue
-                for (i in 0 until n) { ring[(w % ring.size).toInt()] = leveller.level(pcm[i] / 32768f); w++ }
+            try {
+                while (open) {
+                    val n = rec.read(pcm, 0, pcm.size)
+                    // An error (the microphone taken away) ends the reading instead of spinning on it.
+                    if (n < 0) break
+                    for (i in 0 until n) { ring[(w % ring.size).toInt()] = leveller.level(pcm[i] / 32768f); w++ }
+                }
+            } catch (_: Exception) {
+            } finally {
+                // Released by the thread that reads it, never under its feet.
+                runCatching { rec.stop() }
+                runCatching { rec.release() }
             }
         }, "mic-tx").start()
         return true
@@ -47,7 +55,6 @@ class MicSource(override val rate: Int = 48_000) : AudioSource {
 
     fun close() {
         open = false
-        runCatching { record?.stop(); record?.release() }
         record = null
     }
 }

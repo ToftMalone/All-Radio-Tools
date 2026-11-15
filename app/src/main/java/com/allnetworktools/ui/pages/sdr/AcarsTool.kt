@@ -113,7 +113,7 @@ class AcarsController(private val repo: SdrRepository, private val scope: Corout
         val rx = AcarsReceiver { m -> scope.launch { messages = (listOf(m) + messages).take(MAX) } }
         dspRunning = true
         Thread({
-            while (dspRunning) {
+            while (dspRunning) dspStep {
                 val item = full.poll(200, TimeUnit.MILLISECONDS) ?: continue
                 rx.feed(item.first, item.second)
                 free.offer(item.first)

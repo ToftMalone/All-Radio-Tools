@@ -155,7 +155,14 @@ class AppActions(
         }
     }
 
-    fun openUrl(url: String) = launch(Intent(Intent.ACTION_VIEW, url.toUri()))
+    /**
+     * Opens a web page or a place on a map. The address often comes from outside (an NFC tag, a beacon): only web and
+     * map links are followed, so a tag cannot start another app's action (a payment link, a call, a file) by a tap here.
+     */
+    fun openUrl(url: String) {
+        val uri = url.trim().toUri()
+        if (uri.scheme?.lowercase() in setOf("http", "https", "geo")) launch(Intent(Intent.ACTION_VIEW, uri)) else copy("URI", url)
+    }
 
     fun copy(label: String, text: String) {
         context.getSystemService(ClipboardManager::class.java)?.setPrimaryClip(ClipData.newPlainText(label, text))

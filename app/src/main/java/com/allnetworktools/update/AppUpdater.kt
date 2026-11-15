@@ -194,6 +194,8 @@ open class AppUpdater(
                                 val n = input.read(buf)
                                 if (n < 0) break
                                 o.write(buf, 0, n); digest.update(buf, 0, n); done += n
+                                // An APK far bigger than announced is not the release: stop before it fills the storage.
+                                if (done > MaxApkBytes) throw java.io.IOException(S(R.string.wrong_sha_256_fingerprint_file_corrupt))
                                 val now = System.nanoTime()
                                 if (total > 0 && now - lastEmit > 100_000_000L) {
                                     lastEmit = now; _state.value = UpdateState.Downloading(info, (done.toFloat() / total).coerceIn(0f, 1f))
@@ -299,6 +301,7 @@ open class AppUpdater(
 
     companion object {
         const val CheckEveryMs = 6 * 3_600_000L
+        const val MaxApkBytes = 400L * 1024 * 1024
     }
 }
 

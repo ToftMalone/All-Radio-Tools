@@ -24,6 +24,32 @@ interface SdrSink {
     fun close() {}
 }
 
+/** How many times a decoder failed on what it was given, this session (shown in the debug journal). */
+object DspFaults {
+    private val count = java.util.concurrent.atomic.AtomicInteger()
+    val total: Int get() = count.get()
+
+    fun report(e: Throwable) {
+        val n = count.incrementAndGet()
+        // The first ones say where; a decoder failing on every buffer must not fill the journal.
+        if (n <= 5 || n % 1000 == 0) com.allnetworktools.util.DebugLog.e("SDR", "Decoder failed on a buffer (fault $n) on ${Thread.currentThread().name}", e)
+    }
+}
+
+/**
+ * One turn of a receive loop. What a radio hears is not trusted: a malformed or hostile frame that trips a decoder
+ * loses that buffer, not the tool, and never the app (an exception leaving a thread ends the whole process).
+ */
+internal inline fun dspStep(block: () -> Unit) {
+    try {
+        block()
+    } catch (e: Exception) {
+        DspFaults.report(e)
+        // Not a busy loop if the fault comes before the wait for samples.
+        try { Thread.sleep(5) } catch (_: InterruptedException) { Thread.currentThread().interrupt() }
+    }
+}
+
 /**
  * The part every receive-only HackRF tool shares: opening the radio, tuning, gains (automatic by default), the buffer
  * pool between the USB thread and a DSP thread, and stopping. A tool gives its rate, where to tune and a fresh [SdrSink]
@@ -108,7 +134,7 @@ abstract class SdrRxController(
         dspRunning = true
         Thread({
             var last = 0L
-            while (dspRunning) {
+            while (dspRunning) dspStep {
                 val item = full.poll(200, TimeUnit.MILLISECONDS)
                 if (item != null) {
                     sink.feed(item.first, item.second)

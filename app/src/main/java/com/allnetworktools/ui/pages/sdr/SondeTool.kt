@@ -209,7 +209,7 @@ class SondeController(private val repo: SdrRepository, private val scope: Corout
         dspRunning = true
         Thread({
             var last = 0L
-            while (dspRunning) {
+            while (dspRunning) dspStep {
                 val item = full.poll(200, TimeUnit.MILLISECONDS)
                 if (item != null) {
                     val k = d1.process(item.first, item.second, aRe, aIm, 0)

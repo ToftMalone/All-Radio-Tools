@@ -54,11 +54,22 @@ object DnsClient {
 
     private fun viaUdp(q: ByteArray, ip: String, timeoutMs: Int): ByteArray = DatagramSocket().use { s ->
         s.soTimeout = timeoutMs
-        s.send(DatagramPacket(q, q.size, InetAddress.getByName(ip), 53))
+        // Only the server asked may answer, and only this question: anyone else on the network could otherwise slip a
+        // reply in (the hijack check compares what resolvers say).
+        s.connect(InetAddress.getByName(ip), 53)
+        s.send(DatagramPacket(q, q.size))
         val buf = ByteArray(4096)
-        val p = DatagramPacket(buf, buf.size)
-        s.receive(p)
-        buf.copyOf(p.length)
+        val deadline = System.nanoTime() + timeoutMs * 1_000_000L
+        while (true) {
+            val p = DatagramPacket(buf, buf.size)
+            s.receive(p)
+            // The reply carries the identifier of the question.
+            if (p.length >= 12 && buf[0] == q[0] && buf[1] == q[1]) return@use buf.copyOf(p.length)
+            val left = ((deadline - System.nanoTime()) / 1_000_000L).toInt()
+            if (left <= 0) throw java.net.SocketTimeoutException()
+            s.soTimeout = left
+        }
+        @Suppress("UNREACHABLE_CODE") ByteArray(0)
     }
 
     private fun viaHttps(q: ByteArray, url: String, timeoutMs: Int): ByteArray {
@@ -69,7 +80,8 @@ object DnsClient {
             c.setRequestProperty("Content-Type", "application/dns-message")
             c.setRequestProperty("Accept", "application/dns-message")
             c.outputStream.use { it.write(q) }
-            return c.inputStream.use { it.readBytes() }
+            // A DNS message is at most 64 KB: no more is read, whatever the server sends.
+            return c.inputStream.use { it.readNBytes(65_536) }
         } finally {
             c.disconnect()
         }
@@ -99,7 +111,14 @@ object DnsClient {
         return labels.joinToString(".") to (if (end >= 0) end else pos)
     }
 
-    fun parse(raw: ByteArray, ms: Float): DnsAnswer {
+    /** The answer in [raw]; an IOException when it is cut short or malformed. */
+    fun parse(raw: ByteArray, ms: Float): DnsAnswer = try {
+        parseStrict(raw, ms)
+    } catch (e: RuntimeException) {
+        throw java.io.IOException("malformed DNS answer", e)
+    }
+
+    private fun parseStrict(raw: ByteArray, ms: Float): DnsAnswer {
         val buf = ByteBuffer.wrap(raw)
         val rcode = raw[3].toInt() and 0x0F
         val qd = buf.getShort(4).toInt() and 0xFFFF

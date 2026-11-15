@@ -54,6 +54,40 @@ class SdrSettingsTest {
         SdrSettings.nativeAuto = true
     }
 
+    /** While it transmits, the radio stays on the frequency the transmission was checked for, with its settings. */
+    @Test fun nothingMovesTheRadioWhileItTransmits() {
+        val tuned = ArrayList<Long>()
+        val f = object : SdrRadio {
+            override val caps = SdrCaps("fake", 0, 1, 1)
+            val amps = ArrayList<Boolean>()
+            override fun setSampleRate(hz: Int, filterHz: Int) = true
+            override fun setFrequency(hz: Long) = true.also { tuned += hz }
+            override fun setLnaGain(db: Int) = true
+            override fun setVgaGain(db: Int) = true
+            override fun setAmp(on: Boolean) = true.also { amps += on }
+            override fun setAntennaPower(on: Boolean) = true
+            override fun startRx(onSamples: (ByteArray, Int) -> Unit, onError: (String) -> Unit) {}
+            override fun startTx(fill: (ByteArray) -> Unit, onError: (String) -> Unit) = true
+            override fun close() {}
+        }
+        val r = ManagedRadio(f, SdrKind.HackRf)
+        TxSettings.setForTest("F4ABC", true)
+        val e = Emission.around(145_000_000L, 6_000, 6_000, TxUse.Amateur)
+        TxPolicy.declared = e
+        assertTrue(r.setFrequency(144_700_000L))
+        assertTrue(r.startTx({}, {}))
+        // A preset touched while talking would have sent the carrier to the air band.
+        assertTrue(!r.setFrequency(121_500_000L))
+        assertTrue(!r.setAmp(true))
+        assertTrue(!r.setSampleRate(20_000_000, 15_000_000))
+        assertEquals(listOf(144_700_000L), tuned)
+        assertTrue(f.amps.isEmpty())
+        r.stopStreaming()
+        assertTrue(r.setFrequency(121_500_000L))
+        TxPolicy.declared = null
+        TxSettings.setForTest("", false)
+    }
+
     @Test fun biasTeeAppliesToTheRadioInUse() {
         val f = Fake()
         SdrSettings.active = ManagedRadio(f, SdrKind.RtlSdr)

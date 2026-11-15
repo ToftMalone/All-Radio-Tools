@@ -173,7 +173,7 @@ class SpectrumController(private val repo: SdrRepository, private val scope: Cor
         dspRunning = true
         dsp = Thread({
             var last = System.nanoTime()
-            while (dspRunning) {
+            while (dspRunning) dspStep {
                 val (buf, len) = full.poll(200, TimeUnit.MILLISECONDS) ?: continue
                 // Zoomed in, a longer FFT keeps FFT points across the narrower view.
                 val z = wantZoom

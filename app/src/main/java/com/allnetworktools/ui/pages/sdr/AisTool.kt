@@ -173,7 +173,7 @@ class AisController(private val repo: SdrRepository, private val scope: Coroutin
         dspRunning = true
         Thread({
             var last = 0L
-            while (dspRunning) {
+            while (dspRunning) dspStep {
                 val item = full.poll(200, TimeUnit.MILLISECONDS)
                 if (item != null) {
                     rx.feed(item.first, item.second)

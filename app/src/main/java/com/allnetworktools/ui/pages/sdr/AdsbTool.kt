@@ -189,7 +189,7 @@ class AdsbController(private val repo: SdrRepository, private val scope: Corouti
         Thread({
             var last = System.currentTimeMillis()
             var windowCount = 0
-            while (dspRunning) {
+            while (dspRunning) dspStep {
                 val item = full.poll(200, TimeUnit.MILLISECONDS)
                 if (item != null) {
                     demod.feed(item.first, item.second)

@@ -107,11 +107,23 @@ internal class ManagedRadio(private val inner: SdrRadio, private val kind: SdrKi
     private fun native(): Boolean? =
         if (kind.gainSteps != null && !SdrSettings.nativeAuto) inner.setNativeGain(SdrSettings.nativeGain) else null
 
-    override fun setLnaGain(db: Int): Boolean = native() ?: inner.setLnaGain(db)
-    override fun setVgaGain(db: Int): Boolean = native() ?: inner.setVgaGain(db)
-    override fun setAmp(on: Boolean): Boolean = native() ?: inner.setAmp(on)
+    /**
+     * True from the start of a transmission to its end. Nothing a receiving tool does meanwhile (retuning, changing the
+     * rate, the gains or the amplifier, which the HackRF shares between both directions) reaches the radio: what goes
+     * out is what was checked, on the frequency it was checked for.
+     */
+    @Volatile private var transmitting = false
 
-    override fun setSampleRate(hz: Int, filterHz: Int): Boolean =
+    private fun held(what: String): Boolean {
+        if (transmitting) DebugLog.w("SDR", "${inner.caps.name}: $what ignored while transmitting")
+        return transmitting
+    }
+
+    override fun setLnaGain(db: Int): Boolean = if (held("LNA gain")) false else native() ?: inner.setLnaGain(db)
+    override fun setVgaGain(db: Int): Boolean = if (held("VGA gain")) false else native() ?: inner.setVgaGain(db)
+    override fun setAmp(on: Boolean): Boolean = if (held("amplifier")) false else native() ?: inner.setAmp(on)
+
+    override fun setSampleRate(hz: Int, filterHz: Int): Boolean = if (held("sample rate")) false else
         inner.setSampleRate(hz, filterHz).also { DebugLog.i("SDR", "${inner.caps.name}: sample rate $hz -> $it") }
 
     /** The real frequency last asked for, which a transmission is checked against. */
@@ -128,15 +140,19 @@ internal class ManagedRadio(private val inner: SdrRadio, private val kind: SdrKi
         }
         if (why != null) { DebugLog.w("SDR", "TX refused (LO $lastHz Hz, $e): $why"); onError(why); return false }
         DebugLog.i("SDR", "${inner.caps.name}: transmitting $e")
-        return inner.startTx(fill, onError)
+        // Held before the radio starts, so nothing slips in between.
+        transmitting = true
+        return inner.startTx(fill, onError).also { if (!it) transmitting = false }
     }
 
     override fun stopStreaming() {
         DebugLog.i("SDR", "${inner.caps.name}: idle")
         inner.stopStreaming()
+        transmitting = false
     }
 
     override fun setFrequency(hz: Long): Boolean {
+        if (held("frequency $hz")) return false
         lastHz = hz
         val tuned = hz + SdrSettings.converterHz
         return inner.setFrequency(tuned).also { if (!it) DebugLog.w("SDR", "${inner.caps.name}: frequency $tuned refused") }
@@ -148,6 +164,7 @@ internal class ManagedRadio(private val inner: SdrRadio, private val kind: SdrKi
     }
 
     override fun close() {
+        transmitting = false
         if (SdrSettings.active === this) SdrSettings.active = null
         DebugLog.i("SDR", "${inner.caps.name}: closed")
         inner.close()
