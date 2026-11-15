@@ -96,7 +96,7 @@ class HackRf private constructor(
             try {
                 while (running) {
                     val r = try {
-                        conn.requestWait(1000)
+                        conn.waitOwn(1000)
                     } catch (e: TimeoutException) {
                         if (++timeouts >= 3) { onError(S(R.string.no_more_samples_from_the_hackrf)); break }
                         continue
@@ -115,7 +115,7 @@ class HackRf private constructor(
             } catch (e: Exception) {
                 if (running) onError(e.message ?: S(R.string.usb_error))
             } finally {
-                reqs.forEach { runCatching { it.cancel(); it.close() } }
+                conn.retire(reqs)
             }
         }, "hackrf-rx").apply { priority = Thread.MAX_PRIORITY; start() }
     }
@@ -143,14 +143,14 @@ class HackRf private constructor(
             try {
                 reqs.forEachIndexed { i, r -> r.clientData = i; send(i) }
                 while (running) {
-                    val r = try { conn.requestWait(1000) } catch (e: TimeoutException) { onError(S(R.string.usb_link_lost)); break }
+                    val r = try { conn.waitOwn(1000) } catch (e: TimeoutException) { onError(S(R.string.usb_link_lost)); break }
                     if (r == null) { onError(S(R.string.usb_link_lost)); break }
                     if (running) send(r.clientData as Int)
                 }
             } catch (e: Exception) {
                 if (running) onError(e.message ?: S(R.string.usb_error))
             } finally {
-                reqs.forEach { runCatching { it.cancel(); it.close() } }
+                conn.retire(reqs)
             }
         }, "hackrf-tx").apply { priority = Thread.MAX_PRIORITY; start() }
         return true

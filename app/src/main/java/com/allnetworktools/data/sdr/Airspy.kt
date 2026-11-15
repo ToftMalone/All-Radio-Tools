@@ -205,7 +205,7 @@ class Airspy private constructor(
             try {
                 while (running) {
                     val r = try {
-                        conn.requestWait(1000)
+                        conn.waitOwn(1000)
                     } catch (e: TimeoutException) {
                         if (++timeouts >= 3) { onError(S(R.string.no_more_samples_from_the_hackrf)); break }
                         continue
@@ -232,7 +232,7 @@ class Airspy private constructor(
             } catch (e: Exception) {
                 if (running) onError(e.message ?: S(R.string.usb_error))
             } finally {
-                reqs.forEach { runCatching { it.cancel(); it.close() } }
+                conn.retire(reqs)
             }
         }, "airspy-rx").apply { priority = Thread.MAX_PRIORITY; start() }
     }
