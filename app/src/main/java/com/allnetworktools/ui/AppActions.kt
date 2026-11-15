@@ -139,7 +139,8 @@ class AppActions(
 
     /** Same as [saveFile] for big files: [write] streams straight into the chosen file. */
     fun saveStream(fileName: String, mime: String, write: (java.io.OutputStream) -> Unit) {
-        pendingSave = write
+        // A spreadsheet reads a cell starting with = + - @ as a formula: the text received from the air must not.
+        pendingSave = if (mime == "text/csv") { out -> com.allnetworktools.util.Csv.Guard(out).use { write(it) } } else write
         runCatching { createFile(SaveRequest(fileName, mime)) }.onFailure { pendingSave = null; toast(S(R.string.saving_unavailable_on_this_device)) }
     }
 
