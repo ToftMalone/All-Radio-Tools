@@ -218,10 +218,13 @@ class ListenController(repo: SdrRepository, scope: CoroutineScope, onAcquire: ()
             .setAudioFormat(AudioFormat.Builder().setEncoding(AudioFormat.ENCODING_PCM_FLOAT).setSampleRate(ListenReceiver.AUDIO_RATE).setChannelMask(AudioFormat.CHANNEL_OUT_MONO).build())
             .setTransferMode(AudioTrack.MODE_STREAM).setBufferSizeInBytes(ListenReceiver.AUDIO_RATE * 4 / 2).build()
         track.play()
+        audioOut = track
         val scaled = FloatArray(4096)
         val rx = ListenReceiver { b, n ->
             val v = wantVolume * wantVolume
             for (i in 0 until n) scaled[i] = b[i] * v
+            // Reception picks up after a transmission: the speaker was cut for it, and comes back with the first sound.
+            if (track.playState != AudioTrack.PLAYSTATE_PLAYING) runCatching { track.play() }
             track.write(scaled, 0, n, AudioTrack.WRITE_NON_BLOCKING)
         }
         var analyzer = SpectrumAnalyzer(BINS)
@@ -247,6 +250,7 @@ class ListenController(repo: SdrRepository, scope: CoroutineScope, onAcquire: ()
             }
 
             override fun close() {
+                if (audioOut === track) audioOut = null
                 runCatching { track.stop(); track.release() }
                 post { spectrum = null }
             }
@@ -254,6 +258,7 @@ class ListenController(repo: SdrRepository, scope: CoroutineScope, onAcquire: ()
     }
 
     private var mic: com.allnetworktools.data.sdr.MicSource? = null
+    @Volatile private var audioOut: AudioTrack? = null
 
     /** What the current mode transmits as; WFM (broadcast) never. */
     val txMode: com.allnetworktools.data.sdr.TxMode? get() = when (mode) {
@@ -268,6 +273,9 @@ class ListenController(repo: SdrRepository, scope: CoroutineScope, onAcquire: ()
     fun pushToTalk(device: com.allnetworktools.data.sdr.SdrDevice?) {
         if (tx.transmitting) return
         val m = txMode ?: return
+        // The sound the receiver still holds (about half a second) must not reach the microphone: the speaker stops and
+        // empties first.
+        audioOut?.let { runCatching { it.pause(); it.flush() } }
         val src = com.allnetworktools.data.sdr.MicSource()
         if (!src.start()) { tx.error = S(R.string.tx_mic_failed); return }
         val (below, above) = when (m) {
