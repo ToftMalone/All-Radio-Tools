@@ -61,7 +61,7 @@ class WmbusTest {
 
     /** HackRF bytes at 2 MS/s, tuned 500 kHz below 868.95 MHz, the meter 8 kHz off. */
     /** [chipRate]: the meter's chip clock relative to the nominal 100 kchip/s. */
-    private fun air(list: List<Pair<IntArray, Wmbus.Mode>>, seed: Int = 5, chipRate: Double = 1.0): ByteArray {
+    private fun air(list: List<Pair<IntArray, Wmbus.Mode>>, seed: Int = 5, chipRate: Double = 1.0, noise: Double = 16.0): ByteArray {
         val rate = 2_000_000.0
         val spc = 20 / chipRate
         val gap = 120_000
@@ -72,8 +72,8 @@ class WmbusTest {
         var ph = 0.0
         var i = 0
         fun put(re: Double, im: Double) {
-            out[2 * i] = (re * 50 + (rnd.nextDouble() - 0.5) * 16).roundToInt().coerceIn(-127, 127).toByte()
-            out[2 * i + 1] = (im * 50 + (rnd.nextDouble() - 0.5) * 16).roundToInt().coerceIn(-127, 127).toByte()
+            out[2 * i] = (re * 50 + (rnd.nextDouble() - 0.5) * noise).roundToInt().coerceIn(-127, 127).toByte()
+            out[2 * i + 1] = (im * 50 + (rnd.nextDouble() - 0.5) * noise).roundToInt().coerceIn(-127, 127).toByte()
             i++
         }
         repeat(gap) { put(0.0, 0.0) }
@@ -126,5 +126,21 @@ class WmbusTest {
         var o = 0
         while (o < b.size) { val k = minOf(131072, b.size - o); rx.feed(b.copyOfRange(o, o + k), k); o += k }
         assertTrue(got.isEmpty())
+    }
+
+    private fun heardAt(noise: Double, count: Int, seed: Int): Int {
+        val list = (0 until count).map { k -> (if (k % 2 == 0) heat else water) to (if (k % 2 == 0) Wmbus.Mode.C1A else Wmbus.Mode.C1B) }
+        val got = ArrayList<WmbusTelegram>()
+        val rx = WmbusReceiver { got += it }
+        val bytes = air(list, seed, noise = noise)
+        var o = 0
+        while (o < bytes.size) { val k = minOf(131072, bytes.size - o); rx.feed(bytes.copyOfRange(o, o + k), k); o += k }
+        got.forEach { assertTrue("a wrong telegram", it.frame.id == "12345678" || it.frame.id == "87654321") }
+        return got.size
+    }
+
+    @Test
+    fun softMendingWinsFramesNeverForgesOne() {
+        SoftGain.measure("M-Bus C1", 0) { heardAt(175.0, 20, 9) }
     }
 }

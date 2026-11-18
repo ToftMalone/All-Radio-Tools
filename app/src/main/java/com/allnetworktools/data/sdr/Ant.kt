@@ -205,18 +205,34 @@ class AntReceiver(private val onFrame: (AntHeard) -> Unit) {
         val bytes = ByteArray(Ant.FRAME_BYTES)
         var bitsIn = 0
         private var frozen = 0f
+        // The frame's bits and how clear each was, to mend a frame that fails its CRC.
+        private val soft = ByteArray(Ant.FRAME_BYTES * 8)
+        private val margin = FloatArray(Ant.FRAME_BYTES * 8)
 
         /** [sum]: the phase turn over the last bit; [bias]: its running mean, frozen for the frame once the marker is found. */
         fun push(sum: Float, bias: Float) {
-            val b0 = if (sum - (if (collecting >= 0) frozen else bias) > 0) 1 else 0
+            val v = sum - (if (collecting >= 0) frozen else bias)
+            val b0 = if (v > 0) 1 else 0
             val b = if (inv) b0 xor 1 else b0
             if (collecting >= 0) {
                 val i = bitsIn / 8
                 bytes[i] = ((bytes[i].toInt() shl 1) or b).toByte()
+                soft[bitsIn] = b.toByte()
+                margin[bitsIn] = kotlin.math.abs(v)
                 bitsIn++
                 if (bitsIn == Ant.FRAME_BYTES * 8) {
                     collecting = -1
-                    Ant.parse(bytes)?.let { emit(it) }
+                    val f = Ant.parse(bytes) ?: run {
+                        // The marker (bits 0 to 15) was matched, not read: only what follows is mended.
+                        var got: Ant.Frame? = null
+                        SoftMend.mend(soft, margin, 16, soft.size, SoftMend.Gate.Synced) {
+                            SoftMend.packMsb(soft, 0, bytes, Ant.FRAME_BYTES)
+                            got = Ant.parse(bytes)
+                            got != null
+                        }
+                        got
+                    }
+                    f?.let { emit(it) }
                 }
                 return
             }
@@ -231,6 +247,7 @@ class AntReceiver(private val onFrame: (AntHeard) -> Unit) {
                 // Preamble and marker hold as many ones as zeros: the mean over them is the carrier offset; the payload's long
                 // runs would drag a running mean away.
                 frozen = bias
+                for (j in 0 until 16) { soft[j] = ((Ant.ANT_PLUS shr (15 - j)) and 1).toByte(); margin[j] = Float.MAX_VALUE }
                 bitsIn = 16
                 collecting = 0
             }

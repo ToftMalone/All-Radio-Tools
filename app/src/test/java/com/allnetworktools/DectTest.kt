@@ -91,4 +91,46 @@ class DectTest {
         assertEquals(1, Integer.bitCount(bases[0].slots))
         assertEquals(frames, t.handsetBursts)
     }
+
+    /** [count] base bursts, one per frame, at [noise] (uniform, peak to peak; the signal is 50). */
+    private fun heardAt(noise: Double, count: Int, seed: Int): Int {
+        val rate = 4_608_000.0
+        val n = (rate * (0.02 + count * Dect.FRAME_S)).toInt()
+        val freq = DoubleArray(n)
+        val on = BooleanArray(n)
+        val rnd = Random(seed)
+        val sent = HashSet<Long>()
+        val lead = (rate * 0.02).toInt()
+        for (f in 0 until count) {
+            val a = Dect.makeAField(Dect.TA_QT, 0, rnd.nextLong() and 0xFFFFFFFFFFL)
+            sent += a
+            val bits = ArrayList<Int>()
+            for (i in 31 downTo 0) bits += ((Dect.SYNC_RFP shr i) and 1).toInt()
+            for (i in 63 downTo 0) bits += ((a shr i) and 1).toInt()
+            repeat(320) { bits += rnd.nextInt(2) }
+            val start = lead + (f * rate * Dect.FRAME_S).toInt() + (3 * rate * Dect.FRAME_S / Dect.SLOTS).toInt()
+            bits.forEachIndexed { k, b -> for (s in 0 until 4) { val i = start + 4 * k + s; freq[i] = if (b == 1) 288e3 else -288e3; on[i] = true } }
+        }
+        val out = ByteArray(2 * n)
+        var ph = 0.0
+        var sm = 0.0
+        for (i in 0 until n) {
+            sm += (freq[i] - sm) * 0.35
+            ph += 2 * PI * (1_152_000.0 + 20_000.0 + sm) / rate
+            val amp = if (on[i]) 50.0 else 0.0
+            out[2 * i] = (amp * cos(ph) + (rnd.nextDouble() - 0.5) * noise).roundToInt().coerceIn(-127, 127).toByte()
+            out[2 * i + 1] = (amp * sin(ph) + (rnd.nextDouble() - 0.5) * noise).roundToInt().coerceIn(-127, 127).toByte()
+        }
+        val bursts = ArrayList<DectBurst>()
+        val rx = DectReceiver { bursts += it }
+        var o = 0
+        while (o < out.size) { val k = minOf(262144, out.size - o); rx.feed(out.copyOfRange(o, o + k), k); o += k }
+        bursts.forEach { assertTrue("a wrong A-field", it.a.raw in sent) }
+        return bursts.count { it.fromBase }
+    }
+
+    @Test
+    fun softMendingWinsFramesNeverForgesOne() {
+        SoftGain.measure("DECT", 4) { heardAt(70.0, 30, 4) }
+    }
 }

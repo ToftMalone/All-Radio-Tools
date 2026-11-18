@@ -430,6 +430,11 @@ class FlarmDemodulator(private val onFrame: (FlarmFrame) -> Unit) {
         private set
     var badCrc = 0
         private set
+    /** Frames that passed their CRC only once mended. */
+    var mended = 0
+        private set
+    private val bits = ByteArray(DATA_CHIPS / 2)
+    private val margin = FloatArray(DATA_CHIPS / 2)
 
     fun feed(re: FloatArray, im: FloatArray, len: Int) {
         var off = 0
@@ -501,10 +506,20 @@ class FlarmDemodulator(private val onFrame: (FlarmFrame) -> Unit) {
             val b = c.soft[cd.p][((cd.k0 + 2 + 2 * i) and MASK).toInt()]
             val bit = (if (b > a) 1 else 0) xor (if (cd.inv) 1 else 0)
             raw[i shr 3] = ((raw[i shr 3] shl 1) or bit) and 0xFF
+            bits[i] = bit.toByte()
+            margin[i] = abs(b - a)
         }
         var f = raw
         var ok = Flarm.checkCrc(f)
         if (!ok) { f = IntArray(Flarm.FRAME) { raw[it] xor 0xFF }; ok = Flarm.checkCrc(f) }
+        // A clean sync but a bad CRC: the frame is mended from its least clear bits, in the sync's orientation.
+        if (!ok && cd.err <= 1) {
+            val m = IntArray(Flarm.FRAME)
+            if (SoftMend.mend(bits, margin, 0, DATA_CHIPS / 2, SoftMend.Gate.Synced) {
+                    for (j in 0 until Flarm.FRAME) { var v = 0; for (t in 0 until 8) v = (v shl 1) or bits[8 * j + t].toInt(); m[j] = v }
+                    Flarm.checkCrc(m)
+                } > 0) { f = m; ok = true; mended++ }
+        }
         if (!ok) { if (cd.err <= 1) badCrc++; return }
         var pwr = 0.0
         var cnt = 0

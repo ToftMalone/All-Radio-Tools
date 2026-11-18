@@ -104,7 +104,7 @@ class MeteomodemTest {
     }
 
     /** Over the air: each bit as two half-bit symbols (different for 1), FSK, noise, at 100 kS/s complex baseband. */
-    private fun air(frames: List<Pair<ByteArray, Double>>, fs: Double, polarity: Int, seed: Long = 3): Pair<FloatArray, FloatArray> {
+    private fun air(frames: List<Pair<ByteArray, Double>>, fs: Double, polarity: Int, seed: Long = 3, noise: Double = 0.25): Pair<FloatArray, FloatArray> {
         val rnd = Random(seed)
         val re = ArrayList<Float>()
         val im = ArrayList<Float>()
@@ -112,7 +112,7 @@ class MeteomodemTest {
         fun emit(sym: Int, symLen: Double, n: Int) {
             repeat(n) {
                 phase += 2 * PI * polarity * sym * 15e3 / fs + 2 * PI * 1.2e3 / fs // ±15 kHz, plus a small tuning error
-                re += (cos(phase) + rnd.nextGaussian() * 0.25).toFloat(); im += (sin(phase) + rnd.nextGaussian() * 0.25).toFloat()
+                re += (cos(phase) + rnd.nextGaussian() * noise).toFloat(); im += (sin(phase) + rnd.nextGaussian() * noise).toFloat()
             }
         }
         var t = 0.0
@@ -152,4 +152,5 @@ class MeteomodemTest {
             assertTrue(parsed.all { it.serial != null })
         }
     }
+
 }

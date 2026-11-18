@@ -353,11 +353,14 @@ class ZwaveReceiver(private val inputRate: Double = 2_000_000.0, private val cen
                 phi += 0.5
             }
             val chips = ArrayList<Int>()
+            val margins = ArrayList<Float>()
             var k = 0
             while (true) {
                 val pos = a + bphi + k * spc
                 if (pos >= d.size - 1) break
-                chips += if (m(pos) > 0) 1 else 0
+                val v = m(pos)
+                chips += if (v > 0) 1 else 0
+                margins += abs(v).toFloat()
                 k++
             }
             var saw = false
@@ -372,7 +375,9 @@ class ZwaveReceiver(private val inputRate: Double = 2_000_000.0, private val cen
                         if (f != null) return f to true
                     }
                 } else {
-                    val (f, s) = search(chips.map { it xor inv }, rate)
+                    // R3 closes with a CRC-16, strong enough to mend a frame from its least clear chips; R2's 8-bit
+                    // checksum is not.
+                    val (f, s) = search(chips.map { it xor inv }, rate, if (rate == 3) margins.toFloatArray() else null)
                     if (s) saw = true
                     if (f != null) return f to true
                 }
@@ -380,7 +385,7 @@ class ZwaveReceiver(private val inputRate: Double = 2_000_000.0, private val cen
             return null to saw
         }
 
-        private fun search(bits: List<Int>, rate: Int): Pair<Zwave.Frame?, Boolean> {
+        private fun search(bits: List<Int>, rate: Int, margins: FloatArray? = null): Pair<Zwave.Frame?, Boolean> {
             val sof = Zwave.sof(rate)
             val chk = Zwave.checkOctets(rate)
             var saw = false
@@ -401,6 +406,17 @@ class ZwaveReceiver(private val inputRate: Double = 2_000_000.0, private val cen
                             val mp = ByteArray(len) { byteAt(it).toByte() }
                             val f = Zwave.parse(mp, rate)
                             if (f != null && f.checkOk) return f to true
+                            if (margins != null) {
+                                val soft = ByteArray(len * 8) { bits[q + it].toByte() }
+                                val mg = FloatArray(len * 8) { margins[q + it] }
+                                var got: Zwave.Frame? = null
+                                SoftMend.mend(soft, mg, 0, len * 8) {
+                                    SoftMend.packMsb(soft, 0, mp, len)
+                                    got = if ((mp[7].toInt() and 0xFF) == len) Zwave.parse(mp, rate)?.takeIf { it.checkOk } else null
+                                    got != null
+                                }
+                                got?.let { return it to true }
+                            }
                         }
                     }
                 }

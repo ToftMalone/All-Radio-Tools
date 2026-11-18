@@ -76,4 +76,43 @@ class ZwaveTest {
         assertEquals("BATTERY Report 85 %", Zwave.describe(got[0].frame))
         assertEquals("SENSOR_BINARY Report triggered", Zwave.describe(got[1].frame))
     }
+
+    /** R3 bursts (CRC-16, the rate soft mending applies to) at [noise]. */
+    private fun heardAt(noise: Double, count: Int, seed: Long): Int {
+        val fs = 2_000_000.0
+        val rnd = Random(seed)
+        val sig = ArrayList<Pair<Double, Double>>()
+        repeat((0.02 * fs).toInt()) { sig += 0.0 to 0.0 }
+        var phase = 0.0
+        val sent = (0 until count).map { k -> Zwave.build(0x0A0B0C0DL, 9 + k, 1, byteArrayOf(0x25, 0x03, k.toByte(), 1, 2, 3, 4, 5, 6, 7), 3) }
+        for (mpdu in sent) {
+            val bytes = ByteArray(24) { 0x55 } + byteArrayOf(Zwave.sof(3).toByte()) + mpdu
+            val chips = bytes.flatMap { b -> (7 downTo 0).map { (b.toInt() shr it) and 1 } }
+            val spc = fs / Zwave.chipRate(3)
+            val off = (869_850_000L - Zwave.EU_CENTRE_HZ).toDouble() + 3_000.0
+            val n = ((chips.size + 2) * spc).toInt()
+            for (i in 0 until n) {
+                val c = chips[minOf((i / spc).toInt(), chips.size - 1)]
+                phase += 2 * PI * (off + 29_000.0 * (if (c == 1) 1 else -1)) / fs
+                sig += 40 * cos(phase) to 40 * sin(phase)
+            }
+            repeat((0.01 * fs).toInt()) { sig += 0.0 to 0.0 }
+        }
+        val buf = ByteArray(2 * sig.size)
+        for (i in sig.indices) {
+            buf[2 * i] = (sig[i].first + noise * rnd.nextGaussian()).roundToInt().coerceIn(-127, 127).toByte()
+            buf[2 * i + 1] = (sig[i].second + noise * rnd.nextGaussian()).roundToInt().coerceIn(-127, 127).toByte()
+        }
+        val got = ArrayList<ZwaveHeard>()
+        val rx = ZwaveReceiver { got += it }
+        val re = FloatArray(65536); val im = FloatArray(65536)
+        var i = 0
+        while (i < buf.size) { val k = minOf(262144, buf.size - i); rx.feedBytes(buf.copyOfRange(i, i + k), k, re, im); i += k }
+        got.forEach { g -> assertTrue("a wrong frame", g.rate != 3 || g.frame.src in 9 until 9 + count) }
+        return got.count { it.rate == 3 }
+    }
+
+    @Test fun softMendingWinsFramesNeverForgesOne() {
+        SoftGain.measure("Z-Wave R3", 2) { heardAt(46.0, 20, 5) }
+    }
 }

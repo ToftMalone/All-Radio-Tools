@@ -77,7 +77,7 @@ class FlarmTest {
     }
 
     /** HackRF bytes at 2 MS/s tuned 500 kHz below 868.3 MHz: each packet on its channel, ±50 kHz, in noise. */
-    private fun air(packets: List<Pair<IntArray, Int>>, seed: Int = 3): ByteArray {
+    private fun air(packets: List<Pair<IntArray, Int>>, seed: Int = 3, noise: Double = 16.0): ByteArray {
         val rate = 2_000_000.0
         val spc = 20
         val gap = 150_000
@@ -88,8 +88,8 @@ class FlarmTest {
         var ph = 0.0
         var i = 0
         fun put(re: Double, im: Double) {
-            out[2 * i] = (re * 60 + (rnd.nextDouble() - 0.5) * 16).roundToInt().coerceIn(-127, 127).toByte()
-            out[2 * i + 1] = (im * 60 + (rnd.nextDouble() - 0.5) * 16).roundToInt().coerceIn(-127, 127).toByte()
+            out[2 * i] = (re * 60 + (rnd.nextDouble() - 0.5) * noise).roundToInt().coerceIn(-127, 127).toByte()
+            out[2 * i + 1] = (im * 60 + (rnd.nextDouble() - 0.5) * noise).roundToInt().coerceIn(-127, 127).toByte()
             i++
         }
         repeat(gap) { put(0.0, 0.0) }
@@ -201,5 +201,19 @@ class FlarmTest {
         val v7 = IntArray(Flarm.FRAME).also { it[3] = 0x02; it[0] = 0x11 }
         t.update(FlarmFrame(v7, 1, 20.0), now)
         assertEquals(1, t.newProtocolDevices)
+    }
+
+    /** Frames right out of [count] packets at [noise], both channels. */
+    private fun heardAt(noise: Double, count: Int, seed: Int): Int {
+        val list = (0 until count).map { k -> Flarm.encodeV6(packet(0x100000 + k, 45.3 + k * 1e-3, 5.9), ts) to (k % 2) }
+        val frames = receive(air(list, seed, noise))
+        val sent = list.map { it.first.take(Flarm.PAYLOAD) }
+        frames.forEach { f -> assertTrue("a wrong frame", f.bytes.take(Flarm.PAYLOAD) in sent) }
+        return frames.size
+    }
+
+    @Test
+    fun softMendingWinsFramesNeverForgesOne() {
+        SoftGain.measure("FLARM", 5) { heardAt(140.0, 30, 7) }
     }
 }

@@ -3,6 +3,14 @@ package com.allnetworktools
 import com.allnetworktools.data.sdr.AfskDemodulator
 import com.allnetworktools.data.sdr.AprsTx
 import com.allnetworktools.data.sdr.Hdlc
+import com.allnetworktools.data.sdr.Ant
+import com.allnetworktools.data.sdr.AntHeard
+import com.allnetworktools.data.sdr.AntReceiver
+import com.allnetworktools.data.sdr.SoftMend
+import kotlin.math.PI
+import kotlin.math.cos
+import kotlin.math.exp
+import kotlin.math.sin
 import org.junit.Assert.assertArrayEquals
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -105,5 +113,113 @@ class SensitivityTest {
         var total = 0
         for (seed in 1L..10L) for (noise in listOf(0.46, 0.5, 0.55)) total += afskDecoded(noise, true, 20, seed)
         println("STRESS decoded $total/600, none wrong")
+    }
+
+    // ---- Generic soft mending ----
+
+    /** Counts frames decoded over [trials] with mending on and off: on must win, and never lose. */
+    private fun gain(name: String, minGain: Int, decode: () -> Int): Pair<Int, Int> {
+        SoftMend.enabled = false
+        val without = try { decode() } finally { SoftMend.enabled = true }
+        val with = decode()
+        println("GAIN $name: $without without mending, $with with")
+        assertTrue("$name: $without → $with", with >= without + minGain)
+        return without to with
+    }
+
+    private fun crc16(b: ByteArray): Int {
+        var c = 0xFFFF
+        for (x in b) { c = c xor ((x.toInt() and 0xFF) shl 8); repeat(8) { c = if (c and 0x8000 != 0) (c shl 1) xor 0x1021 else c shl 1 }; c = c and 0xFFFF }
+        return c
+    }
+
+    @Test fun softMendFlipsTheWeakBitsOnly() {
+        val rnd = Random(5)
+        val payload = ByteArray(20) { rnd.nextInt().toByte() }
+        val c = crc16(payload)
+        val good = payload + byteArrayOf((c shr 8).toByte(), c.toByte())
+        val bits = ByteArray(good.size * 8) { i -> ((good[i / 8].toInt() shr (7 - i % 8)) and 1).toByte() }
+        val buf = ByteArray(good.size)
+        val check = { SoftMend.packMsb(bits, 0, buf, buf.size); val p = buf.copyOf(20); crc16(p) == (((buf[20].toInt() and 0xFF) shl 8) or (buf[21].toInt() and 0xFF)) }
+        val margin = FloatArray(bits.size) { 1f + rnd.nextFloat() }
+        bits[37] = (bits[37].toInt() xor 1).toByte(); margin[37] = 0.1f
+        bits[150] = (bits[150].toInt() xor 1).toByte(); margin[150] = 0.2f
+        assertEquals(2, SoftMend.mend(bits, margin, 0, bits.size, check = check))
+        assertArrayEquals(good, buf)
+        // A confident wrong bit is left alone: the frame is lost, not forged.
+        bits[60] = (bits[60].toInt() xor 1).toByte()
+        val before = bits.copyOf()
+        assertEquals(0, SoftMend.mend(bits, margin, 0, bits.size, check = check))
+        assertArrayEquals(before, bits)
+    }
+
+    @Test fun softMendRefusesNoise() {
+        val rnd = Random(8)
+        var passed = 0
+        repeat(3000) {
+            val bits = ByteArray(176) { rnd.nextInt(2).toByte() }
+            val margin = FloatArray(176) { abs(rnd.nextGaussian()).toFloat() }
+            val buf = ByteArray(22)
+            if (SoftMend.mend(bits, margin, 0, 176) { SoftMend.packMsb(bits, 0, buf, 22); crc16(buf.copyOf(20)) == (((buf[20].toInt() and 0xFF) shl 8) or (buf[21].toInt() and 0xFF)) } > 0) passed++
+        }
+        assertEquals(0, passed)
+    }
+
+    /** ANT+ GFSK bursts at 4 MS/s with [noise] standard deviation (signal amplitude 40). */
+    private fun antBursts(noise: Double, trials: Int, seed: Long): Int {
+        val fs = 4_000_000.0
+        val rnd = Random(seed)
+        var ok = 0
+        repeat(trials) { t ->
+            val payload = byteArrayOf(0x00, 0xFF.toByte(), 0xFF.toByte(), 0xFF.toByte(), 0x12, 0x34, t.toByte(), 140.toByte())
+            val bits = Ant.bits(Ant.ANT_PLUS, 4321, Ant.HEART_RATE, 5, payload)
+            val sps = 4
+            val nrz = DoubleArray((bits.size + 8) * sps) { val b = it / sps - 4; if (b in bits.indices) (if (bits[b] == 1) 1.0 else -1.0) else 0.0 }
+            val g = DoubleArray(4 * sps + 1) { val x = (it - 2 * sps) / sps.toDouble(); exp(-2 * (PI * 0.5 * x) * (PI * 0.5 * x) / kotlin.math.ln(2.0)) }
+            val gs = g.sum()
+            val pad = 600
+            val buf = ByteArray(2 * (nrz.size + 2 * pad))
+            var ph = rnd.nextDouble() * 2 * PI
+            for (i in 0 until nrz.size + 2 * pad) {
+                var f = 0.0
+                val j = i - pad
+                if (j >= 0 && j < nrz.size) for (k in g.indices) { val q = j + k - 2 * sps; if (q in nrz.indices) f += nrz[q] * g[k] / gs }
+                ph += 2 * PI * (30_000.0 + 160_000.0 * f) / fs
+                val on = j in 0 until nrz.size
+                buf[2 * i] = ((if (on) 40 * cos(ph) else 0.0) + noise * rnd.nextGaussian()).toInt().coerceIn(-127, 127).toByte()
+                buf[2 * i + 1] = ((if (on) 40 * sin(ph) else 0.0) + noise * rnd.nextGaussian()).toInt().coerceIn(-127, 127).toByte()
+            }
+            val got = ArrayList<AntHeard>()
+            AntReceiver { got += it }.feedBytes(buf, buf.size, FloatArray(65536), FloatArray(65536))
+            got.forEach { assertArrayEquals(payload, it.frame.payload) } // never a wrong frame
+            if (got.isNotEmpty()) ok++
+        }
+        return ok
+    }
+
+    @Test fun antGainsFrames() {
+        gain("ANT+ noise 13", 8) { antBursts(13.0, 30, 1) }
+    }
+
+    /** Seconds of pure noise into every receiver that mends with the looser gate: nothing may come out. */
+    @Test fun noiseAloneGivesNothing() {
+        val rnd = Random(21)
+        fun noise(n: Int, sd: Double) = ByteArray(2 * n) { (rnd.nextGaussian() * sd).toInt().coerceIn(-127, 127).toByte() }
+        for (sd in listOf(8.0, 30.0)) {
+            val heard = ArrayList<String>()
+            val ant = AntReceiver { heard += "ANT" }
+            val zb = com.allnetworktools.data.sdr.ZigbeeReceiver(15) { heard += "Zigbee" }
+            val dect = com.allnetworktools.data.sdr.DectReceiver { heard += "DECT" }
+            val flarm = com.allnetworktools.data.sdr.FlarmReceiver { heard += "FLARM" }
+            val re = FloatArray(65536); val im = FloatArray(65536)
+            repeat(120) {
+                val b = noise(65_536, sd) // one USB transfer, 128 KiB
+                ant.feedBytes(b, b.size, re, im)
+                zb.feedBytes(b, b.size, re, im)
+                dect.feed(b, b.size)
+                flarm.feed(b, b.size)
+            }
+            assertTrue("noise $sd gave $heard", heard.isEmpty())
+        }
     }
 }

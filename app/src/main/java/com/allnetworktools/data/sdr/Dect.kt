@@ -170,21 +170,49 @@ class DectDemodulator(private val onBurst: (DectBurst) -> Unit) {
         val bestErrs = ph.minOf { it.errs }
         for (p in ph) {
             if (p.errs > 3) continue
-            val thr = (p.m1 + p.m0) / 2
-            var raw = 0L
-            for (j in 0 until 64) raw = (raw shl 1) or (if (at(p.c + (j + 1) * SPS) > thr) 1L else 0L)
-            val a = Dect.AField(raw)
-            if (!a.crcOk) continue
-            val end = p.c + 65 * SPS
-            skipUntil = end
-            var pw = 0.0
-            var np = 0
-            for (k in p.c - SYNC_BITS * SPS until end) { pw += pb[(k and MASK).toInt()]; np++ }
-            onBurst(DectBurst(fromBase, a, 10 * log10(pw / maxOf(1, np) + 1e-20), (p.c - SYNC_BITS * SPS).toDouble() / RATE))
-            return true
+            val a = read(p.c, (p.m1 + p.m0) / 2)
+            if (a.crcOk) { emit(p.c, a, fromBase); return true }
+        }
+        // No phase reads a good CRC: the one with the widest eye and a clean sync is mended from its least clear bits.
+        ph.firstOrNull { it.errs <= 1 }?.let { p ->
+            read(p.c, (p.m1 + p.m0) / 2)
+            var fixed: Dect.AField? = null
+            SoftMend.mend(bits, margin, 0, 64, SoftMend.Gate.Synced) {
+                var r = 0L
+                for (j in 0 until 64) r = (r shl 1) or bits[j].toLong()
+                Dect.AField(r).takeIf { it.crcOk }?.also { fixed = it } != null
+            }
+            fixed?.let { mended++; emit(p.c, it, fromBase); return true }
         }
         if (bestErrs <= 1) { bad++; return true }
         return false
+    }
+
+    private val bits = ByteArray(64)
+    private val margin = FloatArray(64)
+    /** A-fields that passed their CRC only once mended. */
+    var mended = 0
+        private set
+
+    /** The 64 A-field bits after the sync ending at [c], with how clear each was. */
+    private fun read(c: Long, thr: Double): Dect.AField {
+        var raw = 0L
+        for (j in 0 until 64) {
+            val v = at(c + (j + 1) * SPS)
+            bits[j] = (if (v > thr) 1 else 0).toByte()
+            margin[j] = abs(v - thr).toFloat()
+            raw = (raw shl 1) or bits[j].toLong()
+        }
+        return Dect.AField(raw)
+    }
+
+    private fun emit(c: Long, a: Dect.AField, fromBase: Boolean) {
+        val end = c + 65 * SPS
+        skipUntil = end
+        var pw = 0.0
+        var np = 0
+        for (k in c - SYNC_BITS * SPS until end) { pw += pb[(k and MASK).toInt()]; np++ }
+        onBurst(DectBurst(fromBase, a, 10 * log10(pw / maxOf(1, np) + 1e-20), (c - SYNC_BITS * SPS).toDouble() / RATE))
     }
 
     companion object {

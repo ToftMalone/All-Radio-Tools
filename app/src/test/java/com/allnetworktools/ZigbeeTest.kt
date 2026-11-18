@@ -73,4 +73,27 @@ class ZigbeeTest {
             assertEquals(0x4321, got[1].frame.nwkSrc)
         }
     }
+
+    private fun heardAt(noise: Double, count: Int, seed: Long): Int {
+        val rnd = Random(seed)
+        val rx = ZigbeeReceiver(15) {}
+        val got = ArrayList<ZigbeeHeard>()
+        val rx2 = ZigbeeReceiver(15) { got += it }
+        val sent = (0 until count).map { k -> Zigbee.buildMac(Zigbee.DATA, k, 0x1A62, 0x0000, 0x4321, ByteArray(30) { (it * 7 + k).toByte() }) }
+        for (psdu in sent) {
+            val (re, im) = modulate(psdu, 4_000_000.0, 20_000.0, 700 + rnd.nextInt(50))
+            val buf = ByteArray(2 * re.size)
+            for (i in re.indices) {
+                buf[2 * i] = (40 * re[i] + noise * rnd.nextGaussian()).toInt().coerceIn(-127, 127).toByte()
+                buf[2 * i + 1] = (40 * im[i] + noise * rnd.nextGaussian()).toInt().coerceIn(-127, 127).toByte()
+            }
+            rx2.feedBytes(buf, buf.size, FloatArray(65536), FloatArray(65536))
+        }
+        got.forEach { g -> assertTrue("a wrong frame", sent.any { it.contentEquals(g.raw) }) }
+        return got.size
+    }
+
+    @Test fun softMendingWinsFramesNeverForgesOne() {
+        SoftGain.measure("Zigbee", 2) { heardAt(26.0, 20, 3) }
+    }
 }

@@ -447,7 +447,7 @@ class WmbusDemodulator(private val onTelegram: (WmbusTelegram) -> Unit) {
     }
 
     /** Chip decisions after the sync word, and how far each was from the decision level. */
-    private var dec = IntArray(0)
+    private var dec = ByteArray(0)
     private var margin = FloatArray(0)
 
     /**
@@ -457,7 +457,7 @@ class WmbusDemodulator(private val onTelegram: (WmbusTelegram) -> Unit) {
      * transition and learns the rate.
      */
     private fun track(c: Cand, count: Int, rate: Double) {
-        dec = IntArray(count)
+        dec = ByteArray(count)
         margin = FloatArray(count)
         val amp = maxOf(c.score / 24f, 1e-6f)
         var period = SPS / rate
@@ -470,13 +470,13 @@ class WmbusDemodulator(private val onTelegram: (WmbusTelegram) -> Unit) {
             val e = ((prev - cur) * (mid - c.th) / (amp * amp)).toDouble().coerceIn(-1.0, 1.0)
             x += TIMING_GAIN * e
             period = (period + RATE_GAIN * e).coerceIn(SPS * 0.9, SPS * 1.1)
-            dec[i] = if (cur > c.th) 1 else 0
+            dec[i] = (if (cur > c.th) 1 else 0).toByte()
             margin[i] = abs(cur - c.th)
             prev = cur
         }
     }
 
-    private fun chip(i: Int) = if (i < dec.size) dec[i] else 0
+    private fun chip(i: Int) = if (i < dec.size) dec[i].toInt() else 0
     private fun bits(from: Int, count: Int): Int { var v = 0; for (i in 0 until count) v = (v shl 1) or chip(from + i); return v }
 
     /** A frame is tried with the chip clock starting at the nominal rate, then a little faster and slower. */
@@ -524,8 +524,11 @@ class WmbusDemodulator(private val onTelegram: (WmbusTelegram) -> Unit) {
         if (l < 10) return false
         val formatB = mode == Wmbus.Mode.C1B
         val total = Wmbus.airLength(l, formatB)
+        if (mode != Wmbus.Mode.T1 && start + 8 * total > dec.size) return false
         for (i in 0 until total) { val b = byteAt(i); if (b < 0) return false; bytes += b }
-        val f = Wmbus.parse(bytes.toIntArray(), formatB) ?: return false
+        var air = bytes.toIntArray()
+        if (mode != Wmbus.Mode.T1 && Wmbus.parse(air, formatB) == null) mended += mendBlocks(air, l, formatB, start)
+        val f = Wmbus.parse(air, formatB) ?: return false
         val chipsUsed = start + total * (if (mode == Wmbus.Mode.T1) 12 else 8)
         var pwr = 0.0
         for (k in c.k0 - 24..c.k0 + chipsUsed) pwr += pw[(k and MASK).toInt()]
@@ -533,6 +536,39 @@ class WmbusDemodulator(private val onTelegram: (WmbusTelegram) -> Unit) {
         val nfv = if (nf > 0) nf else 1e-12
         onTelegram(WmbusTelegram(f, mode, 10 * log10(maxOf(pwr - nfv, nfv * 0.01) / nfv), mended))
         return true
+    }
+
+    /**
+     * C mode sends plain bytes, each block closed by its own CRC-16: a block that fails is mended on its own, from its
+     * least clear chips (see [SoftMend]); the length byte must not change. Returns the chips flipped; [air] is updated.
+     */
+    private fun mendBlocks(air: IntArray, l: Int, formatB: Boolean, start: Int): Int {
+        val sizes = ArrayList<Int>()
+        val total = l + 1
+        if (!formatB) { var left = total; var b = minOf(10, left); sizes += b; left -= b; while (left > 0) { b = minOf(16, left); sizes += b; left -= b } }
+        else if (total in 3..128) sizes += total - 2
+        else if (total > 130) { sizes += 126; sizes += total - 130 }
+        else return 0
+        var pos = 0
+        var flips = 0
+        for (n in sizes) {
+            if (pos + n + 2 > air.size) return flips
+            val good = Wmbus.crc16(air, pos, n) == (air[pos + n] shl 8 or air[pos + n + 1])
+            if (!good) {
+                val from = start + 8 * pos
+                val to = start + 8 * (pos + n + 2)
+                val blk = IntArray(n + 2)
+                val f = SoftMend.mend(dec, margin, from, to) {
+                    for (j in 0 until n + 2) blk[j] = bits(from + 8 * j, 8)
+                    (pos > 0 || blk[0] == l) && Wmbus.crc16(blk, 0, n) == (blk[n] shl 8 or blk[n + 1])
+                }
+                if (f == 0) return flips
+                for (j in 0 until n + 2) air[pos + j] = blk[j]
+                flips += f
+            }
+            pos += n + 2
+        }
+        return flips
     }
 
     private fun blockEnd() {

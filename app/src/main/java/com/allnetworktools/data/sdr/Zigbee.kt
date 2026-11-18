@@ -290,6 +290,27 @@ class ZigbeeReceiver(@Volatile var channel: Int, private val onFrame: (ZigbeeHea
             if (pending.isNotEmpty()) run()
         }
 
+        // Per symbol of the frame being read: closest pattern, runner-up, distance of the closest, margin, choice.
+        private val first = IntArray(256)
+        private val second = IntArray(256)
+        private val dist = IntArray(256)
+        private val gap = FloatArray(256)
+        private val choice = ByteArray(256)
+
+        private fun pick(j: Int) = if (choice[j].toInt() == 0) first[j] else second[j]
+
+        private fun symSoft(end: Long, j: Int) {
+            val w = word(end)
+            var b1 = -1; var d1 = 99; var b2 = -1; var d2 = 99
+            for (s in 0 until 16) {
+                val d = Integer.bitCount((w xor pat[s]) and mask)
+                if (d < d1) { b2 = b1; d2 = d1; b1 = s; d1 = d } else if (d < d2) { b2 = s; d2 = d }
+            }
+            first[j] = b1; second[j] = b2; dist[j] = d1
+            // A symbol beyond 9 chip errors is the least clear of all.
+            gap[j] = if (d1 > 9) 0.01f else (d2 - d1).toFloat() + 0.5f
+        }
+
         private fun word(end: Long): Int {
             var w = 0
             for (k in 0 until 32) w = (w shl 1) or chips[((end - 32 + k) and (ringBits - 1).toLong()).toInt()].toInt()
@@ -327,12 +348,24 @@ class ZigbeeReceiver(@Volatile var channel: Int, private val onFrame: (ZigbeeHea
             if (end > count) return -1
             if (count - end > ringBits - 1000) return 0
             val psdu = ByteArray(len)
-            for (i in 0 until len) {
-                val a = sym(k + 64 + 32L * (2 * i + 1)); val b = sym(k + 64 + 32L * (2 * i + 2))
-                if (a < 0 || b < 0) return 0
-                psdu[i] = (a or (b shl 4)).toByte()
+            // Each symbol: the closest pattern, the runner-up, and how much closer the first was (its margin).
+            var unsure = 0
+            for (j in 0 until 2 * len) {
+                symSoft(k + 64 + 32L * (j + 1), j)
+                if (first[j] < 0) return 0
+                if (dist[j] > 9) unsure++
             }
-            if (Zigbee.crc16(psdu, len - 2) != ((psdu[len - 2].toInt() and 0xFF) or ((psdu[len - 1].toInt() and 0xFF) shl 8))) return 0
+            // A symbol too far from every pattern counts as unsure; more than two and the frame is not one.
+            if (unsure > 2) return 0
+            fun build() { for (i in 0 until len) psdu[i] = (pick(2 * i) or (pick(2 * i + 1) shl 4)).toByte() }
+            fun fcsOk() = Zigbee.crc16(psdu, len - 2) == ((psdu[len - 2].toInt() and 0xFF) or ((psdu[len - 1].toInt() and 0xFF) shl 8))
+            for (j in 0 until 2 * len) choice[j] = 0
+            build()
+            if (!fcsOk()) {
+                // The least clear symbols get their runner-up, one then two at a time (see [SoftMend]).
+                if (SoftMend.mend(choice, gap, 0, 2 * len, SoftMend.Gate.Synced) { build(); fcsOk() } == 0) return 0
+                mended++
+            }
             until = end
             emit(psdu)
             return 1
@@ -356,6 +389,9 @@ class ZigbeeReceiver(@Volatile var channel: Int, private val onFrame: (ZigbeeHea
     private var noise = 1e-6
     private var sig = 0.0
     private val recent = ArrayDeque<Pair<Long, Int>>()
+
+    /** Frames whose FCS passed only once their least clear symbols were mended. */
+    @Volatile var mended = 0; private set
 
     /** Frames received with a good FCS, all streams together. */
     @Volatile var frames = 0; private set
