@@ -3081,4 +3081,6 @@ Một đợt lũ là dòng khung ghép đôi giả làm bật cửa sổ trên m
     <string name="sig_name_nr3500">"5G 3,5 GHz"</string>
     <string name="sig_name_wifi24">"Wi-Fi 2,4 GHz"</string>
     <string name="sstv_iss">"ISS"</string>
+    <string name="deep_average">"Trung bình dài"</string>
+    <string name="deep_average_note">"Mọi mẫu đều được phân tích và phổ được lấy trung bình trong khoảng hai giây: nhiễu được làm mượt và các sóng mang ổn định bị chìm vài dB bên dưới sẽ hiện ra. Các xung ngắn mờ đi, và tốn pin hơn."</string>
 </resources>

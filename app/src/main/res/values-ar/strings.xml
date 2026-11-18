@@ -3461,4 +3461,6 @@
     <string name="sig_name_nr3500">"5G 3.5 GHz"</string>
     <string name="sig_name_wifi24">"Wi-Fi 2.4 GHz"</string>
     <string name="sstv_iss">"محطة الفضاء الدولية"</string>
+    <string name="deep_average">"متوسط طويل"</string>
+    <string name="deep_average_note">"تُحلَّل كل عينة ويُحسب متوسط الطيف على نحو ثانيتين: تتنعّم الضوضاء وتظهر الحوامل الثابتة المدفونة تحتها ببضعة ديسيبل. تتلاشى الرشقات القصيرة، ويزداد استهلاك البطارية."</string>
 </resources>

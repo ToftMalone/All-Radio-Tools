@@ -3309,4 +3309,6 @@
     <string name="sig_name_nr3500">"5G 3,5 GHz"</string>
     <string name="sig_name_wifi24">"Wi-Fi 2,4 GHz"</string>
     <string name="sstv_iss">"МКС"</string>
+    <string name="deep_average">"Долгое усреднение"</string>
+    <string name="deep_average_note">"Анализируется каждый отсчёт, а спектр усредняется примерно за две секунды: шум сглаживается, и проявляются стабильные несущие, скрытые на несколько дБ под ним. Короткие всплески бледнеют, а батарея расходуется быстрее."</string>
 </resources>

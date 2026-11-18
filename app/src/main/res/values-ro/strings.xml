@@ -3233,4 +3233,6 @@ Un val este un flux de cadre de asociere false care face să apară un pop-up pe
     <string name="sig_name_nr3500">"5G 3,5 GHz"</string>
     <string name="sig_name_wifi24">"Wi-Fi 2,4 GHz"</string>
     <string name="sstv_iss">"SSI"</string>
+    <string name="deep_average">"Medie lungă"</string>
+    <string name="deep_average_note">"Fiecare eșantion este analizat, iar spectrul este mediat pe aproximativ două secunde: zgomotul se netezește și apar purtătoarele stabile ascunse câțiva dB sub el. Rafalele scurte se estompează, iar bateria se consumă mai repede."</string>
 </resources>

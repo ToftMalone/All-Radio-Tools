@@ -3157,4 +3157,6 @@ Sel, yakındaki her telefonda bir açılır pencere çıkaran sahte eşleştirme
     <string name="sig_name_nr3500">"5G 3,5 GHz"</string>
     <string name="sig_name_wifi24">"Wi-Fi 2,4 GHz"</string>
     <string name="sstv_iss">"ISS"</string>
+    <string name="deep_average">"Uzun ortalama"</string>
+    <string name="deep_average_note">"Her örnek analiz edilir ve spektrumun yaklaşık iki saniyelik ortalaması alınır: gürültü yumuşar ve onun birkaç dB altında gizli sabit taşıyıcılar ortaya çıkar. Kısa patlamalar silikleşir ve pil daha çok harcanır."</string>
 </resources>

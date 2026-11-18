@@ -1,6 +1,7 @@
 package com.allnetworktools.data.sdr
 
 import kotlin.math.PI
+import kotlin.math.abs
 import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin
@@ -205,6 +206,14 @@ class ChannelDown(offsetHz: Double, fs: Double, decim: Int, cutoff: Double, taps
 /**
  * HDLC deframer: NRZI-decoded bits in, frames with a valid CRC-16 out as one bit per byte (CRC removed). [maxBits]
  * bounds a frame: 1200 is plenty for AIS; an AX.25 frame with eight repeaters and 256 bytes of text needs about 2700.
+ *
+ * Fed line levels with [level] instead, it also keeps how sure each level was. A frame whose CRC fails is then tried
+ * again with its least certain levels flipped, one, then two at a time (as Dire Wolf does): a weak signal mostly loses a
+ * frame to one or two marginal bits, and those are the ones a noise spike nudged across the decision threshold. One level
+ * flips two decoded bits through NRZI and can move the bit stuffing, so the frame is decoded afresh from the levels.
+ * Only levels close to the threshold are suspects, and the frame must keep its length: at most 27 tries, so a corrupt
+ * frame has about one chance in 2400 of passing the CRC, and the callers' own checks (AX.25 addresses, AIS message
+ * sizes) turn away nearly all of those.
  */
 class Hdlc(private val maxBits: Int = 1200, private val onFrame: (ByteArray, Int) -> Unit) {
     private val buf = ByteArray(maxBits)
@@ -212,7 +221,37 @@ class Hdlc(private val maxBits: Int = 1200, private val onFrame: (ByteArray, Int
     private var ones = 0
     private var inFrame = false
 
-    fun bit(b: Int) {
+    // Soft mode: the line levels of the frame being read and how sure each was, in a ring indexed by level count.
+    private val ring = 1 shl (32 - Integer.numberOfLeadingZeros(maxBits * 5 / 4 + 64))
+    private var levels: ByteArray? = null
+    private var sure: FloatArray? = null
+    private var raw = 0L
+    private var lastLevel = 0
+    /** Index of the first level after the opening flag. */
+    private var frameStart = -1L
+    private val tmp = ByteArray(maxBits)
+    private val pick = IntArray(WEAK)
+    private var conf = FloatArray(0)
+
+    /** Frames that passed only after mending. */
+    var mended = 0
+        private set
+
+    /** One line level (before NRZI) and how far it was from the decision threshold, in any unit (only compared). */
+    fun level(lv: Int, confidence: Float) {
+        if (levels == null) { levels = ByteArray(ring); sure = FloatArray(ring) }
+        val i = (raw and (ring - 1).toLong()).toInt()
+        levels!![i] = lv.toByte()
+        sure!![i] = confidence
+        val b = if (lv == lastLevel) 1 else 0 // NRZI: no change is a 1
+        lastLevel = lv
+        step(b)
+        raw++
+    }
+
+    fun bit(b: Int) = step(b)
+
+    private fun step(b: Int) {
         if (b == 1) {
             if (++ones > 6) { inFrame = false; n = 0; return } // abort
             if (inFrame) { if (n < maxBits) buf[n++] = 1 else { inFrame = false; n = 0 } }
@@ -221,24 +260,125 @@ class Hdlc(private val maxBits: Int = 1200, private val onFrame: (ByteArray, Int
         when (ones) {
             5 -> { ones = 0; return } // stuffed zero
             6 -> { // flag 0 111111 0: its leading zero and six ones were appended to the frame
-                if (inFrame && n >= 7) { n -= 7; check() }
-                inFrame = true; n = 0; ones = 0; return
+                if (inFrame && n >= 7) { n -= 7; if (!check() && levels != null && mending) mend(raw - 8, n) }
+                inFrame = true; n = 0; ones = 0; frameStart = raw + 1; return
             }
         }
         ones = 0
         if (inFrame) { if (n < maxBits) buf[n++] = 0 else { inFrame = false; n = 0 } }
     }
 
-    private fun check() {
-        if (n < 16 + 38) return
+    private fun crcOk(b: ByteArray, len: Int): Boolean {
         var crc = 0xFFFF
-        for (i in 0 until n) crc = if ((crc xor buf[i].toInt()) and 1 != 0) (crc ushr 1) xor 0x8408 else crc ushr 1
-        if (crc == 0xF0B8) onFrame(buf, n - 16)
+        for (i in 0 until len) crc = if ((crc xor b[i].toInt()) and 1 != 0) (crc ushr 1) xor 0x8408 else crc ushr 1
+        return crc == 0xF0B8
+    }
+
+    private fun check(): Boolean {
+        if (n < MIN_BITS || !crcOk(buf, n)) return false
+        onFrame(buf, n - 16)
+        return true
+    }
+
+    /** Levels [frameStart, lastIdx] hold the frame (the level before frameStart ends the opening flag). */
+    private fun mend(lastIdx: Long, hardBits: Int) {
+        val first = frameStart
+        val count = lastIdx - first + 1
+        if (first < 1 || count < MIN_BITS || count > maxBits * 5 / 4 || raw - first >= ring) return
+        val lv = levels!!
+        val sr = sure!!
+        val mask = (ring - 1).toLong()
+        // Mending is for a real frame with a few marginal levels, not for noise between two chance flags: most levels
+        // must sit well clear of the threshold, which noise's levels do not.
+        val size = count.toInt()
+        val sorted = if (conf.size >= size) conf else FloatArray(maxBits * 5 / 4 + 64).also { conf = it }
+        for (o in 0 until size) sorted[o] = sr[((first + o) and mask).toInt()]
+        java.util.Arrays.sort(sorted, 0, size)
+        val median = sorted[size / 2]
+        var faint = 0
+        for (o in 0 until size) { if (sorted[o] < median * 0.25f) faint++ else break }
+        if (faint > size / 25 + 2) return
+        // Only a level close to the threshold is a suspect: one far from it is almost never the error.
+        val suspect = median * SUSPECT
+        // The WEAK least certain levels, kept sorted with an insertion pass. The last level is left alone: the closing
+        // flag's leading zero depends on it.
+        var k = 0
+        var idx = first
+        while (idx < lastIdx) {
+            val c = sr[(idx and mask).toInt()]
+            val off = (idx - first).toInt()
+            if (c < suspect && (k < WEAK || c < sr[((first + pick[k - 1]) and mask).toInt()])) {
+                var j = if (k < WEAK) k++ else WEAK - 1
+                while (j > 0 && sr[((first + pick[j - 1]) and mask).toInt()] > c) { pick[j] = pick[j - 1]; j-- }
+                pick[j] = off
+            }
+            idx++
+        }
+        fun flip(off: Int) { val r = ((first + off) and mask).toInt(); lv[r] = (lv[r].toInt() xor 1).toByte() }
+        fun tryDecode(): Boolean {
+            val len = redecode(first, lastIdx) ?: return false
+            // A mended frame must also fill whole bytes, as AX.25 and AIS frames do, and keep the length read: a flip that
+            // moves the bit stuffing is far likelier to forge a frame than to fix one.
+            if (len != hardBits || (len - 16) % 8 != 0 || !crcOk(tmp, len)) return false
+            mended++
+            onFrame(tmp, len - 16)
+            return true
+        }
+        for (x in 0 until k) {
+            flip(pick[x])
+            val ok = tryDecode()
+            flip(pick[x])
+            if (ok) return
+        }
+        val pairs = minOf(k, WEAK_PAIRS)
+        for (x in 0 until pairs) for (y in x + 1 until pairs) {
+            flip(pick[x]); flip(pick[y])
+            val ok = tryDecode()
+            flip(pick[x]); flip(pick[y])
+            if (ok) return
+        }
+    }
+
+    /** NRZI and destuffing of the levels into [tmp]; null when the levels hold an abort or a flag. */
+    private fun redecode(first: Long, last: Long): Int? {
+        val lv = levels!!
+        val mask = (ring - 1).toLong()
+        var prev = lv[((first - 1) and mask).toInt()].toInt()
+        var o = 0
+        var run = 0
+        var idx = first
+        while (idx <= last) {
+            val cur = lv[(idx and mask).toInt()].toInt()
+            val b = if (cur == prev) 1 else 0
+            prev = cur
+            idx++
+            if (b == 1) {
+                if (++run > 5) return null
+                if (o >= maxBits) return null
+                tmp[o++] = 1
+            } else {
+                if (run == 5) { run = 0; continue } // stuffed zero
+                run = 0
+                if (o >= maxBits) return null
+                tmp[o++] = 0
+            }
+        }
+        return o
     }
 
     companion object {
         /** An AX.25 frame at its largest, as destuffed bits with the FCS. */
         const val AX25_MAX_BITS = 2800
+        private const val MIN_BITS = 16 + 38
+        /** Levels tried one at a time when the CRC fails. */
+        private const val WEAK = 12
+        /** Of those, the weakest few tried in pairs: 6 give 15 pairs. At most 27 tries: a corrupt frame passes the CRC
+         *  about once in 2400 failures, before the callers' checks. */
+        private const val WEAK_PAIRS = 6
+        /** A level is a suspect below this fraction of the frame's median margin. */
+        private const val SUSPECT = 0.4f
+        /** Off only to measure what mending wins, in tests. */
+        @Volatile internal var mending = true
     }
 }
 
@@ -253,7 +393,6 @@ class AisDemodulator(private val onMessage: (AisMessage) -> Unit) {
     private var mean = 0f
     private val d = FloatArray(3)
     private var count = 0L
-    private val prevLevel = IntArray(SPS)
     private val phases = Array(SPS) { p -> Hdlc { bits, n -> frame(bits, n) } }
     private val recent = HashMap<Int, Long>()
 
@@ -278,9 +417,7 @@ class AisDemodulator(private val onMessage: (AisMessage) -> Unit) {
             // Three-sample average centred on the previous sample.
             val v = (d[0] + d[1] + d[2]) / 3f
             val p = (count % SPS).toInt()
-            val level = if (v > 0) 1 else 0
-            phases[p].bit(if (level == prevLevel[p]) 1 else 0) // NRZI: no change is a 1
-            prevLevel[p] = level
+            phases[p].level(if (v > 0) 1 else 0, abs(v))
             count++
         }
     }

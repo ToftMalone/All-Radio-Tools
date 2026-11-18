@@ -3157,4 +3157,6 @@
     <string name="sig_name_nr3500">"5G 3.5 GHz"</string>
     <string name="sig_name_wifi24">"Wi-Fi 2.4 GHz"</string>
     <string name="sstv_iss">"ISS"</string>
+    <string name="deep_average">"लंबा औसत"</string>
+    <string name="deep_average_note">"हर सैंपल का विश्लेषण होता है और स्पेक्ट्रम का लगभग दो सेकंड का औसत लिया जाता है: शोर समतल होता है और उसके कुछ dB नीचे दबे स्थिर कैरियर दिखने लगते हैं। छोटे बर्स्ट फीके पड़ते हैं, और बैटरी ज़्यादा खर्च होती है।"</string>
 </resources>

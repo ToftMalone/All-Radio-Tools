@@ -3164,4 +3164,6 @@ Una raffica è un flusso di finte trame di abbinamento che fa apparire un pop-up
     <string name="sig_name_nr3500">"5G 3,5 GHz"</string>
     <string name="sig_name_wifi24">"Wi-Fi 2,4 GHz"</string>
     <string name="sstv_iss">"ISS"</string>
+    <string name="deep_average">"Media lunga"</string>
+    <string name="deep_average_note">"Ogni campione viene analizzato e lo spettro viene mediato su circa due secondi: il rumore si attenua e compaiono portanti stabili nascoste qualche dB sotto. I burst brevi svaniscono e la batteria si consuma di più."</string>
 </resources>

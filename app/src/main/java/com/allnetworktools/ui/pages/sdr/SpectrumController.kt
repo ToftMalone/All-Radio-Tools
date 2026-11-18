@@ -49,6 +49,20 @@ class SpectrumController(private val repo: SdrRepository, private val scope: Cor
         get() = gain.ampOn
         set(v) { gain.amp = v }
     var peakHold by mutableStateOf(false)
+    /**
+     * Long averaging: every sample goes through overlapping FFTs and the spectra are averaged over a few seconds. The
+     * noise flattens (its ripple shrinks as the square root of the number of FFTs), so a steady carrier a few dB under
+     * the single-FFT noise rises out of it. Costs CPU, and short bursts fade into the average.
+     */
+    var deepAverage by mutableStateOf(false)
+    @Volatile private var deepWanted = false
+    @Volatile private var resetAverage = false
+
+    fun toggleDeepAverage() {
+        deepAverage = !deepAverage
+        deepWanted = deepAverage
+        resetAverage = true
+    }
     /** The frequency marked by a tap on the spectrum, shown with its level; null for none. */
     var markerHz by mutableStateOf<Long?>(null)
     /** How much of the span is shown, around its centre: 1 for all of it, up to [MAX_ZOOM]. */
@@ -62,6 +76,7 @@ class SpectrumController(private val repo: SdrRepository, private val scope: Cor
         zoom = v
         wantZoom = v
         hold = null
+        resetAverage = true
         dropMarkerOutside(if (running) tunedHz else parsedCenterHz() ?: 0L)
     }
 
@@ -152,6 +167,7 @@ class SpectrumController(private val repo: SdrRepository, private val scope: Cor
         val r = radio ?: run { centerMhz = "%.3f".format(java.util.Locale.US, hz / 1e6); return }
         centerMhz = "%.3f".format(java.util.Locale.US, hz / 1e6)
         hold = null
+        resetAverage = true
         scope.launch {
             if (withContext(Dispatchers.IO) { r.setFrequency(hz) }) tunedHz = hz else error = S(R.string.frequency_refused_by_the_hackrf)
         }
@@ -170,6 +186,8 @@ class SpectrumController(private val repo: SdrRepository, private val scope: Cor
         val full = ArrayBlockingQueue<Pair<ByteArray, Int>>(POOL)
         repeat(POOL) { free.add(ByteArray(131072)) }
         var analyzer = SpectrumAnalyzer(FFT)
+        var avg: FloatArray? = null
+        resetAverage = true
         dspRunning = true
         dsp = Thread({
             var last = System.nanoTime()
@@ -178,12 +196,27 @@ class SpectrumController(private val repo: SdrRepository, private val scope: Cor
                 // Zoomed in, a longer FFT keeps FFT points across the narrower view.
                 val z = wantZoom
                 if (analyzer.size != FFT * z) analyzer = SpectrumAnalyzer(FFT * z)
-                analyzer.accumulate(buf, len)
+                val deep = deepWanted
+                // Deep: FFTs half-overlapping across the whole transfer instead of four spread over it.
+                analyzer.accumulate(buf, len, if (deep) (len / analyzer.size).coerceIn(4, DEEP_BLOCKS) else 4)
                 free.offer(buf)
                 val now = System.nanoTime()
                 if (now - last >= FRAME_NS) {
                     last = now
-                    analyzer.frame()?.let { f -> publish(if (f.size == FFT) f else f.copyOfRange((f.size - FFT) / 2, (f.size + FFT) / 2)) }
+                    analyzer.frame()?.let { raw ->
+                        val f = if (raw.size == FFT) raw else raw.copyOfRange((raw.size - FFT) / 2, (raw.size + FFT) / 2)
+                        if (!deep) { avg = null; publish(f); return@let }
+                        val a = avg
+                        if (a == null || a.size != f.size || resetAverage) {
+                            resetAverage = false
+                            avg = FloatArray(f.size) { i -> dbToPower(f[i]) }
+                            publish(f)
+                        } else {
+                            // Averaged in power, not in dB, so that the level of a carrier stays right.
+                            for (i in a.indices) a[i] += (dbToPower(f[i]) - a[i]) * DEEP_ALPHA
+                            publish(FloatArray(a.size) { i -> (10 * kotlin.math.log10(a[i].toDouble().coerceAtLeast(1e-14))).toFloat() })
+                        }
+                    }
                 }
             }
         }, "sdr-spectrum").apply { start() }
@@ -242,6 +275,11 @@ class SpectrumController(private val repo: SdrRepository, private val scope: Cor
         const val HEIGHT = 160
         private const val POOL = 16
         private const val FRAME_NS = 66_000_000L
+        /** At most this many FFTs per transfer in long averaging (half-overlapping across 64 Ki samples at 1 Ki points). */
+        private const val DEEP_BLOCKS = 128
+        /** Each new frame's weight in long averaging: about 30 frames, two seconds, carry the average. */
+        private const val DEEP_ALPHA = 1f / 30f
+        private fun dbToPower(db: Float) = Math.pow(10.0, db / 10.0).toFloat()
         private const val COLD = 0xFF0B1026.toInt()
 
         /** Dark blue → blue → cyan → yellow → red. */

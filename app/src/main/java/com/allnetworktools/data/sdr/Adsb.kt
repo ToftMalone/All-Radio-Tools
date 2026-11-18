@@ -214,8 +214,10 @@ class AdsbDemodulator(private val onMessage: (ByteArray, Double) -> Unit) {
                 if (m[p + 4] < high && m[p + 5] < high && m[p + 11] < high && m[p + 12] < high && m[p + 13] < high && m[p + 14] < high) {
                     // When an edge of the first pulse fell on a sample, the pulse spread over the next one too: the
                     // bits may then be read one sample later.
-                    var msg = slice(p + 16)
-                    if (msg == null && m[p + 1] > high) msg = slice(p + 17)
+                    var msg = slice(p + 16, false)
+                    if (msg == null && m[p + 1] > high) msg = slice(p + 17, false)
+                    // A frame whose bits fall half way between samples: read it from neighbouring samples averaged.
+                    if (msg == null) msg = slice(p + 16, true)
                     if (msg != null) {
                         decoded++
                         onMessage(msg, 20 * log10((high * 1.5 / 128.0).coerceAtLeast(1e-6)))
@@ -232,11 +234,12 @@ class AdsbDemodulator(private val onMessage: (ByteArray, Double) -> Unit) {
         carry = keep
     }
 
-    private fun slice(start: Int): ByteArray? {
+    private fun slice(start: Int, half: Boolean): ByteArray? {
         val msg = ByteArray(14)
         for (bit in 0 until 112) {
-            val a = mags[start + 2 * bit]
-            val b = mags[start + 2 * bit + 1]
+            val x = start + 2 * bit
+            val a = if (half) mags[x] + mags[x + 1] else mags[x]
+            val b = if (half) mags[x + 1] + mags[x + 2] else mags[x + 1]
             if (a > b) msg[bit / 8] = (msg[bit / 8].toInt() or (0x80 ushr (bit % 8))).toByte()
             conf[bit] = abs(a - b) / (a + b + 1e-3f)
             if (bit == 4) {
@@ -277,7 +280,7 @@ class AdsbDemodulator(private val onMessage: (ByteArray, Double) -> Unit) {
     companion object {
         private const val MAX = 65536
         /** Preamble (16 samples) and 112 bits (224 samples). */
-        private const val FRAME = 16 + 224
+        private const val FRAME = 16 + 224 + 2
         private const val WEAK = 10
         /** A mended message is kept for an aircraft heard cleanly within the last minute. */
         private const val KNOWN = 60L * 2_000_000

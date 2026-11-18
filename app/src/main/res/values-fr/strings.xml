@@ -3251,4 +3251,6 @@
     <string name="sig_note">"Une supposition d\'après les plans de fréquences et la largeur du signal, pas une certitude : n\'importe qui peut émettre n\'importe quoi n\'importe où."</string>
     <string name="sig_unknown">"Rien de connu à cette fréquence."</string>
     <string name="wifi_chip_channel">"canal %1$d"</string>
+    <string name="deep_average">"Moyenne longue"</string>
+    <string name="deep_average_note">"Chaque échantillon est analysé et le spectre est moyenné sur environ deux secondes : le bruit se lisse et les porteuses stables noyées quelques dB dessous apparaissent. Les salves courtes s\'estompent, et la batterie s\'use plus vite."</string>
 </resources>

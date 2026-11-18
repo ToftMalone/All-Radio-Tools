@@ -1,6 +1,7 @@
 package com.allnetworktools.data.sdr
 
 import kotlin.math.PI
+import kotlin.math.abs
 import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.pow
@@ -281,7 +282,8 @@ class AprsTracker {
  * Bell 202 AFSK (1200 Hz mark, 2200 Hz space, 1200 baud) from FM-discriminated baseband at 50 kS/s: tone correlators over
  * one bit, an amplitude-normalised decision, NRZI and HDLC. The bit clock follows the tone changes, since a
  * tracker's 1200 baud can be off by a percent or two; three clocks pulled harder or softer each feed their own HDLC
- * decoder, and a frame two of them decode is passed on once.
+ * decoder, and a frame two of them decode is passed on once. Each level goes in with its margin from the decision, so a
+ * frame lost to a bit or two is mended (see [Hdlc]).
  */
 class AfskDemodulator(private val sampleRate: Double = 50_000.0, private val onFrame: (ByteArray) -> Unit) {
     private val len = (sampleRate / BAUD).roundToInt()
@@ -307,9 +309,10 @@ class AfskDemodulator(private val sampleRate: Double = 50_000.0, private val onF
     private var lastLevel = 0
     /** Where each clock is within the bit, 0 at a bit edge; the bit is read at 0.5. */
     private val clock = DoubleArray(GAINS.size)
-    private val prev = IntArray(GAINS.size)
     private val hdlc = Array(GAINS.size) { Hdlc(Hdlc.AX25_MAX_BITS) { bits, count -> frame(bits, count) } }
     private val recent = HashMap<Int, Long>()
+    /** Frames that passed only once mended, across the clocks (a frame mended by several clocks counts several times). */
+    val mended get() = hdlc.sumOf { it.mended }
 
     private fun frame(bits: ByteArray, count: Int) {
         if (count % 8 != 0) return
@@ -352,7 +355,8 @@ class AfskDemodulator(private val sampleRate: Double = 50_000.0, private val onF
         val es = sSr * sSr + sSi * sSi
         peakM = maxOf(em, peakM * 0.9995)
         peakS = maxOf(es, peakS * 0.9995)
-        val level = if (em / peakM - es / peakS > 0) 1 else 0
+        val margin = em / peakM - es / peakS
+        val level = if (margin > 0) 1 else 0
         val edge = level != lastLevel
         lastLevel = level
         for (c in GAINS.indices) {
@@ -362,8 +366,7 @@ class AfskDemodulator(private val sampleRate: Double = 50_000.0, private val onF
             val before = ph
             ph += step
             if (before < 0.5 && ph >= 0.5) {
-                hdlc[c].bit(if (level == prev[c]) 1 else 0) // NRZI: no change is a 1
-                prev[c] = level
+                hdlc[c].level(level, abs(margin).toFloat()) // NRZI inside; the margin lets a failed frame be mended
             }
             if (ph >= 1) ph -= 1
             clock[c] = ph

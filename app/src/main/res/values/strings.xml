@@ -3177,4 +3177,6 @@
     <string name="sig_note">"A guess from the band plans and the signal\'s width, not a certainty: anyone can transmit anything anywhere."</string>
     <string name="sig_unknown">"Nothing known at this frequency."</string>
     <string name="wifi_chip_channel">"ch. %1$d"</string>
+    <string name="deep_average">"Long averaging"</string>
+    <string name="deep_average_note">"Every sample is analysed and the spectrum is averaged over about two seconds: the noise smooths out and steady carriers buried a few dB under it show up. Short bursts fade, and it uses more battery."</string>
 </resources>

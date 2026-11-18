@@ -3081,4 +3081,6 @@
     <string name="sig_name_nr3500">"5G 3.5 GHz"</string>
     <string name="sig_name_wifi24">"Wi-Fi 2.4 GHz"</string>
     <string name="sstv_iss">"国际空间站"</string>
+    <string name="deep_average">"长时间平均"</string>
+    <string name="deep_average_note">"分析每一个采样,并对频谱做约两秒的平均:噪声被平滑,埋在其下几 dB 的稳定载波会显现出来。短促的突发会变淡,耗电也更多。"</string>
 </resources>

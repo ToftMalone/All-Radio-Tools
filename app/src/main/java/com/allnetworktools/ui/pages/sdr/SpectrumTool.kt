@@ -184,7 +184,11 @@ fun SpectrumTool(vm: MainViewModel) {
                 }
                 GainSettings(c.gain) { c.applyGains() }
                 Text(S(R.string.display_2), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
-                AntFilterChip(S(R.string.peak_hold), c.peakHold, { c.peakHold = !c.peakHold })
+                FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    AntFilterChip(S(R.string.peak_hold), c.peakHold, { c.peakHold = !c.peakHold })
+                    AntFilterChip(S(R.string.deep_average), c.deepAverage, { c.toggleDeepAverage() })
+                }
+                if (c.deepAverage) Text(S(R.string.deep_average_note), style = rf(12, 16), color = cs.onSurfaceVariant)
             }
         }
         SectionCard {

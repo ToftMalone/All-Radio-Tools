@@ -3157,4 +3157,6 @@ Ett flöde är en ström av falska parkopplingsramar som får en popup att visas
     <string name="sig_name_nr3500">"5G 3,5 GHz"</string>
     <string name="sig_name_wifi24">"Wi-Fi 2,4 GHz"</string>
     <string name="sstv_iss">"ISS"</string>
+    <string name="deep_average">"Lång medelvärdesbildning"</string>
+    <string name="deep_average_note">"Varje sampel analyseras och spektrumet medelvärdesbildas över ungefär två sekunder: bruset jämnas ut och stadiga bärvågor som ligger några dB under det syns. Korta skurar bleknar och batteriet går åt snabbare."</string>
 </resources>

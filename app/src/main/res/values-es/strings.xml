@@ -3164,4 +3164,6 @@ Una avalancha es un flujo de tramas de emparejamiento falsas que hace aparecer u
     <string name="sig_name_nr3500">"5G 3,5 GHz"</string>
     <string name="sig_name_wifi24">"Wi-Fi 2,4 GHz"</string>
     <string name="sstv_iss">"EEI"</string>
+    <string name="deep_average">"Promedio largo"</string>
+    <string name="deep_average_note">"Se analiza cada muestra y el espectro se promedia durante unos dos segundos: el ruido se suaviza y aparecen portadoras estables ocultas unos dB por debajo. Las ráfagas cortas se desvanecen y se gasta más batería."</string>
 </resources>

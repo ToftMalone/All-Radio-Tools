@@ -3081,4 +3081,6 @@ Banjir adalah aliran frame pemasangan palsu yang memunculkan pop-up di setiap po
     <string name="sig_name_nr3500">"5G 3,5 GHz"</string>
     <string name="sig_name_wifi24">"Wi-Fi 2,4 GHz"</string>
     <string name="sstv_iss">"ISS"</string>
+    <string name="deep_average">"Rata-rata panjang"</string>
+    <string name="deep_average_note">"Setiap sampel dianalisis dan spektrum dirata-ratakan selama sekitar dua detik: derau menjadi halus dan pembawa stabil yang terkubur beberapa dB di bawahnya muncul. Ledakan singkat memudar, dan baterai lebih boros."</string>
 </resources>

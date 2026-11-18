@@ -3157,4 +3157,6 @@ Een vloed is een stroom nep-koppelframes die op elke telefoon in de buurt een po
     <string name="sig_name_nr3500">"5G 3,5 GHz"</string>
     <string name="sig_name_wifi24">"Wi-Fi 2,4 GHz"</string>
     <string name="sstv_iss">"ISS"</string>
+    <string name="deep_average">"Lange middeling"</string>
+    <string name="deep_average_note">"Elk monster wordt geanalyseerd en het spectrum wordt over ongeveer twee seconden gemiddeld: de ruis vlakt af en stabiele draaggolven die een paar dB eronder zitten worden zichtbaar. Korte bursts vervagen en de batterij raakt sneller leeg."</string>
 </resources>

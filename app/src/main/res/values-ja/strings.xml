@@ -3081,4 +3081,6 @@
     <string name="sig_name_nr3500">"5G 3.5 GHz"</string>
     <string name="sig_name_wifi24">"Wi-Fi 2.4 GHz"</string>
     <string name="sstv_iss">"ISS"</string>
+    <string name="deep_average">"長時間平均"</string>
+    <string name="deep_average_note">"すべてのサンプルを解析し、スペクトラムを約 2 秒間平均します:雑音がならされ、その数 dB 下に埋もれた安定した搬送波が見えてきます。短いバーストは薄れ、電池の消費が増えます。"</string>
 </resources>

@@ -256,8 +256,12 @@ fun ToolsPage(net: Network, vm: MainViewModel) {
     val shownGroups = if (radio == null) allGroups
     else allGroups.map { g -> g.copy(items = g.items.filter { com.allnetworktools.ui.pages.sdr.sdrCompatible(it.tool, radio) }) }.filter { it.items.isNotEmpty() }
     val hidden = allGroups.sumOf { it.items.size } - shownGroups.sumOf { it.items.size }
+    // One card per category (when a radio has more than one); opening one lists its tools, and Back returns to the cards.
+    val carded = shownGroups.size > 1
+    val sdrOpen = if (carded) CategoryMemory.chosen[net]?.let { c -> shownGroups.firstOrNull { it.title == c } } else null
     PageColumn {
-        Column(
+        // Inside a category the featured tool's big card would push its tools down: it shows only on the overview.
+        if (sdrOpen == null) Column(
             Modifier.fadeUp().fillMaxWidth().clip(RoundedCornerShape(32.dp)).background(acc.container)
                 .clickable { open(net.featured) }.padding(20.dp),
         ) {
@@ -281,9 +285,6 @@ fun ToolsPage(net: Network, vm: MainViewModel) {
                 Modifier.padding(horizontal = 8.dp), style = rf(13, 18), color = cs.onSurfaceVariant,
             )
         }
-        // One card per category (when a radio has more than one); opening one lists its tools, and Back returns to the cards.
-        val carded = shownGroups.size > 1
-        val sdrOpen = if (carded) CategoryMemory.chosen[net]?.let { c -> shownGroups.firstOrNull { it.title == c } } else null
         if (carded && sdrOpen == null) {
             SectionTitle(S(R.string.sdr_categories))
             TileGrid(shownGroups) { g, mod ->

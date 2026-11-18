@@ -3309,4 +3309,6 @@ Záplava je proud falešných rámců párování, který vyvolá vyskakovací o
     <string name="sig_name_nr3500">"5G 3,5 GHz"</string>
     <string name="sig_name_wifi24">"Wi-Fi 2,4 GHz"</string>
     <string name="sstv_iss">"ISS"</string>
+    <string name="deep_average">"Dlouhé průměrování"</string>
+    <string name="deep_average_note">"Každý vzorek se analyzuje a spektrum se průměruje asi dvě sekundy: šum se vyhladí a objeví se stálé nosné skryté několik dB pod ním. Krátké záblesky slábnou a baterie se vybíjí rychleji."</string>
 </resources>

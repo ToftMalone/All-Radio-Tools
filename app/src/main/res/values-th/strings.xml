@@ -3081,4 +3081,6 @@
     <string name="sig_name_nr3500">"5G 3.5 GHz"</string>
     <string name="sig_name_wifi24">"Wi-Fi 2.4 GHz"</string>
     <string name="sstv_iss">"ISS"</string>
+    <string name="deep_average">"เฉลี่ยระยะยาว"</string>
+    <string name="deep_average_note">"วิเคราะห์ทุกตัวอย่างและเฉลี่ยสเปกตรัมประมาณสองวินาที: สัญญาณรบกวนเรียบขึ้นและคลื่นพาหะคงที่ที่จมอยู่ใต้ไม่กี่ dB จะปรากฏ สัญญาณสั้น ๆ จะจางลง และใช้แบตเตอรี่มากขึ้น"</string>
 </resources>
