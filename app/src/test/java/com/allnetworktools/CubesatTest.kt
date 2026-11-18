@@ -21,14 +21,14 @@ class CubesatTest {
     private val frame = addr("CQ", 0, false) + addr("RS0ISS", 0, true) + byteArrayOf(0x03, 0xF0.toByte()) + ">ARISS - International Space Station".toByteArray()
 
     /** FM at 500 kS/s around 0 Hz + [doppler], from a baseband frequency for each sample. */
-    private fun fm(dev: DoubleArray, doppler: Double): Pair<FloatArray, FloatArray> {
-        val rnd = Random(2)
+    private fun fm(dev: DoubleArray, doppler: Double, noise: Double = 0.2, seed: Long = 2): Pair<FloatArray, FloatArray> {
+        val rnd = Random(seed)
         val n = dev.size + 100_000
         val re = FloatArray(n); val im = FloatArray(n)
         var ph = 0.0
         for (i in 0 until n) {
             ph += 2 * PI * (doppler + (if (i in 50_000 until 50_000 + dev.size) dev[i - 50_000] else 0.0)) / 500_000.0
-            re[i] = (cos(ph) + 0.2 * rnd.nextGaussian()).toFloat(); im[i] = (sin(ph) + 0.2 * rnd.nextGaussian()).toFloat()
+            re[i] = (cos(ph) + noise * rnd.nextGaussian()).toFloat(); im[i] = (sin(ph) + noise * rnd.nextGaussian()).toFloat()
         }
         return re to im
     }
@@ -93,5 +93,21 @@ class CubesatTest {
         val got = receive(Cubesat.Mode.Afsk1200, fm(dev, 8_000.0))
         assertEquals(1, got.size)
         assertEquals("RS0ISS", got[0].src)
+    }
+
+    private fun g3ruhHeard(noise: Double, trials: Int): Int {
+        var ok = 0
+        for (seed in 1L..trials) {
+            val got = receive(Cubesat.Mode.G3ruh9600, fm(g3ruh(frame), 8_000.0, noise, seed))
+            got.forEach { assertTrue("a wrong frame", String(it.info).contains("Space Station") && it.src == "RS0ISS") }
+            if (got.isNotEmpty()) ok++
+        }
+        return ok
+    }
+
+    /** Mending through the descrambler wins 9600 baud frames near the threshold, never a wrong one. */
+    @Test
+    fun softMendingWinsFramesNeverForgesOne() {
+        SoftGain.measure("G3RUH", 4) { g3ruhHeard(1.05, 30) }
     }
 }

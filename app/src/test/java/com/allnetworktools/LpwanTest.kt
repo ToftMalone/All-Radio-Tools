@@ -142,4 +142,40 @@ class LpwanTest {
         assertEquals("00C0FFEE", sf[0].up.idHex)
         assertEquals(868_150_000.0, sf[0].hz, 50.0)
     }
+
+    /** Sigfox uplinks straight into the receiver at 200 kS/s, 2 kHz off centre, signal 1 and noise [noise] per sample. */
+    private fun sigfoxHeard(noise: Double, trials: Int, rank: Int): Int {
+        val fs = 200_000.0
+        var ok = 0
+        for (t in 1..trials) {
+            val rnd = Random(t.toLong())
+            val sig = Sigfox.buildFrame(0x00C0FFEE, t, byteArrayOf(0x12, 0x34, 0x56, 0x78), rank)
+            val s = IntArray(sig.size + 1) { 1 }
+            for (i in sig.indices) s[i + 1] = if (sig[i] == 1) s[i] else -s[i]
+            val spb = fs / 100
+            val lead = (fs * 0.3).toInt()
+            val total = lead + (s.size * spb).toInt() + (fs * 0.5).toInt()
+            val re = FloatArray(total); val im = FloatArray(total)
+            val ph0 = rnd.nextDouble() * 2 * PI
+            for (i in 0 until total) {
+                val k = i - lead
+                var a = 0.0; var b = 0.0
+                if (k >= 0 && k < s.size * spb) { val ph = ph0 + 2 * PI * 2_000.0 * i / fs; a = s[(k / spb).toInt()] * cos(ph); b = s[(k / spb).toInt()] * sin(ph) }
+                re[i] = (a + noise * rnd.nextGaussian()).toFloat(); im[i] = (b + noise * rnd.nextGaussian()).toFloat()
+            }
+            val got = ArrayList<Sigfox.Uplink>()
+            val rx = com.allnetworktools.data.sdr.SigfoxReceiver(fs) { u, _ -> got += u }
+            var o = 0
+            while (o < total) { val n = minOf(16384, total - o); rx.feed(re.copyOfRange(o, o + n), im.copyOfRange(o, o + n), n); o += n }
+            got.forEach { assertTrue("a wrong uplink", it.idHex == "00C0FFEE" && it.counter == t) }
+            if (got.isNotEmpty()) ok++
+        }
+        return ok
+    }
+
+    /** Near the threshold, mending never loses an uplink nor forges one (Sigfox is mostly lost earlier, to detection). */
+    @Test
+    fun softMendingNeverForgesAnUplink() {
+        SoftGain.measure("Sigfox", 0) { sigfoxHeard(13.0, 20, 1) }
+    }
 }

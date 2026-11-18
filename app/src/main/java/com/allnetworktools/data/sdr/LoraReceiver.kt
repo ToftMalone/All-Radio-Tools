@@ -114,6 +114,8 @@ class LoraReceiver(
     private var grid = 0.0          // slot 0 of the preamble-aligned grid
     private var slot = 0
     private var firstDown = -1
+    private var firstDownBin = 0
+    private var firstDownRatio = 0.0
 
     // Frame.
     private var cfo = 0.0           // total frequency offset, bins
@@ -124,6 +126,14 @@ class LoraReceiver(
     private var needed = 8
     private val symbols = ArrayList<Int>()
     private val snrs = ArrayList<Double>()
+    // Per symbol: the runner-up bin and how much stronger the peak was (ln of the power ratio), to mend a bad CRC.
+    private val alts = ArrayList<Int>()
+    private val margins = ArrayList<Float>()
+    private var altBin = 0
+    private var altMargin = 0f
+
+    /** Frames whose payload CRC passed only once mended. */
+    @Volatile var framesMended = 0; private set
 
     fun feed(re: FloatArray, im: FloatArray, count: Int) {
         // In pieces well under the ring, so nothing waiting is overwritten before it is read.
@@ -292,12 +302,19 @@ class LoraReceiver(
         dechirp(at, frac, down = false)
         val up = pkPow
         dechirp(at, frac, down = true)
-        val isDown = pkPow > 2 * up && ratio() > DETECT_RATIO
-        if (isDown && firstDown >= 0 && slot == firstDown + 1) {
+        // A weak signal's downchirp may miss the detection threshold on its own. Each slot need only look like one
+        // (stronger as a down- than as an upchirp, clearly above the noise); the pair must then agree: the two
+        // downchirps peak on the same bin (twice the frequency offset), which noise does not, and together they must
+        // stand as far out as one detection.
+        val r = ratio()
+        val isDown = pkPow > SFD_DOWN_OVER_UP * up && r > SFD_SLOT_RATIO
+        if (isDown && firstDown >= 0 && slot == firstDown + 1 && circ(pkBin, firstDownBin) <= 1 && r + firstDownRatio > 2 * DETECT_RATIO) {
             synchronise(pkBin)
             return true
         }
         firstDown = if (isDown) slot else -1
+        firstDownBin = pkBin
+        firstDownRatio = r
         if (++slot > SEEK_SLOTS) { sfdLost++; restart(at.toLong()) }
         return true
     }
@@ -340,6 +357,16 @@ class LoraReceiver(
     private fun readSymbol(at: Double): Int {
         dechirp(at, cfo, down = false)
         snrs += 10 * log10(ratio() / n)
+        // The runner-up, away from the peak's own skirt (its neighbours only leak from it).
+        var b2 = -1
+        var p2 = -1.0
+        for (k in 0 until n) {
+            if (circ(k, pkBin) <= 1) continue
+            val p = wRe[k].toDouble() * wRe[k] + wIm[k].toDouble() * wIm[k]
+            if (p > p2) { p2 = p; b2 = k }
+        }
+        altBin = b2
+        altMargin = kotlin.math.ln(pkPow / maxOf(p2, 1e-20)).toFloat()
         return pkBin
     }
 
@@ -355,6 +382,9 @@ class LoraReceiver(
                 start += shift.toDouble() * symLen * rho
                 header = h
                 symbols.clear(); symbols.addAll(bins)
+                // The header passed its own checksum: it is never mended.
+                alts.clear(); margins.clear()
+                repeat(bins.size) { k -> alts += bins[k]; margins += Float.MAX_VALUE }
                 needed = 8 + LoraPhy.payloadSymbols(sf, h.payloadLen, h.cr, h.hasCrc, ldro)
                 break
             }
@@ -373,14 +403,36 @@ class LoraReceiver(
         if (!available(at)) return false
         if (tooOld(at)) { restart(total - symLen); return true }
         symbols += readSymbol(at)
+        alts += altBin
+        margins += altMargin
         return true
     }
 
     private fun finish() {
-        val d = LoraPhy.decode(symbols, sf, ldro) ?: return
+        var d = LoraPhy.decode(symbols, sf, ldro) ?: return
+        if (!d.crcOk && d.header.hasCrc && symbols.size > 8) mend()?.let { d = it; framesMended++ }
         if (d.crcOk) framesOk++ else framesBad++
         val snr = snrs.sorted()[snrs.size / 2]
         onFrame(LoraFrame(d.payload, d.crcOk, d.header.hasCrc, d.header.cr, snr, cfo * bw / n, syncWord))
+    }
+
+    /**
+     * A payload CRC that fails: the least clear symbols (peak hardly above the runner-up) are tried with their
+     * runner-up bin, one then two at a time (see [SoftMend]); the payload CRC-16 decides. The preamble, sync word and
+     * header checksum already showed the frame is real.
+     */
+    private fun mend(): LoraPhy.Decoded? {
+        val count = symbols.size
+        val choice = ByteArray(count)
+        val margin = FloatArray(count) { margins.getOrElse(it) { Float.MAX_VALUE } }
+        val trial = ArrayList<Int>(symbols)
+        var got: LoraPhy.Decoded? = null
+        SoftMend.mend(choice, margin, 8, count, SoftMend.Gate.Synced) {
+            for (i in 8 until count) trial[i] = if (choice[i].toInt() == 0) symbols[i] else alts[i]
+            got = LoraPhy.decode(trial, sf, ldro)?.takeIf { it.crcOk }
+            got != null
+        }
+        return got
     }
 
     companion object {
@@ -392,6 +444,9 @@ class LoraReceiver(
         /** Peak over the mean of the other bins; noise alone rarely reaches it on several windows on the same bin. */
         private const val DETECT_RATIO = 6.0
         private const val BIN_TOLERANCE = 2
+        /** A slot that may be one of the two downchirps: this much stronger dechirped down than up, and this far out. */
+        private const val SFD_DOWN_OVER_UP = 1.5
+        private const val SFD_SLOT_RATIO = 3.5
         /** Preamble (up to 16 symbols after the first 5 seen), sync word and a margin. */
         private const val SEEK_SLOTS = 32
     }

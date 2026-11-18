@@ -418,6 +418,9 @@ class SigfoxReceiver(private val fs: Double, private val onUplink: (Sigfox.Uplin
     }
 
     private val recent = ArrayList<Triple<Sigfox.Uplink, Double, Double>>()
+    /** Uplinks whose CRC passed only once mended. */
+    var mended = 0
+        private set
 
     /** One carrier at [f0] Hz: the uplink and the carrier's frequency, or null. */
     fun demod(sr: FloatArray, si: FloatArray, f0: Double): Pair<Sigfox.Uplink, Double>? {
@@ -494,21 +497,47 @@ class SigfoxReceiver(private val fs: Double, private val onUplink: (Sigfox.Uplin
             c2r[i + 1] = c2r[i] + (dR[i] * dR[i] - dI[i] * dI[i]) / m
             c2i[i + 1] = c2i[i] + 2 * dR[i] * dI[i] / m
         }
+        // Each bit's projection on the carrier: its sign is the bit, its size how clear the bit is.
+        val margin = FloatArray(ns - 1)
         val bits = IntArray(ns - 1) { i ->
             val lo = maxOf(0, i - 15); val hi = minOf(ns - 1, i + 16)
             val turn = 0.5 * atan2(c2i[hi] - c2i[lo], c2r[hi] - c2r[lo])
-            if (dR[i] * cos(-turn) - dI[i] * sin(-turn) > 0) 1 else 0
+            val v = dR[i] * cos(-turn) - dI[i] * sin(-turn)
+            margin[i] = abs(v).toFloat()
+            if (v > 0) 1 else 0
         }
+        var best: Pair<IntArray, Int>? = null
+        var bestMatch = 0
         for (pol in 0..1) {
             val bb = if (pol == 0) bits else IntArray(bits.size) { bits[it] xor 1 }
             for (sh in -2..5) {
                 val st = n0 + sh
                 if (st < 0 || st + Sigfox.PREAMBLE > bb.size) continue
-                if ((0 until Sigfox.PREAMBLE).count { bb[st + it] == (if (it % 2 == 0) 1 else 0) } < 17) continue
+                val match = (0 until Sigfox.PREAMBLE).count { bb[st + it] == (if (it % 2 == 0) 1 else 0) }
+                if (match < 17) continue
                 Sigfox.parse(bb, st + Sigfox.PREAMBLE)?.let { return it to f0 + frq }
+                if (match > bestMatch) { bestMatch = match; best = bb to st }
             }
         }
-        return null
+        // No start passes the CRC: the best-matched one is mended in its container from its least clear bits.
+        val (bb, st) = best ?: return null
+        val pos = st + Sigfox.PREAMBLE
+        if (pos + Sigfox.FT_BITS > bb.size) return null
+        var ft = 0
+        for (i in 0 until Sigfox.FT_BITS) ft = (ft shl 1) or bb[pos + i]
+        val type = Sigfox.typeOf(ft, 1) ?: return null
+        val from = pos + Sigfox.FT_BITS
+        val to = from + 8 * type.container + 16
+        if (to > bb.size) return null
+        val soft = ByteArray(bb.size) { bb[it].toByte() }
+        val trial = bb.copyOf()
+        var got: Sigfox.Uplink? = null
+        SoftMend.mend(soft, margin, from, to, SoftMend.Gate.Synced) {
+            for (i in from until to) trial[i] = soft[i].toInt()
+            got = Sigfox.parse(trial, pos)
+            got != null
+        }
+        return got?.let { mended++; it to f0 + frq }
     }
 
     companion object {

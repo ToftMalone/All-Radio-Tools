@@ -156,4 +156,25 @@ class LoraTest {
         assertTrue(got[0].crcOk)
         assertArrayEquals(meshLike, got[0].payload)
     }
+
+    /** Frames with a good CRC and the right payload out of [trials] at [snrDb]; a wrong payload fails the test. */
+    private fun goodAt(sf: Int, snrDb: Double, trials: Int): Int {
+        var ok = 0
+        for (seed in 1L..trials.toLong()) {
+            val f = receive(meshLike, sf = sf, snrDb = snrDb, seed = seed, ppm = 3.0).filter { it.crcOk }
+            f.forEach { assertArrayEquals(meshLike, it.payload) }
+            if (f.isNotEmpty()) ok++
+        }
+        return ok
+    }
+
+    /** Near the threshold, mending runner-up symbols wins frames whose payload CRC failed; never a wrong one. */
+    @Test fun softMendingWinsFramesNeverForgesOne() {
+        SoftGain.measure("LoRa SF7 -10 dB", 3) { goodAt(7, -10.0, 30) }
+    }
+
+    /** The start of frame found on two agreeing downchirps: at -8.5 dB (−5.5 dB in the channel) nearly every frame. */
+    @Test fun weakFramesStillSynchronise() {
+        assertTrue(goodAt(7, -8.5, 30) >= 25)
+    }
 }

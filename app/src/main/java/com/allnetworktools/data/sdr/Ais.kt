@@ -215,7 +215,13 @@ class ChannelDown(offsetHz: Double, fs: Double, decim: Int, cutoff: Double, taps
  * frame has about one chance in 2400 of passing the CRC, and the callers' own checks (AX.25 addresses, AIS message
  * sizes) turn away nearly all of those.
  */
-class Hdlc(private val maxBits: Int = 1200, private val onFrame: (ByteArray, Int) -> Unit) {
+class Hdlc(
+    private val maxBits: Int = 1200,
+    /** G3RUH 9600 baud: after NRZI each bit is descrambled (x^17 + x^12 + 1) before HDLC. */
+    private val scrambled: Boolean = false,
+    private val onFrame: (ByteArray, Int) -> Unit,
+) {
+    private var sreg = 0
     private val buf = ByteArray(maxBits)
     private var n = 0
     private var ones = 0
@@ -243,8 +249,10 @@ class Hdlc(private val maxBits: Int = 1200, private val onFrame: (ByteArray, Int
         val i = (raw and (ring - 1).toLong()).toInt()
         levels!![i] = lv.toByte()
         sure!![i] = confidence
-        val b = if (lv == lastLevel) 1 else 0 // NRZI: no change is a 1
+        val b0 = if (lv == lastLevel) 1 else 0 // NRZI: no change is a 1
         lastLevel = lv
+        val b = if (scrambled) b0 xor ((sreg shr 11) and 1) xor ((sreg shr 16) and 1) else b0
+        if (scrambled) sreg = (sreg shl 1) or b0
         step(b)
         raw++
     }
@@ -260,7 +268,7 @@ class Hdlc(private val maxBits: Int = 1200, private val onFrame: (ByteArray, Int
         when (ones) {
             5 -> { ones = 0; return } // stuffed zero
             6 -> { // flag 0 111111 0: its leading zero and six ones were appended to the frame
-                if (inFrame && n >= 7) { n -= 7; if (!check() && levels != null && mending) mend(raw - 8, n) }
+                if (inFrame && n >= 7) { n -= 7; if (!check() && levels != null && mending && SoftMend.enabled) mend(raw - 8, n) }
                 inFrame = true; n = 0; ones = 0; frameStart = raw + 1; return
             }
         }
@@ -284,7 +292,9 @@ class Hdlc(private val maxBits: Int = 1200, private val onFrame: (ByteArray, Int
     private fun mend(lastIdx: Long, hardBits: Int) {
         val first = frameStart
         val count = lastIdx - first + 1
-        if (first < 1 || count < MIN_BITS || count > maxBits * 5 / 4 || raw - first >= ring) return
+        // Descrambling looks 17 bits back, so the levels before the frame are needed too.
+        val back = if (scrambled) 19 else 1
+        if (first < back || count < MIN_BITS || count > maxBits * 5 / 4 || raw - first + back >= ring) return
         val lv = levels!!
         val sr = sure!!
         val mask = (ring - 1).toLong()
@@ -301,10 +311,11 @@ class Hdlc(private val maxBits: Int = 1200, private val onFrame: (ByteArray, Int
         // Only a level close to the threshold is a suspect: one far from it is almost never the error.
         val suspect = median * SUSPECT
         // The WEAK least certain levels, kept sorted with an insertion pass. The last level is left alone: the closing
-        // flag's leading zero depends on it.
+        // flag's leading zero depends on it; scrambled, a level reaches 18 bits on, so the last 18 are.
         var k = 0
         var idx = first
-        while (idx < lastIdx) {
+        val lastFlip = if (scrambled) lastIdx - 18 else lastIdx - 1
+        while (idx <= lastFlip) {
             val c = sr[(idx and mask).toInt()]
             val off = (idx - first).toInt()
             if (c < suspect && (k < WEAK || c < sr[((first + pick[k - 1]) and mask).toInt()])) {
@@ -339,19 +350,31 @@ class Hdlc(private val maxBits: Int = 1200, private val onFrame: (ByteArray, Int
         }
     }
 
-    /** NRZI and destuffing of the levels into [tmp]; null when the levels hold an abort or a flag. */
+    /** NRZI, descrambling when [scrambled], and destuffing of the levels into [tmp]; null on an abort or a flag. */
     private fun redecode(first: Long, last: Long): Int? {
         val lv = levels!!
         val mask = (ring - 1).toLong()
         var prev = lv[((first - 1) and mask).toInt()].toInt()
+        var sr = 0
+        if (scrambled) {
+            // The descrambler's 17 bits before the frame, from the levels that carried them.
+            var p = lv[((first - 19) and mask).toInt()].toInt()
+            for (j in first - 18 until first) {
+                val c = lv[(j and mask).toInt()].toInt()
+                sr = (sr shl 1) or (if (c == p) 1 else 0)
+                p = c
+            }
+        }
         var o = 0
         var run = 0
         var idx = first
         while (idx <= last) {
             val cur = lv[(idx and mask).toInt()].toInt()
-            val b = if (cur == prev) 1 else 0
+            val b0 = if (cur == prev) 1 else 0
             prev = cur
             idx++
+            val b = if (scrambled) b0 xor ((sr shr 11) and 1) xor ((sr shr 16) and 1) else b0
+            if (scrambled) sr = (sr shl 1) or b0
             if (b == 1) {
                 if (++run > 5) return null
                 if (o >= maxBits) return null

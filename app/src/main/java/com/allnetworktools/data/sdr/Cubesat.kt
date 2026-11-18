@@ -1,6 +1,7 @@
 package com.allnetworktools.data.sdr
 
 import kotlin.math.PI
+import kotlin.math.abs
 import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.hypot
@@ -70,9 +71,10 @@ class G3ruhDemodulator(private val rate: Double, private val onFrame: (ByteArray
     private var boxPos = 0
     private var boxSum = 0f
     private val next = DoubleArray(PHASES) { spb + it * spb / PHASES }
-    private val prev = IntArray(PHASES)
-    private val shift = IntArray(PHASES)
-    private val hdlc = Array(PHASES) { Hdlc(Hdlc.AX25_MAX_BITS) { bits, count -> frame(bits, count) } }
+    // NRZI and descrambling happen in the HDLC reader, which keeps each level's margin to mend a frame.
+    private val hdlc = Array(PHASES) { Hdlc(Hdlc.AX25_MAX_BITS, scrambled = true) { bits, count -> frame(bits, count) } }
+    /** Frames that passed only once mended, across the phases. */
+    val mended get() = hdlc.sumOf { it.mended }
     private val recent = HashMap<Int, Long>()
 
     private fun frame(bits: ByteArray, count: Int) {
@@ -103,11 +105,7 @@ class G3ruhDemodulator(private val rate: Double, private val onFrame: (ByteArray
         val level = if (boxSum > 0) 1 else 0
         for (p in 0 until PHASES) {
             if (n >= next[p]) {
-                val raw = if (level == prev[p]) 1 else 0 // NRZI
-                prev[p] = level
-                val s = shift[p]
-                hdlc[p].bit(raw xor ((s shr 11) and 1) xor ((s shr 16) and 1))
-                shift[p] = (s shl 1) or raw
+                hdlc[p].level(level, abs(boxSum))
                 next[p] += spb
             }
         }
