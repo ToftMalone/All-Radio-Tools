@@ -233,6 +233,7 @@ private fun PageBody(vm: MainViewModel, net: Network, page: Page) {
             Network.Sdr -> com.allnetworktools.ui.pages.sdr.SdrDashboard(vm)
             Network.Nfc -> com.allnetworktools.ui.pages.nfc.NfcDashboard(vm)
             Network.WifiBt -> ToolsPage(net, vm)
+            Network.Ultrasound -> ToolsPage(net, vm)
         }
         Page.Tools -> ToolsPage(net, vm)
         is Page.ToolPage -> when (page.tool) {
@@ -242,6 +243,17 @@ private fun PageBody(vm: MainViewModel, net: Network, page: Page) {
             Tool.Handover -> {
                 val perms by vm.permissions.collectAsStateWithLifecycle()
                 com.allnetworktools.ui.pages.cell.HandoverTool(PermGroup.Notifications in perms)
+            }
+            Tool.UltraScan, Tool.UltraSonar, Tool.UltraLeak -> {
+                val perms by vm.permissions.collectAsStateWithLifecycle()
+                val actions = LocalActions.current
+                val ok = PermGroup.Microphone in perms
+                val ask = { actions.request(PermGroup.Microphone) }
+                when (page.tool) {
+                    Tool.UltraScan -> com.allnetworktools.ui.pages.ultra.UltraScanTool(ok, ask)
+                    Tool.UltraSonar -> com.allnetworktools.ui.pages.ultra.UltraSonarTool(ok, ask)
+                    else -> com.allnetworktools.ui.pages.ultra.UltraLeakTool(ok, ask)
+                }
             }
             Tool.DriveTest -> {
                 val perms by vm.permissions.collectAsStateWithLifecycle()

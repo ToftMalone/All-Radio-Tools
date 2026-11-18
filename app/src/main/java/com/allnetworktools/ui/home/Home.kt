@@ -283,6 +283,7 @@ private fun description(n: Network) = when (n) {
     Network.Sdr -> S(R.string.hackrf_spectrum_aircraft_ships_radiosondes_fpv)
     Network.Nfc -> S(R.string.nfc_home_description)
     Network.WifiBt -> S(R.string.pair_subtitle)
+    Network.Ultrasound -> S(R.string.ultra_home_description)
 }
 
 @Composable
@@ -330,6 +331,12 @@ private fun CardIcon(network: Network) {
             }
         }
         Network.WifiBt -> ShapeBadge(Sym.DirectionsCar, cookieShape(), 56.dp, roles.accent, roles.onAccent, 28.dp)
+        Network.Ultrasound -> Box(Modifier.size(56.dp), contentAlignment = Alignment.Center) {
+            // Sound waves spreading from a slowly turning clover.
+            PulseRing(roles.accent, 44.dp, periodMs = 1400)
+            Box(Modifier.size(46.dp).spinning(rememberSpin(26_000)).clip(cloverShape()).background(roles.accent))
+            Symbol(Sym.GraphicEq, size = 26.dp, filled = true, tint = roles.onAccent)
+        }
     }
 }
 

@@ -209,6 +209,7 @@ object Sym {
     const val Antenna = "settings_input_antenna"
     const val Usb = "usb"
     const val Mic = "mic"
+    const val MicOff = "mic_off"
     const val Dialpad = "dialpad"
     const val Undo = "undo"
     const val GridOn = "grid_on"

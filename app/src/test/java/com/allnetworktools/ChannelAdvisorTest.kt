@@ -50,4 +50,9 @@ class ChannelAdvisorTest {
         assertEquals(149, a.best!!.channel)
         assertTrue(a.worthMoving)
     }
+
+    @Test fun theOwnNetworkIsFoundByNameWhenItsAccessPointIsNotInTheScan() {
+        val a = ChannelAdvisor.advise(listOf(ap24("Maison", 6, -50, "aa:aa:aa:aa:aa:09"), ap24("Voisin", 6, -55)), WifiBand.B24, "\"Maison\"", "ff:ff:ff:ff:ff:ff")
+        assertEquals(6, a.current!!.channel)
+    }
 }

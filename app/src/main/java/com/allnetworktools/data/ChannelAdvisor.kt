@@ -75,8 +75,11 @@ object ChannelAdvisor {
      */
     fun advise(aps: List<WifiAp>, band: WifiBand, ownSsid: String?, ownBssid: String?): ChannelAdvice {
         if (band == WifiBand.B6) return ChannelAdvice(emptyList(), null)
+        val wanted = ownSsid?.removeSurrounding("\"")?.takeIf { it.isNotEmpty() }
+        // The access point the phone is on; else, the strongest one of its network on this band (a mesh, a repeater).
         val own = aps.firstOrNull { it.bssid.equals(ownBssid, true) }?.takeIf { it.band == band }
-        val ssid = own?.ssid ?: ownSsid?.removeSurrounding("\"")
+            ?: wanted?.let { s -> aps.filter { it.band == band && it.ssid == s }.maxByOrNull { it.rssi } }
+        val ssid = own?.ssid ?: wanted
         val others = aps.filter { it.band == band && !(ssid != null && ssid.isNotEmpty() && it.ssid == ssid) }
         val width = when (band) {
             WifiBand.B24 -> 20

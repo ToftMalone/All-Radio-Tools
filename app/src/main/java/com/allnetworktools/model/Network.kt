@@ -15,6 +15,7 @@ enum class Network(
     Gnss("GNSS", Sym.SatelliteAlt, S(R.string.sky)),
     Nfc("NFC", Sym.Nfc, S(R.string.nfc_featured_short)),
     Sdr("SDR", Sym.Antenna, S(R.string.spectrum)),
+    Ultrasound(S(R.string.ultra_network), Sym.GraphicEq, S(R.string.ultra_featured_short)),
     /** Wi-Fi and Bluetooth together, picked by holding both cards at once: no card of its own on the home grid. */
     WifiBt("Wi-Fi + Bluetooth", Sym.DirectionsCar, "Wardriving"),
     ;
@@ -23,7 +24,7 @@ enum class Network(
     val inGrid: Boolean get() = this != WifiBt
 
     /** Dock tabs: the pair of radios has no dashboard of its own. */
-    val hasDashboard: Boolean get() = this != WifiBt
+    val hasDashboard: Boolean get() = this != WifiBt && this != Ultrasound
 
     // Getters rather than constructor arguments: Tool's entries reference Network, so eager
     // initialisation in both directions would leave one side null.
@@ -38,6 +39,7 @@ enum class Network(
             Sdr -> Tool.Spectrum
             Nfc -> Tool.NfcRead
             WifiBt -> Tool.Wardriving
+            Ultrasound -> Tool.UltraScan
         }
 
     /** Tool reachable directly from the dock. */
@@ -148,6 +150,9 @@ enum class Tool(
     Wardriving(Network.WifiBt, "Wardriving", Sym.DirectionsCar, Sym.Settings, implemented = true),
     RemoteId(Network.WifiBt, S(R.string.drone_detector), Sym.Drone),
     HiddenCam(Network.WifiBt, S(R.string.cam_title), Sym.Videocam),
+    UltraScan(Network.Ultrasound, S(R.string.ultra_scan_title), Sym.GraphicEq, implemented = true),
+    UltraSonar(Network.Ultrasound, S(R.string.ultra_sonar_title), Sym.Radar),
+    UltraLeak(Network.Ultrasound, S(R.string.ultra_leak_title), Sym.Hearing),
     WardrivingSettings(Network.WifiBt, S(R.string.wardriving_settings), Sym.Settings, parent = ToolParent.Other(Wardriving)),
     ;
 

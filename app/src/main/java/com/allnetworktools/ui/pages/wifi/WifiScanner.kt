@@ -323,7 +323,8 @@ private fun BestChannelCard(all: List<WifiAp>, band: WifiBand, ownSsid: String?,
                         verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp),
                     ) {
                         Box(Modifier.size(8.dp).clip(CircleShape).background(loadColor(c.load)))
-                        Text("${label(c)} · ${loadName(c.load)}", style = rf(12, 16, 500))
+                        val short = if (c.lastChannel != c.channel) "${c.channel}–${c.lastChannel}" else S(R.string.wifi_chip_channel, c.channel)
+                        Text("$short · ${loadName(c.load)}", style = rf(12, 16, 500))
                     }
                 }
             }
