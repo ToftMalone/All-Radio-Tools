@@ -207,15 +207,6 @@ private fun groups(net: Network, connectedDevice: String?, servingLabel: String?
             ),
         ),
     )
-    Network.Ultrasound -> listOf(
-        ToolGroup(
-            S(R.string.tools),
-            listOf(
-                ToolEntry(Tool.UltraSonar, S(R.string.ultra_sonar_title), S(R.string.ultra_sonar_subtitle)),
-                ToolEntry(Tool.UltraLeak, S(R.string.ultra_leak_title), S(R.string.ultra_leak_subtitle)),
-            ),
-        ),
-    )
     Network.WifiBt -> listOf(
         ToolGroup(
             S(R.string.security_2),
@@ -235,7 +226,6 @@ private fun featuredSubtitle(net: Network, servingLabel: String?, radio: com.all
     Network.Sdr -> com.allnetworktools.ui.pages.sdr.spectrumSubtitle(radio)
     Network.Nfc -> S(R.string.nfc_reader_sub)
     Network.WifiBt -> S(R.string.wardriving_subtitle)
-    Network.Ultrasound -> S(R.string.ultra_scan_subtitle)
 }
 
 @Composable
@@ -247,7 +237,6 @@ private fun featuredBadge(net: Network, vm: MainViewModel): String? = when (net)
     Network.Sdr -> vm.tools.spectrum.let { if (it.running && it.tunedHz > 0) "%.1f MHz".format(java.util.Locale.getDefault(), it.tunedHz / 1e6) else null }
     Network.Nfc -> vm.tools.nfc.history.size.takeIf { it > 0 }?.let { P(R.plurals.p_nfc_tags_read, it, it) }
     Network.WifiBt -> com.allnetworktools.data.Wardrive.state.collectAsStateWithLifecycle().value.let { if (it.running) S(R.string.wardriving_recording) else null }
-    Network.Ultrasound -> null
 }
 
 @Composable

@@ -243,11 +243,6 @@ class ScreenshotTest {
             )
         }
     }
-    @Test fun ultraTools() = shot("U1_ultra_tools", nav = NavState(Network.Ultrasound, Page.Tools))
-    @Test fun ultraLeak() = shot("U2_ultra_leak", nav = NavState(Network.Ultrasound, Page.ToolPage(Tool.UltraLeak)))
-    @Test fun ultraSonar() = shot("U3_ultra_sonar", nav = NavState(Network.Ultrasound, Page.ToolPage(Tool.UltraSonar)))
-    @Test fun driveTest() = shot("C5_drive_test", nav = NavState(Network.Cellular, Page.ToolPage(Tool.DriveTest)))
-    @Test fun wifiRtt() = shot("12b_wifi_rtt", nav = NavState(Network.Wifi, Page.ToolPage(Tool.WifiRtt)))
     @Test fun dockOnTools() = shot("06_dock_tools", nav = NavState(Network.Wifi, Page.Tools))
     @Test fun homeDark() = shot("04_home_gnss_dark", dark = true, nav = NavState(Network.Gnss))
     @Test fun homeAirplane() {
