@@ -63,6 +63,7 @@ private fun groups(net: Network, connectedDevice: String?, servingLabel: String?
             listOf(
                 ToolEntry(Tool.Speed, S(R.string.speed_test), S(R.string.ping_download_upload)),
                 ToolEntry(Tool.Coverage, S(R.string.coverage_map), S(R.string.the_signal_room_by_room)),
+                ToolEntry(Tool.WifiRtt, S(R.string.rtt_title), S(R.string.rtt_subtitle)),
                 ToolEntry(Tool.Lan, S(R.string.lan_devices), S(R.string.host_discovery)),
                 ToolEntry(Tool.WifiDirect, "Wi-Fi Direct", S(R.string.devices_connected_directly)),
                 ToolEntry(Tool.WifiAware, "Wi-Fi Aware", S(R.string.wi_fi_aware_subtitle)),
@@ -104,6 +105,7 @@ private fun groups(net: Network, connectedDevice: String?, servingLabel: String?
             listOf(
                 ToolEntry(Tool.Neighbors, S(R.string.neighbour_cells), S(R.string.nr_and_lte_cells_seen_by)),
                 ToolEntry(Tool.Handover, S(R.string.handover_log), S(R.string.cell_changes_on_the_move_csv)),
+                ToolEntry(Tool.DriveTest, S(R.string.drive_title), S(R.string.drive_subtitle)),
             ),
         ),
         ToolGroup(

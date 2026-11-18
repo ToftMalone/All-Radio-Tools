@@ -75,6 +75,7 @@ enum class Tool(
     WifiDirect(Network.Wifi, "Wi-Fi Direct", Sym.WifiTethering),
     WifiAware(Network.Wifi, "Wi-Fi Aware", Sym.Smartphone),
     Coverage(Network.Wifi, S(R.string.coverage_map), Sym.GridOn),
+    WifiRtt(Network.Wifi, S(R.string.rtt_title), Sym.Straighten),
 
     BleScan(Network.Bluetooth, S(R.string.ble_scanner), Sym.BluetoothSearching, implemented = true),
     Gatt(Network.Bluetooth, S(R.string.ble_device), Sym.AccountTree, Sym.MoreVert),
@@ -90,6 +91,7 @@ enum class Tool(
     CellDetail(Network.Cellular, S(R.string.serving_cell), Sym.CellTower, Sym.ContentCopy, implemented = true),
     Neighbors(Network.Cellular, S(R.string.neighbour_cells), Sym.CellTower, implemented = true),
     Handover(Network.Cellular, S(R.string.handover_log), Sym.SwapCalls),
+    DriveTest(Network.Cellular, S(R.string.drive_title), Sym.Route),
     FakeCells(Network.Cellular, S(R.string.fake_cell_detector), Sym.Shield),
     // The Wi-Fi Internet tools again, for mobile data.
     CellSpeed(Network.Cellular, S(R.string.speed_test), Sym.Speed, Sym.History),

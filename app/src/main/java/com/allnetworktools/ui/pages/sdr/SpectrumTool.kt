@@ -136,6 +136,7 @@ fun SpectrumTool(vm: MainViewModel) {
                         S(R.string.spectrum_marker, mhzLabel(marker.toDouble())) + (level?.let { " · " + "%.0f dBFS".format(Locale.getDefault(), it) } ?: ""),
                         style = rf(15, 20, 600, tnum = true),
                     )
+                    SignalGuess(vm, c, db, markerAt, marker, center, span)
                     ToolButtons(
                         ToolButton("− ${markerStepLabel(c.markerStepHz())}", Sym.ChevronLeft, BtnKind.OutlineOnSurface) { c.nudgeMarker(-1, center.toLong()) },
                         ToolButton("+ ${markerStepLabel(c.markerStepHz())}", Sym.ChevronRight, BtnKind.OutlineOnSurface) { c.nudgeMarker(1, center.toLong()) },
@@ -271,5 +272,119 @@ private fun WaterfallView(c: SpectrumController) {
             }
         }
         Text(S(R.string.waterfall_newest_at_the_top), Modifier.align(Alignment.BottomStart).padding(10.dp), style = rf(11, 14), color = Color.White.copy(alpha = 0.7f))
+    }
+}
+
+/** Names and descriptions of [SignalId.Kinds], by key. */
+private val SignalTexts: Map<String, Pair<Int, Int>> = mapOf(
+    "fm" to (R.string.sig_name_fm to R.string.sig_fm),
+    "dab" to (R.string.sig_name_dab to R.string.sig_dab),
+    "dvbt" to (R.string.sig_name_dvbt to R.string.sig_dvbt),
+    "sw" to (R.string.sig_name_sw to R.string.sig_sw),
+    "air" to (R.string.sig_name_air to R.string.sig_air),
+    "acars" to (R.string.sig_name_acars to R.string.sig_acars),
+    "vdl2" to (R.string.sig_name_vdl2 to R.string.sig_vdl2),
+    "adsb" to (R.string.sig_name_adsb to R.string.sig_adsb),
+    "modes_up" to (R.string.sig_name_modes_up to R.string.sig_modes_up),
+    "milair" to (R.string.sig_name_milair to R.string.sig_milair),
+    "flarm" to (R.string.sig_name_flarm to R.string.sig_flarm),
+    "marine" to (R.string.sig_name_marine to R.string.sig_marine),
+    "dsc" to (R.string.sig_name_dsc to R.string.sig_dsc),
+    "ais" to (R.string.sig_name_ais to R.string.sig_ais),
+    "sarsat" to (R.string.sig_name_sarsat to R.string.sig_sarsat),
+    "meteor" to (R.string.sig_name_meteor to R.string.sig_meteor),
+    "wxsat" to (R.string.sig_name_wxsat to R.string.sig_wxsat),
+    "sonde" to (R.string.sig_name_sonde to R.string.sig_sonde),
+    "gnss" to (R.string.sig_name_gnss to R.string.sig_gnss),
+    "iridium" to (R.string.sig_name_iridium to R.string.sig_iridium),
+    "inmarsat" to (R.string.sig_name_inmarsat to R.string.sig_inmarsat),
+    "amsat" to (R.string.sig_name_amsat to R.string.sig_amsat),
+    "ham_hf" to (R.string.sig_name_ham_hf to R.string.sig_ham_hf),
+    "ft8" to (R.string.sig_name_ft8 to R.string.sig_ft8),
+    "cb" to (R.string.sig_name_cb to R.string.sig_cb),
+    "ham2m" to (R.string.sig_name_ham2m to R.string.sig_ham2m),
+    "aprs" to (R.string.sig_name_aprs to R.string.sig_aprs),
+    "ham70" to (R.string.sig_name_ham70 to R.string.sig_ham70),
+    "lora_aprs" to (R.string.sig_name_lora_aprs to R.string.sig_lora_aprs),
+    "ham23" to (R.string.sig_name_ham23 to R.string.sig_ham23),
+    "pmr446" to (R.string.sig_name_pmr446 to R.string.sig_pmr446),
+    "ism433" to (R.string.sig_name_ism433 to R.string.sig_ism433),
+    "tpms" to (R.string.sig_name_tpms to R.string.sig_tpms),
+    "srd868" to (R.string.sig_name_srd868 to R.string.sig_srd868),
+    "audio863" to (R.string.sig_name_audio863 to R.string.sig_audio863),
+    "lorawan" to (R.string.sig_name_lorawan to R.string.sig_lorawan),
+    "sigfox" to (R.string.sig_name_sigfox to R.string.sig_sigfox),
+    "meshtastic" to (R.string.sig_name_meshtastic to R.string.sig_meshtastic),
+    "meshcore" to (R.string.sig_name_meshcore to R.string.sig_meshcore),
+    "zwave" to (R.string.sig_name_zwave to R.string.sig_zwave),
+    "wmbus" to (R.string.sig_name_wmbus to R.string.sig_wmbus),
+    "pocsag" to (R.string.sig_name_pocsag to R.string.sig_pocsag),
+    "ism915" to (R.string.sig_name_ism915 to R.string.sig_ism915),
+    "dect" to (R.string.sig_name_dect to R.string.sig_dect),
+    "wifi24" to (R.string.sig_name_wifi24 to R.string.sig_wifi24),
+    "ble" to (R.string.sig_name_ble to R.string.sig_ble),
+    "zigbee" to (R.string.sig_name_zigbee to R.string.sig_zigbee),
+    "ant" to (R.string.sig_name_ant to R.string.sig_ant),
+    "wifi5" to (R.string.sig_name_wifi5 to R.string.sig_wifi5),
+    "fpv" to (R.string.sig_name_fpv to R.string.sig_fpv),
+    "gsmr" to (R.string.sig_name_gsmr to R.string.sig_gsmr),
+    "dl900" to (R.string.sig_name_dl900 to R.string.sig_dl900),
+    "dl800" to (R.string.sig_name_dl800 to R.string.sig_dl800),
+    "dl700" to (R.string.sig_name_dl700 to R.string.sig_dl700),
+    "dl1800" to (R.string.sig_name_dl1800 to R.string.sig_dl1800),
+    "dl2100" to (R.string.sig_name_dl2100 to R.string.sig_dl2100),
+    "dl2600" to (R.string.sig_name_dl2600 to R.string.sig_dl2600),
+    "nr3500" to (R.string.sig_name_nr3500 to R.string.sig_nr3500),
+    "ul" to (R.string.sig_name_ul to R.string.sig_ul),
+    "tetra" to (R.string.sig_name_tetra to R.string.sig_tetra),
+    "pmse" to (R.string.sig_name_pmse to R.string.sig_pmse)
+)
+
+/** What the signal under the marker probably is, with a way to the tool that decodes it. */
+@Composable
+private fun SignalGuess(vm: MainViewModel, c: SpectrumController, db: FloatArray?, markerAt: Float?, marker: Long, center: Double, span: Double) {
+    val id = com.allnetworktools.data.sdr.SignalId
+    val m = remember(db, markerAt, marker, center, span) {
+        if (db != null && markerAt != null) id.measure(db, markerAt, center, span)
+        else com.allnetworktools.data.sdr.SignalId.Measure(marker, 0f, null, span / 1024, false)
+    }
+    val guesses = remember(m) { id.identify(m) }
+    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+        Text(
+            when {
+                !m.present -> S(R.string.sig_no_signal)
+                m.bwHz != null && m.truncated -> S(R.string.sig_width_min, id.widthLabel(m.bwHz))
+                m.bwHz != null -> S(R.string.sig_width, id.widthLabel(m.bwHz))
+                else -> S(R.string.sig_too_narrow, id.widthLabel(m.resolutionHz * 3))
+            },
+            style = rf(12, 16), color = cs.onSurfaceVariant,
+        )
+        if (guesses.isEmpty()) {
+            Text(S(R.string.sig_unknown), style = rf(13, 18))
+            return@Column
+        }
+        Text(S(R.string.sig_title), style = rf(13, 18, 600), color = AntTheme.accent.accent)
+        guesses.forEach { g ->
+            val t = SignalTexts[g.kind.key]
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.Top) {
+                Column(Modifier.weight(1f)) {
+                    Text(t?.let { S(it.first) } ?: g.kind.name, style = rf(14, 20, 600))
+                    t?.let { Text(S(it.second), style = rf(12, 16), color = cs.onSurfaceVariant) }
+                }
+                Text("%.0f %%".format(Locale.getDefault(), g.confidence * 100), style = rf(13, 18, 600, tnum = true))
+            }
+        }
+        // The decoder of the likeliest kind, when the app has one (the Listen tool has its own button above).
+        val best = guesses.first()
+        val tool = best.kind.tool
+        if (tool != null && tool != com.allnetworktools.model.Tool.Listen) {
+            ToolButtons(
+                ToolButton(S(R.string.sig_open, tool.title), Sym.OpenInNew, BtnKind.Outline) {
+                    if (c.running || c.starting) c.stop()
+                    vm.navigate { it.copy(page = com.allnetworktools.Page.ToolPage(tool)) }
+                },
+            )
+        }
+        Text(S(R.string.sig_note), style = rf(11, 14), color = cs.onSurfaceVariant)
     }
 }

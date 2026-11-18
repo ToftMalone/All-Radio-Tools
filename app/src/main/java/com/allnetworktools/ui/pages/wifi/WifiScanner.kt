@@ -165,6 +165,7 @@ fun WifiScanner(vm: MainViewModel) {
             }
             ChannelChart(list, band, conn?.bssid)
         }
+        if (scan != null) BestChannelCard(all, band, conn?.ssid, conn?.bssid)
         if (scan != null && list.isEmpty()) {
             EmptyStateCard(Sym.WifiFind, S(R.string.no_network_on_ghz, band.label), S(R.string.the_scan_goes_on_try_another))
         }
@@ -266,6 +267,68 @@ private fun ScanItem(ap: WifiAp, own: Boolean, index: Int, count: Int) {
                 Symbol(if (ap.security == "Ouvert") Sym.LockOpen else Sym.Lock, size = 13.dp, filled = true, tint = if (own) fg else cs.onSurfaceVariant)
                 Text(ap.security, style = rf(11, 14), color = if (own) fg else cs.onSurfaceVariant)
             }
+        }
+    }
+}
+
+/** Which channel to set the box on in [band], from what the scan heard; the user's own network is left out. */
+@Composable
+private fun BestChannelCard(all: List<WifiAp>, band: WifiBand, ownSsid: String?, ownBssid: String?) {
+    val advice = remember(all, band, ownSsid, ownBssid) { com.allnetworktools.data.ChannelAdvisor.advise(all, band, ownSsid, ownBssid) }
+    val net = AntTheme.net
+    fun loadName(l: com.allnetworktools.data.ChannelLoad) = S(
+        when (l) {
+            com.allnetworktools.data.ChannelLoad.Free -> R.string.wifi_load_free
+            com.allnetworktools.data.ChannelLoad.Calm -> R.string.wifi_load_calm
+            com.allnetworktools.data.ChannelLoad.Busy -> R.string.wifi_load_busy
+            com.allnetworktools.data.ChannelLoad.Saturated -> R.string.wifi_load_saturated
+        },
+    )
+    fun loadColor(l: com.allnetworktools.data.ChannelLoad) = when (l) {
+        com.allnetworktools.data.ChannelLoad.Free -> net.good
+        com.allnetworktools.data.ChannelLoad.Calm -> net.good
+        com.allnetworktools.data.ChannelLoad.Busy -> net.fair
+        com.allnetworktools.data.ChannelLoad.Saturated -> net.poor
+    }
+    fun label(c: com.allnetworktools.data.ChannelChoice) =
+        if (c.lastChannel != c.channel) S(R.string.wifi_block, c.channel, c.lastChannel, c.widthMhz) else S(R.string.wifi_channel_n, c.channel)
+    SectionCard {
+        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                Symbol(Sym.Tune, size = 22.dp, tint = net.wifi.accent)
+                Text(S(R.string.wifi_best_channel), style = rf(14, 20, 600))
+            }
+            val best = advice.best
+            if (band == WifiBand.B6 || best == null) {
+                Text(S(R.string.wifi_best_6ghz), style = rf(13, 18), color = cs.onSurfaceVariant)
+                return@Column
+            }
+            val current = advice.current
+            Text(
+                when {
+                    current == null -> S(R.string.wifi_best_not_connected, label(best))
+                    advice.worthMoving -> S(R.string.wifi_best_move, label(best), Math.round(current.loadDbm - best.loadDbm).toInt())
+                    else -> S(R.string.wifi_best_stay, label(current))
+                },
+                style = rf(15, 20, 600),
+            )
+            if (current != null) Text(
+                S(R.string.wifi_best_current, label(current), loadName(current.load), current.networks),
+                style = rf(13, 18), color = cs.onSurfaceVariant,
+            )
+            androidx.compose.foundation.layout.FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                advice.ranked.take(4).forEach { c ->
+                    Row(
+                        Modifier.clip(androidx.compose.foundation.shape.RoundedCornerShape(12.dp)).background(cs.surfaceContainerHigh).padding(horizontal = 10.dp, vertical = 6.dp),
+                        verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp),
+                    ) {
+                        Box(Modifier.size(8.dp).clip(CircleShape).background(loadColor(c.load)))
+                        Text("${label(c)} · ${loadName(c.load)}", style = rf(12, 16, 500))
+                    }
+                }
+            }
+            if (best.dfs) Text(S(R.string.wifi_best_dfs), style = rf(12, 16), color = cs.onSurfaceVariant)
+            Text(S(R.string.wifi_best_note), style = rf(12, 16), color = cs.onSurfaceVariant)
         }
     }
 }

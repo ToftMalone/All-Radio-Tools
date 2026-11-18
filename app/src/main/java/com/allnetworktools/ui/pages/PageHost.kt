@@ -243,6 +243,15 @@ private fun PageBody(vm: MainViewModel, net: Network, page: Page) {
                 val perms by vm.permissions.collectAsStateWithLifecycle()
                 com.allnetworktools.ui.pages.cell.HandoverTool(PermGroup.Notifications in perms)
             }
+            Tool.DriveTest -> {
+                val perms by vm.permissions.collectAsStateWithLifecycle()
+                val actions = LocalActions.current
+                com.allnetworktools.ui.pages.cell.DriveTestTool(
+                    permitted = perms.location && perms.phone,
+                    onGrant = { actions.request(if (!perms.location) PermGroup.Location else PermGroup.Phone) },
+                    notificationsGranted = PermGroup.Notifications in perms,
+                )
+            }
             Tool.FakeCells -> {
                 val perms by vm.permissions.collectAsStateWithLifecycle()
                 val actions = LocalActions.current
@@ -319,6 +328,17 @@ private fun PageBody(vm: MainViewModel, net: Network, page: Page) {
                     if (modern) S(R.string.android_needs_the_nearby_devices_permission)
                     else S(R.string.android_needs_the_location_permission_to),
                 ) { actions.request(if (modern) PermGroup.Nearby else PermGroup.Location) }
+            }
+            Tool.WifiRtt -> {
+                val perms by vm.permissions.collectAsStateWithLifecycle()
+                val actions = LocalActions.current
+                // Ranging needs precise location, and on Android 13+ "Nearby devices" too.
+                val modern = android.os.Build.VERSION.SDK_INT >= 33
+                com.allnetworktools.ui.pages.wifi.WifiRttTool(
+                    permitted = perms.location && (!modern || perms.nearby),
+                    permissionText = S(R.string.rtt_permission),
+                    onFix = { actions.request(if (!perms.location) PermGroup.Location else PermGroup.Nearby) },
+                )
             }
             Tool.WifiAware -> {
                 val perms by vm.permissions.collectAsStateWithLifecycle()

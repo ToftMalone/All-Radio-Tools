@@ -91,6 +91,11 @@
             android:foregroundServiceType="connectedDevice" />
 
         <service
+            android:name=".data.DriveTestService"
+            android:exported="false"
+            android:foregroundServiceType="location" />
+
+        <service
             android:name=".data.CellWatchService"
             android:exported="false"
             android:foregroundServiceType="location" />
