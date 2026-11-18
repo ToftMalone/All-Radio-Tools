@@ -3302,4 +3302,11 @@ Záplava je proud falešných rámců párování, který vyvolá vyskakovací o
         <item quantity="many">"%2$d skrytého nástroje: %1$s je nemůže spustit"</item>
         <item quantity="other">"%2$d skrytých nástrojů: %1$s je nemůže spustit"</item>
     </plurals>
+    <string name="drive_notification">"%1$s km · %2$d bodů"</string>
+    <string name="rtt_success">"%1$d/%2$d měření"</string>
+    <string name="meshtastic_band_433">"433 MHz (EU)"</string>
+    <string name="meshtastic_band_868">"868 MHz (EU)"</string>
+    <string name="sig_name_nr3500">"5G 3,5 GHz"</string>
+    <string name="sig_name_wifi24">"Wi-Fi 2,4 GHz"</string>
+    <string name="sstv_iss">"ISS"</string>
 </resources>

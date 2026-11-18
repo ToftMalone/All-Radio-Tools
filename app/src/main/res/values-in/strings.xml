@@ -3074,4 +3074,11 @@ Banjir adalah aliran frame pemasangan palsu yang memunculkan pop-up di setiap po
     <plurals name="p_sdr_tools_hidden">
         <item quantity="other">"%2$d alat disembunyikan: %1$s tidak bisa menjalankannya"</item>
     </plurals>
+    <string name="drive_notification">"%1$s km · %2$d titik"</string>
+    <string name="rtt_success">"%1$d/%2$d pengukuran"</string>
+    <string name="meshtastic_band_433">"433 MHz (UE)"</string>
+    <string name="meshtastic_band_868">"868 MHz (UE)"</string>
+    <string name="sig_name_nr3500">"5G 3,5 GHz"</string>
+    <string name="sig_name_wifi24">"Wi-Fi 2,4 GHz"</string>
+    <string name="sstv_iss">"ISS"</string>
 </resources>

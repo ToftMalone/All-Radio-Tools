@@ -3150,4 +3150,11 @@ Een vloed is een stroom nep-koppelframes die op elke telefoon in de buurt een po
         <item quantity="one">"%2$d tool verborgen: de %1$s kan hem niet draaien"</item>
         <item quantity="other">"%2$d tools verborgen: de %1$s kan ze niet draaien"</item>
     </plurals>
+    <string name="drive_notification">"%1$s km · %2$d punten"</string>
+    <string name="rtt_success">"%1$d/%2$d metingen"</string>
+    <string name="meshtastic_band_433">"433 MHz (EU)"</string>
+    <string name="meshtastic_band_868">"868 MHz (EU)"</string>
+    <string name="sig_name_nr3500">"5G 3,5 GHz"</string>
+    <string name="sig_name_wifi24">"Wi-Fi 2,4 GHz"</string>
+    <string name="sstv_iss">"ISS"</string>
 </resources>

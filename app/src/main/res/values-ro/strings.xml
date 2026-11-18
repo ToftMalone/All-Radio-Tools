@@ -3226,4 +3226,11 @@ Un val este un flux de cadre de asociere false care face să apară un pop-up pe
         <item quantity="few">"%2$d instrumente ascunse: %1$s nu le poate rula"</item>
         <item quantity="other">"%2$d de instrumente ascunse: %1$s nu le poate rula"</item>
     </plurals>
+    <string name="drive_notification">"%1$s km · %2$d puncte"</string>
+    <string name="rtt_success">"%1$d/%2$d măsurători"</string>
+    <string name="meshtastic_band_433">"433 MHz (UE)"</string>
+    <string name="meshtastic_band_868">"868 MHz (UE)"</string>
+    <string name="sig_name_nr3500">"5G 3,5 GHz"</string>
+    <string name="sig_name_wifi24">"Wi-Fi 2,4 GHz"</string>
+    <string name="sstv_iss">"SSI"</string>
 </resources>
