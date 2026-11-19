@@ -3136,11 +3136,4 @@
     <string name="cen_ooni_failed">"OONIリストを読み込めませんでした"</string>
     <string name="cen_country">"国（2文字）"</string>
     <string name="cen_how">"OONI Probe と同じく、このツールはスマートフォンから現在のネットワーク経由で、Webサイト、メッセージアプリ、検閲回避手段がブロックされていないかを調べます。各サイトをネットワークのDNSと、ネットワークが読むことも改ざんすることもできない暗号化DNS（DoH）で名前解決し、TCPとTLSで接続します。結果はブロックの場所を示します：DNS（応答なし、または偽のアドレス）、IPアドレス、サイト名を含むTLSハンドシェイク（別の名前で同じハンドシェイクが通ることで確認するSNIフィルタリング）、または傍受（スマートフォンが信頼しない証明書）。メッセージアプリ、Tor、ブリッジ、Snowflake、暗号化DNS、VPNはそれぞれのサーバーでテストします。どこでもダウンしているサイトはIPブロックのように見えます。OONIには何も送信せず、結果はスマートフォンに残ります。"</string>
-    <string name="cen_suite_vowifi">"Wi-Fi通話"</string>
-    <string name="cen_no_sim">"SIMカードなし"</string>
-    <string name="cen_how_vowifi">"Wi-Fi通話：スマートフォンは、SIMから決まる名前（epdg.epc.mncXXX.mccYYY.pub.3gppnetwork.org）の事業者ゲートウェイ（ePDG）にIPsec（IKEv2、UDPポート500と4500）で接続します。テストはこの名前を解決し、両方のポートでIKEv2のやり取りを始めます。応答があればWi-Fi通話が通る可能性があります。別の名前を使う事業者もあり、その場合は判定できません。"</string>
-    <string name="cen_suite_volte">"VoLTE通話"</string>
-    <string name="cen_v_carrier_off">"この端末では無効"</string>
-    <string name="cen_v_fallback">"2G/3Gにフォールバック"</string>
-    <string name="cen_how_volte">"VoLTE：この通話は事業者専用のIMS経路を使い、アプリからは到達できません。テストはSIMごとにAndroidが把握している情報を読み取ります：事業者設定がこの端末にVoLTEを提供しているか（未承認の端末では無効にされます）、Androidが公開していればVoLTEスイッチ、そして音声サービスが登録されているネットワーク：LTEか5GならVoLTE / VoNRが動作中、2Gか3Gなら通話はそちらにフォールバックします。"</string>
 </resources>

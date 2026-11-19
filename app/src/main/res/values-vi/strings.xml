@@ -3136,11 +3136,4 @@ Một đợt lũ là dòng khung ghép đôi giả làm bật cửa sổ trên m
     <string name="cen_ooni_failed">"Không tải được danh sách OONI"</string>
     <string name="cen_country">"Quốc gia (hai chữ cái)"</string>
     <string name="cen_how">"Giống OONI Probe, công cụ này kiểm tra từ điện thoại của bạn, qua mạng hiện tại, xem các trang web, ứng dụng nhắn tin và cách vượt kiểm duyệt có bị chặn không. Mỗi trang được phân giải bằng DNS của mạng và bằng DNS mã hóa (DoH) mà mạng không đọc hay sửa được, rồi kết nối qua TCP và TLS. Kết quả cho biết chặn ở đâu: DNS (không trả lời hoặc địa chỉ giả), địa chỉ IP, bắt tay TLS nêu tên trang (lọc SNI, được xác nhận khi cùng bắt tay đó với tên khác thành công) hoặc chặn bắt (chứng chỉ điện thoại không tin). Ứng dụng nhắn tin cùng Tor, cầu nối, Snowflake, DNS mã hóa và VPN được kiểm tra trên chính máy chủ của chúng. Trang sập ở mọi nơi trông giống chặn IP. Không gì được gửi tới OONI và kết quả ở lại trên điện thoại."</string>
-    <string name="cen_suite_vowifi">"Gọi qua Wi-Fi"</string>
-    <string name="cen_no_sim">"Không có thẻ SIM"</string>
-    <string name="cen_how_vowifi">"Gọi qua Wi-Fi: điện thoại kết nối cổng của nhà mạng (ePDG), có tên lấy từ SIM (epdg.epc.mncXXX.mccYYY.pub.3gppnetwork.org), qua IPsec (IKEv2, cổng UDP 500 và 4500). Bài kiểm tra phân giải tên đó và mở trao đổi IKEv2 trên cả hai cổng: có trả lời nghĩa là cuộc gọi qua Wi-Fi có thể đi qua. Một số nhà mạng dùng tên khác; khi đó bài kiểm tra không kết luận được."</string>
-    <string name="cen_suite_volte">"Cuộc gọi VoLTE"</string>
-    <string name="cen_v_carrier_off">"Tắt cho điện thoại này"</string>
-    <string name="cen_v_fallback">"Lùi về 2G/3G"</string>
-    <string name="cen_how_volte">"VoLTE: các cuộc gọi này dùng kênh IMS riêng của nhà mạng, không ứng dụng nào truy cập được. Bài kiểm tra đọc những gì Android biết về mỗi SIM: cấu hình nhà mạng có cung cấp VoLTE cho điện thoại này không (nhà mạng tắt nó trên máy chưa được duyệt), công tắc VoLTE khi Android chia sẻ, và mạng mà dịch vụ thoại đang đăng ký: LTE hoặc 5G nghĩa là VoLTE / VoNR hoạt động; 2G hoặc 3G nghĩa là cuộc gọi lùi về đó."</string>
 </resources>

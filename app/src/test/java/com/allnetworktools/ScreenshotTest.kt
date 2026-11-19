@@ -309,7 +309,7 @@ class ScreenshotTest {
         val c = vm.tools.censor
         val suites = listOf(
             com.allnetworktools.data.net.Suite.Messaging, com.allnetworktools.data.net.Suite.Web, com.allnetworktools.data.net.Suite.Middlebox,
-            com.allnetworktools.data.net.Suite.Volte, com.allnetworktools.data.net.Suite.Web, com.allnetworktools.data.net.Suite.WifiCalling,
+            com.allnetworktools.data.net.Suite.Web,
             com.allnetworktools.data.net.Suite.Circumvention, com.allnetworktools.data.net.Suite.Messaging,
         )
         suites.forEachIndexed { i, s ->

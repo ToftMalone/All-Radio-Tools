@@ -3364,11 +3364,4 @@ Záplava je proud falešných rámců párování, který vyvolá vyskakovací o
     <string name="cen_ooni_failed">"Seznam OONI se nepodařilo načíst"</string>
     <string name="cen_country">"Země (dvě písmena)"</string>
     <string name="cen_how">"Stejně jako OONI Probe tento nástroj z vašeho telefonu v aktuální síti ověřuje, zda jsou blokovány weby, komunikátory a způsoby obcházení cenzury. Každý web se překládá DNS sítě i šifrovaným DNS (DoH), které síť nemůže číst ani měnit, a pak se kontaktuje přes TCP a TLS. Výsledek ukáže, kde je blokace: v DNS (žádná odpověď nebo falešná adresa), na IP adrese, při TLS handshaku se jménem webu (filtrování SNI, potvrzené stejným handshakem s jiným jménem) nebo odposlech (certifikát, kterému telefon nedůvěřuje). Komunikátory a Tor, jeho mosty, Snowflake, šifrované DNS a VPN se testují na jejich vlastních serverech. Web nedostupný všude vypadá jako blokace IP. Nic se neposílá do OONI a výsledky zůstávají v telefonu."</string>
-    <string name="cen_suite_vowifi">"Volání přes Wi-Fi"</string>
-    <string name="cen_no_sim">"Žádná SIM karta"</string>
-    <string name="cen_how_vowifi">"Volání přes Wi-Fi: telefon se připojuje k bráně operátora (ePDG), jejíž jméno pochází ze SIM (epdg.epc.mncXXX.mccYYY.pub.3gppnetwork.org), přes IPsec (IKEv2, UDP porty 500 a 4500). Test přeloží toto jméno a zahájí výměnu IKEv2 na obou portech: odpověď znamená, že hovory přes Wi-Fi mohou projít. Někteří operátoři používají jiné jméno; test pak nemůže rozhodnout."</string>
-    <string name="cen_suite_volte">"Hovory VoLTE"</string>
-    <string name="cen_v_carrier_off">"Pro tento telefon vypnuto"</string>
-    <string name="cen_v_fallback">"Návrat na 2G/3G"</string>
-    <string name="cen_how_volte">"VoLTE: tyto hovory používají vlastní kanál IMS operátora, ke kterému se žádná aplikace nedostane. Test čte, co Android ví o každé SIM: zda konfigurace operátora nabízí VoLTE tomuto telefonu (operátoři ho vypínají u neschválených telefonů), přepínač VoLTE, pokud ho Android sdílí, a síť, ve které je hlasová služba registrována: LTE nebo 5G znamená, že VoLTE / VoNR funguje; 2G nebo 3G znamená, že hovory přecházejí tam."</string>
 </resources>

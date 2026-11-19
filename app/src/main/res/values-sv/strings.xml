@@ -3212,11 +3212,4 @@ Ett flöde är en ström av falska parkopplingsramar som får en popup att visas
     <string name="cen_ooni_failed">"Kunde inte ladda OONI-listan"</string>
     <string name="cen_country">"Land (två bokstäver)"</string>
     <string name="cen_how">"Precis som OONI Probe kontrollerar det här verktyget från din telefon, över det aktuella nätet, om webbplatser, meddelandeappar och sätt att kringgå censur är blockerade. Varje webbplats slås upp med nätets DNS och med krypterad DNS (DoH), som nätet varken kan läsa eller ändra, och nås sedan över TCP och TLS. Resultatet visar var blockeringen sitter: DNS (inget svar eller en falsk adress), IP-adressen, TLS-handskakningen som namnger webbplatsen (SNI-filtrering, bekräftad av samma handskakning med ett annat namn) eller en avlyssning (ett certifikat som telefonen inte litar på). Meddelandeappar samt Tor, dess bryggor, Snowflake, krypterad DNS och VPN testas mot sina egna servrar. En webbplats som är nere överallt ser ut som en IP-blockering. Inget skickas till OONI och resultaten stannar på telefonen."</string>
-    <string name="cen_suite_vowifi">"Wi-Fi-samtal"</string>
-    <string name="cen_no_sim">"Inget SIM-kort"</string>
-    <string name="cen_how_vowifi">"Wi-Fi-samtal: telefonen når operatörens gateway (ePDG), vars namn kommer från SIM-kortet (epdg.epc.mncXXX.mccYYY.pub.3gppnetwork.org), över IPsec (IKEv2, UDP-portarna 500 och 4500). Testet slår upp namnet och öppnar ett IKEv2-utbyte på båda portarna: ett svar betyder att samtal över Wi-Fi kan gå fram. Vissa operatörer använder ett annat namn; då kan testet inte avgöra."</string>
-    <string name="cen_suite_volte">"VoLTE-samtal"</string>
-    <string name="cen_v_carrier_off">"Av för den här telefonen"</string>
-    <string name="cen_v_fallback">"Faller tillbaka till 2G/3G"</string>
-    <string name="cen_how_volte">"VoLTE: dessa samtal går i operatörens egen IMS-kanal, som ingen app kan nå. Testet läser vad Android vet om varje SIM-kort: om operatörens konfiguration erbjuder VoLTE till den här telefonen (operatörer stänger av det på telefoner de inte godkänt), VoLTE-reglaget när Android delar det, och nätet där rösttjänsten är registrerad: LTE eller 5G betyder att VoLTE / VoNR fungerar; 2G eller 3G betyder att samtalen faller tillbaka dit."</string>
 </resources>

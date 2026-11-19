@@ -3136,11 +3136,4 @@
     <string name="cen_ooni_failed">"无法加载 OONI 列表"</string>
     <string name="cen_country">"国家（两个字母）"</string>
     <string name="cen_how">"与 OONI Probe 一样，此工具从你的手机通过当前网络检查网站、即时通讯应用和绕过审查的方法是否被封锁。每个网站都会用网络的 DNS 以及网络无法读取或篡改的加密 DNS（DoH）解析，然后通过 TCP 和 TLS 连接。结果会说明封锁发生在哪里：DNS（无响应或虚假地址）、IP 地址、包含网站名称的 TLS 握手（SNI 过滤，以同一握手换用其他名称能通过来确认），或劫持（手机不信任的证书）。即时通讯应用以及 Tor、其网桥、Snowflake、加密 DNS 和 VPN 都在它们自己的服务器上测试。到处都宕机的网站看起来像 IP 封锁。不会向 OONI 发送任何内容，结果保留在手机上。"</string>
-    <string name="cen_suite_vowifi">"Wi-Fi 通话"</string>
-    <string name="cen_no_sim">"无 SIM 卡"</string>
-    <string name="cen_how_vowifi">"Wi-Fi 通话：手机通过 IPsec（IKEv2，UDP 端口 500 和 4500）连接运营商的网关（ePDG），其名称来自 SIM 卡（epdg.epc.mncXXX.mccYYY.pub.3gppnetwork.org）。测试会解析该名称并在两个端口上发起 IKEv2 交换：收到回复说明 Wi-Fi 通话可以接通。部分运营商使用其他名称，此时测试无法判断。"</string>
-    <string name="cen_suite_volte">"VoLTE 通话"</string>
-    <string name="cen_v_carrier_off">"此手机已关闭"</string>
-    <string name="cen_v_fallback">"回落到 2G/3G"</string>
-    <string name="cen_how_volte">"VoLTE：这类通话走运营商自己的 IMS 通道，任何应用都无法访问。测试读取 Android 对每张 SIM 卡掌握的信息：运营商配置是否为此手机提供 VoLTE（运营商会在未认证的手机上关闭它）、Android 公开时的 VoLTE 开关，以及语音服务注册的网络：LTE 或 5G 表示 VoLTE / VoNR 正常；2G 或 3G 表示通话回落到这些网络。"</string>
 </resources>
