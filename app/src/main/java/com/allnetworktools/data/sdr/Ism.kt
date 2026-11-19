@@ -10,7 +10,7 @@ import kotlin.math.roundToInt
  * src/devices/ file it comes from, and a reading only leaves when its CRC, checksum or repetition check passed.
  */
 
-private typealias Out = MutableList<IsmReading>
+internal typealias Out = MutableList<IsmReading>
 
 /** Mark (carrier on, or the upper tone) and the space after it, in microseconds. */
 data class IsmPulse(val pulseUs: Float, val gapUs: Float)
@@ -36,12 +36,14 @@ data class IsmReading(
 class IsmBits {
     val bb = ArrayList<IntArray>()
     val n = ArrayList<Int>()
+    /** bitbuffer's syncs_before_row. */
+    val syncs = ArrayList<Int>()
 
     init { clear() }
 
-    fun copy(): IsmBits { val c = IsmBits(); c.bb.clear(); c.n.clear(); bb.forEach { c.bb += it.copyOf() }; c.n.addAll(n); return c }
+    fun copy(): IsmBits { val c = IsmBits(); c.bb.clear(); c.n.clear(); c.syncs.clear(); bb.forEach { c.bb += it.copyOf() }; c.n.addAll(n); c.syncs.addAll(syncs); return c }
     fun rows() = bb.size
-    fun clear() { bb.clear(); n.clear(); bb += IntArray(ROW_BYTES); n += 0 }
+    fun clear() { bb.clear(); n.clear(); syncs.clear(); bb += IntArray(ROW_BYTES); n += 0; syncs += 0 }
     fun hasData() = n[0] > 0 || rows() > 1
 
     fun addBit(b: Int) {
@@ -53,10 +55,10 @@ class IsmBits {
 
     /** As bitbuffer_add_row: empty rows count. */
     fun addRow() {
-        if (rows() < MAX_ROWS) { bb += IntArray(ROW_BYTES); n += 0 } else { bb[bb.lastIndex] = IntArray(ROW_BYTES); n[n.lastIndex] = 0 }
+        if (rows() < MAX_ROWS) { bb += IntArray(ROW_BYTES); n += 0; syncs += 0 } else { bb[bb.lastIndex] = IntArray(ROW_BYTES); n[n.lastIndex] = 0; syncs[syncs.lastIndex] = 0 }
     }
 
-    fun addSync() { if (n.last() != 0) addRow() }
+    fun addSync() { if (n.last() != 0) addRow(); syncs[syncs.lastIndex]++ }
 
     fun bit(row: Int, pos: Int): Int = if (row < 0 || row >= rows() || pos < 0 || pos >= n[row]) 0 else (bb[row][pos shr 3] shr (7 - (pos and 7))) and 1
     fun byteAt(row: Int, i: Int) = if (row < rows() && i < ROW_BYTES) bb[row][i] else 0
@@ -161,15 +163,15 @@ object Ism {
         return sum and 0xFFFF
     }
 
-    private fun addBytes(m: IntArray, n: Int, off: Int = 0): Int { var r = 0; for (i in 0 until n) r += m[off + i]; return r }
-    private fun xorBytes(m: IntArray, n: Int): Int { var r = 0; for (i in 0 until n) r = r xor m[i]; return r }
-    private fun parity8(b: Int): Int { var x = b; x = x xor (x shr 4); x = x xor (x shr 2); x = x xor (x shr 1); return x and 1 }
-    private fun parityBytes(m: IntArray, n: Int, off: Int): Int { var r = 0; for (i in 0 until n) r = r xor parity8(m[off + i]); return r }
-    private fun reflect4(x0: Int): Int { var x = ((x0 and 0xCC) shr 2) or ((x0 and 0x33) shl 2); x = ((x and 0xAA) shr 1) or ((x and 0x55) shl 1); return x and 0xFF }
-    private fun s16(v: Int) = v.toShort().toInt()
-    private fun inv8(v: Int) = v.inv() and 0xFF
-    private fun hex(v: Int, digits: Int) = "%0${digits}x".format(v)
-    private fun pat(vararg b: Int) = b
+    internal fun addBytes(m: IntArray, n: Int, off: Int = 0): Int { var r = 0; for (i in 0 until n) r += m[off + i]; return r }
+    internal fun xorBytes(m: IntArray, n: Int): Int { var r = 0; for (i in 0 until n) r = r xor m[i]; return r }
+    internal fun parity8(b: Int): Int { var x = b; x = x xor (x shr 4); x = x xor (x shr 2); x = x xor (x shr 1); return x and 1 }
+    internal fun parityBytes(m: IntArray, n: Int, off: Int): Int { var r = 0; for (i in 0 until n) r = r xor parity8(m[off + i]); return r }
+    internal fun reflect4(x0: Int): Int { var x = ((x0 and 0xCC) shr 2) or ((x0 and 0x33) shl 2); x = ((x and 0xAA) shr 1) or ((x and 0x55) shl 1); return x and 0xFF }
+    internal fun s16(v: Int) = v.toShort().toInt()
+    internal fun inv8(v: Int) = v.inv() and 0xFF
+    internal fun hex(v: Int, digits: Int) = "%0${digits}x".format(v)
+    internal fun pat(vararg b: Int) = b
 
     /** bitbuffer_manchester_decode: pairs 01 → 1, 10 → 0, up to the first pair without a transition. */
     fun manchester(inp: IsmBits, row: Int, start: Int, out: IsmBits, max: Int): Int {
@@ -187,8 +189,8 @@ object Ism {
 
     // ---------------------------------------------------------------- pulse_slicer.c
 
-    private enum class Mod { OokPwm, OokPpm, OokPcm, OokMcZero, OokDmc, FskPcm, FskPwm }
-    private class Timing(val s: Float, val l: Float, val reset: Float, val gap: Float = 0f, val sync: Float = 0f, val tol: Float = 0f)
+    internal enum class Mod { OokPwm, OokPpm, OokPcm, OokMcZero, OokDmc, FskPcm, FskPwm }
+    internal class Timing(val s: Float, val l: Float, val reset: Float, val gap: Float = 0f, val sync: Float = 0f, val tol: Float = 0f)
 
     /** The bit width the PCM slicer measured, for the decoders that tell two rates apart. */
     private var pcmBitUs = 0f
@@ -321,7 +323,7 @@ object Ism {
 
     // ---------------------------------------------------------------- the devices
 
-    private class Builder(val model: String, val kind: String, val id: String, val mic: String) {
+    internal class Builder(val model: String, val kind: String, val id: String, val mic: String) {
         var channel: Int? = null
         var channelName: String? = null
         var battery: Boolean? = null
@@ -720,7 +722,7 @@ object Ism {
         out += r2.build()
     }
 
-    private fun crc4(m: IntArray, n: Int, poly: Int, init: Int): Int {
+    internal fun crc4(m: IntArray, n: Int, poly: Int, init: Int): Int {
         var rem = init shl 4
         val p = poly shl 4
         for (i in 0 until n) { rem = rem xor m[i]; repeat(8) { rem = if (rem and 0x80 != 0) ((rem shl 1) xor p) and 0xff else (rem shl 1) and 0xff } }
@@ -1390,15 +1392,15 @@ object Ism {
     /** One decoder on bits already sliced. Used by the tests. */
     internal fun decodeBits(model: String, bits: IsmBits): List<IsmReading> {
         val out = ArrayList<IsmReading>()
-        protos.first { it.name.startsWith(model) }.fn(bits.copy(), out, ArrayList())
+        allProtos.first { it.name.startsWith(model) }.fn(bits.copy(), out, ArrayList())
         return out
     }
 
     // ---------------------------------------------------------------- the table
 
-    private class Proto(val name: String, val fsk: Boolean, val mod: Mod, val t: Timing, val fn: (IsmBits, Out, MutableList<Int>) -> Unit)
+    internal class Proto(val name: String, val fsk: Boolean, val mod: Mod, val t: Timing, val fn: (IsmBits, Out, MutableList<Int>) -> Unit)
 
-    private fun p(name: String, mod: Mod, t: Timing, fn: (IsmBits, Out) -> Unit) =
+    internal fun p(name: String, mod: Mod, t: Timing, fn: (IsmBits, Out) -> Unit) =
         Proto(name, mod == Mod.FskPcm || mod == Mod.FskPwm, mod, t) { b, o, _ -> fn(b, o) }
 
     private val protos: List<Proto> = listOf(
@@ -1444,15 +1446,18 @@ object Ism {
         p("Fine Offset / Ecowitt WH31E / WH31B", Mod.FskPcm, Timing(56f, 56f, 1500f), ::wh31e),
     )
 
+    /** Every protocol: the ones above, then the ones in IsmMore. */
+    private val allProtos: List<Proto> by lazy { protos + IsmMore.protos }
+
     /** The supported devices, for the screen. */
-    val deviceNames: List<String> get() = protos.map { it.name } + "TP-Link Tapo"
+    val deviceNames: List<String> get() = allProtos.map { it.name } + "TP-Link Tapo"
 
     /** Every device that matches the train, one reading each. */
     fun decode(t: IsmTrain): List<IsmReading> {
         if (t.p.isEmpty() || t.p.any { !it.pulseUs.isFinite() || !it.gapUs.isFinite() || it.pulseUs < 0 || it.gapUs < 0 }) return emptyList()
         val out = ArrayList<IsmReading>()
         val seen = ArrayList<Int>()
-        for (pr in protos) {
+        for (pr in allProtos) {
             if (pr.fsk != t.fsk) continue
             val emit: (IsmBits) -> Unit = { b -> runCatching { pr.fn(b.copy(), out, seen) } }
             when (pr.mod) {

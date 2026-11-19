@@ -204,7 +204,10 @@ class IsmController(private val repo: SdrRepository, private val scope: Coroutin
     companion object {
         private const val POOL = 32
         /** The ISM bands the sensors use, with where. */
-        val BANDS = listOf(433_920_000L to "433,92 MHz", 868_300_000L to "868,3 MHz", 315_000_000L to "315 MHz", 345_000_000L to "345 MHz", 915_000_000L to "915 MHz")
+        val BANDS = listOf(
+            433_920_000L to "433,92 MHz", 433_420_000L to "433,42 MHz", 868_300_000L to "868,3 MHz", 868_950_000L to "868,95 MHz",
+            315_000_000L to "315 MHz", 345_000_000L to "345 MHz", 915_000_000L to "915 MHz",
+        )
     }
 }
 
