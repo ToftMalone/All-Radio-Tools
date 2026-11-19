@@ -363,9 +363,9 @@ private fun PageBody(vm: MainViewModel, net: Network, page: Page) {
             Tool.CellDetail -> CellDetailTool(vm.cell.collectAsStateWithLifecycle().value.state, page.arg) {
                 vm.navigate { it.copy(page = Page.ToolPage(Tool.Neighbors)) }
             }
-            Tool.CellSpeed, Tool.CellPing, Tool.CellTrace, Tool.CellDns, Tool.CellWhois -> MobileInternetRoute(vm, page)
+            Tool.CellSpeed, Tool.CellPing, Tool.CellTrace, Tool.CellDns, Tool.CellWhois, Tool.CellCensor -> MobileInternetRoute(vm, page)
             Tool.Lan, Tool.LanDevice, Tool.Ping, Tool.Trace, Tool.Ports, Tool.Dns, Tool.Speed,
-            Tool.Whois, Tool.EvilTwin, Tool.Audit, Tool.Mitm, Tool.Coverage -> WifiToolRoute(vm, page)
+            Tool.Whois, Tool.EvilTwin, Tool.Audit, Tool.Mitm, Tool.Coverage, Tool.Censor -> WifiToolRoute(vm, page)
             else -> ComingSoon(page.tool)
         }
         else -> Unit
@@ -388,6 +388,11 @@ private fun MobileInternetRoute(vm: MainViewModel, page: Page.ToolPage) {
         Tool.CellTrace -> TraceTool(tools.cellTrace)
         Tool.CellDns -> DnsTool(tools.cellDns, null)
         Tool.CellWhois -> com.allnetworktools.ui.pages.wifi.WhoisTool(tools.cellWhois)
+        Tool.CellCensor -> {
+            val cell = vm.cell.collectAsStateWithLifecycle().value.state
+            val label = listOfNotNull(cell?.operator, cell?.techLabel).joinToString(" · ").ifEmpty { Network.Cellular.label }
+            com.allnetworktools.ui.pages.wifi.CensorTool(tools.cellCensor, label, Sym.CellBars3)
+        }
         Tool.CellSpeed -> {
             val cell = vm.cell.collectAsStateWithLifecycle().value.state
             val label = listOfNotNull(cell?.operator, cell?.techLabel).joinToString(" · ").ifEmpty { Network.Cellular.label }
@@ -417,6 +422,7 @@ private fun WifiToolRoute(vm: MainViewModel, page: Page.ToolPage) {
         Tool.Ports -> PortsTool(tools.ports, page.arg, conn?.gateway)
         Tool.Dns -> DnsTool(tools.dns, conn?.dns?.firstOrNull { '.' in it })
         Tool.Whois -> com.allnetworktools.ui.pages.wifi.WhoisTool(tools.whois)
+        Tool.Censor -> com.allnetworktools.ui.pages.wifi.CensorTool(tools.censor, conn?.ssid?.takeIf { it.isNotBlank() } ?: "Wi-Fi", Sym.Wifi)
         Tool.Audit -> com.allnetworktools.ui.pages.wifi.AuditTool(tools.audit, conn, vm.wifiScan.collectAsStateWithLifecycle().value)
         Tool.Mitm -> com.allnetworktools.ui.pages.wifi.MitmTool(tools.mitm, conn)
         Tool.EvilTwin -> com.allnetworktools.ui.pages.wifi.EvilTwinTool(

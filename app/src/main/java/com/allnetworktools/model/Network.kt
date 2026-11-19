@@ -71,6 +71,7 @@ enum class Tool(
     WifiAware(Network.Wifi, "Wi-Fi Aware", Sym.Smartphone),
     Coverage(Network.Wifi, S(R.string.coverage_map), Sym.GridOn),
     WifiRtt(Network.Wifi, S(R.string.rtt_title), Sym.Straighten),
+    Censor(Network.Wifi, S(R.string.cen_title), Sym.Public),
 
     BleScan(Network.Bluetooth, S(R.string.ble_scanner), Sym.BluetoothSearching, implemented = true),
     Gatt(Network.Bluetooth, S(R.string.ble_device), Sym.AccountTree, Sym.MoreVert),
@@ -94,6 +95,7 @@ enum class Tool(
     CellTrace(Network.Cellular, "Traceroute", Sym.Route, Sym.IosShare),
     CellDns(Network.Cellular, "DNS Lookup", Sym.Dns, Sym.History),
     CellWhois(Network.Cellular, "Whois", Sym.TravelExplore, Sym.IosShare),
+    CellCensor(Network.Cellular, S(R.string.cen_title), Sym.Public),
 
     Sky(Network.Gnss, S(R.string.gnss_sky), Sym.SatelliteAlt, implemented = true),
     PositionCompare(Network.Gnss, S(R.string.compare_positions), Sym.ShareLocation, Sym.Refresh),

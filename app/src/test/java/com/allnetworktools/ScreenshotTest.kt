@@ -1,5 +1,6 @@
 package com.allnetworktools
 
+import com.allnetworktools.data.net.Verdict as CensorVerdict
 import androidx.compose.ui.graphics.asImageBitmap
 import android.graphics.Bitmap
 import androidx.compose.ui.graphics.asAndroidBitmap
@@ -65,6 +66,7 @@ class ScreenshotTest {
         Scenario.throttled = false
         Scenario.bleEmpty = false
         Scenario.evilTwin = false
+        Scenario.onWifi = false
         Scenario.wifiStarted = false
         Scenario.bleStarted = false
         Scenario.cellStarted = false
@@ -290,6 +292,23 @@ class ScreenshotTest {
         vm.tools.lanDevice.latency = 5f
         vm.tools.lanDevice.services.addAll(listOf(8008 to "HTTP 200 OK", 8009 to null, 8443 to "HTTP 404 Not Found"))
         vm.tools.lanDevice.phase = Phase.Results
+    }
+    @Test fun censorResults() {
+        Scenario.onWifi = true
+        censorShot()
+    }
+    private fun censorShot() = shot("74_censor_results", nav = tool(Tool.Censor)) { vm ->
+        val c = vm.tools.censor
+        fun r(s: com.allnetworktools.data.net.Suite, n: String, v: com.allnetworktools.data.net.Verdict, cat: String? = null, doh: Boolean = false) =
+            com.allnetworktools.data.net.CensorResult(s, n, n, cat, v, listOf(com.allnetworktools.data.net.Step("DNS", v != com.allnetworktools.data.net.Verdict.DnsBlocked, "x")), doh, 420)
+        val W = com.allnetworktools.data.net.Suite.Web
+        c.results.addAll(listOf(
+            r(W, "www.rt.com", CensorVerdict.DnsBlocked, "StateMedia", doh = true), r(W, "thepiratebay.org", CensorVerdict.DnsTampered, "FileSharing", doh = true),
+            r(W, "www.pornhub.com", CensorVerdict.SniBlocked, "Adult"), r(W, "fr.wikipedia.org", CensorVerdict.Ok, "Search"), r(W, "www.lemonde.fr", CensorVerdict.Ok, "News"),
+            r(com.allnetworktools.data.net.Suite.Messaging, "Signal", CensorVerdict.Ok), r(com.allnetworktools.data.net.Suite.Messaging, "WhatsApp", CensorVerdict.Partial),
+            r(com.allnetworktools.data.net.Suite.Circumvention, "Tor", CensorVerdict.Ok), r(com.allnetworktools.data.net.Suite.Circumvention, "Tor obfs4", CensorVerdict.TcpBlocked),
+            r(com.allnetworktools.data.net.Suite.Middlebox, "HTTP", CensorVerdict.Ok),
+        ))
     }
     @Test fun pingIdle() = shot("65_ping_idle", nav = tool(Tool.Ping))
     @Test fun pingResults() = shot("66_ping_results", nav = tool(Tool.Ping)) { vm ->

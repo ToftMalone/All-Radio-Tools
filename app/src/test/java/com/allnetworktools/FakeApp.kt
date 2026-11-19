@@ -45,6 +45,8 @@ object Scenario {
     var throttled = false
     var bleEmpty = false
     var evilTwin = false
+    /** Connected to Wi-Fi: the Internet tools of the Wi-Fi network are usable. */
+    var onWifi = false
 
     /** Set when a measurement flow starts being collected: the home screen must not start any. */
     var wifiStarted = false
@@ -71,6 +73,7 @@ private fun Context.fakeRadios() = object : RadiosRepository(this@fakeRadios) {
     override val bluetoothEnabled: Flow<Boolean> = flowOf(!Scenario.airplane)
     override val airplaneMode: Flow<Boolean> = flowOf(Scenario.airplane)
     override val locationEnabled: Flow<Boolean> = flowOf(true)
+    override val onWifi: Flow<Boolean> = flowOf(Scenario.onWifi)
 }
 
 internal val scan = listOf(

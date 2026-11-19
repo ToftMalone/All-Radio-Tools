@@ -29,9 +29,9 @@ class InternetAvailability(private val onWifi: Boolean, private val onMobileData
     companion object {
         val WifiInternet = setOf(
             Tool.Ping, Tool.Trace, Tool.Dns, Tool.Speed, Tool.Ports, Tool.Whois,
-            Tool.Lan, Tool.LanDevice, Tool.Coverage, Tool.Audit, Tool.EvilTwin, Tool.Mitm,
+            Tool.Lan, Tool.LanDevice, Tool.Coverage, Tool.Audit, Tool.EvilTwin, Tool.Mitm, Tool.Censor,
         )
-        val MobileInternet = setOf(Tool.CellSpeed, Tool.CellPing, Tool.CellTrace, Tool.CellDns, Tool.CellWhois)
+        val MobileInternet = setOf(Tool.CellSpeed, Tool.CellPing, Tool.CellTrace, Tool.CellDns, Tool.CellWhois, Tool.CellCensor)
     }
 }
 

@@ -77,6 +77,7 @@ private fun groups(net: Network, connectedDevice: String?, servingLabel: String?
                 ToolEntry(Tool.Ports, S(R.string.port_scan), S(R.string.tcp_common_ports)),
                 ToolEntry(Tool.Dns, "DNS Lookup", "A, AAAA, MX, TXT, NS"),
                 ToolEntry(Tool.Whois, "Whois", S(R.string.domain_or_ip_address)),
+                ToolEntry(Tool.Censor, S(R.string.cen_title), S(R.string.cen_subtitle)),
             ),
         ),
         ToolGroup(
@@ -116,6 +117,7 @@ private fun groups(net: Network, connectedDevice: String?, servingLabel: String?
                 ToolEntry(Tool.CellTrace, "Traceroute", S(R.string.hops_to_the_host)),
                 ToolEntry(Tool.CellDns, "DNS Lookup", "A, AAAA, MX, TXT, NS"),
                 ToolEntry(Tool.CellWhois, "Whois", S(R.string.domain_or_ip_address)),
+                ToolEntry(Tool.CellCensor, S(R.string.cen_title), S(R.string.cen_subtitle)),
             ),
         ),
         ToolGroup(S(R.string.security_2), listOf(ToolEntry(Tool.FakeCells, S(R.string.fake_cell_detector), S(R.string.fake_cell_subtitle)))),
