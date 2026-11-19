@@ -3139,4 +3139,8 @@
     <string name="cen_suite_vowifi">"Wi-Fi 통화"</string>
     <string name="cen_no_sim">"SIM 카드 없음"</string>
     <string name="cen_how_vowifi">"Wi-Fi 통화: 휴대폰은 SIM에서 정해지는 이름(epdg.epc.mncXXX.mccYYY.pub.3gppnetwork.org)의 통신사 게이트웨이(ePDG)에 IPsec(IKEv2, UDP 포트 500과 4500)으로 접속합니다. 테스트는 이 이름을 조회하고 두 포트에서 IKEv2 교환을 시작합니다. 응답이 오면 Wi-Fi 통화가 통할 수 있다는 뜻입니다. 다른 이름을 쓰는 통신사도 있으며 그 경우 판단할 수 없습니다."</string>
+    <string name="cen_suite_volte">"VoLTE 통화"</string>
+    <string name="cen_v_carrier_off">"이 휴대폰에서 꺼짐"</string>
+    <string name="cen_v_fallback">"2G/3G로 전환"</string>
+    <string name="cen_how_volte">"VoLTE: 이 통화는 앱이 접근할 수 없는 통신사 전용 IMS 경로를 사용합니다. 테스트는 SIM마다 Android가 아는 정보를 읽습니다: 통신사 설정이 이 휴대폰에 VoLTE를 제공하는지(승인되지 않은 휴대폰에서는 끕니다), Android가 공개하는 경우 VoLTE 스위치, 그리고 음성 서비스가 등록된 네트워크: LTE나 5G면 VoLTE / VoNR이 동작하고, 2G나 3G면 통화가 그쪽으로 전환됩니다."</string>
 </resources>

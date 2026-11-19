@@ -3222,4 +3222,8 @@ Una raffica è un flusso di finte trame di abbinamento che fa apparire un pop-up
     <string name="cen_suite_vowifi">"Chiamate Wi-Fi"</string>
     <string name="cen_no_sim">"Nessuna SIM"</string>
     <string name="cen_how_vowifi">"Chiamate Wi-Fi: il telefono raggiunge il gateway del suo operatore (ePDG), il cui nome deriva dalla SIM (epdg.epc.mncXXX.mccYYY.pub.3gppnetwork.org), via IPsec (IKEv2, porte UDP 500 e 4500). Il test risolve quel nome e avvia uno scambio IKEv2 su entrambe le porte: una risposta significa che le chiamate via Wi-Fi possono passare. Alcuni operatori usano un altro nome; in quel caso il test non è conclusivo."</string>
+    <string name="cen_suite_volte">"Chiamate VoLTE"</string>
+    <string name="cen_v_carrier_off">"Disattivato per questo telefono"</string>
+    <string name="cen_v_fallback">"Ripiego su 2G/3G"</string>
+    <string name="cen_how_volte">"VoLTE: queste chiamate usano il canale IMS dell\'operatore, che nessuna app può raggiungere. Il test legge ciò che Android sa per ogni SIM: se la configurazione dell\'operatore offre il VoLTE a questo telefono (gli operatori lo disattivano sui telefoni non approvati), l\'interruttore VoLTE quando Android lo condivide e la rete su cui è registrata la voce: LTE o 5G significa che VoLTE / VoNR funziona; 2G o 3G significa che le chiamate ripiegano lì."</string>
 </resources>

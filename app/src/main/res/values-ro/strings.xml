@@ -3291,4 +3291,8 @@ Un val este un flux de cadre de asociere false care face să apară un pop-up pe
     <string name="cen_suite_vowifi">"Apeluri prin Wi-Fi"</string>
     <string name="cen_no_sim">"Fără cartelă SIM"</string>
     <string name="cen_how_vowifi">"Apeluri prin Wi-Fi: telefonul contactează gateway-ul operatorului (ePDG), al cărui nume vine de pe SIM (epdg.epc.mncXXX.mccYYY.pub.3gppnetwork.org), prin IPsec (IKEv2, porturile UDP 500 și 4500). Testul rezolvă acest nume și deschide un schimb IKEv2 pe ambele porturi: un răspuns înseamnă că apelurile prin Wi-Fi pot trece. Unii operatori folosesc alt nume; atunci testul este neconcludent."</string>
+    <string name="cen_suite_volte">"Apeluri VoLTE"</string>
+    <string name="cen_v_carrier_off">"Dezactivat pentru acest telefon"</string>
+    <string name="cen_v_fallback">"Revenire la 2G/3G"</string>
+    <string name="cen_how_volte">"VoLTE: aceste apeluri folosesc canalul IMS propriu al operatorului, la care nicio aplicație nu are acces. Testul citește ce știe Android pentru fiecare SIM: dacă configurația operatorului oferă VoLTE acestui telefon (operatorii îl dezactivează pe telefoanele neaprobate), comutatorul VoLTE când Android îl partajează și rețeaua pe care e înregistrat serviciul de voce: LTE sau 5G înseamnă că VoLTE / VoNR funcționează; 2G sau 3G înseamnă că apelurile revin acolo."</string>
 </resources>

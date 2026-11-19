@@ -3235,4 +3235,8 @@
     <string name="cen_suite_vowifi">"Wi-Fi calling"</string>
     <string name="cen_no_sim">"No SIM card"</string>
     <string name="cen_how_vowifi">"Wi-Fi calling: the phone reaches its operator\'s gateway (ePDG), whose name comes from the SIM (epdg.epc.mncXXX.mccYYY.pub.3gppnetwork.org), over IPsec (IKEv2, UDP ports 500 and 4500). The test resolves that name and opens an IKEv2 exchange on both ports: an answer means calls over Wi-Fi can get through. Some operators use another name; the test then cannot conclude."</string>
+    <string name="cen_suite_volte">"VoLTE calls"</string>
+    <string name="cen_v_carrier_off">"Off for this phone"</string>
+    <string name="cen_v_fallback">"Falls back to 2G/3G"</string>
+    <string name="cen_how_volte">"VoLTE: these calls use the operator\'s own IMS channel, which no app can reach. The test reads what Android knows for each SIM: whether the operator\'s configuration offers VoLTE to this phone (operators turn it off for phones they have not approved), the VoLTE switch when Android shares it, and the network the voice service is registered on: LTE or 5G means VoLTE / VoNR works; 2G or 3G means calls fall back there."</string>
 </resources>

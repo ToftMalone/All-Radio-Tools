@@ -3367,4 +3367,8 @@ Záplava je proud falešných rámců párování, který vyvolá vyskakovací o
     <string name="cen_suite_vowifi">"Volání přes Wi-Fi"</string>
     <string name="cen_no_sim">"Žádná SIM karta"</string>
     <string name="cen_how_vowifi">"Volání přes Wi-Fi: telefon se připojuje k bráně operátora (ePDG), jejíž jméno pochází ze SIM (epdg.epc.mncXXX.mccYYY.pub.3gppnetwork.org), přes IPsec (IKEv2, UDP porty 500 a 4500). Test přeloží toto jméno a zahájí výměnu IKEv2 na obou portech: odpověď znamená, že hovory přes Wi-Fi mohou projít. Někteří operátoři používají jiné jméno; test pak nemůže rozhodnout."</string>
+    <string name="cen_suite_volte">"Hovory VoLTE"</string>
+    <string name="cen_v_carrier_off">"Pro tento telefon vypnuto"</string>
+    <string name="cen_v_fallback">"Návrat na 2G/3G"</string>
+    <string name="cen_how_volte">"VoLTE: tyto hovory používají vlastní kanál IMS operátora, ke kterému se žádná aplikace nedostane. Test čte, co Android ví o každé SIM: zda konfigurace operátora nabízí VoLTE tomuto telefonu (operátoři ho vypínají u neschválených telefonů), přepínač VoLTE, pokud ho Android sdílí, a síť, ve které je hlasová služba registrována: LTE nebo 5G znamená, že VoLTE / VoNR funguje; 2G nebo 3G znamená, že hovory přecházejí tam."</string>
 </resources>

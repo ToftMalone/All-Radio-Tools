@@ -3215,4 +3215,8 @@ Sel, yakındaki her telefonda bir açılır pencere çıkaran sahte eşleştirme
     <string name="cen_suite_vowifi">"Wi-Fi araması"</string>
     <string name="cen_no_sim">"SIM kart yok"</string>
     <string name="cen_how_vowifi">"Wi-Fi araması: telefon, adı SIM\'den gelen (epdg.epc.mncXXX.mccYYY.pub.3gppnetwork.org) operatör ağ geçidine (ePDG) IPsec (IKEv2, UDP 500 ve 4500 bağlantı noktaları) üzerinden ulaşır. Test bu adı çözümler ve iki bağlantı noktasında bir IKEv2 değişimi başlatır: yanıt gelmesi, Wi-Fi aramalarının geçebileceği anlamına gelir. Bazı operatörler başka bir ad kullanır; bu durumda test sonuç veremez."</string>
+    <string name="cen_suite_volte">"VoLTE aramaları"</string>
+    <string name="cen_v_carrier_off">"Bu telefonda kapalı"</string>
+    <string name="cen_v_fallback">"2G/3G\'ye geri düşüyor"</string>
+    <string name="cen_how_volte">"VoLTE: bu aramalar operatörün hiçbir uygulamanın erişemediği kendi IMS kanalını kullanır. Test, Android\'in her SIM için bildiklerini okur: operatör yapılandırmasının bu telefona VoLTE sunup sunmadığı (operatörler onaylamadıkları telefonlarda kapatır), Android paylaşıyorsa VoLTE anahtarı ve ses hizmetinin kayıtlı olduğu ağ: LTE veya 5G, VoLTE / VoNR\'nin çalıştığı; 2G veya 3G, aramaların oraya geri düştüğü anlamına gelir."</string>
 </resources>

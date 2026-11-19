@@ -3139,4 +3139,8 @@
     <string name="cen_suite_vowifi">"Wi-Fi 通话"</string>
     <string name="cen_no_sim">"无 SIM 卡"</string>
     <string name="cen_how_vowifi">"Wi-Fi 通话：手机通过 IPsec（IKEv2，UDP 端口 500 和 4500）连接运营商的网关（ePDG），其名称来自 SIM 卡（epdg.epc.mncXXX.mccYYY.pub.3gppnetwork.org）。测试会解析该名称并在两个端口上发起 IKEv2 交换：收到回复说明 Wi-Fi 通话可以接通。部分运营商使用其他名称，此时测试无法判断。"</string>
+    <string name="cen_suite_volte">"VoLTE 通话"</string>
+    <string name="cen_v_carrier_off">"此手机已关闭"</string>
+    <string name="cen_v_fallback">"回落到 2G/3G"</string>
+    <string name="cen_how_volte">"VoLTE：这类通话走运营商自己的 IMS 通道，任何应用都无法访问。测试读取 Android 对每张 SIM 卡掌握的信息：运营商配置是否为此手机提供 VoLTE（运营商会在未认证的手机上关闭它）、Android 公开时的 VoLTE 开关，以及语音服务注册的网络：LTE 或 5G 表示 VoLTE / VoNR 正常；2G 或 3G 表示通话回落到这些网络。"</string>
 </resources>

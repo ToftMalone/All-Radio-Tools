@@ -3222,4 +3222,8 @@ Uma enxurrada é um fluxo de quadros de pareamento falsos que faz aparecer um po
     <string name="cen_suite_vowifi">"Chamadas Wi-Fi"</string>
     <string name="cen_no_sim">"Sem cartão SIM"</string>
     <string name="cen_how_vowifi">"Chamadas Wi-Fi: o telefone contacta o gateway do seu operador (ePDG), cujo nome vem do SIM (epdg.epc.mncXXX.mccYYY.pub.3gppnetwork.org), por IPsec (IKEv2, portas UDP 500 e 4500). O teste resolve esse nome e abre uma troca IKEv2 nas duas portas: uma resposta significa que as chamadas por Wi-Fi podem passar. Alguns operadores usam outro nome; nesse caso o teste é inconclusivo."</string>
+    <string name="cen_suite_volte">"Chamadas VoLTE"</string>
+    <string name="cen_v_carrier_off">"Desativado neste telefone"</string>
+    <string name="cen_v_fallback">"Recorre a 2G/3G"</string>
+    <string name="cen_how_volte">"VoLTE: estas chamadas usam o canal IMS próprio do operador, que nenhuma app consegue alcançar. O teste lê o que o Android sabe de cada SIM: se a configuração do operador oferece VoLTE a este telefone (os operadores desligam-no em telefones não homologados), o interruptor VoLTE quando o Android o partilha, e a rede em que a voz está registada: LTE ou 5G significa que o VoLTE / VoNR funciona; 2G ou 3G significa que as chamadas recorrem a essas redes."</string>
 </resources>

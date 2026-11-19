@@ -3222,4 +3222,8 @@ Una avalancha es un flujo de tramas de emparejamiento falsas que hace aparecer u
     <string name="cen_suite_vowifi">"Llamadas por Wi-Fi"</string>
     <string name="cen_no_sim">"Sin tarjeta SIM"</string>
     <string name="cen_how_vowifi">"Llamadas por Wi-Fi: el teléfono contacta la pasarela de su operador (ePDG), cuyo nombre viene de la SIM (epdg.epc.mncXXX.mccYYY.pub.3gppnetwork.org), por IPsec (IKEv2, puertos UDP 500 y 4500). La prueba resuelve ese nombre y abre un intercambio IKEv2 en ambos puertos: una respuesta significa que las llamadas por Wi-Fi pueden pasar. Algunos operadores usan otro nombre; entonces la prueba no es concluyente."</string>
+    <string name="cen_suite_volte">"Llamadas VoLTE"</string>
+    <string name="cen_v_carrier_off">"Desactivado en este teléfono"</string>
+    <string name="cen_v_fallback">"Recurre a 2G/3G"</string>
+    <string name="cen_how_volte">"VoLTE: estas llamadas usan el canal IMS propio del operador, que ninguna app puede alcanzar. La prueba lee lo que Android sabe de cada SIM: si la configuración del operador ofrece VoLTE a este teléfono (los operadores lo desactivan en teléfonos no homologados), el interruptor VoLTE cuando Android lo comparte, y la red en la que está registrada la voz: LTE o 5G significa que VoLTE / VoNR funciona; 2G o 3G significa que las llamadas recurren a ellas."</string>
 </resources>

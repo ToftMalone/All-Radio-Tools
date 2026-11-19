@@ -3215,4 +3215,8 @@ Eine Flut ist ein Strom gefälschter Kopplungs-Frames, der auf jedem Telefon in 
     <string name="cen_suite_vowifi">"WLAN-Telefonie"</string>
     <string name="cen_no_sim">"Keine SIM-Karte"</string>
     <string name="cen_how_vowifi">"WLAN-Telefonie: Das Telefon erreicht das Gateway seines Netzbetreibers (ePDG), dessen Name von der SIM stammt (epdg.epc.mncXXX.mccYYY.pub.3gppnetwork.org), über IPsec (IKEv2, UDP-Ports 500 und 4500). Der Test löst diesen Namen auf und startet einen IKEv2-Austausch auf beiden Ports: Eine Antwort heißt, dass Anrufe über WLAN durchkommen können. Manche Betreiber nutzen einen anderen Namen; dann ist der Test nicht eindeutig."</string>
+    <string name="cen_suite_volte">"VoLTE-Anrufe"</string>
+    <string name="cen_v_carrier_off">"Für dieses Telefon aus"</string>
+    <string name="cen_v_fallback">"Rückfall auf 2G/3G"</string>
+    <string name="cen_how_volte">"VoLTE: Diese Anrufe nutzen den eigenen IMS-Kanal des Betreibers, den keine App erreicht. Der Test liest, was Android pro SIM weiß: ob die Betreiberkonfiguration VoLTE für dieses Telefon anbietet (Betreiber schalten es bei nicht freigegebenen Telefonen ab), den VoLTE-Schalter, wenn Android ihn teilt, und das Netz, in dem der Sprachdienst registriert ist: LTE oder 5G heißt, VoLTE / VoNR funktioniert; 2G oder 3G heißt, Anrufe fallen dorthin zurück."</string>
 </resources>

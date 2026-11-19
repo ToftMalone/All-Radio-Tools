@@ -3519,4 +3519,8 @@
     <string name="cen_suite_vowifi">"مكالمات Wi-Fi"</string>
     <string name="cen_no_sim">"لا توجد شريحة SIM"</string>
     <string name="cen_how_vowifi">"مكالمات Wi-Fi: يتصل الهاتف ببوابة مشغّله (ePDG) التي يأتي اسمها من الشريحة (epdg.epc.mncXXX.mccYYY.pub.3gppnetwork.org) عبر IPsec (IKEv2، منفذا UDP 500 و4500). يستعلم الاختبار عن هذا الاسم ويبدأ تبادل IKEv2 على المنفذين: وصول رد يعني أن المكالمات عبر Wi-Fi يمكن أن تمر. يستخدم بعض المشغّلين اسمًا آخر، وعندها لا يمكن للاختبار الحسم."</string>
+    <string name="cen_suite_volte">"مكالمات VoLTE"</string>
+    <string name="cen_v_carrier_off">"معطّل لهذا الهاتف"</string>
+    <string name="cen_v_fallback">"تراجع إلى 2G/3G"</string>
+    <string name="cen_how_volte">"VoLTE: تمر هذه المكالمات عبر قناة IMS الخاصة بالمشغّل، التي لا يصل إليها أي تطبيق. يقرأ الاختبار ما يعرفه Android عن كل شريحة: هل يتيح إعداد المشغّل خدمة VoLTE لهذا الهاتف (يعطّلها المشغّلون على الهواتف غير المعتمدة)، ومفتاح VoLTE إن أتاحه Android، والشبكة التي تُسجّل عليها خدمة الصوت: LTE أو 5G يعني أن VoLTE / VoNR يعمل؛ و2G أو 3G يعني أن المكالمات تتراجع إليها."</string>
 </resources>

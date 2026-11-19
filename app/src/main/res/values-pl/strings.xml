@@ -3367,4 +3367,8 @@ Zalew to strumień fałszywych ramek parowania, który wywołuje wyskakujące ok
     <string name="cen_suite_vowifi">"Połączenia przez Wi-Fi"</string>
     <string name="cen_no_sim">"Brak karty SIM"</string>
     <string name="cen_how_vowifi">"Połączenia przez Wi-Fi: telefon łączy się z bramą operatora (ePDG), której nazwa pochodzi z karty SIM (epdg.epc.mncXXX.mccYYY.pub.3gppnetwork.org), przez IPsec (IKEv2, porty UDP 500 i 4500). Test rozwiązuje tę nazwę i otwiera wymianę IKEv2 na obu portach: odpowiedź oznacza, że połączenia przez Wi-Fi mogą przechodzić. Niektórzy operatorzy używają innej nazwy; wtedy test jest niejednoznaczny."</string>
+    <string name="cen_suite_volte">"Połączenia VoLTE"</string>
+    <string name="cen_v_carrier_off">"Wyłączone dla tego telefonu"</string>
+    <string name="cen_v_fallback">"Powrót do 2G/3G"</string>
+    <string name="cen_how_volte">"VoLTE: te połączenia idą własnym kanałem IMS operatora, do którego żadna aplikacja nie ma dostępu. Test odczytuje, co Android wie o każdej karcie SIM: czy konfiguracja operatora oferuje VoLTE temu telefonowi (operatorzy wyłączają je w niezatwierdzonych telefonach), przełącznik VoLTE, gdy Android go udostępnia, oraz sieć, w której zarejestrowana jest usługa głosowa: LTE lub 5G oznacza, że VoLTE / VoNR działa; 2G lub 3G oznacza, że połączenia tam wracają."</string>
 </resources>

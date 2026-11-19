@@ -3139,4 +3139,8 @@ Banjir adalah aliran frame pemasangan palsu yang memunculkan pop-up di setiap po
     <string name="cen_suite_vowifi">"Panggilan Wi-Fi"</string>
     <string name="cen_no_sim">"Tidak ada kartu SIM"</string>
     <string name="cen_how_vowifi">"Panggilan Wi-Fi: ponsel menghubungi gateway operatornya (ePDG), yang namanya berasal dari SIM (epdg.epc.mncXXX.mccYYY.pub.3gppnetwork.org), melalui IPsec (IKEv2, port UDP 500 dan 4500). Tes mencari nama itu dan membuka pertukaran IKEv2 di kedua port: jawaban berarti panggilan lewat Wi-Fi bisa tersambung. Sebagian operator memakai nama lain; tes lalu tidak dapat menyimpulkan."</string>
+    <string name="cen_suite_volte">"Panggilan VoLTE"</string>
+    <string name="cen_v_carrier_off">"Mati untuk ponsel ini"</string>
+    <string name="cen_v_fallback">"Kembali ke 2G/3G"</string>
+    <string name="cen_how_volte">"VoLTE: panggilan ini memakai kanal IMS milik operator, yang tidak dapat dijangkau aplikasi. Tes membaca yang diketahui Android untuk setiap SIM: apakah konfigurasi operator menawarkan VoLTE ke ponsel ini (operator mematikannya pada ponsel yang belum mereka setujui), sakelar VoLTE bila Android membagikannya, dan jaringan tempat layanan suara terdaftar: LTE atau 5G berarti VoLTE / VoNR berfungsi; 2G atau 3G berarti panggilan kembali ke sana."</string>
 </resources>

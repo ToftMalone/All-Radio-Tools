@@ -32,8 +32,8 @@ class ToolsHub(private val app: AntApplication, private val scope: CoroutineScop
     val cellDns by lazy { DnsController(scope).also { it.systemDns = "" } }
     val cellSpeed by lazy { SpeedController(scope) }
     val cellWhois by lazy { com.allnetworktools.ui.pages.wifi.WhoisController(scope) }
-    val censor by lazy { com.allnetworktools.ui.pages.wifi.CensorController(scope) { com.allnetworktools.ui.pages.wifi.simPlmns(app) } }
-    val cellCensor by lazy { com.allnetworktools.ui.pages.wifi.CensorController(scope) { com.allnetworktools.ui.pages.wifi.simPlmns(app) } }
+    val censor by lazy { com.allnetworktools.ui.pages.wifi.CensorController(scope) { com.allnetworktools.ui.pages.wifi.simVoices(app) } }
+    val cellCensor by lazy { com.allnetworktools.ui.pages.wifi.CensorController(scope) { com.allnetworktools.ui.pages.wifi.simVoices(app) } }
     val coverage = com.allnetworktools.ui.pages.wifi.CoverageController()
     val whois by lazy { com.allnetworktools.ui.pages.wifi.WhoisController(scope) }
     val bleFilter = com.allnetworktools.ui.pages.bt.BleFilterState()

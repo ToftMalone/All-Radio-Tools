@@ -3367,4 +3367,8 @@
     <string name="cen_suite_vowifi">"Звонки по Wi-Fi"</string>
     <string name="cen_no_sim">"Нет SIM-карты"</string>
     <string name="cen_how_vowifi">"Звонки по Wi-Fi: телефон подключается к шлюзу оператора (ePDG), имя которого берётся из SIM (epdg.epc.mncXXX.mccYYY.pub.3gppnetwork.org), по IPsec (IKEv2, UDP-порты 500 и 4500). Тест разрешает это имя и начинает обмен IKEv2 на обоих портах: ответ означает, что звонки по Wi-Fi могут проходить. Некоторые операторы используют другое имя; тогда тест неоднозначен."</string>
+    <string name="cen_suite_volte">"Звонки VoLTE"</string>
+    <string name="cen_v_carrier_off">"Отключено для этого телефона"</string>
+    <string name="cen_v_fallback">"Откат на 2G/3G"</string>
+    <string name="cen_how_volte">"VoLTE: эти звонки идут по собственному каналу IMS оператора, недоступному приложениям. Тест считывает, что Android знает о каждой SIM: предлагает ли конфигурация оператора VoLTE этому телефону (операторы отключают его на неодобренных телефонах), переключатель VoLTE, если Android его раскрывает, и сеть, в которой зарегистрирована голосовая служба: LTE или 5G — VoLTE / VoNR работает; 2G или 3G — звонки откатываются туда."</string>
 </resources>

@@ -43,13 +43,17 @@ import kotlinx.coroutines.withTimeoutOrNull
  * A site that is down everywhere looks like an IP block from here; the verdict says "IP blocked or down".
  */
 
-enum class Suite { Web, Messaging, WifiCalling, Circumvention, Middlebox }
+enum class Suite { Web, Messaging, WifiCalling, Volte, Circumvention, Middlebox }
 
 enum class Verdict {
-    Ok, Partial, DnsBlocked, DnsTampered, TcpBlocked, SniBlocked, TlsBlocked, Intercepted, ProxyDetected, Down, Inconclusive;
+    Ok, Partial, DnsBlocked, DnsTampered, TcpBlocked, SniBlocked, TlsBlocked, Intercepted, ProxyDetected, Down, Inconclusive,
+    /** The operator's configuration for this phone switches the service off. */
+    CarrierOff,
+    /** Calls fall back to 2G/3G instead of VoLTE / VoNR. */
+    Fallback;
 
-    val blocked get() = this in setOf(DnsBlocked, DnsTampered, TcpBlocked, SniBlocked, TlsBlocked, Intercepted)
-    val anomaly get() = this in setOf(Partial, ProxyDetected)
+    val blocked get() = this in setOf(DnsBlocked, DnsTampered, TcpBlocked, SniBlocked, TlsBlocked, Intercepted, CarrierOff)
+    val anomaly get() = this in setOf(Partial, ProxyDetected, Fallback)
 }
 
 /** One step of a test: what was tried ("DNS", "TCP 443 1.2.3.4", "TLS"…), whether it worked, and a short note. */
@@ -71,6 +75,21 @@ data class CensorResult(
 data class Endpoint(val host: String, val port: Int = 443, val how: How = How.Tls) {
     enum class How { Tcp, Tls, TlsAnyCert, Doh }
 }
+
+/**
+ * What Android tells of a SIM's calls: the operator's configuration for this phone (VoLTE, Wi-Fi calling), the user's
+ * VoLTE switch when Android shares it, and the network the voice service is registered on now. Null when unknown.
+ */
+data class SimVoice(
+    val operator: String,
+    val mcc: String,
+    val mnc: String,
+    val volteAllowed: Boolean? = null,
+    val wfcAllowed: Boolean? = null,
+    val volteSwitch: Boolean? = null,
+    /** TelephonyManager.NETWORK_TYPE_* of the voice service. */
+    val voiceRat: Int? = null,
+)
 
 data class AppTarget(val name: String, val endpoints: List<Endpoint>, val sites: List<String> = emptyList())
 
@@ -392,11 +411,23 @@ object Censor {
     }
 
     /** Wi-Fi calling for the SIM of [operator]: the ePDG's name, then IKEv2 on UDP 500 and 4500. */
-    suspend fun wifiCalling(operator: String, mcc: String, mnc: String): CensorResult {
+    suspend fun wifiCalling(operator: String, mcc: String, mnc: String): CensorResult = wifiCalling(SimVoice(operator, mcc, mnc))
+
+    /** Wi-Fi calling for [sim]: what the operator allows this phone, the ePDG's name, then IKEv2 on UDP 500 and 4500. */
+    suspend fun wifiCalling(sim: SimVoice): CensorResult {
         val t0 = System.currentTimeMillis()
-        val host = epdgName(mcc, mnc)
+        val host = epdgName(sim.mcc, sim.mnc)
+        val operator = sim.operator
         val steps = ArrayList<Step>()
-        fun done(v: Verdict, viaDoh: Boolean = false) = CensorResult(Suite.WifiCalling, operator, host, null, v, steps.toList(), viaDoh, System.currentTimeMillis() - t0)
+        if (sim.wfcAllowed != null) steps += Step("Operator config: Wi-Fi calling", sim.wfcAllowed, if (sim.wfcAllowed) "allowed" else "not offered for this phone")
+        val onWifiNow = sim.voiceRat == RAT_IWLAN
+        if (onWifiNow) steps += Step("Voice registered", true, "Wi-Fi (IWLAN)")
+        fun done(v0: Verdict, viaDoh: Boolean = false): CensorResult {
+            // The phone's own state outweighs our probe: calls already on Wi-Fi work, a service the operator does not
+            // offer this phone does not.
+            val v = when { sim.wfcAllowed == false -> Verdict.CarrierOff; onWifiNow -> Verdict.Ok; else -> v0 }
+            return CensorResult(Suite.WifiCalling, operator, host, null, v, steps.toList(), viaDoh, System.currentTimeMillis() - t0)
+        }
         val (all, o) = systemDns(host)
         steps += Step("DNS $host", o.ok && all.none(::bogon), o.note)
         var viaDoh = false
@@ -422,6 +453,40 @@ object Censor {
             else -> Verdict.TcpBlocked
         }
         return done(v, viaDoh && (a.ok || b.ok))
+    }
+
+    // ---------------------------------------------------------------- VoLTE
+
+    const val RAT_IWLAN = 18
+    private const val RAT_LTE = 13
+    private const val RAT_NR = 20
+
+    fun ratName(rat: Int?): String = when (rat) {
+        null -> "unknown"; 0 -> "no service"; 13 -> "LTE"; 19 -> "LTE-CA"; 20 -> "5G NR"; 18 -> "Wi-Fi (IWLAN)"
+        1 -> "GPRS"; 2 -> "EDGE"; 16 -> "GSM"; 3 -> "UMTS"; 8 -> "HSDPA"; 9 -> "HSUPA"; 10 -> "HSPA"; 15 -> "HSPA+"
+        17 -> "TD-SCDMA"; 4 -> "CDMA"; 7 -> "1xRTT"; 5, 6, 12 -> "EVDO"; else -> "type $rat"
+    }
+
+    /**
+     * VoLTE / VoNR for [sim]. Its calls ride the operator's IMS bearer, which no app can reach: what can be known is
+     * whether the operator's configuration offers VoLTE to this phone, the user's switch, and where the voice service
+     * is registered (LTE or 5G: VoLTE / VoNR; 2G or 3G: calls fall back there).
+     */
+    fun volte(sim: SimVoice): CensorResult {
+        val steps = ArrayList<Step>()
+        if (sim.volteAllowed != null) steps += Step("Operator config: VoLTE", sim.volteAllowed, if (sim.volteAllowed) "allowed" else "not offered for this phone")
+        if (sim.volteSwitch != null) steps += Step("VoLTE setting", sim.volteSwitch, if (sim.volteSwitch) "on" else "off")
+        val rat = sim.voiceRat
+        val onPs = rat == RAT_LTE || rat == 19 || rat == RAT_NR
+        steps += Step("Voice registered", onPs || rat == RAT_IWLAN, ratName(rat))
+        val v = when {
+            sim.volteAllowed == false -> Verdict.CarrierOff
+            onPs -> Verdict.Ok
+            rat == RAT_IWLAN -> if (sim.volteAllowed == true) Verdict.Ok else Verdict.Inconclusive
+            rat == null || rat == 0 -> Verdict.Inconclusive
+            else -> Verdict.Fallback
+        }
+        return CensorResult(Suite.Volte, sim.operator, "${sim.mcc}-${sim.mnc}", null, v, steps)
     }
 
     // ---------------------------------------------------------------- middleboxes

@@ -96,3 +96,36 @@ class WifiCallingTest {
         assertFalse(Censor.isIkeReply(reply, reply.size, spi, natT = true))
     }
 }
+
+class VolteTest {
+    private fun sim(allowed: Boolean? = true, switch: Boolean? = null, rat: Int?) =
+        com.allnetworktools.data.net.SimVoice("Orange F", "208", "01", volteAllowed = allowed, volteSwitch = switch, voiceRat = rat)
+
+    @Test fun voiceOnLteOr5gIsVolte() {
+        assertEquals(Verdict.Ok, Censor.volte(sim(rat = 13)).verdict)
+        assertEquals(Verdict.Ok, Censor.volte(sim(rat = 20)).verdict)
+        assertEquals(Verdict.Ok, Censor.volte(sim(allowed = null, rat = 13)).verdict)
+    }
+
+    @Test fun operatorOffWins() {
+        val r = Censor.volte(sim(allowed = false, rat = 13))
+        assertEquals(Verdict.CarrierOff, r.verdict)
+        assertTrue(r.verdict.blocked)
+        assertEquals("not offered for this phone", r.steps.first().note)
+    }
+
+    @Test fun twoGOrThreeGIsAFallback() {
+        val r = Censor.volte(sim(switch = false, rat = 3))
+        assertEquals(Verdict.Fallback, r.verdict)
+        assertTrue(r.verdict.anomaly)
+        assertEquals(listOf("allowed", "off", "UMTS"), r.steps.map { it.note })
+        assertEquals(Verdict.Fallback, Censor.volte(sim(rat = 16)).verdict)
+    }
+
+    @Test fun noServiceOrUnknownCannotConclude() {
+        assertEquals(Verdict.Inconclusive, Censor.volte(sim(rat = 0)).verdict)
+        assertEquals(Verdict.Inconclusive, Censor.volte(sim(allowed = null, rat = null)).verdict)
+        assertEquals(Verdict.Ok, Censor.volte(sim(rat = Censor.RAT_IWLAN)).verdict)
+        assertEquals(Verdict.Inconclusive, Censor.volte(sim(allowed = null, rat = Censor.RAT_IWLAN)).verdict)
+    }
+}

@@ -3139,4 +3139,8 @@ Một đợt lũ là dòng khung ghép đôi giả làm bật cửa sổ trên m
     <string name="cen_suite_vowifi">"Gọi qua Wi-Fi"</string>
     <string name="cen_no_sim">"Không có thẻ SIM"</string>
     <string name="cen_how_vowifi">"Gọi qua Wi-Fi: điện thoại kết nối cổng của nhà mạng (ePDG), có tên lấy từ SIM (epdg.epc.mncXXX.mccYYY.pub.3gppnetwork.org), qua IPsec (IKEv2, cổng UDP 500 và 4500). Bài kiểm tra phân giải tên đó và mở trao đổi IKEv2 trên cả hai cổng: có trả lời nghĩa là cuộc gọi qua Wi-Fi có thể đi qua. Một số nhà mạng dùng tên khác; khi đó bài kiểm tra không kết luận được."</string>
+    <string name="cen_suite_volte">"Cuộc gọi VoLTE"</string>
+    <string name="cen_v_carrier_off">"Tắt cho điện thoại này"</string>
+    <string name="cen_v_fallback">"Lùi về 2G/3G"</string>
+    <string name="cen_how_volte">"VoLTE: các cuộc gọi này dùng kênh IMS riêng của nhà mạng, không ứng dụng nào truy cập được. Bài kiểm tra đọc những gì Android biết về mỗi SIM: cấu hình nhà mạng có cung cấp VoLTE cho điện thoại này không (nhà mạng tắt nó trên máy chưa được duyệt), công tắc VoLTE khi Android chia sẻ, và mạng mà dịch vụ thoại đang đăng ký: LTE hoặc 5G nghĩa là VoLTE / VoNR hoạt động; 2G hoặc 3G nghĩa là cuộc gọi lùi về đó."</string>
 </resources>

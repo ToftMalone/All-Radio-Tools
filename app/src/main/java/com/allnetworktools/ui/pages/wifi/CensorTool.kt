@@ -71,10 +71,12 @@ import kotlinx.coroutines.sync.withPermit
  */
 class CensorController(
     private val scope: CoroutineScope,
-    /** (operator, MCC, MNC) of each SIM, for Wi-Fi calling. */
-    private val sims: () -> List<Triple<String, String, String>> = { emptyList() },
+    /** What Android tells of each SIM's calls, for Wi-Fi calling and VoLTE. */
+    private val sims: () -> List<com.allnetworktools.data.net.SimVoice> = { emptyList() },
 ) {
-    val suites = mutableStateMapOf(Suite.Web to true, Suite.Messaging to true, Suite.WifiCalling to true, Suite.Circumvention to true, Suite.Middlebox to true)
+    val suites = mutableStateMapOf(
+        Suite.Web to true, Suite.Messaging to true, Suite.WifiCalling to true, Suite.Volte to true, Suite.Circumvention to true, Suite.Middlebox to true,
+    )
     val categories = mutableStateMapOf<Category, Boolean>().apply { Category.entries.forEach { put(it, it != Category.Adult) } }
     val custom = mutableStateListOf<String>()
     var input by mutableStateOf("")
@@ -128,10 +130,13 @@ class CensorController(
         val tasks = ArrayList<suspend () -> CensorResult>()
         sites.forEach { (h, c) -> tasks += { Censor.site("https://$h/", c) } }
         if (suites[Suite.Messaging] == true) CensorLists.messaging.forEach { a -> tasks += { Censor.app(Suite.Messaging, a) } }
-        if (suites[Suite.WifiCalling] == true) {
+        if (suites[Suite.WifiCalling] == true || suites[Suite.Volte] == true) {
             val l = runCatching(sims).getOrDefault(emptyList())
-            if (l.isEmpty()) tasks += { CensorResult(Suite.WifiCalling, S(R.string.cen_no_sim), "", null, Verdict.Inconclusive, emptyList()) }
-            l.forEach { (op, mcc, mnc) -> tasks += { Censor.wifiCalling(op, mcc, mnc) } }
+            for (suite in listOf(Suite.WifiCalling, Suite.Volte)) {
+                if (suites[suite] != true) continue
+                if (l.isEmpty()) tasks += { CensorResult(suite, S(R.string.cen_no_sim), "", null, Verdict.Inconclusive, emptyList()) }
+                l.forEach { sim -> if (suite == Suite.WifiCalling) tasks += { Censor.wifiCalling(sim) } else tasks += { Censor.volte(sim) } }
+            }
         }
         if (suites[Suite.Circumvention] == true) CensorLists.circumvention.forEach { a -> tasks += { Censor.app(Suite.Circumvention, a) } }
         if (suites[Suite.Middlebox] == true) tasks += { Censor.headerManipulation() }
@@ -169,12 +174,13 @@ private fun verdictText(v: Verdict) = S(
         Verdict.DnsTampered -> R.string.cen_v_dns_tamper; Verdict.TcpBlocked -> R.string.cen_v_tcp; Verdict.SniBlocked -> R.string.cen_v_sni
         Verdict.TlsBlocked -> R.string.cen_v_tls; Verdict.Intercepted -> R.string.cen_v_mitm; Verdict.ProxyDetected -> R.string.cen_v_proxy
         Verdict.Down -> R.string.cen_v_down; Verdict.Inconclusive -> R.string.cen_v_inconclusive
+        Verdict.CarrierOff -> R.string.cen_v_carrier_off; Verdict.Fallback -> R.string.cen_v_fallback
     },
 )
 
 private fun suiteText(s: Suite) = S(
     when (s) {
-        Suite.Web -> R.string.cen_suite_web; Suite.Messaging -> R.string.cen_suite_im; Suite.WifiCalling -> R.string.cen_suite_vowifi
+        Suite.Web -> R.string.cen_suite_web; Suite.Messaging -> R.string.cen_suite_im; Suite.WifiCalling -> R.string.cen_suite_vowifi; Suite.Volte -> R.string.cen_suite_volte
         Suite.Circumvention -> R.string.cen_suite_circ; Suite.Middlebox -> R.string.cen_suite_mb
     },
 )
@@ -262,7 +268,7 @@ private fun Results(c: CensorController) {
 private fun ResultRow(r: CensorResult) {
     var open by androidx.compose.runtime.remember { mutableStateOf(false) }
     val color = verdictColor(r.verdict)
-    val icon = when (r.suite) { Suite.Web -> Sym.Public; Suite.Messaging -> Sym.Forum; Suite.WifiCalling -> Sym.Call; Suite.Circumvention -> Sym.Key; Suite.Middlebox -> Sym.Router }
+    val icon = when (r.suite) { Suite.Web -> Sym.Public; Suite.Messaging -> Sym.Forum; Suite.WifiCalling -> Sym.Call; Suite.Volte -> Sym.CellTower; Suite.Circumvention -> Sym.Key; Suite.Middlebox -> Sym.Router }
     Row(
         Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp)).clickable { open = !open }.padding(vertical = 10.dp),
         verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp),
@@ -335,24 +341,45 @@ private fun Settings(c: CensorController) {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text(S(R.string.cen_how), style = rf(13, 18), color = cs.onSurfaceVariant)
                 Text(S(R.string.cen_how_vowifi), style = rf(13, 18), color = cs.onSurfaceVariant)
+                Text(S(R.string.cen_how_volte), style = rf(13, 18), color = cs.onSurfaceVariant)
             }
         }
     }
 }
 
-/** (operator, MCC, MNC) of each active SIM: every subscription when the phone state may be read, else the default SIM. */
-fun simPlmns(ctx: android.content.Context): List<Triple<String, String, String>> {
+/**
+ * What Android tells of each active SIM's calls: its operator code, the operator's configuration for this phone
+ * (VoLTE, Wi-Fi calling), the user's VoLTE switch when readable, and the network the voice service is on. Everything
+ * needs the phone permission; what is refused stays unknown.
+ */
+fun simVoices(ctx: android.content.Context): List<com.allnetworktools.data.net.SimVoice> {
     val sm = ctx.getSystemService(android.telephony.SubscriptionManager::class.java)
+    val base = ctx.getSystemService(android.telephony.TelephonyManager::class.java) ?: return emptyList()
+    val cfgs = ctx.getSystemService(android.telephony.CarrierConfigManager::class.java)
+    fun voice(subId: Int?, op: String, mcc: String, mnc: String): com.allnetworktools.data.net.SimVoice {
+        val tm = if (subId != null) base.createForSubscriptionId(subId) else base
+        val cfg = runCatching { if (subId != null) cfgs?.getConfigForSubId(subId) else cfgs?.config }.getOrNull()
+        fun flag(key: String) = cfg?.takeIf { it.containsKey(key) }?.getBoolean(key)
+        val switch = if (subId != null && android.os.Build.VERSION.SDK_INT >= 30) runCatching {
+            ctx.getSystemService(android.telephony.ims.ImsManager::class.java)?.getImsMmTelManager(subId)?.isAdvancedCallingSettingEnabled
+        }.getOrNull() else null
+        return com.allnetworktools.data.net.SimVoice(
+            op, mcc, mnc,
+            volteAllowed = flag(android.telephony.CarrierConfigManager.KEY_CARRIER_VOLTE_AVAILABLE_BOOL),
+            wfcAllowed = flag(android.telephony.CarrierConfigManager.KEY_CARRIER_WFC_IMS_AVAILABLE_BOOL),
+            volteSwitch = switch,
+            voiceRat = runCatching { tm.voiceNetworkType }.getOrNull(),
+        )
+    }
     val subs = runCatching { sm?.activeSubscriptionInfoList }.getOrNull().orEmpty()
     val l = subs.mapNotNull { s ->
         val mcc = s.mccString
         val mnc = s.mncString
         if (mcc.isNullOrEmpty() || mnc.isNullOrEmpty()) null
-        else Triple(s.carrierName?.toString()?.takeIf { it.isNotBlank() } ?: "SIM ${s.simSlotIndex + 1}", mcc, mnc)
-    }.distinctBy { it.second + it.third }
+        else voice(s.subscriptionId, s.carrierName?.toString()?.takeIf { it.isNotBlank() } ?: "SIM ${s.simSlotIndex + 1}", mcc, mnc)
+    }.distinctBy { it.mcc + it.mnc }
     if (l.isNotEmpty()) return l
-    val tm = ctx.getSystemService(android.telephony.TelephonyManager::class.java) ?: return emptyList()
-    val op = runCatching { tm.simOperator }.getOrNull()
+    val op = runCatching { base.simOperator }.getOrNull()
     if (op == null || op.length < 5) return emptyList()
-    return listOf(Triple(runCatching { tm.simOperatorName }.getOrNull()?.takeIf { it.isNotBlank() } ?: op, op.take(3), op.drop(3)))
+    return listOf(voice(null, runCatching { base.simOperatorName }.getOrNull()?.takeIf { it.isNotBlank() } ?: op, op.take(3), op.drop(3)))
 }
