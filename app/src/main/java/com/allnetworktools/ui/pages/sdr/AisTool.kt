@@ -114,8 +114,8 @@ data class Ship(
 
 /** AIS receiver on both channels, 161,975 and 162,025 MHz, from a single capture at 2,304 MS/s. */
 class AisController(private val repo: SdrRepository, private val scope: CoroutineScope, private val onAcquire: () -> Unit = {}) {
-    /** Both channels moved together (they stay 50 kHz apart around this centre). */
-    val free = FreeFrequency(AisReceiver.CENTER_HZ, 100.0, 1000.0)
+    /** Channel A (161.975 MHz) moved, channel B following 50 kHz above. */
+    val free = FreeFrequency(AisReceiver.CENTER_HZ - 25_000L, 100.0, 1000.0)
     val gain = SdrGain(listOf(16, 24, 32, 40), 32, listOf(20, 30, 40), 30, amp = false)
     var lnaGain by gain::lna
     var vgaGain by gain::vga
@@ -139,11 +139,12 @@ class AisController(private val repo: SdrRepository, private val scope: Coroutin
 
     fun start(device: SdrDevice) {
         if (running || starting) return
-        if (!free.valid) { error = S(R.string.invalid_frequency_1_to_6000_mhz); return }
+        if (!free.valid) { error = S(free.invalidText); return }
         val shift = free.shiftHz
         onAcquire()
         error = null
         starting = true
+        val gen = ++startGen
         scope.launch {
             try {
                 if (!repo.hasPermission(device) && !repo.requestPermission(device)) { error = S(R.string.usb_access_to_the_hackrf_refused); return@launch }
@@ -157,7 +158,9 @@ class AisController(private val repo: SdrRepository, private val scope: Coroutin
                     r.setSampleRate(rate, HackRf.filterFor(rate)) && r.setFrequency(AisReceiver.CENTER_HZ + shift - rate / 4) &&
                         r.setLnaGain(lna) && r.setVgaGain(vga) && r.setAmp(withAmp)
                 }
-                if (!ok) { r.close(); error = S(R.string.sdr_settings_refused); return@launch }
+                if (!ok) { r.close(); if (gen == startGen) error = S(R.string.sdr_settings_refused); return@launch }
+                // Stopped (or another tool took over) while the radio was opening: this start is void.
+                if (gen != startGen) { withContext(Dispatchers.IO) { r.close() }; return@launch }
                 radio = r
                 startPipeline(r)
                 running = true
@@ -211,7 +214,14 @@ class AisController(private val repo: SdrRepository, private val scope: Coroutin
         scope.launch(Dispatchers.IO) { r.setLnaGain(lna); r.setVgaGain(vga); r.setAmp(withAmp) }
     }
 
+    /** Counts starts and stops: a start still opening the radio when [stop] comes is dropped. */
+
+    private var startGen = 0
+
+
     fun stop() {
+
+        startGen++
         dspRunning = false
         val r = radio
         radio = null

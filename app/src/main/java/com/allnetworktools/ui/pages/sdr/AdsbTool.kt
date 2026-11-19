@@ -155,6 +155,7 @@ class AdsbController(private val repo: SdrRepository, private val scope: Corouti
         onAcquire()
         error = null
         starting = true
+        val gen = ++startGen
         scope.launch {
             try {
                 if (!repo.hasPermission(device) && !repo.requestPermission(device)) { error = S(R.string.usb_access_to_the_hackrf_refused); return@launch }
@@ -166,7 +167,9 @@ class AdsbController(private val repo: SdrRepository, private val scope: Corouti
                     r.setSampleRate(2_000_000, HackRf.filterFor(2_000_000)) && r.setFrequency(1_090_000_000) &&
                         r.setLnaGain(lna) && r.setVgaGain(vga) && r.setAmp(withAmp)
                 }
-                if (!ok) { r.close(); error = S(R.string.sdr_settings_refused); return@launch }
+                if (!ok) { r.close(); if (gen == startGen) error = S(R.string.sdr_settings_refused); return@launch }
+                // Stopped (or another tool took over) while the radio was opening: this start is void.
+                if (gen != startGen) { withContext(Dispatchers.IO) { r.close() }; return@launch }
                 radio = r
                 startPipeline(r)
                 running = true
@@ -229,7 +232,14 @@ class AdsbController(private val repo: SdrRepository, private val scope: Corouti
         scope.launch(Dispatchers.IO) { r.setLnaGain(lna); r.setVgaGain(vga); r.setAmp(withAmp) }
     }
 
+    /** Counts starts and stops: a start still opening the radio when [stop] comes is dropped. */
+
+    private var startGen = 0
+
+
     fun stop() {
+
+        startGen++
         dspRunning = false
         val r = radio
         radio = null

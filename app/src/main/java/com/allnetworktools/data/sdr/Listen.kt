@@ -193,6 +193,8 @@ class ListenReceiver(private val sampleRate: Int = 2_000_000, private val onAudi
         hist2Re.fill(0f); hist2Im.fill(0f)
         histA.fill(0f); posA = 0; phaseA = 0
         amAvg = 0f; agc = 1f; deEmph = 0f
+        // Voice queued in DMR/dPMR mode is not for another mode (nor for a later return to it).
+        dvQueued = 0; dvRead = 0; dvWrite = 0
         if (m == ListenMode.Usb || m == ListenMode.Lsb) {
             // A low-pass moved to the middle of the sideband (1.5 kHz above or below the carrier).
             val w = 2 * PI * 1_500.0 / 50_000 * (if (m == ListenMode.Usb) 1 else -1)

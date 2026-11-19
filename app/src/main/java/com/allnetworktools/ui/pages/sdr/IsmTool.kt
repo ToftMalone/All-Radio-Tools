@@ -97,6 +97,7 @@ class IsmController(private val repo: SdrRepository, private val scope: Coroutin
         onAcquire()
         error = null
         starting = true
+        val gen = ++startGen
         scope.launch {
             try {
                 if (!repo.hasPermission(device) && !repo.requestPermission(device)) { error = S(R.string.usb_access_to_the_hackrf_refused); return@launch }
@@ -110,7 +111,9 @@ class IsmController(private val repo: SdrRepository, private val scope: Coroutin
                     r.setSampleRate(rate, HackRf.filterFor(rate)) && r.setFrequency(hz - rate / 4) &&
                         r.setLnaGain(lna) && r.setVgaGain(vga) && r.setAmp(withAmp)
                 }
-                if (!ok) { r.close(); error = S(R.string.sdr_settings_refused); return@launch }
+                if (!ok) { r.close(); if (gen == startGen) error = S(R.string.sdr_settings_refused); return@launch }
+                // Stopped (or another tool took over) while the radio was opening: this start is void.
+                if (gen != startGen) { withContext(Dispatchers.IO) { r.close() }; return@launch }
                 radio = r
                 startPipeline(r)
                 running = true
@@ -170,7 +173,14 @@ class IsmController(private val repo: SdrRepository, private val scope: Coroutin
         scope.launch(Dispatchers.IO) { r.setLnaGain(lna); r.setVgaGain(vga); r.setAmp(withAmp) }
     }
 
+    /** Counts starts and stops: a start still opening the radio when [stop] comes is dropped. */
+
+    private var startGen = 0
+
+
     fun stop() {
+
+        startGen++
         dspRunning = false
         val r = radio
         radio = null
@@ -212,7 +222,7 @@ fun IsmTool(vm: MainViewModel) {
         val snapshot = c.csv()
         actions.saveFile("ism-${Export.stamp(System.currentTimeMillis())}.csv", "text/csv") { snapshot.toByteArray() }
     }
-    val band = IsmController.BANDS.first { it.first == c.bandHz }.second
+    val band = if (c.free.on && c.free.hz() != null) "${FreeFrequency.mhz(c.free.hz()!!).replace('.', ',')} MHz" else IsmController.BANDS.first { it.first == c.bandHz }.second
     PageColumn {
         HeroCard {
             Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(6.dp)) {

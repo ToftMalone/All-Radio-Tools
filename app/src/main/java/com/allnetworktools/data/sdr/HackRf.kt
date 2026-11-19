@@ -283,7 +283,13 @@ open class SdrRepository(private val context: Context) {
         cont.invokeOnCancellation { runCatching { context.unregisterReceiver(receiver) } }
     }
 
-    open fun open(d: SdrDevice): SdrRadio? {
+    /**
+     * One open at a time, from waiting for the previous radio to setting the new one active: two tools opening at
+     * once both found the radio free, and the one whose start was cancelled then closed it under the other.
+     */
+    open fun open(d: SdrDevice): SdrRadio? = synchronized(OpenLock) { openNow(d) }
+
+    private fun openNow(d: SdrDevice): SdrRadio? {
         val dev = d.usb ?: return null
         val m = usb ?: return null
         // The previous tool's radio must be fully closed first (see ManagedRadio.Gate).
@@ -305,3 +311,6 @@ open class SdrRepository(private val context: Context) {
         return r
     }
 }
+
+/** Serialises [SdrRepository.open]. */
+private object OpenLock

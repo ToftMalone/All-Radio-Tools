@@ -21,11 +21,11 @@ class SpectrumAnalyzer(val size: Int) {
     var blocks = 0
         private set
 
-    /** Adds up to [maxBlocks] FFTs taken across the buffer. */
+    /** Adds up to [maxBlocks] FFTs taken across the buffer, half-overlapping when that many are asked for. */
     fun accumulate(buf: ByteArray, len: Int, maxBlocks: Int = 4) {
         val samples = len / 2
         if (samples < size) return
-        val count = minOf(maxBlocks, samples / size)
+        val count = minOf(maxBlocks, 2 * samples / size - 1)
         val stride = if (count > 1) (samples - size) / (count - 1) else 0
         for (b in 0 until count) {
             val off = 2 * b * stride

@@ -64,7 +64,7 @@ class FlarmController(repo: SdrRepository, scope: CoroutineScope, onAcquire: () 
 
     override val sampleRate = FlarmReceiver.SAMPLE_RATE
     override fun tuneHz() = FlarmReceiver.CENTRE_HZ - sampleRate / 4
-    override val free = FreeFrequency(com.allnetworktools.data.sdr.FlarmReceiver.CENTRE_HZ)
+    override val free = FreeFrequency(com.allnetworktools.data.sdr.FlarmReceiver.CENTRE_HZ - 100_000L) // 868.2 MHz, the other channel 200 kHz above
 
     override fun newSink(): SdrSink {
         val tracker = FlarmTracker()

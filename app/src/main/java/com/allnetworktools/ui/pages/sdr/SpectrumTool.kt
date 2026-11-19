@@ -118,8 +118,10 @@ fun SpectrumTool(vm: MainViewModel) {
     // A tap or a drag places the marker; held against an edge, it takes the spectrum along (a quarter of the width at a
     // time), as the Listen tool's dial does.
     var lastEdgeMs by remember { androidx.compose.runtime.mutableLongStateOf(0L) }
-    val place: (Float) -> Unit = { f ->
-        c.markerHz = (center - span / 2 + f * span).toLong()
+    val put: (Float) -> Unit = { f -> c.markerHz = (center - span / 2 + f * span).toLong() }
+    // Only a drag scrolls: a tap near an edge just puts the marker there.
+    val drag: (Float) -> Unit = { f ->
+        put(f)
         val now = System.currentTimeMillis()
         if ((f < EDGE || f > 1 - EDGE) && now - lastEdgeMs > EDGE_MS) {
             lastEdgeMs = now
@@ -144,8 +146,8 @@ fun SpectrumTool(vm: MainViewModel) {
                 }
             }
             Column(Modifier.pinchZoom(c.zoom, c::chooseZoom), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                SpectrumView(db, c.hold, peakIdx, markerAt, height = 160, onTap = place)
-                WaterfallView(c, markerAt, place)
+                SpectrumView(db, c.hold, peakIdx, markerAt, height = 160, onDrag = drag, onTap = put)
+                WaterfallView(c, markerAt, put)
             }
             // The frequency buttons right under the spectrum they move.
             Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -262,7 +264,7 @@ private fun MarkerBar(vm: MainViewModel, c: SpectrumController, db: FloatArray?,
 }
 
 @Composable
-internal fun SpectrumView(db: FloatArray?, hold: FloatArray?, peakIdx: Int?, markerAt: Float? = null, height: Int = 180, onTap: ((Float) -> Unit)? = null) {
+internal fun SpectrumView(db: FloatArray?, hold: FloatArray?, peakIdx: Int?, markerAt: Float? = null, height: Int = 180, onDrag: ((Float) -> Unit)? = null, onTap: ((Float) -> Unit)? = null) {
     val line = AntTheme.accent.accent
     val grid = cs.outlineVariant
     val holdColor = AntTheme.net.fair
@@ -270,6 +272,7 @@ internal fun SpectrumView(db: FloatArray?, hold: FloatArray?, peakIdx: Int?, mar
     Box(Modifier.fillMaxWidth().height(height.dp).clip(RoundedCornerShape(24.dp)).background(cs.surfaceContainerHigh)) {
         // The handler is read again at every gesture: it holds the centre and the width shown now, not those of the first frame.
         val current by androidx.compose.runtime.rememberUpdatedState(onTap)
+        val dragging by androidx.compose.runtime.rememberUpdatedState(onDrag ?: onTap)
         val tap = if (onTap != null) Modifier.pointerInput(Unit) {
             awaitEachGesture {
                 val down = awaitFirstDown(requireUnconsumed = false)
@@ -287,7 +290,7 @@ internal fun SpectrumView(db: FloatArray?, hold: FloatArray?, peakIdx: Int?, mar
                     if (!moved && kotlin.math.abs(dy) > viewConfiguration.touchSlop && kotlin.math.abs(dy) > kotlin.math.abs(dx)) { scrolling = true; break }
                     if (kotlin.math.abs(dx) > viewConfiguration.touchSlop) moved = true
                     // One finger sliding along the spectrum moves the marker, as the dial of the Listen tool.
-                    if (moved) { current?.invoke(at(ch.position.x)); ch.consume() }
+                    if (moved) { dragging?.invoke(at(ch.position.x)); ch.consume() }
                 }
                 if (!moved && !scrolling) current?.invoke(at(down.position.x))
             }

@@ -67,7 +67,7 @@ class ZwaveController(repo: SdrRepository, scope: CoroutineScope, onAcquire: () 
 
     override val sampleRate = 2_000_000
     override fun tuneHz() = Zwave.EU_CENTRE_HZ
-    override val free = FreeFrequency(com.allnetworktools.data.sdr.Zwave.EU_CENTRE_HZ)
+    override val free = FreeFrequency(868_420_000L) // the R1 channel; the other groups follow
 
     override fun newSink(): SdrSink {
         var changed = false

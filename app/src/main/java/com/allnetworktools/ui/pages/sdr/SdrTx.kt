@@ -31,7 +31,7 @@ interface RxHost {
  * Sends one transmission at a time: checks the licence and the band, borrows the tool's radio (or opens it when the
  * tool is not receiving), transmits [TxStream] until it ends or [stop], then gives the radio back.
  */
-class SdrTransmitter(private val repo: SdrRepository, private val scope: CoroutineScope) {
+class SdrTransmitter(private val repo: SdrRepository, private val scope: CoroutineScope, private val onAcquire: () -> Unit = {}) {
     var transmitting by mutableStateOf(false)
         private set
     var error by mutableStateOf<String?>(null)
@@ -50,6 +50,8 @@ class SdrTransmitter(private val repo: SdrRepository, private val scope: Corouti
             var r: SdrRadio? = shared
             try {
                 if (r == null) {
+                    // The other tools let go of the radio first, as when a tool starts receiving.
+                    onAcquire()
                     val d = device!!
                     if (!repo.hasPermission(d) && !repo.requestPermission(d)) { error = S(R.string.usb_access_to_the_hackrf_refused); return@launch }
                     r = withContext(Dispatchers.IO) { repo.open(d) } ?: run { error = S(R.string.could_not_open_the_hackrf); return@launch }

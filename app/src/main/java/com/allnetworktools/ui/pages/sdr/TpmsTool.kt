@@ -95,6 +95,7 @@ class TpmsController(private val repo: SdrRepository, private val scope: Corouti
         onAcquire()
         error = null
         starting = true
+        val gen = ++startGen
         scope.launch {
             try {
                 if (!repo.hasPermission(device) && !repo.requestPermission(device)) { error = S(R.string.usb_access_to_the_hackrf_refused); return@launch }
@@ -108,7 +109,9 @@ class TpmsController(private val repo: SdrRepository, private val scope: Corouti
                     r.setSampleRate(rate, HackRf.filterFor(rate)) && r.setFrequency(hz - rate / 4) &&
                         r.setLnaGain(lna) && r.setVgaGain(vga) && r.setAmp(withAmp)
                 }
-                if (!ok) { r.close(); error = S(R.string.sdr_settings_refused); return@launch }
+                if (!ok) { r.close(); if (gen == startGen) error = S(R.string.sdr_settings_refused); return@launch }
+                // Stopped (or another tool took over) while the radio was opening: this start is void.
+                if (gen != startGen) { withContext(Dispatchers.IO) { r.close() }; return@launch }
                 radio = r
                 startPipeline(r)
                 running = true
@@ -160,7 +163,14 @@ class TpmsController(private val repo: SdrRepository, private val scope: Corouti
         scope.launch(Dispatchers.IO) { r.setLnaGain(lna); r.setVgaGain(vga); r.setAmp(withAmp) }
     }
 
+    /** Counts starts and stops: a start still opening the radio when [stop] comes is dropped. */
+
+    private var startGen = 0
+
+
     fun stop() {
+
+        startGen++
         dspRunning = false
         val r = radio
         radio = null
@@ -195,7 +205,7 @@ fun TpmsTool(vm: MainViewModel) {
         val snapshot = c.csv()
         actions.saveFile("tpms-${Export.stamp(System.currentTimeMillis())}.csv", "text/csv") { snapshot.toByteArray() }
     }
-    val mhz = "%.2f".format(Locale.getDefault(), c.bandHz / 1e6)
+    val mhz = "%.2f".format(Locale.getDefault(), (if (c.free.on) c.free.hz() ?: c.bandHz else c.bandHz) / 1e6)
     PageColumn {
         HeroCard {
             Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(6.dp)) {

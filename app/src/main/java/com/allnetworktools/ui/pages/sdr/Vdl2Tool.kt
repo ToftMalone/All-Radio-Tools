@@ -59,7 +59,7 @@ class Vdl2Controller(repo: SdrRepository, scope: CoroutineScope, onAcquire: () -
 
     override val sampleRate = Vdl2Receiver.SAMPLE_RATE
     override fun tuneHz() = Vdl2.CENTRE_HZ - sampleRate / 4
-    override val free = FreeFrequency(com.allnetworktools.data.sdr.Vdl2.CENTRE_HZ)
+    override val free = FreeFrequency(136_975_000L) // the common VDL2 channel; the others follow
 
     override fun newSink(): SdrSink {
         val kept = ArrayDeque<Vdl2Message>()

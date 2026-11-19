@@ -85,7 +85,7 @@ class AcarsController(private val repo: SdrRepository, private val scope: Corout
 
     fun start(device: SdrDevice) {
         if (running || starting) return
-        if (!free.valid) { error = S(R.string.invalid_frequency_1_to_6000_mhz); return }
+        if (!free.valid) { error = S(free.invalidText); return }
         val own = if (free.on) free.hz() else null
         // A free channel sits 75 kHz above the tuning, clear of the radio's DC spike.
         channels = own?.let { listOf(it) } ?: com.allnetworktools.data.sdr.Acars.EuropeHz
@@ -93,6 +93,7 @@ class AcarsController(private val repo: SdrRepository, private val scope: Corout
         onAcquire()
         error = null
         starting = true
+        val gen = ++startGen
         scope.launch {
             try {
                 if (!repo.hasPermission(device) && !repo.requestPermission(device)) { error = S(R.string.usb_access_to_the_hackrf_refused); return@launch }
@@ -105,7 +106,9 @@ class AcarsController(private val repo: SdrRepository, private val scope: Corout
                     r.setSampleRate(rate, HackRf.filterFor(rate)) && r.setFrequency(centreHz) &&
                         r.setLnaGain(lna) && r.setVgaGain(vga) && r.setAmp(withAmp)
                 }
-                if (!ok) { r.close(); error = S(R.string.sdr_settings_refused); return@launch }
+                if (!ok) { r.close(); if (gen == startGen) error = S(R.string.sdr_settings_refused); return@launch }
+                // Stopped (or another tool took over) while the radio was opening: this start is void.
+                if (gen != startGen) { withContext(Dispatchers.IO) { r.close() }; return@launch }
                 radio = r
                 startPipeline(r)
                 running = true
@@ -143,7 +146,14 @@ class AcarsController(private val repo: SdrRepository, private val scope: Corout
         scope.launch(Dispatchers.IO) { r.setLnaGain(lna); r.setVgaGain(vga); r.setAmp(withAmp) }
     }
 
+    /** Counts starts and stops: a start still opening the radio when [stop] comes is dropped. */
+
+    private var startGen = 0
+
+
     fun stop() {
+
+        startGen++
         dspRunning = false
         val r = radio
         radio = null
@@ -190,7 +200,10 @@ fun AcarsTool(vm: MainViewModel) {
                 Text("${c.messages.size}", style = gs(56, 60, 500, -1.5f, tnum = true))
                 Text(P(R.plurals.p_messages, c.messages.size), Modifier.padding(bottom = 8.dp), style = rf(18, 24, 500))
             }
-            Text(S(R.string.n_131_525_131_725_131_825, aircraft, P(R.plurals.p_aircraft, aircraft)), style = rf(14, 20))
+            // With a free channel, the three European ones in the text give way to it.
+            val heard = S(R.string.n_131_525_131_725_131_825, aircraft, P(R.plurals.p_aircraft, aircraft))
+            val own = if (c.free.on) c.free.hz() else null
+            Text(if (own == null) heard else heard.replace(Regex("131[.,]525 / 131[.,]725 / 131[.,]825"), FreeFrequency.mhz(own)), style = rf(14, 20))
             Row(Modifier.padding(top = 12.dp)) {
                 when {
                     c.error != null -> HeroChip(c.error!!, AntTheme.net.poor)

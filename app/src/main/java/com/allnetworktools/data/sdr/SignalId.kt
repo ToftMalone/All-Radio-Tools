@@ -144,20 +144,24 @@ object SignalId {
         for (i in max(0, markerIdx - reach)..minOf(n - 1, markerIdx + reach)) if (sm[i] > sm[near]) near = i
         val snr = sm[near] - floor
         if (snr < MIN_SNR_DB) return Measure(hzOf(markerIdx.toDouble()), snr, null, res, false)
-        // Grows the run of bins above [thr] around [from], stepping over dips shorter than [gap] bins.
-        fun grow(from: Int, thr: Float, gap: Int): IntArray {
+        // Grows the run of bins above [thr] around [from], stepping over dips shorter than [gap] bins that stay above
+        // [dip]: a gap down to the noise is between two signals, not inside one.
+        fun grow(from: Int, thr: Float, gap: Int, dip: Float = Float.NEGATIVE_INFINITY): IntArray {
+            fun across(i: Int, dir: Int): Int {
+                var k = 1
+                while (k <= gap) {
+                    val j = i + dir * k
+                    if (j !in 0 until n) return 0
+                    if (sm[j] > thr) return k
+                    if (sm[j] <= dip) return 0
+                    k++
+                }
+                return 0
+            }
             var l = from
             var r = from
-            while (true) {
-                var k = 1
-                while (k <= gap && l - k >= 0 && sm[l - k] <= thr) k++
-                if (l - k >= 0 && k <= gap) l -= k else break
-            }
-            while (true) {
-                var k = 1
-                while (k <= gap && r + k < n && sm[r + k] <= thr) k++
-                if (r + k < n && k <= gap) r += k else break
-            }
+            while (true) { val k = across(l, -1); if (k == 0) break; l -= k }
+            while (true) { val k = across(r, 1); if (k == 0) break; r += k }
             return intArrayOf(l, r)
         }
         // First the whole signal, roughly (half way up from the floor), so that where the marker sits in it does not
@@ -166,7 +170,7 @@ object SignalId {
         var top = coarse[0]
         for (i in coarse[0]..coarse[1]) if (sm[i] > sm[top]) top = i
         val span0 = coarse[1] - coarse[0] + 1
-        val (l, r) = grow(top, max(sm[top] - 10f, floor + 4f), max(max(2, w), span0 / 8)).let { it[0] to it[1] }
+        val (l, r) = grow(top, max(sm[top] - 10f, floor + 4f), max(max(2, w), span0 / 8), floor + (sm[top] - floor) / 4).let { it[0] to it[1] }
         val truncated = l == 0 || r == n - 1
         // Smoothing widened the run by w - 1 bins.
         val bins = (r - l + 1) - (w - 1)

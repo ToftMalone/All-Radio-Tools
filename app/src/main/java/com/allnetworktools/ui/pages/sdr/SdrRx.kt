@@ -76,7 +76,7 @@ abstract class SdrRxController(
     private var rxError: ((String) -> Unit)? = null
 
     /** Transmissions from this tool, with its radio lent while receiving. */
-    val tx by lazy { SdrTransmitter(repo, scope) }
+    val tx by lazy { SdrTransmitter(repo, scope, onAcquire) }
 
     override val activeRadio: SdrRadio? get() = radio
 
@@ -107,6 +107,7 @@ abstract class SdrRxController(
         onAcquire()
         error = null
         starting = true
+        val gen = ++startGen
         scope.launch {
             try {
                 if (!repo.hasPermission(device) && !repo.requestPermission(device)) { error = S(R.string.usb_access_to_the_hackrf_refused); return@launch }
@@ -121,7 +122,9 @@ abstract class SdrRxController(
                     r.setSampleRate(rate, HackRf.filterFor(rate)) && r.setFrequency(hz) &&
                         r.setLnaGain(lna) && r.setVgaGain(vga) && r.setAmp(withAmp)
                 }
-                if (!ok) { r.close(); error = S(R.string.sdr_settings_refused); return@launch }
+                if (!ok) { r.close(); if (gen == startGen) error = S(R.string.sdr_settings_refused); return@launch }
+                // Stopped (or another tool took over) while the radio was opening: this start is void.
+                if (gen != startGen) { withContext(Dispatchers.IO) { r.close() }; return@launch }
                 radio = r
                 startPipeline(r, newSink())
                 running = true
@@ -172,7 +175,14 @@ abstract class SdrRxController(
         scope.launch(Dispatchers.IO) { r.setFrequency(hz) }
     }
 
+    /** Counts starts and stops: a start still opening the radio when [stop] comes is dropped. */
+
+    private var startGen = 0
+
+
     fun stop() {
+
+        startGen++
         if (tx.transmitting) tx.stop()
         dspRunning = false
         val r = radio

@@ -174,6 +174,7 @@ class ListenController(repo: SdrRepository, scope: CoroutineScope, onAcquire: ()
     fun typedFrequency() { parsedHz()?.let { tune(it) } }
 
     fun chooseMode(m: ListenMode) {
+        dvCall = null
         mode = m
         wantMode = m
         gain.profile = if (m == ListenMode.Wfm) com.allnetworktools.data.sdr.GainProfile.Strong else com.allnetworktools.data.sdr.GainProfile.Narrow
@@ -185,6 +186,7 @@ class ListenController(repo: SdrRepository, scope: CoroutineScope, onAcquire: ()
 
     /** Tunes to [hz]: inside the window only the digital tuner moves, outside the radio follows. */
     fun tune(hz: Long) {
+        if (hz != frequencyHz) dvCall = null
         // Not while transmitting: the radio stays where the transmission was checked.
         if (tx.transmitting) return
         frequencyHz = hz
@@ -268,7 +270,7 @@ class ListenController(repo: SdrRepository, scope: CoroutineScope, onAcquire: ()
             override fun close() {
                 if (audioOut === track) audioOut = null
                 runCatching { track.stop(); track.release() }
-                post { spectrum = null }
+                post { spectrum = null; dvCall = null }
             }
         }
     }

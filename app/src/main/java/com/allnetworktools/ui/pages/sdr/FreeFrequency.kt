@@ -25,7 +25,10 @@ import kotlin.math.roundToLong
  * other channels (AIS's second one, FLARM's pair, Z-Wave's groups…) move by as much, so they keep their spacing.
  * [nominalHz] is the channel the tool is built for.
  */
-class FreeFrequency(val nominalHz: Long, private val minMhz: Double = 1.0, private val maxMhz: Double = 6000.0) {
+class FreeFrequency(val nominalHz: Long, val minMhz: Double = 1.0, val maxMhz: Double = 6000.0) {
+    /** What an unusable frequency is told, with this tool's range. */
+    val invalidText: Int get() = if (minMhz >= 100.0) R.string.invalid_frequency_100_to_1000_mhz else R.string.invalid_frequency_1_to_6000_mhz
+
     var on by mutableStateOf(false)
     var text by mutableStateOf(mhz(nominalHz))
 
@@ -66,16 +69,20 @@ object SdrHandoff {
     /** Whether [hz] lies within [halfWidthHz] of one of [centres]. */
     fun near(hz: Long, halfWidthHz: Long, vararg centres: Long) = centres.any { kotlin.math.abs(hz - it) <= halfWidthHz }
 
-    @Volatile private var pending: Pair<Tool, Long>? = null
+    private class Offer(val tool: Tool, val hz: Long, val atMs: Long)
+    @Volatile private var pending: Offer? = null
 
-    fun offer(tool: Tool, hz: Long) { pending = tool to hz }
+    fun offer(tool: Tool, hz: Long) { pending = Offer(tool, hz, System.currentTimeMillis()) }
 
+    /** The frequency offered to [tool], if it is fresh: a tool opened much later (its page was blocked) starts as usual. */
     fun take(tool: Tool): Long? {
         val p = pending ?: return null
-        if (p.first != tool) return null
+        if (p.tool != tool) return null
         pending = null
-        return p.second
+        return p.hz.takeIf { System.currentTimeMillis() - p.atMs < FRESH_MS }
     }
+
+    private const val FRESH_MS = 10_000L
 }
 
 /** The free frequency setting, for a tool's settings tab. Changes take effect at the next start. */
@@ -91,7 +98,7 @@ fun FreeFrequencySettings(f: FreeFrequency, running: Boolean, onChange: () -> Un
             val hz = f.hz()
             Text(
                 if (hz != null) S(R.string.sdr_free_note, FreeFrequency.mhz(hz).replace('.', ','), FreeFrequency.mhz(f.nominalHz).replace('.', ','))
-                else S(R.string.invalid_frequency_1_to_6000_mhz),
+                else S(f.invalidText),
                 style = rf(12, 16), color = if (hz != null) cs.onSurfaceVariant else cs.error,
             )
         }
