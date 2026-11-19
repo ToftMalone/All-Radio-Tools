@@ -163,10 +163,44 @@ internal class ManagedRadio(private val inner: SdrRadio, private val kind: SdrKi
         inner.startRx(onSamples) { msg -> DebugLog.e("SDR", "${inner.caps.name}: $msg"); onError(msg) }
     }
 
+    @Volatile private var closed = false
+
     override fun close() {
+        if (closed) return
+        closed = true
         transmitting = false
-        if (SdrSettings.active === this) SdrSettings.active = null
-        DebugLog.i("SDR", "${inner.caps.name}: closed")
+        // Closed first, released after: the radio is free only once its last command (receive mode off) is sent.
         inner.close()
+        DebugLog.i("SDR", "${inner.caps.name}: closed")
+        synchronized(Gate) {
+            if (SdrSettings.active === this) SdrSettings.active = null
+            (Gate as Object).notifyAll()
+        }
+    }
+
+    /**
+     * One tool at a time holds the radio. A tool that takes over asks the others to stop, and they close their radio
+     * in the background; opening it meanwhile let the old one's last command (receive mode off) land after the new
+     * one started, and the radio fell silent ("no more samples"). [awaitFree] waits for that close to finish.
+     */
+    object Gate {
+        private const val WAIT_MS = 5_000L
+
+        fun awaitFree() {
+            val stale = synchronized(Gate) {
+                val until = System.currentTimeMillis() + WAIT_MS
+                while (SdrSettings.active != null) {
+                    val left = until - System.currentTimeMillis()
+                    if (left <= 0) break
+                    (Gate as Object).wait(left)
+                }
+                SdrSettings.active
+            }
+            // Its tool was told to stop and did not close it in time: closed here, so the new one starts on a quiet radio.
+            if (stale != null) {
+                DebugLog.w("SDR", "The previous radio was still open after ${WAIT_MS / 1000} s: closing it")
+                runCatching { stale.close() }
+            }
+        }
     }
 }

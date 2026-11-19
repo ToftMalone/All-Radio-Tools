@@ -69,4 +69,29 @@ class SignalIdTest {
         }
         assertEquals(SignalId.Kinds.size, SignalId.Kinds.map { it.key }.distinct().size)
     }
+
+    /**
+     * Issue #17: a DMR signal (4FSK, four humps with dips between them) read its width from the hump nearest the
+     * marker, so the width changed as the marker moved. It must not, wherever the marker sits on the signal.
+     */
+    @Test fun aDmrWidthDoesNotDependOnTheMarker() {
+        val c = 446.1e6
+        val s = 200e3
+        val n = 1024
+        val rnd = java.util.Random(4)
+        val hz0 = 446.08e6
+        val db = FloatArray(n) { i ->
+            val f = c - s / 2 + (i + 0.5) * s / n - hz0
+            var p = 0.0
+            for (dev in doubleArrayOf(-1944.0, -648.0, 648.0, 1944.0)) p += Math.exp(-(f - dev) * (f - dev) / (2 * 350.0 * 350.0))
+            (-90 + 10 * kotlin.math.log10(1 + 1e4 * p) + rnd.nextGaussian()).toFloat()
+        }
+        val widths = (-2500..2500 step 125).map { off -> SignalId.measure(db, at(c, s, hz0 + off), c, s) }
+        widths.forEach { assertTrue(it.present) }
+        val bws = widths.map { it.bwHz!! }
+        assertTrue("widths $bws", bws.max() - bws.min() <= 2 * s / n)
+        assertEquals(5.4e3, bws.average(), 1.5e3)
+        // The centre found is the signal's, not the marker's.
+        widths.forEach { assertEquals(hz0, it.hz.toDouble(), 600.0) }
+    }
 }

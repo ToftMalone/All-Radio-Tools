@@ -286,6 +286,8 @@ open class SdrRepository(private val context: Context) {
     open fun open(d: SdrDevice): SdrRadio? {
         val dev = d.usb ?: return null
         val m = usb ?: return null
+        // The previous tool's radio must be fully closed first (see ManagedRadio.Gate).
+        ManagedRadio.Gate.awaitFree()
         com.allnetworktools.util.DebugLog.i("SDR", "Opening ${d.kind.label} (${d.name})")
         val raw = runCatching {
             when (d.kind) {

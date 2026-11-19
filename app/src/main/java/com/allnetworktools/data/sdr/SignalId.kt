@@ -2,6 +2,7 @@ package com.allnetworktools.data.sdr
 
 import com.allnetworktools.model.Tool
 import kotlin.math.ln
+import kotlin.math.log10
 import kotlin.math.max
 import kotlin.math.roundToInt
 
@@ -104,7 +105,7 @@ object SignalId {
         /** Centre of the signal found near the marker, Hz; the marker itself when no signal stands out. */
         val hz: Long,
         val snrDb: Float,
-        /** Occupied width at 6 dB under the peak, Hz; null when no signal stands out or it is too narrow to measure. */
+        /** Occupied width at 10 dB under the signal's top, Hz; null when no signal stands out or it is too narrow to measure. */
         val bwHz: Double?,
         /** One point of the spectrum, Hz: nothing narrower than a few of them can be measured. */
         val resolutionHz: Double,
@@ -117,6 +118,8 @@ object SignalId {
     }
 
     const val MIN_SNR_DB = 6f
+    /** Bins the spectrum is smoothed over before measuring a width (odd). */
+    private const val SMOOTH_MIN = 5
 
     /** The signal at [at] (0 to 1 along [db]) on a view of [spanHz] centred on [centerHz]. */
     fun measure(db: FloatArray, at: Float, centerHz: Double, spanHz: Double): Measure {
@@ -126,20 +129,47 @@ object SignalId {
         val markerIdx = (at * (n - 1)).roundToInt().coerceIn(0, n - 1)
         // The noise floor: a low percentile, so a signal filling most of the view still stands out of it.
         val floor = db.sortedArray()[n / 10]
+        // Lightly smoothed (in power): an FSK signal's spectrum is humps and dips (4FSK has four), and the FFT ripples.
+        val w = max(SMOOTH_MIN, n / 256) or 1
+        val half = w / 2
+        val lin = DoubleArray(n) { Math.pow(10.0, db[it] / 10.0) }
+        val sm = FloatArray(n) { i ->
+            var acc = 0.0
+            var cnt = 0
+            for (j in max(0, i - half)..minOf(n - 1, i + half)) { acc += lin[j]; cnt++ }
+            (10 * log10(acc / cnt)).toFloat()
+        }
         val reach = max(3, n / 100)
-        var peak = markerIdx
-        for (i in max(0, markerIdx - reach)..minOf(n - 1, markerIdx + reach)) if (db[i] > db[peak]) peak = i
-        val snr = db[peak] - floor
+        var near = markerIdx
+        for (i in max(0, markerIdx - reach)..minOf(n - 1, markerIdx + reach)) if (sm[i] > sm[near]) near = i
+        val snr = sm[near] - floor
         if (snr < MIN_SNR_DB) return Measure(hzOf(markerIdx.toDouble()), snr, null, res, false)
-        val thr = max(db[peak] - 6f, floor + 3f)
-        // A one-point dip (the FFT's own ripple) does not end the signal.
-        fun above(i: Int) = i in 0 until n && db[i] > thr
-        var l = peak
-        while (above(l - 1) || (above(l - 2) && l - 2 >= 0)) l -= if (above(l - 1)) 1 else 2
-        var r = peak
-        while (above(r + 1) || (above(r + 2) && r + 2 < n)) r += if (above(r + 1)) 1 else 2
-        val bins = r - l + 1
+        // Grows the run of bins above [thr] around [from], stepping over dips shorter than [gap] bins.
+        fun grow(from: Int, thr: Float, gap: Int): IntArray {
+            var l = from
+            var r = from
+            while (true) {
+                var k = 1
+                while (k <= gap && l - k >= 0 && sm[l - k] <= thr) k++
+                if (l - k >= 0 && k <= gap) l -= k else break
+            }
+            while (true) {
+                var k = 1
+                while (k <= gap && r + k < n && sm[r + k] <= thr) k++
+                if (r + k < n && k <= gap) r += k else break
+            }
+            return intArrayOf(l, r)
+        }
+        // First the whole signal, roughly (half way up from the floor), so that where the marker sits in it does not
+        // matter; then its width 10 dB under its own top, as the signal is usually described.
+        val coarse = grow(near, floor + snr / 2, max(2, w))
+        var top = coarse[0]
+        for (i in coarse[0]..coarse[1]) if (sm[i] > sm[top]) top = i
+        val span0 = coarse[1] - coarse[0] + 1
+        val (l, r) = grow(top, max(sm[top] - 10f, floor + 4f), max(max(2, w), span0 / 8)).let { it[0] to it[1] }
         val truncated = l == 0 || r == n - 1
+        // Smoothing widened the run by w - 1 bins.
+        val bins = (r - l + 1) - (w - 1)
         val bw = if (bins <= 2) null else bins * res
         return Measure(hzOf((l + r) / 2.0), snr, bw, res, truncated)
     }

@@ -99,6 +99,58 @@ class SdrSettingsTest {
         SdrSettings.active = null
         assertTrue(SdrKind.Pluto.biasTee.not())
     }
+
+    /**
+     * Issue #18: switching tools, the old tool closes its radio in the background while the new one opens it. The
+     * new one must wait for that close (its last command, receive off) to end, or the radio falls silent.
+     */
+    @Test fun aNewRadioWaitsForThePreviousToClose() {
+        val events = java.util.Collections.synchronizedList(ArrayList<String>())
+        val slow = object : SdrRadio {
+            override val caps = SdrCaps("old", 0, 1, 1)
+            override fun setSampleRate(hz: Int, filterHz: Int) = true
+            override fun setFrequency(hz: Long) = true
+            override fun setLnaGain(db: Int) = true
+            override fun setVgaGain(db: Int) = true
+            override fun setAmp(on: Boolean) = true
+            override fun setAntennaPower(on: Boolean) = true
+            override fun startRx(onSamples: (ByteArray, Int) -> Unit, onError: (String) -> Unit) {}
+            override fun close() { Thread.sleep(300); events += "old closed" }
+        }
+        val old = ManagedRadio(slow, SdrKind.HackRf)
+        SdrSettings.active = old
+        val closer = Thread { Thread.sleep(50); old.close() }.apply { start() }
+        ManagedRadio.Gate.awaitFree()
+        events += "new opens"
+        closer.join()
+        assertEquals(listOf("old closed", "new opens"), events.toList())
+        assertEquals(null, SdrSettings.active)
+        // Closing twice is harmless.
+        old.close()
+        assertEquals(1, events.count { it == "old closed" })
+    }
+
+    /** A radio its tool never closes is closed after the wait, so the new tool still starts. */
+    @Test fun aStaleRadioIsClosedAfterTheWait() {
+        var closed = false
+        val stuck = object : SdrRadio {
+            override val caps = SdrCaps("stuck", 0, 1, 1)
+            override fun setSampleRate(hz: Int, filterHz: Int) = true
+            override fun setFrequency(hz: Long) = true
+            override fun setLnaGain(db: Int) = true
+            override fun setVgaGain(db: Int) = true
+            override fun setAmp(on: Boolean) = true
+            override fun setAntennaPower(on: Boolean) = true
+            override fun startRx(onSamples: (ByteArray, Int) -> Unit, onError: (String) -> Unit) {}
+            override fun close() { closed = true }
+        }
+        SdrSettings.active = ManagedRadio(stuck, SdrKind.HackRf)
+        val t0 = System.currentTimeMillis()
+        ManagedRadio.Gate.awaitFree()
+        assertTrue(closed)
+        assertTrue(System.currentTimeMillis() - t0 >= 4_900)
+        assertEquals(null, SdrSettings.active)
+    }
 }
 
 class SdrChunksTest {
