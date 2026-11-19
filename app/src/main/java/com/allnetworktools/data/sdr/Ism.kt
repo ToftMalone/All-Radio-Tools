@@ -1445,7 +1445,7 @@ object Ism {
     )
 
     /** The supported devices, for the screen. */
-    val deviceNames: List<String> get() = protos.map { it.name }
+    val deviceNames: List<String> get() = protos.map { it.name } + listOf("Ubiquiti SuperLink", "TP-Link Tapo")
 
     /** Every device that matches the train, one reading each. */
     fun decode(t: IsmTrain): List<IsmReading> {
@@ -1477,15 +1477,32 @@ object Ism {
  * found and brought to 0 Hz, then it is read as FSK when the carrier stays up while the frequency takes two values,
  * else as OOK from the envelope, into a train of marks and spaces for the protocol table (as OnAir's ism_rx).
  */
-class IsmReceiver(private val onReading: (IsmReading, Double) -> Unit, private val onUnknown: (IsmTrain) -> Unit = {}) {
+class IsmReceiver(
+    private val onReading: (IsmReading, Double) -> Unit,
+    private val onUnknown: (IsmTrain) -> Unit = {},
+    /** The HackRF's tuning, fs/4 under the channel: places Tapo's channels, and SuperLink's in the whole capture. */
+    tunedHz: Double = 0.0,
+) {
     private val d1 = Decimator(4, 0.06, taps = 48)
     private val inRe = FloatArray(32768)
     private val inIm = FloatArray(32768)
-    private val demod = IsmDemodulator(RATE, onReading, onUnknown)
+    private val demod = IsmDemodulator(RATE, onReading, onUnknown, if (tunedHz > 0) tunedHz + SAMPLE_RATE / 4 else 0.0)
+    /** SuperLink lives between 863 and 928 MHz; elsewhere its scan would only cost. */
+    private val superLink = if (tunedHz in 862e6..929e6) SuperLinkScanner(SAMPLE_RATE.toDouble(), tunedHz) { f, hz ->
+        onReading(SuperLink.reading(f, hz), System.currentTimeMillis().toDouble())
+    } else null
 
     fun feed(buf: ByteArray, len: Int) {
-        val k = d1.process(buf, len, inRe, inIm, 0)
-        demod.feed(inRe, inIm, k)
+        // In pieces the decimator's output holds.
+        var off = 0
+        while (off < len) {
+            val m = minOf(131_072, len - off)
+            val piece = if (off == 0 && m == len) buf else buf.copyOfRange(off, off + m)
+            val k = d1.process(piece, m, inRe, inIm, 0)
+            demod.feed(inRe, inIm, k)
+            superLink?.feedBytes(piece, m)
+            off += m
+        }
     }
 
     companion object {
@@ -1494,7 +1511,15 @@ class IsmReceiver(private val onReading: (IsmReading, Double) -> Unit, private v
     }
 }
 
-class IsmDemodulator(private val rd: Double = 500_000.0, private val onReading: (IsmReading, Double) -> Unit, private val onUnknown: (IsmTrain) -> Unit = {}) {
+class IsmDemodulator(
+    private val rd: Double = 500_000.0,
+    private val onReading: (IsmReading, Double) -> Unit,
+    private val onUnknown: (IsmTrain) -> Unit = {},
+    /** The channel's centre on the air, 0 when unknown: for the devices known by their frequency (Tapo). */
+    private val centerHz: Double = 0.0,
+) {
+    /** The current burst's frequency, from the channel's centre. */
+    private var burstHz = 0.0
     private val ringSize = Integer.highestOneBit((rd * 1.2).toInt()) * 2
     private val ringRe = FloatArray(ringSize)
     private val ringIm = FloatArray(ringSize)
@@ -1553,6 +1578,7 @@ class IsmDemodulator(private val rd: Double = 500_000.0, private val onReading: 
             sy += yi[k] * yr[k - 1] - yr[k] * yi[k - 1]
         }
         val w = -kotlin.math.atan2(sy, sx)
+        burstHz = -w * rd / (2 * Math.PI)
         var ph = 0.0
         for (k in 0 until m) {
             val c = kotlin.math.cos(ph).toFloat(); val s = kotlin.math.sin(ph).toFloat()
@@ -1738,7 +1764,7 @@ class IsmDemodulator(private val rd: Double = 500_000.0, private val onReading: 
 
     private fun handle(t: IsmTrain) {
         if (t.p.size < 3) return
-        val rs = Ism.decode(t)
+        val rs = Ism.decode(t).ifEmpty { listOfNotNull(if (centerHz > 0) Tapo.match(t, centerHz + burstHz) else null) }
         if (rs.isEmpty()) { if (t.p.size >= 8) onUnknown(t); return }
         val now = System.currentTimeMillis().toDouble()
         rs.forEach { onReading(it, now) }

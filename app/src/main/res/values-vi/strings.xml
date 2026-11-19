@@ -3088,4 +3088,5 @@ Một đợt lũ là dòng khung ghép đôi giả làm bật cửa sổ trên m
     <string name="tx_not_in_dv">"Thoại số chỉ thu: chọn NFM, AM, USB hoặc LSB để phát."</string>
     <string name="listen_dv_waiting">"Đang chờ cuộc gọi DMR hoặc dPMR"</string>
     <string name="listen_dv_encrypted">"được mã hóa, không phát"</string>
+    <string name="ism_superlink_tapo_note">"Ubiquiti SuperLink (cảm biến UniFi Protect) được phát hiện ở bất kỳ đâu trong 2 MHz mà radio nghe được giữa 863 và 928 MHz: hãy chọn một băng SuperLink. Mỗi cảm biến hiện với địa chỉ MAC; số đo của nó được mã hóa. Kế hoạch kênh châu Âu chưa được công bố: băng EU bao phủ 865–867 MHz, băng 868,3 MHz bao phủ 866,8–868,8 MHz. Cảm biến TP-Link Tapo (868,35 MHz, nghe trên băng 868,3 MHz) chỉ được nhận ra qua chữ ký vô tuyến: định dạng không công khai nên không có ID và số đo."</string>
 </resources>

@@ -123,6 +123,16 @@ class LoraReceiver(
     private var start = 0.0         // first header symbol
     private var syncWord = -1
     private var header: LoraPhy.Header? = null
+    private var fullHeader = false
+
+    /**
+     * Where the header may start, in symbols from the expected place, and how its block is coded. SF5 and SF6 come from
+     * SX126x chips, whose frame differs at those two spreading factors: Semtech's time-on-air counts two more symbols
+     * before the header (6.25 instead of 4.25) and a header block at the full rate (at the reduced rate, it could not
+     * hold the header). Both places are tried; the header checksum and then the payload CRC decide.
+     */
+    private val shifts = if (sf < 7) intArrayOf(2, 0, 1, 3, -1) else intArrayOf(0, 1, -1)
+    private val headerForms = listOf(sf < 7)
     private var needed = 8
     private val symbols = ArrayList<Int>()
     private val snrs = ArrayList<Double>()
@@ -373,20 +383,24 @@ class LoraReceiver(
     private fun payload(): Boolean {
         if (header == null) {
             // The header must decode at the expected place; a slot early or late is tried before giving up.
-            val last = symbolAt(8) + symLen
+            val last = symbolAt(8 + shifts.max()) + symLen
             if (!available(last)) return false
-            if (tooOld(symbolAt(0) - symLen)) { restart(total - symLen); return true }
-            for (shift in intArrayOf(0, 1, -1)) {
+            if (tooOld(symbolAt(shifts.min()) - symLen)) { restart(total - symLen); return true }
+            search@ for (shift in shifts) {
                 val bins = List(8) { readSymbol(symbolAt(it) + shift.toDouble() * symLen * rho) }
-                val h = LoraPhy.readHeader(bins, sf)?.first ?: continue
-                start += shift.toDouble() * symLen * rho
-                header = h
-                symbols.clear(); symbols.addAll(bins)
-                // The header passed its own checksum: it is never mended.
-                alts.clear(); margins.clear()
-                repeat(bins.size) { k -> alts += bins[k]; margins += Float.MAX_VALUE }
-                needed = 8 + LoraPhy.payloadSymbols(sf, h.payloadLen, h.cr, h.hasCrc, ldro)
-                break
+                for (full in headerForms) {
+                    val h = LoraPhy.readHeader(bins, sf, full)?.first ?: continue
+                    start += shift.toDouble() * symLen * rho
+                    header = h
+                    fullHeader = full
+                    symbols.clear(); symbols.addAll(bins)
+                    val own = snrs.takeLast(bins.size); snrs.clear(); snrs.addAll(own)
+                    // The header passed its own checksum: it is never mended.
+                    alts.clear(); margins.clear()
+                    repeat(bins.size) { k -> alts += bins[k]; margins += Float.MAX_VALUE }
+                    needed = 8 + LoraPhy.payloadSymbols(sf, h.payloadLen, h.cr, h.hasCrc, ldro, full)
+                    break@search
+                }
             }
             if (header == null) {
                 headerErrors++
@@ -409,7 +423,7 @@ class LoraReceiver(
     }
 
     private fun finish() {
-        var d = LoraPhy.decode(symbols, sf, ldro) ?: return
+        var d = LoraPhy.decode(symbols, sf, ldro, fullHeader) ?: return
         if (!d.crcOk && d.header.hasCrc && symbols.size > 8) mend()?.let { d = it; framesMended++ }
         if (d.crcOk) framesOk++ else framesBad++
         val snr = snrs.sorted()[snrs.size / 2]
@@ -429,7 +443,7 @@ class LoraReceiver(
         var got: LoraPhy.Decoded? = null
         SoftMend.mend(choice, margin, 8, count, SoftMend.Gate.Synced) {
             for (i in 8 until count) trial[i] = if (choice[i].toInt() == 0) symbols[i] else alts[i]
-            got = LoraPhy.decode(trial, sf, ldro)?.takeIf { it.crcOk }
+            got = LoraPhy.decode(trial, sf, ldro, fullHeader)?.takeIf { it.crcOk }
             got != null
         }
         return got

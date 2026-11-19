@@ -3171,4 +3171,5 @@ Una raffica è un flusso di finte trame di abbinamento che fa apparire un pop-up
     <string name="tx_not_in_dv">"La voce digitale è solo in ricezione: scegli NFM, AM, USB o LSB per trasmettere."</string>
     <string name="listen_dv_waiting">"In attesa di una chiamata DMR o dPMR"</string>
     <string name="listen_dv_encrypted">"cifrata, non riprodotta"</string>
+    <string name="ism_superlink_tapo_note">"Ubiquiti SuperLink (sensori UniFi Protect) viene individuato ovunque nei 2 MHz che la radio ascolta tra 863 e 928 MHz: scegli una banda SuperLink. Ogni sensore compare con il suo indirizzo MAC; le sue letture sono cifrate. Il piano dei canali europeo non è pubblicato: la banda EU copre 865–867 MHz, la banda 868,3 MHz copre 866,8–868,8 MHz. I sensori TP-Link Tapo (868,35 MHz, ricevuti sulla banda 868,3 MHz) sono riconosciuti solo dalla loro firma radio: il formato non è pubblico, quindi niente ID né letture."</string>
 </resources>

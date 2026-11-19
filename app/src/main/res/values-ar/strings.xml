@@ -3468,4 +3468,5 @@
     <string name="tx_not_in_dv">"الصوت الرقمي للاستقبال فقط: اختر NFM أو AM أو USB أو LSB للإرسال."</string>
     <string name="listen_dv_waiting">"بانتظار مكالمة DMR أو dPMR"</string>
     <string name="listen_dv_encrypted">"مشفرة، لا تُشغَّل"</string>
+    <string name="ism_superlink_tapo_note">"يُكتشف Ubiquiti SuperLink (مستشعرات UniFi Protect) في أي مكان ضمن الـ 2 ميغاهرتز التي يسمعها الراديو بين 863 و928 ميغاهرتز: اختر نطاق SuperLink. يظهر كل مستشعر بعنوان MAC الخاص به؛ قراءاته مشفّرة. خطة القنوات الأوروبية غير منشورة: يغطي نطاق EU من 865 إلى 867 ميغاهرتز، ونطاق 868.3 ميغاهرتز من 866.8 إلى 868.8 ميغاهرتز. تُعرف مستشعرات TP-Link Tapo (868.35 ميغاهرتز، تُسمع على نطاق 868.3 ميغاهرتز) من بصمتها الراديوية فقط: صيغتها غير علنية، فلا معرّف ولا قراءة."</string>
 </resources>

@@ -3088,4 +3088,5 @@
     <string name="tx_not_in_dv">"디지털 음성은 수신 전용입니다: 송신하려면 NFM, AM, USB 또는 LSB를 선택하세요."</string>
     <string name="listen_dv_waiting">"DMR 또는 dPMR 호출 대기 중"</string>
     <string name="listen_dv_encrypted">"암호화됨, 재생 안 함"</string>
+    <string name="ism_superlink_tapo_note">"Ubiquiti SuperLink(UniFi Protect 센서)는 863~928 MHz에서 라디오가 듣는 2 MHz 안 어디서든 찾아냅니다. SuperLink 대역을 선택하세요. 각 센서는 MAC 주소로 표시되며 측정값은 암호화되어 있습니다. 유럽 채널 계획은 공개되지 않았습니다. EU 대역은 865~867 MHz, 868.3 MHz 대역은 866.8~868.8 MHz를 다룹니다. TP-Link Tapo 센서(868.35 MHz, 868.3 MHz 대역에서 수신)는 무선 신호 특성으로만 식별됩니다. 형식이 공개되지 않아 ID도 측정값도 없습니다."</string>
 </resources>

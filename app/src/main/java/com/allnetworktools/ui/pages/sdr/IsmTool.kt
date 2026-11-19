@@ -115,7 +115,7 @@ class IsmController(private val repo: SdrRepository, private val scope: Coroutin
                 // Stopped (or another tool took over) while the radio was opening: this start is void.
                 if (gen != startGen) { withContext(Dispatchers.IO) { r.close() }; return@launch }
                 radio = r
-                startPipeline(r)
+                startPipeline(r, (hz - rate / 4).toDouble())
                 running = true
             } finally {
                 starting = false
@@ -123,7 +123,7 @@ class IsmController(private val repo: SdrRepository, private val scope: Coroutin
         }
     }
 
-    private fun startPipeline(r: SdrRadio) {
+    private fun startPipeline(r: SdrRadio, tunedHz: Double) {
         val free = ArrayBlockingQueue<ByteArray>(POOL)
         val full = ArrayBlockingQueue<Pair<ByteArray, Int>>(POOL)
         repeat(POOL) { free.add(ByteArray(131072)) }
@@ -136,7 +136,7 @@ class IsmController(private val repo: SdrRepository, private val scope: Coroutin
             val prev = table[key]
             table[key] = IsmDevice(key, reading, (prev?.count ?: 0) + 1, now)
             total++
-        }, { unknownCount++ })
+        }, { unknownCount++ }, tunedHz)
         dspRunning = true
         Thread({
             var last = 0L
@@ -204,7 +204,12 @@ class IsmController(private val repo: SdrRepository, private val scope: Coroutin
     companion object {
         private const val POOL = 32
         /** The ISM bands the sensors use, with where. */
-        val BANDS = listOf(433_920_000L to "433,92 MHz", 868_300_000L to "868,3 MHz", 315_000_000L to "315 MHz", 345_000_000L to "345 MHz", 915_000_000L to "915 MHz")
+        val BANDS = listOf(
+            433_920_000L to "433,92 MHz", 868_300_000L to "868,3 MHz", 315_000_000L to "315 MHz", 345_000_000L to "345 MHz", 915_000_000L to "915 MHz",
+            // The capture (2 MHz, centred fs/4 under the band) over SuperLink's uplinks: the whole US plan (915.6 to
+            // 917.0 MHz), and the bottom of the EU band, where its plan presumably starts as the US one does.
+            866_400_000L to "SuperLink EU 865–867 MHz", 916_800_000L to "SuperLink US 915–917 MHz",
+        )
     }
 }
 
@@ -275,7 +280,10 @@ fun IsmTool(vm: MainViewModel) {
             SectionCard {
                 Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                     Symbol(Sym.Info, size = 22.dp, tint = AntTheme.accent.accent)
-                    Text(S(R.string.ism_how_it_works, Ism.deviceNames.size), style = rf(13, 18), color = cs.onSurfaceVariant)
+                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Text(S(R.string.ism_how_it_works, Ism.deviceNames.size), style = rf(13, 18), color = cs.onSurfaceVariant)
+                        Text(S(R.string.ism_superlink_tapo_note), style = rf(13, 18), color = cs.onSurfaceVariant)
+                    }
                 }
             }
         }
