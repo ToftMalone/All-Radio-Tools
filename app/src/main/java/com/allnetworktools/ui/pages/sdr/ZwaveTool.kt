@@ -67,6 +67,7 @@ class ZwaveController(repo: SdrRepository, scope: CoroutineScope, onAcquire: () 
 
     override val sampleRate = 2_000_000
     override fun tuneHz() = Zwave.EU_CENTRE_HZ
+    override val free = FreeFrequency(com.allnetworktools.data.sdr.Zwave.EU_CENTRE_HZ)
 
     override fun newSink(): SdrSink {
         var changed = false
@@ -110,6 +111,7 @@ class ZwaveController(repo: SdrRepository, scope: CoroutineScope, onAcquire: () 
 @Composable
 fun ZwaveTool(vm: MainViewModel) {
     val c = vm.tools.zwave
+    TakeHandoff(com.allnetworktools.model.Tool.Zwave) { c.free.offer(it, SdrHandoff.near(it, 60_000, 868_400_000, 868_420_000, 869_850_000)) }
     val actions = LocalActions.current
     val device by vm.sdrDevice.collectAsStateWithLifecycle()
     if (c.frames.isNotEmpty()) TopBarAction(Sym.Download) {
@@ -184,7 +186,10 @@ fun ZwaveTool(vm: MainViewModel) {
             }
         }
         if (tab == ToolTab.Settings) {
-            SectionCard { GainSettings(c.gain) { c.applyGains() } }
+            SectionCard {
+                FreeFrequencySettings(c.free, c.running || c.starting)
+                GainSettings(c.gain) { c.applyGains() }
+            }
         }
         if (tab == ToolTab.Settings) {
             SectionCard {

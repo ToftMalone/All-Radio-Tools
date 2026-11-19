@@ -201,4 +201,49 @@ class Pmr446Test {
         reference(dpmrVoice).forEachIndexed { i, want -> assertArrayEquals("dPMR frame $i", want, dpmrGot[i], 0f) }
         assertTrue(dmrGot.any { p -> p.any { kotlin.math.abs(it) > 0.01f } })
     }
+
+    /** Issue #20: the Listen tool's DMR/dPMR mode plays the AMBE voice of a call on any frequency. */
+    @Test
+    fun listenPlaysDigitalVoice() {
+        val rate = 2_000_000.0
+        val total = (rate * 1.6).toInt()
+        val rnd = Random(12)
+        fun noise(n: Int) = IntArray(n) { Dmr.dibitToSymbol(rnd.nextInt(4)) }
+        val voice = voiceFrames(36, rnd)
+        val header = symbolsOf(Dmr.dataBurst(1, 1, Dmr.bptcEncode(Dmr.lcInfo(lc, false)), 3))
+        var syms = IntArray(0)
+        repeat(2) { syms += noise(12) + header + noise(144) }
+        for (b in 0 until 12) {
+            val vs = voice[3 * b] + voice[3 * b + 1] + voice[3 * b + 2]
+            val centre = if (b % 6 == 0) bitsOf(Dmr.SYNC[0], 48) else IntArray(48) { rnd.nextInt(2) }
+            syms += noise(12) + symbolsOf(vs.copyOfRange(0, 108) + centre + vs.copyOfRange(108, 216)) + noise(144)
+        }
+        val f = fsk(syms, 4800.0, 648.0, rate)
+        // The call 230 kHz above the radio's tuning, as Listen picks a channel inside its window.
+        val off = 230_000.0
+        val start = (rate * 0.2).toInt()
+        val out = ByteArray(2 * total)
+        var p = 0.0
+        for (i in 0 until total) {
+            var re = 0.0; var im = 0.0
+            if (i in start until start + f.size) { p += 2 * PI * (off + 250 + f[i - start]) / rate; re = cos(p); im = sin(p) }
+            out[2 * i] = (re * 30 + (rnd.nextDouble() - 0.5) * 10).roundToInt().toByte()
+            out[2 * i + 1] = (im * 30 + (rnd.nextDouble() - 0.5) * 10).roundToInt().toByte()
+        }
+        var samples = 0
+        var loud = 0
+        val heard = ArrayList<PmrEvent>()
+        val rx = com.allnetworktools.data.sdr.ListenReceiver { a, n -> samples += n; for (i in 0 until n) if (kotlin.math.abs(a[i]) > 0.01f) loud++ }
+        rx.mode = com.allnetworktools.data.sdr.ListenMode.Dv
+        rx.offsetHz = off
+        rx.dvEvent = { heard += it }
+        var o = 0
+        while (o < out.size) { val k = minOf(131072, out.size - o); rx.feed(out.copyOfRange(o, o + k), k); o += k }
+        val headers = heard.filterIsInstance<PmrEvent.Dmr>().map { it.burst }.filterIsInstance<Dmr.Burst.Header>()
+        assertTrue("headers $heard", headers.isNotEmpty())
+        assertEquals(lc, headers[0].lc)
+        // The audio keeps pace with the radio (50 kS/s for 1.6 s), and the call's 36 voice frames (0.72 s) are heard.
+        assertEquals(80_000.0, samples.toDouble(), 2_000.0)
+        assertTrue("loud samples $loud", loud > 15_000)
+    }
 }

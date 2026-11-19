@@ -76,6 +76,7 @@ class PmrController(repo: SdrRepository, scope: CoroutineScope, onAcquire: () ->
 
     override val sampleRate = Pmr446Receiver.SAMPLE_RATE
     override fun tuneHz() = Pmr446.CENTRE_HZ - sampleRate / 4
+    override val free = FreeFrequency(com.allnetworktools.data.sdr.Pmr446.CENTRE_HZ)
 
     fun listen(ch: Int?) {
         val next = if (listening == ch) null else ch
@@ -197,6 +198,7 @@ class PmrController(repo: SdrRepository, scope: CoroutineScope, onAcquire: () ->
 @Composable
 fun PmrTool(vm: MainViewModel) {
     val c = vm.tools.pmr
+    TakeHandoff(com.allnetworktools.model.Tool.Pmr) { c.free.offer(it, it in 446_000_000L..446_200_000L) }
     val device by vm.sdrDevice.collectAsStateWithLifecycle()
     val now = System.currentTimeMillis()
     val active = c.channels.count { it.overDb > 10 }
@@ -243,6 +245,7 @@ fun PmrTool(vm: MainViewModel) {
         if (tab == ToolTab.Settings) {
             SectionCard {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    FreeFrequencySettings(c.free, c.running || c.starting)
                     GainSettings(c.gain) { c.applyGains() }
                 }
             }

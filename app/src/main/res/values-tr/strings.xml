@@ -3159,4 +3159,9 @@ Sel, yakındaki her telefonda bir açılır pencere çıkaran sahte eşleştirme
     <string name="sstv_iss">"ISS"</string>
     <string name="deep_average">"Uzun ortalama"</string>
     <string name="deep_average_note">"Her örnek analiz edilir ve spektrumun yaklaşık iki saniyelik ortalaması alınır: gürültü yumuşar ve onun birkaç dB altında gizli sabit taşıyıcılar ortaya çıkar. Kısa patlamalar silikleşir ve pil daha çok harcanır."</string>
+    <string name="sdr_free_frequency">"Serbest frekans"</string>
+    <string name="sdr_free_note">"%2$s MHz yerine %1$s MHz dinler; aracın diğer kanalları da aynı miktarda kayar. Bir sonraki başlatmada geçerli olur."</string>
+    <string name="tx_not_in_dv">"Dijital ses yalnızca alınır: yayın için NFM, AM, USB veya LSB seçin."</string>
+    <string name="listen_dv_waiting">"DMR veya dPMR çağrısı bekleniyor"</string>
+    <string name="listen_dv_encrypted">"şifreli, çalınmadı"</string>
 </resources>

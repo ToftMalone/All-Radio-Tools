@@ -96,10 +96,14 @@ abstract class SdrRxController(
 
     protected abstract val sampleRate: Int
     protected abstract fun tuneHz(): Long
+
+    /** The tool's main channel moved elsewhere, for the tools that allow it; its whole tuning moves by as much. */
+    open val free: FreeFrequency? get() = null
     protected abstract fun newSink(): SdrSink
 
     fun start(device: SdrDevice) {
         if (running || starting) return
+        if (free?.valid == false) { error = S(R.string.invalid_frequency_1_to_6000_mhz); return }
         onAcquire()
         error = null
         starting = true
@@ -111,7 +115,7 @@ abstract class SdrRxController(
                 val vga = gain.vga
                 val withAmp = gain.ampOn
                 val rate = sampleRate
-                val hz = tuneHz()
+                val hz = tuneHz() + (free?.shiftHz ?: 0L)
                 tunedHz = hz
                 val ok = withContext(Dispatchers.IO) {
                     r.setSampleRate(rate, HackRf.filterFor(rate)) && r.setFrequency(hz) &&

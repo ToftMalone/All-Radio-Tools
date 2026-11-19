@@ -66,6 +66,8 @@ data class IsmDevice(val key: String, val last: IsmReading, val count: Int, val 
  * band sits fs/4 above the tuning, out of the HackRF's DC spike. Kept in memory for the session only.
  */
 class IsmController(private val repo: SdrRepository, private val scope: CoroutineScope, private val onAcquire: () -> Unit = {}) {
+    /** Replaces the chosen band with the user's frequency. */
+    val free = FreeFrequency(433_920_000L)
     var bandHz by mutableStateOf(BANDS.first().first)
     val gain = SdrGain(listOf(16, 24, 32, 40), 32, listOf(20, 30, 40), 30, amp = true)
     var lnaGain by gain::lna
@@ -91,6 +93,7 @@ class IsmController(private val repo: SdrRepository, private val scope: Coroutin
 
     fun start(device: SdrDevice) {
         if (running || starting) return
+        if (!free.valid) { error = S(R.string.invalid_frequency_1_to_6000_mhz); return }
         onAcquire()
         error = null
         starting = true
@@ -102,7 +105,7 @@ class IsmController(private val repo: SdrRepository, private val scope: Coroutin
                 val vga = vgaGain
                 val withAmp = amp
                 val rate = IsmReceiver.SAMPLE_RATE
-                val hz = bandHz
+                val hz = if (free.on) free.hz() ?: bandHz else bandHz
                 val ok = withContext(Dispatchers.IO) {
                     r.setSampleRate(rate, HackRf.filterFor(rate)) && r.setFrequency(hz - rate / 4) &&
                         r.setLnaGain(lna) && r.setVgaGain(vga) && r.setAmp(withAmp)
@@ -202,6 +205,7 @@ private fun value(f: com.allnetworktools.data.sdr.IsmField) = Ism.fmt(f) + unit(
 @Composable
 fun IsmTool(vm: MainViewModel) {
     val c = vm.tools.ism
+    TakeHandoff(com.allnetworktools.model.Tool.Ism) { c.free.offer(it, SdrHandoff.near(it, 400_000, c.bandHz)) }
     val actions = LocalActions.current
     val device by vm.sdrDevice.collectAsStateWithLifecycle()
     if (c.devices.isNotEmpty()) TopBarAction(Sym.Download) {
@@ -252,6 +256,7 @@ fun IsmTool(vm: MainViewModel) {
                             AntFilterChip(label, c.bandHz == hz, { if (c.bandHz != hz && !c.starting) { if (c.running) c.stop(); c.bandHz = hz } })
                         }
                     }
+                    FreeFrequencySettings(c.free, c.running || c.starting)
                     GainSettings(c.gain) { c.applyGains() }
                 }
             }

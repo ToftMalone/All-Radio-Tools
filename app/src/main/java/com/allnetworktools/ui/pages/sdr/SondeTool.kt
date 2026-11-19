@@ -287,6 +287,7 @@ private fun climb(v: Double) = when {
 @Composable
 fun SondeTool(vm: MainViewModel) {
     val c = vm.tools.sonde
+    TakeHandoff(com.allnetworktools.model.Tool.Sonde) { c.frequencyMhz = FreeFrequency.mhz(it) }
     val actions = LocalActions.current
     if (c.sondes.isNotEmpty()) TopBarAction(Sym.Download) {
         val snapshot = c.sondes

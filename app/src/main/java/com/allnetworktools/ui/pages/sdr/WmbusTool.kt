@@ -60,6 +60,7 @@ class WmbusController(repo: SdrRepository, scope: CoroutineScope, onAcquire: () 
 
     override val sampleRate = WmbusReceiver.SAMPLE_RATE
     override fun tuneHz() = WmbusReceiver.CENTRE_HZ - sampleRate / 4
+    override val free = FreeFrequency(com.allnetworktools.data.sdr.WmbusReceiver.CENTRE_HZ)
 
     override fun newSink(): SdrSink {
         val table = LinkedHashMap<String, WmbusMeter>()
@@ -101,6 +102,7 @@ private fun recordName(r: Wmbus.Record, quantities: List<String>) =
 @Composable
 fun WmbusTool(vm: MainViewModel) {
     val c = vm.tools.wmbus
+    TakeHandoff(com.allnetworktools.model.Tool.Wmbus) { c.free.offer(it, SdrHandoff.near(it, 60_000, 868_950_000)) }
     val actions = LocalActions.current
     val device by vm.sdrDevice.collectAsStateWithLifecycle()
     val quantities = S(R.string.wmbus_quantities).split('|')
@@ -146,6 +148,7 @@ fun WmbusTool(vm: MainViewModel) {
         if (tab == ToolTab.Settings) {
             SectionCard {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    FreeFrequencySettings(c.free, c.running || c.starting)
                     GainSettings(c.gain) { c.applyGains() }
                 }
             }

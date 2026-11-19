@@ -3083,4 +3083,9 @@
     <string name="sstv_iss">"ISS"</string>
     <string name="deep_average">"長時間平均"</string>
     <string name="deep_average_note">"すべてのサンプルを解析し、スペクトラムを約 2 秒間平均します:雑音がならされ、その数 dB 下に埋もれた安定した搬送波が見えてきます。短いバーストは薄れ、電池の消費が増えます。"</string>
+    <string name="sdr_free_frequency">"任意周波数"</string>
+    <string name="sdr_free_note">"%2$s MHz の代わりに %1$s MHz で受信します。ツールの他のチャンネルも同じだけ移動します。次回の開始時から有効です。"</string>
+    <string name="tx_not_in_dv">"デジタル音声は受信のみです。送信するには NFM、AM、USB、LSB を選んでください。"</string>
+    <string name="listen_dv_waiting">"DMR または dPMR の呼び出しを待機中"</string>
+    <string name="listen_dv_encrypted">"暗号化のため再生しません"</string>
 </resources>

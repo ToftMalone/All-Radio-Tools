@@ -20,7 +20,12 @@ enum class ListenMode(val label: String, val stepHz: Long, val bandwidthHz: Int)
     /** Upper sideband (radio amateurs above 10 MHz). */
     Usb("USB", 500, 2_400),
     /** Lower sideband (radio amateurs below 10 MHz). */
-    Lsb("LSB", 500, 2_400);
+    Lsb("LSB", 500, 2_400),
+    /**
+     * Digital voice, DMR and dPMR (4FSK at 4800 and 2400 symbols/s): the AMBE+2 voice decoded and played. A call its
+     * header marks as encrypted stays silent; receive only.
+     */
+    Dv("DMR/dPMR", 6_250, 12_500);
 
     companion object {
         /** Amateur bands where voice is single sideband: lower below 10 MHz, upper above. */
@@ -105,6 +110,33 @@ class ListenReceiver(private val sampleRate: Int = 2_000_000, private val onAudi
     private var powerN = 0
     private val out = FloatArray(4096)
     private var outN = 0
+
+    // Digital voice: the DMR and dPMR decoders of the PMR446 tool, fed with this receiver's discriminator; their 8 kHz
+    // voice is brought to the 50 kS/s audio and queued, then played in step with the samples coming in.
+    private val digital = PmrChannel(0L, 0.0, false) { e -> if (e is PmrEvent.Voice) queueVoice(e.pcm) else dvEvent?.invoke(e) }
+    /** What the digital decoders heard besides voice (calls, identities), for the screen. */
+    @Volatile var dvEvent: ((PmrEvent) -> Unit)? = null
+    private val dvBuf = FloatArray(AUDIO_RATE)
+    private var dvWrite = 0
+    private var dvRead = 0
+    private var dvQueued = 0
+    private val dvGain = 1.6f
+
+    private fun queueVoice(pcm: FloatArray) {
+        // 8 kHz to 50 kHz: linear interpolation, 6.25 output samples per input one.
+        val n = pcm.size * AUDIO_RATE / 8_000
+        for (j in 0 until n) {
+            if (dvQueued >= dvBuf.size) break
+            val x = j * 8_000.0 / AUDIO_RATE
+            val i = x.toInt()
+            val f = (x - i).toFloat()
+            val a = pcm[i]
+            val b = pcm[minOf(i + 1, pcm.size - 1)]
+            dvBuf[dvWrite] = a + (b - a) * f
+            dvWrite = (dvWrite + 1) % dvBuf.size
+            dvQueued++
+        }
+    }
 
     private fun lowPass(taps: Int, cutoff: Double): FloatArray {
         val raw = DoubleArray(taps) { i ->
@@ -213,6 +245,15 @@ class ListenReceiver(private val sampleRate: Int = 2_000_000, private val onAudi
                 val f = atan2(di, dr) * (50_000f / (2 * PI.toFloat() * 5_000f))
                 hpOut = 0.96f * (hpOut + f - hpIn); hpIn = f
                 emit((hpOut * 0.8f).coerceIn(-1f, 1f))
+            }
+            ListenMode.Dv -> {
+                val dr = ar * prevRe + ai * prevIm
+                val di = ai * prevRe - ar * prevIm
+                prevRe = ar; prevIm = ai
+                // The discriminator in Hz goes to the DMR and dPMR decoders, which hand back voice (see [voice]).
+                digital.pushFm(atan2(di, dr) * (50_000f / (2 * PI.toFloat())))
+                // Between voice frames, silence: digital signalling played as FM is only a buzz.
+                if (dvQueued <= 0) emit(0f) else { emit(dvBuf[dvRead] * dvGain); dvRead = (dvRead + 1) % dvBuf.size; dvQueued-- }
             }
             ListenMode.Am -> {
                 val env = sqrt(ar * ar + ai * ai)

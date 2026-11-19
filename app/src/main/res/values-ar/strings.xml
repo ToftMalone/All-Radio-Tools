@@ -3463,4 +3463,9 @@
     <string name="sstv_iss">"محطة الفضاء الدولية"</string>
     <string name="deep_average">"متوسط طويل"</string>
     <string name="deep_average_note">"تُحلَّل كل عينة ويُحسب متوسط الطيف على نحو ثانيتين: تتنعّم الضوضاء وتظهر الحوامل الثابتة المدفونة تحتها ببضعة ديسيبل. تتلاشى الرشقات القصيرة، ويزداد استهلاك البطارية."</string>
+    <string name="sdr_free_frequency">"تردد حر"</string>
+    <string name="sdr_free_note">"يستمع على %1$s ميغاهرتز بدلًا من %2$s ميغاهرتز؛ تنتقل قنوات الأداة الأخرى بالمقدار نفسه. يسري عند البدء التالي."</string>
+    <string name="tx_not_in_dv">"الصوت الرقمي للاستقبال فقط: اختر NFM أو AM أو USB أو LSB للإرسال."</string>
+    <string name="listen_dv_waiting">"بانتظار مكالمة DMR أو dPMR"</string>
+    <string name="listen_dv_encrypted">"مشفرة، لا تُشغَّل"</string>
 </resources>

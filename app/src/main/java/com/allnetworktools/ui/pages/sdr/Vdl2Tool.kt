@@ -59,6 +59,7 @@ class Vdl2Controller(repo: SdrRepository, scope: CoroutineScope, onAcquire: () -
 
     override val sampleRate = Vdl2Receiver.SAMPLE_RATE
     override fun tuneHz() = Vdl2.CENTRE_HZ - sampleRate / 4
+    override val free = FreeFrequency(com.allnetworktools.data.sdr.Vdl2.CENTRE_HZ)
 
     override fun newSink(): SdrSink {
         val kept = ArrayDeque<Vdl2Message>()
@@ -108,6 +109,7 @@ private val clock = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
 @Composable
 fun Vdl2Tool(vm: MainViewModel) {
     val c = vm.tools.vdl2
+    TakeHandoff(com.allnetworktools.model.Tool.Vdl2) { c.free.offer(it, it in 136_700_000L..137_000_000L) }
     val actions = LocalActions.current
     val device by vm.sdrDevice.collectAsStateWithLifecycle()
     if (c.messages.isNotEmpty()) TopBarAction(Sym.Download) {
@@ -151,6 +153,7 @@ fun Vdl2Tool(vm: MainViewModel) {
         }
         if (tab == ToolTab.Settings) {
             SectionCard {
+                FreeFrequencySettings(c.free, c.running || c.starting)
                 GainSettings(c.gain) { c.applyGains() }
             }
         }

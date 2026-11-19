@@ -3083,4 +3083,9 @@ Một đợt lũ là dòng khung ghép đôi giả làm bật cửa sổ trên m
     <string name="sstv_iss">"ISS"</string>
     <string name="deep_average">"Trung bình dài"</string>
     <string name="deep_average_note">"Mọi mẫu đều được phân tích và phổ được lấy trung bình trong khoảng hai giây: nhiễu được làm mượt và các sóng mang ổn định bị chìm vài dB bên dưới sẽ hiện ra. Các xung ngắn mờ đi, và tốn pin hơn."</string>
+    <string name="sdr_free_frequency">"Tần số tự do"</string>
+    <string name="sdr_free_note">"Nghe trên %1$s MHz thay vì %2$s MHz; các kênh khác của công cụ dịch theo cùng mức. Áp dụng ở lần bắt đầu tới."</string>
+    <string name="tx_not_in_dv">"Thoại số chỉ thu: chọn NFM, AM, USB hoặc LSB để phát."</string>
+    <string name="listen_dv_waiting">"Đang chờ cuộc gọi DMR hoặc dPMR"</string>
+    <string name="listen_dv_encrypted">"được mã hóa, không phát"</string>
 </resources>

@@ -60,6 +60,7 @@ class LoraAprsController(repo: SdrRepository, scope: CoroutineScope, onAcquire: 
 
     override val sampleRate = MeshRadio.SAMPLE_RATE
     override fun tuneHz() = LoraAprs.EU.loHz
+    override val free = FreeFrequency(com.allnetworktools.data.sdr.LoraAprs.EU.channels.first().hz)
 
     override fun newSink(): SdrSink {
         val radio = MeshRadio(LoraAprs.EU) { f ->
@@ -92,6 +93,7 @@ class LoraAprsController(repo: SdrRepository, scope: CoroutineScope, onAcquire: 
 @Composable
 fun LoraAprsTool(vm: MainViewModel) {
     val c = vm.tools.loraAprs
+    TakeHandoff(com.allnetworktools.model.Tool.LoraAprs) { c.free.offer(it, SdrHandoff.near(it, 100_000, 433_775_000, 434_855_000)) }
     val actions = LocalActions.current
     val device by vm.sdrDevice.collectAsStateWithLifecycle()
     val positions by vm.positions.collectAsStateWithLifecycle()
@@ -140,7 +142,10 @@ fun LoraAprsTool(vm: MainViewModel) {
             }
         }
         if (tab == ToolTab.Settings) {
-            SectionCard { GainSettings(c.gain) { c.applyGains() } }
+            SectionCard {
+                FreeFrequencySettings(c.free, c.running || c.starting)
+                GainSettings(c.gain) { c.applyGains() }
+            }
         }
         if (tab == ToolTab.Settings) {
             SectionCard {

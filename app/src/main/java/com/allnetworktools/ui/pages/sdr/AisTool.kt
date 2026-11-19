@@ -114,6 +114,8 @@ data class Ship(
 
 /** AIS receiver on both channels, 161,975 and 162,025 MHz, from a single capture at 2,304 MS/s. */
 class AisController(private val repo: SdrRepository, private val scope: CoroutineScope, private val onAcquire: () -> Unit = {}) {
+    /** Both channels moved together (they stay 50 kHz apart around this centre). */
+    val free = FreeFrequency(AisReceiver.CENTER_HZ, 100.0, 1000.0)
     val gain = SdrGain(listOf(16, 24, 32, 40), 32, listOf(20, 30, 40), 30, amp = false)
     var lnaGain by gain::lna
     var vgaGain by gain::vga
@@ -137,6 +139,8 @@ class AisController(private val repo: SdrRepository, private val scope: Coroutin
 
     fun start(device: SdrDevice) {
         if (running || starting) return
+        if (!free.valid) { error = S(R.string.invalid_frequency_1_to_6000_mhz); return }
+        val shift = free.shiftHz
         onAcquire()
         error = null
         starting = true
@@ -150,7 +154,7 @@ class AisController(private val repo: SdrRepository, private val scope: Coroutin
                 val rate = AisReceiver.SAMPLE_RATE.toInt()
                 // 162,000 MHz sits fs/4 above the tuning frequency, away from the HackRF's DC spike.
                 val ok = withContext(Dispatchers.IO) {
-                    r.setSampleRate(rate, HackRf.filterFor(rate)) && r.setFrequency(AisReceiver.CENTER_HZ - rate / 4) &&
+                    r.setSampleRate(rate, HackRf.filterFor(rate)) && r.setFrequency(AisReceiver.CENTER_HZ + shift - rate / 4) &&
                         r.setLnaGain(lna) && r.setVgaGain(vga) && r.setAmp(withAmp)
                 }
                 if (!ok) { r.close(); error = S(R.string.sdr_settings_refused); return@launch }
@@ -229,6 +233,7 @@ private fun knots(v: Double) = S(R.string.kn_km_h).format(Locale.getDefault(), v
 @Composable
 fun AisTool(vm: MainViewModel) {
     val c = vm.tools.ais
+    TakeHandoff(com.allnetworktools.model.Tool.Ais) { c.free.offer(it, it in 161_950_000L..162_050_000L) }
     val actions = LocalActions.current
     if (c.ships.isNotEmpty()) TopBarAction(Sym.Download) {
         val snapshot = c.ships
@@ -278,6 +283,7 @@ fun AisTool(vm: MainViewModel) {
         if (tab == ToolTab.Settings) {
             SectionCard {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    FreeFrequencySettings(c.free, c.running || c.starting)
                     GainSettings(c.gain) { c.applyGains() }
                 }
             }

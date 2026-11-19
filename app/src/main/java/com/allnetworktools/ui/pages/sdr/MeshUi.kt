@@ -230,6 +230,7 @@ fun MeshScreen(vm: MainViewModel, c: MeshController, fileName: String, emptyIcon
             SectionCard {
                 Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                     settings()
+                    c.free?.let { FreeFrequencySettings(it, c.running || c.starting) }
                     GainSettings(c.gain) { c.applyGains() }
                 }
             }

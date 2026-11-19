@@ -90,6 +90,20 @@ class ListenController(repo: SdrRepository, scope: CoroutineScope, onAcquire: ()
         private set
     var mode by mutableStateOf(ListenMode.Wfm)
         private set
+    /** The last digital call heard in DMR/dPMR mode: (description, encrypted). */
+    var dvCall by mutableStateOf<Pair<String, Boolean>?>(null)
+
+    private fun dvDescribe(e: com.allnetworktools.data.sdr.PmrEvent): Pair<String, Boolean>? {
+        fun who(group: Boolean, id: Int?) = when { id == null -> "?"; group -> "TG $id"; else -> "$id" }
+        return when (e) {
+            is com.allnetworktools.data.sdr.PmrEvent.Dmr -> when (val b = e.burst) {
+                is com.allnetworktools.data.sdr.Dmr.Burst.Header -> "DMR · ${who(b.lc.group, b.lc.dst)} ← ${b.lc.src} · TS${e.slot}" to b.lc.privacy
+                else -> null
+            }
+            is com.allnetworktools.data.sdr.PmrEvent.DpmrHeader -> "dPMR · ${who(e.header.callType == 0, e.header.called)} ← ${e.header.own}" to false
+            else -> null
+        }
+    }
     var frequencyText by mutableStateOf("100.000")
     var volume by mutableFloatStateOf(0.8f)
     /** Below [SQUELCH_MIN] the squelch is off. */
@@ -227,6 +241,8 @@ class ListenController(repo: SdrRepository, scope: CoroutineScope, onAcquire: ()
             if (track.playState != AudioTrack.PLAYSTATE_PLAYING) runCatching { track.play() }
             track.write(scaled, 0, n, AudioTrack.WRITE_NON_BLOCKING)
         }
+        // Digital voice: who talks to whom, and whether the call is encrypted (then it stays silent).
+        rx.dvEvent = { e -> dvDescribe(e)?.let { d -> post { dvCall = d } } }
         var analyzer = SpectrumAnalyzer(BINS)
         var lastFrame = 0L
         return object : SdrSink {
@@ -266,7 +282,7 @@ class ListenController(repo: SdrRepository, scope: CoroutineScope, onAcquire: ()
         ListenMode.Am -> com.allnetworktools.data.sdr.TxMode.Am
         ListenMode.Usb -> com.allnetworktools.data.sdr.TxMode.Usb
         ListenMode.Lsb -> com.allnetworktools.data.sdr.TxMode.Lsb
-        ListenMode.Wfm -> null
+        ListenMode.Wfm, ListenMode.Dv -> null
     }
 
     /** Push to talk: the microphone goes out on the tuned frequency, in the tuned mode, until [releaseTalk]. */
@@ -402,6 +418,17 @@ fun ListenTool(vm: MainViewModel) {
         HeroCard {
             Text("%.4f MHz".format(Locale.getDefault(), c.frequencyHz / 1e6), style = rf(32, 38, 600, tnum = true))
             Text(c.mode.label, style = rf(14, 20))
+            if (c.mode == ListenMode.Dv) {
+                val call = c.dvCall
+                Text(
+                    when {
+                        call == null -> S(R.string.listen_dv_waiting)
+                        call.second -> call.first + " · " + S(R.string.listen_dv_encrypted)
+                        else -> call.first
+                    },
+                    style = rf(13, 18, 600, tnum = true),
+                )
+            }
             Row(Modifier.padding(top = 12.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 when {
                     c.error != null -> HeroChip(c.error!!, AntTheme.net.poor)
@@ -557,7 +584,7 @@ private fun SpectrumPicker(c: ListenController) {
 private fun TalkCard(c: ListenController, device: com.allnetworktools.data.sdr.SdrDevice, gate: LicenceGate) {
     val vmPerms = com.allnetworktools.ui.LocalActions.current
     val e = com.allnetworktools.data.sdr.Emission.around(c.frequencyHz, 3_000, 3_000, com.allnetworktools.data.sdr.TxUse.Amateur)
-    val why = if (c.txMode == null) S(R.string.tx_not_in_wfm) else com.allnetworktools.data.sdr.TxPolicy.refuse(e, ignoreLicence = true)
+    val why = if (c.txMode == null) S(if (c.mode == ListenMode.Dv) R.string.tx_not_in_dv else R.string.tx_not_in_wfm) else com.allnetworktools.data.sdr.TxPolicy.refuse(e, ignoreLicence = true)
     val red = cs.error
     SectionCard {
         Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
@@ -617,7 +644,7 @@ private fun FrequencyCard(c: ListenController, transmit: Boolean) {
             }
             Text(S(R.string.listen_mode), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                ListenMode.entries.filter { !transmit || it != ListenMode.Wfm }.forEach { m -> AntFilterChip(m.label, c.mode == m, { c.chooseMode(m) }) }
+                ListenMode.entries.filter { !transmit || (it != ListenMode.Wfm && it != ListenMode.Dv) }.forEach { m -> AntFilterChip(m.label, c.mode == m, { c.chooseMode(m) }) }
             }
         }
     }
@@ -628,7 +655,7 @@ private fun FrequencyCard(c: ListenController, transmit: Boolean) {
 private fun ListenTxPage(c: ListenController, device: com.allnetworktools.data.sdr.SdrDevice?) {
     val gate = rememberLicenceGate()
     val e = com.allnetworktools.data.sdr.Emission.around(c.frequencyHz, 3_000, 3_000, com.allnetworktools.data.sdr.TxUse.Amateur)
-    val why = if (c.txMode == null) S(R.string.tx_not_in_wfm) else com.allnetworktools.data.sdr.TxPolicy.refuse(e, ignoreLicence = true)
+    val why = if (c.txMode == null) S(if (c.mode == ListenMode.Dv) R.string.tx_not_in_dv else R.string.tx_not_in_wfm) else com.allnetworktools.data.sdr.TxPolicy.refuse(e, ignoreLicence = true)
     TxHero("%.4f MHz".format(Locale.getDefault(), c.frequencyHz / 1e6), c.mode.label + " · " + S(R.string.tx_talk_title), c.tx, device, why)
     FrequencyCard(c, transmit = true)
     if (canTransmitWith(device)) {

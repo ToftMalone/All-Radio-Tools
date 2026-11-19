@@ -3311,4 +3311,9 @@ Záplava je proud falešných rámců párování, který vyvolá vyskakovací o
     <string name="sstv_iss">"ISS"</string>
     <string name="deep_average">"Dlouhé průměrování"</string>
     <string name="deep_average_note">"Každý vzorek se analyzuje a spektrum se průměruje asi dvě sekundy: šum se vyhladí a objeví se stálé nosné skryté několik dB pod ním. Krátké záblesky slábnou a baterie se vybíjí rychleji."</string>
+    <string name="sdr_free_frequency">"Volná frekvence"</string>
+    <string name="sdr_free_note">"Poslouchá na %1$s MHz místo %2$s MHz; ostatní kanály nástroje se posunou o stejně. Platí od příštího spuštění."</string>
+    <string name="tx_not_in_dv">"Digitální hlas se pouze přijímá: pro vysílání zvolte NFM, AM, USB nebo LSB."</string>
+    <string name="listen_dv_waiting">"Čekání na hovor DMR nebo dPMR"</string>
+    <string name="listen_dv_encrypted">"šifrováno, nepřehráváno"</string>
 </resources>

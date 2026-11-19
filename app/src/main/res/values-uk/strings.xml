@@ -3311,4 +3311,9 @@
     <string name="sstv_iss">"МКС"</string>
     <string name="deep_average">"Довге усереднення"</string>
     <string name="deep_average_note">"Аналізується кожен відлік, а спектр усереднюється приблизно за дві секунди: шум згладжується, і проявляються стабільні несучі, приховані на кілька дБ під ним. Короткі сплески бліднуть, а батарея витрачається швидше."</string>
+    <string name="sdr_free_frequency">"Вільна частота"</string>
+    <string name="sdr_free_note">"Приймання на %1$s МГц замість %2$s МГц; інші канали інструмента зсуваються на стільки ж. Діє з наступного запуску."</string>
+    <string name="tx_not_in_dv">"Цифровий голос лише приймається: для передачі виберіть NFM, AM, USB або LSB."</string>
+    <string name="listen_dv_waiting">"Очікування виклику DMR або dPMR"</string>
+    <string name="listen_dv_encrypted">"зашифровано, не відтворюється"</string>
 </resources>

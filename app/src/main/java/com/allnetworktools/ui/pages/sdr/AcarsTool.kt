@@ -61,6 +61,10 @@ import com.allnetworktools.util.P
  * 2.4 MS/s capture centred between them. Kept in memory for the session only.
  */
 class AcarsController(private val repo: SdrRepository, private val scope: CoroutineScope, private val onAcquire: () -> Unit = {}) {
+    /** One channel of the user's instead of the European three (other regions use other frequencies). */
+    val free = FreeFrequency(com.allnetworktools.data.sdr.Acars.EuropeHz.first(), 100.0, 1000.0)
+    private var channels = com.allnetworktools.data.sdr.Acars.EuropeHz
+    private var centreHz = Acars.CenterHz
     val gain = SdrGain(listOf(16, 24, 32, 40), 32, listOf(20, 30, 40), 30, amp = true)
     var lnaGain by gain::lna
     var vgaGain by gain::vga
@@ -81,6 +85,11 @@ class AcarsController(private val repo: SdrRepository, private val scope: Corout
 
     fun start(device: SdrDevice) {
         if (running || starting) return
+        if (!free.valid) { error = S(R.string.invalid_frequency_1_to_6000_mhz); return }
+        val own = if (free.on) free.hz() else null
+        // A free channel sits 75 kHz above the tuning, clear of the radio's DC spike.
+        channels = own?.let { listOf(it) } ?: com.allnetworktools.data.sdr.Acars.EuropeHz
+        centreHz = own?.let { it - 75_000L } ?: Acars.CenterHz
         onAcquire()
         error = null
         starting = true
@@ -93,7 +102,7 @@ class AcarsController(private val repo: SdrRepository, private val scope: Corout
                 val withAmp = amp
                 val rate = AcarsReceiver.SAMPLE_RATE
                 val ok = withContext(Dispatchers.IO) {
-                    r.setSampleRate(rate, HackRf.filterFor(rate)) && r.setFrequency(Acars.CenterHz) &&
+                    r.setSampleRate(rate, HackRf.filterFor(rate)) && r.setFrequency(centreHz) &&
                         r.setLnaGain(lna) && r.setVgaGain(vga) && r.setAmp(withAmp)
                 }
                 if (!ok) { r.close(); error = S(R.string.sdr_settings_refused); return@launch }
@@ -110,7 +119,7 @@ class AcarsController(private val repo: SdrRepository, private val scope: Corout
         val free = ArrayBlockingQueue<ByteArray>(POOL)
         val full = ArrayBlockingQueue<Pair<ByteArray, Int>>(POOL)
         repeat(POOL) { free.add(ByteArray(131072)) }
-        val rx = AcarsReceiver { m -> scope.launch { messages = (listOf(m) + messages).take(MAX) } }
+        val rx = AcarsReceiver(channels, centreHz) { m -> scope.launch { messages = (listOf(m) + messages).take(MAX) } }
         dspRunning = true
         Thread({
             while (dspRunning) dspStep {
@@ -167,6 +176,7 @@ private val clock = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
 @Composable
 fun AcarsTool(vm: MainViewModel) {
     val c = vm.tools.acars
+    TakeHandoff(com.allnetworktools.model.Tool.Acars) { c.free.offer(it, SdrHandoff.near(it, 15_000, 131_525_000, 131_725_000, 131_825_000)) }
     val actions = LocalActions.current
     val device by vm.sdrDevice.collectAsStateWithLifecycle()
     if (c.messages.isNotEmpty()) TopBarAction(Sym.Download) {
@@ -207,6 +217,7 @@ fun AcarsTool(vm: MainViewModel) {
         }
         if (tab == ToolTab.Settings) {
             SectionCard {
+                FreeFrequencySettings(c.free, c.running || c.starting)
                 GainSettings(c.gain) { c.applyGains() }
             }
         }

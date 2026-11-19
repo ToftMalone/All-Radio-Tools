@@ -563,6 +563,8 @@ class ScreenshotTest {
             v
         }
         vm.tools.spectrum.setForTest(db, 98_000_000L)
+        // The marker on the strongest station: its bar under the spectrum, the analysis button lit.
+        vm.tools.spectrum.markerHz = 97_005_000L
     }
     @Test fun adsb() = shot("H6_adsb", nav = NavState(Network.Sdr, Page.ToolPage(Tool.Adsb))) { vm ->
         vm.tools.adsb.setForTest(

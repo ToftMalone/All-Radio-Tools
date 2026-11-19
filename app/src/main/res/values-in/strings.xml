@@ -3083,4 +3083,9 @@ Banjir adalah aliran frame pemasangan palsu yang memunculkan pop-up di setiap po
     <string name="sstv_iss">"ISS"</string>
     <string name="deep_average">"Rata-rata panjang"</string>
     <string name="deep_average_note">"Setiap sampel dianalisis dan spektrum dirata-ratakan selama sekitar dua detik: derau menjadi halus dan pembawa stabil yang terkubur beberapa dB di bawahnya muncul. Ledakan singkat memudar, dan baterai lebih boros."</string>
+    <string name="sdr_free_frequency">"Frekuensi bebas"</string>
+    <string name="sdr_free_note">"Mendengarkan di %1$s MHz alih-alih %2$s MHz; kanal lain alat ini bergeser sebanyak itu. Berlaku pada mulai berikutnya."</string>
+    <string name="tx_not_in_dv">"Suara digital hanya diterima: pilih NFM, AM, USB, atau LSB untuk memancar."</string>
+    <string name="listen_dv_waiting">"Menunggu panggilan DMR atau dPMR"</string>
+    <string name="listen_dv_encrypted">"terenkripsi, tidak diputar"</string>
 </resources>

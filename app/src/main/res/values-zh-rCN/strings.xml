@@ -3083,4 +3083,9 @@
     <string name="sstv_iss">"国际空间站"</string>
     <string name="deep_average">"长时间平均"</string>
     <string name="deep_average_note">"分析每一个采样,并对频谱做约两秒的平均:噪声被平滑,埋在其下几 dB 的稳定载波会显现出来。短促的突发会变淡,耗电也更多。"</string>
+    <string name="sdr_free_frequency">"自由频率"</string>
+    <string name="sdr_free_note">"在 %1$s MHz 而非 %2$s MHz 接收；工具的其他信道随之平移同样的量。下次启动时生效。"</string>
+    <string name="tx_not_in_dv">"数字语音仅接收：发射请选择 NFM、AM、USB 或 LSB。"</string>
+    <string name="listen_dv_waiting">"等待 DMR 或 dPMR 呼叫"</string>
+    <string name="listen_dv_encrypted">"已加密，不播放"</string>
 </resources>

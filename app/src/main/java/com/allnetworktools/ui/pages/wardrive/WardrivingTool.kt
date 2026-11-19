@@ -185,7 +185,7 @@ fun WardrivingScreen(st: WardriveState, onUpload: () -> Unit, onExport: () -> Un
     val nav = WindowInsets.navigationBars.asPaddingValues()
     LazyColumn(
         Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 128.dp + nav.calculateBottomPadding()),
+        contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = com.allnetworktools.ui.pages.LocalDockSpace.current + nav.calculateBottomPadding()),
         verticalArrangement = Arrangement.spacedBy(3.dp),
     ) {
         item(key = "head") {

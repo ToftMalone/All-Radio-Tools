@@ -3159,4 +3159,9 @@ Een vloed is een stroom nep-koppelframes die op elke telefoon in de buurt een po
     <string name="sstv_iss">"ISS"</string>
     <string name="deep_average">"Lange middeling"</string>
     <string name="deep_average_note">"Elk monster wordt geanalyseerd en het spectrum wordt over ongeveer twee seconden gemiddeld: de ruis vlakt af en stabiele draaggolven die een paar dB eronder zitten worden zichtbaar. Korte bursts vervagen en de batterij raakt sneller leeg."</string>
+    <string name="sdr_free_frequency">"Vrije frequentie"</string>
+    <string name="sdr_free_note">"Luistert op %1$s MHz in plaats van %2$s MHz; de andere kanalen van de tool schuiven evenveel op. Geldt vanaf de volgende start."</string>
+    <string name="tx_not_in_dv">"Digitale spraak is alleen ontvangst: kies NFM, AM, USB of LSB om te zenden."</string>
+    <string name="listen_dv_waiting">"Wachten op een DMR- of dPMR-oproep"</string>
+    <string name="listen_dv_encrypted">"versleuteld, niet afgespeeld"</string>
 </resources>

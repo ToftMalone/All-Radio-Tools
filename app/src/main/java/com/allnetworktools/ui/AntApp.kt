@@ -254,7 +254,8 @@ private fun MainShell(vm: MainViewModel) {
 
 @Composable
 private fun DockLayer(vm: MainViewModel, nav: NavState, modifier: Modifier, onClose: () -> Unit) {
-    val visible = nav.network != null && nav.page != Page.Settings && nav.page != Page.Changelog
+    // Hidden inside a tool, on every network: the tool gets the whole screen, and the dock comes back once it is closed.
+    val visible = nav.network != null && nav.page != Page.Settings && nav.page != Page.Changelog && nav.page !is Page.ToolPage
     var lastNet by remember { mutableStateOf(nav.network ?: Network.Wifi) }
     if (nav.network != null) lastNet = nav.network
     val density = LocalDensity.current

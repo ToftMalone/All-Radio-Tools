@@ -3179,4 +3179,9 @@
     <string name="wifi_chip_channel">"ch. %1$d"</string>
     <string name="deep_average">"Long averaging"</string>
     <string name="deep_average_note">"Every sample is analysed and the spectrum is averaged over about two seconds: the noise smooths out and steady carriers buried a few dB under it show up. Short bursts fade, and it uses more battery."</string>
+    <string name="sdr_free_frequency">"Free frequency"</string>
+    <string name="sdr_free_note">"Listens on %1$s MHz instead of %2$s MHz; the tool\'s other channels move by as much. Takes effect at the next start."</string>
+    <string name="tx_not_in_dv">"Digital voice is received only: choose NFM, AM, USB or LSB to transmit."</string>
+    <string name="listen_dv_waiting">"Waiting for a DMR or dPMR call"</string>
+    <string name="listen_dv_encrypted">"encrypted, not played"</string>
 </resources>

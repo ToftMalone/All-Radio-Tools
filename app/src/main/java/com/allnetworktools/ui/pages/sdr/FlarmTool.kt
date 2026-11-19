@@ -64,6 +64,7 @@ class FlarmController(repo: SdrRepository, scope: CoroutineScope, onAcquire: () 
 
     override val sampleRate = FlarmReceiver.SAMPLE_RATE
     override fun tuneHz() = FlarmReceiver.CENTRE_HZ - sampleRate / 4
+    override val free = FreeFrequency(com.allnetworktools.data.sdr.FlarmReceiver.CENTRE_HZ)
 
     override fun newSink(): SdrSink {
         val tracker = FlarmTracker()
@@ -86,6 +87,7 @@ class FlarmController(repo: SdrRepository, scope: CoroutineScope, onAcquire: () 
 @Composable
 fun FlarmTool(vm: MainViewModel) {
     val c = vm.tools.flarm
+    TakeHandoff(com.allnetworktools.model.Tool.Flarm) { c.free.offer(it, SdrHandoff.near(it, 150_000, 868_300_000)) }
     val device by vm.sdrDevice.collectAsStateWithLifecycle()
     // The phone's position completes the aircraft's truncated positions; it is read while this screen is open.
     val positions by vm.positions.collectAsStateWithLifecycle()
@@ -130,6 +132,7 @@ fun FlarmTool(vm: MainViewModel) {
         if (tab == ToolTab.Settings) {
             SectionCard {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    FreeFrequencySettings(c.free, c.running || c.starting)
                     GainSettings(c.gain) { c.applyGains() }
                 }
             }

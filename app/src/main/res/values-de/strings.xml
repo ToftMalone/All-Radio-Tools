@@ -3159,4 +3159,9 @@ Eine Flut ist ein Strom gefälschter Kopplungs-Frames, der auf jedem Telefon in 
     <string name="sstv_iss">"ISS"</string>
     <string name="deep_average">"Lange Mittelung"</string>
     <string name="deep_average_note">"Jede Probe wird analysiert und das Spektrum über etwa zwei Sekunden gemittelt: Das Rauschen glättet sich, und stetige Träger, die einige dB darunter liegen, werden sichtbar. Kurze Bursts verblassen, und der Akku wird stärker beansprucht."</string>
+    <string name="sdr_free_frequency">"Freie Frequenz"</string>
+    <string name="sdr_free_note">"Hört auf %1$s MHz statt %2$s MHz; die anderen Kanäle des Werkzeugs verschieben sich um denselben Betrag. Gilt ab dem nächsten Start."</string>
+    <string name="tx_not_in_dv">"Digitale Sprache wird nur empfangen: Wählen Sie NFM, AM, USB oder LSB zum Senden."</string>
+    <string name="listen_dv_waiting">"Warte auf einen DMR- oder dPMR-Ruf"</string>
+    <string name="listen_dv_encrypted">"verschlüsselt, nicht abgespielt"</string>
 </resources>

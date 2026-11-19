@@ -74,6 +74,7 @@ class MeshtasticController(repo: SdrRepository, scope: CoroutineScope, onAcquire
 @Composable
 fun MeshtasticTool(vm: MainViewModel) {
     val c = vm.tools.meshtastic
+    TakeHandoff(com.allnetworktools.model.Tool.Meshtastic) { if (!SdrHandoff.near(it, 130_000, 869_525_000, 433_875_000)) { c.bandKey = "free"; c.frequencyMhz = FreeFrequency.mhz(it) } }
     val actions = LocalActions.current
     MeshScreen(
         vm, c, "meshtastic", Sym.Hub, S(R.string.meshtastic_none_yet), S(R.string.meshtastic_none_yet_body), S(R.string.meshtastic_how_it_works),

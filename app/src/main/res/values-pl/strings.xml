@@ -3311,4 +3311,9 @@ Zalew to strumień fałszywych ramek parowania, który wywołuje wyskakujące ok
     <string name="sstv_iss">"ISS"</string>
     <string name="deep_average">"Długie uśrednianie"</string>
     <string name="deep_average_note">"Każda próbka jest analizowana, a widmo uśredniane przez około dwie sekundy: szum się wygładza i pojawiają się stałe nośne ukryte kilka dB pod nim. Krótkie impulsy bledną, a bateria zużywa się szybciej."</string>
+    <string name="sdr_free_frequency">"Dowolna częstotliwość"</string>
+    <string name="sdr_free_note">"Słucha na %1$s MHz zamiast %2$s MHz; pozostałe kanały narzędzia przesuwają się o tyle samo. Działa od następnego uruchomienia."</string>
+    <string name="tx_not_in_dv">"Głos cyfrowy jest tylko odbierany: wybierz NFM, AM, USB lub LSB, aby nadawać."</string>
+    <string name="listen_dv_waiting">"Oczekiwanie na połączenie DMR lub dPMR"</string>
+    <string name="listen_dv_encrypted">"zaszyfrowane, nie odtwarzane"</string>
 </resources>

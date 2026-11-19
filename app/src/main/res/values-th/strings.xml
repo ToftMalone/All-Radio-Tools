@@ -3083,4 +3083,9 @@
     <string name="sstv_iss">"ISS"</string>
     <string name="deep_average">"เฉลี่ยระยะยาว"</string>
     <string name="deep_average_note">"วิเคราะห์ทุกตัวอย่างและเฉลี่ยสเปกตรัมประมาณสองวินาที: สัญญาณรบกวนเรียบขึ้นและคลื่นพาหะคงที่ที่จมอยู่ใต้ไม่กี่ dB จะปรากฏ สัญญาณสั้น ๆ จะจางลง และใช้แบตเตอรี่มากขึ้น"</string>
+    <string name="sdr_free_frequency">"ความถี่อิสระ"</string>
+    <string name="sdr_free_note">"ฟังที่ %1$s MHz แทน %2$s MHz ช่องอื่นของเครื่องมือเลื่อนตามเท่ากัน มีผลเมื่อเริ่มครั้งถัดไป"</string>
+    <string name="tx_not_in_dv">"เสียงดิจิทัลรับอย่างเดียว: เลือก NFM, AM, USB หรือ LSB เพื่อส่ง"</string>
+    <string name="listen_dv_waiting">"กำลังรอการเรียก DMR หรือ dPMR"</string>
+    <string name="listen_dv_encrypted">"เข้ารหัส ไม่เล่น"</string>
 </resources>

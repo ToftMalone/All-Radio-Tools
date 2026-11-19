@@ -322,6 +322,7 @@ private fun weatherLine(w: AprsWeather): String = listOfNotNull(
 @Composable
 fun AprsTool(vm: MainViewModel) {
     val c = vm.tools.aprs
+    TakeHandoff(com.allnetworktools.model.Tool.Aprs) { if (!SdrHandoff.near(it, 6_000, 144_800_000, 144_390_000)) c.frequencyMhz = FreeFrequency.mhz(it) }
     val actions = LocalActions.current
     if (c.stations.isNotEmpty()) TopBarAction(Sym.Download) {
         val snapshot = c.stations

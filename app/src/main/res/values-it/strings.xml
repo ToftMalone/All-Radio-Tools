@@ -3166,4 +3166,9 @@ Una raffica è un flusso di finte trame di abbinamento che fa apparire un pop-up
     <string name="sstv_iss">"ISS"</string>
     <string name="deep_average">"Media lunga"</string>
     <string name="deep_average_note">"Ogni campione viene analizzato e lo spettro viene mediato su circa due secondi: il rumore si attenua e compaiono portanti stabili nascoste qualche dB sotto. I burst brevi svaniscono e la batteria si consuma di più."</string>
+    <string name="sdr_free_frequency">"Frequenza libera"</string>
+    <string name="sdr_free_note">"Ascolta su %1$s MHz invece di %2$s MHz; gli altri canali dello strumento si spostano di altrettanto. Vale dal prossimo avvio."</string>
+    <string name="tx_not_in_dv">"La voce digitale è solo in ricezione: scegli NFM, AM, USB o LSB per trasmettere."</string>
+    <string name="listen_dv_waiting">"In attesa di una chiamata DMR o dPMR"</string>
+    <string name="listen_dv_encrypted">"cifrata, non riprodotta"</string>
 </resources>

@@ -184,6 +184,7 @@ private fun mhzList(hz: List<Long>) = hz.joinToString(" · ") { "%.4f".format(Lo
 @Composable
 fun PocsagTool(vm: MainViewModel) {
     val c = vm.tools.pocsag
+    TakeHandoff(com.allnetworktools.model.Tool.Pocsag) { hz -> if (c.network?.channelsHz?.any { kotlin.math.abs(it - hz) <= 6_000 } != true) { c.network = null; c.customMhz = FreeFrequency.mhz(hz) } }
     val actions = LocalActions.current
     val device by vm.sdrDevice.collectAsStateWithLifecycle()
     if (c.messages.isNotEmpty()) TopBarAction(Sym.Download) {

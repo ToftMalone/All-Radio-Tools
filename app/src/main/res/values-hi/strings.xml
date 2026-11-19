@@ -3159,4 +3159,9 @@
     <string name="sstv_iss">"ISS"</string>
     <string name="deep_average">"लंबा औसत"</string>
     <string name="deep_average_note">"हर सैंपल का विश्लेषण होता है और स्पेक्ट्रम का लगभग दो सेकंड का औसत लिया जाता है: शोर समतल होता है और उसके कुछ dB नीचे दबे स्थिर कैरियर दिखने लगते हैं। छोटे बर्स्ट फीके पड़ते हैं, और बैटरी ज़्यादा खर्च होती है।"</string>
+    <string name="sdr_free_frequency">"मुक्त आवृत्ति"</string>
+    <string name="sdr_free_note">"%2$s MHz की जगह %1$s MHz पर सुनता है; टूल के अन्य चैनल उतने ही खिसकते हैं। अगली शुरुआत से लागू।"</string>
+    <string name="tx_not_in_dv">"डिजिटल आवाज़ केवल प्राप्ति है: ट्रांसमिट करने के लिए NFM, AM, USB या LSB चुनें।"</string>
+    <string name="listen_dv_waiting">"DMR या dPMR कॉल की प्रतीक्षा"</string>
+    <string name="listen_dv_encrypted">"एन्क्रिप्टेड, नहीं चलाया गया"</string>
 </resources>

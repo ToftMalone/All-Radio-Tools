@@ -3083,4 +3083,9 @@
     <string name="sstv_iss">"ISS"</string>
     <string name="deep_average">"장시간 평균"</string>
     <string name="deep_average_note">"모든 샘플을 분석하고 스펙트럼을 약 2초 동안 평균합니다: 잡음이 고르게 되고 그 아래 몇 dB에 묻힌 안정된 반송파가 드러납니다. 짧은 버스트는 흐려지고 배터리를 더 씁니다."</string>
+    <string name="sdr_free_frequency">"자유 주파수"</string>
+    <string name="sdr_free_note">"%2$s MHz 대신 %1$s MHz에서 수신합니다. 도구의 다른 채널도 같은 만큼 이동합니다. 다음 시작부터 적용됩니다."</string>
+    <string name="tx_not_in_dv">"디지털 음성은 수신 전용입니다: 송신하려면 NFM, AM, USB 또는 LSB를 선택하세요."</string>
+    <string name="listen_dv_waiting">"DMR 또는 dPMR 호출 대기 중"</string>
+    <string name="listen_dv_encrypted">"암호화됨, 재생 안 함"</string>
 </resources>

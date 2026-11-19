@@ -66,6 +66,8 @@ data class TpmsInfo(val protocol: String, val id: String, val last: TpmsReading,
  * HackRF's DC spike. Kept in memory for the session only.
  */
 class TpmsController(private val repo: SdrRepository, private val scope: CoroutineScope, private val onAcquire: () -> Unit = {}) {
+    /** Replaces the chosen band with the user's frequency. */
+    val free = FreeFrequency(com.allnetworktools.data.sdr.TpmsReceiver.EUROPE_HZ)
     var bandHz by mutableStateOf(TpmsReceiver.EUROPE_HZ)
     val gain = SdrGain(listOf(16, 24, 32, 40), 32, listOf(20, 30, 40), 30, amp = true)
     var lnaGain by gain::lna
@@ -89,6 +91,7 @@ class TpmsController(private val repo: SdrRepository, private val scope: Corouti
 
     fun start(device: SdrDevice) {
         if (running || starting) return
+        if (!free.valid) { error = S(R.string.invalid_frequency_1_to_6000_mhz); return }
         onAcquire()
         error = null
         starting = true
@@ -100,7 +103,7 @@ class TpmsController(private val repo: SdrRepository, private val scope: Corouti
                 val vga = vgaGain
                 val withAmp = amp
                 val rate = TpmsReceiver.SAMPLE_RATE
-                val hz = bandHz
+                val hz = if (free.on) free.hz() ?: bandHz else bandHz
                 val ok = withContext(Dispatchers.IO) {
                     r.setSampleRate(rate, HackRf.filterFor(rate)) && r.setFrequency(hz - rate / 4) &&
                         r.setLnaGain(lna) && r.setVgaGain(vga) && r.setAmp(withAmp)
@@ -185,6 +188,7 @@ class TpmsController(private val repo: SdrRepository, private val scope: Corouti
 @Composable
 fun TpmsTool(vm: MainViewModel) {
     val c = vm.tools.tpms
+    TakeHandoff(com.allnetworktools.model.Tool.Tpms) { c.free.offer(it, SdrHandoff.near(it, 150_000, c.bandHz)) }
     val actions = LocalActions.current
     val device by vm.sdrDevice.collectAsStateWithLifecycle()
     if (c.sensors.isNotEmpty()) TopBarAction(Sym.Download) {
@@ -235,6 +239,7 @@ fun TpmsTool(vm: MainViewModel) {
                             AntFilterChip(label, c.bandHz == hz, { if (c.bandHz != hz && !c.starting) { if (c.running) c.stop(); c.bandHz = hz } })
                         }
                     }
+                    FreeFrequencySettings(c.free, c.running || c.starting)
                     GainSettings(c.gain) { c.applyGains() }
                 }
             }

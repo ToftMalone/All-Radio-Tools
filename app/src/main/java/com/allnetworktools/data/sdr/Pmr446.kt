@@ -239,10 +239,7 @@ class PmrChannel(val hz: Long, private val offHz: Double, narrow: Boolean, priva
                 val zi = yi * lr - yr * li
                 lr = yr; li = yi
                 val hz = (kotlin.math.atan2(zi, zr) * 50_000.0 / (2 * PI)).toFloat()
-                nOut++
-                dmr.push(hz)
-                dpmr.push(hz)
-                dpmrEnd.push(hz)
+                pushFm(hz)
                 lowAcc += hz; lowCnt++
                 if (lowCnt == 50) { low[lowN % low.size] = lowAcc / 50; lowN++; lowAcc = 0f; lowCnt = 0 }
                 if (audio != null && i % 2 == 1 && nOut > digitalUntil) { aud[na++] = hz; if (na == aud.size) { audio?.invoke(aud, na); na = 0 } }
@@ -250,6 +247,17 @@ class PmrChannel(val hz: Long, private val offHz: Double, narrow: Boolean, priva
             if (na > 0) audio?.invoke(aud, na)
             off += m
         }
+    }
+
+    /**
+     * One FM discriminator sample (Hz of deviation, 50 kS/s) into the DMR and dPMR searches: what [feed] does after
+     * its own channel filter, open to a receiver that demodulates by itself (the Listen tool).
+     */
+    fun pushFm(hz: Float) {
+        nOut++
+        dmr.push(hz)
+        dpmr.push(hz)
+        dpmrEnd.push(hz)
     }
 
     /** Mean power since the last call, in dB (full scale = 0). */

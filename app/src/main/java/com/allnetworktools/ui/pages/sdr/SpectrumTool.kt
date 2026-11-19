@@ -1,6 +1,10 @@
 package com.allnetworktools.ui.pages.sdr
 
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -15,6 +19,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -107,11 +112,29 @@ fun SpectrumTool(vm: MainViewModel) {
     val span = c.spanMhz * 1e6 / c.zoom
     val peakIdx = db?.let { a -> a.indices.maxBy { a[it] } }
     val peakHz = peakIdx?.let { center - span / 2 + (it + 0.5) * span / db.size }
-    PageColumn {
-        HeroCard {
-            Text("${mhzLabel(center)} MHz", style = gs(30, 36, 500, tnum = true))
-            Text(S(R.string.width_mhz_from_to_mhz, widthLabel(span), mhzLabel(center - span / 2), mhzLabel(center + span / 2)), Modifier.padding(top = 2.dp), style = rf(14, 20))
-            Row(Modifier.padding(top = 12.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+    // The marker, as a place along the spectrum shown (null when off it).
+    val marker = c.markerHz
+    val markerAt = marker?.let { ((it - (center - span / 2)) / span).toFloat() }?.takeIf { it in 0f..1f }
+    // A tap or a drag places the marker; held against an edge, it takes the spectrum along (a quarter of the width at a
+    // time), as the Listen tool's dial does.
+    var lastEdgeMs by remember { androidx.compose.runtime.mutableLongStateOf(0L) }
+    val place: (Float) -> Unit = { f ->
+        c.markerHz = (center - span / 2 + f * span).toLong()
+        val now = System.currentTimeMillis()
+        if ((f < EDGE || f > 1 - EDGE) && now - lastEdgeMs > EDGE_MS) {
+            lastEdgeMs = now
+            c.retune((center + (if (f < EDGE) -span else span) / 4).toLong())
+        }
+    }
+    var analysis by remember { androidx.compose.runtime.mutableStateOf(false) }
+    // The spectrum stays at the top (issue #16); only the settings under it scroll.
+    Column(Modifier.fillMaxSize()) {
+        Column(Modifier.padding(horizontal = 16.dp).padding(top = 4.dp, bottom = 8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Column(Modifier.weight(1f)) {
+                    Text("${mhzLabel(center)} MHz", style = gs(22, 28, 500, tnum = true), maxLines = 1)
+                    Text(S(R.string.width_mhz_from_to_mhz, widthLabel(span), mhzLabel(center - span / 2), mhzLabel(center + span / 2)), style = rf(12, 16), color = cs.onSurfaceVariant, maxLines = 2)
+                }
                 when {
                     c.error != null -> HeroChip(c.error!!, AntTheme.net.poor)
                     c.starting -> HeroChip(S(R.string.starting_the_hackrf), AntTheme.net.fair, blink = true)
@@ -120,97 +143,131 @@ fun SpectrumTool(vm: MainViewModel) {
                     else -> HeroChip(S(R.string.ready, device!!.name), AntTheme.net.good)
                 }
             }
-        }
-        // The marker, as a place along the spectrum shown (null when off it).
-        val marker = c.markerHz
-        val markerAt = marker?.let { ((it - (center - span / 2)) / span).toFloat() }?.takeIf { it in 0f..1f }
-        Column(Modifier.pinchZoom(c.zoom, c::chooseZoom), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            SpectrumView(db, c.hold, peakIdx, markerAt) { f -> c.markerHz = (center - span / 2 + f * span).toLong() }
-            WaterfallView(c)
-        }
-        if (marker != null) {
-            val level = if (db != null && markerAt != null) markerLevel(db, markerAt) else null
-            SectionCard {
-                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                    Text(
-                        S(R.string.spectrum_marker, mhzLabel(marker.toDouble())) + (level?.let { " · " + "%.0f dBFS".format(Locale.getDefault(), it) } ?: ""),
-                        style = rf(15, 20, 600, tnum = true),
-                    )
-                    SignalGuess(vm, c, db, markerAt, marker, center, span)
-                    ToolButtons(
-                        ToolButton("− ${markerStepLabel(c.markerStepHz())}", Sym.ChevronLeft, BtnKind.OutlineOnSurface) { c.nudgeMarker(-1, center.toLong()) },
-                        ToolButton("+ ${markerStepLabel(c.markerStepHz())}", Sym.ChevronRight, BtnKind.OutlineOnSurface) { c.nudgeMarker(1, center.toLong()) },
-                    )
-                    ToolButtons(
-                        ToolButton(S(R.string.spectrum_listen_here), Sym.Headphones) {
-                            // The radio goes to the Listen tool, tuned on the marker in the mode of its band.
-                            if (c.running || c.starting) c.stop()
-                            vm.tools.listen.listenAt(marker)
-                            vm.navigate { it.copy(page = com.allnetworktools.Page.ToolPage(com.allnetworktools.model.Tool.Listen)) }
-                        },
-                        ToolButton(S(R.string.spectrum_marker_clear), Sym.Close, BtnKind.OutlineOnSurface) { c.markerHz = null },
-                    )
-                }
+            Column(Modifier.pinchZoom(c.zoom, c::chooseZoom), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                SpectrumView(db, c.hold, peakIdx, markerAt, height = 160, onTap = place)
+                WaterfallView(c, markerAt, place)
             }
-        } else if (db != null) {
-            Text(S(R.string.spectrum_marker_hint), Modifier.padding(horizontal = 8.dp), style = rf(12, 16), color = cs.onSurfaceVariant)
+            // The frequency buttons right under the spectrum they move.
+            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                RoundButton(Sym.ChevronLeft) { c.retune((center - span / 2).toLong()) }
+                Text("± ${widthLabel(span / 2)} MHz", Modifier.weight(1f), style = rf(13, 18, 600), color = cs.onSurfaceVariant, textAlign = androidx.compose.ui.text.style.TextAlign.Center)
+                RoundButton(Sym.ChevronRight) { c.retune((center + span / 2).toLong()) }
+            }
+            if (marker != null) MarkerBar(vm, c, db, markerAt, marker, center, span) { analysis = true }
+            else if (db != null) Text(S(R.string.spectrum_marker_hint), Modifier.padding(horizontal = 8.dp), style = rf(12, 16), color = cs.onSurfaceVariant)
         }
-        FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            SpectrumController.Zooms.forEach { z -> AntFilterChip(widthLabel(c.spanMhz * 1e6 / z) + " MHz", c.zoom == z, { c.chooseZoom(z) }) }
-        }
-        ToolButtons(
-            ToolButton("− ${widthLabel(span / 2)} MHz", Sym.ChevronLeft, BtnKind.OutlineOnSurface) { c.retune((center - span / 2).toLong()) },
-            ToolButton("+ ${widthLabel(span / 2)} MHz", Sym.ChevronRight, BtnKind.OutlineOnSurface) { c.retune((center + span / 2).toLong()) },
-        )
-        if (c.running || c.starting) StartButton(S(R.string.stop), Sym.Stop) { c.stop() }
-        else StartButton(S(R.string.start_the_analysis), Sym.PlayArrow, enabled = device != null && c.parsedCenterHz() != null) { device?.let(c::start) }
-        SectionCard {
-            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                HostInputField(c.centerMhz, { c.centerMhz = it }, S(R.string.centre_frequency_mhz), Sym.Antenna, keyboardType = KeyboardType.Decimal) {
-                    c.parsedCenterHz()?.let(c::retune)
-                }
-                Text(S(R.string.bands), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
+        Box(Modifier.weight(1f)) {
+            PageColumn {
+                if (c.running || c.starting) StartButton(S(R.string.stop), Sym.Stop) { c.stop() }
+                else StartButton(S(R.string.start_the_analysis), Sym.PlayArrow, enabled = device != null && c.parsedCenterHz() != null) { device?.let(c::start) }
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    SpectrumPreset.entries.forEach { p ->
-                        AntFilterChip(p.label, false, {
-                            if (!c.running) c.spanMhz = fitSpan(p.spanMhz, device?.spectrumSpans)
-                            c.retune((p.centerMhz * 1e6).toLong())
-                        })
+                    SpectrumController.Zooms.forEach { z -> AntFilterChip(widthLabel(c.spanMhz * 1e6 / z) + " MHz", c.zoom == z, { c.chooseZoom(z) }) }
+                }
+                SectionCard {
+                    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                        HostInputField(c.centerMhz, { c.centerMhz = it }, S(R.string.centre_frequency_mhz), Sym.Antenna, keyboardType = KeyboardType.Decimal) {
+                            c.parsedCenterHz()?.let(c::retune)
+                        }
+                        Text(S(R.string.bands), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
+                        FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                            SpectrumPreset.entries.forEach { p ->
+                                AntFilterChip(p.label, false, {
+                                    if (!c.running) c.spanMhz = fitSpan(p.spanMhz, device?.spectrumSpans)
+                                    c.retune((p.centerMhz * 1e6).toLong())
+                                })
+                            }
+                        }
+                        Text(S(R.string.displayed_width_at_next_start), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
+                        FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                            (device?.spectrumSpans ?: listOf(2, 5, 10, 20)).forEach { s -> AntFilterChip("$s MHz", c.spanMhz == s, { if (c.spanMhz != s && !c.starting) { if (c.running) c.stop(); c.spanMhz = s } }) }
+                        }
+                        GainSettings(c.gain) { c.applyGains() }
+                        Text(S(R.string.display_2), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
+                        FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                            AntFilterChip(S(R.string.peak_hold), c.peakHold, { c.peakHold = !c.peakHold })
+                            AntFilterChip(S(R.string.deep_average), c.deepAverage, { c.toggleDeepAverage() })
+                        }
+                        if (c.deepAverage) Text(S(R.string.deep_average_note), style = rf(12, 16), color = cs.onSurfaceVariant)
                     }
                 }
-                Text(S(R.string.displayed_width_at_next_start), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
-                FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    (device?.spectrumSpans ?: listOf(2, 5, 10, 20)).forEach { s -> AntFilterChip("$s MHz", c.spanMhz == s, { if (c.spanMhz != s && !c.starting) { if (c.running) c.stop(); c.spanMhz = s } }) }
+                SectionCard {
+                    Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                        Symbol(Sym.Info, size = 22.dp, tint = AntTheme.accent.accent)
+                        Text(
+                            S(R.string.receive_only_the_level_is_in) +
+                                S(R.string.the_line_in_the_middle_is),
+                            style = rf(13, 18), color = cs.onSurfaceVariant,
+                        )
+                    }
                 }
-                GainSettings(c.gain) { c.applyGains() }
-                Text(S(R.string.display_2), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
-                FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    AntFilterChip(S(R.string.peak_hold), c.peakHold, { c.peakHold = !c.peakHold })
-                    AntFilterChip(S(R.string.deep_average), c.deepAverage, { c.toggleDeepAverage() })
-                }
-                if (c.deepAverage) Text(S(R.string.deep_average_note), style = rf(12, 16), color = cs.onSurfaceVariant)
             }
         }
-        SectionCard {
-            Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                Symbol(Sym.Info, size = 22.dp, tint = AntTheme.accent.accent)
-                Text(
-                    S(R.string.receive_only_the_level_is_in) +
-                        S(R.string.the_line_in_the_middle_is),
-                    style = rf(13, 18), color = cs.onSurfaceVariant,
-                )
-            }
+    }
+    if (analysis && marker != null) {
+        androidx.compose.material3.AlertDialog(
+            onDismissRequest = { analysis = false },
+            title = { Text(S(R.string.spectrum_marker, mhzLabel(marker.toDouble()))) },
+            text = {
+                Column(Modifier.verticalScroll(androidx.compose.foundation.rememberScrollState())) {
+                    SignalGuess(vm, c, db, markerAt, marker, center, span) { analysis = false }
+                }
+            },
+            confirmButton = { androidx.compose.material3.TextButton({ analysis = false }) { Text(S(R.string.close)) } },
+        )
+    }
+}
+
+/** Held this close to an edge (a fraction of the width), the marker moves the spectrum. */
+private const val EDGE = 0.04f
+private const val EDGE_MS = 700L
+
+@Composable
+private fun RoundButton(icon: String, tint: Color = cs.onSurface, background: Color = cs.surfaceContainerHigh, onClick: () -> Unit) {
+    Box(Modifier.size(44.dp).clip(CircleShape).background(background).clickable(onClick = onClick), contentAlignment = Alignment.Center) {
+        Symbol(icon, size = 22.dp, tint = tint)
+    }
+}
+
+/**
+ * The marker on one line that does not change height: where it is and its level, a step either way, the analysis (its
+ * button lit when the signal looks like something known, the details in a window), Listen, and away.
+ */
+@Composable
+private fun MarkerBar(vm: MainViewModel, c: SpectrumController, db: FloatArray?, markerAt: Float?, marker: Long, center: Double, span: Double, onAnalysis: () -> Unit) {
+    val level = if (db != null && markerAt != null) markerLevel(db, markerAt) else null
+    val id = com.allnetworktools.data.sdr.SignalId
+    val known = remember(db, markerAt, marker, center, span) {
+        db != null && markerAt != null && id.identify(id.measure(db, markerAt, center, span)).isNotEmpty()
+    }
+    val acc = AntTheme.accent
+    Row(
+        Modifier.fillMaxWidth().clip(RoundedCornerShape(20.dp)).background(cs.surfaceContainerLow).padding(horizontal = 8.dp, vertical = 6.dp),
+        verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp),
+    ) {
+        Column(Modifier.weight(1f).padding(start = 6.dp)) {
+            Text(mhzLabel(marker.toDouble()) + " MHz", style = rf(14, 18, 600, tnum = true), maxLines = 1)
+            Text(level?.let { "%.0f dBFS".format(Locale.getDefault(), it) } ?: "—", style = rf(12, 16, tnum = true), color = cs.onSurfaceVariant, maxLines = 1)
         }
+        RoundButton(Sym.ChevronLeft) { c.nudgeMarker(-1, center.toLong()) }
+        RoundButton(Sym.ChevronRight) { c.nudgeMarker(1, center.toLong()) }
+        RoundButton(Sym.Search, tint = if (known) acc.onAccent else cs.onSurfaceVariant, background = if (known) acc.accent else cs.surfaceContainerHigh, onClick = onAnalysis)
+        RoundButton(Sym.Headphones) {
+            // The radio goes to the Listen tool, tuned on the marker in the mode of its band.
+            if (c.running || c.starting) c.stop()
+            vm.tools.listen.listenAt(marker)
+            vm.navigate { it.copy(page = com.allnetworktools.Page.ToolPage(com.allnetworktools.model.Tool.Listen)) }
+        }
+        RoundButton(Sym.Close) { c.markerHz = null }
     }
 }
 
 @Composable
-internal fun SpectrumView(db: FloatArray?, hold: FloatArray?, peakIdx: Int?, markerAt: Float? = null, onTap: ((Float) -> Unit)? = null) {
+internal fun SpectrumView(db: FloatArray?, hold: FloatArray?, peakIdx: Int?, markerAt: Float? = null, height: Int = 180, onTap: ((Float) -> Unit)? = null) {
     val line = AntTheme.accent.accent
     val grid = cs.outlineVariant
     val holdColor = AntTheme.net.fair
     val markerColor = cs.tertiary
-    Box(Modifier.fillMaxWidth().height(180.dp).clip(RoundedCornerShape(24.dp)).background(cs.surfaceContainerHigh)) {
+    Box(Modifier.fillMaxWidth().height(height.dp).clip(RoundedCornerShape(24.dp)).background(cs.surfaceContainerHigh)) {
         // The handler is read again at every gesture: it holds the centre and the width shown now, not those of the first frame.
         val current by androidx.compose.runtime.rememberUpdatedState(onTap)
         val tap = if (onTap != null) Modifier.pointerInput(Unit) {
@@ -263,17 +320,21 @@ internal fun SpectrumView(db: FloatArray?, hold: FloatArray?, peakIdx: Int?, mar
 }
 
 @Composable
-private fun WaterfallView(c: SpectrumController) {
+private fun WaterfallView(c: SpectrumController, markerAt: Float?, onTap: (Float) -> Unit) {
     val frames = c.frames // recompose on each new row
     val image = remember { c.waterfall.asImageBitmap() }
-    Box(Modifier.fillMaxWidth().height(170.dp).clip(RoundedCornerShape(24.dp)).background(Color(0xFF0B1026))) {
-        Canvas(Modifier.fillMaxSize()) {
+    val markerColor = cs.tertiary
+    val current by androidx.compose.runtime.rememberUpdatedState(onTap)
+    Box(Modifier.fillMaxWidth().height(110.dp).clip(RoundedCornerShape(24.dp)).background(Color(0xFF0B1026))) {
+        // The marker can be placed on the waterfall too: a signal that comes and goes shows there better.
+        Canvas(Modifier.fillMaxSize().pointerInput(Unit) { detectTapGestures { o -> current((o.x / size.width).coerceIn(0f, 1f)) } }) {
             if (frames >= 0) {
                 drawImage(
                     image, IntOffset.Zero, IntSize(SpectrumController.WIDTH, SpectrumController.HEIGHT),
                     dstSize = IntSize(size.width.toInt(), size.height.toInt()), filterQuality = FilterQuality.Low,
                 )
             }
+            markerAt?.let { m -> drawLine(markerColor, Offset(size.width * m, 0f), Offset(size.width * m, size.height), 2f) }
         }
         Text(S(R.string.waterfall_newest_at_the_top), Modifier.align(Alignment.BottomStart).padding(10.dp), style = rf(11, 14), color = Color.White.copy(alpha = 0.7f))
     }
@@ -346,7 +407,7 @@ private val SignalTexts: Map<String, Pair<Int, Int>> = mapOf(
 
 /** What the signal under the marker probably is, with a way to the tool that decodes it. */
 @Composable
-private fun SignalGuess(vm: MainViewModel, c: SpectrumController, db: FloatArray?, markerAt: Float?, marker: Long, center: Double, span: Double) {
+private fun SignalGuess(vm: MainViewModel, c: SpectrumController, db: FloatArray?, markerAt: Float?, marker: Long, center: Double, span: Double, onOpen: () -> Unit = {}) {
     val id = com.allnetworktools.data.sdr.SignalId
     val m = remember(db, markerAt, marker, center, span) {
         if (db != null && markerAt != null) id.measure(db, markerAt, center, span)
@@ -384,6 +445,9 @@ private fun SignalGuess(vm: MainViewModel, c: SpectrumController, db: FloatArray
         if (tool != null && tool != com.allnetworktools.model.Tool.Listen) {
             ToolButtons(
                 ToolButton(S(R.string.sig_open, tool.title), Sym.OpenInNew, BtnKind.Outline) {
+                    // The tool opens on the signal: its centre as measured, else the marker (issue #21).
+                    SdrHandoff.offer(tool, if (m.present) m.hz else marker)
+                    onOpen()
                     if (c.running || c.starting) c.stop()
                     vm.navigate { it.copy(page = com.allnetworktools.Page.ToolPage(tool)) }
                 },

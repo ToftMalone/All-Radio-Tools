@@ -3166,4 +3166,9 @@ Una avalancha es un flujo de tramas de emparejamiento falsas que hace aparecer u
     <string name="sstv_iss">"EEI"</string>
     <string name="deep_average">"Promedio largo"</string>
     <string name="deep_average_note">"Se analiza cada muestra y el espectro se promedia durante unos dos segundos: el ruido se suaviza y aparecen portadoras estables ocultas unos dB por debajo. Las ráfagas cortas se desvanecen y se gasta más batería."</string>
+    <string name="sdr_free_frequency">"Frecuencia libre"</string>
+    <string name="sdr_free_note">"Escucha en %1$s MHz en lugar de %2$s MHz; los demás canales de la herramienta se desplazan lo mismo. Se aplica en el próximo inicio."</string>
+    <string name="tx_not_in_dv">"La voz digital es solo de recepción: elija NFM, AM, USB o LSB para transmitir."</string>
+    <string name="listen_dv_waiting">"Esperando una llamada DMR o dPMR"</string>
+    <string name="listen_dv_encrypted">"cifrada, no reproducida"</string>
 </resources>

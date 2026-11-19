@@ -32,6 +32,7 @@ import kotlinx.coroutines.CoroutineScope
 /** MeshCore nodes (adverts), the Public channel and the "#name" channels the user adds, for this session only. */
 class MeshCoreController(repo: SdrRepository, scope: CoroutineScope, onAcquire: () -> Unit = {}) : MeshController(repo, scope, onAcquire, "sdr-meshcore") {
     override val band: MeshBand = MeshCore.EU868
+    override val free = FreeFrequency(com.allnetworktools.data.sdr.MeshCore.EU868.channels.first().hz)
     override val tracker = MeshCoreTracker()
 
     var hashtags by mutableStateOf<List<String>>(emptyList())
@@ -54,6 +55,7 @@ class MeshCoreController(repo: SdrRepository, scope: CoroutineScope, onAcquire: 
 @Composable
 fun MeshCoreTool(vm: MainViewModel) {
     val c = vm.tools.meshcore
+    TakeHandoff(com.allnetworktools.model.Tool.MeshCore) { c.free.offer(it, SdrHandoff.near(it, 60_000, 869_618_000)) }
     val actions = LocalActions.current
     MeshScreen(
         vm, c, "meshcore", Sym.Hub, S(R.string.meshcore_none_yet), S(R.string.meshcore_none_yet_body), S(R.string.meshcore_how_it_works),

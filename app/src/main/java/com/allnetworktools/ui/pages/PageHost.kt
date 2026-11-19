@@ -172,19 +172,25 @@ fun PageHostContent(vm: MainViewModel, nav: NavState, onBack: () -> Unit) {
                 label = "fadeThrough",
                 modifier = Modifier.weight(1f),
             ) { (net, page) ->
-                PageBody(vm, net ?: Network.Wifi, page)
+                // Inside a tool the dock is hidden: the page needs no room kept for it under its content.
+                CompositionLocalProvider(LocalDockSpace provides if (page is Page.ToolPage) 24.dp else 128.dp) {
+                    PageBody(vm, net ?: Network.Wifi, page)
+                }
             }
         }
     }
 }
 
 /** Scrollable page body with the standard 16 dp gutters and room for the dock. */
+/** Room kept under a page's content for the floating dock: little inside a tool, where the dock is hidden. */
+val LocalDockSpace = staticCompositionLocalOf { 128.dp }
+
 @Composable
 fun PageColumn(content: @Composable ColumnScope.() -> Unit) {
     val nav = WindowInsets.navigationBars.asPaddingValues()
     Column(
         Modifier.fillMaxSize().verticalScroll(rememberScrollState())
-            .padding(PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 128.dp + nav.calculateBottomPadding())),
+            .padding(PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = LocalDockSpace.current + nav.calculateBottomPadding())),
         verticalArrangement = Arrangement.spacedBy(12.dp),
         content = content,
     )

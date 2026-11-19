@@ -3235,4 +3235,9 @@ Un val este un flux de cadre de asociere false care face să apară un pop-up pe
     <string name="sstv_iss">"SSI"</string>
     <string name="deep_average">"Medie lungă"</string>
     <string name="deep_average_note">"Fiecare eșantion este analizat, iar spectrul este mediat pe aproximativ două secunde: zgomotul se netezește și apar purtătoarele stabile ascunse câțiva dB sub el. Rafalele scurte se estompează, iar bateria se consumă mai repede."</string>
+    <string name="sdr_free_frequency">"Frecvență liberă"</string>
+    <string name="sdr_free_note">"Ascultă pe %1$s MHz în loc de %2$s MHz; celelalte canale ale instrumentului se mută la fel. Se aplică la următoarea pornire."</string>
+    <string name="tx_not_in_dv">"Vocea digitală este doar recepție: alegeți NFM, AM, USB sau LSB pentru a emite."</string>
+    <string name="listen_dv_waiting">"Se așteaptă un apel DMR sau dPMR"</string>
+    <string name="listen_dv_encrypted">"criptat, neredat"</string>
 </resources>

@@ -3253,4 +3253,9 @@
     <string name="wifi_chip_channel">"canal %1$d"</string>
     <string name="deep_average">"Moyenne longue"</string>
     <string name="deep_average_note">"Chaque échantillon est analysé et le spectre est moyenné sur environ deux secondes : le bruit se lisse et les porteuses stables noyées quelques dB dessous apparaissent. Les salves courtes s\'estompent, et la batterie s\'use plus vite."</string>
+    <string name="sdr_free_frequency">"Fréquence libre"</string>
+    <string name="sdr_free_note">"Écoute sur %1$s MHz au lieu de %2$s MHz ; les autres canaux de l\'outil se décalent d\'autant. Pris en compte au prochain démarrage."</string>
+    <string name="tx_not_in_dv">"La voix numérique est en réception seule : choisissez NFM, AM, USB ou LSB pour émettre."</string>
+    <string name="listen_dv_waiting">"En attente d\'un appel DMR ou dPMR"</string>
+    <string name="listen_dv_encrypted">"chiffré, non joué"</string>
 </resources>

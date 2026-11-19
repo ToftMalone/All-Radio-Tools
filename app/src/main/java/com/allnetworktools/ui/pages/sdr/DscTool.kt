@@ -63,6 +63,7 @@ class DscController(repo: SdrRepository, scope: CoroutineScope, onAcquire: () ->
 
     override val sampleRate = DscReceiver.SAMPLE_RATE
     override fun tuneHz() = DscReceiver.CHANNEL_70_HZ - sampleRate / 4
+    override val free = FreeFrequency(com.allnetworktools.data.sdr.DscReceiver.CHANNEL_70_HZ)
 
     override fun newSink(): SdrSink {
         val heard = ArrayList<DscHeard>()
@@ -107,6 +108,7 @@ class DscController(repo: SdrRepository, scope: CoroutineScope, onAcquire: () ->
 @Composable
 fun DscTool(vm: MainViewModel) {
     val c = vm.tools.dsc
+    TakeHandoff(com.allnetworktools.model.Tool.Dsc) { c.free.offer(it, SdrHandoff.near(it, 10_000, 156_525_000)) }
     val actions = LocalActions.current
     val device by vm.sdrDevice.collectAsStateWithLifecycle()
     val positions by vm.positions.collectAsStateWithLifecycle()
@@ -154,6 +156,7 @@ fun DscTool(vm: MainViewModel) {
         if (tab == ToolTab.Settings) {
             SectionCard {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    FreeFrequencySettings(c.free, c.running || c.starting)
                     GainSettings(c.gain) { c.applyGains() }
                 }
             }
