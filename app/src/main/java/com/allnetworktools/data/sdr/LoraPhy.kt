@@ -107,9 +107,9 @@ object LoraPhy {
      * Number of payload symbols after the 8 header symbols. With the low-data-rate optimisation ([ldro]) every
      * block carries sf − 2 codewords, like the header block.
      */
-    fun payloadSymbols(sf: Int, payloadLen: Int, cr: Int, hasCrc: Boolean, ldro: Boolean = false, fullHeader: Boolean = false): Int {
+    fun payloadSymbols(sf: Int, payloadLen: Int, cr: Int, hasCrc: Boolean, ldro: Boolean = false): Int {
         val nibbles = 5 + 2 * payloadLen + (if (hasCrc) 4 else 0)
-        val rest = nibbles - headerRows(sf, fullHeader)
+        val rest = nibbles - (sf - 2)
         val rows = if (ldro) sf - 2 else sf
         return if (rest <= 0) 0 else ((rest + rows - 1) / rows) * (cr + 4)
     }
@@ -117,18 +117,11 @@ object LoraPhy {
     /** Semtech chips switch the low-data-rate optimisation on when a symbol lasts 16 ms or more. */
     fun lowDataRate(sf: Int, bandwidthHz: Double): Boolean = (1 shl sf) / bandwidthHz >= 0.016
 
-    /**
-     * Codewords in the header block: sf − 2 at the reduced rate. SX126x chips send SF5 and SF6 with the header block at
-     * the full rate instead ([fullHeader]): sf − 2 rows could not hold the header's five nibbles at SF5, and Semtech's
-     * time-on-air formula for those two spreading factors counts sf nibbles in the first block.
-     */
-    fun headerRows(sf: Int, fullHeader: Boolean): Int = if (fullHeader) sf else sf - 2
-
     /** The explicit header read from the first 8 symbols (FFT bins), with the payload nibbles that share its block. */
-    fun readHeader(bins: List<Int>, sf: Int, fullHeader: Boolean = false): Pair<Header, List<Int>>? {
-        if (bins.size < 8 || headerRows(sf, fullHeader) < 5) return null
-        val vals = IntArray(8) { binToValue(bins[it], sf, reduced = !fullHeader) }
-        val nib = deinterleave(vals, headerRows(sf, fullHeader), 8).map { hammingDecode(it, 4) }
+    fun readHeader(bins: List<Int>, sf: Int): Pair<Header, List<Int>>? {
+        if (bins.size < 8) return null
+        val vals = IntArray(8) { binToValue(bins[it], sf, reduced = true) }
+        val nib = deinterleave(vals, sf - 2, 8).map { hammingDecode(it, 4) }
         val h = header(nib.take(5).toIntArray()) ?: return null
         return h to nib.drop(5)
     }
@@ -136,8 +129,8 @@ object LoraPhy {
     class Decoded(val header: Header, val payload: ByteArray, val crcOk: Boolean)
 
     /** A whole frame from its symbols (FFT bins relative to the preamble); null when the header does not check out. */
-    fun decode(bins: List<Int>, sf: Int, ldro: Boolean, fullHeader: Boolean = false): Decoded? {
-        val (h, first) = readHeader(bins, sf, fullHeader) ?: return null
+    fun decode(bins: List<Int>, sf: Int, ldro: Boolean): Decoded? {
+        val (h, first) = readHeader(bins, sf) ?: return null
         val nibbles = ArrayList(first)
         val block = h.cr + 4
         val rows = if (ldro) sf - 2 else sf

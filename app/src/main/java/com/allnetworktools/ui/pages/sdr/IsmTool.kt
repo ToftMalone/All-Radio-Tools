@@ -204,12 +204,7 @@ class IsmController(private val repo: SdrRepository, private val scope: Coroutin
     companion object {
         private const val POOL = 32
         /** The ISM bands the sensors use, with where. */
-        val BANDS = listOf(
-            433_920_000L to "433,92 MHz", 868_300_000L to "868,3 MHz", 315_000_000L to "315 MHz", 345_000_000L to "345 MHz", 915_000_000L to "915 MHz",
-            // The capture (2 MHz, centred fs/4 under the band) over SuperLink's uplinks: the whole US plan (915.6 to
-            // 917.0 MHz), and the bottom of the EU band, where its plan presumably starts as the US one does.
-            866_400_000L to "SuperLink EU 865–867 MHz", 916_800_000L to "SuperLink US 915–917 MHz",
-        )
+        val BANDS = listOf(433_920_000L to "433,92 MHz", 868_300_000L to "868,3 MHz", 315_000_000L to "315 MHz", 345_000_000L to "345 MHz", 915_000_000L to "915 MHz")
     }
 }
 
@@ -282,7 +277,7 @@ fun IsmTool(vm: MainViewModel) {
                     Symbol(Sym.Info, size = 22.dp, tint = AntTheme.accent.accent)
                     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                         Text(S(R.string.ism_how_it_works, Ism.deviceNames.size), style = rf(13, 18), color = cs.onSurfaceVariant)
-                        Text(S(R.string.ism_superlink_tapo_note), style = rf(13, 18), color = cs.onSurfaceVariant)
+                        Text(S(R.string.ism_tapo_note), style = rf(13, 18), color = cs.onSurfaceVariant)
                     }
                 }
             }

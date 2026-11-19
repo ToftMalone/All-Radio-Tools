@@ -3171,5 +3171,5 @@ Una avalancha es un flujo de tramas de emparejamiento falsas que hace aparecer u
     <string name="tx_not_in_dv">"La voz digital es solo de recepción: elija NFM, AM, USB o LSB para transmitir."</string>
     <string name="listen_dv_waiting">"Esperando una llamada DMR o dPMR"</string>
     <string name="listen_dv_encrypted">"cifrada, no reproducida"</string>
-    <string name="ism_superlink_tapo_note">"Ubiquiti SuperLink (sensores UniFi Protect) se detecta en cualquier punto de los 2 MHz que oye la radio entre 863 y 928 MHz: elige una banda SuperLink. Cada sensor aparece con su dirección MAC; sus lecturas están cifradas. Su plan de canales europeo no es público: la banda EU cubre 865–867 MHz y la banda de 868,3 MHz, 866,8–868,8 MHz. Los sensores TP-Link Tapo (868,35 MHz, se oyen en la banda de 868,3 MHz) se reconocen solo por su firma de radio: su formato no es público, así que no hay ID ni lectura."</string>
+    <string name="ism_tapo_note">"Los sensores TP-Link Tapo (868,35 MHz, se oyen en la banda de 868,3 MHz) se reconocen solo por su firma de radio: su formato no es público, así que no hay ID ni lectura."</string>
 </resources>

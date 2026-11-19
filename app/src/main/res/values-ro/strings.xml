@@ -3240,5 +3240,5 @@ Un val este un flux de cadre de asociere false care face să apară un pop-up pe
     <string name="tx_not_in_dv">"Vocea digitală este doar recepție: alegeți NFM, AM, USB sau LSB pentru a emite."</string>
     <string name="listen_dv_waiting">"Se așteaptă un apel DMR sau dPMR"</string>
     <string name="listen_dv_encrypted">"criptat, neredat"</string>
-    <string name="ism_superlink_tapo_note">"Ubiquiti SuperLink (senzorii UniFi Protect) este detectat oriunde în cei 2 MHz pe care radioul îi aude între 863 și 928 MHz: alegeți o bandă SuperLink. Fiecare senzor apare cu adresa sa MAC; citirile sale sunt criptate. Planul european de canale nu este publicat: banda EU acoperă 865–867 MHz, banda de 868,3 MHz acoperă 866,8–868,8 MHz. Senzorii TP-Link Tapo (868,35 MHz, recepționați pe banda de 868,3 MHz) sunt recunoscuți doar după semnătura radio: formatul lor nu este public, deci nici ID, nici citiri."</string>
+    <string name="ism_tapo_note">"Senzorii TP-Link Tapo (868,35 MHz, recepționați pe banda de 868,3 MHz) sunt recunoscuți doar după semnătura radio: formatul lor nu este public, deci nici ID, nici citiri."</string>
 </resources>

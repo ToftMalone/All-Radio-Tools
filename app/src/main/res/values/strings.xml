@@ -3184,5 +3184,5 @@
     <string name="tx_not_in_dv">"Digital voice is received only: choose NFM, AM, USB or LSB to transmit."</string>
     <string name="listen_dv_waiting">"Waiting for a DMR or dPMR call"</string>
     <string name="listen_dv_encrypted">"encrypted, not played"</string>
-    <string name="ism_superlink_tapo_note">"Ubiquiti SuperLink (UniFi Protect sensors) is found anywhere in the 2 MHz the radio hears between 863 and 928 MHz: pick a SuperLink band. Each sensor shows by its MAC address; its readings are encrypted. Its EU channel plan is not published: the EU band covers 865–867 MHz, the 868.3 MHz band 866.8–868.8 MHz. TP-Link Tapo sensors (868.35 MHz, heard on the 868.3 MHz band) are recognised by their radio signature only: their format is not public, so no ID and no reading."</string>
+    <string name="ism_tapo_note">"TP-Link Tapo sensors (868.35 MHz, heard on the 868.3 MHz band) are recognised by their radio signature only: their format is not public, so no ID and no reading."</string>
 </resources>

@@ -3164,5 +3164,5 @@ Eine Flut ist ein Strom gefälschter Kopplungs-Frames, der auf jedem Telefon in 
     <string name="tx_not_in_dv">"Digitale Sprache wird nur empfangen: Wählen Sie NFM, AM, USB oder LSB zum Senden."</string>
     <string name="listen_dv_waiting">"Warte auf einen DMR- oder dPMR-Ruf"</string>
     <string name="listen_dv_encrypted">"verschlüsselt, nicht abgespielt"</string>
-    <string name="ism_superlink_tapo_note">"Ubiquiti SuperLink (UniFi-Protect-Sensoren) wird überall in den 2 MHz gefunden, die das Funkgerät zwischen 863 und 928 MHz hört: Wähle ein SuperLink-Band. Jeder Sensor erscheint mit seiner MAC-Adresse; seine Messwerte sind verschlüsselt. Der EU-Kanalplan ist nicht veröffentlicht: Das EU-Band deckt 865–867 MHz ab, das 868,3-MHz-Band 866,8–868,8 MHz. TP-Link-Tapo-Sensoren (868,35 MHz, im 868,3-MHz-Band zu hören) werden nur an ihrer Funksignatur erkannt: Ihr Format ist nicht öffentlich, also weder Kennung noch Messwert."</string>
+    <string name="ism_tapo_note">"TP-Link-Tapo-Sensoren (868,35 MHz, im 868,3-MHz-Band zu hören) werden nur an ihrer Funksignatur erkannt: Ihr Format ist nicht öffentlich, also weder Kennung noch Messwert."</string>
 </resources>

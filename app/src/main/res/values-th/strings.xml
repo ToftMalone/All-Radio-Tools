@@ -3088,5 +3088,5 @@
     <string name="tx_not_in_dv">"เสียงดิจิทัลรับอย่างเดียว: เลือก NFM, AM, USB หรือ LSB เพื่อส่ง"</string>
     <string name="listen_dv_waiting">"กำลังรอการเรียก DMR หรือ dPMR"</string>
     <string name="listen_dv_encrypted">"เข้ารหัส ไม่เล่น"</string>
-    <string name="ism_superlink_tapo_note">"Ubiquiti SuperLink (เซนเซอร์ UniFi Protect) ตรวจพบได้ทุกที่ในช่วง 2 MHz ที่วิทยุได้ยินระหว่าง 863 ถึง 928 MHz: เลือกย่าน SuperLink เซนเซอร์แต่ละตัวแสดงด้วยที่อยู่ MAC ค่าที่วัดได้ถูกเข้ารหัส แผนช่องสัญญาณยุโรปไม่ได้เผยแพร่: ย่าน EU ครอบคลุม 865–867 MHz ย่าน 868.3 MHz ครอบคลุม 866.8–868.8 MHz เซนเซอร์ TP-Link Tapo (868.35 MHz ได้ยินในย่าน 868.3 MHz) รู้จักได้จากลายเซ็นวิทยุเท่านั้น: รูปแบบไม่เปิดเผย จึงไม่มี ID และค่าที่วัด"</string>
+    <string name="ism_tapo_note">"เซนเซอร์ TP-Link Tapo (868.35 MHz ได้ยินในย่าน 868.3 MHz) รู้จักได้จากลายเซ็นวิทยุเท่านั้น: รูปแบบไม่เปิดเผย จึงไม่มี ID และค่าที่วัด"</string>
 </resources>

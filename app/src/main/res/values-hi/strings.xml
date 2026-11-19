@@ -3164,5 +3164,5 @@
     <string name="tx_not_in_dv">"डिजिटल आवाज़ केवल प्राप्ति है: ट्रांसमिट करने के लिए NFM, AM, USB या LSB चुनें।"</string>
     <string name="listen_dv_waiting">"DMR या dPMR कॉल की प्रतीक्षा"</string>
     <string name="listen_dv_encrypted">"एन्क्रिप्टेड, नहीं चलाया गया"</string>
-    <string name="ism_superlink_tapo_note">"Ubiquiti SuperLink (UniFi Protect सेंसर) 863 से 928 MHz के बीच रेडियो जो 2 MHz सुनता है, उसमें कहीं भी मिल जाता है: कोई SuperLink बैंड चुनें। हर सेंसर अपने MAC पते के साथ दिखता है; उसकी रीडिंग एन्क्रिप्टेड हैं। इसकी यूरोपीय चैनल योजना प्रकाशित नहीं है: EU बैंड 865–867 MHz और 868.3 MHz बैंड 866.8–868.8 MHz कवर करता है। TP-Link Tapo सेंसर (868.35 MHz, 868.3 MHz बैंड पर सुनाई देते हैं) केवल अपने रेडियो सिग्नेचर से पहचाने जाते हैं: उनका फ़ॉर्मेट सार्वजनिक नहीं है, इसलिए न ID न रीडिंग।"</string>
+    <string name="ism_tapo_note">"TP-Link Tapo सेंसर (868.35 MHz, 868.3 MHz बैंड पर सुनाई देते हैं) केवल अपने रेडियो सिग्नेचर से पहचाने जाते हैं: उनका फ़ॉर्मेट सार्वजनिक नहीं है, इसलिए न ID न रीडिंग।"</string>
 </resources>

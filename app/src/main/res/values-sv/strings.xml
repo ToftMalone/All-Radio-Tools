@@ -3164,5 +3164,5 @@ Ett flöde är en ström av falska parkopplingsramar som får en popup att visas
     <string name="tx_not_in_dv">"Digitalt tal tas bara emot: välj NFM, AM, USB eller LSB för att sända."</string>
     <string name="listen_dv_waiting">"Väntar på ett DMR- eller dPMR-samtal"</string>
     <string name="listen_dv_encrypted">"krypterat, spelas inte upp"</string>
-    <string name="ism_superlink_tapo_note">"Ubiquiti SuperLink (UniFi Protect-sensorer) hittas var som helst i de 2 MHz som radion hör mellan 863 och 928 MHz: välj ett SuperLink-band. Varje sensor visas med sin MAC-adress; dess mätvärden är krypterade. Den europeiska kanalplanen är inte publicerad: EU-bandet täcker 865–867 MHz, 868,3 MHz-bandet 866,8–868,8 MHz. TP-Link Tapo-sensorer (868,35 MHz, hörs på 868,3 MHz-bandet) känns bara igen på sin radiosignatur: formatet är inte offentligt, så inget ID och inga mätvärden."</string>
+    <string name="ism_tapo_note">"TP-Link Tapo-sensorer (868,35 MHz, hörs på 868,3 MHz-bandet) känns bara igen på sin radiosignatur: formatet är inte offentligt, så inget ID och inga mätvärden."</string>
 </resources>

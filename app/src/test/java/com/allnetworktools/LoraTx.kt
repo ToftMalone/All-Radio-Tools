@@ -11,8 +11,7 @@ import kotlin.math.sin
  * hamming_enc, interleaver, gray_demap, modulate) so the receiver is checked against the reference, not against itself.
  */
 object LoraTx {
-    fun symbols(payload: ByteArray, sf: Int, cr: Int, hasCrc: Boolean = true, ldro: Boolean = false, fullHeader: Boolean = false): IntArray {
-        val rows0 = LoraPhy.headerRows(sf, fullHeader)
+    fun symbols(payload: ByteArray, sf: Int, cr: Int, hasCrc: Boolean = true, ldro: Boolean = false): IntArray {
         val nib = ArrayList<Int>()
         // header_impl
         val len = payload.size
@@ -38,7 +37,7 @@ object LoraTx {
         }
         // hamming_enc_impl
         val cws = nib.mapIndexed { i, x ->
-            val crApp = if (i < rows0) 4 else cr
+            val crApp = if (i < sf - 2) 4 else cr
             val d = IntArray(4) { (x shr (3 - it)) and 1 } // int2bool: MSB first
             if (crApp != 1) {
                 val p0 = d[3] xor d[2] xor d[1]
@@ -55,16 +54,15 @@ object LoraTx {
         val out = ArrayList<Int>()
         var cnt = 0
         while (cnt < cws.size) {
-            val first = cnt < rows0
+            val first = cnt < sf - 2
             val cwLen = 4 + if (first) 4 else cr
-            val reduced = (first && !fullHeader) || ldro
-            val sfApp = if (first) rows0 else if (ldro) sf - 2 else sf
+            val sfApp = if (first || ldro) sf - 2 else sf
             val cwBin = Array(sfApp) { i -> val v = cws.getOrElse(cnt + i) { 0 }; IntArray(cwLen) { (v shr (cwLen - 1 - it)) and 1 } }
             cnt += sfApp
             for (i in 0 until cwLen) {
                 val inter = IntArray(sf)
                 for (j in 0 until sfApp) inter[j] = cwBin[Math.floorMod(i - j - 1, sfApp)][i]
-                if (reduced) inter[sfApp] = inter.sum() % 2
+                if (first || ldro) inter[sfApp] = inter.sum() % 2
                 out += inter.fold(0) { a, x -> (a shl 1) + x }
             }
         }
@@ -85,7 +83,7 @@ object LoraTx {
     fun waveform(
         symbols: IntArray, sf: Int, bw: Double, rate: Double,
         syncWord: Int = 0x2B, preamble: Int = 16, delayChips: Double = 0.0, cfoHz: Double = 0.0, ppm: Double = 0.0,
-        mixHz: Double = 0.0, tailChips: Double = 2048.0, amplitude: Double = 1.0, gapSymbols: Int = 0,
+        mixHz: Double = 0.0, tailChips: Double = 2048.0, amplitude: Double = 1.0,
     ): Pair<DoubleArray, DoubleArray> {
         val n = 1 shl sf
         // (id, kind): kind 0 upchirp, 1 downchirp; the quarter downchirp is handled by the frame length.
@@ -95,7 +93,7 @@ object LoraTx {
         ids += ((syncWord and 0xF) shl 3) to 0
         repeat(3) { ids += 0 to 1 }
         val downEnd = (preamble + 4.25) * n
-        val payloadStart = downEnd + gapSymbols * n
+        val payloadStart = downEnd
         val frameChips = payloadStart + symbols.size * n
         val totalChips = delayChips + frameChips + tailChips
         val count = (totalChips * rate / bw).toInt()
@@ -113,7 +111,7 @@ object LoraTx {
                 val local: Double
                 if (chip < payloadStart) {
                     val k = floor(chip / n).toInt()
-                    if (chip >= downEnd) { id = 0; down = false } else if (chip >= (preamble + 2) * n) { id = 0; down = true } else { id = ids[k].first; down = false }
+                    if (chip >= (preamble + 2) * n) { id = 0; down = true } else { id = ids[k].first; down = false }
                     local = chip - k * n
                 } else {
                     val k = floor((chip - payloadStart) / n).toInt()

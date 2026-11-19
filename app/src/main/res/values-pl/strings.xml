@@ -3316,5 +3316,5 @@ Zalew to strumień fałszywych ramek parowania, który wywołuje wyskakujące ok
     <string name="tx_not_in_dv">"Głos cyfrowy jest tylko odbierany: wybierz NFM, AM, USB lub LSB, aby nadawać."</string>
     <string name="listen_dv_waiting">"Oczekiwanie na połączenie DMR lub dPMR"</string>
     <string name="listen_dv_encrypted">"zaszyfrowane, nie odtwarzane"</string>
-    <string name="ism_superlink_tapo_note">"Ubiquiti SuperLink (czujniki UniFi Protect) jest wykrywany w dowolnym miejscu 2 MHz, które radio słyszy między 863 a 928 MHz: wybierz pasmo SuperLink. Każdy czujnik jest pokazywany z adresem MAC; jego odczyty są zaszyfrowane. Europejski plan kanałów nie jest opublikowany: pasmo EU obejmuje 865–867 MHz, pasmo 868,3 MHz obejmuje 866,8–868,8 MHz. Czujniki TP-Link Tapo (868,35 MHz, słyszalne w paśmie 868,3 MHz) są rozpoznawane tylko po sygnaturze radiowej: ich format nie jest publiczny, więc brak ID i odczytów."</string>
+    <string name="ism_tapo_note">"Czujniki TP-Link Tapo (868,35 MHz, słyszalne w paśmie 868,3 MHz) są rozpoznawane tylko po sygnaturze radiowej: ich format nie jest publiczny, więc brak ID i odczytów."</string>
 </resources>

@@ -3171,5 +3171,5 @@ Uma enxurrada é um fluxo de quadros de pareamento falsos que faz aparecer um po
     <string name="tx_not_in_dv">"A voz digital é só recepção: escolha NFM, AM, USB ou LSB para transmitir."</string>
     <string name="listen_dv_waiting">"Aguardando uma chamada DMR ou dPMR"</string>
     <string name="listen_dv_encrypted">"criptografada, não reproduzida"</string>
-    <string name="ism_superlink_tapo_note">"O Ubiquiti SuperLink (sensores UniFi Protect) é encontrado em qualquer ponto dos 2 MHz que o rádio ouve entre 863 e 928 MHz: escolha uma banda SuperLink. Cada sensor aparece com o seu endereço MAC; as suas leituras são cifradas. O plano de canais europeu não está publicado: a banda EU cobre 865–867 MHz e a banda de 868,3 MHz cobre 866,8–868,8 MHz. Os sensores TP-Link Tapo (868,35 MHz, ouvidos na banda de 868,3 MHz) são reconhecidos apenas pela sua assinatura de rádio: o formato não é público, por isso não há ID nem leitura."</string>
+    <string name="ism_tapo_note">"Os sensores TP-Link Tapo (868,35 MHz, ouvidos na banda de 868,3 MHz) são reconhecidos apenas pela sua assinatura de rádio: o formato não é público, por isso não há ID nem leitura."</string>
 </resources>
