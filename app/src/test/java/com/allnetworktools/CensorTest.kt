@@ -46,3 +46,53 @@ class CensorTest {
         assertTrue(Verdict.Partial.anomaly && Verdict.ProxyDetected.anomaly)
     }
 }
+
+class WifiCallingTest {
+    private fun u16(b: ByteArray, i: Int) = ((b[i].toInt() and 0xff) shl 8) or (b[i + 1].toInt() and 0xff)
+
+    @Test fun epdgNameFollows3gpp() {
+        assertEquals("epdg.epc.mnc001.mcc208.pub.3gppnetwork.org", Censor.epdgName("208", "01"))
+        assertEquals("epdg.epc.mnc410.mcc310.pub.3gppnetwork.org", Censor.epdgName("310", "410"))
+    }
+
+    @Test fun ikeSaInitIsWellFormed() {
+        val spi = ByteArray(8) { (it + 1).toByte() }
+        val m = Censor.ikeSaInit(spi, java.util.Random(1))
+        // Header: our SPI, no responder SPI, SA first, IKEv2, IKE_SA_INIT, initiator, message 0, the whole length.
+        assertTrue((0 until 8).all { m[it] == spi[it] } && (8 until 16).all { m[it].toInt() == 0 })
+        assertEquals(33, m[16].toInt()); assertEquals(0x20, m[17].toInt()); assertEquals(34, m[18].toInt()); assertEquals(0x08, m[19].toInt())
+        assertEquals(m.size, ((u16(m, 24) shl 16) or u16(m, 26)))
+        // The payloads chain SA → KE → Nonce → end, their lengths adding up.
+        var at = 28
+        var next = m[16].toInt()
+        val seen = ArrayList<Int>()
+        while (next != 0) {
+            seen += next
+            val len = u16(m, at + 2)
+            if (next == 33) {
+                assertEquals(4, m[at + 4 + 7].toInt()) // four transforms
+                assertEquals(len - 4, u16(m, at + 6)) // the proposal fills the SA
+            }
+            if (next == 34) { assertEquals(14, u16(m, at + 4)); assertEquals(8 + 256, len) }
+            next = m[at].toInt()
+            at += len
+        }
+        assertEquals(listOf(33, 34, 40), seen)
+        assertEquals(m.size, at)
+    }
+
+    @Test fun recognisesTheGatewaysAnswer() {
+        val spi = ByteArray(8) { 7 }
+        val reply = ByteArray(40).also { r ->
+            for (i in 0 until 8) r[i] = 7
+            r[16] = 33; r[17] = 0x20; r[18] = 34; r[19] = 0x20 // response
+        }
+        assertTrue(Censor.isIkeReply(reply, reply.size, spi, natT = false))
+        assertFalse(Censor.isIkeReply(reply, reply.size, ByteArray(8) { 8 }, natT = false))
+        assertFalse(Censor.isIkeReply(reply, 20, spi, natT = false))
+        // On port 4500 behind the four-zero-byte marker.
+        val natT = ByteArray(4) + reply
+        assertTrue(Censor.isIkeReply(natT, natT.size, spi, natT = true))
+        assertFalse(Censor.isIkeReply(reply, reply.size, spi, natT = true))
+    }
+}

@@ -69,8 +69,12 @@ import kotlinx.coroutines.sync.withPermit
  * The censorship test (in the spirit of OONI Probe) over one network: the Wi-Fi tool and its mobile-data copy each have
  * their own controller, so each network keeps its own results. Results stay in memory for the session.
  */
-class CensorController(private val scope: CoroutineScope) {
-    val suites = mutableStateMapOf(Suite.Web to true, Suite.Messaging to true, Suite.Circumvention to true, Suite.Middlebox to true)
+class CensorController(
+    private val scope: CoroutineScope,
+    /** (operator, MCC, MNC) of each SIM, for Wi-Fi calling. */
+    private val sims: () -> List<Triple<String, String, String>> = { emptyList() },
+) {
+    val suites = mutableStateMapOf(Suite.Web to true, Suite.Messaging to true, Suite.WifiCalling to true, Suite.Circumvention to true, Suite.Middlebox to true)
     val categories = mutableStateMapOf<Category, Boolean>().apply { Category.entries.forEach { put(it, it != Category.Adult) } }
     val custom = mutableStateListOf<String>()
     var input by mutableStateOf("")
@@ -124,6 +128,11 @@ class CensorController(private val scope: CoroutineScope) {
         val tasks = ArrayList<suspend () -> CensorResult>()
         sites.forEach { (h, c) -> tasks += { Censor.site("https://$h/", c) } }
         if (suites[Suite.Messaging] == true) CensorLists.messaging.forEach { a -> tasks += { Censor.app(Suite.Messaging, a) } }
+        if (suites[Suite.WifiCalling] == true) {
+            val l = runCatching(sims).getOrDefault(emptyList())
+            if (l.isEmpty()) tasks += { CensorResult(Suite.WifiCalling, S(R.string.cen_no_sim), "", null, Verdict.Inconclusive, emptyList()) }
+            l.forEach { (op, mcc, mnc) -> tasks += { Censor.wifiCalling(op, mcc, mnc) } }
+        }
         if (suites[Suite.Circumvention] == true) CensorLists.circumvention.forEach { a -> tasks += { Censor.app(Suite.Circumvention, a) } }
         if (suites[Suite.Middlebox] == true) tasks += { Censor.headerManipulation() }
         total = tasks.size
@@ -164,7 +173,10 @@ private fun verdictText(v: Verdict) = S(
 )
 
 private fun suiteText(s: Suite) = S(
-    when (s) { Suite.Web -> R.string.cen_suite_web; Suite.Messaging -> R.string.cen_suite_im; Suite.Circumvention -> R.string.cen_suite_circ; Suite.Middlebox -> R.string.cen_suite_mb },
+    when (s) {
+        Suite.Web -> R.string.cen_suite_web; Suite.Messaging -> R.string.cen_suite_im; Suite.WifiCalling -> R.string.cen_suite_vowifi
+        Suite.Circumvention -> R.string.cen_suite_circ; Suite.Middlebox -> R.string.cen_suite_mb
+    },
 )
 
 private fun categoryText(c: Category) = S(
@@ -250,7 +262,7 @@ private fun Results(c: CensorController) {
 private fun ResultRow(r: CensorResult) {
     var open by androidx.compose.runtime.remember { mutableStateOf(false) }
     val color = verdictColor(r.verdict)
-    val icon = when (r.suite) { Suite.Web -> Sym.Public; Suite.Messaging -> Sym.Forum; Suite.Circumvention -> Sym.Key; Suite.Middlebox -> Sym.Router }
+    val icon = when (r.suite) { Suite.Web -> Sym.Public; Suite.Messaging -> Sym.Forum; Suite.WifiCalling -> Sym.Call; Suite.Circumvention -> Sym.Key; Suite.Middlebox -> Sym.Router }
     Row(
         Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp)).clickable { open = !open }.padding(vertical = 10.dp),
         verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp),
@@ -320,7 +332,27 @@ private fun Settings(c: CensorController) {
     SectionCard {
         Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
             Symbol(Sym.Info, size = 22.dp, tint = AntTheme.accent.accent)
-            Text(S(R.string.cen_how), style = rf(13, 18), color = cs.onSurfaceVariant)
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text(S(R.string.cen_how), style = rf(13, 18), color = cs.onSurfaceVariant)
+                Text(S(R.string.cen_how_vowifi), style = rf(13, 18), color = cs.onSurfaceVariant)
+            }
         }
     }
+}
+
+/** (operator, MCC, MNC) of each active SIM: every subscription when the phone state may be read, else the default SIM. */
+fun simPlmns(ctx: android.content.Context): List<Triple<String, String, String>> {
+    val sm = ctx.getSystemService(android.telephony.SubscriptionManager::class.java)
+    val subs = runCatching { sm?.activeSubscriptionInfoList }.getOrNull().orEmpty()
+    val l = subs.mapNotNull { s ->
+        val mcc = s.mccString
+        val mnc = s.mncString
+        if (mcc.isNullOrEmpty() || mnc.isNullOrEmpty()) null
+        else Triple(s.carrierName?.toString()?.takeIf { it.isNotBlank() } ?: "SIM ${s.simSlotIndex + 1}", mcc, mnc)
+    }.distinctBy { it.second + it.third }
+    if (l.isNotEmpty()) return l
+    val tm = ctx.getSystemService(android.telephony.TelephonyManager::class.java) ?: return emptyList()
+    val op = runCatching { tm.simOperator }.getOrNull()
+    if (op == null || op.length < 5) return emptyList()
+    return listOf(Triple(runCatching { tm.simOperatorName }.getOrNull()?.takeIf { it.isNotBlank() } ?: op, op.take(3), op.drop(3)))
 }

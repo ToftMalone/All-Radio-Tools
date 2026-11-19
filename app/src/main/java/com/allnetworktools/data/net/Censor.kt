@@ -43,7 +43,7 @@ import kotlinx.coroutines.withTimeoutOrNull
  * A site that is down everywhere looks like an IP block from here; the verdict says "IP blocked or down".
  */
 
-enum class Suite { Web, Messaging, Circumvention, Middlebox }
+enum class Suite { Web, Messaging, WifiCalling, Circumvention, Middlebox }
 
 enum class Verdict {
     Ok, Partial, DnsBlocked, DnsTampered, TcpBlocked, SniBlocked, TlsBlocked, Intercepted, ProxyDetected, Down, Inconclusive;
@@ -89,6 +89,7 @@ object Censor {
             e is SocketTimeoutException -> Fail.Timeout
             e is UnknownHostException -> Fail.NoName
             e is NoRouteToHostException -> Fail.Unreachable
+            e is java.net.PortUnreachableException -> Fail.Refused
             e is SSLHandshakeException && (e.cause is CertificateException || e.cause is CertPathValidatorException || "certif" in m || "trust anchor" in m || "subject alternative" in m || "hostname" in m) -> Fail.Cert
             e is ConnectException && "refused" in m -> Fail.Refused
             "reset" in m || "broken pipe" in m || e is EOFException || "eof" in m || "closed" in m || "shutdown" in m -> Fail.Reset
@@ -309,6 +310,118 @@ object Censor {
         val s = DnsClient.Public.firstOrNull { it.dohUrl?.contains(server) == true } ?: return Out(Fail.Other, "unknown")
         return runCatching { DnsClient.resolve("example.com", DnsType.A, s, doh = true, timeoutMs = TIMEOUT) }
             .fold({ if (it.rcode == 0 && it.records.isNotEmpty()) ok("${it.ms.toInt()} ms") else Out(Fail.Other, it.rcodeName) }, ::classify)
+    }
+
+
+    // ---------------------------------------------------------------- Wi-Fi calling
+
+    /** The operator's ePDG, the gateway of Wi-Fi calling (3GPP TS 23.003 §19.4.2.9). */
+    fun epdgName(mcc: String, mnc: String) = "epdg.epc.mnc${mnc.padStart(3, '0')}.mcc$mcc.pub.3gppnetwork.org"
+
+    /**
+     * An IKEv2 IKE_SA_INIT request (RFC 7296), as a phone opens its tunnel to the ePDG: one proposal with what 3GPP
+     * requires ePDGs to take (AES-CBC-256, HMAC-SHA2-256, PRF-HMAC-SHA2-256, 2048-bit MODP), a key share and a nonce.
+     * Any IKEv2 answer (the next step, a cookie, a request for another group) shows the gateway is reachable.
+     */
+    fun ikeSaInit(spi: ByteArray, rnd: java.util.Random = java.security.SecureRandom()): ByteArray {
+        val o = java.io.ByteArrayOutputStream()
+        fun u8(v: Int) = o.write(v and 0xff)
+        fun u16(v: Int) { u8(v shr 8); u8(v) }
+        fun u32(v: Int) { u16(v shr 16); u16(v) }
+        fun transform(last: Boolean, type: Int, id: Int, keyLen: Int = 0) {
+            u8(if (last) 0 else 3); u8(0); u16(if (keyLen > 0) 12 else 8); u8(type); u8(0); u16(id)
+            if (keyLen > 0) { u16(0x800E); u16(keyLen) }
+        }
+        val transforms = 12 + 8 + 8 + 8
+        val proposal = 8 + transforms
+        val sa = 4 + proposal
+        val ke = 8 + 256
+        val nonce = 4 + 32
+        // Header
+        o.write(spi, 0, 8); repeat(8) { u8(0) }
+        u8(33); u8(0x20); u8(34); u8(0x08); u32(0); u32(28 + sa + ke + nonce)
+        // SA
+        u8(34); u8(0); u16(sa)
+        u8(0); u8(0); u16(proposal); u8(1); u8(1); u8(0); u8(4)
+        transform(false, 1, 12, 256) // ENCR_AES_CBC 256
+        transform(false, 2, 5)       // PRF_HMAC_SHA2_256
+        transform(false, 3, 12)      // AUTH_HMAC_SHA2_256_128
+        transform(true, 4, 14)       // 2048-bit MODP
+        // KE
+        u8(40); u8(0); u16(ke); u16(14); u16(0)
+        val key = ByteArray(256).also(rnd::nextBytes)
+        key[0] = (key[0].toInt() and 0x7f).toByte() // under the group's prime
+        o.write(key)
+        // Nonce
+        u8(0); u8(0); u16(nonce)
+        o.write(ByteArray(32).also(rnd::nextBytes))
+        return o.toByteArray()
+    }
+
+    /** Whether [reply] answers our IKE_SA_INIT ([spi]); [natT] when it came on port 4500, after the non-ESP marker. */
+    fun isIkeReply(reply: ByteArray, len: Int, spi: ByteArray, natT: Boolean): Boolean {
+        val off = if (natT) 4 else 0
+        if (len < off + 28) return false
+        if (natT && (reply[0].toInt() or reply[1].toInt() or reply[2].toInt() or reply[3].toInt()) != 0) return false
+        for (i in 0 until 8) if (reply[off + i] != spi[i]) return false
+        return reply[off + 18].toInt() == 34 && (reply[off + 19].toInt() and 0x20) != 0
+    }
+
+    suspend fun ike(ip: InetAddress, port: Int): Out = withContext(Dispatchers.IO) {
+        val natT = port == 4500
+        val spi = ByteArray(8).also { java.security.SecureRandom().nextBytes(it) }
+        val msg = ikeSaInit(spi).let { if (natT) ByteArray(4) + it else it }
+        runCatching {
+            java.net.DatagramSocket().use { s ->
+                s.connect(ip, port)
+                s.soTimeout = 2500
+                val buf = ByteArray(4096)
+                // UDP may lose the first try: three, as a phone retransmits.
+                repeat(3) {
+                    s.send(java.net.DatagramPacket(msg, msg.size))
+                    val deadline = System.currentTimeMillis() + 2500
+                    while (System.currentTimeMillis() < deadline) {
+                        val p = java.net.DatagramPacket(buf, buf.size)
+                        try { s.receive(p) } catch (e: SocketTimeoutException) { break }
+                        if (isIkeReply(buf, p.length, spi, natT)) return@runCatching ok("IKEv2 reply")
+                    }
+                }
+                Out(Fail.Timeout, "no IKEv2 reply")
+            }
+        }.getOrElse(::classify)
+    }
+
+    /** Wi-Fi calling for the SIM of [operator]: the ePDG's name, then IKEv2 on UDP 500 and 4500. */
+    suspend fun wifiCalling(operator: String, mcc: String, mnc: String): CensorResult {
+        val t0 = System.currentTimeMillis()
+        val host = epdgName(mcc, mnc)
+        val steps = ArrayList<Step>()
+        fun done(v: Verdict, viaDoh: Boolean = false) = CensorResult(Suite.WifiCalling, operator, host, null, v, steps.toList(), viaDoh, System.currentTimeMillis() - t0)
+        val (all, o) = systemDns(host)
+        steps += Step("DNS $host", o.ok && all.none(::bogon), o.note)
+        var viaDoh = false
+        val addr: InetAddress = if (o.ok && all.isNotEmpty()) {
+            if (all.all(::bogon)) return done(Verdict.DnsTampered)
+            all.firstOrNull { it is Inet4Address && !bogon(it) } ?: all.first { !bogon(it) }
+        } else {
+            val ctl = encryptedDns(host)
+            steps += Step("DoH", !ctl.isNullOrEmpty(), when { ctl == null -> "no answer"; ctl.isEmpty() -> "NXDOMAIN"; else -> ctl.joinToString(" ") })
+            // No such name anywhere: this operator does not publish its ePDG under the standard name.
+            if (ctl.isNullOrEmpty()) return done(Verdict.Inconclusive)
+            viaDoh = true
+            InetAddress.getByName(ctl.first())
+        }
+        val a = ike(addr, 500)
+        steps += Step("IKEv2 UDP 500 ${addr.hostAddress}", a.ok, a.note)
+        val b = ike(addr, 4500)
+        steps += Step("IKEv2 UDP 4500 ${addr.hostAddress}", b.ok, b.note)
+        val v = when {
+            viaDoh -> Verdict.DnsBlocked
+            a.ok && b.ok -> Verdict.Ok
+            a.ok || b.ok -> Verdict.Partial
+            else -> Verdict.TcpBlocked
+        }
+        return done(v, viaDoh && (a.ok || b.ok))
     }
 
     // ---------------------------------------------------------------- middleboxes
