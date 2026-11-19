@@ -293,6 +293,34 @@ class ScreenshotTest {
         vm.tools.lanDevice.services.addAll(listOf(8008 to "HTTP 200 OK", 8009 to null, 8443 to "HTTP 404 Not Found"))
         vm.tools.lanDevice.phase = Phase.Results
     }
+    /** Results arriving while the list shows, a new suite after another (the crash of 1.13.1's debug build). */
+    @Test fun censorResultsArriveWhileShown() {
+        Scenario.onWifi = true
+        runBlocking { app.settings.setOnboardingDone(true) }
+        val vm = MainViewModel(app)
+        vm.navigate { tool(Tool.Censor) }
+        compose.mainClock.autoAdvance = false
+        compose.setContent { AntApp(vm) }
+        fun frames() = repeat(5) {
+            compose.mainClock.advanceTimeBy(100)
+            org.robolectric.shadows.ShadowLooper.idleMainLooper(100, java.util.concurrent.TimeUnit.MILLISECONDS)
+        }
+        frames()
+        val c = vm.tools.censor
+        val suites = listOf(
+            com.allnetworktools.data.net.Suite.Messaging, com.allnetworktools.data.net.Suite.Web, com.allnetworktools.data.net.Suite.Middlebox,
+            com.allnetworktools.data.net.Suite.Volte, com.allnetworktools.data.net.Suite.Web, com.allnetworktools.data.net.Suite.WifiCalling,
+            com.allnetworktools.data.net.Suite.Circumvention, com.allnetworktools.data.net.Suite.Messaging,
+        )
+        suites.forEachIndexed { i, s ->
+            val v = if (i % 2 == 0) CensorVerdict.Ok else CensorVerdict.DnsBlocked
+            compose.runOnUiThread { c.results += com.allnetworktools.data.net.CensorResult(s, "site$i", "t$i", null, v, emptyList()) }
+            frames()
+        }
+        compose.runOnUiThread { c.results.clear() }
+        frames()
+    }
+
     @Test fun censorResults() {
         Scenario.onWifi = true
         censorShot()

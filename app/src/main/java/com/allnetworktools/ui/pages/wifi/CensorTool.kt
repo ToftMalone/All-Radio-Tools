@@ -246,19 +246,27 @@ fun CensorTool(c: CensorController, networkLabel: String, networkIcon: String) {
 
 @Composable
 private fun Results(c: CensorController) {
+    // No early return in here: results come in while the list shows, and every suite, row and card must keep its own
+    // place in the composition (keyed), or Compose mixes their state up.
     if (c.results.isEmpty()) {
         ToolEmpty(Sym.Public, S(R.string.cen_empty_title), S(R.string.cen_empty_body), null)
-        return
-    }
-    Suite.entries.forEach { suite ->
-        val rows = c.results.filter { it.suite == suite }
-            .sortedWith(compareBy<CensorResult>({ !it.verdict.blocked }, { !it.verdict.anomaly }, { it.verdict == Verdict.Ok }, { it.name }))
-        if (rows.isEmpty()) return@forEach
-        Text(suiteText(suite), Modifier.padding(start = 4.dp, top = 8.dp), style = rf(14, 20, 600), color = cs.onSurfaceVariant)
-        SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)) {
-            rows.forEachIndexed { i, r ->
-                if (i > 0) Hairline()
-                ResultRow(r)
+    } else {
+        val bySuite = c.results.toList().groupBy { it.suite }
+        Suite.entries.forEach { suite ->
+            val rows = bySuite[suite].orEmpty()
+                .sortedWith(compareBy<CensorResult>({ !it.verdict.blocked }, { !it.verdict.anomaly }, { it.verdict == Verdict.Ok }, { it.name }))
+            androidx.compose.runtime.key(suite) {
+                if (rows.isNotEmpty()) {
+                    Text(suiteText(suite), Modifier.padding(start = 4.dp, top = 8.dp), style = rf(14, 20, 600), color = cs.onSurfaceVariant)
+                    SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)) {
+                        rows.forEachIndexed { i, r ->
+                            androidx.compose.runtime.key(r.name, r.target) {
+                                if (i > 0) Hairline()
+                                ResultRow(r)
+                            }
+                        }
+                    }
+                }
             }
         }
     }
