@@ -275,7 +275,6 @@ private fun DockLayer(vm: MainViewModel, nav: NavState, modifier: Modifier, onCl
                 val page = when (tab) {
                     DockTab.Dashboard -> Page.Dashboard
                     DockTab.Tools -> Page.Tools
-                    DockTab.Featured -> lastNet.dockShortcut?.let { Page.ToolPage(it) } ?: Page.Tools
                 }
                 vm.navigate { it.copy(page = page) }
             },

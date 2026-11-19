@@ -46,18 +46,19 @@ import kotlinx.coroutines.launch
 import com.allnetworktools.R
 import com.allnetworktools.util.S
 
-enum class DockTab { Dashboard, Featured, Tools }
+enum class DockTab { Dashboard, Tools }
 
 fun activeTab(page: Page): DockTab? = when (page) {
     Page.Dashboard -> DockTab.Dashboard
     Page.Tools -> DockTab.Tools
-    is Page.ToolPage -> if (page.tool.isDockShortcut) DockTab.Featured else DockTab.Tools
+    is Page.ToolPage -> DockTab.Tools
     else -> null
 }
 
 /**
  * Floating toolbar: a leading home button (back to the network grid, or deselect the card when already on
- * it), then the network's three tabs. Colors come from LocalAccent.
+ * it), then the network's tabs: its dashboard and its tools (the main tool is the first card of the tools). Colors come
+ * from LocalAccent.
  */
 @Composable
 fun FloatingDock(
@@ -96,10 +97,9 @@ fun FloatingDock(
             }
         }
         val active = activeTab(page)
-        DockTab.entries.filter { (it != DockTab.Featured || network.dockShortcut != null) && (it != DockTab.Dashboard || network.hasDashboard) }.forEach { tab ->
+        DockTab.entries.filter { it != DockTab.Dashboard || network.hasDashboard }.forEach { tab ->
             val (icon, label) = when (tab) {
                 DockTab.Dashboard -> Sym.SpaceDashboard to "Dashboard"
-                DockTab.Featured -> network.dockShortcut!!.icon to network.featuredShort
                 DockTab.Tools -> Sym.Handyman to S(R.string.tools)
             }
             TabButton(icon, label, tab == active) { onTab(tab) }

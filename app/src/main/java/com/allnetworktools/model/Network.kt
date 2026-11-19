@@ -7,16 +7,15 @@ import com.allnetworktools.util.S
 enum class Network(
     val label: String,
     val icon: String,
-    val featuredShort: String,
 ) {
-    Wifi("Wi-Fi", Sym.Wifi, "Scan"),
-    Bluetooth("Bluetooth", Sym.Bluetooth, "BLE"),
-    Cellular(S(R.string.mobile_network), Sym.CellBars3, S(R.string.cells)),
-    Gnss("GNSS", Sym.SatelliteAlt, S(R.string.sky)),
-    Nfc("NFC", Sym.Nfc, S(R.string.nfc_featured_short)),
-    Sdr("SDR", Sym.Antenna, S(R.string.spectrum)),
+    Wifi("Wi-Fi", Sym.Wifi),
+    Bluetooth("Bluetooth", Sym.Bluetooth),
+    Cellular(S(R.string.mobile_network), Sym.CellBars3),
+    Gnss("GNSS", Sym.SatelliteAlt),
+    Nfc("NFC", Sym.Nfc),
+    Sdr("SDR", Sym.Antenna),
     /** Wi-Fi and Bluetooth together, picked by holding both cards at once: no card of its own on the home grid. */
-    WifiBt("Wi-Fi + Bluetooth", Sym.DirectionsCar, "Wardriving"),
+    WifiBt("Wi-Fi + Bluetooth", Sym.DirectionsCar),
     ;
 
     /** Has its own card on the home grid. */
@@ -39,10 +38,6 @@ enum class Network(
             Nfc -> Tool.NfcRead
             WifiBt -> Tool.Wardriving
         }
-
-    /** Tool reachable directly from the dock. */
-    val dockShortcut: Tool?
-        get() = featured
 }
 
 /** Where the back arrow of a tool leads. */
@@ -150,6 +145,4 @@ enum class Tool(
     HiddenCam(Network.WifiBt, S(R.string.cam_title), Sym.Videocam),
     WardrivingSettings(Network.WifiBt, S(R.string.wardriving_settings), Sym.Settings, parent = ToolParent.Other(Wardriving)),
     ;
-
-    val isDockShortcut: Boolean get() = network.dockShortcut == this
 }
