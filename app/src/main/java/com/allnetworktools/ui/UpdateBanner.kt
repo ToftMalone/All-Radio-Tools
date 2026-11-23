@@ -68,14 +68,8 @@ fun UpdateDialog(vm: MainViewModel) {
                         .verticalScroll(rememberScrollState()).padding(14.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
-                    val items = changelogItems(s.info.notes)
-                    if (items.isEmpty()) Text(S(R.string.no_notes_for_this_version), style = rf(13, 18), color = cs.onSurfaceVariant)
-                    items.forEach { line ->
-                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                            Text("•", style = rf(13, 18, 700), color = cs.primary)
-                            Text(line, style = rf(13, 18))
-                        }
-                    }
+                    if (changelogSections(s.info.notes).isEmpty()) Text(S(R.string.no_notes_for_this_version), style = rf(13, 18), color = cs.onSurfaceVariant)
+                    else ChangelogList(s.info.notes, 13)
                 }
             }
         },
@@ -84,17 +78,50 @@ fun UpdateDialog(vm: MainViewModel) {
     )
 }
 
-/** The release notes as a list: one entry per Markdown bullet, or per paragraph when there are none. */
-internal fun changelogItems(notes: String): List<String> {
-    val lines = notes.replace("\r", "").lines().map { it.trim() }.filter { it.isNotEmpty() && !it.startsWith("#") }
-    val out = ArrayList<String>()
-    for (l in lines) {
-        val bullet = l.startsWith("- ") || l.startsWith("* ") || l.startsWith("• ")
-        val text = (if (bullet) l.substring(2) else l).replace("**", "").replace("`", "").trim()
+/** One point of the notes; [sub] for a point nested under the one before. */
+internal data class ChangelogItem(val text: String, val sub: Boolean = false)
+
+/** A part of the notes under its heading ("🆕 New", "🐛 Fixes"…), or without one. */
+internal data class ChangelogSection(val title: String?, val items: List<ChangelogItem>)
+
+/** The release notes cut at their Markdown headings, each part as its bullets (nested ones marked) or paragraphs. */
+internal fun changelogSections(notes: String): List<ChangelogSection> {
+    val out = ArrayList<ChangelogSection>()
+    var title: String? = null
+    var items = ArrayList<ChangelogItem>()
+    fun close() { if (items.isNotEmpty() || title != null) out += ChangelogSection(title, items); items = ArrayList() }
+    val raw = notes.replace("\r", "").lines()
+    val anyBullet = raw.any { it.trim().let { t -> t.startsWith("- ") || t.startsWith("* ") || t.startsWith("• ") } }
+    for (line in raw) {
+        val t = line.trim()
+        if (t.isEmpty()) continue
+        if (t.startsWith("#")) { close(); title = t.trimStart('#').trim().ifEmpty { null }; continue }
+        val bullet = t.startsWith("- ") || t.startsWith("* ") || t.startsWith("• ")
+        val text = (if (bullet) t.substring(2) else t).replace("**", "").replace("`", "").trim()
         if (text.isEmpty()) continue
-        if (!bullet && out.isNotEmpty() && lines.any { it.startsWith("- ") || it.startsWith("* ") }) out[out.size - 1] = out.last() + " " + text else out += text
+        val indent = line.length - line.trimStart().length
+        if (!bullet && anyBullet && items.isNotEmpty()) items[items.size - 1] = items.last().copy(text = items.last().text + " " + text)
+        else items += ChangelogItem(text, bullet && indent >= 2)
     }
-    return out
+    close()
+    return out.filter { it.items.isNotEmpty() }
+}
+
+/** The notes as a list under their section headings, for the update window and the changelog. */
+@androidx.compose.runtime.Composable
+internal fun ChangelogList(notes: String, size: Int = 14) {
+    val sections = changelogSections(notes)
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        sections.forEachIndexed { i, sec ->
+            sec.title?.let { Text(it, Modifier.padding(top = if (i == 0) 0.dp else 6.dp), style = rf(size + 1, size + 7, 700), color = cs.primary) }
+            sec.items.forEach { item ->
+                Row(Modifier.padding(start = if (item.sub) 18.dp else 0.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Text(if (item.sub) "◦" else "•", style = rf(size, size + 6, 700), color = cs.primary)
+                    Text(item.text, Modifier.weight(1f), style = rf(size, size + 6))
+                }
+            }
+        }
+    }
 }
 
 /** Progress of an app update: download, permission to install, result. Hidden when nothing is going on. */

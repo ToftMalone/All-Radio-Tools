@@ -1,6 +1,7 @@
 package com.allnetworktools.ui.settings
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
@@ -17,7 +18,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.allnetworktools.BuildConfig
 import com.allnetworktools.MainViewModel
-import com.allnetworktools.ui.changelogItems
 import com.allnetworktools.ui.components.SectionCard
 import com.allnetworktools.ui.components.TechChip
 import com.allnetworktools.ui.components.rise
@@ -84,7 +84,7 @@ fun ChangelogScreen(vm: MainViewModel) {
 private fun ReleaseCard(r: ReleaseNote, modifier: Modifier) {
     val installed = !isNewerVersion(r.tag, BuildConfig.VERSION_NAME) && !isNewerVersion(BuildConfig.VERSION_NAME, r.tag)
     val newer = isNewerVersion(r.tag, BuildConfig.VERSION_NAME)
-    val items = changelogItems(r.notes)
+    val items = com.allnetworktools.ui.changelogSections(r.notes)
     SectionCard(modifier) {
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             Column(Modifier.weight(1f)) {
@@ -99,14 +99,7 @@ private fun ReleaseCard(r: ReleaseNote, modifier: Modifier) {
         if (items.isEmpty()) {
             Text(S(R.string.no_notes_for_this_version), Modifier.padding(top = 10.dp), style = rf(14, 20), color = cs.onSurfaceVariant)
         } else {
-            Column(Modifier.padding(top = 10.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                items.forEach { line ->
-                    Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                        Text("•", style = rf(14, 20, 700), color = cs.primary)
-                        Text(line, Modifier.weight(1f), style = rf(14, 20))
-                    }
-                }
-            }
+            Box(Modifier.padding(top = 10.dp)) { com.allnetworktools.ui.ChangelogList(r.notes) }
         }
     }
 }

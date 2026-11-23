@@ -61,10 +61,23 @@ class UpdaterTest {
         assertEquals("- Seulement", com.allnetworktools.update.localizedNotes("- Seulement", "fr"))
     }
 
-    @Test fun changelogBecomesAList() {
-        val items = com.allnetworktools.ui.changelogItems("## Nouveautés\r\n- Premier point\n- **Deuxième** point\n  suite du deuxième\n\n- `Troisième`")
-        assertEquals(listOf("Premier point", "Deuxième point suite du deuxième", "Troisième"), items)
-        assertEquals(listOf("Un paragraphe."), com.allnetworktools.ui.changelogItems("Un paragraphe."))
-        assertTrue(com.allnetworktools.ui.changelogItems("").isEmpty())
+    @Test fun changelogBecomesSections() {
+        val sec = com.allnetworktools.ui.changelogSections(
+            "### 🆕 Nouveautés\r\n- Premier point\n  - Sous-point\n- **Deuxième** point\n  suite du deuxième\n\n### 🐛 Corrections\n- `Troisième`",
+        )
+        assertEquals(listOf("🆕 Nouveautés", "🐛 Corrections"), sec.map { it.title })
+        assertEquals(
+            listOf(
+                com.allnetworktools.ui.ChangelogItem("Premier point"),
+                com.allnetworktools.ui.ChangelogItem("Sous-point", sub = true),
+                com.allnetworktools.ui.ChangelogItem("Deuxième point suite du deuxième"),
+            ),
+            sec[0].items,
+        )
+        assertEquals(listOf(com.allnetworktools.ui.ChangelogItem("Troisième")), sec[1].items)
+        // Older notes: no heading, one section.
+        assertEquals(listOf(null), com.allnetworktools.ui.changelogSections("- Un\n- Deux").map { it.title })
+        assertEquals("Un paragraphe.", com.allnetworktools.ui.changelogSections("Un paragraphe.").single().items.single().text)
+        assertTrue(com.allnetworktools.ui.changelogSections("").isEmpty())
     }
 }
