@@ -3364,4 +3364,5 @@ Záplava je proud falešných rámců párování, který vyvolá vyskakovací o
     <string name="cen_ooni_failed">"Seznam OONI se nepodařilo načíst"</string>
     <string name="cen_country">"Země (dvě písmena)"</string>
     <string name="cen_how">"Stejně jako OONI Probe tento nástroj z vašeho telefonu v aktuální síti ověřuje, zda jsou blokovány weby, komunikátory a způsoby obcházení cenzury. Každý web se překládá DNS sítě i šifrovaným DNS (DoH), které síť nemůže číst ani měnit, a pak se kontaktuje přes TCP a TLS. Výsledek ukáže, kde je blokace: v DNS (žádná odpověď nebo falešná adresa), na IP adrese, při TLS handshaku se jménem webu (filtrování SNI, potvrzené stejným handshakem s jiným jménem) nebo odposlech (certifikát, kterému telefon nedůvěřuje). Komunikátory a Tor, jeho mosty, Snowflake, šifrované DNS a VPN se testují na jejich vlastních serverech. Web nedostupný všude vypadá jako blokace IP. Nic se neposílá do OONI a výsledky zůstávají v telefonu."</string>
+    <string name="spectrum_tune">"Naladit"</string>
 </resources>

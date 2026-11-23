@@ -3219,4 +3219,5 @@ Una raffica è un flusso di finte trame di abbinamento che fa apparire un pop-up
     <string name="cen_ooni_failed">"Impossibile caricare la lista OONI"</string>
     <string name="cen_country">"Paese (due lettere)"</string>
     <string name="cen_how">"Come OONI Probe, questo strumento verifica dal tuo telefono, sulla rete attuale, se siti web, app di messaggistica e modi per aggirare la censura sono bloccati. Ogni sito viene risolto con il DNS della rete e con un DNS cifrato (DoH), che la rete non può leggere né modificare, poi raggiunto in TCP e TLS. Il risultato indica dove avviene il blocco: il DNS (nessuna risposta o un indirizzo falso), l\'indirizzo IP, l\'handshake TLS che nomina il sito (filtro SNI, confermato dallo stesso handshake con un altro nome) o un\'intercettazione (un certificato di cui il telefono non si fida). Le app di messaggistica e Tor, i suoi bridge, Snowflake, il DNS cifrato e le VPN sono testati sui loro server. Un sito giù ovunque sembra un blocco IP. Nulla viene inviato a OONI e i risultati restano sul telefono."</string>
+    <string name="spectrum_tune">"Sintonizza"</string>
 </resources>

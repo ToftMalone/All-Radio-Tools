@@ -3219,4 +3219,5 @@ Una avalancha es un flujo de tramas de emparejamiento falsas que hace aparecer u
     <string name="cen_ooni_failed">"No se pudo cargar la lista de OONI"</string>
     <string name="cen_country">"País (dos letras)"</string>
     <string name="cen_how">"Como OONI Probe, esta herramienta comprueba desde tu teléfono, en la red actual, si están bloqueados sitios web, apps de mensajería y formas de eludir la censura. Cada sitio se resuelve con el DNS de la red y con DNS cifrado (DoH), que la red no puede leer ni modificar, y luego se contacta por TCP y TLS. El resultado indica dónde está el bloqueo: el DNS (sin respuesta o una dirección falsa), la dirección IP, el handshake TLS que nombra el sitio (filtrado SNI, confirmado por el mismo handshake con otro nombre) o una interceptación (un certificado en el que el teléfono no confía). Las apps de mensajería y Tor, sus puentes, Snowflake, el DNS cifrado y las VPN se prueban en sus propios servidores. Un sitio caído en todas partes parece un bloqueo de IP. No se envía nada a OONI y los resultados se quedan en el teléfono."</string>
+    <string name="spectrum_tune">"Sintonizar"</string>
 </resources>

@@ -3136,4 +3136,5 @@
     <string name="cen_ooni_failed">"OONIリストを読み込めませんでした"</string>
     <string name="cen_country">"国（2文字）"</string>
     <string name="cen_how">"OONI Probe と同じく、このツールはスマートフォンから現在のネットワーク経由で、Webサイト、メッセージアプリ、検閲回避手段がブロックされていないかを調べます。各サイトをネットワークのDNSと、ネットワークが読むことも改ざんすることもできない暗号化DNS（DoH）で名前解決し、TCPとTLSで接続します。結果はブロックの場所を示します：DNS（応答なし、または偽のアドレス）、IPアドレス、サイト名を含むTLSハンドシェイク（別の名前で同じハンドシェイクが通ることで確認するSNIフィルタリング）、または傍受（スマートフォンが信頼しない証明書）。メッセージアプリ、Tor、ブリッジ、Snowflake、暗号化DNS、VPNはそれぞれのサーバーでテストします。どこでもダウンしているサイトはIPブロックのように見えます。OONIには何も送信せず、結果はスマートフォンに残ります。"</string>
+    <string name="spectrum_tune">"同調"</string>
 </resources>

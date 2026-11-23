@@ -3219,4 +3219,5 @@ Uma enxurrada é um fluxo de quadros de pareamento falsos que faz aparecer um po
     <string name="cen_ooni_failed">"Não foi possível carregar a lista OONI"</string>
     <string name="cen_country">"País (duas letras)"</string>
     <string name="cen_how">"Tal como o OONI Probe, esta ferramenta verifica a partir do seu telefone, na rede atual, se sites, apps de mensagens e formas de contornar a censura estão bloqueados. Cada site é resolvido com o DNS da rede e com DNS cifrado (DoH), que a rede não pode ler nem alterar, e depois contactado por TCP e TLS. O resultado indica onde está o bloqueio: o DNS (sem resposta ou um endereço falso), o endereço IP, o handshake TLS que nomeia o site (filtragem SNI, confirmada pelo mesmo handshake com outro nome) ou uma interceção (um certificado em que o telefone não confia). As apps de mensagens e o Tor, as suas pontes, o Snowflake, o DNS cifrado e as VPN são testados nos seus próprios servidores. Um site em baixo em todo o lado parece um bloqueio de IP. Nada é enviado à OONI e os resultados ficam no telefone."</string>
+    <string name="spectrum_tune">"Sintonizar"</string>
 </resources>

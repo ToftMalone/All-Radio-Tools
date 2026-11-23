@@ -3136,4 +3136,5 @@ Một đợt lũ là dòng khung ghép đôi giả làm bật cửa sổ trên m
     <string name="cen_ooni_failed">"Không tải được danh sách OONI"</string>
     <string name="cen_country">"Quốc gia (hai chữ cái)"</string>
     <string name="cen_how">"Giống OONI Probe, công cụ này kiểm tra từ điện thoại của bạn, qua mạng hiện tại, xem các trang web, ứng dụng nhắn tin và cách vượt kiểm duyệt có bị chặn không. Mỗi trang được phân giải bằng DNS của mạng và bằng DNS mã hóa (DoH) mà mạng không đọc hay sửa được, rồi kết nối qua TCP và TLS. Kết quả cho biết chặn ở đâu: DNS (không trả lời hoặc địa chỉ giả), địa chỉ IP, bắt tay TLS nêu tên trang (lọc SNI, được xác nhận khi cùng bắt tay đó với tên khác thành công) hoặc chặn bắt (chứng chỉ điện thoại không tin). Ứng dụng nhắn tin cùng Tor, cầu nối, Snowflake, DNS mã hóa và VPN được kiểm tra trên chính máy chủ của chúng. Trang sập ở mọi nơi trông giống chặn IP. Không gì được gửi tới OONI và kết quả ở lại trên điện thoại."</string>
+    <string name="spectrum_tune">"Dò tần"</string>
 </resources>

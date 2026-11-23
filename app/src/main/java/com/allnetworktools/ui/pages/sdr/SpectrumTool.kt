@@ -76,6 +76,9 @@ internal val SPECTRUM_INSET = 8.dp
  */
 internal fun binX(i: Int, n: Int, width: Float): Float = width * (i + 0.5f) / n
 
+/** A frequency in MHz to the 100 Hz, as the centre button and the marker show it. */
+internal fun fineMhz(hz: Double) = "%.4f".format(Locale.getDefault(), hz / 1e6)
+
 /** The level under the marker: the highest of the points around it, so a narrow signal is not missed. */
 internal fun markerLevel(db: FloatArray, at: Float): Float {
     val i = (at * db.size).toInt().coerceIn(0, db.size - 1)
@@ -138,30 +141,51 @@ fun SpectrumTool(vm: MainViewModel) {
         }
     }
     var analysis by remember { androidx.compose.runtime.mutableStateOf(false) }
+    var editCenter by remember { androidx.compose.runtime.mutableStateOf(false) }
+    val pickBand: (SpectrumPreset) -> Unit = { p ->
+        if (!c.running) c.spanMhz = fitSpan(p.spanMhz, device?.spectrumSpans)
+        c.retune((p.centerMhz * 1e6).toLong())
+    }
     // The spectrum stays at the top (issue #16); only the settings under it scroll.
     Column(Modifier.fillMaxSize()) {
+        // No header line (issue #22): the peak sits at the foot of the spectrum, the centre in the button under it.
         Column(Modifier.padding(horizontal = 16.dp).padding(top = 4.dp, bottom = 8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                Column(Modifier.weight(1f)) {
-                    Text("${mhzLabel(center)} MHz", style = gs(22, 28, 500, tnum = true), maxLines = 1)
-                    Text(S(R.string.width_mhz_from_to_mhz, widthLabel(span), mhzLabel(center - span / 2), mhzLabel(center + span / 2)), style = rf(12, 16), color = cs.onSurfaceVariant, maxLines = 2)
-                }
-                when {
-                    c.error != null -> HeroChip(c.error!!, AntTheme.net.poor)
-                    c.starting -> HeroChip(S(R.string.starting_the_hackrf), AntTheme.net.fair, blink = true)
-                    c.running && peakHz != null && db != null -> HeroChip(S(R.string.peak_mhz_dbfs, mhzLabel(peakHz)).format(Locale.getDefault(), db[peakIdx!!]), AntTheme.net.good, blink = true)
-                    device == null -> HeroChip(S(R.string.no_hackrf_plugged_in), AntTheme.net.poor)
-                    else -> HeroChip(S(R.string.ready, device!!.name), AntTheme.net.good)
-                }
-            }
             Column(Modifier.pinchZoom(c.zoom, c::chooseZoom), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                SpectrumView(db, c.hold, peakIdx, markerAt, height = 160, onDrag = drag, onTap = put)
-                WaterfallView(c, markerAt, put)
+                Box {
+                    SpectrumView(db, c.hold, peakIdx, markerAt, height = 160, onDrag = drag, onTap = put)
+                    val (label, tint) = when {
+                        c.error != null -> c.error!! to AntTheme.net.poor
+                        c.starting -> S(R.string.starting_the_hackrf) to AntTheme.net.fair
+                        c.running && peakHz != null && db != null ->
+                            S(R.string.peak_mhz_dbfs, mhzLabel(peakHz)).format(Locale.getDefault(), db[peakIdx!!]) to cs.onSurfaceVariant
+                        device == null -> S(R.string.no_hackrf_plugged_in) to AntTheme.net.poor
+                        else -> S(R.string.ready, device!!.name) to AntTheme.net.good
+                    }
+                    Text(
+                        label,
+                        Modifier.align(Alignment.BottomEnd).padding(end = 18.dp, bottom = 8.dp, start = 18.dp)
+                            .clip(RoundedCornerShape(8.dp)).background(cs.surfaceContainerHigh.copy(alpha = 0.85f)).padding(horizontal = 6.dp, vertical = 1.dp),
+                        style = rf(11, 14, 600, tnum = true), color = tint, maxLines = 2,
+                    )
+                }
+                WaterfallView(c, markerAt, onDrag = drag, onTap = put)
             }
-            // The frequency buttons right under the spectrum they move.
-            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            // Move by half a width, zoom out and in, and the centre: a tap on it to type another frequency.
+            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                 RoundButton(Sym.ChevronLeft) { c.retune((center - span / 2).toLong()) }
-                Text("± ${widthLabel(span / 2)} MHz", Modifier.weight(1f), style = rf(13, 18, 600), color = cs.onSurfaceVariant, textAlign = androidx.compose.ui.text.style.TextAlign.Center)
+                RoundButton(Sym.Remove, enabled = c.zoom > SpectrumController.Zooms.first()) {
+                    SpectrumController.Zooms.lastOrNull { it < c.zoom }?.let(c::chooseZoom)
+                }
+                Column(
+                    Modifier.weight(1f).height(48.dp).clip(RoundedCornerShape(24.dp)).background(cs.surfaceContainerHigh).clickable { editCenter = true },
+                    horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center,
+                ) {
+                    Text(fineMhz(center), style = rf(16, 20, 700, tnum = true), maxLines = 1)
+                    Text("± ${widthLabel(span / 2)} MHz", style = rf(11, 14, 500, tnum = true), color = cs.onSurfaceVariant, maxLines = 1)
+                }
+                RoundButton(Sym.Add, enabled = c.zoom < SpectrumController.Zooms.last()) {
+                    SpectrumController.Zooms.firstOrNull { it > c.zoom }?.let(c::chooseZoom)
+                }
                 RoundButton(Sym.ChevronRight) { c.retune((center + span / 2).toLong()) }
             }
             if (marker != null) MarkerBar(vm, c, db, markerAt, marker, center, span) { analysis = true }
@@ -176,16 +200,10 @@ fun SpectrumTool(vm: MainViewModel) {
                 }
                 SectionCard {
                     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                        HostInputField(c.centerMhz, { c.centerMhz = it }, S(R.string.centre_frequency_mhz), Sym.Antenna, keyboardType = KeyboardType.Decimal) {
-                            c.parsedCenterHz()?.let(c::retune)
-                        }
                         Text(S(R.string.bands), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
                         FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                             SpectrumPreset.entries.forEach { p ->
-                                AntFilterChip(p.label, false, {
-                                    if (!c.running) c.spanMhz = fitSpan(p.spanMhz, device?.spectrumSpans)
-                                    c.retune((p.centerMhz * 1e6).toLong())
-                                })
+                                AntFilterChip(p.label, false, { pickBand(p) })
                             }
                         }
                         Text(S(R.string.displayed_width_at_next_start), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
@@ -214,6 +232,25 @@ fun SpectrumTool(vm: MainViewModel) {
             }
         }
     }
+    if (editCenter) {
+        // In a window, so the keyboard cannot hide the field (issue #22).
+        val apply = { c.parsedCenterHz()?.let(c::retune); editCenter = false }
+        androidx.compose.material3.AlertDialog(
+            onDismissRequest = { editCenter = false },
+            title = { Text(S(R.string.centre_frequency_mhz)) },
+            text = {
+                Column(Modifier.verticalScroll(androidx.compose.foundation.rememberScrollState()), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                    HostInputField(c.centerMhz, { c.centerMhz = it }, S(R.string.centre_frequency_mhz), Sym.Antenna, keyboardType = KeyboardType.Decimal) { apply() }
+                    Text(S(R.string.bands), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
+                    FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        SpectrumPreset.entries.forEach { p -> AntFilterChip(p.label, false, { pickBand(p); editCenter = false }) }
+                    }
+                }
+            },
+            confirmButton = { androidx.compose.material3.TextButton({ apply() }, enabled = c.parsedCenterHz() != null) { Text(S(R.string.spectrum_tune)) } },
+            dismissButton = { androidx.compose.material3.TextButton({ editCenter = false }) { Text(S(R.string.cancel)) } },
+        )
+    }
     if (analysis && marker != null) {
         androidx.compose.material3.AlertDialog(
             onDismissRequest = { analysis = false },
@@ -233,9 +270,9 @@ private const val EDGE = 0.04f
 private const val EDGE_MS = 700L
 
 @Composable
-private fun RoundButton(icon: String, tint: Color = cs.onSurface, background: Color = cs.surfaceContainerHigh, onClick: () -> Unit) {
-    Box(Modifier.size(44.dp).clip(CircleShape).background(background).clickable(onClick = onClick), contentAlignment = Alignment.Center) {
-        Symbol(icon, size = 22.dp, tint = tint)
+private fun RoundButton(icon: String, tint: Color = cs.onSurface, background: Color = cs.surfaceContainerHigh, enabled: Boolean = true, onClick: () -> Unit) {
+    Box(Modifier.size(44.dp).clip(CircleShape).background(background).clickable(enabled = enabled, onClick = onClick), contentAlignment = Alignment.Center) {
+        Symbol(icon, size = 22.dp, tint = if (enabled) tint else tint.copy(alpha = 0.38f))
     }
 }
 
@@ -251,25 +288,39 @@ private fun MarkerBar(vm: MainViewModel, c: SpectrumController, db: FloatArray?,
         db != null && markerAt != null && id.identify(id.measure(db, markerAt, center, span)).isNotEmpty()
     }
     val acc = AntTheme.accent
-    Row(
+    Column(
         Modifier.fillMaxWidth().clip(RoundedCornerShape(20.dp)).background(cs.surfaceContainerLow).padding(horizontal = 8.dp, vertical = 6.dp),
-        verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp),
+        verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
-        Column(Modifier.weight(1f).padding(start = 6.dp)) {
-            Text(mhzLabel(marker.toDouble()) + " MHz", style = rf(14, 18, 600, tnum = true), maxLines = 1)
-            Text(level?.let { "%.0f dBFS".format(Locale.getDefault(), it) } ?: "—", style = rf(12, 16, tnum = true), color = cs.onSurfaceVariant, maxLines = 1)
+        Row(Modifier.fillMaxWidth().padding(horizontal = 6.dp), verticalAlignment = Alignment.Bottom) {
+            Text(fineMhz(marker.toDouble()) + " MHz", Modifier.weight(1f), style = rf(16, 20, 700, tnum = true), maxLines = 1)
+            Text(level?.let { "%.0f dBFS".format(Locale.getDefault(), it) } ?: "—", style = rf(13, 18, 500, tnum = true), color = cs.onSurfaceVariant, maxLines = 1)
         }
-        RoundButton(Sym.ChevronLeft) { c.nudgeMarker(-1, center.toLong()) }
-        RoundButton(Sym.ChevronRight) { c.nudgeMarker(1, center.toLong()) }
-        RoundButton(Sym.Search, tint = if (known) acc.onAccent else cs.onSurfaceVariant, background = if (known) acc.accent else cs.surfaceContainerHigh, onClick = onAnalysis)
-        RoundButton(Sym.Headphones) {
-            // The radio goes to the Listen tool, tuned on the marker in the mode of its band.
-            if (c.running || c.starting) c.stop()
-            vm.tools.listen.listenAt(marker)
-            vm.navigate { it.copy(page = com.allnetworktools.Page.ToolPage(com.allnetworktools.model.Tool.Listen)) }
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+            FlatButton(Sym.ChevronLeft) { c.nudgeMarker(-1, center.toLong()) }
+            FlatButton(Sym.ChevronRight) { c.nudgeMarker(1, center.toLong()) }
+            // The marker becomes the centre.
+            FlatButton(Sym.GpsFixed) { c.retune(marker) }
+            FlatButton(Sym.Search, lit = known, onClick = onAnalysis)
+            FlatButton(Sym.Headphones) {
+                // The radio goes to the Listen tool, tuned on the marker in the mode of its band.
+                if (c.running || c.starting) c.stop()
+                vm.tools.listen.listenAt(marker)
+                vm.navigate { it.copy(page = com.allnetworktools.Page.ToolPage(com.allnetworktools.model.Tool.Listen)) }
+            }
+            FlatButton(Sym.Close) { c.markerHz = null }
         }
-        RoundButton(Sym.Close) { c.markerHz = null }
     }
+}
+
+/** A low, wide button of the marker bar's second floor. */
+@Composable
+private fun androidx.compose.foundation.layout.RowScope.FlatButton(icon: String, lit: Boolean = false, onClick: () -> Unit) {
+    val acc = AntTheme.accent
+    Box(
+        Modifier.weight(1f).height(36.dp).clip(RoundedCornerShape(18.dp)).background(if (lit) acc.accent else cs.surfaceContainerHigh).clickable(onClick = onClick),
+        contentAlignment = Alignment.Center,
+    ) { Symbol(icon, size = 20.dp, tint = if (lit) acc.onAccent else cs.onSurface) }
 }
 
 @Composable
@@ -280,30 +331,7 @@ internal fun SpectrumView(db: FloatArray?, hold: FloatArray?, peakIdx: Int?, mar
     val markerColor = cs.tertiary
     Box(Modifier.fillMaxWidth().height(height.dp).clip(RoundedCornerShape(24.dp)).background(cs.surfaceContainerHigh)) {
         // The handler is read again at every gesture: it holds the centre and the width shown now, not those of the first frame.
-        val current by androidx.compose.runtime.rememberUpdatedState(onTap)
-        val dragging by androidx.compose.runtime.rememberUpdatedState(onDrag ?: onTap)
-        val tap = if (onTap != null) Modifier.pointerInput(Unit) {
-            awaitEachGesture {
-                val down = awaitFirstDown(requireUnconsumed = false)
-                fun at(x: Float) = (x / size.width).coerceIn(0f, 1f)
-                var moved = false
-                var scrolling = false
-                while (true) {
-                    val event = awaitPointerEvent()
-                    // Two fingers are a pinch (the zoom), not a marker.
-                    if (event.changes.count { it.pressed } > 1) { scrolling = true; break }
-                    val ch = event.changes.firstOrNull() ?: break
-                    if (!ch.pressed) break
-                    val dx = ch.position.x - down.position.x
-                    val dy = ch.position.y - down.position.y
-                    if (!moved && kotlin.math.abs(dy) > viewConfiguration.touchSlop && kotlin.math.abs(dy) > kotlin.math.abs(dx)) { scrolling = true; break }
-                    if (kotlin.math.abs(dx) > viewConfiguration.touchSlop) moved = true
-                    // One finger sliding along the spectrum moves the marker, as the dial of the Listen tool.
-                    if (moved) { dragging?.invoke(at(ch.position.x)); ch.consume() }
-                }
-                if (!moved && !scrolling) current?.invoke(at(down.position.x))
-            }
-        } else Modifier
+        val tap = Modifier.markerGestures(onTap, onDrag)
         Canvas(Modifier.fillMaxSize().padding(horizontal = SPECTRUM_INSET, vertical = 12.dp).then(tap)) {
             val minDb = -110f
             val maxDb = -10f
@@ -331,16 +359,48 @@ internal fun SpectrumView(db: FloatArray?, hold: FloatArray?, peakIdx: Int?, mar
     }
 }
 
+/**
+ * A tap puts the marker, one finger sliding sideways drags it; a vertical slide is left to the page and two fingers to
+ * the pinch. The handlers are read again at every gesture: they hold the centre and the width shown now.
+ */
 @Composable
-private fun WaterfallView(c: SpectrumController, markerAt: Float?, onTap: (Float) -> Unit) {
+internal fun Modifier.markerGestures(onTap: ((Float) -> Unit)?, onDrag: ((Float) -> Unit)?): Modifier {
+    if (onTap == null) return this
+    val current by androidx.compose.runtime.rememberUpdatedState(onTap)
+    val dragging by androidx.compose.runtime.rememberUpdatedState(onDrag ?: onTap)
+    return pointerInput(Unit) {
+        awaitEachGesture {
+            val down = awaitFirstDown(requireUnconsumed = false)
+            fun at(x: Float) = (x / size.width).coerceIn(0f, 1f)
+            var moved = false
+            var scrolling = false
+            while (true) {
+                val event = awaitPointerEvent()
+                // Two fingers are a pinch (the zoom), not a marker.
+                if (event.changes.count { it.pressed } > 1) { scrolling = true; break }
+                val ch = event.changes.firstOrNull() ?: break
+                if (!ch.pressed) break
+                val dx = ch.position.x - down.position.x
+                val dy = ch.position.y - down.position.y
+                if (!moved && kotlin.math.abs(dy) > viewConfiguration.touchSlop && kotlin.math.abs(dy) > kotlin.math.abs(dx)) { scrolling = true; break }
+                if (kotlin.math.abs(dx) > viewConfiguration.touchSlop) moved = true
+                // One finger sliding along moves the marker, as the dial of the Listen tool.
+                if (moved) { dragging(at(ch.position.x)); ch.consume() }
+            }
+            if (!moved && !scrolling) current(at(down.position.x))
+        }
+    }
+}
+
+@Composable
+private fun WaterfallView(c: SpectrumController, markerAt: Float?, onDrag: (Float) -> Unit, onTap: (Float) -> Unit) {
     val frames = c.frames // recompose on each new row
     val image = remember { c.waterfall.asImageBitmap() }
     val markerColor = cs.tertiary
-    val current by androidx.compose.runtime.rememberUpdatedState(onTap)
     Box(Modifier.fillMaxWidth().height(110.dp).clip(RoundedCornerShape(24.dp)).background(Color(0xFF0B1026))) {
         // The marker can be placed on the waterfall too: a signal that comes and goes shows there better.
         // The same side inset as the spectrum above, so a signal sits at the same place in both.
-        Canvas(Modifier.fillMaxSize().padding(horizontal = SPECTRUM_INSET).pointerInput(Unit) { detectTapGestures { o -> current((o.x / size.width).coerceIn(0f, 1f)) } }) {
+        Canvas(Modifier.fillMaxSize().padding(horizontal = SPECTRUM_INSET).markerGestures(onTap, onDrag)) {
             if (frames >= 0) {
                 drawImage(
                     image, IntOffset.Zero, IntSize(SpectrumController.WIDTH, SpectrumController.HEIGHT),
