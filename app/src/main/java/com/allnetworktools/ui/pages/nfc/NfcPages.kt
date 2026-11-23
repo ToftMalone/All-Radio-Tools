@@ -1,5 +1,6 @@
 package com.allnetworktools.ui.pages.nfc
 
+import com.allnetworktools.ui.components.fadeUp
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -93,7 +94,7 @@ private fun Listen(c: NfcController, mode: NfcMode) {
 private fun HoldTag(title: String, text: String, working: Boolean = false) {
     val acc = AntTheme.accent
     Column(
-        Modifier.fillMaxWidth().clip(RoundedCornerShape(32.dp)).background(acc.container).padding(vertical = 28.dp, horizontal = 20.dp),
+        Modifier.fadeUp().fillMaxWidth().clip(RoundedCornerShape(32.dp)).background(acc.container).padding(vertical = 28.dp, horizontal = 20.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Box(Modifier.size(120.dp), contentAlignment = Alignment.Center) {
@@ -636,7 +637,7 @@ fun NfcAntennaTool(vm: MainViewModel) {
     val fill by animateFloatAsState(if (s.present) s.quality else 0f, label = "q")
     PageColumn {
         Column(
-            Modifier.fillMaxWidth().clip(RoundedCornerShape(32.dp)).background(AntTheme.accent.container).padding(24.dp),
+            Modifier.fadeUp().fillMaxWidth().clip(RoundedCornerShape(32.dp)).background(AntTheme.accent.container).padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(10.dp),
         ) {
             Box(Modifier.size(150.dp).clip(CircleShape).background(color.copy(alpha = 0.18f)), contentAlignment = Alignment.Center) {

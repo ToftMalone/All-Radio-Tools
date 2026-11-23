@@ -1,5 +1,6 @@
 package com.allnetworktools.ui.pages.wardrive
 
+import com.allnetworktools.ui.components.fadeUp
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -302,7 +303,7 @@ private fun Locator(s: CamSuspect) {
         else -> S(R.string.cam_cold) to AntTheme.net.wifi.accent
     }
     Column(
-        Modifier.fillMaxWidth().clip(RoundedCornerShape(28.dp)).background(acc.container).padding(20.dp),
+        Modifier.fadeUp().fillMaxWidth().clip(RoundedCornerShape(28.dp)).background(acc.container).padding(20.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
         Text(S(R.string.cam_locating, s.name.ifEmpty { s.address }), style = rf(14, 20, 600), color = acc.onContainer, maxLines = 1, overflow = TextOverflow.Ellipsis)

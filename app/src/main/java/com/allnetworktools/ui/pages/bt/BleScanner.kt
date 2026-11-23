@@ -1,5 +1,6 @@
 package com.allnetworktools.ui.pages.bt
 
+import com.allnetworktools.ui.components.fadeUp
 import androidx.compose.animation.core.animateOffsetAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.Canvas
@@ -270,7 +271,7 @@ private fun IdentifyCard(c: BleIdentifyController, unknown: Int, candidates: Int
     val haptics = AntTheme.haptics
     if (!c.running && !c.finished && unknown == 0) return
     Column(
-        Modifier.fillMaxWidth().clip(RoundedCornerShape(24.dp)).background(roles.container).padding(start = 16.dp, end = 12.dp, top = 14.dp, bottom = 14.dp),
+        Modifier.fadeUp().fillMaxWidth().clip(RoundedCornerShape(24.dp)).background(roles.container).padding(start = 16.dp, end = 12.dp, top = 14.dp, bottom = 14.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {

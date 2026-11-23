@@ -156,9 +156,21 @@ fun PageHostContent(vm: MainViewModel, nav: NavState, onBack: () -> Unit) {
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
             ) {
                 IconCircleButton(Sym.ArrowBack, onBack, tint = cs.onSurface)
-                Column(Modifier.weight(1f)) {
-                    Text(title, style = gs(22, 28, 500), maxLines = 1)
-                    Text(subtitle, style = rf(12, 16), color = cs.onSurfaceVariant, maxLines = 1)
+                // The title fades through with the page under it, rather than switching ahead of it.
+                AnimatedContent(
+                    title to subtitle,
+                    Modifier.weight(1f),
+                    transitionSpec = {
+                        (fadeIn(tween(300, 90, Motion.Emphasized)) + slideInVertically(tween(300, 90, Motion.Emphasized)) { it / 8 })
+                            .togetherWith(fadeOut(tween(90)))
+                    },
+                    contentAlignment = Alignment.CenterStart,
+                    label = "pageTitle",
+                ) { (t, sub) ->
+                    Column(Modifier.fillMaxWidth()) {
+                        Text(t, style = gs(22, 28, 500), maxLines = 1)
+                        Text(sub, style = rf(12, 16), color = cs.onSurfaceVariant, maxLines = 1)
+                    }
                 }
                 val a = topAction.value
                 if (a != null) IconCircleButton(a.icon, a.onClick, tint = cs.onSurfaceVariant) else Spacer(Modifier.size(48.dp))

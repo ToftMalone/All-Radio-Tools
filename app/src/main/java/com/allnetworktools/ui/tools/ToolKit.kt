@@ -3,6 +3,7 @@ package com.allnetworktools.ui.tools
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.togetherWith
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
@@ -161,11 +162,11 @@ fun Stepper(value: Int, onDec: () -> Unit, onInc: () -> Unit) {
         Modifier.clip(RoundedCornerShape(20.dp)).background(cs.surfaceContainerHigh).padding(4.dp),
         verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp),
     ) {
-        Box(Modifier.size(36.dp).clip(CircleShape).background(cs.surface).clickable(onClick = onDec), contentAlignment = Alignment.Center) {
+        Box(Modifier.size(36.dp).clip(CircleShape).background(cs.surface).clickable(role = androidx.compose.ui.semantics.Role.Button, onClick = onDec), contentAlignment = Alignment.Center) {
             Symbol(Sym.Remove, size = 20.dp, tint = cs.onSurface)
         }
         Text(value.toString(), Modifier.widthIn(min = 36.dp), style = gs(18, 24, 600, tnum = true), textAlign = TextAlign.Center)
-        Box(Modifier.size(36.dp).clip(CircleShape).background(acc.accent).clickable(onClick = onInc), contentAlignment = Alignment.Center) {
+        Box(Modifier.size(36.dp).clip(CircleShape).background(acc.accent).clickable(role = androidx.compose.ui.semantics.Role.Button, onClick = onInc), contentAlignment = Alignment.Center) {
             Symbol(Sym.Add, size = 20.dp, tint = acc.onAccent)
         }
     }
@@ -218,15 +219,27 @@ fun ToolButtons(vararg buttons: ToolButton, modifier: Modifier = Modifier) {
 @Composable
 fun StartButton(text: String, icon: String = Sym.PlayArrow, enabled: Boolean = true, onClick: () -> Unit) {
     val acc = AntTheme.accent
-    Row(
-        Modifier.fillMaxWidth().height(56.dp).clip(RoundedCornerShape(28.dp))
-            .background(if (enabled) acc.accent else cs.onSurface.copy(alpha = 0.12f))
-            .clickable(enabled = enabled, onClick = onClick),
-        verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
+    // Start ↔ stop and enabled ↔ disabled ease over instead of switching at once.
+    val bg by androidx.compose.animation.animateColorAsState(if (enabled) acc.accent else cs.onSurface.copy(alpha = 0.12f), tween(250), label = "startBg")
+    val fg by androidx.compose.animation.animateColorAsState(if (enabled) acc.onAccent else cs.onSurface.copy(alpha = 0.38f), tween(250), label = "startFg")
+    Box(
+        Modifier.fillMaxWidth().height(56.dp).clip(RoundedCornerShape(28.dp)).background(bg)
+            .clickable(enabled = enabled, role = androidx.compose.ui.semantics.Role.Button, onClick = onClick),
+        contentAlignment = Alignment.Center,
     ) {
-        val fg = if (enabled) acc.onAccent else cs.onSurface.copy(alpha = 0.38f)
-        Symbol(icon, size = 22.dp, filled = true, tint = fg)
-        Text(text, style = rf(16, 20, 600), color = fg)
+        androidx.compose.animation.AnimatedContent(
+            icon to text,
+            transitionSpec = {
+                (androidx.compose.animation.fadeIn(tween(220, 60)) + androidx.compose.animation.scaleIn(tween(220, 60), initialScale = 0.92f))
+                    .togetherWith(androidx.compose.animation.fadeOut(tween(90)))
+            },
+            label = "startLabel",
+        ) { (i, t) ->
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Symbol(i, size = 22.dp, filled = true, tint = fg)
+                Text(t, style = rf(16, 20, 600), color = fg)
+            }
+        }
     }
 }
 
@@ -272,9 +285,23 @@ fun ToolEmpty(icon: String, title: String, message: String, button: String?, onC
     }
 }
 
+/**
+ * A progress value that eases forward but jumps back: a test started again starts from empty instead of rewinding
+ * from full.
+ */
+@Composable
+fun rememberProgress(fraction: Float): androidx.compose.runtime.State<Float> {
+    val target = fraction.coerceIn(0f, 1f)
+    val a = androidx.compose.runtime.remember { androidx.compose.animation.core.Animatable(target) }
+    androidx.compose.runtime.LaunchedEffect(target) {
+        if (target < a.value - 0.001f) a.snapTo(target) else a.animateTo(target, Motion.standard())
+    }
+    return a.asState()
+}
+
 @Composable
 fun ProgressBar(fraction: Float, modifier: Modifier = Modifier, track: Color = cs.surfaceContainerHighest, height: Dp = 8.dp) {
-    val f by animateFloatAsState(fraction.coerceIn(0f, 1f), Motion.standard(), label = "progress")
+    val f by rememberProgress(fraction)
     Box(modifier.fillMaxWidth().height(height).clip(RoundedCornerShape(height / 2)).background(track)) {
         Box(Modifier.fillMaxWidth(f).fillMaxHeight().clip(RoundedCornerShape(height / 2)).background(AntTheme.accent.accent))
     }
@@ -307,7 +334,7 @@ fun Spinner(size: Dp = 28.dp) {
 /** Circular progress ring with a centred label. */
 @Composable
 fun ProgressRing(fraction: Float, label: String, size: Dp = 96.dp, stroke: Dp = 10.dp, track: Color = cs.surface) {
-    val f by animateFloatAsState(fraction.coerceIn(0f, 1f), Motion.standard(), label = "ring")
+    val f by rememberProgress(fraction)
     val acc = AntTheme.accent.accent
     Box(Modifier.size(size), contentAlignment = Alignment.Center) {
         Canvas(Modifier.size(size)) {
@@ -315,7 +342,7 @@ fun ProgressRing(fraction: Float, label: String, size: Dp = 96.dp, stroke: Dp = 
             val tl = Offset(sw / 2, sw / 2)
             val sz = Size(this.size.width - sw, this.size.height - sw)
             drawArc(track, 0f, 360f, false, tl, sz, style = Stroke(sw))
-            drawArc(acc, -90f, 360f * f, false, tl, sz, style = Stroke(sw, cap = StrokeCap.Round))
+            if (f > 0.002f) drawArc(acc, -90f, 360f * f, false, tl, sz, style = Stroke(sw, cap = StrokeCap.Round))
         }
         Text(label, style = gs(22, 28, 600, tnum = true))
     }

@@ -1,5 +1,6 @@
 package com.allnetworktools.ui.pages.sdr
 
+import com.allnetworktools.ui.components.fadeUp
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.shape.CircleShape
@@ -150,7 +151,7 @@ fun SpectrumTool(vm: MainViewModel) {
     Column(Modifier.fillMaxSize()) {
         // No header line (issue #22): the peak sits at the foot of the spectrum, the centre in the button under it.
         Column(Modifier.padding(horizontal = 16.dp).padding(top = 4.dp, bottom = 8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            Column(Modifier.pinchZoom(c.zoom, c::chooseZoom), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Column(Modifier.fadeUp().pinchZoom(c.zoom, c::chooseZoom), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Box {
                     SpectrumView(db, c.hold, peakIdx, markerAt, height = 160, onDrag = drag, onTap = put)
                     val (label, tint) = when {
@@ -268,7 +269,7 @@ private const val EDGE_MS = 700L
 
 @Composable
 private fun RoundButton(icon: String, tint: Color = cs.onSurface, background: Color = cs.surfaceContainerHigh, enabled: Boolean = true, onClick: () -> Unit) {
-    Box(Modifier.size(44.dp).clip(CircleShape).background(background).clickable(enabled = enabled, onClick = onClick), contentAlignment = Alignment.Center) {
+    Box(Modifier.size(44.dp).clip(CircleShape).background(background).clickable(enabled = enabled, role = androidx.compose.ui.semantics.Role.Button, onClick = onClick), contentAlignment = Alignment.Center) {
         Symbol(icon, size = 22.dp, tint = if (enabled) tint else tint.copy(alpha = 0.38f))
     }
 }
@@ -315,7 +316,7 @@ private fun MarkerBar(vm: MainViewModel, c: SpectrumController, db: FloatArray?,
 private fun androidx.compose.foundation.layout.RowScope.FlatButton(icon: String, lit: Boolean = false, onClick: () -> Unit) {
     val acc = AntTheme.accent
     Box(
-        Modifier.weight(1f).height(36.dp).clip(RoundedCornerShape(18.dp)).background(if (lit) acc.accent else cs.surfaceContainerHigh).clickable(onClick = onClick),
+        Modifier.weight(1f).height(36.dp).clip(RoundedCornerShape(18.dp)).background(if (lit) acc.accent else cs.surfaceContainerHigh).clickable(role = androidx.compose.ui.semantics.Role.Button, onClick = onClick),
         contentAlignment = Alignment.Center,
     ) { Symbol(icon, size = 20.dp, tint = if (lit) acc.onAccent else cs.onSurface) }
 }

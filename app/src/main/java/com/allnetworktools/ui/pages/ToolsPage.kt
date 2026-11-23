@@ -335,3 +335,28 @@ fun ToolsPage(net: Network, vm: MainViewModel) {
         }
     }
 }
+
+/** One tool as the search of the home screen lists it: under the radio its tools page shows it on. */
+data class ToolHit(val network: Network, val tool: Tool, val title: String, val subtitle: String, val icon: String)
+
+/** Every tool of every radio, featured ones first, for the search of the home screen. */
+fun allToolHits(): List<ToolHit> = Network.entries.flatMap { net ->
+    val featured = ToolHit(net, net.featured, net.featured.title, featuredSubtitle(net, null), net.featured.icon)
+    listOf(featured) + groups(net, null, null).flatMap { g -> g.items.map { ToolHit(net, it.tool, it.title, it.subtitle, it.icon) } }
+}.distinctBy { it.network to it.tool }
+
+private fun fold(s: String) = java.text.Normalizer.normalize(s, java.text.Normalizer.Form.NFD).replace(Regex("\\p{M}+"), "").lowercase()
+
+private val splitter = Regex("[^\\p{L}\\p{N}]+")
+private fun words(s: String) = fold(s).split(splitter).filter { it.isNotEmpty() }
+
+/**
+ * The tools where every word of [query] starts a word of their name, description or radio, accents and case aside
+ * ("av" finds "avions", not "Z-Wave"); those matched on their name alone come first.
+ */
+fun searchTools(all: List<ToolHit>, query: String): List<ToolHit> {
+    val asked = words(query)
+    if (asked.isEmpty()) return emptyList()
+    fun hits(text: String): Boolean { val w = words(text); return asked.all { q -> w.any { it.startsWith(q) } } }
+    return all.filter { hits("${it.title} ${it.subtitle} ${it.network.label}") }.sortedBy { if (hits(it.title)) 0 else 1 }
+}

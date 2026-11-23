@@ -1,5 +1,9 @@
 package com.allnetworktools
 
+import androidx.compose.ui.test.performTextInput
+import androidx.compose.ui.test.onLast
+import androidx.compose.ui.test.onAllNodesWithContentDescription
+import androidx.compose.ui.test.onNodeWithContentDescription
 import com.allnetworktools.data.net.Verdict as CensorVerdict
 import androidx.compose.ui.graphics.asImageBitmap
 import android.graphics.Bitmap
@@ -601,6 +605,35 @@ class ScreenshotTest {
     }
 
 
+    /** The search of the home screen: accents and case aside, on name, description and radio, names first. */
+    @Test fun toolSearch() {
+        val all = com.allnetworktools.ui.pages.allToolHits()
+        assertTrue("every radio has tools", Network.entries.all { n -> all.any { it.network == n } })
+        fun find(q: String) = com.allnetworktools.ui.pages.searchTools(all, q)
+        assertTrue(find("   ").isEmpty())
+        val censor = find("censure")
+        assertTrue("Wi-Fi and mobile copies", censor.any { it.tool == Tool.Censor } && censor.any { it.tool == Tool.CellCensor })
+        assertTrue("accents aside", find("METEO").isNotEmpty())
+        assertEquals("names first", Tool.Spectrum, find("spectre").first().tool)
+        assertTrue(find("zzzzqx").isEmpty())
+        shot("02c_home_search") { }
+        compose.onNodeWithContentDescription("Chercher un outil").performClick()
+        compose.mainClock.advanceTimeBy(600)
+        compose.onAllNodesWithContentDescription("Chercher un outil").onLast().performTextInput("ping")
+    }
+    /** The search window's content, drawn on its own: the test capture does not draw full-screen dialog windows. */
+    @Test fun toolSearchScreen() {
+        compose.mainClock.autoAdvance = false
+        compose.setContent {
+            com.allnetworktools.ui.theme.AntTheme(com.allnetworktools.data.AppSettings()) {
+                com.allnetworktools.ui.home.ToolSearchContent({ _, _ -> }, {}, initialQuery = "sdr av")
+            }
+        }
+        repeat(10) { compose.mainClock.advanceTimeBy(100); org.robolectric.shadows.ShadowLooper.idleMainLooper(100, java.util.concurrent.TimeUnit.MILLISECONDS) }
+        val bitmap = compose.onRoot().captureToImage().asAndroidBitmap()
+        val dir = File(System.getProperty("screenshots.dir") ?: "build/screenshots").apply { mkdirs() }
+        File(dir, "02d_tool_search.png").outputStream().use { bitmap.compress(Bitmap.CompressFormat.PNG, 100, it) }
+    }
     @Test fun spectrum() = shot("H5_spectrum", dark = true, nav = NavState(Network.Sdr, Page.ToolPage(Tool.Spectrum))) { vm ->
         // FM band: a few stations over a −95 dBFS floor.
         val stations = mapOf(120 to -38f, 260 to -52f, 410 to -30f, 590 to -61f, 700 to -44f, 905 to -49f)

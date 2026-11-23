@@ -214,6 +214,7 @@ private fun MainShell(vm: MainViewModel) {
                 onBlockerAction = actions::resolve,
                 onDeselect = { vm.navigate { it.copy(network = null) } },
                 onSettings = { vm.navigate { it.copy(network = null, page = Page.Settings) } },
+                onOpenTool = { n, t -> vm.navigate { it.copy(network = n, page = Page.ToolPage(t)) } },
             )
         }
 

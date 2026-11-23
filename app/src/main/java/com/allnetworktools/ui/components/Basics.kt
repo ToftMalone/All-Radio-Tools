@@ -1,5 +1,10 @@
 package com.allnetworktools.ui.components
 
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
+import com.allnetworktools.R
+import com.allnetworktools.util.S
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -52,7 +57,41 @@ import com.allnetworktools.ui.theme.cs
 import com.allnetworktools.ui.theme.gs
 import com.allnetworktools.ui.theme.rf
 
-/** A Material Symbols Rounded glyph rendered from the bundled variable font. */
+/**
+ * What a screen reader says for an action icon ("Back", "Close", "Next"…), or null for one that only decorates. The
+ * glyphs are ligatures: left alone, TalkBack read their font names ("arrow_back", "chevron_right").
+ */
+fun symbolLabel(name: String): String? = when (name) {
+    Sym.ArrowBack -> S(R.string.a11y_back)
+    Sym.Close, Sym.Cancel -> S(R.string.a11y_close)
+    Sym.Refresh, Sym.RestartAlt -> S(R.string.a11y_refresh)
+    Sym.IosShare, Sym.Share -> S(R.string.a11y_share)
+    Sym.Settings -> S(R.string.a11y_settings)
+    Sym.Search -> S(R.string.a11y_search)
+    Sym.Add -> S(R.string.a11y_add)
+    Sym.Remove -> S(R.string.a11y_remove)
+    Sym.ChevronLeft -> S(R.string.a11y_previous)
+    Sym.ChevronRight -> S(R.string.a11y_next)
+    Sym.Delete -> S(R.string.a11y_delete)
+    Sym.Download -> S(R.string.a11y_download)
+    Sym.MoreVert -> S(R.string.a11y_more)
+    Sym.Headphones -> S(R.string.a11y_listen)
+    Sym.GpsFixed -> S(R.string.a11y_center)
+    Sym.Help -> S(R.string.a11y_help)
+    Sym.Fullscreen -> S(R.string.a11y_fullscreen)
+    Sym.FullscreenExit -> S(R.string.a11y_fullscreen_exit)
+    Sym.ContentCopy -> S(R.string.a11y_copy)
+    Sym.Edit -> S(R.string.a11y_edit)
+    Sym.Tune, Sym.FilterAlt -> S(R.string.a11y_filters)
+    Sym.MyLocation -> S(R.string.a11y_my_location)
+    Sym.History -> S(R.string.a11y_history)
+    else -> null
+}
+
+/**
+ * A Material Symbols Rounded glyph rendered from the bundled variable font. A screen reader hears [description]
+ * (by default the action the icon stands for), or nothing for a decorative one.
+ */
 @Composable
 fun Symbol(
     name: String,
@@ -60,11 +99,12 @@ fun Symbol(
     size: Dp = 24.dp,
     filled: Boolean = false,
     tint: Color = LocalContentColor.current,
+    description: String? = symbolLabel(name),
 ) {
     val sp = with(LocalDensity.current) { size.toSp() }
     Text(
         text = name,
-        modifier = modifier,
+        modifier = modifier.clearAndSetSemantics { if (description != null) contentDescription = description },
         style = TextStyle(
             fontFamily = if (filled) SymbolsFilled else SymbolsOutlined,
             fontSize = sp,
@@ -361,11 +401,14 @@ fun TextAction(text: String, onClick: () -> Unit, color: Color = AntTheme.accent
 }
 
 @Composable
-fun IconCircleButton(icon: String, onClick: () -> Unit, modifier: Modifier = Modifier, bg: Color = Color.Transparent, tint: Color = LocalContentColor.current, size: Dp = 48.dp, filled: Boolean = false) {
+fun IconCircleButton(
+    icon: String, onClick: () -> Unit, modifier: Modifier = Modifier, bg: Color = Color.Transparent, tint: Color = LocalContentColor.current,
+    size: Dp = 48.dp, filled: Boolean = false, label: String? = symbolLabel(icon),
+) {
     Box(
-        modifier.size(size).clip(CircleShape).background(bg).clickable(onClick = onClick),
+        modifier.size(size).clip(CircleShape).background(bg).clickable(role = Role.Button, onClick = onClick),
         contentAlignment = Alignment.Center,
-    ) { Symbol(icon, size = 24.dp, tint = tint, filled = filled) }
+    ) { Symbol(icon, size = 24.dp, tint = tint, filled = filled, description = label) }
 }
 
 /** Rounded square holding an icon, used as list leading. */
