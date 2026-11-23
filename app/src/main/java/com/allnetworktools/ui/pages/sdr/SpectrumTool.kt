@@ -67,9 +67,18 @@ internal fun fitSpan(wanted: Int, spans: List<Int>?): Int =
 
 internal fun mhzLabel(hz: Double) = "%.3f".format(Locale.getDefault(), hz / 1e6)
 
+/** The side inset of the spectrum and of the waterfall: both must share it, or their edges drift apart. */
+internal val SPECTRUM_INSET = 8.dp
+
+/**
+ * Where bin [i] of [n] sits across [width]: at the middle of its slice, as each waterfall column is drawn over its
+ * own slice. Spreading the points from edge to edge instead put the outer ones half a column off.
+ */
+internal fun binX(i: Int, n: Int, width: Float): Float = width * (i + 0.5f) / n
+
 /** The level under the marker: the highest of the points around it, so a narrow signal is not missed. */
 internal fun markerLevel(db: FloatArray, at: Float): Float {
-    val i = Math.round(at * (db.size - 1))
+    val i = (at * db.size).toInt().coerceIn(0, db.size - 1)
     return (maxOf(0, i - 1)..minOf(db.size - 1, i + 1)).maxOf { db[it] }
 }
 
@@ -295,7 +304,7 @@ internal fun SpectrumView(db: FloatArray?, hold: FloatArray?, peakIdx: Int?, mar
                 if (!moved && !scrolling) current?.invoke(at(down.position.x))
             }
         } else Modifier
-        Canvas(Modifier.fillMaxSize().padding(horizontal = 8.dp, vertical = 12.dp).then(tap)) {
+        Canvas(Modifier.fillMaxSize().padding(horizontal = SPECTRUM_INSET, vertical = 12.dp).then(tap)) {
             val minDb = -110f
             val maxDb = -10f
             fun y(v: Float) = size.height * (1 - ((v - minDb) / (maxDb - minDb)).coerceIn(0f, 1f))
@@ -303,14 +312,14 @@ internal fun SpectrumView(db: FloatArray?, hold: FloatArray?, peakIdx: Int?, mar
             drawLine(grid, Offset(size.width / 2, 0f), Offset(size.width / 2, size.height), 1f)
             fun path(a: FloatArray) = Path().apply {
                 a.forEachIndexed { i, v ->
-                    val x = size.width * i / (a.size - 1)
+                    val x = binX(i, a.size, size.width)
                     if (i == 0) moveTo(x, y(v)) else lineTo(x, y(v))
                 }
             }
             hold?.let { drawPath(path(it), holdColor.copy(alpha = 0.7f), style = Stroke(1.5f)) }
             if (db != null) {
                 drawPath(path(db), line, style = Stroke(2f))
-                peakIdx?.let { drawCircle(line, 5f, Offset(size.width * it / (db.size - 1), y(db[it]))) }
+                peakIdx?.let { drawCircle(line, 5f, Offset(binX(it, db.size, size.width), y(db[it]))) }
             }
             markerAt?.let { m ->
                 val x = size.width * m
@@ -330,7 +339,8 @@ private fun WaterfallView(c: SpectrumController, markerAt: Float?, onTap: (Float
     val current by androidx.compose.runtime.rememberUpdatedState(onTap)
     Box(Modifier.fillMaxWidth().height(110.dp).clip(RoundedCornerShape(24.dp)).background(Color(0xFF0B1026))) {
         // The marker can be placed on the waterfall too: a signal that comes and goes shows there better.
-        Canvas(Modifier.fillMaxSize().pointerInput(Unit) { detectTapGestures { o -> current((o.x / size.width).coerceIn(0f, 1f)) } }) {
+        // The same side inset as the spectrum above, so a signal sits at the same place in both.
+        Canvas(Modifier.fillMaxSize().padding(horizontal = SPECTRUM_INSET).pointerInput(Unit) { detectTapGestures { o -> current((o.x / size.width).coerceIn(0f, 1f)) } }) {
             if (frames >= 0) {
                 drawImage(
                     image, IntOffset.Zero, IntSize(SpectrumController.WIDTH, SpectrumController.HEIGHT),

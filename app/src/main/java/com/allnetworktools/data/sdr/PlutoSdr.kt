@@ -233,28 +233,46 @@ class PlutoSdr private constructor(
         private const val CMD_OPEN_PIPE = 1
         private const val CMD_CLOSE_PIPE = 2
 
-        private fun iioInterface(d: UsbDevice): UsbInterface? =
-            (0 until d.interfaceCount).map(d::getInterface).firstOrNull { it.name == "IIO" }
+        /** The PlutoSDR's own product id; the same on ADI's firmware and on Tezuka (F5OEO) and its clones. */
+        const val PID = 0xb673
 
-        fun isPluto(d: UsbDevice) = d.vendorId == VID && iioInterface(d) != null
+        /**
+         * The libiio pipe. Its name is "IIO", but Android does not always read the interface strings (before USB access
+         * is granted, or on some firmware), so the vendor-specific interface with a bulk pair stands in for it.
+         */
+        private fun iioInterface(d: UsbDevice): UsbInterface? {
+            val all = (0 until d.interfaceCount).map(d::getInterface)
+            return all.firstOrNull { it.name == "IIO" } ?: all.firstOrNull { i ->
+                i.interfaceClass == UsbConstants.USB_CLASS_VENDOR_SPEC && i.endpointCount >= 2 &&
+                    i.getEndpoint(0).type == UsbConstants.USB_ENDPOINT_XFER_BULK && i.getEndpoint(0).direction == UsbConstants.USB_DIR_IN &&
+                    i.getEndpoint(1).type == UsbConstants.USB_ENDPOINT_XFER_BULK && i.getEndpoint(1).direction == UsbConstants.USB_DIR_OUT
+            }
+        }
+
+        /** By its USB ids, so it is found (and USB access asked for) even when the interface names cannot be read yet. */
+        fun isPluto(d: UsbDevice) = d.vendorId == VID && (d.productId == PID || iioInterface(d) != null)
 
         fun open(manager: UsbManager, device: UsbDevice): PlutoSdr? {
-            val iface = iioInterface(device) ?: return null
+            fun log(m: String) = com.allnetworktools.util.DebugLog.i("SDR", "PlutoSDR: $m")
+            log((0 until device.interfaceCount).map(device::getInterface).joinToString { i ->
+                "#${i.id} '${i.name}' class ${i.interfaceClass}/${i.interfaceSubclass} ${i.endpointCount} ep"
+            })
+            val iface = iioInterface(device) ?: return null.also { log("no IIO interface") }
             // The endpoints come in pairs, input then output: the first pair is pipe 0.
             val eps = (0 until iface.endpointCount).map(iface::getEndpoint)
-            if (eps.size < 2 || eps[0].direction != UsbConstants.USB_DIR_IN || eps[1].direction != UsbConstants.USB_DIR_OUT) return null
-            val conn = manager.openDevice(device) ?: return null
-            if (!conn.claimInterface(iface, true)) { conn.close(); return null }
-            fun fail(): PlutoSdr? { conn.releaseInterface(iface); conn.close(); return null }
-            if (conn.controlTransfer(TYPE_PIPE, CMD_RESET_PIPES, 0, iface.id, null, 0, 1000) < 0) return fail()
-            if (conn.controlTransfer(TYPE_PIPE, CMD_OPEN_PIPE, 0, iface.id, null, 0, 1000) < 0) return fail()
+            if (eps.size < 2 || eps[0].direction != UsbConstants.USB_DIR_IN || eps[1].direction != UsbConstants.USB_DIR_OUT) return null.also { log("unexpected endpoints") }
+            val conn = manager.openDevice(device) ?: return null.also { log("openDevice refused") }
+            if (!conn.claimInterface(iface, true)) { conn.close(); return null.also { log("claimInterface #${iface.id} refused") } }
+            fun fail(why: String): PlutoSdr? { log(why); conn.releaseInterface(iface); conn.close(); return null }
+            if (conn.controlTransfer(TYPE_PIPE, CMD_RESET_PIPES, 0, iface.id, null, 0, 1000) < 0) return fail("pipe reset failed")
+            if (conn.controlTransfer(TYPE_PIPE, CMD_OPEN_PIPE, 0, iface.id, null, 0, 1000) < 0) return fail("pipe open failed")
             val epIn = eps[0]
             val epOut = eps[1]
             val c = IiodClient({ b, n -> conn.bulkTransfer(epIn, b, n, READ_TIMEOUT_MS) }, { b, n -> conn.bulkTransfer(epOut, b, n, 2000) })
             c.exec("TIMEOUT 10000")
-            val devs = c.print()?.let(IiodClient::devices) ?: return fail()
-            val phy = devs["ad9361-phy"] ?: return fail()
-            val rx = devs["cf-ad9361-lpc"] ?: return fail()
+            val devs = c.print()?.let(IiodClient::devices) ?: return fail("no IIO context from iiod")
+            val phy = devs["ad9361-phy"] ?: return fail("no ad9361-phy in ${devs.keys}")
+            val rx = devs["cf-ad9361-lpc"] ?: return fail("no cf-ad9361-lpc in ${devs.keys}")
             // The probing client has read the context; the radio's own client starts from a clean stream.
             return PlutoSdr(conn, iface, epIn, epOut, phy, rx)
         }
