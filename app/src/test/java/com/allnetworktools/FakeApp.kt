@@ -47,11 +47,6 @@ object Scenario {
     var evilTwin = false
     /** Connected to Wi-Fi: the Internet tools of the Wi-Fi network are usable. */
     var onWifi = true
-    /** Gemini Nano: unavailable unless a test says otherwise, as on most phones. */
-    var aiState: com.allnetworktools.ai.AiState = com.allnetworktools.ai.AiState.Unavailable
-    var aiAnswer = "- Le ping vers 1.1.1.1 est bon : 15 ms en moyenne.\n- Aucune perte de paquets.\n- La gigue est faible, les appels vidéo iront bien."
-    /** Prompts sent to the fake Gemini. */
-    val aiPrompts = mutableListOf<String>()
 
     /** Set when a measurement flow starts being collected: the home screen must not start any. */
     var wifiStarted = false
@@ -241,18 +236,7 @@ private fun Context.fakeGnss() = object : GnssRepository(this@fakeGnss) {
     )
 }
 
-/** Gemini Nano as the scenario says, answering with [Scenario.aiAnswer] in pieces. */
-class FakeAi : com.allnetworktools.ai.AiEngine {
-    override val state = kotlinx.coroutines.flow.MutableStateFlow(Scenario.aiState)
-    override fun check() = Unit
-    override fun answer(prompt: String) = kotlinx.coroutines.flow.flow {
-        Scenario.aiPrompts += prompt
-        Scenario.aiAnswer.chunked(24).forEach { emit(it) }
-    }
-}
-
 class FakeApp : AntApplication() {
-    override val ai by lazy { FakeAi() }
     override val permissions by lazy { fakePermissions() }
     override val radios by lazy { fakeRadios() }
     override val wifi by lazy { fakeWifi() }

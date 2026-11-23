@@ -3165,19 +3165,4 @@
     <string name="search_tools">"ツールを検索"</string>
     <string name="search_tools_hint">"ツール名、機能、または無線の一部を入力: %1$d 個のツール"</string>
     <string name="search_no_tool">"「%1$s」に一致するツールはありません。"</string>
-    <string name="ai_explain">"説明"</string>
-    <string name="ai_report">"レポート"</string>
-    <string name="ai_nothing_yet">"まだ説明できる結果がありません。先にツールを実行してから、もう一度 Gemini に聞いてください。"</string>
-    <string name="ai_failed">"Gemini が応答できませんでした: %1$s"</string>
-    <string name="ai_downloading">"Gemini Nano をスマートフォンにダウンロード中… %1$d MB"</string>
-    <string name="ai_thinking">"Gemini が結果を読んでいます…"</string>
-    <string name="ai_disclaimer">"アプリの測定値をもとに、このスマートフォン上の Gemini Nano が作成しました。誤りがある可能性があります。重要な点は確認してください。"</string>
-    <string name="ai_ask_gemini">"Gemini に聞く"</string>
-    <string name="ai_assistant">"Gemini アシスタント"</string>
-    <string name="ai_assistant_sub">"ネットワークについて質問"</string>
-    <string name="ai_assistant_hint">"ネットワークについて質問してください。Gemini はスマートフォン上で、すでに測定した内容をもとに答えます。"</string>
-    <string name="ai_assistant_examples">"Wi-Fi が遅いのはなぜ？|モバイルの電波は良好？|トラッカーに追跡されている？|ネットワークは安全？"</string>
-    <string name="ai_assistant_field">"Gemini に聞く…"</string>
-    <string name="ai_open_tool">"%1$s を開く"</string>
-    <string name="ai_send">"送信"</string>
 </resources>

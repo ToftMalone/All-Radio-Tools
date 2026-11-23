@@ -3248,19 +3248,4 @@ Una avalancha es un flujo de tramas de emparejamiento falsas que hace aparecer u
     <string name="search_tools">"Buscar una herramienta"</string>
     <string name="search_tools_hint">"Escribe parte del nombre de una herramienta, lo que hace o su radio: %1$d herramientas."</string>
     <string name="search_no_tool">"Ninguna herramienta coincide con «%1$s»."</string>
-    <string name="ai_explain">"Explicar"</string>
-    <string name="ai_report">"Informe"</string>
-    <string name="ai_nothing_yet">"Aún no hay nada que explicar: ejecuta primero la herramienta y vuelve a preguntar a Gemini."</string>
-    <string name="ai_failed">"Gemini no pudo responder: %1$s"</string>
-    <string name="ai_downloading">"Descargando Gemini Nano en el teléfono… %1$d MB"</string>
-    <string name="ai_thinking">"Gemini está leyendo los resultados…"</string>
-    <string name="ai_disclaimer">"Escrito por Gemini Nano en este teléfono a partir de las mediciones de la app. Puede equivocarse: comprueba lo importante."</string>
-    <string name="ai_ask_gemini">"Preguntar a Gemini"</string>
-    <string name="ai_assistant">"Asistente Gemini"</string>
-    <string name="ai_assistant_sub">"Pregunta sobre tus redes"</string>
-    <string name="ai_assistant_hint">"Haz una pregunta sobre tus redes: Gemini responde en el propio teléfono con lo que ya ha medido."</string>
-    <string name="ai_assistant_examples">"¿Por qué mi Wi-Fi va lento?|¿Es buena mi señal móvil?|¿Me sigue un rastreador?|¿Es segura mi red?"</string>
-    <string name="ai_assistant_field">"Pregunta a Gemini…"</string>
-    <string name="ai_open_tool">"Abrir %1$s"</string>
-    <string name="ai_send">"Enviar"</string>
 </resources>

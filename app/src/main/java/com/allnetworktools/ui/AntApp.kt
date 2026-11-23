@@ -215,9 +215,6 @@ private fun MainShell(vm: MainViewModel) {
                 onDeselect = { vm.navigate { it.copy(network = null) } },
                 onSettings = { vm.navigate { it.copy(network = null, page = Page.Settings) } },
                 onOpenTool = { n, t -> vm.navigate { it.copy(network = n, page = Page.ToolPage(t)) } },
-                assistant = if (com.allnetworktools.ai.rememberAiAvailable(vm)) { close ->
-                    com.allnetworktools.ai.AiAssistant(vm, onOpenTool = { n, t -> close(); vm.navigate { it.copy(network = n, page = Page.ToolPage(t)) } }, onDismiss = close)
-                } else null,
             )
         }
 

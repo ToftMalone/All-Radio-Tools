@@ -3241,19 +3241,4 @@
     <string name="search_tools">"टूल खोजें"</string>
     <string name="search_tools_hint">"टूल के नाम, काम या रेडियो का कुछ हिस्सा लिखें: %1$d टूल।"</string>
     <string name="search_no_tool">"“%1$s” से कोई टूल मेल नहीं खाता।"</string>
-    <string name="ai_explain">"समझाएं"</string>
-    <string name="ai_report">"रिपोर्ट"</string>
-    <string name="ai_nothing_yet">"अभी समझाने को कुछ नहीं: पहले टूल चलाएं, फिर Gemini से दोबारा पूछें।"</string>
-    <string name="ai_failed">"Gemini जवाब नहीं दे सका: %1$s"</string>
-    <string name="ai_downloading">"फ़ोन पर Gemini Nano डाउनलोड हो रहा है… %1$d MB"</string>
-    <string name="ai_thinking">"Gemini नतीजे पढ़ रहा है…"</string>
-    <string name="ai_disclaimer">"ऐप के मापों से इस फ़ोन पर Gemini Nano ने लिखा। यह गलत हो सकता है: ज़रूरी बातें जांचें।"</string>
-    <string name="ai_ask_gemini">"Gemini से पूछें"</string>
-    <string name="ai_assistant">"Gemini सहायक"</string>
-    <string name="ai_assistant_sub">"अपने नेटवर्क के बारे में पूछें"</string>
-    <string name="ai_assistant_hint">"अपने नेटवर्क के बारे में सवाल पूछें: Gemini फ़ोन पर ही, पहले से मापे गए डेटा से जवाब देता है।"</string>
-    <string name="ai_assistant_examples">"मेरा Wi-Fi धीमा क्यों है?|क्या मेरा मोबाइल सिग्नल अच्छा है?|क्या कोई ट्रैकर मेरा पीछा कर रहा है?|क्या मेरा नेटवर्क सुरक्षित है?"</string>
-    <string name="ai_assistant_field">"Gemini से पूछें…"</string>
-    <string name="ai_open_tool">"%1$s खोलें"</string>
-    <string name="ai_send">"भेजें"</string>
 </resources>

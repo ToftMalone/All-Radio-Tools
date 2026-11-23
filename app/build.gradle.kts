@@ -73,8 +73,6 @@ kotlin {
 
 dependencies {
     implementation(libs.androidx.core.ktx)
-    // Gemini Nano on the phone, through AICore (only where the phone offers it).
-    implementation(libs.mlkit.genai.prompt)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.lifecycle.viewmodel.compose)

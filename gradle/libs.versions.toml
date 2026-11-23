@@ -1,5 +1,4 @@
 [versions]
-mlkitGenaiPrompt = "1.0.0-beta5"
 agp = "9.4.1"
 kotlin = "2.4.20"
 composeBom = "2026.09.00"
@@ -17,7 +16,6 @@ junit = "4.13.2"
 arcore = "1.56.0"
 
 [libraries]
-mlkit-genai-prompt = { module = "com.google.mlkit:genai-prompt", version.ref = "mlkitGenaiPrompt" }
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
 androidx-lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycle" }

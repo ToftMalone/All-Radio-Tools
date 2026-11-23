@@ -3165,19 +3165,4 @@ Banjir adalah aliran frame pemasangan palsu yang memunculkan pop-up di setiap po
     <string name="search_tools">"Cari alat"</string>
     <string name="search_tools_hint">"Ketik sebagian nama alat, fungsinya, atau radionya: %1$d alat."</string>
     <string name="search_no_tool">"Tidak ada alat yang cocok dengan “%1$s”."</string>
-    <string name="ai_explain">"Jelaskan"</string>
-    <string name="ai_report">"Laporan"</string>
-    <string name="ai_nothing_yet">"Belum ada yang dijelaskan: jalankan alatnya dulu, lalu tanya Gemini lagi."</string>
-    <string name="ai_failed">"Gemini tidak dapat menjawab: %1$s"</string>
-    <string name="ai_downloading">"Mengunduh Gemini Nano ke ponsel… %1$d MB"</string>
-    <string name="ai_thinking">"Gemini sedang membaca hasilnya…"</string>
-    <string name="ai_disclaimer">"Ditulis oleh Gemini Nano di ponsel ini dari pengukuran aplikasi. Bisa salah: periksa hal yang penting."</string>
-    <string name="ai_ask_gemini">"Tanya Gemini"</string>
-    <string name="ai_assistant">"Asisten Gemini"</string>
-    <string name="ai_assistant_sub">"Tanya tentang jaringan Anda"</string>
-    <string name="ai_assistant_hint">"Ajukan pertanyaan tentang jaringan Anda: Gemini menjawab di ponsel itu sendiri dari apa yang sudah diukur."</string>
-    <string name="ai_assistant_examples">"Kenapa Wi-Fi saya lambat?|Apakah sinyal seluler saya bagus?|Apakah ada pelacak yang mengikuti saya?|Apakah jaringan saya aman?"</string>
-    <string name="ai_assistant_field">"Tanya Gemini…"</string>
-    <string name="ai_open_tool">"Buka %1$s"</string>
-    <string name="ai_send">"Kirim"</string>
 </resources>

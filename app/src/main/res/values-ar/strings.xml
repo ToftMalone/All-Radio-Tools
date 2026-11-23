@@ -3545,19 +3545,4 @@
     <string name="search_tools">"البحث عن أداة"</string>
     <string name="search_tools_hint">"اكتب جزءًا من اسم الأداة أو وظيفتها أو الراديو: %1$d أداة."</string>
     <string name="search_no_tool">"لا توجد أداة تطابق «%1$s»."</string>
-    <string name="ai_explain">"اشرح"</string>
-    <string name="ai_report">"تقرير"</string>
-    <string name="ai_nothing_yet">"لا شيء لشرحه بعد: شغّل الأداة أولًا ثم اسأل Gemini مجددًا."</string>
-    <string name="ai_failed">"تعذّر على Gemini الرد: %1$s"</string>
-    <string name="ai_downloading">"جارٍ تنزيل Gemini Nano على الهاتف… %1$d ميغابايت"</string>
-    <string name="ai_thinking">"يقرأ Gemini النتائج…"</string>
-    <string name="ai_disclaimer">"كتبه Gemini Nano على هذا الهاتف من قياسات التطبيق. قد يخطئ: تحقّق مما يهم."</string>
-    <string name="ai_ask_gemini">"اسأل Gemini"</string>
-    <string name="ai_assistant">"مساعد Gemini"</string>
-    <string name="ai_assistant_sub">"اسأل عن شبكاتك"</string>
-    <string name="ai_assistant_hint">"اطرح سؤالًا عن شبكاتك: يجيب Gemini على الهاتف نفسه مما قاسه بالفعل."</string>
-    <string name="ai_assistant_examples">"لماذا شبكة Wi-Fi بطيئة؟|هل إشارة الجوال جيدة؟|هل يتتبعني جهاز تعقّب؟|هل شبكتي آمنة؟"</string>
-    <string name="ai_assistant_field">"اسأل Gemini…"</string>
-    <string name="ai_open_tool">"فتح %1$s"</string>
-    <string name="ai_send">"إرسال"</string>
 </resources>

@@ -3241,19 +3241,4 @@ Een vloed is een stroom nep-koppelframes die op elke telefoon in de buurt een po
     <string name="search_tools">"Tool zoeken"</string>
     <string name="search_tools_hint">"Typ een deel van de naam van een tool, wat hij doet of zijn radio: %1$d tools."</string>
     <string name="search_no_tool">"Geen tool komt overeen met ‘%1$s’."</string>
-    <string name="ai_explain">"Uitleggen"</string>
-    <string name="ai_report">"Rapport"</string>
-    <string name="ai_nothing_yet">"Nog niets uit te leggen: start eerst de tool en vraag het Gemini daarna opnieuw."</string>
-    <string name="ai_failed">"Gemini kon niet antwoorden: %1$s"</string>
-    <string name="ai_downloading">"Gemini Nano wordt naar de telefoon gedownload… %1$d MB"</string>
-    <string name="ai_thinking">"Gemini leest de resultaten…"</string>
-    <string name="ai_disclaimer">"Geschreven door Gemini Nano op deze telefoon, op basis van de metingen van de app. Het kan fout zijn: controleer wat belangrijk is."</string>
-    <string name="ai_ask_gemini">"Vraag het Gemini"</string>
-    <string name="ai_assistant">"Gemini-assistent"</string>
-    <string name="ai_assistant_sub">"Vraag iets over je netwerken"</string>
-    <string name="ai_assistant_hint">"Stel een vraag over je netwerken: Gemini antwoordt op de telefoon zelf op basis van wat al gemeten is."</string>
-    <string name="ai_assistant_examples">"Waarom is mijn wifi traag?|Is mijn mobiele signaal goed?|Volgt een tracker mij?|Is mijn netwerk veilig?"</string>
-    <string name="ai_assistant_field">"Vraag het Gemini…"</string>
-    <string name="ai_open_tool">"%1$s openen"</string>
-    <string name="ai_send">"Versturen"</string>
 </resources>

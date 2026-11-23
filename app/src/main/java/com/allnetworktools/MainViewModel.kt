@@ -247,7 +247,6 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     val roams: StateFlow<List<RoamEvent>> = _roams
 
     val updater get() = g.updater
-    val ai get() = g.ai
 
     internal fun setRoamsForTest(list: List<RoamEvent>) {
         _roams.value = list

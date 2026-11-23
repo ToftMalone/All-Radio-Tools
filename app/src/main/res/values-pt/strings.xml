@@ -3248,19 +3248,4 @@ Uma enxurrada é um fluxo de quadros de pareamento falsos que faz aparecer um po
     <string name="search_tools">"Procurar uma ferramenta"</string>
     <string name="search_tools_hint">"Escreva parte do nome de uma ferramenta, o que faz ou o seu rádio: %1$d ferramentas."</string>
     <string name="search_no_tool">"Nenhuma ferramenta corresponde a «%1$s»."</string>
-    <string name="ai_explain">"Explicar"</string>
-    <string name="ai_report">"Relatório"</string>
-    <string name="ai_nothing_yet">"Ainda nada para explicar: execute primeiro a ferramenta e pergunte de novo ao Gemini."</string>
-    <string name="ai_failed">"O Gemini não conseguiu responder: %1$s"</string>
-    <string name="ai_downloading">"A transferir o Gemini Nano para o telefone… %1$d MB"</string>
-    <string name="ai_thinking">"O Gemini está a ler os resultados…"</string>
-    <string name="ai_disclaimer">"Escrito pelo Gemini Nano neste telefone a partir das medições da app. Pode errar: verifique o que importa."</string>
-    <string name="ai_ask_gemini">"Perguntar ao Gemini"</string>
-    <string name="ai_assistant">"Assistente Gemini"</string>
-    <string name="ai_assistant_sub">"Pergunte sobre as suas redes"</string>
-    <string name="ai_assistant_hint">"Faça uma pergunta sobre as suas redes: o Gemini responde no próprio telefone com o que já mediu."</string>
-    <string name="ai_assistant_examples">"Porque é que o meu Wi-Fi está lento?|O meu sinal móvel é bom?|Um rastreador está a seguir-me?|A minha rede é segura?"</string>
-    <string name="ai_assistant_field">"Pergunte ao Gemini…"</string>
-    <string name="ai_open_tool">"Abrir %1$s"</string>
-    <string name="ai_send">"Enviar"</string>
 </resources>

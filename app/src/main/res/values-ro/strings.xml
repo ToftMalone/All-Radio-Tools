@@ -3317,19 +3317,4 @@ Un val este un flux de cadre de asociere false care face să apară un pop-up pe
     <string name="search_tools">"Caută un instrument"</string>
     <string name="search_tools_hint">"Scrie o parte din numele unui instrument, ce face sau radioul lui: %1$d instrumente."</string>
     <string name="search_no_tool">"Niciun instrument nu corespunde cu „%1$s”."</string>
-    <string name="ai_explain">"Explică"</string>
-    <string name="ai_report">"Raport"</string>
-    <string name="ai_nothing_yet">"Încă nimic de explicat: pornește mai întâi instrumentul, apoi întreabă din nou Gemini."</string>
-    <string name="ai_failed">"Gemini nu a putut răspunde: %1$s"</string>
-    <string name="ai_downloading">"Se descarcă Gemini Nano pe telefon… %1$d MB"</string>
-    <string name="ai_thinking">"Gemini citește rezultatele…"</string>
-    <string name="ai_disclaimer">"Scris de Gemini Nano pe acest telefon, din măsurătorile aplicației. Poate greși: verifică ce contează."</string>
-    <string name="ai_ask_gemini">"Întreabă Gemini"</string>
-    <string name="ai_assistant">"Asistent Gemini"</string>
-    <string name="ai_assistant_sub">"Întreabă despre rețelele tale"</string>
-    <string name="ai_assistant_hint">"Pune o întrebare despre rețelele tale: Gemini răspunde chiar pe telefon din ce a măsurat deja."</string>
-    <string name="ai_assistant_examples">"De ce e lent Wi-Fi-ul meu?|Semnalul mobil e bun?|Mă urmărește un tracker?|Rețeaua mea e sigură?"</string>
-    <string name="ai_assistant_field">"Întreabă Gemini…"</string>
-    <string name="ai_open_tool">"Deschide %1$s"</string>
-    <string name="ai_send">"Trimite"</string>
 </resources>

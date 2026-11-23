@@ -3165,19 +3165,4 @@
     <string name="search_tools">"ค้นหาเครื่องมือ"</string>
     <string name="search_tools_hint">"พิมพ์ส่วนหนึ่งของชื่อเครื่องมือ สิ่งที่ทำ หรือวิทยุ: %1$d เครื่องมือ"</string>
     <string name="search_no_tool">"ไม่มีเครื่องมือที่ตรงกับ “%1$s”"</string>
-    <string name="ai_explain">"อธิบาย"</string>
-    <string name="ai_report">"รายงาน"</string>
-    <string name="ai_nothing_yet">"ยังไม่มีอะไรให้อธิบาย: เรียกใช้เครื่องมือก่อน แล้วถาม Gemini อีกครั้ง"</string>
-    <string name="ai_failed">"Gemini ตอบไม่ได้: %1$s"</string>
-    <string name="ai_downloading">"กำลังดาวน์โหลด Gemini Nano ลงโทรศัพท์… %1$d MB"</string>
-    <string name="ai_thinking">"Gemini กำลังอ่านผลลัพธ์…"</string>
-    <string name="ai_disclaimer">"เขียนโดย Gemini Nano บนโทรศัพท์เครื่องนี้จากการวัดของแอป อาจผิดพลาดได้: โปรดตรวจสอบสิ่งสำคัญ"</string>
-    <string name="ai_ask_gemini">"ถาม Gemini"</string>
-    <string name="ai_assistant">"ผู้ช่วย Gemini"</string>
-    <string name="ai_assistant_sub">"ถามเกี่ยวกับเครือข่ายของคุณ"</string>
-    <string name="ai_assistant_hint">"ถามคำถามเกี่ยวกับเครือข่ายของคุณ: Gemini ตอบบนโทรศัพท์เองจากสิ่งที่วัดไว้แล้ว"</string>
-    <string name="ai_assistant_examples">"ทำไม Wi-Fi ช้า?|สัญญาณมือถือดีไหม?|มีอุปกรณ์ติดตามตามฉันอยู่ไหม?|เครือข่ายของฉันปลอดภัยไหม?"</string>
-    <string name="ai_assistant_field">"ถาม Gemini…"</string>
-    <string name="ai_open_tool">"เปิด %1$s"</string>
-    <string name="ai_send">"ส่ง"</string>
 </resources>

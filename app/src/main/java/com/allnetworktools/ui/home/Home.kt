@@ -130,11 +130,7 @@ fun HomeScreen(
     onDeselect: () -> Unit,
     onSettings: () -> Unit,
     onOpenTool: (Network, com.allnetworktools.model.Tool) -> Unit = { _, _ -> },
-    /** The Gemini button and what it opens; null where the phone cannot run Gemini Nano, so it shows nowhere. */
-    assistant: (@Composable (onClose: () -> Unit) -> Unit)? = null,
 ) {
-    var assisting by androidx.compose.runtime.saveable.rememberSaveable { androidx.compose.runtime.mutableStateOf(false) }
-    if (assisting && assistant != null) assistant { assisting = false }
     var searching by androidx.compose.runtime.saveable.rememberSaveable { androidx.compose.runtime.mutableStateOf(false) }
     if (searching) ToolSearch(onPick = { n, t -> searching = false; onOpenTool(n, t) }, onDismiss = { searching = false })
     Box(
@@ -149,10 +145,6 @@ fun HomeScreen(
                     Column(Modifier.weight(1f)) {
                         Text("All Radio Tools", style = gs(32, 40, 500, -0.3f), color = cs.onSurface, maxLines = 1)
                         Text(Greetings.ofThisLaunch, Modifier.padding(top = 4.dp), style = rf(14, 20), color = cs.onSurfaceVariant)
-                    }
-                    if (assistant != null) {
-                        com.allnetworktools.ai.GeminiButton(S(R.string.ai_assistant), { assisting = true }, background = cs.surfaceContainerHigh)
-                        Spacer(Modifier.width(8.dp))
                     }
                     IconCircleButton(Sym.Search, { searching = true }, bg = cs.surfaceContainerHigh, tint = cs.onSurfaceVariant, label = S(R.string.search_tools))
                     Spacer(Modifier.width(8.dp))
