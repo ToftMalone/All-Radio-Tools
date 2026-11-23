@@ -3165,4 +3165,19 @@
     <string name="search_tools">"搜索工具"</string>
     <string name="search_tools_hint">"输入工具名称、功能或无线电的一部分：共 %1$d 个工具。"</string>
     <string name="search_no_tool">"没有与“%1$s”匹配的工具。"</string>
+    <string name="ai_explain">"解释"</string>
+    <string name="ai_report">"报告"</string>
+    <string name="ai_nothing_yet">"暂无可解释的结果：请先运行该工具，然后再问 Gemini。"</string>
+    <string name="ai_failed">"Gemini 无法回答：%1$s"</string>
+    <string name="ai_downloading">"正在将 Gemini Nano 下载到手机… %1$d MB"</string>
+    <string name="ai_thinking">"Gemini 正在读取结果…"</string>
+    <string name="ai_disclaimer">"由本机上的 Gemini Nano 根据应用的测量结果撰写。可能有误：请核实重要内容。"</string>
+    <string name="ai_ask_gemini">"问 Gemini"</string>
+    <string name="ai_assistant">"Gemini 助手"</string>
+    <string name="ai_assistant_sub">"询问你的网络"</string>
+    <string name="ai_assistant_hint">"就你的网络提问：Gemini 直接在手机上根据已测量的内容回答。"</string>
+    <string name="ai_assistant_examples">"为什么我的 Wi-Fi 很慢？|我的移动信号好吗？|有追踪器在跟踪我吗？|我的网络安全吗？"</string>
+    <string name="ai_assistant_field">"问 Gemini…"</string>
+    <string name="ai_open_tool">"打开%1$s"</string>
+    <string name="ai_send">"发送"</string>
 </resources>

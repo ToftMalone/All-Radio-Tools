@@ -3393,4 +3393,19 @@ Záplava je proud falešných rámců párování, který vyvolá vyskakovací o
     <string name="search_tools">"Hledat nástroj"</string>
     <string name="search_tools_hint">"Napište část názvu nástroje, co dělá nebo jeho rádio: %1$d nástrojů."</string>
     <string name="search_no_tool">"Žádný nástroj neodpovídá „%1$s“."</string>
+    <string name="ai_explain">"Vysvětlit"</string>
+    <string name="ai_report">"Zpráva"</string>
+    <string name="ai_nothing_yet">"Zatím není co vysvětlovat: nejdřív spusťte nástroj a pak se Gemini zeptejte znovu."</string>
+    <string name="ai_failed">"Gemini nemohl odpovědět: %1$s"</string>
+    <string name="ai_downloading">"Stahování Gemini Nano do telefonu… %1$d MB"</string>
+    <string name="ai_thinking">"Gemini čte výsledky…"</string>
+    <string name="ai_disclaimer">"Napsal Gemini Nano v tomto telefonu z měření aplikace. Může se mýlit: ověřte, co je důležité."</string>
+    <string name="ai_ask_gemini">"Zeptat se Gemini"</string>
+    <string name="ai_assistant">"Asistent Gemini"</string>
+    <string name="ai_assistant_sub">"Zeptejte se na své sítě"</string>
+    <string name="ai_assistant_hint">"Položte otázku o svých sítích: Gemini odpoví přímo v telefonu z toho, co už bylo změřeno."</string>
+    <string name="ai_assistant_examples">"Proč je moje Wi-Fi pomalá?|Je můj mobilní signál dobrý?|Sleduje mě lokátor?|Je moje síť bezpečná?"</string>
+    <string name="ai_assistant_field">"Zeptejte se Gemini…"</string>
+    <string name="ai_open_tool">"Otevřít %1$s"</string>
+    <string name="ai_send">"Odeslat"</string>
 </resources>

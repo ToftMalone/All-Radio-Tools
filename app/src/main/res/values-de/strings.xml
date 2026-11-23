@@ -3241,4 +3241,19 @@ Eine Flut ist ein Strom gefälschter Kopplungs-Frames, der auf jedem Telefon in 
     <string name="search_tools">"Werkzeug suchen"</string>
     <string name="search_tools_hint">"Gib einen Teil des Namens, der Funktion oder des Funks eines Werkzeugs ein: %1$d Werkzeuge durchsuchbar."</string>
     <string name="search_no_tool">"Kein Werkzeug passt zu „%1$s“."</string>
+    <string name="ai_explain">"Erklären"</string>
+    <string name="ai_report">"Bericht"</string>
+    <string name="ai_nothing_yet">"Noch nichts zu erklären: Starte zuerst das Werkzeug und frag Gemini dann erneut."</string>
+    <string name="ai_failed">"Gemini konnte nicht antworten: %1$s"</string>
+    <string name="ai_downloading">"Gemini Nano wird aufs Telefon geladen… %1$d MB"</string>
+    <string name="ai_thinking">"Gemini liest die Ergebnisse…"</string>
+    <string name="ai_disclaimer">"Von Gemini Nano auf diesem Telefon aus den Messungen der App geschrieben. Es kann sich irren: Prüfe, was wichtig ist."</string>
+    <string name="ai_ask_gemini">"Gemini fragen"</string>
+    <string name="ai_assistant">"Gemini-Assistent"</string>
+    <string name="ai_assistant_sub">"Frag zu deinen Netzen"</string>
+    <string name="ai_assistant_hint">"Stell eine Frage zu deinen Netzen: Gemini antwortet auf dem Telefon selbst anhand dessen, was es schon gemessen hat."</string>
+    <string name="ai_assistant_examples">"Warum ist mein WLAN langsam?|Ist mein Mobilfunksignal gut?|Folgt mir ein Tracker?|Ist mein Netz sicher?"</string>
+    <string name="ai_assistant_field">"Gemini fragen…"</string>
+    <string name="ai_open_tool">"%1$s öffnen"</string>
+    <string name="ai_send">"Senden"</string>
 </resources>

@@ -3261,4 +3261,19 @@
     <string name="search_tools">"Search a tool"</string>
     <string name="search_tools_hint">"Type part of a tool\'s name, what it does or its radio: %1$d tools to search."</string>
     <string name="search_no_tool">"No tool matches “%1$s”."</string>
+    <string name="ai_explain">"Explain"</string>
+    <string name="ai_report">"Report"</string>
+    <string name="ai_nothing_yet">"Nothing to explain yet: run the tool first, then ask Gemini again."</string>
+    <string name="ai_failed">"Gemini could not answer: %1$s"</string>
+    <string name="ai_downloading">"Downloading Gemini Nano to the phone… %1$d MB"</string>
+    <string name="ai_thinking">"Gemini is reading the results…"</string>
+    <string name="ai_disclaimer">"Written by Gemini Nano on this phone, from the app\'s measurements. It can be wrong: check what matters."</string>
+    <string name="ai_ask_gemini">"Ask Gemini"</string>
+    <string name="ai_assistant">"Gemini assistant"</string>
+    <string name="ai_assistant_sub">"Ask about your networks"</string>
+    <string name="ai_assistant_hint">"Ask a question about your networks: Gemini answers from what the phone has already measured, on the phone itself."</string>
+    <string name="ai_assistant_examples">"Why is my Wi-Fi slow?|Is my mobile signal good?|Is a tracker following me?|Is my network secure?"</string>
+    <string name="ai_assistant_field">"Ask Gemini…"</string>
+    <string name="ai_open_tool">"Open %1$s"</string>
+    <string name="ai_send">"Send"</string>
 </resources>

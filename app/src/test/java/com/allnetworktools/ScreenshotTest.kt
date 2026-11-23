@@ -1,5 +1,6 @@
 package com.allnetworktools
 
+import androidx.compose.foundation.layout.padding
 import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.onLast
 import androidx.compose.ui.test.onAllNodesWithContentDescription
@@ -71,6 +72,8 @@ class ScreenshotTest {
         Scenario.bleEmpty = false
         Scenario.evilTwin = false
         Scenario.onWifi = true
+        Scenario.aiState = com.allnetworktools.ai.AiState.Unavailable
+        Scenario.aiPrompts.clear()
         Scenario.wifiStarted = false
         Scenario.bleStarted = false
         Scenario.cellStarted = false
@@ -633,6 +636,51 @@ class ScreenshotTest {
         val bitmap = compose.onRoot().captureToImage().asAndroidBitmap()
         val dir = File(System.getProperty("screenshots.dir") ?: "build/screenshots").apply { mkdirs() }
         File(dir, "02d_tool_search.png").outputStream().use { bitmap.compress(Bitmap.CompressFormat.PNG, 100, it) }
+    }
+    /** Where the phone cannot run Gemini Nano, the AI shows nowhere: not on the home screen, not in a tool. */
+    @Test fun aiHiddenWithoutAicore() {
+        shot("02e_home_no_ai") { }
+        assertEquals(0, compose.onAllNodesWithContentDescription("Assistant Gemini").fetchSemanticsNodes().size)
+        assertEquals(0, compose.onAllNodesWithContentDescription("Demander à Gemini").fetchSemanticsNodes().size)
+        assertTrue("never asked on its own", Scenario.aiPrompts.isEmpty())
+    }
+    /** With Gemini Nano: its button next to the search, and nothing asked until it is tapped. */
+    @Test fun aiButtonOnHome() {
+        Scenario.aiState = com.allnetworktools.ai.AiState.Ready
+        shot("02f_home_ai") { }
+        assertEquals(1, compose.onAllNodesWithContentDescription("Assistant Gemini").fetchSemanticsNodes().size)
+        assertTrue("never asked on its own", Scenario.aiPrompts.isEmpty())
+    }
+    /** In a tool with results: the Gemini button in the top bar, nothing asked before the tap. */
+    @Test fun aiButtonInTool() {
+        Scenario.aiState = com.allnetworktools.ai.AiState.Ready
+        shot("02g_ping_ai", nav = NavState(Network.Wifi, Page.ToolPage(Tool.Ping))) { }
+        assertEquals(1, compose.onAllNodesWithContentDescription("Demander à Gemini").fetchSemanticsNodes().size)
+        assertTrue(Scenario.aiPrompts.isEmpty())
+    }
+    /** An answer as the sheet shows it, drawn on its own (the test capture does not draw sheet windows). */
+    @Test fun aiAnswerScreen() {
+        Scenario.aiState = com.allnetworktools.ai.AiState.Ready
+        val vm = MainViewModel(app)
+        compose.mainClock.autoAdvance = false
+        compose.setContent {
+            com.allnetworktools.ui.theme.AntTheme(com.allnetworktools.data.AppSettings()) {
+                androidx.compose.runtime.CompositionLocalProvider(com.allnetworktools.ui.LocalActions provides com.allnetworktools.ui.rememberAppActions(vm, com.allnetworktools.ui.Toaster())) {
+                    androidx.compose.foundation.layout.Column(
+                        androidx.compose.ui.Modifier.background(com.allnetworktools.ui.theme.cs.surfaceContainerLow).padding(20.dp),
+                        verticalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(12.dp),
+                    ) {
+                        com.allnetworktools.ai.AiHeader("Ping")
+                        com.allnetworktools.ai.AiAnswer(vm, "prompt", key = 1, shareTitle = "Ping", onRetry = {})
+                    }
+                }
+            }
+        }
+        repeat(20) { compose.mainClock.advanceTimeBy(100); org.robolectric.shadows.ShadowLooper.idleMainLooper(100, java.util.concurrent.TimeUnit.MILLISECONDS) }
+        assertEquals(listOf("prompt"), Scenario.aiPrompts)
+        val bitmap = compose.onRoot().captureToImage().asAndroidBitmap()
+        val dir = File(System.getProperty("screenshots.dir") ?: "build/screenshots").apply { mkdirs() }
+        File(dir, "02h_ai_answer.png").outputStream().use { bitmap.compress(Bitmap.CompressFormat.PNG, 100, it) }
     }
     @Test fun spectrum() = shot("H5_spectrum", dark = true, nav = NavState(Network.Sdr, Page.ToolPage(Tool.Spectrum))) { vm ->
         // FM band: a few stations over a −95 dBFS floor.

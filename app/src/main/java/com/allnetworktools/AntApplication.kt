@@ -58,5 +58,9 @@ open class AntApplication : Application() {
     open val weatherTles by lazy { com.allnetworktools.data.orbit.WeatherTleRepository(this) }
     open val amateurTles by lazy { com.allnetworktools.data.orbit.WeatherTleRepository(this, "amateur.tle", com.allnetworktools.data.orbit.WeatherTleRepository.AmateurUrl) }
     open val nfc by lazy { com.allnetworktools.data.nfc.NfcRepository(this) }
+    /** For work that outlives a screen (asking AICore whether Gemini Nano is there). */
+    val appScope by lazy { kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.SupervisorJob() + kotlinx.coroutines.Dispatchers.Default) }
+    /** Gemini Nano, asked once whether the phone has it; it never starts on its own. */
+    open val ai: com.allnetworktools.ai.AiEngine by lazy { com.allnetworktools.ai.GeminiNano(appScope).also { it.check() } }
     open val wifiDirect by lazy { com.allnetworktools.data.WifiDirectRepository(this) }
 }

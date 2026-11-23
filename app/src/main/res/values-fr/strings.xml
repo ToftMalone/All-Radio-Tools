@@ -3335,4 +3335,19 @@
     <string name="search_tools">"Chercher un outil"</string>
     <string name="search_tools_hint">"Tapez une partie du nom d\'un outil, de ce qu\'il fait ou de sa radio : %1$d outils à chercher."</string>
     <string name="search_no_tool">"Aucun outil ne correspond à « %1$s »."</string>
+    <string name="ai_explain">"Expliquer"</string>
+    <string name="ai_report">"Rapport"</string>
+    <string name="ai_nothing_yet">"Rien à expliquer pour l\'instant : lancez d\'abord l\'outil, puis redemandez à Gemini."</string>
+    <string name="ai_failed">"Gemini n\'a pas pu répondre : %1$s"</string>
+    <string name="ai_downloading">"Téléchargement de Gemini Nano sur le téléphone… %1$d Mo"</string>
+    <string name="ai_thinking">"Gemini lit les résultats…"</string>
+    <string name="ai_disclaimer">"Rédigé par Gemini Nano sur ce téléphone, à partir des mesures de l\'app. Il peut se tromper : vérifiez ce qui compte."</string>
+    <string name="ai_ask_gemini">"Demander à Gemini"</string>
+    <string name="ai_assistant">"Assistant Gemini"</string>
+    <string name="ai_assistant_sub">"Posez une question sur vos réseaux"</string>
+    <string name="ai_assistant_hint">"Posez une question sur vos réseaux : Gemini répond à partir de ce que le téléphone a déjà mesuré, sur le téléphone lui-même."</string>
+    <string name="ai_assistant_examples">"Pourquoi mon Wi-Fi est lent ?|Mon signal mobile est-il bon ?|Un traqueur me suit-il ?|Mon réseau est-il sûr ?"</string>
+    <string name="ai_assistant_field">"Demandez à Gemini…"</string>
+    <string name="ai_open_tool">"Ouvrir %1$s"</string>
+    <string name="ai_send">"Envoyer"</string>
 </resources>

@@ -203,7 +203,7 @@ private fun Group(title: String, rows: List<Pair<String, String?>>, index: Int) 
     }
 }
 
-private fun report(m: CellMeasure, s: CellState?): String = buildString {
+internal fun report(m: CellMeasure, s: CellState?): String = buildString {
     appendLine("${m.tech.short} ${m.title()} ${m.arfcnText().orEmpty()}")
     s?.operator?.let { appendLine(S(R.string.carrier_2, it)) }
     listOf("Cell ID" to m.cellId, "Node ID" to m.nodeId, "TAC" to m.tac, "MCC" to m.mcc, "MNC" to m.mnc, "RSRP" to m.rsrp, "RSRQ" to m.rsrq, "SINR" to m.sinr, "RSSI" to m.rssi, "TA" to m.timingAdvance)

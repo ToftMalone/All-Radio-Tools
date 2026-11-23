@@ -3248,4 +3248,19 @@ Una raffica è un flusso di finte trame di abbinamento che fa apparire un pop-up
     <string name="search_tools">"Cerca uno strumento"</string>
     <string name="search_tools_hint">"Digita parte del nome di uno strumento, cosa fa o la sua radio: %1$d strumenti."</string>
     <string name="search_no_tool">"Nessuno strumento corrisponde a «%1$s»."</string>
+    <string name="ai_explain">"Spiega"</string>
+    <string name="ai_report">"Rapporto"</string>
+    <string name="ai_nothing_yet">"Ancora niente da spiegare: avvia prima lo strumento, poi richiedi a Gemini."</string>
+    <string name="ai_failed">"Gemini non ha potuto rispondere: %1$s"</string>
+    <string name="ai_downloading">"Download di Gemini Nano sul telefono… %1$d MB"</string>
+    <string name="ai_thinking">"Gemini sta leggendo i risultati…"</string>
+    <string name="ai_disclaimer">"Scritto da Gemini Nano su questo telefono dalle misure dell\'app. Può sbagliare: verifica ciò che conta."</string>
+    <string name="ai_ask_gemini">"Chiedi a Gemini"</string>
+    <string name="ai_assistant">"Assistente Gemini"</string>
+    <string name="ai_assistant_sub">"Chiedi delle tue reti"</string>
+    <string name="ai_assistant_hint">"Fai una domanda sulle tue reti: Gemini risponde sul telefono stesso da ciò che ha già misurato."</string>
+    <string name="ai_assistant_examples">"Perché il mio Wi-Fi è lento?|Il mio segnale mobile è buono?|Un tracker mi segue?|La mia rete è sicura?"</string>
+    <string name="ai_assistant_field">"Chiedi a Gemini…"</string>
+    <string name="ai_open_tool">"Apri %1$s"</string>
+    <string name="ai_send">"Invia"</string>
 </resources>

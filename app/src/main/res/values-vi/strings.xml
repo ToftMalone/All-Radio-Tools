@@ -3165,4 +3165,19 @@ Một đợt lũ là dòng khung ghép đôi giả làm bật cửa sổ trên m
     <string name="search_tools">"Tìm công cụ"</string>
     <string name="search_tools_hint">"Nhập một phần tên công cụ, chức năng hoặc sóng của nó: %1$d công cụ."</string>
     <string name="search_no_tool">"Không có công cụ nào khớp với “%1$s”."</string>
+    <string name="ai_explain">"Giải thích"</string>
+    <string name="ai_report">"Báo cáo"</string>
+    <string name="ai_nothing_yet">"Chưa có gì để giải thích: hãy chạy công cụ trước rồi hỏi lại Gemini."</string>
+    <string name="ai_failed">"Gemini không thể trả lời: %1$s"</string>
+    <string name="ai_downloading">"Đang tải Gemini Nano về điện thoại… %1$d MB"</string>
+    <string name="ai_thinking">"Gemini đang đọc kết quả…"</string>
+    <string name="ai_disclaimer">"Do Gemini Nano viết trên điện thoại này từ các phép đo của ứng dụng. Có thể sai: hãy kiểm tra điều quan trọng."</string>
+    <string name="ai_ask_gemini">"Hỏi Gemini"</string>
+    <string name="ai_assistant">"Trợ lý Gemini"</string>
+    <string name="ai_assistant_sub">"Hỏi về mạng của bạn"</string>
+    <string name="ai_assistant_hint">"Đặt câu hỏi về mạng của bạn: Gemini trả lời ngay trên điện thoại dựa trên những gì đã đo."</string>
+    <string name="ai_assistant_examples">"Vì sao Wi-Fi của tôi chậm?|Sóng di động của tôi có tốt không?|Có thiết bị theo dõi đi theo tôi không?|Mạng của tôi có an toàn không?"</string>
+    <string name="ai_assistant_field">"Hỏi Gemini…"</string>
+    <string name="ai_open_tool">"Mở %1$s"</string>
+    <string name="ai_send">"Gửi"</string>
 </resources>

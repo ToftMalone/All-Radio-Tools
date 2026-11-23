@@ -3241,4 +3241,19 @@ Ett flöde är en ström av falska parkopplingsramar som får en popup att visas
     <string name="search_tools">"Sök ett verktyg"</string>
     <string name="search_tools_hint">"Skriv en del av ett verktygs namn, vad det gör eller dess radio: %1$d verktyg."</string>
     <string name="search_no_tool">"Inget verktyg matchar ”%1$s”."</string>
+    <string name="ai_explain">"Förklara"</string>
+    <string name="ai_report">"Rapport"</string>
+    <string name="ai_nothing_yet">"Inget att förklara än: kör verktyget först och fråga sedan Gemini igen."</string>
+    <string name="ai_failed">"Gemini kunde inte svara: %1$s"</string>
+    <string name="ai_downloading">"Laddar ner Gemini Nano till telefonen… %1$d MB"</string>
+    <string name="ai_thinking">"Gemini läser resultaten…"</string>
+    <string name="ai_disclaimer">"Skrivet av Gemini Nano på den här telefonen utifrån appens mätningar. Det kan ha fel: kontrollera det viktiga."</string>
+    <string name="ai_ask_gemini">"Fråga Gemini"</string>
+    <string name="ai_assistant">"Gemini-assistent"</string>
+    <string name="ai_assistant_sub">"Fråga om dina nätverk"</string>
+    <string name="ai_assistant_hint">"Ställ en fråga om dina nätverk: Gemini svarar på själva telefonen utifrån det som redan mätts."</string>
+    <string name="ai_assistant_examples">"Varför är mitt wifi långsamt?|Är min mobilsignal bra?|Följer en spårare mig?|Är mitt nätverk säkert?"</string>
+    <string name="ai_assistant_field">"Fråga Gemini…"</string>
+    <string name="ai_open_tool">"Öppna %1$s"</string>
+    <string name="ai_send">"Skicka"</string>
 </resources>

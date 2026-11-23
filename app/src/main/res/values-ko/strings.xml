@@ -3165,4 +3165,19 @@
     <string name="search_tools">"도구 검색"</string>
     <string name="search_tools_hint">"도구 이름, 기능 또는 무선의 일부를 입력하세요: 도구 %1$d개"</string>
     <string name="search_no_tool">"“%1$s”와 일치하는 도구가 없습니다."</string>
+    <string name="ai_explain">"설명"</string>
+    <string name="ai_report">"보고서"</string>
+    <string name="ai_nothing_yet">"아직 설명할 결과가 없습니다. 먼저 도구를 실행한 다음 Gemini에게 다시 물어보세요."</string>
+    <string name="ai_failed">"Gemini가 답하지 못했습니다: %1$s"</string>
+    <string name="ai_downloading">"휴대전화에 Gemini Nano 다운로드 중… %1$d MB"</string>
+    <string name="ai_thinking">"Gemini가 결과를 읽는 중…"</string>
+    <string name="ai_disclaimer">"앱의 측정값을 바탕으로 이 휴대전화의 Gemini Nano가 작성했습니다. 틀릴 수 있으니 중요한 내용은 확인하세요."</string>
+    <string name="ai_ask_gemini">"Gemini에게 묻기"</string>
+    <string name="ai_assistant">"Gemini 어시스턴트"</string>
+    <string name="ai_assistant_sub">"네트워크에 대해 질문하기"</string>
+    <string name="ai_assistant_hint">"네트워크에 대해 질문하세요. Gemini가 휴대전화에서 직접, 이미 측정한 내용을 바탕으로 답합니다."</string>
+    <string name="ai_assistant_examples">"Wi-Fi가 왜 느린가요?|모바일 신호가 좋은가요?|추적기가 나를 따라오나요?|내 네트워크는 안전한가요?"</string>
+    <string name="ai_assistant_field">"Gemini에게 묻기…"</string>
+    <string name="ai_open_tool">"%1$s 열기"</string>
+    <string name="ai_send">"보내기"</string>
 </resources>

@@ -37,6 +37,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -171,6 +172,14 @@ fun PageHostContent(vm: MainViewModel, nav: NavState, onBack: () -> Unit) {
                         Text(t, style = gs(22, 28, 500), maxLines = 1)
                         Text(sub, style = rf(12, 16), color = cs.onSurfaceVariant, maxLines = 1)
                     }
+                }
+                // Gemini on this tool's results, where the phone has it and the tool has something to explain.
+                val tool = (nav.page as? Page.ToolPage)?.tool
+                val facts = remember(tool) { tool?.let { com.allnetworktools.ai.toolFacts(it, vm) } }
+                var aiOpen by remember(tool) { mutableStateOf(false) }
+                if (facts != null && com.allnetworktools.ai.rememberAiAvailable(vm)) {
+                    com.allnetworktools.ai.GeminiButton(S(R.string.ai_ask_gemini), { aiOpen = true })
+                    if (aiOpen) com.allnetworktools.ai.AiToolSheet(vm, tool!!.title, facts) { aiOpen = false }
                 }
                 val a = topAction.value
                 if (a != null) IconCircleButton(a.icon, a.onClick, tint = cs.onSurfaceVariant) else Spacer(Modifier.size(48.dp))

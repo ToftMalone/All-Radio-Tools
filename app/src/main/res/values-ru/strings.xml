@@ -3393,4 +3393,19 @@
     <string name="search_tools">"Найти инструмент"</string>
     <string name="search_tools_hint">"Введите часть названия инструмента, его назначения или радио: %1$d инструментов."</string>
     <string name="search_no_tool">"Нет инструментов по запросу «%1$s»."</string>
+    <string name="ai_explain">"Объяснить"</string>
+    <string name="ai_report">"Отчёт"</string>
+    <string name="ai_nothing_yet">"Пока нечего объяснять: сначала запустите инструмент, затем снова спросите Gemini."</string>
+    <string name="ai_failed">"Gemini не смог ответить: %1$s"</string>
+    <string name="ai_downloading">"Загрузка Gemini Nano на телефон… %1$d МБ"</string>
+    <string name="ai_thinking">"Gemini читает результаты…"</string>
+    <string name="ai_disclaimer">"Написано Gemini Nano на этом телефоне по измерениям приложения. Возможны ошибки: проверяйте важное."</string>
+    <string name="ai_ask_gemini">"Спросить Gemini"</string>
+    <string name="ai_assistant">"Помощник Gemini"</string>
+    <string name="ai_assistant_sub">"Спросите о своих сетях"</string>
+    <string name="ai_assistant_hint">"Задайте вопрос о своих сетях: Gemini отвечает прямо на телефоне по уже сделанным измерениям."</string>
+    <string name="ai_assistant_examples">"Почему медленный Wi-Fi?|Хороший ли мобильный сигнал?|Следит ли за мной трекер?|Безопасна ли моя сеть?"</string>
+    <string name="ai_assistant_field">"Спросите Gemini…"</string>
+    <string name="ai_open_tool">"Открыть %1$s"</string>
+    <string name="ai_send">"Отправить"</string>
 </resources>

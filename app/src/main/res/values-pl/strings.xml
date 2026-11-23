@@ -3393,4 +3393,19 @@ Zalew to strumień fałszywych ramek parowania, który wywołuje wyskakujące ok
     <string name="search_tools">"Szukaj narzędzia"</string>
     <string name="search_tools_hint">"Wpisz część nazwy narzędzia, jego funkcji lub radia: %1$d narzędzi."</string>
     <string name="search_no_tool">"Żadne narzędzie nie pasuje do „%1$s”."</string>
+    <string name="ai_explain">"Wyjaśnij"</string>
+    <string name="ai_report">"Raport"</string>
+    <string name="ai_nothing_yet">"Na razie nie ma czego wyjaśniać: najpierw uruchom narzędzie, potem zapytaj Gemini ponownie."</string>
+    <string name="ai_failed">"Gemini nie mógł odpowiedzieć: %1$s"</string>
+    <string name="ai_downloading">"Pobieranie Gemini Nano na telefon… %1$d MB"</string>
+    <string name="ai_thinking">"Gemini czyta wyniki…"</string>
+    <string name="ai_disclaimer">"Napisane przez Gemini Nano na tym telefonie na podstawie pomiarów aplikacji. Może się mylić: sprawdź to, co ważne."</string>
+    <string name="ai_ask_gemini">"Zapytaj Gemini"</string>
+    <string name="ai_assistant">"Asystent Gemini"</string>
+    <string name="ai_assistant_sub">"Zapytaj o swoje sieci"</string>
+    <string name="ai_assistant_hint">"Zadaj pytanie o swoje sieci: Gemini odpowiada na samym telefonie na podstawie tego, co już zmierzono."</string>
+    <string name="ai_assistant_examples">"Dlaczego moje Wi-Fi jest wolne?|Czy mój sygnał komórkowy jest dobry?|Czy śledzi mnie lokalizator?|Czy moja sieć jest bezpieczna?"</string>
+    <string name="ai_assistant_field">"Zapytaj Gemini…"</string>
+    <string name="ai_open_tool">"Otwórz %1$s"</string>
+    <string name="ai_send">"Wyślij"</string>
 </resources>

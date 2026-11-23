@@ -3241,4 +3241,19 @@ Sel, yakındaki her telefonda bir açılır pencere çıkaran sahte eşleştirme
     <string name="search_tools">"Araç ara"</string>
     <string name="search_tools_hint">"Bir aracın adının, işlevinin veya radyosunun bir kısmını yazın: %1$d araç."</string>
     <string name="search_no_tool">"“%1$s” ile eşleşen araç yok."</string>
+    <string name="ai_explain">"Açıkla"</string>
+    <string name="ai_report">"Rapor"</string>
+    <string name="ai_nothing_yet">"Henüz açıklanacak bir şey yok: önce aracı çalıştırın, sonra Gemini\'ye yeniden sorun."</string>
+    <string name="ai_failed">"Gemini yanıt veremedi: %1$s"</string>
+    <string name="ai_downloading">"Gemini Nano telefona indiriliyor… %1$d MB"</string>
+    <string name="ai_thinking">"Gemini sonuçları okuyor…"</string>
+    <string name="ai_disclaimer">"Uygulamanın ölçümlerinden bu telefonda Gemini Nano tarafından yazıldı. Yanılabilir: önemli olanı kontrol edin."</string>
+    <string name="ai_ask_gemini">"Gemini\'ye sor"</string>
+    <string name="ai_assistant">"Gemini asistanı"</string>
+    <string name="ai_assistant_sub">"Ağlarınız hakkında sorun"</string>
+    <string name="ai_assistant_hint">"Ağlarınız hakkında bir soru sorun: Gemini, telefonun zaten ölçtüklerinden yola çıkarak telefonda yanıt verir."</string>
+    <string name="ai_assistant_examples">"Wi-Fi\'m neden yavaş?|Mobil sinyalim iyi mi?|Beni bir takip cihazı izliyor mu?|Ağım güvenli mi?"</string>
+    <string name="ai_assistant_field">"Gemini\'ye sorun…"</string>
+    <string name="ai_open_tool">"%1$s aç"</string>
+    <string name="ai_send">"Gönder"</string>
 </resources>
