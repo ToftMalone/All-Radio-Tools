@@ -195,9 +195,6 @@ fun SpectrumTool(vm: MainViewModel) {
             PageColumn {
                 if (c.running || c.starting) StartButton(S(R.string.stop), Sym.Stop) { c.stop() }
                 else StartButton(S(R.string.start_the_analysis), Sym.PlayArrow, enabled = device != null && c.parsedCenterHz() != null) { device?.let(c::start) }
-                FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    SpectrumController.Zooms.forEach { z -> AntFilterChip(widthLabel(c.spanMhz * 1e6 / z) + " MHz", c.zoom == z, { c.chooseZoom(z) }) }
-                }
                 SectionCard {
                     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                         Text(S(R.string.bands), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
