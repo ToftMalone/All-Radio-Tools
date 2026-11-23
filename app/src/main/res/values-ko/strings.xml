@@ -3137,4 +3137,5 @@
     <string name="cen_country">"국가(두 글자)"</string>
     <string name="cen_how">"OONI Probe처럼 이 도구는 휴대폰에서 현재 네트워크를 통해 웹사이트, 메신저, 검열 우회 수단이 차단되었는지 확인합니다. 각 사이트를 네트워크의 DNS와, 네트워크가 읽거나 바꿀 수 없는 암호화 DNS(DoH)로 조회한 뒤 TCP와 TLS로 연결합니다. 결과는 차단 위치를 알려 줍니다: DNS(응답 없음 또는 가짜 주소), IP 주소, 사이트 이름을 담은 TLS 핸드셰이크(다른 이름으로 같은 핸드셰이크가 통과하면 확인되는 SNI 필터링), 또는 가로채기(휴대폰이 신뢰하지 않는 인증서). 메신저와 Tor, 브리지, Snowflake, 암호화 DNS, VPN은 각자의 서버에서 테스트합니다. 어디서나 다운된 사이트는 IP 차단처럼 보입니다. OONI로 아무것도 보내지 않으며 결과는 휴대폰에 남습니다."</string>
     <string name="spectrum_tune">"튜닝"</string>
+    <string name="snackbar_ok">"확인"</string>
 </resources>

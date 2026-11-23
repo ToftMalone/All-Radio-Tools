@@ -3213,4 +3213,5 @@ Ett flöde är en ström av falska parkopplingsramar som får en popup att visas
     <string name="cen_country">"Land (två bokstäver)"</string>
     <string name="cen_how">"Precis som OONI Probe kontrollerar det här verktyget från din telefon, över det aktuella nätet, om webbplatser, meddelandeappar och sätt att kringgå censur är blockerade. Varje webbplats slås upp med nätets DNS och med krypterad DNS (DoH), som nätet varken kan läsa eller ändra, och nås sedan över TCP och TLS. Resultatet visar var blockeringen sitter: DNS (inget svar eller en falsk adress), IP-adressen, TLS-handskakningen som namnger webbplatsen (SNI-filtrering, bekräftad av samma handskakning med ett annat namn) eller en avlyssning (ett certifikat som telefonen inte litar på). Meddelandeappar samt Tor, dess bryggor, Snowflake, krypterad DNS och VPN testas mot sina egna servrar. En webbplats som är nere överallt ser ut som en IP-blockering. Inget skickas till OONI och resultaten stannar på telefonen."</string>
     <string name="spectrum_tune">"Ställ in"</string>
+    <string name="snackbar_ok">"OK"</string>
 </resources>

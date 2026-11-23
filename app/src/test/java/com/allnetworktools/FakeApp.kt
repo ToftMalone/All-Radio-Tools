@@ -46,7 +46,7 @@ object Scenario {
     var bleEmpty = false
     var evilTwin = false
     /** Connected to Wi-Fi: the Internet tools of the Wi-Fi network are usable. */
-    var onWifi = false
+    var onWifi = true
 
     /** Set when a measurement flow starts being collected: the home screen must not start any. */
     var wifiStarted = false

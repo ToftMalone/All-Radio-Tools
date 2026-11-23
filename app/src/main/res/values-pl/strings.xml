@@ -3365,4 +3365,5 @@ Zalew to strumień fałszywych ramek parowania, który wywołuje wyskakujące ok
     <string name="cen_country">"Kraj (dwie litery)"</string>
     <string name="cen_how">"Tak jak OONI Probe, to narzędzie sprawdza z twojego telefonu, w bieżącej sieci, czy strony WWW, komunikatory i sposoby obchodzenia cenzury są blokowane. Każda strona jest rozwiązywana przez DNS sieci i przez szyfrowany DNS (DoH), którego sieć nie może odczytać ani zmienić, a następnie łączona przez TCP i TLS. Wynik mówi, gdzie jest blokada: w DNS (brak odpowiedzi lub fałszywy adres), na adresie IP, w uzgadnianiu TLS z nazwą strony (filtrowanie SNI, potwierdzone tym samym uzgadnianiem z inną nazwą) lub przechwytywanie (certyfikat, któremu telefon nie ufa). Komunikatory oraz Tor, jego mosty, Snowflake, szyfrowany DNS i VPN są testowane na własnych serwerach. Strona niedostępna wszędzie wygląda jak blokada IP. Nic nie jest wysyłane do OONI, a wyniki zostają w telefonie."</string>
     <string name="spectrum_tune">"Dostrój"</string>
+    <string name="snackbar_ok">"OK"</string>
 </resources>

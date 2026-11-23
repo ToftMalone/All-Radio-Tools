@@ -3213,4 +3213,5 @@ Sel, yakındaki her telefonda bir açılır pencere çıkaran sahte eşleştirme
     <string name="cen_country">"Ülke (iki harf)"</string>
     <string name="cen_how">"OONI Probe gibi bu araç, telefonunuzdan ve mevcut ağ üzerinden web sitelerinin, mesajlaşma uygulamalarının ve sansürü aşma yollarının engellenip engellenmediğini denetler. Her site ağın DNS\'i ile ve ağın okuyamadığı ya da değiştiremediği şifreli DNS (DoH) ile çözümlenir, ardından TCP ve TLS ile bağlanılır. Sonuç engelin nerede olduğunu gösterir: DNS (yanıt yok ya da sahte adres), IP adresi, siteyi adlandıran TLS el sıkışması (aynı el sıkışmanın başka bir adla geçmesiyle doğrulanan SNI filtreleme) ya da araya girme (telefonun güvenmediği bir sertifika). Mesajlaşma uygulamaları ile Tor, köprüleri, Snowflake, şifreli DNS ve VPN\'ler kendi sunucularında test edilir. Her yerde kapalı olan bir site IP engeline benzer. OONI\'ye hiçbir şey gönderilmez ve sonuçlar telefonda kalır."</string>
     <string name="spectrum_tune">"Ayarla"</string>
+    <string name="snackbar_ok">"Tamam"</string>
 </resources>

@@ -3137,4 +3137,5 @@ Banjir adalah aliran frame pemasangan palsu yang memunculkan pop-up di setiap po
     <string name="cen_country">"Negara (dua huruf)"</string>
     <string name="cen_how">"Seperti OONI Probe, alat ini memeriksa dari ponsel Anda, melalui jaringan saat ini, apakah situs web, aplikasi perpesanan, dan cara mengelak sensor diblokir. Setiap situs dicari dengan DNS jaringan dan dengan DNS terenkripsi (DoH) yang tidak dapat dibaca atau diubah jaringan, lalu dihubungi melalui TCP dan TLS. Hasilnya menunjukkan letak pemblokiran: DNS (tanpa jawaban atau alamat palsu), alamat IP, jabat tangan TLS yang menyebut nama situs (pemfilteran SNI, dipastikan oleh jabat tangan yang sama dengan nama lain), atau penyadapan (sertifikat yang tidak dipercaya ponsel). Aplikasi perpesanan serta Tor, jembatannya, Snowflake, DNS terenkripsi, dan VPN diuji di server mereka sendiri. Situs yang mati di mana-mana terlihat seperti blokir IP. Tidak ada yang dikirim ke OONI dan hasil tetap di ponsel."</string>
     <string name="spectrum_tune">"Setel"</string>
+    <string name="snackbar_ok">"Oke"</string>
 </resources>

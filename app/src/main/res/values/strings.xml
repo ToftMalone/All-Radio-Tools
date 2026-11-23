@@ -3233,4 +3233,5 @@
     <string name="cen_country">"Country (two letters)"</string>
     <string name="cen_how">"Like OONI Probe, this tool checks from your phone, over the current network, whether websites, messaging apps and ways around censorship are blocked. Each site is looked up with the network\'s DNS and with encrypted DNS (DoH), which the network can neither read nor change, then reached over TCP and TLS. The result says where it is blocked: DNS (no answer, or a false address), the IP address, the TLS handshake naming the site (SNI filtering, confirmed by the same handshake with another name), or an interception (a certificate the phone does not trust). Messaging apps and Tor, its bridges, Snowflake, encrypted DNS and VPNs are tested on their own servers. A site down everywhere looks like an IP block. Nothing is sent to OONI and results stay on the phone."</string>
     <string name="spectrum_tune">"Tune"</string>
+    <string name="snackbar_ok">"OK"</string>
 </resources>

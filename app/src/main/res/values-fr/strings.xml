@@ -3307,4 +3307,5 @@
     <string name="cen_country">"Pays (deux lettres)"</string>
     <string name="cen_how">"Comme OONI Probe, cet outil vérifie depuis votre téléphone, sur le réseau actuel, si des sites web, des messageries et des moyens de contourner la censure sont bloqués. Chaque site est résolu avec le DNS du réseau et avec un DNS chiffré (DoH), que le réseau ne peut ni lire ni modifier, puis joint en TCP et en TLS. Le résultat indique où se situe le blocage : le DNS (pas de réponse ou une fausse adresse), l\'adresse IP, la poignée de main TLS qui nomme le site (filtrage SNI, confirmé par la même poignée de main avec un autre nom) ou une interception (un certificat auquel le téléphone ne fait pas confiance). Les messageries ainsi que Tor, ses ponts, Snowflake, le DNS chiffré et les VPN sont testés sur leurs propres serveurs. Un site en panne partout ressemble à un blocage d\'IP. Rien n\'est envoyé à OONI et les résultats restent sur le téléphone."</string>
     <string name="spectrum_tune">"Accorder"</string>
+    <string name="snackbar_ok">"OK"</string>
 </resources>

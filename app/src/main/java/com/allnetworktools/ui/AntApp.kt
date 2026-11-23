@@ -7,6 +7,7 @@ import androidx.activity.compose.PredictiveBackHandler
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
@@ -51,6 +52,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.allnetworktools.MainViewModel
 import com.allnetworktools.NavState
 import com.allnetworktools.Page
+import com.allnetworktools.R
+import com.allnetworktools.util.S
 import com.allnetworktools.model.Network
 import com.allnetworktools.model.Tool
 import com.allnetworktools.model.ToolParent
@@ -84,7 +87,8 @@ fun AntApp(vm: MainViewModel) {
                 }
                 UpdateBanner(vm, Modifier.align(Alignment.TopCenter))
                 if (settings.onboardingDone) UpdateDialog(vm)
-                Snackbar(toaster, Modifier.align(Alignment.BottomCenter))
+                val inTool = vm.nav.collectAsStateWithLifecycle().value.page is Page.ToolPage
+                Snackbar(toaster, inTool, Modifier.align(Alignment.BottomCenter))
             }
         }
     }
@@ -135,17 +139,23 @@ private fun MainShell(vm: MainViewModel) {
 
     LaunchedEffect(pageOpen) {
         if (pageOpen) {
+            // Opened again while still closing: it grows back from where it is, not from the card in one jump.
+            val closing = shown != null && progress.value > 0f
             shown = nav
             back.snapTo(0f)
-            progress.snapTo(0f)
-            contentAlpha.snapTo(0f)
+            if (!closing) {
+                progress.snapTo(0f)
+                contentAlpha.snapTo(0f)
+            }
             haptics.confirm()
-            launch { contentAlpha.animateTo(1f, tween(300, 120, Motion.Emphasized)) }
+            launch { contentAlpha.animateTo(1f, tween(300, if (closing) 0 else 120, Motion.Emphasized)) }
             progress.animateTo(1f, tween(520, easing = Motion.Emphasized))
         } else if (shown != null) {
+            // After a predictive back the page keeps the size the gesture left it at while it shrinks into its card:
+            // growing back to full size on the way out made it bounce.
             launch { contentAlpha.animateTo(0f, tween(120)) }
-            launch { back.animateTo(0f, tween(380, easing = Motion.EmphasizedAccelerate)) }
             progress.animateTo(0f, tween(380, easing = Motion.EmphasizedAccelerate))
+            back.snapTo(0f)
             shown = null
         }
     }
@@ -291,7 +301,7 @@ private fun DockLayer(vm: MainViewModel, nav: NavState, modifier: Modifier, onCl
 }
 
 @Composable
-private fun Snackbar(toaster: Toaster, modifier: Modifier) {
+private fun Snackbar(toaster: Toaster, inTool: Boolean, modifier: Modifier) {
     val msg = toaster.message
     val serial = toaster.serial
     val y = remember { Animatable(1f) }
@@ -310,7 +320,8 @@ private fun Snackbar(toaster: Toaster, modifier: Modifier) {
     Row(
         modifier
             .windowInsetsPadding(WindowInsets.navigationBars)
-            .padding(start = 16.dp, end = 16.dp, bottom = 108.dp)
+            // Above the dock, or near the bottom inside a tool, where the dock is hidden.
+            .padding(start = 16.dp, end = 16.dp, bottom = if (inTool) 24.dp else 108.dp)
             .fillMaxWidth()
             .graphicsLayer {
                 translationY = y.value * 20.dp.toPx()
@@ -318,12 +329,13 @@ private fun Snackbar(toaster: Toaster, modifier: Modifier) {
             }
             .clip(RoundedCornerShape(8.dp))
             .background(cs.inverseSurface)
+            .clickable(enabled = msg != null) { toaster.dismiss(serial) }
             .heightIn(min = 48.dp)
             .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(text, Modifier.weight(1f), style = rf(14, 20), color = cs.inverseOnSurface)
-        Text("OK", Modifier.padding(start = 12.dp), style = rf(14, 20, 600), color = cs.inversePrimary)
+        Text(S(R.string.snackbar_ok), Modifier.padding(start = 12.dp), style = rf(14, 20, 600), color = cs.inversePrimary)
     }
 }
 

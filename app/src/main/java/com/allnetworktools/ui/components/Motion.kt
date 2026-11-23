@@ -75,7 +75,8 @@ fun Modifier.rise(index: Int = 0, stepMs: Int = 45, distance: Dp = 18.dp): Modif
     val y = remember { Animatable(1f) }
     val a = remember { Animatable(0f) }
     LaunchedEffect(Unit) {
-        delay((index * stepMs).toLong())
+        // Only the first rows are staggered: row 40 of a scan used to stay blank for two seconds before rising.
+        delay((index.coerceIn(0, MAX_STAGGER) * stepMs).toLong())
         launch { y.animateTo(0f, Motion.standard()) }
         a.animateTo(1f, tween(300, easing = Motion.Emphasized))
     }
@@ -84,6 +85,9 @@ fun Modifier.rise(index: Int = 0, stepMs: Int = 45, distance: Dp = 18.dp): Modif
         alpha = a.value
     }
 }
+
+/** Rows past this one rise together with it. */
+private const val MAX_STAGGER = 8
 
 /** Pop entrance: scale 0.4 → 1 and rotation −40° → 0 with a bouncy spring. */
 @Composable

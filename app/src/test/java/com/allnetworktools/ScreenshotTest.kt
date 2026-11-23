@@ -66,7 +66,7 @@ class ScreenshotTest {
         Scenario.throttled = false
         Scenario.bleEmpty = false
         Scenario.evilTwin = false
-        Scenario.onWifi = false
+        Scenario.onWifi = true
         Scenario.wifiStarted = false
         Scenario.bleStarted = false
         Scenario.cellStarted = false
