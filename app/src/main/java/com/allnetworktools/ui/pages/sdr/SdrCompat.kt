@@ -45,3 +45,11 @@ fun sdrCompatible(tool: Tool, device: SdrDevice?): Boolean {
     val need = NEEDS[tool] ?: return true
     return d.kind.canRun(need.rate, need.bands, d.usb?.productName)
 }
+
+/**
+ * Why the radio did not open, for the tools: an RTL-SDR stick with a tuner this driver does not run says which,
+ * anything else the general message.
+ */
+internal fun sdrOpenError(): String = com.allnetworktools.data.sdr.RtlSdr.unsupportedTuner?.let {
+    com.allnetworktools.util.S(com.allnetworktools.R.string.sdr_tuner_unsupported, it)
+} ?: com.allnetworktools.util.S(com.allnetworktools.R.string.could_not_open_the_hackrf)

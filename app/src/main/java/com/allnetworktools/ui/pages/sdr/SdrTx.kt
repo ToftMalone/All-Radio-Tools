@@ -54,7 +54,7 @@ class SdrTransmitter(private val repo: SdrRepository, private val scope: Corouti
                     onAcquire()
                     val d = device!!
                     if (!repo.hasPermission(d) && !repo.requestPermission(d)) { error = S(R.string.usb_access_to_the_hackrf_refused); return@launch }
-                    r = withContext(Dispatchers.IO) { repo.open(d) } ?: run { error = S(R.string.could_not_open_the_hackrf); return@launch }
+                    r = withContext(Dispatchers.IO) { repo.open(d) } ?: run { error = sdrOpenError(); return@launch }
                 }
                 val radio = r!!
                 if (!radio.canTransmit) { error = S(R.string.tx_radio_cannot); return@launch }

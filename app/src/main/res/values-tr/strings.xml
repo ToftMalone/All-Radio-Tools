@@ -3241,4 +3241,5 @@ Sel, yakındaki her telefonda bir açılır pencere çıkaran sahte eşleştirme
     <string name="search_tools">"Araç ara"</string>
     <string name="search_tools_hint">"Bir aracın adının, işlevinin veya radyosunun bir kısmını yazın: %1$d araç."</string>
     <string name="search_no_tool">"“%1$s” ile eşleşen araç yok."</string>
+    <string name="sdr_tuner_unsupported">"Bu RTL-SDR çubuğunda %1$s alıcı var, henüz desteklenmiyor (yalnızca R820T, R820T2 ve R828D)"</string>
 </resources>

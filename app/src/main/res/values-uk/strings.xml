@@ -3393,4 +3393,5 @@
     <string name="search_tools">"Знайти інструмент"</string>
     <string name="search_tools_hint">"Введіть частину назви інструмента, його призначення або радіо: %1$d інструментів."</string>
     <string name="search_no_tool">"Немає інструментів за запитом «%1$s»."</string>
+    <string name="sdr_tuner_unsupported">"У цього RTL-SDR тюнер %1$s, поки не підтримується (лише R820T, R820T2 і R828D)"</string>
 </resources>

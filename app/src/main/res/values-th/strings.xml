@@ -3165,4 +3165,5 @@
     <string name="search_tools">"ค้นหาเครื่องมือ"</string>
     <string name="search_tools_hint">"พิมพ์ส่วนหนึ่งของชื่อเครื่องมือ สิ่งที่ทำ หรือวิทยุ: %1$d เครื่องมือ"</string>
     <string name="search_no_tool">"ไม่มีเครื่องมือที่ตรงกับ “%1$s”"</string>
+    <string name="sdr_tuner_unsupported">"RTL-SDR นี้ใช้จูนเนอร์ %1$s ซึ่งยังไม่รองรับ (รองรับเฉพาะ R820T, R820T2 และ R828D)"</string>
 </resources>

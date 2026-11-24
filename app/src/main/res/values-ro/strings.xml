@@ -3317,4 +3317,5 @@ Un val este un flux de cadre de asociere false care face să apară un pop-up pe
     <string name="search_tools">"Caută un instrument"</string>
     <string name="search_tools_hint">"Scrie o parte din numele unui instrument, ce face sau radioul lui: %1$d instrumente."</string>
     <string name="search_no_tool">"Niciun instrument nu corespunde cu „%1$s”."</string>
+    <string name="sdr_tuner_unsupported">"Acest stick RTL-SDR are un tuner %1$s, încă nesuportat (doar R820T, R820T2 și R828D)"</string>
 </resources>

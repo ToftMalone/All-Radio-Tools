@@ -3165,4 +3165,5 @@ Một đợt lũ là dòng khung ghép đôi giả làm bật cửa sổ trên m
     <string name="search_tools">"Tìm công cụ"</string>
     <string name="search_tools_hint">"Nhập một phần tên công cụ, chức năng hoặc sóng của nó: %1$d công cụ."</string>
     <string name="search_no_tool">"Không có công cụ nào khớp với “%1$s”."</string>
+    <string name="sdr_tuner_unsupported">"USB RTL-SDR này dùng bộ dò %1$s, chưa được hỗ trợ (chỉ R820T, R820T2 và R828D)"</string>
 </resources>

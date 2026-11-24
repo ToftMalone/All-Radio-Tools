@@ -3241,4 +3241,5 @@
     <string name="search_tools">"टूल खोजें"</string>
     <string name="search_tools_hint">"टूल के नाम, काम या रेडियो का कुछ हिस्सा लिखें: %1$d टूल।"</string>
     <string name="search_no_tool">"“%1$s” से कोई टूल मेल नहीं खाता।"</string>
+    <string name="sdr_tuner_unsupported">"इस RTL-SDR स्टिक में %1$s ट्यूनर है, जो अभी समर्थित नहीं है (केवल R820T, R820T2 और R828D)"</string>
 </resources>

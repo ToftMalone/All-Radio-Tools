@@ -3241,4 +3241,5 @@ Eine Flut ist ein Strom gefälschter Kopplungs-Frames, der auf jedem Telefon in 
     <string name="search_tools">"Werkzeug suchen"</string>
     <string name="search_tools_hint">"Gib einen Teil des Namens, der Funktion oder des Funks eines Werkzeugs ein: %1$d Werkzeuge durchsuchbar."</string>
     <string name="search_no_tool">"Kein Werkzeug passt zu „%1$s“."</string>
+    <string name="sdr_tuner_unsupported">"Dieser RTL-SDR-Stick hat einen %1$s-Tuner, der noch nicht unterstützt wird (nur R820T, R820T2 und R828D)"</string>
 </resources>

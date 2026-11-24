@@ -3393,4 +3393,5 @@ Zalew to strumień fałszywych ramek parowania, który wywołuje wyskakujące ok
     <string name="search_tools">"Szukaj narzędzia"</string>
     <string name="search_tools_hint">"Wpisz część nazwy narzędzia, jego funkcji lub radia: %1$d narzędzi."</string>
     <string name="search_no_tool">"Żadne narzędzie nie pasuje do „%1$s”."</string>
+    <string name="sdr_tuner_unsupported">"Ten RTL-SDR ma tuner %1$s, jeszcze nieobsługiwany (tylko R820T, R820T2 i R828D)"</string>
 </resources>

@@ -3241,4 +3241,5 @@ Ett flöde är en ström av falska parkopplingsramar som får en popup att visas
     <string name="search_tools">"Sök ett verktyg"</string>
     <string name="search_tools_hint">"Skriv en del av ett verktygs namn, vad det gör eller dess radio: %1$d verktyg."</string>
     <string name="search_no_tool">"Inget verktyg matchar ”%1$s”."</string>
+    <string name="sdr_tuner_unsupported">"Den här RTL-SDR-stickan har en %1$s-tuner som inte stöds än (bara R820T, R820T2 och R828D)"</string>
 </resources>

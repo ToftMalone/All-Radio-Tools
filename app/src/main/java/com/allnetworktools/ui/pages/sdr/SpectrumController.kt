@@ -142,7 +142,7 @@ class SpectrumController(private val repo: SdrRepository, private val scope: Cor
         scope.launch {
             try {
                 if (!repo.hasPermission(device) && !repo.requestPermission(device)) { error = S(R.string.usb_access_to_the_hackrf_refused); return@launch }
-                val r = withContext(Dispatchers.IO) { repo.open(device) } ?: run { error = S(R.string.could_not_open_the_hackrf); return@launch }
+                val r = withContext(Dispatchers.IO) { repo.open(device) } ?: run { error = sdrOpenError(); return@launch }
                 val rate = spanMhz * 1_000_000
                 val lna = lnaGain
                 val vga = vgaGain

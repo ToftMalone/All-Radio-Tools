@@ -3335,4 +3335,5 @@
     <string name="search_tools">"Chercher un outil"</string>
     <string name="search_tools_hint">"Tapez une partie du nom d\'un outil, de ce qu\'il fait ou de sa radio : %1$d outils à chercher."</string>
     <string name="search_no_tool">"Aucun outil ne correspond à « %1$s »."</string>
+    <string name="sdr_tuner_unsupported">"Cette clé RTL-SDR a un tuner %1$s, pas encore pris en charge (seuls les R820T, R820T2 et R828D le sont)"</string>
 </resources>

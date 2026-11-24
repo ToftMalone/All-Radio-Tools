@@ -3261,4 +3261,5 @@
     <string name="search_tools">"Search a tool"</string>
     <string name="search_tools_hint">"Type part of a tool\'s name, what it does or its radio: %1$d tools to search."</string>
     <string name="search_no_tool">"No tool matches “%1$s”."</string>
+    <string name="sdr_tuner_unsupported">"This RTL-SDR stick has an %1$s tuner, not supported yet (only R820T, R820T2 and R828D are)"</string>
 </resources>

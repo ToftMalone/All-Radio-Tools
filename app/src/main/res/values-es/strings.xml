@@ -3248,4 +3248,5 @@ Una avalancha es un flujo de tramas de emparejamiento falsas que hace aparecer u
     <string name="search_tools">"Buscar una herramienta"</string>
     <string name="search_tools_hint">"Escribe parte del nombre de una herramienta, lo que hace o su radio: %1$d herramientas."</string>
     <string name="search_no_tool">"Ninguna herramienta coincide con «%1$s»."</string>
+    <string name="sdr_tuner_unsupported">"Este RTL-SDR tiene un sintonizador %1$s, aún no compatible (solo R820T, R820T2 y R828D)"</string>
 </resources>

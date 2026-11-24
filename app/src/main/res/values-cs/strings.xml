@@ -3393,4 +3393,5 @@ Záplava je proud falešných rámců párování, který vyvolá vyskakovací o
     <string name="search_tools">"Hledat nástroj"</string>
     <string name="search_tools_hint">"Napište část názvu nástroje, co dělá nebo jeho rádio: %1$d nástrojů."</string>
     <string name="search_no_tool">"Žádný nástroj neodpovídá „%1$s“."</string>
+    <string name="sdr_tuner_unsupported">"Tento RTL-SDR má tuner %1$s, zatím nepodporovaný (jen R820T, R820T2 a R828D)"</string>
 </resources>

@@ -3165,4 +3165,5 @@ Banjir adalah aliran frame pemasangan palsu yang memunculkan pop-up di setiap po
     <string name="search_tools">"Cari alat"</string>
     <string name="search_tools_hint">"Ketik sebagian nama alat, fungsinya, atau radionya: %1$d alat."</string>
     <string name="search_no_tool">"Tidak ada alat yang cocok dengan “%1$s”."</string>
+    <string name="sdr_tuner_unsupported">"Stik RTL-SDR ini memakai tuner %1$s, belum didukung (hanya R820T, R820T2, dan R828D)"</string>
 </resources>

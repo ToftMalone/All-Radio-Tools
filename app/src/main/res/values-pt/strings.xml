@@ -3248,4 +3248,5 @@ Uma enxurrada é um fluxo de quadros de pareamento falsos que faz aparecer um po
     <string name="search_tools">"Procurar uma ferramenta"</string>
     <string name="search_tools_hint">"Escreva parte do nome de uma ferramenta, o que faz ou o seu rádio: %1$d ferramentas."</string>
     <string name="search_no_tool">"Nenhuma ferramenta corresponde a «%1$s»."</string>
+    <string name="sdr_tuner_unsupported">"Esta pen RTL-SDR tem um sintonizador %1$s, ainda não suportado (só R820T, R820T2 e R828D)"</string>
 </resources>

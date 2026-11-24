@@ -3165,4 +3165,5 @@
     <string name="search_tools">"도구 검색"</string>
     <string name="search_tools_hint">"도구 이름, 기능 또는 무선의 일부를 입력하세요: 도구 %1$d개"</string>
     <string name="search_no_tool">"“%1$s”와 일치하는 도구가 없습니다."</string>
+    <string name="sdr_tuner_unsupported">"이 RTL-SDR에는 아직 지원되지 않는 %1$s 튜너가 있습니다(R820T, R820T2, R828D만 지원)"</string>
 </resources>

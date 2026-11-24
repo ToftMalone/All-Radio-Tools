@@ -3248,4 +3248,5 @@ Una raffica è un flusso di finte trame di abbinamento che fa apparire un pop-up
     <string name="search_tools">"Cerca uno strumento"</string>
     <string name="search_tools_hint">"Digita parte del nome di uno strumento, cosa fa o la sua radio: %1$d strumenti."</string>
     <string name="search_no_tool">"Nessuno strumento corrisponde a «%1$s»."</string>
+    <string name="sdr_tuner_unsupported">"Questa chiavetta RTL-SDR ha un tuner %1$s, non ancora supportato (solo R820T, R820T2 e R828D)"</string>
 </resources>

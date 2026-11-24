@@ -161,12 +161,31 @@ class RtlSdr private constructor(
 
         fun isRtlSdr(d: UsbDevice) = (d.vendorId to d.productId) in KNOWN
 
+        /** The tuner of the last stick that could not be opened for want of an R82xx, for the error shown. */
+        @Volatile var unsupportedTuner: String? = null
+
+        /**
+         * The tuners this driver does not run, found by their I2C address and ID register as librtlsdr does (with the
+         * repeater on): E4000, FC0013, then, after resetting the tuner through GPIO 4, FC2580 and FC0012.
+         */
+        internal fun otherTuner(rtl: Rtl2832): String? {
+            if (rtl.i2cReadReg(0xc8, 0x02) == 0x40) return "E4000"
+            if (rtl.i2cReadReg(0xc6, 0x00) == 0xa3) return "FC0013"
+            rtl.setGpioOutput(4)
+            rtl.setGpioBit(4, true)
+            rtl.setGpioBit(4, false)
+            if (rtl.i2cReadReg(0xac, 0x01) and 0x7f == 0x56) return "FC2580"
+            if (rtl.i2cReadReg(0xc6, 0x00) == 0xa1) return "FC0012"
+            return null
+        }
+
         /** In place: the dongle's unsigned samples (0 to 255, centred on 127.5) become signed ones. */
         fun unsignedToSigned(buf: ByteArray, len: Int) {
             for (i in 0 until len) buf[i] = (buf[i].toInt() xor 0x80).toByte()
         }
 
         fun open(manager: UsbManager, device: UsbDevice): RtlSdr? {
+            unsupportedTuner = null
             val iface = (0 until device.interfaceCount).map(device::getInterface).firstOrNull() ?: return null
             val ep = (0 until iface.endpointCount).map(iface::getEndpoint)
                 .firstOrNull { it.direction == UsbConstants.USB_DIR_IN && it.type == UsbConstants.USB_ENDPOINT_XFER_BULK }
@@ -202,8 +221,10 @@ class RtlSdr private constructor(
             }
             DebugLog.i("RTL-SDR", "USB strings '$maker' / '$product' -> model $model, tuner $chip")
             if (chip == null) {
-                DebugLog.w("RTL-SDR", "No R820T / R828D tuner answered (E4000, FC0012, FC0013 and FC2580 are not supported)")
-                // E4000, FC0012, FC0013 and FC2580 sticks are not supported.
+                // Which tuner it is, the way librtlsdr tells them apart, so the log says what such a stick holds.
+                val other = otherTuner(rtl)
+                DebugLog.w("RTL-SDR", "No R820T / R828D tuner answered; found ${other ?: "no known tuner"} (E4000, FC0012, FC0013 and FC2580 are not supported yet)")
+                unsupportedTuner = other ?: "?"
                 rtl.setI2cRepeater(false)
                 conn.releaseInterface(iface); conn.close()
                 return null

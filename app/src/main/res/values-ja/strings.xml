@@ -3165,4 +3165,5 @@
     <string name="search_tools">"ツールを検索"</string>
     <string name="search_tools_hint">"ツール名、機能、または無線の一部を入力: %1$d 個のツール"</string>
     <string name="search_no_tool">"「%1$s」に一致するツールはありません。"</string>
+    <string name="sdr_tuner_unsupported">"この RTL-SDR のチューナーは %1$s で、まだ対応していません（対応は R820T、R820T2、R828D のみ）"</string>
 </resources>

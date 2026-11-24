@@ -3165,4 +3165,5 @@
     <string name="search_tools">"搜索工具"</string>
     <string name="search_tools_hint">"输入工具名称、功能或无线电的一部分：共 %1$d 个工具。"</string>
     <string name="search_no_tool">"没有与“%1$s”匹配的工具。"</string>
+    <string name="sdr_tuner_unsupported">"此 RTL-SDR 使用 %1$s 调谐器，暂不支持（仅支持 R820T、R820T2 和 R828D）"</string>
 </resources>

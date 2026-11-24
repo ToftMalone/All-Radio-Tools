@@ -3241,4 +3241,5 @@ Een vloed is een stroom nep-koppelframes die op elke telefoon in de buurt een po
     <string name="search_tools">"Tool zoeken"</string>
     <string name="search_tools_hint">"Typ een deel van de naam van een tool, wat hij doet of zijn radio: %1$d tools."</string>
     <string name="search_no_tool">"Geen tool komt overeen met ‘%1$s’."</string>
+    <string name="sdr_tuner_unsupported">"Deze RTL-SDR-stick heeft een %1$s-tuner, nog niet ondersteund (alleen R820T, R820T2 en R828D)"</string>
 </resources>

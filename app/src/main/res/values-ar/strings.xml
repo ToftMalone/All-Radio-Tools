@@ -3545,4 +3545,5 @@
     <string name="search_tools">"البحث عن أداة"</string>
     <string name="search_tools_hint">"اكتب جزءًا من اسم الأداة أو وظيفتها أو الراديو: %1$d أداة."</string>
     <string name="search_no_tool">"لا توجد أداة تطابق «%1$s»."</string>
+    <string name="sdr_tuner_unsupported">"يحتوي جهاز RTL-SDR هذا على موالف %1$s غير مدعوم بعد (المدعوم فقط R820T وR820T2 وR828D)"</string>
 </resources>

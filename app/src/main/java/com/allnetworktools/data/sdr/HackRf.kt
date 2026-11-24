@@ -231,8 +231,33 @@ class HackRf private constructor(
 open class SdrRepository(private val context: Context) {
     private val usb: UsbManager? = context.getSystemService(UsbManager::class.java)
 
+    /** The USB devices last logged, so each plug or unplug is written once. */
+    private var loggedUsb: Set<String>? = null
+
+    /**
+     * Every USB device Android shows, written to the debug log when the set changes, known radio or not: when a radio
+     * is not recognised, its ids and interfaces say why.
+     */
+    private fun logUsb(all: Collection<android.hardware.usb.UsbDevice>) {
+        val keys = all.map { it.deviceName + "/" + it.vendorId + ":" + it.productId }.toSet()
+        if (keys == loggedUsb) return
+        loggedUsb = keys
+        if (all.isEmpty()) { com.allnetworktools.util.DebugLog.i("USB", "No USB device"); return }
+        all.forEach { d ->
+            val names = runCatching { "${d.manufacturerName} / ${d.productName}" }.getOrElse { "(names unreadable)" }
+            val ifaces = (0 until d.interfaceCount).map(d::getInterface).joinToString { i ->
+                "#${i.id} '${i.name}' class ${i.interfaceClass}/${i.interfaceSubclass}/${i.interfaceProtocol} ${i.endpointCount} ep"
+            }
+            com.allnetworktools.util.DebugLog.i(
+                "USB",
+                "%04x:%04x class %d, %s, %d interface(s): %s".format(d.vendorId, d.productId, d.deviceClass, names, d.interfaceCount, ifaces),
+            )
+        }
+    }
+
     private fun find(): SdrDevice? {
         val all = usb?.deviceList?.values ?: return null
+        logUsb(all)
         // The HackRF first: it is the one every tool was written for.
         val found = all.firstOrNull(HackRf::isHackRf)?.let { SdrDevice(HackRf.name(it), it, SdrKind.HackRf) }
             ?: all.firstOrNull(Airspy::isAirspy)?.let { SdrDevice(it.productName ?: "Airspy", it, SdrKind.Airspy) }
