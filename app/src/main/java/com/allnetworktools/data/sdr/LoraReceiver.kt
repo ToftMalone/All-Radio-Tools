@@ -411,7 +411,7 @@ class LoraReceiver(
     private fun finish() {
         var d = LoraPhy.decode(symbols, sf, ldro) ?: return
         if (!d.crcOk && d.header.hasCrc && symbols.size > 8) mend()?.let { d = it; framesMended++ }
-        if (d.crcOk) framesOk++ else framesBad++
+        if (d.crcOk) { framesOk++; SdrHealth.good() } else { framesBad++; SdrHealth.bad() }
         val snr = snrs.sorted()[snrs.size / 2]
         onFrame(LoraFrame(d.payload, d.crcOk, d.header.hasCrc, d.header.cr, snr, cfo * bw / n, syncWord))
     }

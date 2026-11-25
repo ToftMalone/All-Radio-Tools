@@ -184,7 +184,7 @@ class DectDemodulator(private val onBurst: (DectBurst) -> Unit) {
             }
             fixed?.let { mended++; emit(p.c, it, fromBase); return true }
         }
-        if (bestErrs <= 1) { bad++; return true }
+        if (bestErrs <= 1) { bad++; SdrHealth.bad(); return true }
         return false
     }
 
@@ -207,6 +207,7 @@ class DectDemodulator(private val onBurst: (DectBurst) -> Unit) {
     }
 
     private fun emit(c: Long, a: Dect.AField, fromBase: Boolean) {
+        SdrHealth.good()
         val end = c + 65 * SPS
         skipUntil = end
         var pw = 0.0

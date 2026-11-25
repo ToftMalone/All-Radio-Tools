@@ -3298,4 +3298,21 @@ Una raffica è un flusso di finte trame di abbinamento che fa apparire un pop-up
     <string name="gain_advice_strong">"Troppo forte: il convertitore satura. Abbassa il guadagno."</string>
     <string name="gain_advice_weak">"Troppo debole: il rumore si perde in quello del convertitore. Alza il guadagno."</string>
     <string name="gain_advice_good">"Guadagno ben regolato"</string>
+    <string name="advice_dismiss">"Nascondi questo consiglio"</string>
+    <string name="advice_usb_title">"Campioni persi sul collegamento USB"</string>
+    <string name="advice_usb_body">"La radio invia meno campioni del richiesto, e ciò che si perde non si può decodificare. Prova un altro cavo, senza hub, o un\'altra porta USB."</string>
+    <string name="advice_phone_title">"Il telefono non tiene il passo"</string>
+    <string name="advice_phone_body">"Dei campioni vengono scartati prima del decoder. Chiudi le altre app e disattiva il risparmio batteria: rallenta il telefono."</string>
+    <string name="advice_nothing_title">"Trame ricevute, nessuna decodificata"</string>
+    <string name="advice_nothing_body">"Arrivano segnali del tipo giusto, ma nessuno supera il controllo: troppo deboli o disturbati. Alza o avvicina l\'antenna, o regola il guadagno."</string>
+    <string name="advice_damaged_title">"Ricezione al limite"</string>
+    <string name="advice_damaged_body">"Molte trame arrivano danneggiate. Un\'antenna posizionata meglio, o una regolazione del guadagno, le salverebbe."</string>
+    <string name="advice_adsb_title">"Nessun aereo da 2 minuti"</string>
+    <string name="advice_adsb_body">"L\'ADS-B richiede un\'antenna per 1090 MHz (elementi da 6,9 cm) con vista libera sul cielo, meglio fuori o a una finestra. Controlla anche il guadagno."</string>
+    <string name="advice_channel_title">"Il tuo canale Wi-Fi è affollato"</string>
+    <string name="advice_channel_body">"La tua rete è su %1$s con altre %2$d reti; %3$s è %4$s. Imposta lì il tuo router per una connessione più veloce e stabile."</string>
+    <string name="advice_dns_slow_title">"Il tuo DNS è lento"</string>
+    <string name="advice_dns_slow_body">"Il server DNS della tua connessione risponde in %1$s ms, %2$s in %3$s ms. Sceglilo come DNS privato nelle impostazioni di Android: i siti si apriranno più in fretta."</string>
+    <string name="advice_dns_down_title">"Il tuo DNS non risponde"</string>
+    <string name="advice_dns_down_body">"Il server DNS della tua connessione non ha risposto; %1$s ha risposto in %2$s ms. Sceglilo come DNS privato nelle impostazioni di Android."</string>
 </resources>

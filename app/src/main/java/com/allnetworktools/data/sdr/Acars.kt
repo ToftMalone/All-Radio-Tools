@@ -241,6 +241,7 @@ class AcarsDecoder(private val audioRate: Double, private val freqMhz: Double, p
             if (Acars.mend(r.buf, r.tail)) Acars.parse(r.buf, r.tail, freqMhz, System.currentTimeMillis())?.let { m ->
                 // The neighbouring phases read the same frame: drop their copies.
                 for (ps in readers) for (o in ps) o.inFrame = false
+                SdrHealth.good()
                 onMessage(m)
             }
         }

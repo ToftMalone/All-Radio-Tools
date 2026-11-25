@@ -3215,4 +3215,21 @@
     <string name="gain_advice_strong">"太强：转换器饱和。请降低增益。"</string>
     <string name="gain_advice_weak">"太弱：噪声淹没在转换器的噪声中。请提高增益。"</string>
     <string name="gain_advice_good">"增益设置合适"</string>
+    <string name="advice_dismiss">"隐藏此建议"</string>
+    <string name="advice_usb_title">"USB 链路丢失采样"</string>
+    <string name="advice_usb_body">"电台发送的采样少于请求，丢失的部分无法解码。请换一根线（不经集线器）或换一个 USB 接口。"</string>
+    <string name="advice_phone_title">"手机处理不过来"</string>
+    <string name="advice_phone_body">"采样在解码前被丢弃。请关闭其他应用并关闭省电模式：它会拖慢手机。"</string>
+    <string name="advice_nothing_title">"收到帧，但一个也没解出"</string>
+    <string name="advice_nothing_body">"收到了正确类型的信号，但没有一个通过校验：太弱或受干扰。把天线放高或放近些，或调整增益。"</string>
+    <string name="advice_damaged_title">"接收处于临界"</string>
+    <string name="advice_damaged_body">"许多帧到达时已损坏。把天线放到更好的位置或调整增益就能救回它们。"</string>
+    <string name="advice_adsb_title">"2 分钟内没有飞机"</string>
+    <string name="advice_adsb_body">"ADS-B 需要一根 1090 MHz 天线（振子 6.9 厘米）且能开阔地看到天空，最好在室外或窗边。也请检查增益。"</string>
+    <string name="advice_channel_title">"您的 Wi-Fi 信道拥挤"</string>
+    <string name="advice_channel_body">"您的网络在%1$s，与另外 %2$d 个网络共用；%3$s%4$s。把路由器改到那里，连接更快更稳。"</string>
+    <string name="advice_dns_slow_title">"您的 DNS 较慢"</string>
+    <string name="advice_dns_slow_body">"您连接的 DNS 服务器 %1$s 毫秒应答，%2$s 只需 %3$s 毫秒。在 Android 设置中把它设为私人 DNS，网站打开更快。"</string>
+    <string name="advice_dns_down_title">"您的 DNS 没有应答"</string>
+    <string name="advice_dns_down_body">"您连接的 DNS 服务器没有应答；%1$s 在 %2$s 毫秒内应答。在 Android 设置中把它设为私人 DNS。"</string>
 </resources>

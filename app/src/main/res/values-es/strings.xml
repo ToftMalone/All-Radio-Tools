@@ -3298,4 +3298,21 @@ Una avalancha es un flujo de tramas de emparejamiento falsas que hace aparecer u
     <string name="gain_advice_strong">"Demasiado fuerte: el convertidor satura. Baja la ganancia."</string>
     <string name="gain_advice_weak">"Demasiado débil: el ruido se pierde en el del convertidor. Sube la ganancia."</string>
     <string name="gain_advice_good">"Ganancia bien ajustada"</string>
+    <string name="advice_dismiss">"Ocultar este consejo"</string>
+    <string name="advice_usb_title">"Muestras perdidas en el enlace USB"</string>
+    <string name="advice_usb_body">"La radio envía menos muestras de las pedidas, y lo perdido no se puede decodificar. Prueba otro cable, sin hub, u otro puerto USB."</string>
+    <string name="advice_phone_title">"El teléfono no da abasto"</string>
+    <string name="advice_phone_body">"Se descartan muestras antes del decodificador. Cierra las demás apps y desactiva el ahorro de batería: ralentiza el teléfono."</string>
+    <string name="advice_nothing_title">"Tramas captadas, ninguna decodificada"</string>
+    <string name="advice_nothing_body">"Llegan señales del tipo correcto, pero ninguna pasa su control: demasiado débiles o perturbadas. Sube o acerca la antena, o ajusta la ganancia."</string>
+    <string name="advice_damaged_title">"Recepción al límite"</string>
+    <string name="advice_damaged_body">"Muchas tramas llegan dañadas. Una antena mejor colocada, o un ajuste de la ganancia, las salvaría."</string>
+    <string name="advice_adsb_title">"Ningún avión en 2 minutos"</string>
+    <string name="advice_adsb_body">"El ADS-B necesita una antena para 1090 MHz (elementos de 6,9 cm) con vista despejada del cielo, idealmente fuera o en una ventana. Revisa también la ganancia."</string>
+    <string name="advice_channel_title">"Tu canal Wi-Fi está saturado"</string>
+    <string name="advice_channel_body">"Tu red está en %1$s con %2$d redes más; %3$s está %4$s. Pon tu router en él para una conexión más rápida y estable."</string>
+    <string name="advice_dns_slow_title">"Tu DNS es lento"</string>
+    <string name="advice_dns_slow_body">"El servidor DNS de tu conexión responde en %1$s ms, %2$s en %3$s ms. Elígelo como DNS privado en los ajustes de Android: las webs abrirán más rápido."</string>
+    <string name="advice_dns_down_title">"Tu DNS no responde"</string>
+    <string name="advice_dns_down_body">"El servidor DNS de tu conexión no respondió; %1$s respondió en %2$s ms. Elígelo como DNS privado en los ajustes de Android."</string>
 </resources>

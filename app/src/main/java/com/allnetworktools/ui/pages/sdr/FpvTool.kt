@@ -236,7 +236,7 @@ class FpvController(private val repo: SdrRepository, private val scope: Coroutin
             onSamples = { data, len ->
                 gain.feed(data, len)
                 val at = usbBytes.getAndAdd(len.toLong()) / 2
-                pipe.free.poll()?.let { b -> System.arraycopy(data, 0, b, 0, len); pipe.full.offer(Triple(b, len, at)) }
+                pipe.free.poll()?.let { b -> System.arraycopy(data, 0, b, 0, len); pipe.full.offer(Triple(b, len, at)) } ?: com.allnetworktools.data.sdr.SdrHealth.dropped(len)
             },
             onError = { msg -> scope.launch { error = msg; stop() } },
         )

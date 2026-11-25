@@ -353,6 +353,7 @@ class Rs41Demodulator(private val sampleRate: Double, private val onFrame: (Byte
                 frame = bytes(best, mean, pol, Rs41.EXT_LEN)
             }
             frames++
+            SdrHealth.good()
             onFrame(frame)
             scanFrom = best + (frame.size * 8 * sps).toInt()
         }

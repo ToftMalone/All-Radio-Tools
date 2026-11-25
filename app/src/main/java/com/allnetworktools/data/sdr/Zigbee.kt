@@ -397,6 +397,7 @@ class ZigbeeReceiver(@Volatile var channel: Int, private val onFrame: (ZigbeeHea
     @Volatile var frames = 0; private set
 
     private fun emit(psdu: ByteArray) {
+        SdrHealth.good()
         // The same frame from another sample phase or orientation is one frame.
         val h = psdu.contentHashCode()
         while (recent.isNotEmpty() && k - recent.first().first > 40_000) recent.removeFirst()

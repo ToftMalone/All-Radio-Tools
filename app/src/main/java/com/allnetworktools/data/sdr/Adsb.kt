@@ -220,6 +220,7 @@ class AdsbDemodulator(private val onMessage: (ByteArray, Double) -> Unit) {
                     if (msg == null) msg = slice(p + 16, true)
                     if (msg != null) {
                         decoded++
+                        SdrHealth.good()
                         onMessage(msg, 20 * log10((high * 1.5 / 128.0).coerceAtLeast(1e-6)))
                         p += FRAME
                         continue

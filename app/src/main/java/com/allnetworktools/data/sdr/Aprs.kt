@@ -323,6 +323,7 @@ class AfskDemodulator(private val sampleRate: Double = 50_000.0, private val onF
         if (last != null && n - last < 25_000) return
         recent[h] = n
         if (recent.size > 64) recent.entries.removeAll { n - it.value > 250_000 }
+        SdrHealth.good()
         onFrame(out)
     }
 

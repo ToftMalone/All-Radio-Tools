@@ -289,6 +289,7 @@ class PocsagReceiver(channelsHz: List<Long>, val centerHz: Long = centre(channel
     private val channels = channelsHz.map { hz ->
         Channel((hz - centerHz).toDouble(), hz / 1e6) { m ->
             // Paging networks send the same message again and from several transmitters: keep the first.
+            SdrHealth.good()
             val key = "${m.ric}/${m.function}/${m.text}"
             val now = System.currentTimeMillis()
             val last = recent[key]

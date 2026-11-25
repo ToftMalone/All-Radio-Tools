@@ -370,6 +370,23 @@ class ScreenshotTest {
         listOf("Système" to 18f, "Cloudflare" to 9f, "Google" to 14f, "Quad9" to 21f).forEach { (k, v) -> c.compare[k] = v }
         c.phase = Phase.Results
     }
+    @Test fun dnsSlowAdvice() = shot("70b_dns_slow_advice", nav = tool(Tool.Dns)) { vm ->
+        val c = vm.tools.dns
+        c.host = "wikipedia.org"
+        c.answer = DnsAnswer(0, listOf(DnsRecord("A", "185.15.58.224", 300)), 180f)
+        listOf("Système" to 182f, "Cloudflare" to 11f, "Google" to 16f, "Quad9" to 23f).forEach { (k, v) -> c.compare[k] = v }
+        c.phase = Phase.Results
+    }
+    private fun withSdrAdvice(a: com.allnetworktools.data.sdr.SdrAdvice, block: () -> Unit) {
+        com.allnetworktools.ui.pages.sdr.SdrAdviceForTest.forced = a
+        try { block() } finally { com.allnetworktools.ui.pages.sdr.SdrAdviceForTest.forced = null }
+    }
+    @Test fun sdrAdsbAdvice() = withSdrAdvice(com.allnetworktools.data.sdr.SdrAdvice.NoAircraft) {
+        shot("H6b_adsb_advice", nav = NavState(Network.Sdr, Page.ToolPage(Tool.Adsb)))
+    }
+    @Test fun sdrUsbAdvice() = withSdrAdvice(com.allnetworktools.data.sdr.SdrAdvice.SamplesLostUsb) {
+        shot("H6c_usb_advice", dark = true, nav = NavState(Network.Sdr, Page.ToolPage(Tool.Pocsag)))
+    }
     @Test fun coverageWalk() = shot("74_coverage_walk", nav = tool(Tool.Coverage)) { vm ->
         val c = vm.tools.coverage
         c.support = com.allnetworktools.ui.pages.wifi.ArSupport(com.google.ar.core.ArCoreApk.Availability.SUPPORTED_INSTALLED, tofCamera = true)

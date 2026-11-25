@@ -3215,4 +3215,21 @@ Một đợt lũ là dòng khung ghép đôi giả làm bật cửa sổ trên m
     <string name="gain_advice_strong">"Quá mạnh: bộ chuyển đổi bị bão hòa. Hãy giảm độ lợi."</string>
     <string name="gain_advice_weak">"Quá yếu: nhiễu bị chìm trong nhiễu của bộ chuyển đổi. Hãy tăng độ lợi."</string>
     <string name="gain_advice_good">"Độ lợi đã hợp lý"</string>
+    <string name="advice_dismiss">"Ẩn lời khuyên này"</string>
+    <string name="advice_usb_title">"Mất mẫu trên liên kết USB"</string>
+    <string name="advice_usb_body">"Radio gửi ít mẫu hơn yêu cầu, và phần mất không thể giải mã. Hãy thử cáp khác, không qua hub, hoặc cổng USB khác."</string>
+    <string name="advice_phone_title">"Điện thoại không theo kịp"</string>
+    <string name="advice_phone_body">"Mẫu bị bỏ trước bộ giải mã. Đóng các ứng dụng khác và tắt tiết kiệm pin: nó làm chậm điện thoại."</string>
+    <string name="advice_nothing_title">"Bắt được khung, không giải mã được"</string>
+    <string name="advice_nothing_body">"Tín hiệu đúng loại có đến, nhưng không cái nào qua kiểm tra: quá yếu hoặc bị nhiễu. Đặt ăng-ten cao hơn hoặc gần hơn, hoặc chỉnh độ lợi."</string>
+    <string name="advice_damaged_title">"Thu ở mức giới hạn"</string>
+    <string name="advice_damaged_body">"Nhiều khung đến bị hỏng. Một ăng-ten đặt tốt hơn, hoặc chỉnh độ lợi, sẽ cứu được chúng."</string>
+    <string name="advice_adsb_title">"Không có máy bay trong 2 phút"</string>
+    <string name="advice_adsb_body">"ADS-B cần ăng-ten 1090 MHz (thanh 6,9 cm) nhìn thoáng lên trời, tốt nhất ở ngoài hoặc bên cửa sổ. Kiểm tra cả độ lợi."</string>
+    <string name="advice_channel_title">"Kênh Wi-Fi của bạn đông đúc"</string>
+    <string name="advice_channel_body">"Mạng của bạn ở %1$s cùng %2$d mạng khác; %3$s đang %4$s. Chuyển bộ định tuyến sang đó để kết nối nhanh và ổn định hơn."</string>
+    <string name="advice_dns_slow_title">"DNS của bạn chậm"</string>
+    <string name="advice_dns_slow_body">"Máy chủ DNS của kết nối trả lời trong %1$s ms, %2$s trong %3$s ms. Chọn nó làm DNS riêng trong cài đặt Android: trang web mở nhanh hơn."</string>
+    <string name="advice_dns_down_title">"DNS của bạn không trả lời"</string>
+    <string name="advice_dns_down_body">"Máy chủ DNS của kết nối không trả lời; %1$s trả lời trong %2$s ms. Chọn nó làm DNS riêng trong cài đặt Android."</string>
 </resources>

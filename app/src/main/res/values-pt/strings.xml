@@ -3298,4 +3298,21 @@ Uma enxurrada é um fluxo de quadros de pareamento falsos que faz aparecer um po
     <string name="gain_advice_strong">"Demasiado forte: o conversor satura. Baixe o ganho."</string>
     <string name="gain_advice_weak">"Demasiado fraco: o ruído perde-se no do conversor. Suba o ganho."</string>
     <string name="gain_advice_good">"Ganho bem ajustado"</string>
+    <string name="advice_dismiss">"Ocultar este conselho"</string>
+    <string name="advice_usb_title">"Amostras perdidas na ligação USB"</string>
+    <string name="advice_usb_body">"O rádio envia menos amostras do que o pedido, e o que se perde não pode ser descodificado. Experimente outro cabo, sem hub, ou outra porta USB."</string>
+    <string name="advice_phone_title">"O telemóvel não acompanha"</string>
+    <string name="advice_phone_body">"Há amostras descartadas antes do descodificador. Feche as outras apps e desligue a poupança de bateria: abranda o telemóvel."</string>
+    <string name="advice_nothing_title">"Tramas captadas, nenhuma descodificada"</string>
+    <string name="advice_nothing_body">"Chegam sinais do tipo certo, mas nenhum passa a verificação: demasiado fracos ou perturbados. Suba ou aproxime a antena, ou ajuste o ganho."</string>
+    <string name="advice_damaged_title">"Receção no limite"</string>
+    <string name="advice_damaged_body">"Muitas tramas chegam danificadas. Uma antena melhor colocada, ou um ajuste do ganho, salvá-las-ia."</string>
+    <string name="advice_adsb_title">"Nenhum avião há 2 minutos"</string>
+    <string name="advice_adsb_body">"O ADS-B precisa de uma antena para 1090 MHz (elementos de 6,9 cm) com vista desimpedida do céu, idealmente lá fora ou a uma janela. Verifique também o ganho."</string>
+    <string name="advice_channel_title">"O seu canal Wi-Fi está congestionado"</string>
+    <string name="advice_channel_body">"A sua rede está em %1$s com %2$d outras redes; %3$s está %4$s. Ponha o router nele para uma ligação mais rápida e estável."</string>
+    <string name="advice_dns_slow_title">"O seu DNS é lento"</string>
+    <string name="advice_dns_slow_body">"O servidor DNS da sua ligação responde em %1$s ms, %2$s em %3$s ms. Escolha-o como DNS privado nas definições do Android: os sites abrem mais depressa."</string>
+    <string name="advice_dns_down_title">"O seu DNS não responde"</string>
+    <string name="advice_dns_down_body">"O servidor DNS da sua ligação não respondeu; %1$s respondeu em %2$s ms. Escolha-o como DNS privado nas definições do Android."</string>
 </resources>

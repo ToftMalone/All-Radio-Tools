@@ -201,7 +201,7 @@ class AisController(private val repo: SdrRepository, private val scope: Coroutin
         }, "sdr-ais").start()
         gain.attach { applyGains() }
         r.startRx(
-            onSamples = { data, len -> gain.feed(data, len); free.poll()?.let { b -> System.arraycopy(data, 0, b, 0, len); full.offer(b to len) } },
+            onSamples = { data, len -> gain.feed(data, len); free.poll()?.let { b -> System.arraycopy(data, 0, b, 0, len); full.offer(b to len) } ?: com.allnetworktools.data.sdr.SdrHealth.dropped(len) },
             onError = { msg -> scope.launch { error = msg; stop() } },
         )
     }

@@ -138,6 +138,7 @@ fun WifiDashboard(vm: MainViewModel) {
                 )
             }
         }
+        WifiChannelAdvice(scan, c.band, c.ssid, c.bssid)
         SectionCard {
             CardHeader(S(R.string.live_signal)) {
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
@@ -205,4 +206,22 @@ private fun RoamingCard(roams: List<com.allnetworktools.RoamEvent>, scan: List<c
             }
         }
     }
+}
+
+/** A crowded channel while a clearly quieter one is free in the same band: said once, on the dashboard. */
+@Composable
+private fun WifiChannelAdvice(scan: List<com.allnetworktools.data.WifiAp>?, band: com.allnetworktools.data.WifiBand, ssid: String?, bssid: String?) {
+    val advice = androidx.compose.runtime.remember(scan, band, ssid, bssid) { scan?.let { com.allnetworktools.data.ChannelAdvisor.advise(it, band, ssid, bssid) } }
+    val cur = advice?.current
+    val best = advice?.best
+    val show = advice != null && cur != null && best != null && advice.worthMoving && cur.load >= com.allnetworktools.data.ChannelLoad.Busy
+    fun label(ch: com.allnetworktools.data.ChannelChoice) =
+        if (ch.lastChannel != ch.channel) S(R.string.wifi_block, ch.channel, ch.lastChannel, ch.widthMhz) else S(R.string.wifi_channel_n, ch.channel)
+    com.allnetworktools.ui.components.AdviceCard(
+        if (show) com.allnetworktools.ui.components.Advice(
+            "wifi-channel", Sym.WifiChannel, S(R.string.advice_channel_title),
+            S(R.string.advice_channel_body, label(cur!!), cur.networks, label(best!!), S(if (best.load <= com.allnetworktools.data.ChannelLoad.Calm) R.string.wifi_load_free else R.string.wifi_load_calm)),
+            AntTheme.net.fair,
+        ) else null,
+    )
 }

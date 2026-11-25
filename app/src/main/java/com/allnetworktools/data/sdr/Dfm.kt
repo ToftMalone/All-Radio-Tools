@@ -159,6 +159,7 @@ class DfmDecoder(private val onFrame: (SondeFrame) -> Unit) {
             val la = lat; val lo = lon; val al = alt
             // A fix still at zero (no GPS yet) is not a position.
             val fix = la != null && lo != null && al != null && !(la == 0.0 && lo == 0.0)
+            SdrHealth.good()
             onFrame(SondeFrame(model, sn, frameNumber, null, if (fix) la else null, if (fix) lo else null, if (fix) al else null,
                 speed, course, climb, sats))
         }

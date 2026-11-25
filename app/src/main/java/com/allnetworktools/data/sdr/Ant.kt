@@ -258,6 +258,7 @@ class AntReceiver(private val onFrame: (AntHeard) -> Unit) {
     private val recent = ArrayDeque<Pair<Long, Int>>()
 
     private fun emit(f: Ant.Frame) {
+        SdrHealth.good()
         val h = 31 * f.deviceNumber + f.payload.contentHashCode()
         while (recent.isNotEmpty() && k - recent.first().first > 4_000) recent.removeFirst()
         if (recent.any { it.second == h }) return

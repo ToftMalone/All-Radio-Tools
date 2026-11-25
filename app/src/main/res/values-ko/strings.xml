@@ -3215,4 +3215,21 @@
     <string name="gain_advice_strong">"너무 강함: 변환기가 포화됩니다. 게인을 낮추세요."</string>
     <string name="gain_advice_weak">"너무 약함: 잡음이 변환기 잡음에 묻힙니다. 게인을 높이세요."</string>
     <string name="gain_advice_good">"게인이 적절합니다"</string>
+    <string name="advice_dismiss">"이 조언 숨기기"</string>
+    <string name="advice_usb_title">"USB 연결에서 샘플 손실"</string>
+    <string name="advice_usb_body">"무전기가 요청보다 적은 샘플을 보내고, 잃은 부분은 디코딩할 수 없습니다. 허브 없이 다른 케이블이나 다른 USB 포트를 써 보세요."</string>
+    <string name="advice_phone_title">"휴대폰이 따라가지 못합니다"</string>
+    <string name="advice_phone_body">"디코더 전에 샘플이 버려집니다. 다른 앱을 닫고 절전 모드를 끄세요. 휴대폰을 느리게 합니다."</string>
+    <string name="advice_nothing_title">"프레임 수신, 디코딩 0"</string>
+    <string name="advice_nothing_body">"맞는 종류의 신호는 오지만 검사를 통과하는 것이 없습니다. 너무 약하거나 간섭이 있습니다. 안테나를 더 높게·가깝게 두거나 게인을 조정하세요."</string>
+    <string name="advice_damaged_title">"수신 한계"</string>
+    <string name="advice_damaged_body">"많은 프레임이 손상되어 도착합니다. 안테나 위치를 개선하거나 게인을 조정하면 살릴 수 있습니다."</string>
+    <string name="advice_adsb_title">"2분간 항공기 없음"</string>
+    <string name="advice_adsb_body">"ADS-B에는 하늘이 트인 1090 MHz 안테나(6.9 cm 소자)가 필요합니다. 야외나 창가가 좋습니다. 게인도 확인하세요."</string>
+    <string name="advice_channel_title">"Wi-Fi 채널이 혼잡합니다"</string>
+    <string name="advice_channel_body">"네트워크가 %1$s에 다른 네트워크 %2$d개와 함께 있습니다. %3$s은(는) %4$s 상태입니다. 공유기를 그 채널로 바꾸면 더 빠르고 안정적입니다."</string>
+    <string name="advice_dns_slow_title">"DNS가 느립니다"</string>
+    <string name="advice_dns_slow_body">"연결의 DNS 서버는 %1$s ms, %2$s은(는) %3$s ms에 응답합니다. Android 설정에서 비공개 DNS로 지정하면 사이트가 더 빨리 열립니다."</string>
+    <string name="advice_dns_down_title">"DNS가 응답하지 않습니다"</string>
+    <string name="advice_dns_down_body">"연결의 DNS 서버가 응답하지 않았고, %1$s은(는) %2$s ms에 응답했습니다. Android 설정에서 비공개 DNS로 지정하세요."</string>
 </resources>

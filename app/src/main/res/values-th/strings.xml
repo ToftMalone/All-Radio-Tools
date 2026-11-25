@@ -3215,4 +3215,21 @@
     <string name="gain_advice_strong">"แรงเกินไป: ตัวแปลงอิ่มตัว ลดเกน"</string>
     <string name="gain_advice_weak">"อ่อนเกินไป: สัญญาณรบกวนจมอยู่ในของตัวแปลง เพิ่มเกน"</string>
     <string name="gain_advice_good">"ตั้งเกนได้ดี"</string>
+    <string name="advice_dismiss">"ซ่อนคำแนะนำนี้"</string>
+    <string name="advice_usb_title">"ตัวอย่างสัญญาณหายบนลิงก์ USB"</string>
+    <string name="advice_usb_body">"วิทยุส่งตัวอย่างน้อยกว่าที่ขอ และส่วนที่หายถอดรหัสไม่ได้ ลองสายอื่นโดยไม่ใช้ฮับ หรือพอร์ต USB อื่น"</string>
+    <string name="advice_phone_title">"โทรศัพท์ประมวลผลไม่ทัน"</string>
+    <string name="advice_phone_body">"ตัวอย่างถูกทิ้งก่อนถึงตัวถอดรหัส ปิดแอปอื่นและปิดโหมดประหยัดแบตเตอรี่ เพราะทำให้โทรศัพท์ช้าลง"</string>
+    <string name="advice_nothing_title">"รับเฟรมได้ แต่ถอดรหัสไม่ได้เลย"</string>
+    <string name="advice_nothing_body">"สัญญาณชนิดที่ถูกต้องเข้ามา แต่ไม่มีอันใดผ่านการตรวจสอบ อ่อนเกินไปหรือถูกรบกวน ยกเสาอากาศให้สูงหรือใกล้ขึ้น หรือปรับเกน"</string>
+    <string name="advice_damaged_title">"การรับอยู่ที่ขีดจำกัด"</string>
+    <string name="advice_damaged_body">"เฟรมจำนวนมากมาถึงแบบเสียหาย เสาอากาศที่วางดีขึ้นหรือการปรับเกนจะช่วยได้"</string>
+    <string name="advice_adsb_title">"ไม่มีเครื่องบินมา 2 นาที"</string>
+    <string name="advice_adsb_body">"ADS-B ต้องใช้เสาอากาศ 1090 MHz (ชิ้นยาว 6.9 ซม.) ที่มองเห็นท้องฟ้าโล่ง ดีที่สุดคือข้างนอกหรือริมหน้าต่าง ตรวจสอบเกนด้วย"</string>
+    <string name="advice_channel_title">"ช่อง Wi-Fi ของคุณแออัด"</string>
+    <string name="advice_channel_body">"เครือข่ายของคุณอยู่บน %1$s ร่วมกับอีก %2$d เครือข่าย %3$s %4$s ตั้งเราเตอร์ไปที่นั่นเพื่อการเชื่อมต่อที่เร็วและเสถียรขึ้น"</string>
+    <string name="advice_dns_slow_title">"DNS ของคุณช้า"</string>
+    <string name="advice_dns_slow_body">"เซิร์ฟเวอร์ DNS ของการเชื่อมต่อตอบใน %1$s ms ส่วน %2$s ตอบใน %3$s ms เลือกเป็น DNS ส่วนตัวในการตั้งค่า Android แล้วเว็บจะเปิดเร็วขึ้น"</string>
+    <string name="advice_dns_down_title">"DNS ของคุณไม่ตอบ"</string>
+    <string name="advice_dns_down_body">"เซิร์ฟเวอร์ DNS ของการเชื่อมต่อไม่ตอบ ส่วน %1$s ตอบใน %2$s ms เลือกเป็น DNS ส่วนตัวในการตั้งค่า Android"</string>
 </resources>

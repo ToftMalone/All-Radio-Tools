@@ -3215,4 +3215,21 @@
     <string name="gain_advice_strong">"強すぎます: コンバーターが飽和しています。ゲインを下げてください。"</string>
     <string name="gain_advice_weak">"弱すぎます: ノイズがコンバーターのノイズに埋もれています。ゲインを上げてください。"</string>
     <string name="gain_advice_good">"ゲインは適切です"</string>
+    <string name="advice_dismiss">"このアドバイスを隠す"</string>
+    <string name="advice_usb_title">"USB 接続でサンプルが失われています"</string>
+    <string name="advice_usb_body">"無線機が要求より少ないサンプルを送っており、失われた分はデコードできません。別のケーブル（ハブなし）か別の USB ポートを試してください。"</string>
+    <string name="advice_phone_title">"スマホの処理が追いつきません"</string>
+    <string name="advice_phone_body">"デコーダーの前でサンプルが捨てられています。他のアプリを閉じ、省電力モードをオフにしてください。スマホが遅くなります。"</string>
+    <string name="advice_nothing_title">"フレームを受信、デコードはゼロ"</string>
+    <string name="advice_nothing_body">"正しい種類の信号は届いていますが、どれもチェックを通りません。弱すぎるか妨害されています。アンテナを高く・近くするか、ゲインを調整してください。"</string>
+    <string name="advice_damaged_title">"受信が限界ぎりぎり"</string>
+    <string name="advice_damaged_body">"多くのフレームが壊れて届いています。アンテナの置き場所を改善するかゲインを調整すれば救えます。"</string>
+    <string name="advice_adsb_title">"2 分間航空機なし"</string>
+    <string name="advice_adsb_body">"ADS-B には空がよく見える 1090 MHz 用アンテナ（エレメント 6.9 cm）が必要です。屋外か窓際が理想です。ゲインも確認してください。"</string>
+    <string name="advice_channel_title">"Wi-Fi チャンネルが混雑しています"</string>
+    <string name="advice_channel_body">"あなたのネットワークは %1$s で他に %2$d のネットワークがあります。%3$s は%4$sです。ルーターをそこに設定すると、より速く安定します。"</string>
+    <string name="advice_dns_slow_title">"DNS が遅いです"</string>
+    <string name="advice_dns_slow_body">"接続先の DNS サーバーは %1$s ms、%2$s は %3$s ms で応答します。Android の設定でプライベート DNS に選ぶと、サイトが速く開きます。"</string>
+    <string name="advice_dns_down_title">"DNS が応答しません"</string>
+    <string name="advice_dns_down_body">"接続先の DNS サーバーは応答しませんでした。%1$s は %2$s ms で応答しました。Android の設定でプライベート DNS に選んでください。"</string>
 </resources>

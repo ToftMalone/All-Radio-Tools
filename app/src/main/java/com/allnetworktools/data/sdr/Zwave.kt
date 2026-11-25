@@ -308,7 +308,7 @@ class ZwaveReceiver(private val inputRate: Double = 2_000_000.0, private val cen
             var sawSof = false
             for (r in rates) {
                 val (f, saw) = decodeRate(dd, a, r, fs)
-                if (f != null) { onFrame(ZwaveHeard(f, r, hz, snr)); return }
+                if (f != null) { SdrHealth.good(); onFrame(ZwaveHeard(f, r, hz, snr)); return }
                 if (saw) sawSof = true
             }
             if (sawSof) bad++

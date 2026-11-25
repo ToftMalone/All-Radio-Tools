@@ -284,6 +284,7 @@ class Hdlc(
 
     private fun check(): Boolean {
         if (n < MIN_BITS || !crcOk(buf, n)) return false
+        SdrHealth.good()
         onFrame(buf, n - 16)
         return true
     }
@@ -332,6 +333,7 @@ class Hdlc(
             // moves the bit stuffing is far likelier to forge a frame than to fix one.
             if (len != hardBits || (len - 16) % 8 != 0 || !crcOk(tmp, len)) return false
             mended++
+            SdrHealth.good()
             onFrame(tmp, len - 16)
             return true
         }

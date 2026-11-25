@@ -3445,4 +3445,21 @@ Záplava je proud falešných rámců párování, který vyvolá vyskakovací o
     <string name="gain_advice_strong">"Příliš silný: převodník se saturuje. Snižte zisk."</string>
     <string name="gain_advice_weak">"Příliš slabý: šum zaniká v šumu převodníku. Zvyšte zisk."</string>
     <string name="gain_advice_good">"Zisk dobře nastaven"</string>
+    <string name="advice_dismiss">"Skrýt tuto radu"</string>
+    <string name="advice_usb_title">"Ztracené vzorky na USB"</string>
+    <string name="advice_usb_body">"Rádio posílá méně vzorků, než bylo žádáno, a ztracené nelze dekódovat. Zkuste jiný kabel, bez hubu, nebo jiný port USB."</string>
+    <string name="advice_phone_title">"Telefon nestíhá"</string>
+    <string name="advice_phone_body">"Vzorky se zahazují před dekodérem. Zavřete ostatní aplikace a vypněte úsporu baterie: zpomaluje telefon."</string>
+    <string name="advice_nothing_title">"Rámce zachyceny, žádný nedekódován"</string>
+    <string name="advice_nothing_body">"Přicházejí signály správného druhu, ale žádný neprojde kontrolou: příliš slabé nebo rušené. Dejte anténu výš nebo blíž, nebo upravte zisk."</string>
+    <string name="advice_damaged_title">"Příjem na hraně"</string>
+    <string name="advice_damaged_body">"Mnoho rámců přichází poškozených. Lépe umístěná anténa nebo úprava zisku by je zachránila."</string>
+    <string name="advice_adsb_title">"Žádné letadlo 2 minuty"</string>
+    <string name="advice_adsb_body">"ADS-B potřebuje anténu pro 1090 MHz (prvky 6,9 cm) s volným výhledem na oblohu, nejlépe venku nebo u okna. Zkontrolujte i zisk."</string>
+    <string name="advice_channel_title">"Váš kanál Wi-Fi je přeplněný"</string>
+    <string name="advice_channel_body">"Vaše síť je na %1$s s %2$d dalšími sítěmi; %3$s je %4$s. Nastavte na něj router pro rychlejší a stabilnější připojení."</string>
+    <string name="advice_dns_slow_title">"Váš DNS je pomalý"</string>
+    <string name="advice_dns_slow_body">"DNS server vašeho připojení odpovídá za %1$s ms, %2$s za %3$s ms. Zvolte ho jako soukromé DNS v nastavení Androidu: stránky se otevřou rychleji."</string>
+    <string name="advice_dns_down_title">"Váš DNS neodpovídá"</string>
+    <string name="advice_dns_down_body">"DNS server vašeho připojení neodpověděl; %1$s odpověděl za %2$s ms. Zvolte ho jako soukromé DNS v nastavení Androidu."</string>
 </resources>

@@ -3291,4 +3291,21 @@ Een vloed is een stroom nep-koppelframes die op elke telefoon in de buurt een po
     <string name="gain_advice_strong">"Te sterk: de converter raakt verzadigd. Verlaag de versterking."</string>
     <string name="gain_advice_weak">"Te zwak: de ruis verdwijnt in die van de converter. Verhoog de versterking."</string>
     <string name="gain_advice_good">"Versterking goed ingesteld"</string>
+    <string name="advice_dismiss">"Deze tip verbergen"</string>
+    <string name="advice_usb_title">"Samples verloren op de USB-verbinding"</string>
+    <string name="advice_usb_body">"De radio levert minder samples dan gevraagd, en wat verloren gaat kan niet gedecodeerd worden. Probeer een andere kabel, zonder hub, of een andere USB-poort."</string>
+    <string name="advice_phone_title">"De telefoon kan het niet bijhouden"</string>
+    <string name="advice_phone_body">"Samples worden vóór de decoder weggegooid. Sluit andere apps en zet batterijbesparing uit: die vertraagt de telefoon."</string>
+    <string name="advice_nothing_title">"Frames ontvangen, geen gedecodeerd"</string>
+    <string name="advice_nothing_body">"Signalen van de juiste soort komen binnen, maar geen enkel doorstaat de controle: te zwak of gestoord. Zet de antenne hoger of dichterbij, of pas de versterking aan."</string>
+    <string name="advice_damaged_title">"Ontvangst op het randje"</string>
+    <string name="advice_damaged_body">"Veel frames komen beschadigd aan. Een beter geplaatste antenne of een aangepaste versterking zou ze redden."</string>
+    <string name="advice_adsb_title">"Al 2 minuten geen vliegtuig"</string>
+    <string name="advice_adsb_body">"ADS-B vraagt een antenne voor 1090 MHz (elementen van 6,9 cm) met vrij zicht op de lucht, liefst buiten of bij een raam. Controleer ook de versterking."</string>
+    <string name="advice_channel_title">"Je wifikanaal is druk"</string>
+    <string name="advice_channel_body">"Je netwerk zit op %1$s met %2$d andere netwerken; %3$s is %4$s. Zet je router daarop voor een snellere, stabielere verbinding."</string>
+    <string name="advice_dns_slow_title">"Je DNS is traag"</string>
+    <string name="advice_dns_slow_body">"De DNS-server van je verbinding antwoordt in %1$s ms, %2$s in %3$s ms. Kies hem als privé-DNS in de Android-instellingen: sites openen sneller."</string>
+    <string name="advice_dns_down_title">"Je DNS antwoordt niet"</string>
+    <string name="advice_dns_down_body">"De DNS-server van je verbinding gaf geen antwoord; %1$s antwoordde in %2$s ms. Kies hem als privé-DNS in de Android-instellingen."</string>
 </resources>

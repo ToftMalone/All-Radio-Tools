@@ -124,7 +124,12 @@ internal class ManagedRadio(private val inner: SdrRadio, private val kind: SdrKi
     override fun setAmp(on: Boolean): Boolean = if (held("amplifier")) false else native() ?: inner.setAmp(on)
 
     override fun setSampleRate(hz: Int, filterHz: Int): Boolean = if (held("sample rate")) false else
-        inner.setSampleRate(hz, filterHz).also { DebugLog.i("SDR", "${inner.caps.name}: sample rate $hz -> $it") }
+        inner.setSampleRate(hz, filterHz).also { DebugLog.i("SDR", "${inner.caps.name}: sample rate $hz -> $it"); if (it) rate = hz }
+
+    /** The rate the tool asked for, which [SdrHealth] expects the samples at. */
+    @Volatile private var rate = 0
+    /** The first reception on this radio is a new session for [SdrHealth]; later ones resume after a transmission. */
+    @Volatile private var received = false
 
     /** The real frequency last asked for, which a transmission is checked against. */
     @Volatile private var lastHz = 0L
@@ -147,6 +152,7 @@ internal class ManagedRadio(private val inner: SdrRadio, private val kind: SdrKi
 
     override fun stopStreaming() {
         DebugLog.i("SDR", "${inner.caps.name}: idle")
+        SdrHealth.rxStopped()
         inner.stopStreaming()
         transmitting = false
     }
@@ -160,7 +166,9 @@ internal class ManagedRadio(private val inner: SdrRadio, private val kind: SdrKi
 
     override fun startRx(onSamples: (ByteArray, Int) -> Unit, onError: (String) -> Unit) {
         DebugLog.i("SDR", "${inner.caps.name}: start receiving")
-        inner.startRx(onSamples) { msg -> DebugLog.e("SDR", "${inner.caps.name}: $msg"); onError(msg) }
+        SdrHealth.rxStarted(rate, fresh = !received)
+        received = true
+        inner.startRx({ b, n -> SdrHealth.delivered(n); onSamples(b, n) }) { msg -> DebugLog.e("SDR", "${inner.caps.name}: $msg"); onError(msg) }
     }
 
     @Volatile private var closed = false
@@ -169,6 +177,7 @@ internal class ManagedRadio(private val inner: SdrRadio, private val kind: SdrKi
         if (closed) return
         closed = true
         transmitting = false
+        SdrHealth.rxStopped()
         // Closed first, released after: the radio is free only once its last command (receive mode off) is sent.
         inner.close()
         DebugLog.i("SDR", "${inner.caps.name}: closed")

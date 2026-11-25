@@ -512,7 +512,7 @@ class Vdl2Channel(val freqHz: Long, private val fs: Double, private val onMessag
             val now = System.currentTimeMillis()
             for (f in Vdl2.hdlcFrames(data)) {
                 if (f.size < 11 || !Vdl2.fcsOk(f)) continue
-                Vdl2.parse(f.copyOf(f.size - 2), freqHz, now, o.snrDb)?.let { any = true; onMessage(it) }
+                Vdl2.parse(f.copyOf(f.size - 2), freqHz, now, o.snrDb)?.let { any = true; SdrHealth.good(); onMessage(it) }
             }
             if (any) good++
             state = 0

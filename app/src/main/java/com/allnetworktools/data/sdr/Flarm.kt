@@ -520,12 +520,13 @@ class FlarmDemodulator(private val onFrame: (FlarmFrame) -> Unit) {
                     Flarm.checkCrc(m)
                 } > 0) { f = m; ok = true; mended++ }
         }
-        if (!ok) { if (cd.err <= 1) badCrc++; return }
+        if (!ok) { if (cd.err <= 1) { badCrc++; SdrHealth.bad() }; return }
         var pwr = 0.0
         var cnt = 0
         for (k in cd.k0 - 31..cd.k0 + DATA_CHIPS) { pwr += c.pw[(k and MASK).toInt()]; cnt++ }
         pwr /= cnt.toDouble() * SPS
         val nf = if (c.nf > 0) c.nf else 1e-12
+        SdrHealth.good()
         onFrame(FlarmFrame(f, c.idx, 10 * log10(maxOf(pwr - nf, nf * 0.01) / nf)))
     }
 

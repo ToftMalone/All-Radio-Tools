@@ -3386,4 +3386,21 @@
     <string name="gain_advice_strong">"Trop fort : le convertisseur sature. Baissez le gain."</string>
     <string name="gain_advice_weak">"Trop faible : le bruit se perd dans celui du convertisseur. Montez le gain."</string>
     <string name="gain_advice_good">"Gain bien réglé"</string>
+    <string name="advice_dismiss">"Masquer ce conseil"</string>
+    <string name="advice_usb_title">"Échantillons perdus sur le lien USB"</string>
+    <string name="advice_usb_body">"La radio envoie moins d\'échantillons que demandé, et ce qui est perdu ne peut pas être décodé. Essayez un autre câble, sans hub, ou un autre port USB."</string>
+    <string name="advice_phone_title">"Le téléphone ne suit pas"</string>
+    <string name="advice_phone_body">"Des échantillons sont abandonnés avant le décodeur. Fermez les autres applis et coupez l\'économie de batterie : elle ralentit le téléphone."</string>
+    <string name="advice_nothing_title">"Trames captées, aucune décodée"</string>
+    <string name="advice_nothing_body">"Des signaux du bon type arrivent, mais aucun ne passe son contrôle : trop faibles ou perturbés. Placez l\'antenne plus haut ou plus près, ou ajustez le gain."</string>
+    <string name="advice_damaged_title">"Réception à la limite"</string>
+    <string name="advice_damaged_body">"Beaucoup de trames arrivent abîmées. Une antenne mieux placée, ou un réglage du gain, les sauverait."</string>
+    <string name="advice_adsb_title">"Aucun avion depuis 2 minutes"</string>
+    <string name="advice_adsb_body">"L\'ADS-B demande une antenne pour 1090 MHz (brins de 6,9 cm) avec une vue dégagée sur le ciel, idéalement dehors ou à une fenêtre. Vérifiez aussi le gain."</string>
+    <string name="advice_channel_title">"Votre canal Wi-Fi est encombré"</string>
+    <string name="advice_channel_body">"Votre réseau est sur %1$s avec %2$d autres réseaux ; %3$s est %4$s. Réglez votre box dessus pour une connexion plus rapide et plus stable."</string>
+    <string name="advice_dns_slow_title">"Votre DNS est lent"</string>
+    <string name="advice_dns_slow_body">"Le serveur DNS de votre connexion répond en %1$s ms, %2$s en %3$s ms. Choisissez-le comme DNS privé dans les réglages d\'Android : les sites s\'ouvriront plus vite."</string>
+    <string name="advice_dns_down_title">"Votre DNS ne répond pas"</string>
+    <string name="advice_dns_down_body">"Le serveur DNS de votre connexion n\'a pas répondu ; %1$s a répondu en %2$s ms. Choisissez-le comme DNS privé dans les réglages d\'Android."</string>
 </resources>

@@ -196,6 +196,8 @@ fun PageHostContent(vm: MainViewModel, nav: NavState, onBack: () -> Unit) {
 /** Scrollable page body with the standard 16 dp gutters and room for the dock. */
 /** Room kept under a page's content for the floating dock: little inside a tool, where the dock is hidden. */
 val LocalDockSpace = staticCompositionLocalOf { 128.dp }
+/** The tool whose page is shown, for what [PageColumn] adds to every tool page (the SDR reception advice). */
+val LocalPageTool = staticCompositionLocalOf<Tool?> { null }
 
 @Composable
 fun PageColumn(content: @Composable ColumnScope.() -> Unit) {
@@ -204,8 +206,10 @@ fun PageColumn(content: @Composable ColumnScope.() -> Unit) {
         Modifier.fillMaxSize().verticalScroll(rememberScrollState())
             .padding(PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = LocalDockSpace.current + nav.calculateBottomPadding())),
         verticalArrangement = Arrangement.spacedBy(12.dp),
-        content = content,
-    )
+    ) {
+        LocalPageTool.current?.takeIf { it.network == Network.Sdr }?.let { com.allnetworktools.ui.pages.sdr.SdrAdviceBanner(it) }
+        content()
+    }
 }
 
 @Composable
@@ -242,6 +246,11 @@ private fun PageBody(vm: MainViewModel, net: Network, page: Page) {
             if (PermGroup.LocalNetwork !in perms && !actions.isPermanentlyDenied(PermGroup.LocalNetwork)) actions.request(PermGroup.LocalNetwork)
         }
     }
+    androidx.compose.runtime.CompositionLocalProvider(LocalPageTool provides (page as? Page.ToolPage)?.tool) { PageContent(vm, net, page) }
+}
+
+@Composable
+private fun PageContent(vm: MainViewModel, net: Network, page: Page) {
     when (page) {
         Page.Dashboard -> when (net) {
             Network.Wifi -> WifiDashboard(vm)

@@ -3291,4 +3291,21 @@ Ett flöde är en ström av falska parkopplingsramar som får en popup att visas
     <string name="gain_advice_strong">"För starkt: omvandlaren mättas. Sänk förstärkningen."</string>
     <string name="gain_advice_weak">"För svagt: bruset försvinner i omvandlarens. Höj förstärkningen."</string>
     <string name="gain_advice_good">"Förstärkningen är bra inställd"</string>
+    <string name="advice_dismiss">"Dölj detta råd"</string>
+    <string name="advice_usb_title">"Sampel förlorade på USB-länken"</string>
+    <string name="advice_usb_body">"Radion skickar färre sampel än begärt, och det som förloras kan inte avkodas. Prova en annan kabel, utan hubb, eller en annan USB-port."</string>
+    <string name="advice_phone_title">"Telefonen hinner inte med"</string>
+    <string name="advice_phone_body">"Sampel kastas före avkodaren. Stäng andra appar och stäng av batterisparläget: det gör telefonen långsammare."</string>
+    <string name="advice_nothing_title">"Ramar fångade, ingen avkodad"</string>
+    <string name="advice_nothing_body">"Signaler av rätt slag kommer in, men ingen klarar kontrollen: för svaga eller störda. Sätt antennen högre eller närmare, eller justera förstärkningen."</string>
+    <string name="advice_damaged_title">"Mottagning på gränsen"</string>
+    <string name="advice_damaged_body">"Många ramar kommer fram skadade. En bättre placerad antenn eller justerad förstärkning skulle rädda dem."</string>
+    <string name="advice_adsb_title">"Inget flygplan på 2 minuter"</string>
+    <string name="advice_adsb_body">"ADS-B kräver en antenn för 1090 MHz (element på 6,9 cm) med fri sikt mot himlen, helst ute eller vid ett fönster. Kontrollera också förstärkningen."</string>
+    <string name="advice_channel_title">"Din wifikanal är trång"</string>
+    <string name="advice_channel_body">"Ditt nätverk är på %1$s med %2$d andra nätverk; %3$s är %4$s. Ställ din router på den för en snabbare, stabilare anslutning."</string>
+    <string name="advice_dns_slow_title">"Din DNS är långsam"</string>
+    <string name="advice_dns_slow_body">"Din anslutnings DNS-server svarar på %1$s ms, %2$s på %3$s ms. Välj den som privat DNS i Androids inställningar: sidor öppnas snabbare."</string>
+    <string name="advice_dns_down_title">"Din DNS svarar inte"</string>
+    <string name="advice_dns_down_body">"Din anslutnings DNS-server svarade inte; %1$s svarade på %2$s ms. Välj den som privat DNS i Androids inställningar."</string>
 </resources>

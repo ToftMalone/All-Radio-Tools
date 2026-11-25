@@ -3367,4 +3367,21 @@ Un val este un flux de cadre de asociere false care face să apară un pop-up pe
     <string name="gain_advice_strong">"Prea puternic: convertorul se saturează. Coboară câștigul."</string>
     <string name="gain_advice_weak">"Prea slab: zgomotul se pierde în cel al convertorului. Crește câștigul."</string>
     <string name="gain_advice_good">"Câștig bine reglat"</string>
+    <string name="advice_dismiss">"Ascunde acest sfat"</string>
+    <string name="advice_usb_title">"Eșantioane pierdute pe legătura USB"</string>
+    <string name="advice_usb_body">"Radioul trimite mai puține eșantioane decât s-a cerut, iar ce se pierde nu poate fi decodat. Încearcă alt cablu, fără hub, sau alt port USB."</string>
+    <string name="advice_phone_title">"Telefonul nu face față"</string>
+    <string name="advice_phone_body">"Eșantioane sunt aruncate înainte de decodor. Închide celelalte aplicații și oprește economisirea bateriei: încetinește telefonul."</string>
+    <string name="advice_nothing_title">"Cadre captate, niciunul decodat"</string>
+    <string name="advice_nothing_body">"Sosesc semnale de tipul potrivit, dar niciunul nu trece verificarea: prea slabe sau perturbate. Pune antena mai sus sau mai aproape, ori ajustează câștigul."</string>
+    <string name="advice_damaged_title">"Recepție la limită"</string>
+    <string name="advice_damaged_body">"Multe cadre sosesc deteriorate. O antenă mai bine plasată sau o ajustare a câștigului le-ar salva."</string>
+    <string name="advice_adsb_title">"Niciun avion de 2 minute"</string>
+    <string name="advice_adsb_body">"ADS-B cere o antenă pentru 1090 MHz (elemente de 6,9 cm) cu vedere liberă spre cer, ideal afară sau la o fereastră. Verifică și câștigul."</string>
+    <string name="advice_channel_title">"Canalul tău Wi-Fi e aglomerat"</string>
+    <string name="advice_channel_body">"Rețeaua ta e pe %1$s cu alte %2$d rețele; %3$s este %4$s. Mută routerul pe el pentru o conexiune mai rapidă și mai stabilă."</string>
+    <string name="advice_dns_slow_title">"DNS-ul tău e lent"</string>
+    <string name="advice_dns_slow_body">"Serverul DNS al conexiunii tale răspunde în %1$s ms, %2$s în %3$s ms. Alege-l ca DNS privat în setările Android: site-urile se vor deschide mai repede."</string>
+    <string name="advice_dns_down_title">"DNS-ul tău nu răspunde"</string>
+    <string name="advice_dns_down_body">"Serverul DNS al conexiunii tale n-a răspuns; %1$s a răspuns în %2$s ms. Alege-l ca DNS privat în setările Android."</string>
 </resources>

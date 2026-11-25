@@ -3291,4 +3291,21 @@ Sel, yakındaki her telefonda bir açılır pencere çıkaran sahte eşleştirme
     <string name="gain_advice_strong">"Çok güçlü: dönüştürücü doyuyor. Kazancı düşürün."</string>
     <string name="gain_advice_weak">"Çok zayıf: gürültü dönüştürücününkinde kayboluyor. Kazancı artırın."</string>
     <string name="gain_advice_good">"Kazanç iyi ayarlı"</string>
+    <string name="advice_dismiss">"Bu öneriyi gizle"</string>
+    <string name="advice_usb_title">"USB bağlantısında örnek kaybı"</string>
+    <string name="advice_usb_body">"Telsiz istenenden az örnek gönderiyor ve kaybolan çözülemez. Başka bir kablo, hub\'sız, ya da başka bir USB bağlantı noktası deneyin."</string>
+    <string name="advice_phone_title">"Telefon yetişemiyor"</string>
+    <string name="advice_phone_body">"Örnekler çözücüden önce atılıyor. Diğer uygulamaları kapatın ve pil tasarrufunu kapatın: telefonu yavaşlatır."</string>
+    <string name="advice_nothing_title">"Çerçeveler yakalandı, hiçbiri çözülmedi"</string>
+    <string name="advice_nothing_body">"Doğru türde sinyaller geliyor ama hiçbiri denetimi geçmiyor: çok zayıf ya da bozuk. Anteni daha yükseğe ya da yakına koyun veya kazancı ayarlayın."</string>
+    <string name="advice_damaged_title">"Sınırda alım"</string>
+    <string name="advice_damaged_body">"Birçok çerçeve hasarlı geliyor. Daha iyi yerleştirilmiş bir anten ya da kazanç ayarı onları kurtarır."</string>
+    <string name="advice_adsb_title">"2 dakikadır uçak yok"</string>
+    <string name="advice_adsb_body">"ADS-B, gökyüzünü açıkça gören 1090 MHz bir anten ister (6,9 cm elemanlar), tercihen dışarıda ya da pencerede. Kazancı da kontrol edin."</string>
+    <string name="advice_channel_title">"Wi-Fi kanalınız kalabalık"</string>
+    <string name="advice_channel_body">"Ağınız %1$s üzerinde, %2$d başka ağla birlikte; %3$s %4$s. Daha hızlı ve kararlı bir bağlantı için modeminizi oraya alın."</string>
+    <string name="advice_dns_slow_title">"DNS\'iniz yavaş"</string>
+    <string name="advice_dns_slow_body">"Bağlantınızın DNS sunucusu %1$s ms\'de yanıt veriyor, %2$s %3$s ms\'de. Android ayarlarında özel DNS olarak seçin: siteler daha hızlı açılır."</string>
+    <string name="advice_dns_down_title">"DNS\'iniz yanıt vermiyor"</string>
+    <string name="advice_dns_down_body">"Bağlantınızın DNS sunucusu yanıt vermedi; %1$s %2$s ms\'de yanıt verdi. Android ayarlarında özel DNS olarak seçin."</string>
 </resources>

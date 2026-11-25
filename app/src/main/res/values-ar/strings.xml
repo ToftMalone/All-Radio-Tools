@@ -3599,4 +3599,21 @@
     <string name="gain_advice_strong">"قوي جدًا: المحوّل مشبع. اخفض الكسب."</string>
     <string name="gain_advice_weak">"ضعيف جدًا: الضجيج يضيع في ضجيج المحوّل. ارفع الكسب."</string>
     <string name="gain_advice_good">"الكسب مضبوط جيدًا"</string>
+    <string name="advice_dismiss">"إخفاء هذه النصيحة"</string>
+    <string name="advice_usb_title">"فقدان عينات على وصلة USB"</string>
+    <string name="advice_usb_body">"يرسل الجهاز عينات أقل من المطلوب، وما يُفقد لا يمكن فك ترميزه. جرّب كابلًا آخر بدون موزّع، أو منفذ USB آخر."</string>
+    <string name="advice_phone_title">"الهاتف لا يواكب"</string>
+    <string name="advice_phone_body">"تُهمَل عينات قبل وصولها إلى فك الترميز. أغلق التطبيقات الأخرى وأوقف توفير البطارية: فهو يبطئ الهاتف."</string>
+    <string name="advice_nothing_title">"إطارات ملتقطة ولم يُفك أيّ منها"</string>
+    <string name="advice_nothing_body">"تصل إشارات من النوع الصحيح لكن لا يجتاز أيّ منها الفحص: ضعيفة جدًا أو مشوّشة. ارفع الهوائي أو قرّبه، أو اضبط الكسب."</string>
+    <string name="advice_damaged_title">"استقبال على الحافة"</string>
+    <string name="advice_damaged_body">"تصل إطارات كثيرة تالفة. هوائي في مكان أفضل أو ضبط للكسب سينقذها."</string>
+    <string name="advice_adsb_title">"لا طائرات منذ دقيقتين"</string>
+    <string name="advice_adsb_body">"يحتاج ADS-B إلى هوائي لتردد 1090 ميغاهرتز (عناصر بطول 6.9 سم) برؤية مفتوحة للسماء، ويُفضّل في الخارج أو عند نافذة. تحقّق من الكسب أيضًا."</string>
+    <string name="advice_channel_title">"قناة Wi-Fi لديك مزدحمة"</string>
+    <string name="advice_channel_body">"شبكتك على %1$s مع %2$d شبكات أخرى؛ %3$s %4$s. اضبط الراوتر عليها لاتصال أسرع وأكثر ثباتًا."</string>
+    <string name="advice_dns_slow_title">"DNS لديك بطيء"</string>
+    <string name="advice_dns_slow_body">"يستجيب خادم DNS لاتصالك خلال %1$s مللي ثانية، و%2$s خلال %3$s مللي ثانية. اختره كـ DNS خاص في إعدادات أندرويد: ستفتح المواقع أسرع."</string>
+    <string name="advice_dns_down_title">"DNS لديك لا يستجيب"</string>
+    <string name="advice_dns_down_body">"لم يستجب خادم DNS لاتصالك؛ استجاب %1$s خلال %2$s مللي ثانية. اختره كـ DNS خاص في إعدادات أندرويد."</string>
 </resources>

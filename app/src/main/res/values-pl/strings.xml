@@ -3445,4 +3445,21 @@ Zalew to strumień fałszywych ramek parowania, który wywołuje wyskakujące ok
     <string name="gain_advice_strong">"Za silny: przetwornik się nasyca. Zmniejsz wzmocnienie."</string>
     <string name="gain_advice_weak">"Za słaby: szum ginie w szumie przetwornika. Zwiększ wzmocnienie."</string>
     <string name="gain_advice_good">"Wzmocnienie dobrze ustawione"</string>
+    <string name="advice_dismiss">"Ukryj tę wskazówkę"</string>
+    <string name="advice_usb_title">"Utracone próbki na łączu USB"</string>
+    <string name="advice_usb_body">"Radio wysyła mniej próbek, niż zażądano, a utraconych nie da się zdekodować. Spróbuj innego kabla, bez huba, lub innego portu USB."</string>
+    <string name="advice_phone_title">"Telefon nie nadąża"</string>
+    <string name="advice_phone_body">"Próbki są odrzucane przed dekoderem. Zamknij inne aplikacje i wyłącz oszczędzanie baterii: spowalnia telefon."</string>
+    <string name="advice_nothing_title">"Ramki odebrane, żadna nie zdekodowana"</string>
+    <string name="advice_nothing_body">"Docierają sygnały właściwego typu, ale żaden nie przechodzi kontroli: za słabe lub zakłócone. Umieść antenę wyżej lub bliżej albo dostosuj wzmocnienie."</string>
+    <string name="advice_damaged_title">"Odbiór na granicy"</string>
+    <string name="advice_damaged_body">"Wiele ramek dociera uszkodzonych. Lepiej ustawiona antena lub korekta wzmocnienia by je uratowała."</string>
+    <string name="advice_adsb_title">"Brak samolotów od 2 minut"</string>
+    <string name="advice_adsb_body">"ADS-B wymaga anteny na 1090 MHz (elementy 6,9 cm) z otwartym widokiem na niebo, najlepiej na zewnątrz lub przy oknie. Sprawdź też wzmocnienie."</string>
+    <string name="advice_channel_title">"Twój kanał Wi-Fi jest zatłoczony"</string>
+    <string name="advice_channel_body">"Twoja sieć jest na %1$s z %2$d innymi sieciami; %3$s jest %4$s. Przestaw na niego router, by połączenie było szybsze i stabilniejsze."</string>
+    <string name="advice_dns_slow_title">"Twój DNS jest wolny"</string>
+    <string name="advice_dns_slow_body">"Serwer DNS twojego połączenia odpowiada w %1$s ms, %2$s w %3$s ms. Wybierz go jako prywatny DNS w ustawieniach Androida: strony otworzą się szybciej."</string>
+    <string name="advice_dns_down_title">"Twój DNS nie odpowiada"</string>
+    <string name="advice_dns_down_body">"Serwer DNS twojego połączenia nie odpowiedział; %1$s odpowiedział w %2$s ms. Wybierz go jako prywatny DNS w ustawieniach Androida."</string>
 </resources>

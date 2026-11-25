@@ -3215,4 +3215,21 @@ Banjir adalah aliran frame pemasangan palsu yang memunculkan pop-up di setiap po
     <string name="gain_advice_strong">"Terlalu kuat: konverter jenuh. Turunkan gain."</string>
     <string name="gain_advice_weak">"Terlalu lemah: derau hilang di derau konverter. Naikkan gain."</string>
     <string name="gain_advice_good">"Gain sudah pas"</string>
+    <string name="advice_dismiss">"Sembunyikan saran ini"</string>
+    <string name="advice_usb_title">"Sampel hilang di tautan USB"</string>
+    <string name="advice_usb_body">"Radio mengirim sampel lebih sedikit dari yang diminta, dan yang hilang tidak bisa didekode. Coba kabel lain, tanpa hub, atau port USB lain."</string>
+    <string name="advice_phone_title">"Ponsel tidak sanggup mengikuti"</string>
+    <string name="advice_phone_body">"Sampel dibuang sebelum dekoder. Tutup aplikasi lain dan matikan penghemat baterai: itu memperlambat ponsel."</string>
+    <string name="advice_nothing_title">"Frame tertangkap, tak satu pun terdekode"</string>
+    <string name="advice_nothing_body">"Sinyal jenis yang benar datang, tapi tidak ada yang lolos pemeriksaan: terlalu lemah atau terganggu. Pasang antena lebih tinggi atau lebih dekat, atau atur gain."</string>
+    <string name="advice_damaged_title">"Penerimaan di batas"</string>
+    <string name="advice_damaged_body">"Banyak frame datang rusak. Antena yang ditempatkan lebih baik, atau penyesuaian gain, akan menyelamatkannya."</string>
+    <string name="advice_adsb_title">"Tidak ada pesawat selama 2 menit"</string>
+    <string name="advice_adsb_body">"ADS-B butuh antena 1090 MHz (elemen 6,9 cm) dengan pandangan langit terbuka, sebaiknya di luar atau di jendela. Periksa juga gain."</string>
+    <string name="advice_channel_title">"Kanal Wi-Fi Anda padat"</string>
+    <string name="advice_channel_body">"Jaringan Anda di %1$s bersama %2$d jaringan lain; %3$s %4$s. Pindahkan router Anda ke sana untuk koneksi lebih cepat dan stabil."</string>
+    <string name="advice_dns_slow_title">"DNS Anda lambat"</string>
+    <string name="advice_dns_slow_body">"Server DNS koneksi Anda menjawab dalam %1$s ms, %2$s dalam %3$s ms. Pilih sebagai DNS pribadi di pengaturan Android: situs terbuka lebih cepat."</string>
+    <string name="advice_dns_down_title">"DNS Anda tidak menjawab"</string>
+    <string name="advice_dns_down_body">"Server DNS koneksi Anda tidak menjawab; %1$s menjawab dalam %2$s ms. Pilih sebagai DNS pribadi di pengaturan Android."</string>
 </resources>

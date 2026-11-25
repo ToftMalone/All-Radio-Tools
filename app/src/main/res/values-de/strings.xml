@@ -3291,4 +3291,21 @@ Eine Flut ist ein Strom gefälschter Kopplungs-Frames, der auf jedem Telefon in 
     <string name="gain_advice_strong">"Zu stark: der Wandler übersteuert. Verstärkung senken."</string>
     <string name="gain_advice_weak">"Zu schwach: das Rauschen geht im Wandlerrauschen unter. Verstärkung erhöhen."</string>
     <string name="gain_advice_good">"Verstärkung gut eingestellt"</string>
+    <string name="advice_dismiss">"Diesen Hinweis ausblenden"</string>
+    <string name="advice_usb_title">"Samples gehen auf der USB-Verbindung verloren"</string>
+    <string name="advice_usb_body">"Das Funkgerät liefert weniger Samples als angefordert, und Verlorenes lässt sich nicht dekodieren. Probiere ein anderes Kabel, ohne Hub, oder einen anderen USB-Anschluss."</string>
+    <string name="advice_phone_title">"Das Handy kommt nicht mit"</string>
+    <string name="advice_phone_body">"Samples werden vor dem Decoder verworfen. Schließe andere Apps und schalte den Energiesparmodus aus: Er bremst das Handy."</string>
+    <string name="advice_nothing_title">"Rahmen empfangen, keiner dekodiert"</string>
+    <string name="advice_nothing_body">"Signale der richtigen Art kommen an, aber keines besteht die Prüfung: zu schwach oder gestört. Stell die Antenne höher oder näher, oder passe die Verstärkung an."</string>
+    <string name="advice_damaged_title">"Empfang an der Grenze"</string>
+    <string name="advice_damaged_body">"Viele Rahmen kommen beschädigt an. Eine besser platzierte Antenne oder eine angepasste Verstärkung würde sie retten."</string>
+    <string name="advice_adsb_title">"Seit 2 Minuten kein Flugzeug"</string>
+    <string name="advice_adsb_body">"ADS-B braucht eine Antenne für 1090 MHz (Elemente von 6,9 cm) mit freier Sicht zum Himmel, am besten draußen oder am Fenster. Prüfe auch die Verstärkung."</string>
+    <string name="advice_channel_title">"Dein WLAN-Kanal ist überfüllt"</string>
+    <string name="advice_channel_body">"Dein Netz ist auf %1$s mit %2$d anderen Netzen; %3$s ist %4$s. Stell deinen Router darauf um, für eine schnellere und stabilere Verbindung."</string>
+    <string name="advice_dns_slow_title">"Dein DNS ist langsam"</string>
+    <string name="advice_dns_slow_body">"Der DNS-Server deiner Verbindung antwortet in %1$s ms, %2$s in %3$s ms. Wähle ihn in den Android-Einstellungen als privates DNS: Seiten öffnen sich schneller."</string>
+    <string name="advice_dns_down_title">"Dein DNS antwortet nicht"</string>
+    <string name="advice_dns_down_body">"Der DNS-Server deiner Verbindung hat nicht geantwortet; %1$s antwortete in %2$s ms. Wähle ihn in den Android-Einstellungen als privates DNS."</string>
 </resources>

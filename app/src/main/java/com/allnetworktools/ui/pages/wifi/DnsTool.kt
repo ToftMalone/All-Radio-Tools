@@ -205,6 +205,19 @@ fun DnsTool(c: DnsController, systemDns: String?) {
                     }
                 }
             }
+            if (c.compare.size == c.servers.size) {
+                val sys = c.servers.first().name
+                dnsAdvice(c.compare[sys], c.compare.filterKeys { it != sys })?.let { (name, best, mine) ->
+                    com.allnetworktools.ui.components.AdviceCard(
+                        com.allnetworktools.ui.components.Advice(
+                            "dns-slow", Sym.Speed,
+                            S(if (mine == null) R.string.advice_dns_down_title else R.string.advice_dns_slow_title),
+                            if (mine == null) S(R.string.advice_dns_down_body, name, fmt(best)) else S(R.string.advice_dns_slow_body, fmt(mine), name, fmt(best)),
+                            AntTheme.net.fair,
+                        ),
+                    )
+                }
+            }
             SectionCard {
                 Text(S(R.string.server_comparison), style = rf(14, 20, 600))
                 val maxMs = maxOf(30f, c.compare.values.filterNotNull().maxOrNull() ?: 0f)
@@ -257,4 +270,15 @@ private fun ServerRadioCard(s: DnsServer, selected: Boolean, modifier: Modifier,
             Text(s.ip.ifEmpty { com.allnetworktools.model.Network.Cellular.label }, style = mono(12, 16), color = (if (selected) acc.onContainer else cs.onSurface).copy(alpha = 0.8f))
         }
     }
+}
+
+/**
+ * Whether another server would serve this connection better than the system one ([system] in ms, null when it gave no
+ * answer): when the system server failed and another answered, or when it took at least twice as long as the fastest
+ * and 30 ms more. Gives the fastest server's name, its time and the system's.
+ */
+internal fun dnsAdvice(system: Float?, others: Map<String, Float?>): Triple<String, Float, Float?>? {
+    val (name, best) = others.entries.mapNotNull { e -> e.value?.let { e.key to it } }.minByOrNull { it.second } ?: return null
+    if (system == null) return Triple(name, best, null)
+    return if (system >= 2 * best && system - best >= 30f) Triple(name, best, system) else null
 }

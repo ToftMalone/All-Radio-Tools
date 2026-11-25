@@ -251,6 +251,7 @@ class MeteomodemDemodulator(private val sampleRate: Double, private val onFrame:
             }
             if (found != null && used != null) {
                 frames++
+                SdrHealth.good()
                 onFrame(found)
                 scanFrom += (used.len * 16 * used.symLen).toInt()
             } else scanFrom++

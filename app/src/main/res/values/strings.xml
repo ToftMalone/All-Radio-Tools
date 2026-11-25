@@ -3311,4 +3311,21 @@
     <string name="gain_advice_strong">"Too strong: the converter saturates. Lower the gain."</string>
     <string name="gain_advice_weak">"Too weak: the noise is lost in the converter\'s. Raise the gain."</string>
     <string name="gain_advice_good">"Gain well set"</string>
+    <string name="advice_dismiss">"Hide this advice"</string>
+    <string name="advice_usb_title">"Samples lost on the USB link"</string>
+    <string name="advice_usb_body">"The radio sends fewer samples than asked, and what is lost cannot be decoded. Try another cable, without a hub, or another USB port."</string>
+    <string name="advice_phone_title">"The phone can\'t keep up"</string>
+    <string name="advice_phone_body">"Samples are dropped before the decoder. Close the other apps, and turn off battery saving: it slows the phone down."</string>
+    <string name="advice_nothing_title">"Frames caught, none decoded"</string>
+    <string name="advice_nothing_body">"Signals of the right kind arrive, but none passes its check: too weak or disturbed. Move the antenna higher or nearer, or adjust the gain."</string>
+    <string name="advice_damaged_title">"Reception on the edge"</string>
+    <string name="advice_damaged_body">"Many frames arrive damaged. A better-placed antenna, or a gain adjustment, would save them."</string>
+    <string name="advice_adsb_title">"No aircraft for 2 minutes"</string>
+    <string name="advice_adsb_body">"ADS-B wants an antenna for 1090 MHz (6.9 cm elements) with a clear view of the sky, ideally outside or at a window. Check the gain too."</string>
+    <string name="advice_channel_title">"Your Wi-Fi channel is crowded"</string>
+    <string name="advice_channel_body">"Your network is on %1$s with %2$d other networks; %3$s is %4$s. Set your box on it in its settings for a faster, steadier connection."</string>
+    <string name="advice_dns_slow_title">"Your DNS is slow"</string>
+    <string name="advice_dns_slow_body">"Your connection\'s DNS server answers in %1$s ms, %2$s in %3$s ms. Set it as Private DNS in Android\'s settings: sites open faster."</string>
+    <string name="advice_dns_down_title">"Your DNS isn\'t answering"</string>
+    <string name="advice_dns_down_body">"Your connection\'s DNS server gave no answer; %1$s answered in %2$s ms. Set it as Private DNS in Android\'s settings."</string>
 </resources>

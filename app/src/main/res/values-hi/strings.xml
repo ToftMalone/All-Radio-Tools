@@ -3291,4 +3291,21 @@
     <string name="gain_advice_strong">"बहुत तेज़: कन्वर्टर संतृप्त है। गेन घटाएँ।"</string>
     <string name="gain_advice_weak">"बहुत कमज़ोर: शोर कन्वर्टर के शोर में खो जाता है। गेन बढ़ाएँ।"</string>
     <string name="gain_advice_good">"गेन सही सेट है"</string>
+    <string name="advice_dismiss">"यह सलाह छिपाएँ"</string>
+    <string name="advice_usb_title">"USB लिंक पर सैंपल खो रहे हैं"</string>
+    <string name="advice_usb_body">"रेडियो माँगे से कम सैंपल भेज रहा है, और खोया हुआ डिकोड नहीं हो सकता। दूसरी केबल, बिना हब के, या दूसरा USB पोर्ट आज़माएँ।"</string>
+    <string name="advice_phone_title">"फ़ोन साथ नहीं दे पा रहा"</string>
+    <string name="advice_phone_body">"डिकोडर से पहले सैंपल छोड़े जा रहे हैं। दूसरे ऐप बंद करें और बैटरी सेवर बंद करें: वह फ़ोन को धीमा करता है।"</string>
+    <string name="advice_nothing_title">"फ़्रेम पकड़े गए, कोई डिकोड नहीं हुआ"</string>
+    <string name="advice_nothing_body">"सही तरह के सिग्नल आ रहे हैं, पर कोई जाँच पास नहीं करता: बहुत कमज़ोर या बाधित। एंटीना ऊँचा या पास रखें, या गेन बदलें।"</string>
+    <string name="advice_damaged_title">"सीमा पर रिसेप्शन"</string>
+    <string name="advice_damaged_body">"कई फ़्रेम ख़राब होकर आ रहे हैं। बेहतर जगह पर एंटीना या गेन में बदलाव उन्हें बचा लेगा।"</string>
+    <string name="advice_adsb_title">"2 मिनट से कोई विमान नहीं"</string>
+    <string name="advice_adsb_body">"ADS-B को 1090 MHz का एंटीना (6.9 सेमी के तत्व) चाहिए जिससे आसमान साफ़ दिखे, बेहतर है बाहर या खिड़की पर। गेन भी जाँचें।"</string>
+    <string name="advice_channel_title">"आपका Wi-Fi चैनल भीड़भाड़ वाला है"</string>
+    <string name="advice_channel_body">"आपका नेटवर्क %1$s पर %2$d अन्य नेटवर्क के साथ है; %3$s %4$s है। तेज़ और स्थिर कनेक्शन के लिए अपना राउटर उस पर करें।"</string>
+    <string name="advice_dns_slow_title">"आपका DNS धीमा है"</string>
+    <string name="advice_dns_slow_body">"आपके कनेक्शन का DNS सर्वर %1$s ms में जवाब देता है, %2$s %3$s ms में। Android सेटिंग में उसे निजी DNS चुनें: साइटें तेज़ी से खुलेंगी।"</string>
+    <string name="advice_dns_down_title">"आपका DNS जवाब नहीं दे रहा"</string>
+    <string name="advice_dns_down_body">"आपके कनेक्शन के DNS सर्वर ने जवाब नहीं दिया; %1$s ने %2$s ms में जवाब दिया। Android सेटिंग में उसे निजी DNS चुनें।"</string>
 </resources>

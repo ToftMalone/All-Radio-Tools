@@ -3445,4 +3445,21 @@
     <string name="gain_advice_strong">"Слишком сильно: АЦП перегружен. Уменьшите усиление."</string>
     <string name="gain_advice_weak">"Слишком слабо: шум теряется в шуме АЦП. Увеличьте усиление."</string>
     <string name="gain_advice_good">"Усиление в норме"</string>
+    <string name="advice_dismiss">"Скрыть этот совет"</string>
+    <string name="advice_usb_title">"Потеря отсчётов на USB"</string>
+    <string name="advice_usb_body">"Радио передаёт меньше отсчётов, чем запрошено, и потерянное не декодировать. Попробуйте другой кабель, без хаба, или другой USB-порт."</string>
+    <string name="advice_phone_title">"Телефон не успевает"</string>
+    <string name="advice_phone_body">"Отсчёты отбрасываются до декодера. Закройте другие приложения и отключите энергосбережение: оно замедляет телефон."</string>
+    <string name="advice_nothing_title">"Кадры пойманы, ни один не декодирован"</string>
+    <string name="advice_nothing_body">"Сигналы нужного типа приходят, но ни один не проходит проверку: слишком слабые или с помехами. Поднимите или приблизьте антенну либо настройте усиление."</string>
+    <string name="advice_damaged_title">"Приём на грани"</string>
+    <string name="advice_damaged_body">"Многие кадры приходят повреждёнными. Лучше размещённая антенна или настройка усиления спасли бы их."</string>
+    <string name="advice_adsb_title">"Ни одного самолёта 2 минуты"</string>
+    <string name="advice_adsb_body">"Для ADS-B нужна антенна на 1090 МГц (элементы 6,9 см) с открытым видом на небо, лучше снаружи или у окна. Проверьте и усиление."</string>
+    <string name="advice_channel_title">"Ваш канал Wi-Fi перегружен"</string>
+    <string name="advice_channel_body">"Ваша сеть на %1$s вместе с %2$d другими сетями; %3$s — %4$s. Переключите на него роутер для более быстрого и стабильного соединения."</string>
+    <string name="advice_dns_slow_title">"Ваш DNS медленный"</string>
+    <string name="advice_dns_slow_body">"DNS-сервер вашего подключения отвечает за %1$s мс, %2$s — за %3$s мс. Выберите его как частный DNS в настройках Android: сайты будут открываться быстрее."</string>
+    <string name="advice_dns_down_title">"Ваш DNS не отвечает"</string>
+    <string name="advice_dns_down_body">"DNS-сервер вашего подключения не ответил; %1$s ответил за %2$s мс. Выберите его как частный DNS в настройках Android."</string>
 </resources>

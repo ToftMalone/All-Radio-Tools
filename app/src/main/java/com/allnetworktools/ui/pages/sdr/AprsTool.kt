@@ -277,7 +277,7 @@ class AprsController(private val repo: SdrRepository, private val scope: Corouti
             }
         }, "sdr-aprs").start()
         gain.attach { applyGains() }
-        val samples: (ByteArray, Int) -> Unit = { data, len -> gain.feed(data, len); free.poll()?.let { b -> System.arraycopy(data, 0, b, 0, len); full.offer(b to len) } }
+        val samples: (ByteArray, Int) -> Unit = { data, len -> gain.feed(data, len); free.poll()?.let { b -> System.arraycopy(data, 0, b, 0, len); full.offer(b to len) } ?: com.allnetworktools.data.sdr.SdrHealth.dropped(len) }
         val failed: (String) -> Unit = { msg -> scope.launch { error = msg; stop() } }
         rxSamples = samples
         rxError = failed
