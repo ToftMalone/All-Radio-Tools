@@ -3282,4 +3282,20 @@ Una avalancha es un flujo de tramas de emparejamiento falsas que hace aparecer u
         <item quantity="one">"canal"</item>
         <item quantity="other">"canales"</item>
     </plurals>
+    <string name="pmr_mdc_unit">"unidad %1$s"</string>
+    <string name="mdc_ptt">"ID de PTT"</string>
+    <string name="mdc_ptt_end">"ID de PTT (soltado)"</string>
+    <string name="mdc_status_request">"Petición de estado"</string>
+    <string name="mdc_status">"Estado %1$d"</string>
+    <string name="mdc_inhibit">"Bloqueo de radio"</string>
+    <string name="mdc_enable">"Desbloqueo de radio"</string>
+    <string name="mdc_message">"Mensaje"</string>
+    <string name="mdc_selcall">"Llamada selectiva"</string>
+    <string name="mdc_monitor">"Escucha remota"</string>
+    <string name="mdc_radio_check">"Prueba de radio"</string>
+    <string name="mdc_call_alert">"Alerta de llamada"</string>
+    <string name="pmr_selcall">"5 tonos"</string>
+    <string name="gain_advice_strong">"Demasiado fuerte: el convertidor satura. Baja la ganancia."</string>
+    <string name="gain_advice_weak">"Demasiado débil: el ruido se pierde en el del convertidor. Sube la ganancia."</string>
+    <string name="gain_advice_good">"Ganancia bien ajustada"</string>
 </resources>

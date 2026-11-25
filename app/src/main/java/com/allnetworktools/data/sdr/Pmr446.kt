@@ -170,6 +170,10 @@ sealed class PmrEvent(val hz: Long) {
     class DpmrEnd(hz: Long, val end: Dpmr.End) : PmrEvent(hz)
     /** A Kenwood FleetSync identity burst: who keyed up. */
     class FleetSyncId(hz: Long, val msg: FleetSync.Message) : PmrEvent(hz)
+    /** A Motorola MDC-1200 burst: the radio's unit ID and what it signals. */
+    class MdcId(hz: Long, val msg: Mdc1200.Message) : PmrEvent(hz)
+    /** A 5-tone selective call ([standard] ZVEI1, CCIR or EEA) or a DTMF string ([standard] "DTMF"). */
+    class Tones(hz: Long, val standard: String, val digits: String) : PmrEvent(hz)
     /** Digital voice decoded: 160 samples at 8 kHz per 20 ms; [slot] 0 for dPMR. */
     class Voice(hz: Long, val slot: Int, val pcm: FloatArray) : PmrEvent(hz)
 }
@@ -199,7 +203,11 @@ class PmrChannel(val hz: Long, private val offHz: Double, narrow: Boolean, priva
     private val dpmrEnd = FourFskSync(50_000.0, 2400.0, listOf(Dpmr.FS3), 0, intArrayOf(36)) { dpmrEndFrame(it) }
     // Kenwood FleetSync: the FFSK identity burst at the start of an analogue call.
     private val fleetFramer = FleetSyncFramer { m -> onEvent(PmrEvent.FleetSyncId(hz, m)) }
-    private val ffsk = FfskDemodulator(50_000.0) { fleetFramer.bit(it) }
+    // Motorola MDC-1200: the same tones, XOR-precoded, on the same tone decisions.
+    private val mdcFramer = Mdc1200Framer { m -> onEvent(PmrEvent.MdcId(hz, m)) }
+    private val ffsk = FfskDemodulator(50_000.0) { fleetFramer.bit(it); mdcFramer.tone(it) }
+    // 5-tone selective calls and DTMF.
+    private val toneSig = ToneSignalling({ s, d -> onEvent(PmrEvent.Tones(hz, s, d)) }, { d -> onEvent(PmrEvent.Tones(hz, "DTMF", d)) })
     // AMBE+2 decoders: one per DMR time slot (0 when the slot is not known), one for dPMR.
     private val ambe = Array(3) { AmbeDecoder() }
     private val ambeDpmr = AmbeDecoder()
@@ -261,6 +269,7 @@ class PmrChannel(val hz: Long, private val offHz: Double, narrow: Boolean, priva
     fun pushFm(hz: Float) {
         nOut++
         ffsk.push(hz)
+        toneSig.push(hz)
         dmr.push(hz)
         dpmr.push(hz)
         dpmrEnd.push(hz)

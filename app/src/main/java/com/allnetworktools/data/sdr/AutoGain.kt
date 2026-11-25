@@ -339,3 +339,39 @@ class AutoGain(profile: GainProfile, lna: Int, vga: Int) {
         }
     }
 }
+
+/** What the samples say about a gain set by hand. */
+enum class GainAdvice { TooStrong, TooWeak, Good }
+
+/**
+ * Advice for a manual gain, from the same measures as [AutoGain]: the converter clipping (or RMS far over the tool's
+ * aim) is too strong, a noise floor sunk in the converter's own quantisation noise is too weak. A verdict changes only
+ * when two windows in a row agree, so it does not flicker.
+ */
+class GainAdvisor(var profile: GainProfile) {
+    private val meter = GainMeter()
+    private var pending: GainAdvice? = null
+    var advice: GainAdvice? = null
+        private set
+
+    fun reset() { meter.reset(); pending = null; advice = null }
+
+    /** Samples in; true when [advice] changed. */
+    fun feed(buf: ByteArray, len: Int, nowNs: Long): Boolean {
+        val m = meter.feed(buf, len, nowNs) ?: return false
+        val v = judge(m, profile)
+        val agreed = v == pending
+        pending = v
+        if (!agreed || v == advice) return false
+        advice = v
+        return true
+    }
+
+    companion object {
+        fun judge(m: GainMeasure, p: GainProfile): GainAdvice = when {
+            m.clip > 0.002 || m.peak >= 0.99 || m.rmsDbfs > p.targetRms + 12 -> GainAdvice.TooStrong
+            m.marginDb != null && m.marginDb < p.marginGoal - 8 -> GainAdvice.TooWeak
+            else -> GainAdvice.Good
+        }
+    }
+}

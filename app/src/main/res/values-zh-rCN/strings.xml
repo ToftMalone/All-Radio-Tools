@@ -3199,4 +3199,20 @@
         <item quantity="one">"个频道"</item>
         <item quantity="other">"个频道"</item>
     </plurals>
+    <string name="pmr_mdc_unit">"单元 %1$s"</string>
+    <string name="mdc_ptt">"PTT 识别码"</string>
+    <string name="mdc_ptt_end">"PTT 识别码（松开）"</string>
+    <string name="mdc_status_request">"状态查询"</string>
+    <string name="mdc_status">"状态 %1$d"</string>
+    <string name="mdc_inhibit">"遥毙"</string>
+    <string name="mdc_enable">"遥开"</string>
+    <string name="mdc_message">"消息"</string>
+    <string name="mdc_selcall">"选呼"</string>
+    <string name="mdc_monitor">"远程监听"</string>
+    <string name="mdc_radio_check">"电台检查"</string>
+    <string name="mdc_call_alert">"呼叫提醒"</string>
+    <string name="pmr_selcall">"五音"</string>
+    <string name="gain_advice_strong">"太强：转换器饱和。请降低增益。"</string>
+    <string name="gain_advice_weak">"太弱：噪声淹没在转换器的噪声中。请提高增益。"</string>
+    <string name="gain_advice_good">"增益设置合适"</string>
 </resources>

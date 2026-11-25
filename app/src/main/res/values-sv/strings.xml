@@ -3275,4 +3275,20 @@ Ett flöde är en ström av falska parkopplingsramar som får en popup att visas
         <item quantity="one">"kanal"</item>
         <item quantity="other">"kanaler"</item>
     </plurals>
+    <string name="pmr_mdc_unit">"enhet %1$s"</string>
+    <string name="mdc_ptt">"PTT-ID"</string>
+    <string name="mdc_ptt_end">"PTT-ID (släppt)"</string>
+    <string name="mdc_status_request">"Statusförfrågan"</string>
+    <string name="mdc_status">"Status %1$d"</string>
+    <string name="mdc_inhibit">"Spärra radio"</string>
+    <string name="mdc_enable">"Aktivera radio"</string>
+    <string name="mdc_message">"Meddelande"</string>
+    <string name="mdc_selcall">"Selektivt anrop"</string>
+    <string name="mdc_monitor">"Fjärravlyssning"</string>
+    <string name="mdc_radio_check">"Radiokontroll"</string>
+    <string name="mdc_call_alert">"Anropslarm"</string>
+    <string name="pmr_selcall">"5-tons"</string>
+    <string name="gain_advice_strong">"För starkt: omvandlaren mättas. Sänk förstärkningen."</string>
+    <string name="gain_advice_weak">"För svagt: bruset försvinner i omvandlarens. Höj förstärkningen."</string>
+    <string name="gain_advice_good">"Förstärkningen är bra inställd"</string>
 </resources>

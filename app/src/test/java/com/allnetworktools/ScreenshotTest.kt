@@ -642,6 +642,18 @@ class ScreenshotTest {
             com.allnetworktools.data.sdr.AirChannel(119_250_000L, false, now - 20_000, now - 3_000, 3_000, -61f, false),
         ))
     }
+    @Test fun pmrAnalogueSignalling() = shot("H23_pmr_signalling", nav = NavState(Network.Sdr, Page.ToolPage(Tool.Pmr))) { vm ->
+        val now = System.currentTimeMillis()
+        vm.tools.pmr.setForTest(
+            listOf(com.allnetworktools.ui.pages.sdr.PmrChannelState(3, 446_031_250L, 24.0, now, "MDC-1200", 88.5)),
+            listOf(
+                com.allnetworktools.ui.pages.sdr.PmrCall(now, 446_031_250L, false, null, false, 0x1777, null, 0, false, false, true, mdc = com.allnetworktools.data.sdr.Mdc1200.Message(0x01, 0x00, 0x1777)),
+                com.allnetworktools.ui.pages.sdr.PmrCall(now - 8_000, 446_056_250L, false, null, false, null, null, 0, false, false, false, tones = "ZVEI1" to "12345"),
+                com.allnetworktools.ui.pages.sdr.PmrCall(now - 20_000, 446_081_250L, false, null, false, null, null, 0, false, false, false, tones = "DTMF" to "1550#"),
+                com.allnetworktools.ui.pages.sdr.PmrCall(now - 40_000, 446_031_250L, false, null, false, 0x4321, null, 0, true, false, false, mdc = com.allnetworktools.data.sdr.Mdc1200.Message(0x00, 0x80, 0x4321)),
+            ),
+        )
+    }
     @Test fun spectrum() = shot("H5_spectrum", dark = true, nav = NavState(Network.Sdr, Page.ToolPage(Tool.Spectrum))) { vm ->
         // FM band: a few stations over a −95 dBFS floor.
         val stations = mapOf(120 to -38f, 260 to -52f, 410 to -30f, 590 to -61f, 700 to -44f, 905 to -49f)

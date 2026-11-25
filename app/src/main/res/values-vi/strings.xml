@@ -3199,4 +3199,20 @@ Một đợt lũ là dòng khung ghép đôi giả làm bật cửa sổ trên m
         <item quantity="one">"kênh"</item>
         <item quantity="other">"kênh"</item>
     </plurals>
+    <string name="pmr_mdc_unit">"đơn vị %1$s"</string>
+    <string name="mdc_ptt">"ID PTT"</string>
+    <string name="mdc_ptt_end">"ID PTT (nhả)"</string>
+    <string name="mdc_status_request">"Yêu cầu trạng thái"</string>
+    <string name="mdc_status">"Trạng thái %1$d"</string>
+    <string name="mdc_inhibit">"Khóa máy"</string>
+    <string name="mdc_enable">"Mở khóa máy"</string>
+    <string name="mdc_message">"Tin nhắn"</string>
+    <string name="mdc_selcall">"Gọi chọn lọc"</string>
+    <string name="mdc_monitor">"Nghe từ xa"</string>
+    <string name="mdc_radio_check">"Kiểm tra máy"</string>
+    <string name="mdc_call_alert">"Cảnh báo cuộc gọi"</string>
+    <string name="pmr_selcall">"5 âm"</string>
+    <string name="gain_advice_strong">"Quá mạnh: bộ chuyển đổi bị bão hòa. Hãy giảm độ lợi."</string>
+    <string name="gain_advice_weak">"Quá yếu: nhiễu bị chìm trong nhiễu của bộ chuyển đổi. Hãy tăng độ lợi."</string>
+    <string name="gain_advice_good">"Độ lợi đã hợp lý"</string>
 </resources>

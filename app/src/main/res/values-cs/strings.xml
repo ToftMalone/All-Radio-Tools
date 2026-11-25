@@ -3429,4 +3429,20 @@ Záplava je proud falešných rámců párování, který vyvolá vyskakovací o
         <item quantity="few">"kanály"</item>
         <item quantity="many">"kanálů"</item>
     </plurals>
+    <string name="pmr_mdc_unit">"jednotka %1$s"</string>
+    <string name="mdc_ptt">"ID PTT"</string>
+    <string name="mdc_ptt_end">"ID PTT (uvolněno)"</string>
+    <string name="mdc_status_request">"Dotaz na stav"</string>
+    <string name="mdc_status">"Stav %1$d"</string>
+    <string name="mdc_inhibit">"Blokování stanice"</string>
+    <string name="mdc_enable">"Odblokování stanice"</string>
+    <string name="mdc_message">"Zpráva"</string>
+    <string name="mdc_selcall">"Selektivní volání"</string>
+    <string name="mdc_monitor">"Vzdálený odposlech"</string>
+    <string name="mdc_radio_check">"Test stanice"</string>
+    <string name="mdc_call_alert">"Upozornění na volání"</string>
+    <string name="pmr_selcall">"5tónové"</string>
+    <string name="gain_advice_strong">"Příliš silný: převodník se saturuje. Snižte zisk."</string>
+    <string name="gain_advice_weak">"Příliš slabý: šum zaniká v šumu převodníku. Zvyšte zisk."</string>
+    <string name="gain_advice_good">"Zisk dobře nastaven"</string>
 </resources>

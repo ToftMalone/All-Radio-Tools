@@ -3429,4 +3429,20 @@ Zalew to strumień fałszywych ramek parowania, który wywołuje wyskakujące ok
         <item quantity="few">"kanały"</item>
         <item quantity="many">"kanałów"</item>
     </plurals>
+    <string name="pmr_mdc_unit">"jednostka %1$s"</string>
+    <string name="mdc_ptt">"ID PTT"</string>
+    <string name="mdc_ptt_end">"ID PTT (zwolniony)"</string>
+    <string name="mdc_status_request">"Zapytanie o status"</string>
+    <string name="mdc_status">"Status %1$d"</string>
+    <string name="mdc_inhibit">"Blokada radia"</string>
+    <string name="mdc_enable">"Odblokowanie radia"</string>
+    <string name="mdc_message">"Wiadomość"</string>
+    <string name="mdc_selcall">"Wywołanie selektywne"</string>
+    <string name="mdc_monitor">"Zdalny nasłuch"</string>
+    <string name="mdc_radio_check">"Test radia"</string>
+    <string name="mdc_call_alert">"Alarm wywołania"</string>
+    <string name="pmr_selcall">"5-tonowe"</string>
+    <string name="gain_advice_strong">"Za silny: przetwornik się nasyca. Zmniejsz wzmocnienie."</string>
+    <string name="gain_advice_weak">"Za słaby: szum ginie w szumie przetwornika. Zwiększ wzmocnienie."</string>
+    <string name="gain_advice_good">"Wzmocnienie dobrze ustawione"</string>
 </resources>

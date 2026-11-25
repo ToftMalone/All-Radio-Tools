@@ -3275,4 +3275,20 @@ Een vloed is een stroom nep-koppelframes die op elke telefoon in de buurt een po
         <item quantity="one">"kanaal"</item>
         <item quantity="other">"kanalen"</item>
     </plurals>
+    <string name="pmr_mdc_unit">"eenheid %1$s"</string>
+    <string name="mdc_ptt">"PTT-ID"</string>
+    <string name="mdc_ptt_end">"PTT-ID (losgelaten)"</string>
+    <string name="mdc_status_request">"Statusverzoek"</string>
+    <string name="mdc_status">"Status %1$d"</string>
+    <string name="mdc_inhibit">"Radio blokkeren"</string>
+    <string name="mdc_enable">"Radio vrijgeven"</string>
+    <string name="mdc_message">"Bericht"</string>
+    <string name="mdc_selcall">"Selectieve oproep"</string>
+    <string name="mdc_monitor">"Meeluisteren op afstand"</string>
+    <string name="mdc_radio_check">"Radiocontrole"</string>
+    <string name="mdc_call_alert">"Oproepalarm"</string>
+    <string name="pmr_selcall">"5-toons"</string>
+    <string name="gain_advice_strong">"Te sterk: de converter raakt verzadigd. Verlaag de versterking."</string>
+    <string name="gain_advice_weak">"Te zwak: de ruis verdwijnt in die van de converter. Verhoog de versterking."</string>
+    <string name="gain_advice_good">"Versterking goed ingesteld"</string>
 </resources>

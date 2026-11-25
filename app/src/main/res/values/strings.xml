@@ -3295,4 +3295,20 @@
         <item quantity="one">"channel"</item>
         <item quantity="other">"channels"</item>
     </plurals>
+    <string name="pmr_mdc_unit">"unit %1$s"</string>
+    <string name="mdc_ptt">"PTT ID"</string>
+    <string name="mdc_ptt_end">"PTT ID (released)"</string>
+    <string name="mdc_status_request">"Status request"</string>
+    <string name="mdc_status">"Status %1$d"</string>
+    <string name="mdc_inhibit">"Radio inhibit"</string>
+    <string name="mdc_enable">"Radio enable"</string>
+    <string name="mdc_message">"Message"</string>
+    <string name="mdc_selcall">"Selective call"</string>
+    <string name="mdc_monitor">"Remote monitor"</string>
+    <string name="mdc_radio_check">"Radio check"</string>
+    <string name="mdc_call_alert">"Call alert"</string>
+    <string name="pmr_selcall">"5-tone"</string>
+    <string name="gain_advice_strong">"Too strong: the converter saturates. Lower the gain."</string>
+    <string name="gain_advice_weak">"Too weak: the noise is lost in the converter\'s. Raise the gain."</string>
+    <string name="gain_advice_good">"Gain well set"</string>
 </resources>

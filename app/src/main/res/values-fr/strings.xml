@@ -3370,4 +3370,20 @@
         <item quantity="other">"canaux"</item>
         <item quantity="many">"canaux"</item>
     </plurals>
+    <string name="pmr_mdc_unit">"unité %1$s"</string>
+    <string name="mdc_ptt">"Identifiant PTT"</string>
+    <string name="mdc_ptt_end">"Identifiant PTT (relâché)"</string>
+    <string name="mdc_status_request">"Demande d\'état"</string>
+    <string name="mdc_status">"État %1$d"</string>
+    <string name="mdc_inhibit">"Blocage radio"</string>
+    <string name="mdc_enable">"Déblocage radio"</string>
+    <string name="mdc_message">"Message"</string>
+    <string name="mdc_selcall">"Appel sélectif"</string>
+    <string name="mdc_monitor">"Écoute à distance"</string>
+    <string name="mdc_radio_check">"Test radio"</string>
+    <string name="mdc_call_alert">"Alerte d\'appel"</string>
+    <string name="pmr_selcall">"5 tons"</string>
+    <string name="gain_advice_strong">"Trop fort : le convertisseur sature. Baissez le gain."</string>
+    <string name="gain_advice_weak">"Trop faible : le bruit se perd dans celui du convertisseur. Montez le gain."</string>
+    <string name="gain_advice_good">"Gain bien réglé"</string>
 </resources>

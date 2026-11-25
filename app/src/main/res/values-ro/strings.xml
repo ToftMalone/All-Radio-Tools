@@ -3351,4 +3351,20 @@ Un val este un flux de cadre de asociere false care face să apară un pop-up pe
         <item quantity="one">"canal"</item>
         <item quantity="other">"canale"</item>
     </plurals>
+    <string name="pmr_mdc_unit">"unitate %1$s"</string>
+    <string name="mdc_ptt">"ID PTT"</string>
+    <string name="mdc_ptt_end">"ID PTT (eliberat)"</string>
+    <string name="mdc_status_request">"Cerere de stare"</string>
+    <string name="mdc_status">"Stare %1$d"</string>
+    <string name="mdc_inhibit">"Blocare stație"</string>
+    <string name="mdc_enable">"Deblocare stație"</string>
+    <string name="mdc_message">"Mesaj"</string>
+    <string name="mdc_selcall">"Apel selectiv"</string>
+    <string name="mdc_monitor">"Ascultare la distanță"</string>
+    <string name="mdc_radio_check">"Test stație"</string>
+    <string name="mdc_call_alert">"Alertă de apel"</string>
+    <string name="pmr_selcall">"5 tonuri"</string>
+    <string name="gain_advice_strong">"Prea puternic: convertorul se saturează. Coboară câștigul."</string>
+    <string name="gain_advice_weak">"Prea slab: zgomotul se pierde în cel al convertorului. Crește câștigul."</string>
+    <string name="gain_advice_good">"Câștig bine reglat"</string>
 </resources>

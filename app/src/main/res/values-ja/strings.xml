@@ -3199,4 +3199,20 @@
         <item quantity="one">"チャンネル"</item>
         <item quantity="other">"チャンネル"</item>
     </plurals>
+    <string name="pmr_mdc_unit">"ユニット %1$s"</string>
+    <string name="mdc_ptt">"PTT ID"</string>
+    <string name="mdc_ptt_end">"PTT ID（リリース時）"</string>
+    <string name="mdc_status_request">"ステータス要求"</string>
+    <string name="mdc_status">"ステータス %1$d"</string>
+    <string name="mdc_inhibit">"無線機の停止"</string>
+    <string name="mdc_enable">"無線機の有効化"</string>
+    <string name="mdc_message">"メッセージ"</string>
+    <string name="mdc_selcall">"選択呼出"</string>
+    <string name="mdc_monitor">"遠隔モニター"</string>
+    <string name="mdc_radio_check">"無線チェック"</string>
+    <string name="mdc_call_alert">"呼出アラート"</string>
+    <string name="pmr_selcall">"5トーン"</string>
+    <string name="gain_advice_strong">"強すぎます: コンバーターが飽和しています。ゲインを下げてください。"</string>
+    <string name="gain_advice_weak">"弱すぎます: ノイズがコンバーターのノイズに埋もれています。ゲインを上げてください。"</string>
+    <string name="gain_advice_good">"ゲインは適切です"</string>
 </resources>

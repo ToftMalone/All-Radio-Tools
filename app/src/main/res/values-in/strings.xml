@@ -3199,4 +3199,20 @@ Banjir adalah aliran frame pemasangan palsu yang memunculkan pop-up di setiap po
         <item quantity="one">"kanal"</item>
         <item quantity="other">"kanal"</item>
     </plurals>
+    <string name="pmr_mdc_unit">"unit %1$s"</string>
+    <string name="mdc_ptt">"ID PTT"</string>
+    <string name="mdc_ptt_end">"ID PTT (dilepas)"</string>
+    <string name="mdc_status_request">"Permintaan status"</string>
+    <string name="mdc_status">"Status %1$d"</string>
+    <string name="mdc_inhibit">"Blokir radio"</string>
+    <string name="mdc_enable">"Aktifkan radio"</string>
+    <string name="mdc_message">"Pesan"</string>
+    <string name="mdc_selcall">"Panggilan selektif"</string>
+    <string name="mdc_monitor">"Pantau jarak jauh"</string>
+    <string name="mdc_radio_check">"Cek radio"</string>
+    <string name="mdc_call_alert">"Peringatan panggilan"</string>
+    <string name="pmr_selcall">"5 nada"</string>
+    <string name="gain_advice_strong">"Terlalu kuat: konverter jenuh. Turunkan gain."</string>
+    <string name="gain_advice_weak">"Terlalu lemah: derau hilang di derau konverter. Naikkan gain."</string>
+    <string name="gain_advice_good">"Gain sudah pas"</string>
 </resources>

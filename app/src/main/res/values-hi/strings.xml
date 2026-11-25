@@ -3275,4 +3275,20 @@
         <item quantity="one">"चैनल"</item>
         <item quantity="other">"चैनल"</item>
     </plurals>
+    <string name="pmr_mdc_unit">"यूनिट %1$s"</string>
+    <string name="mdc_ptt">"PTT ID"</string>
+    <string name="mdc_ptt_end">"PTT ID (छोड़ा गया)"</string>
+    <string name="mdc_status_request">"स्थिति अनुरोध"</string>
+    <string name="mdc_status">"स्थिति %1$d"</string>
+    <string name="mdc_inhibit">"रेडियो अवरोध"</string>
+    <string name="mdc_enable">"रेडियो सक्षम"</string>
+    <string name="mdc_message">"संदेश"</string>
+    <string name="mdc_selcall">"चयनात्मक कॉल"</string>
+    <string name="mdc_monitor">"दूरस्थ निगरानी"</string>
+    <string name="mdc_radio_check">"रेडियो जाँच"</string>
+    <string name="mdc_call_alert">"कॉल अलर्ट"</string>
+    <string name="pmr_selcall">"5-टोन"</string>
+    <string name="gain_advice_strong">"बहुत तेज़: कन्वर्टर संतृप्त है। गेन घटाएँ।"</string>
+    <string name="gain_advice_weak">"बहुत कमज़ोर: शोर कन्वर्टर के शोर में खो जाता है। गेन बढ़ाएँ।"</string>
+    <string name="gain_advice_good">"गेन सही सेट है"</string>
 </resources>

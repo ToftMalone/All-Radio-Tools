@@ -3282,4 +3282,20 @@ Una raffica è un flusso di finte trame di abbinamento che fa apparire un pop-up
         <item quantity="one">"canale"</item>
         <item quantity="other">"canali"</item>
     </plurals>
+    <string name="pmr_mdc_unit">"unità %1$s"</string>
+    <string name="mdc_ptt">"ID PTT"</string>
+    <string name="mdc_ptt_end">"ID PTT (rilasciato)"</string>
+    <string name="mdc_status_request">"Richiesta di stato"</string>
+    <string name="mdc_status">"Stato %1$d"</string>
+    <string name="mdc_inhibit">"Blocco radio"</string>
+    <string name="mdc_enable">"Sblocco radio"</string>
+    <string name="mdc_message">"Messaggio"</string>
+    <string name="mdc_selcall">"Chiamata selettiva"</string>
+    <string name="mdc_monitor">"Ascolto remoto"</string>
+    <string name="mdc_radio_check">"Verifica radio"</string>
+    <string name="mdc_call_alert">"Avviso di chiamata"</string>
+    <string name="pmr_selcall">"5 toni"</string>
+    <string name="gain_advice_strong">"Troppo forte: il convertitore satura. Abbassa il guadagno."</string>
+    <string name="gain_advice_weak">"Troppo debole: il rumore si perde in quello del convertitore. Alza il guadagno."</string>
+    <string name="gain_advice_good">"Guadagno ben regolato"</string>
 </resources>

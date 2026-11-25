@@ -112,7 +112,7 @@ class SdrGain(
 ) {
     /** What the tool's signals ask of the automatic gain; a tool whose mode changes (Listen) sets it again. */
     var profile = profile
-        set(v) { field = v; loop?.reprofile(v) }
+        set(v) { field = v; loop?.reprofile(v); advisor.profile = v }
     var auto by mutableStateOf(true)
     var lna by mutableIntStateOf(lna)
     var vga by mutableIntStateOf(vga)
@@ -129,11 +129,17 @@ class SdrGain(
     @Volatile private var loop: AutoGain? = null
     private val ampCheck = com.allnetworktools.data.sdr.AmpCheck()
     private var onAdjust: () -> Unit = {}
+    private val advisor = com.allnetworktools.data.sdr.GainAdvisor(profile)
+    /** With the gain set by hand: too strong, too weak or right, from the samples (null until known, and in Auto). */
+    var advice by mutableStateOf<com.allnetworktools.data.sdr.GainAdvice?>(null)
+        private set
 
     /** Called when reception starts: from then on, in automatic mode, [onAdjust] pushes each new step to the radio. */
     fun attach(onAdjust: () -> Unit) {
         this.onAdjust = onAdjust
         loop = AutoGain(profile, lna, vga)
+        advisor.reset()
+        advice = null
     }
 
     /** Samples as they arrive from the radio, on its thread. */
@@ -153,7 +159,10 @@ class SdrGain(
                 com.allnetworktools.data.sdr.AmpCheck.Action.None -> Unit
             }
         }
-        if (!auto) return
+        if (!auto) {
+            if (advisor.feed(buf, len, System.nanoTime())) { val a = advisor.advice; main.post { if (!auto) advice = a } }
+            return
+        }
         val l = loop ?: return
         val step = l.feed(buf, len, System.nanoTime()) ?: return
         main.post {
@@ -165,6 +174,8 @@ class SdrGain(
 
     fun setAuto() {
         auto = true
+        advice = null
+        advisor.reset()
         loop = AutoGain(profile, lna, vga)
     }
 }
@@ -196,8 +207,23 @@ internal fun GainSettings(g: SdrGain, onChange: () -> Unit) {
                 }
             }
         }
+        if (!g.auto) g.advice?.let { GainAdviceLine(it) }
         if (kind?.biasTee == true) BiasTeeLine()
         ConverterLine()
+    }
+}
+
+/** What the samples say of a gain set by hand. */
+@Composable
+private fun GainAdviceLine(a: com.allnetworktools.data.sdr.GainAdvice) {
+    val (sym, color, text) = when (a) {
+        com.allnetworktools.data.sdr.GainAdvice.TooStrong -> Triple(Sym.Warning, com.allnetworktools.ui.theme.AntTheme.net.poor, S(R.string.gain_advice_strong))
+        com.allnetworktools.data.sdr.GainAdvice.TooWeak -> Triple(Sym.Info, com.allnetworktools.ui.theme.AntTheme.net.fair, S(R.string.gain_advice_weak))
+        com.allnetworktools.data.sdr.GainAdvice.Good -> Triple(Sym.CheckCircle, com.allnetworktools.ui.theme.AntTheme.net.good, S(R.string.gain_advice_good))
+    }
+    androidx.compose.foundation.layout.Row(verticalAlignment = androidx.compose.ui.Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        com.allnetworktools.ui.components.Symbol(sym, size = 18.dp, tint = color)
+        Text(text, style = rf(12, 16, 500), color = color)
     }
 }
 

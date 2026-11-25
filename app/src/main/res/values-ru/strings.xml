@@ -3429,4 +3429,20 @@
         <item quantity="few">"канала"</item>
         <item quantity="many">"каналов"</item>
     </plurals>
+    <string name="pmr_mdc_unit">"абонент %1$s"</string>
+    <string name="mdc_ptt">"ID PTT"</string>
+    <string name="mdc_ptt_end">"ID PTT (отпущено)"</string>
+    <string name="mdc_status_request">"Запрос статуса"</string>
+    <string name="mdc_status">"Статус %1$d"</string>
+    <string name="mdc_inhibit">"Блокировка рации"</string>
+    <string name="mdc_enable">"Разблокировка рации"</string>
+    <string name="mdc_message">"Сообщение"</string>
+    <string name="mdc_selcall">"Селективный вызов"</string>
+    <string name="mdc_monitor">"Удалённое прослушивание"</string>
+    <string name="mdc_radio_check">"Проверка рации"</string>
+    <string name="mdc_call_alert">"Оповещение о вызове"</string>
+    <string name="pmr_selcall">"5-тональный"</string>
+    <string name="gain_advice_strong">"Слишком сильно: АЦП перегружен. Уменьшите усиление."</string>
+    <string name="gain_advice_weak">"Слишком слабо: шум теряется в шуме АЦП. Увеличьте усиление."</string>
+    <string name="gain_advice_good">"Усиление в норме"</string>
 </resources>

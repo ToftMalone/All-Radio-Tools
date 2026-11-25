@@ -3199,4 +3199,20 @@
         <item quantity="one">"ช่อง"</item>
         <item quantity="other">"ช่อง"</item>
     </plurals>
+    <string name="pmr_mdc_unit">"หน่วย %1$s"</string>
+    <string name="mdc_ptt">"PTT ID"</string>
+    <string name="mdc_ptt_end">"PTT ID (ปล่อย)"</string>
+    <string name="mdc_status_request">"ขอสถานะ"</string>
+    <string name="mdc_status">"สถานะ %1$d"</string>
+    <string name="mdc_inhibit">"ระงับวิทยุ"</string>
+    <string name="mdc_enable">"เปิดใช้วิทยุ"</string>
+    <string name="mdc_message">"ข้อความ"</string>
+    <string name="mdc_selcall">"เรียกแบบเลือก"</string>
+    <string name="mdc_monitor">"ฟังระยะไกล"</string>
+    <string name="mdc_radio_check">"ตรวจวิทยุ"</string>
+    <string name="mdc_call_alert">"แจ้งเตือนการเรียก"</string>
+    <string name="pmr_selcall">"5 โทน"</string>
+    <string name="gain_advice_strong">"แรงเกินไป: ตัวแปลงอิ่มตัว ลดเกน"</string>
+    <string name="gain_advice_weak">"อ่อนเกินไป: สัญญาณรบกวนจมอยู่ในของตัวแปลง เพิ่มเกน"</string>
+    <string name="gain_advice_good">"ตั้งเกนได้ดี"</string>
 </resources>

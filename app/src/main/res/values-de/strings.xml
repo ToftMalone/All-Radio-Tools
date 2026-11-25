@@ -3275,4 +3275,20 @@ Eine Flut ist ein Strom gefälschter Kopplungs-Frames, der auf jedem Telefon in 
         <item quantity="one">"Kanal"</item>
         <item quantity="other">"Kanäle"</item>
     </plurals>
+    <string name="pmr_mdc_unit">"Gerät %1$s"</string>
+    <string name="mdc_ptt">"PTT-Kennung"</string>
+    <string name="mdc_ptt_end">"PTT-Kennung (losgelassen)"</string>
+    <string name="mdc_status_request">"Statusabfrage"</string>
+    <string name="mdc_status">"Status %1$d"</string>
+    <string name="mdc_inhibit">"Funkgerät sperren"</string>
+    <string name="mdc_enable">"Funkgerät freigeben"</string>
+    <string name="mdc_message">"Nachricht"</string>
+    <string name="mdc_selcall">"Selektivruf"</string>
+    <string name="mdc_monitor">"Fernabhören"</string>
+    <string name="mdc_radio_check">"Funkprüfung"</string>
+    <string name="mdc_call_alert">"Rufalarm"</string>
+    <string name="pmr_selcall">"5-Ton"</string>
+    <string name="gain_advice_strong">"Zu stark: der Wandler übersteuert. Verstärkung senken."</string>
+    <string name="gain_advice_weak">"Zu schwach: das Rauschen geht im Wandlerrauschen unter. Verstärkung erhöhen."</string>
+    <string name="gain_advice_good">"Verstärkung gut eingestellt"</string>
 </resources>

@@ -62,6 +62,10 @@ data class PmrCall(
     val emergency: Boolean, val encrypted: Boolean, val end: Boolean,
     /** A Kenwood FleetSync identity on an analogue call, instead of digital signalling. */
     val fleet: com.allnetworktools.data.sdr.FleetSync.Message? = null,
+    /** A Motorola MDC-1200 burst. */
+    val mdc: com.allnetworktools.data.sdr.Mdc1200.Message? = null,
+    /** A selective call or DTMF string: (standard, digits). */
+    val tones: Pair<String, String>? = null,
 )
 
 /**
@@ -128,14 +132,16 @@ class PmrController(repo: SdrRepository, scope: CoroutineScope, onAcquire: () ->
                 is PmrEvent.DpmrEnd -> PmrCall(now, e.hz, false, null, true, log.firstOrNull { !it.dmr && it.hz == e.hz }?.src, null, 0, false, false, true)
                 is PmrEvent.Voice -> null
                 is PmrEvent.FleetSyncId -> PmrCall(now, e.hz, false, null, false, e.msg.unit, null, 0, false, false, false, fleet = e.msg)
+                is PmrEvent.Tones -> PmrCall(now, e.hz, false, null, false, null, null, 0, false, false, false, tones = e.standard to e.digits)
+                is PmrEvent.MdcId -> PmrCall(now, e.hz, false, null, false, e.msg.unit, null, 0, e.msg.op == 0x00, false, e.msg.op == 0x01 && e.msg.arg == 0x00, mdc = e.msg)
             }
             val ch = chOf(e.hz)
-            kind[ch] = when (e) { is PmrEvent.Dmr, is PmrEvent.DmrVoice -> "DMR"; is PmrEvent.FleetSyncId -> "FleetSync"; else -> "dPMR" }
+            kind[ch] = when (e) { is PmrEvent.Dmr, is PmrEvent.DmrVoice -> "DMR"; is PmrEvent.FleetSyncId -> "FleetSync"; is PmrEvent.MdcId -> "MDC-1200"; is PmrEvent.Tones -> if (e.standard == "DTMF") "DTMF" else S(R.string.pmr_selcall); else -> "dPMR" }
             last[ch] = now
             if (call != null) {
                 // A header or terminator is sent several times: one line per call and end.
                 val prev = log.firstOrNull()
-                if (prev == null || prev.src != call.src || prev.dst != call.dst || prev.end != call.end || prev.hz != call.hz || now - prev.atMs > 5_000) {
+                if (prev == null || prev.src != call.src || prev.dst != call.dst || prev.end != call.end || prev.hz != call.hz || prev.tones != call.tones || prev.mdc != call.mdc || now - prev.atMs > 5_000) {
                     log.addFirst(call); changed = true
                     while (log.size > 300) log.removeLast()
                 }
@@ -214,7 +220,7 @@ fun PmrTool(vm: MainViewModel) {
                 Text("$active", style = gs(56, 60, 500, -1.5f, tnum = true))
                 Text(S(R.string.pmr_active), Modifier.padding(bottom = 8.dp), style = rf(18, 24, 500))
             }
-            Text(S(R.string.pmr_heard, c.channels.count { it.lastMs > 0 }, c.calls.size), style = rf(14, 20))
+            Text(S(R.string.pmr_heard, c.channels.count { it.lastMs > 0 }, c.calls.count { it.fleet == null && it.mdc == null && it.tones == null }), style = rf(14, 20))
             Row(Modifier.padding(top = 12.dp)) {
                 when {
                     c.error != null -> HeroChip(c.error!!, AntTheme.net.poor)
@@ -307,6 +313,28 @@ private fun CallRow(c: PmrCall) {
         LeadingIcon(if (c.end) Sym.Stop else Sym.Mic, if (c.emergency) cs.errorContainer else acc.container, if (c.emergency) cs.onErrorContainer else acc.onContainer, 40.dp, RoundedCornerShape(12.dp), 22.dp)
         Column(Modifier.weight(1f)) {
             val id = { v: Int? -> v?.let { if (c.dmr) "$it" else Dpmr.idText(it) } ?: "?" }
+            val tn = c.tones
+            if (tn != null) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text((if (tn.first == "DTMF") "DTMF" else S(R.string.pmr_selcall) + " " + tn.first) + " · " + tn.second, Modifier.weight(1f), style = rf(15, 20, 600, tnum = true), maxLines = 2)
+                    Text(DateFormat.getTimeInstance(DateFormat.MEDIUM).format(Date(c.atMs)), style = rf(12, 16, tnum = true), color = cs.onSurfaceVariant)
+                }
+                Text("%.5f MHz".format(Locale.getDefault(), c.hz / 1e6), style = rf(12, 16, tnum = true), color = cs.onSurfaceVariant)
+                return@Column
+            }
+            val md = c.mdc
+            if (md != null) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text("MDC-1200 · " + mdcLabel(md), Modifier.weight(1f), style = rf(15, 20, 600), maxLines = 2)
+                    Text(DateFormat.getTimeInstance(DateFormat.MEDIUM).format(Date(c.atMs)), style = rf(12, 16, tnum = true), color = cs.onSurfaceVariant)
+                }
+                Text(
+                    listOfNotNull(S(R.string.pmr_mdc_unit, md.unitHex), "%.5f MHz".format(Locale.getDefault(), c.hz / 1e6), "op %02X/%02X".format(md.op, md.arg),
+                        if (c.emergency && md.op != 0x00) S(R.string.pmr_emergency) else null).joinToString(" · "),
+                    style = rf(12, 16, tnum = true), color = cs.onSurfaceVariant,
+                )
+                return@Column
+            }
             val fs = c.fleet
             if (fs != null) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
@@ -340,5 +368,24 @@ private fun CallRow(c: PmrCall) {
                 style = rf(12, 16, tnum = true), color = cs.onSurfaceVariant,
             )
         }
+    }
+}
+
+/** What an MDC-1200 burst signals, in words. */
+private fun mdcLabel(m: com.allnetworktools.data.sdr.Mdc1200.Message): String {
+    return when (com.allnetworktools.data.sdr.Mdc1200.label(m.op, m.arg)) {
+        com.allnetworktools.data.sdr.Mdc1200.Operation.Ptt -> S(R.string.mdc_ptt)
+        com.allnetworktools.data.sdr.Mdc1200.Operation.PttEnd -> S(R.string.mdc_ptt_end)
+        com.allnetworktools.data.sdr.Mdc1200.Operation.Emergency -> S(R.string.pmr_emergency)
+        com.allnetworktools.data.sdr.Mdc1200.Operation.StatusRequest -> S(R.string.mdc_status_request)
+        com.allnetworktools.data.sdr.Mdc1200.Operation.Status -> S(R.string.mdc_status, m.arg)
+        com.allnetworktools.data.sdr.Mdc1200.Operation.Inhibit -> S(R.string.mdc_inhibit)
+        com.allnetworktools.data.sdr.Mdc1200.Operation.Enable -> S(R.string.mdc_enable)
+        com.allnetworktools.data.sdr.Mdc1200.Operation.Message -> S(R.string.mdc_message)
+        com.allnetworktools.data.sdr.Mdc1200.Operation.SelectiveCall -> S(R.string.mdc_selcall)
+        com.allnetworktools.data.sdr.Mdc1200.Operation.RemoteMonitor -> S(R.string.mdc_monitor)
+        com.allnetworktools.data.sdr.Mdc1200.Operation.RadioCheck -> S(R.string.mdc_radio_check)
+        com.allnetworktools.data.sdr.Mdc1200.Operation.CallAlert -> S(R.string.mdc_call_alert)
+        null -> "op %02X/%02X".format(m.op, m.arg)
     }
 }

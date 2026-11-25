@@ -3199,4 +3199,20 @@
         <item quantity="one">"채널"</item>
         <item quantity="other">"채널"</item>
     </plurals>
+    <string name="pmr_mdc_unit">"유닛 %1$s"</string>
+    <string name="mdc_ptt">"PTT ID"</string>
+    <string name="mdc_ptt_end">"PTT ID (해제)"</string>
+    <string name="mdc_status_request">"상태 요청"</string>
+    <string name="mdc_status">"상태 %1$d"</string>
+    <string name="mdc_inhibit">"무전기 차단"</string>
+    <string name="mdc_enable">"무전기 활성화"</string>
+    <string name="mdc_message">"메시지"</string>
+    <string name="mdc_selcall">"선택 호출"</string>
+    <string name="mdc_monitor">"원격 모니터"</string>
+    <string name="mdc_radio_check">"무전기 점검"</string>
+    <string name="mdc_call_alert">"호출 알림"</string>
+    <string name="pmr_selcall">"5톤"</string>
+    <string name="gain_advice_strong">"너무 강함: 변환기가 포화됩니다. 게인을 낮추세요."</string>
+    <string name="gain_advice_weak">"너무 약함: 잡음이 변환기 잡음에 묻힙니다. 게인을 높이세요."</string>
+    <string name="gain_advice_good">"게인이 적절합니다"</string>
 </resources>

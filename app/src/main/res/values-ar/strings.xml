@@ -3583,4 +3583,20 @@
         <item quantity="few">"قنوات"</item>
         <item quantity="many">"قناة"</item>
     </plurals>
+    <string name="pmr_mdc_unit">"الوحدة %1$s"</string>
+    <string name="mdc_ptt">"معرّف PTT"</string>
+    <string name="mdc_ptt_end">"معرّف PTT (عند التحرير)"</string>
+    <string name="mdc_status_request">"طلب الحالة"</string>
+    <string name="mdc_status">"الحالة %1$d"</string>
+    <string name="mdc_inhibit">"تعطيل الجهاز"</string>
+    <string name="mdc_enable">"تفعيل الجهاز"</string>
+    <string name="mdc_message">"رسالة"</string>
+    <string name="mdc_selcall">"نداء انتقائي"</string>
+    <string name="mdc_monitor">"استماع عن بُعد"</string>
+    <string name="mdc_radio_check">"فحص الجهاز"</string>
+    <string name="mdc_call_alert">"تنبيه نداء"</string>
+    <string name="pmr_selcall">"خماسي النغمات"</string>
+    <string name="gain_advice_strong">"قوي جدًا: المحوّل مشبع. اخفض الكسب."</string>
+    <string name="gain_advice_weak">"ضعيف جدًا: الضجيج يضيع في ضجيج المحوّل. ارفع الكسب."</string>
+    <string name="gain_advice_good">"الكسب مضبوط جيدًا"</string>
 </resources>

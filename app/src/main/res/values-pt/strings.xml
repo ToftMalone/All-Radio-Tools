@@ -3282,4 +3282,20 @@ Uma enxurrada é um fluxo de quadros de pareamento falsos que faz aparecer um po
         <item quantity="one">"canal"</item>
         <item quantity="other">"canais"</item>
     </plurals>
+    <string name="pmr_mdc_unit">"unidade %1$s"</string>
+    <string name="mdc_ptt">"ID de PTT"</string>
+    <string name="mdc_ptt_end">"ID de PTT (solto)"</string>
+    <string name="mdc_status_request">"Pedido de estado"</string>
+    <string name="mdc_status">"Estado %1$d"</string>
+    <string name="mdc_inhibit">"Bloqueio do rádio"</string>
+    <string name="mdc_enable">"Desbloqueio do rádio"</string>
+    <string name="mdc_message">"Mensagem"</string>
+    <string name="mdc_selcall">"Chamada seletiva"</string>
+    <string name="mdc_monitor">"Escuta remota"</string>
+    <string name="mdc_radio_check">"Teste de rádio"</string>
+    <string name="mdc_call_alert">"Alerta de chamada"</string>
+    <string name="pmr_selcall">"5 tons"</string>
+    <string name="gain_advice_strong">"Demasiado forte: o conversor satura. Baixe o ganho."</string>
+    <string name="gain_advice_weak">"Demasiado fraco: o ruído perde-se no do conversor. Suba o ganho."</string>
+    <string name="gain_advice_good">"Ganho bem ajustado"</string>
 </resources>

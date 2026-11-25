@@ -3275,4 +3275,20 @@ Sel, yakındaki her telefonda bir açılır pencere çıkaran sahte eşleştirme
         <item quantity="one">"kanal"</item>
         <item quantity="other">"kanal"</item>
     </plurals>
+    <string name="pmr_mdc_unit">"birim %1$s"</string>
+    <string name="mdc_ptt">"PTT kimliği"</string>
+    <string name="mdc_ptt_end">"PTT kimliği (bırakıldı)"</string>
+    <string name="mdc_status_request">"Durum isteği"</string>
+    <string name="mdc_status">"Durum %1$d"</string>
+    <string name="mdc_inhibit">"Telsiz engelleme"</string>
+    <string name="mdc_enable">"Telsiz etkinleştirme"</string>
+    <string name="mdc_message">"Mesaj"</string>
+    <string name="mdc_selcall">"Seçici çağrı"</string>
+    <string name="mdc_monitor">"Uzaktan dinleme"</string>
+    <string name="mdc_radio_check">"Telsiz kontrolü"</string>
+    <string name="mdc_call_alert">"Çağrı uyarısı"</string>
+    <string name="pmr_selcall">"5 tonlu"</string>
+    <string name="gain_advice_strong">"Çok güçlü: dönüştürücü doyuyor. Kazancı düşürün."</string>
+    <string name="gain_advice_weak">"Çok zayıf: gürültü dönüştürücününkinde kayboluyor. Kazancı artırın."</string>
+    <string name="gain_advice_good">"Kazanç iyi ayarlı"</string>
 </resources>
