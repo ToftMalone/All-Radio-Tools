@@ -3242,4 +3242,37 @@ Een vloed is een stroom nep-koppelframes die op elke telefoon in de buurt een po
     <string name="search_tools_hint">"Typ een deel van de naam van een tool, wat hij doet of zijn radio: %1$d tools."</string>
     <string name="search_no_tool">"Geen tool komt overeen met ‘%1$s’."</string>
     <string name="sdr_tuner_unsupported">"Deze RTL-SDR-stick heeft een %1$s-tuner, nog niet ondersteund (alleen R820T, R820T2 en R828D)"</string>
+    <string name="spectrum_snapshot">"Spectrumopname"</string>
+    <string name="listen_notch_hint">"Lang drukken zet een notch op een fluittoon of draaggolf; tik op de chip om hem te verwijderen."</string>
+    <string name="listen_notch_chip">"Notch %1$s ✕"</string>
+    <string name="listen_boost_off">"Volumeversterking: uit"</string>
+    <string name="listen_boost">"Volumeversterking: +%1$s dB (zachte begrenzer)"</string>
+    <string name="sound_cues">"Geluidssignalen"</string>
+    <string name="sound_cues_sub">"Korte tonen als een signaal gevonden wordt, een decoder vergrendelt of het verliest en een overgang eindigt"</string>
+    <string name="pocsag_scan">"🔍 Scan"</string>
+    <string name="pocsag_scan_hint">"Zoekt pagerzenders in de 2 MHz rond de opgegeven frequentie, decodeert elk op 512, 1200 en 2400 bit/s en zegt welke snelheid werkt."</string>
+    <string name="pocsag_scan_centre">"Midden van de scan (MHz)"</string>
+    <string name="pocsag_scan_carriers">"Gevonden zenders"</string>
+    <string name="pocsag_scan_none">"Nog geen zender: pagers zenden in pakketjes, blijf luisteren."</string>
+    <string name="pocsag_scan_best">"decodeert op %1$d bit/s"</string>
+    <string name="pocsag_scan_no_page">"nog geen bericht gedecodeerd"</string>
+    <string name="pmr_fleetsync_id">"vloot %1$d · eenheid %2$d"</string>
+    <string name="airband_title">"Luchtvaartscanner"</string>
+    <string name="airband_subtitle">"Elk luchtvaartkanaal dat uitzendt, zonder lijst"</string>
+    <string name="airband_playing">"Speelt %1$s MHz"</string>
+    <string name="airband_listening">"Wacht op een kanaal dat uitzendt"</string>
+    <string name="airband_window">"Deel van de band (1,8 MHz per keer)"</string>
+    <string name="airband_channels_title">"Gehoorde kanalen"</string>
+    <string name="airband_pin_hint">"Tik op een kanaal om alleen dat te horen; nogmaals voor het sterkste in de lucht."</string>
+    <string name="airband_none_yet">"Nog niets in de lucht"</string>
+    <string name="airband_none_yet_body">"Kanalen openen vanzelf zodra een draaggolf uitzendt en sluiten na 30 s stilte."</string>
+    <string name="airband_how_it_works">"Alleen ontvangst. De scanner bewaakt 1,8 MHz van de luchtvaartband 118–137 MHz in stappen van 8,33 en 25 kHz, opent elk kanaal dat uitzendt, speelt het sterkste in AM en houdt het 2 s vast na het wegvallen van de draaggolf zodat een antwoord niet wordt afgekapt. Luisteren naar luchtvaartverkeer kan bij jou gereguleerd zijn."</string>
+    <string name="airband_on_air">"in de lucht"</string>
+    <string name="airband_ago">"%1$d s geleden"</string>
+    <string name="airband_talk">"%1$d s spraak"</string>
+    <string name="airband_pinned">"vastgezet"</string>
+    <plurals name="p_airband_channels">
+        <item quantity="one">"kanaal"</item>
+        <item quantity="other">"kanalen"</item>
+    </plurals>
 </resources>

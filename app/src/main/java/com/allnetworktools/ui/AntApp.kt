@@ -75,6 +75,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun AntApp(vm: MainViewModel) {
     val settings = vm.settings.collectAsStateWithLifecycle().value ?: return
+    androidx.compose.runtime.SideEffect { com.allnetworktools.util.SoundCues.enabled = settings.soundCues }
     AntTheme(settings) {
         val toaster = remember { Toaster() }
         val actions = rememberAppActions(vm, toaster)

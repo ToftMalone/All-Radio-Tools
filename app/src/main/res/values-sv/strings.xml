@@ -3242,4 +3242,37 @@ Ett flöde är en ström av falska parkopplingsramar som får en popup att visas
     <string name="search_tools_hint">"Skriv en del av ett verktygs namn, vad det gör eller dess radio: %1$d verktyg."</string>
     <string name="search_no_tool">"Inget verktyg matchar ”%1$s”."</string>
     <string name="sdr_tuner_unsupported">"Den här RTL-SDR-stickan har en %1$s-tuner som inte stöds än (bara R820T, R820T2 och R828D)"</string>
+    <string name="spectrum_snapshot">"Spektrumbild"</string>
+    <string name="listen_notch_hint">"Ett långt tryck lägger ett notchfilter på en vissling eller bärvåg; tryck på dess chip för att ta bort det."</string>
+    <string name="listen_notch_chip">"Notch %1$s ✕"</string>
+    <string name="listen_boost_off">"Volymförstärkning: av"</string>
+    <string name="listen_boost">"Volymförstärkning: +%1$s dB (mjuk begränsare)"</string>
+    <string name="sound_cues">"Ljudsignaler"</string>
+    <string name="sound_cues_sub">"Korta toner när en signal hittas, en avkodare låser eller tappar den och en passage slutar"</string>
+    <string name="pocsag_scan">"🔍 Sök"</string>
+    <string name="pocsag_scan_hint">"Söker personsökarsändare inom 2 MHz runt angiven frekvens, avkodar var och en i 512, 1200 och 2400 bit/s och säger vilken hastighet som fungerar."</string>
+    <string name="pocsag_scan_centre">"Sökningens mitt (MHz)"</string>
+    <string name="pocsag_scan_carriers">"Hittade sändare"</string>
+    <string name="pocsag_scan_none">"Ingen sändare än: personsökare sänder i skurar, fortsätt lyssna."</string>
+    <string name="pocsag_scan_best">"avkodar i %1$d bit/s"</string>
+    <string name="pocsag_scan_no_page">"inget meddelande avkodat än"</string>
+    <string name="pmr_fleetsync_id">"flotta %1$d · enhet %2$d"</string>
+    <string name="airband_title">"Flygbandsskanner"</string>
+    <string name="airband_subtitle">"Varje flygkanal som sänder, utan lista"</string>
+    <string name="airband_playing">"Spelar %1$s MHz"</string>
+    <string name="airband_listening">"Väntar på en kanal som sänder"</string>
+    <string name="airband_window">"Del av bandet (1,8 MHz åt gången)"</string>
+    <string name="airband_channels_title">"Hörda kanaler"</string>
+    <string name="airband_pin_hint">"Tryck på en kanal för att bara höra den; igen för den starkaste i luften."</string>
+    <string name="airband_none_yet">"Inget i luften än"</string>
+    <string name="airband_none_yet_body">"Kanaler öppnas själva så fort en bärvåg sänder och stängs efter 30 s tystnad."</string>
+    <string name="airband_how_it_works">"Endast mottagning. Skannern bevakar 1,8 MHz av flygbandet 118–137 MHz i 8,33- och 25-kHz-steg, öppnar varje kanal som sänder, spelar den starkaste i AM och håller den 2 s efter att bärvågen försvunnit så att ett svar inte klipps. Att lyssna på flygtrafik kan vara reglerat där du är."</string>
+    <string name="airband_on_air">"sänder"</string>
+    <string name="airband_ago">"för %1$d s sedan"</string>
+    <string name="airband_talk">"%1$d s tal"</string>
+    <string name="airband_pinned">"fäst"</string>
+    <plurals name="p_airband_channels">
+        <item quantity="one">"kanal"</item>
+        <item quantity="other">"kanaler"</item>
+    </plurals>
 </resources>

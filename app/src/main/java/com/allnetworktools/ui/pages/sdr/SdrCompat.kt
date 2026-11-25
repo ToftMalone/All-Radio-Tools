@@ -31,6 +31,7 @@ private val NEEDS: Map<Tool, SdrNeed> = mapOf(
     Tool.Pmr to SdrNeed(2_000_000, 446.0 to 446.2),
     Tool.Dect to SdrNeed(4_608_000, 1880.0 to 1900.0),
     Tool.Vdl2 to SdrNeed(2_000_000, 136.0 to 137.0),
+    Tool.Airband to SdrNeed(2_000_000, 118.0 to 137.0),
     Tool.Dsc to SdrNeed(2_000_000, 156.0 to 157.0),
     Tool.Wmbus to SdrNeed(2_000_000, 868.0 to 869.5),
     Tool.Flarm to SdrNeed(2_000_000, 868.0 to 869.0),

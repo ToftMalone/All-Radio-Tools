@@ -1,5 +1,6 @@
 package com.allnetworktools.ui.pages.sdr
 
+import kotlinx.coroutines.launch
 import com.allnetworktools.ui.components.fadeUp
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.verticalScroll
@@ -139,6 +140,27 @@ fun SpectrumTool(vm: MainViewModel) {
         if ((f < EDGE || f > 1 - EDGE) && now - lastEdgeMs > EDGE_MS) {
             lastEdgeMs = now
             c.retune((center + (if (f < EDGE) -span else span) / 4).toLong())
+        }
+    }
+    // A picture of what is on screen, to share (OnAir-style snapshot): only while there is a spectrum to show.
+    val shareActions = com.allnetworktools.ui.LocalActions.current
+    val shareContext = androidx.compose.ui.platform.LocalContext.current
+    val shareScope = androidx.compose.runtime.rememberCoroutineScope()
+    if (db != null) com.allnetworktools.ui.pages.TopBarAction(Sym.PhotoCamera) {
+        val snapDb = db
+        val snapHold = c.hold
+        val markerDb = markerAt?.let { markerLevel(snapDb, it) }
+        val caption = SpectrumSnapshot.caption(center, span, marker, markerDb, System.currentTimeMillis(), com.allnetworktools.BuildConfig.VERSION_NAME)
+        val wf = c.waterfall.copy(android.graphics.Bitmap.Config.ARGB_8888, false)
+        shareScope.launch(kotlinx.coroutines.Dispatchers.Default) {
+            val png = SpectrumSnapshot.render(snapDb, snapHold, wf, center, span, marker, caption)
+            val dir = java.io.File(shareContext.cacheDir, "share").apply { mkdirs() }
+            val f = java.io.File(dir, "spectrum-${com.allnetworktools.util.Export.stamp(System.currentTimeMillis())}.png")
+            f.outputStream().use { png.compress(android.graphics.Bitmap.CompressFormat.PNG, 100, it) }
+            kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
+                shareActions.copy(S(R.string.spectrum_snapshot), caption)
+                shareActions.shareFile(S(R.string.spectrum_snapshot), f, "image/png")
+            }
         }
     }
     var analysis by remember { androidx.compose.runtime.mutableStateOf(false) }

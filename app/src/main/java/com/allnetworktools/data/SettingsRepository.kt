@@ -26,6 +26,8 @@ data class AppSettings(
     val refreshSeconds: Float = 1f,
     val haptics: Boolean = true,
     val keepAwake: Boolean = false,
+    /** Short tones for a signal found, a lock, a lost lock and a pass ended; off unless switched on. */
+    val soundCues: Boolean = false,
     val onboardingDone: Boolean = false,
     /** Permission groups already requested once, to detect a permanent denial. */
     val askedPermissions: Set<String> = emptySet(),
@@ -44,6 +46,7 @@ class SettingsRepository(private val context: Context) {
         val signal = stringPreferencesKey("signal")
         val haptics = booleanPreferencesKey("haptics")
         val awake = booleanPreferencesKey("keep_awake")
+        val cues = booleanPreferencesKey("sound_cues")
         val onboarding = booleanPreferencesKey("onboarding_done")
         val asked = stringSetPreferencesKey("asked_permissions")
     }
@@ -56,6 +59,7 @@ class SettingsRepository(private val context: Context) {
             signal = p[K.signal]?.let { runCatching { SignalDisplay.valueOf(it) }.getOrNull() } ?: d.signal,
             haptics = p[K.haptics] ?: d.haptics,
             keepAwake = p[K.awake] ?: d.keepAwake,
+            soundCues = p[K.cues] ?: d.soundCues,
             onboardingDone = p[K.onboarding] ?: d.onboardingDone,
             askedPermissions = p[K.asked] ?: d.askedPermissions,
         )
@@ -66,6 +70,7 @@ class SettingsRepository(private val context: Context) {
     suspend fun setSignal(v: SignalDisplay) = context.store.edit { it[K.signal] = v.name }
     suspend fun setHaptics(v: Boolean) = context.store.edit { it[K.haptics] = v }
     suspend fun setKeepAwake(v: Boolean) = context.store.edit { it[K.awake] = v }
+    suspend fun setSoundCues(v: Boolean) = context.store.edit { it[K.cues] = v }
     suspend fun setOnboardingDone(done: Boolean = true) = context.store.edit { it[K.onboarding] = done }
     suspend fun markAsked(group: String) = context.store.edit { it[K.asked] = (it[K.asked] ?: emptySet()) + group }
 }

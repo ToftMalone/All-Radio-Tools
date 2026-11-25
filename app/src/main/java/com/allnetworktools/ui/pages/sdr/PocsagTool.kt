@@ -1,5 +1,6 @@
 package com.allnetworktools.ui.pages.sdr
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
@@ -70,6 +71,11 @@ class PocsagController(private val repo: SdrRepository, private val scope: Corou
     /** A network from [PocsagNetworks], or null for the single frequency in [customMhz]. */
     var network by mutableStateOf<PocsagNetwork?>(PocsagNetworks.France)
     var customMhz by mutableStateOf("466.075")
+    /** Scan mode: the whole capture around [customMhz] is searched for pagers instead of a known network. */
+    var scan by mutableStateOf(false)
+    /** The carriers the scan found, with the pages each bit rate decoded on them. */
+    var carriers by mutableStateOf<List<com.allnetworktools.data.sdr.PagerCarrier>>(emptyList())
+        private set
     val gain = SdrGain(listOf(16, 24, 32, 40), 32, listOf(20, 30, 40), 30, amp = true)
     var lnaGain by gain::lna
     var vgaGain by gain::vga
@@ -92,7 +98,15 @@ class PocsagController(private val repo: SdrRepository, private val scope: Corou
 
     fun parsedCustomHz(): Long? = customMhz.trim().replace(',', '.').toDoubleOrNull()?.takeIf { it in 100.0..1000.0 }?.let { (it * 1e6).roundToLong() }
 
-    fun channels(): List<Long>? = network?.channelsHz ?: parsedCustomHz()?.let { listOf(it) }
+    fun channels(): List<Long>? = if (scan) parsedCustomHz()?.let { listOf(it) } else network?.channelsHz ?: parsedCustomHz()?.let { listOf(it) }
+
+    /** Picks a carrier found by the scan: the tool then listens to it alone. */
+    fun listenTo(hz: Long) {
+        if (running) stop()
+        scan = false
+        network = null
+        customMhz = "%.5f".format(Locale.US, hz / 1e6).trimEnd('0').trimEnd('.')
+    }
 
     fun start(device: SdrDevice) {
         if (running || starting) return
@@ -109,7 +123,8 @@ class PocsagController(private val repo: SdrRepository, private val scope: Corou
                 val vga = vgaGain
                 val withAmp = amp
                 val rate = PocsagReceiver.SAMPLE_RATE
-                val centre = PocsagReceiver.centre(chans)
+                // Scanning: tuned 100 kHz above the frequency given, so the DC spike is not on it.
+                val centre = if (scan) chans.first() + 100_000 else PocsagReceiver.centre(chans)
                 val ok = withContext(Dispatchers.IO) {
                     r.setSampleRate(rate, HackRf.filterFor(rate)) && r.setFrequency(centre) &&
                         r.setLnaGain(lna) && r.setVgaGain(vga) && r.setAmp(withAmp)
@@ -119,7 +134,8 @@ class PocsagController(private val repo: SdrRepository, private val scope: Corou
                 if (gen != startGen) { withContext(Dispatchers.IO) { r.close() }; return@launch }
                 radio = r
                 listening = chans
-                startPipeline(r, chans)
+                carriers = emptyList()
+                startPipeline(r, chans, if (scan) centre else null)
                 running = true
             } finally {
                 starting = false
@@ -127,16 +143,20 @@ class PocsagController(private val repo: SdrRepository, private val scope: Corou
         }
     }
 
-    private fun startPipeline(r: SdrRadio, chans: List<Long>) {
+    private fun startPipeline(r: SdrRadio, chans: List<Long>, scanCentre: Long?) {
         val free = ArrayBlockingQueue<ByteArray>(POOL)
         val full = ArrayBlockingQueue<Pair<ByteArray, Int>>(POOL)
         repeat(POOL) { free.add(ByteArray(131072)) }
-        val rx = PocsagReceiver(chans) { m -> scope.launch { messages = (listOf(m) + messages).take(MAX) } }
+        val onMessage: (PocsagMessage) -> Unit = { m -> scope.launch { messages = (listOf(m.copy(timeMs = System.currentTimeMillis())) + messages).take(MAX) } }
+        val rx: (ByteArray, Int) -> Unit = if (scanCentre != null) {
+            val sc = com.allnetworktools.data.sdr.PocsagScanner(scanCentre, onMessage, { list -> scope.launch { carriers = list } })
+            sc::feed
+        } else PocsagReceiver(chans, onMessage = onMessage)::feed
         dspRunning = true
         Thread({
             while (dspRunning) dspStep {
                 val item = full.poll(200, TimeUnit.MILLISECONDS) ?: continue
-                rx.feed(item.first, item.second)
+                rx(item.first, item.second)
                 free.offer(item.first)
             }
         }, "sdr-pocsag").start()
@@ -223,6 +243,31 @@ fun PocsagTool(vm: MainViewModel) {
         if (c.running || c.starting) StartButton(S(R.string.stop), Sym.Stop) { c.stop() }
         else StartButton(S(R.string.start_receiving), Sym.PlayArrow, enabled = d != null && c.channels() != null) { d?.let(c::start) }
         val tab = ToolTabRow("PocsagTool0", map = false)
+        if (tab == ToolTab.Main && c.scan && (c.running || c.carriers.isNotEmpty())) {
+            SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 12.dp, bottom = 4.dp)) {
+                Text(S(R.string.pocsag_scan_carriers), style = rf(14, 20, 600))
+                if (c.carriers.isEmpty()) Text(S(R.string.pocsag_scan_none), Modifier.padding(vertical = 10.dp), style = rf(13, 18), color = cs.onSurfaceVariant)
+                c.carriers.forEachIndexed { i, k ->
+                    if (i > 0) Hairline()
+                    Row(
+                        Modifier.fillMaxWidth().clickable { c.listenTo(k.hz) }.padding(vertical = 10.dp),
+                        verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    ) {
+                        Column(Modifier.weight(1f)) {
+                            Text(mhzList(listOf(k.hz)) + " MHz", style = rf(15, 20, 600, tnum = true))
+                            Text(
+                                listOfNotNull(
+                                    "%.0f dBFS".format(Locale.getDefault(), k.peakDb),
+                                    k.bestBaud?.let { S(R.string.pocsag_scan_best, it) } ?: S(R.string.pocsag_scan_no_page),
+                                ).joinToString(" · "),
+                                style = rf(12, 16, tnum = true), color = cs.onSurfaceVariant,
+                            )
+                        }
+                        Text(P(R.plurals.p_messages, k.pages).let { "${k.pages} $it" }, style = rf(13, 18, 600, tnum = true))
+                    }
+                }
+            }
+        }
         if (tab == ToolTab.Main) {
             if (c.messages.isEmpty()) {
                 if (c.running) ToolEmpty(Sym.Sms, S(R.string.pocsag_none_yet), S(R.string.pocsag_none_yet_body), null)
@@ -241,12 +286,16 @@ fun PocsagTool(vm: MainViewModel) {
                     Text(S(R.string.pocsag_network), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
                     FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                         (PocsagNetworks.all + listOf(null)).forEach { net ->
-                            AntFilterChip(net?.name ?: S(R.string.pocsag_custom), c.network == net, {
-                                if (c.network != net && !c.starting) { if (c.running) c.stop(); c.network = net }
+                            AntFilterChip(net?.name ?: S(R.string.pocsag_custom), !c.scan && c.network == net, {
+                                if ((c.scan || c.network != net) && !c.starting) { if (c.running) c.stop(); c.scan = false; c.network = net }
                             })
                         }
+                        AntFilterChip(S(R.string.pocsag_scan), c.scan, {
+                            if (!c.scan && !c.starting) { if (c.running) c.stop(); c.scan = true; c.network = null }
+                        })
                     }
-                    if (c.network == null && !c.running) HostInputField(c.customMhz, { c.customMhz = it }, S(R.string.frequency_mhz), Sym.Antenna, keyboardType = KeyboardType.Decimal)
+                    if (c.scan) Text(S(R.string.pocsag_scan_hint), style = rf(12, 16), color = cs.onSurfaceVariant)
+                    if ((c.network == null || c.scan) && !c.running) HostInputField(c.customMhz, { c.customMhz = it }, S(if (c.scan) R.string.pocsag_scan_centre else R.string.frequency_mhz), Sym.Antenna, keyboardType = KeyboardType.Decimal)
                     GainSettings(c.gain) { c.applyGains() }
                 }
             }

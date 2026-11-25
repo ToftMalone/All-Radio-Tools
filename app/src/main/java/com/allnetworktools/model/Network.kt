@@ -119,6 +119,7 @@ enum class Tool(
     Ais(Network.Sdr, "AIS", Sym.Boat),
     Aprs(Network.Sdr, "APRS", Sym.Radio),
     Acars(Network.Sdr, "ACARS", Sym.Flight),
+    Airband(Network.Sdr, S(R.string.airband_title), Sym.Headphones),
     Meteor(Network.Sdr, "Meteor-M", Sym.SatelliteAlt),
     Fpv(Network.Sdr, "Drones", Sym.Videocam),
     Tpms(Network.Sdr, "TPMS", Sym.TireRepair),

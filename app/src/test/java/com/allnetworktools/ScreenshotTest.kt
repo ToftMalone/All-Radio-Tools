@@ -634,6 +634,14 @@ class ScreenshotTest {
         val dir = File(System.getProperty("screenshots.dir") ?: "build/screenshots").apply { mkdirs() }
         File(dir, "02d_tool_search.png").outputStream().use { bitmap.compress(Bitmap.CompressFormat.PNG, 100, it) }
     }
+    @Test fun airband() = shot("H22_airband", nav = NavState(Network.Sdr, Page.ToolPage(Tool.Airband))) { vm ->
+        val now = System.currentTimeMillis()
+        vm.tools.airband.setForTest(listOf(
+            com.allnetworktools.data.sdr.AirChannel(120_350_000L, true, now - 60_000, now, 14_000, -38f, true),
+            com.allnetworktools.data.sdr.AirChannel(121_008_333L, false, now - 50_000, now - 12_000, 6_000, -52f, false),
+            com.allnetworktools.data.sdr.AirChannel(119_250_000L, false, now - 20_000, now - 3_000, 3_000, -61f, false),
+        ))
+    }
     @Test fun spectrum() = shot("H5_spectrum", dark = true, nav = NavState(Network.Sdr, Page.ToolPage(Tool.Spectrum))) { vm ->
         // FM band: a few stations over a −95 dBFS floor.
         val stations = mapOf(120 to -38f, 260 to -52f, 410 to -30f, 590 to -61f, 700 to -44f, 905 to -49f)

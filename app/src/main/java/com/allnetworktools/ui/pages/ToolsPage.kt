@@ -150,6 +150,7 @@ private fun groups(net: Network, connectedDevice: String?, servingLabel: String?
             R.string.aviation, Sym.Flight,
             ToolEntry(Tool.Adsb, "ADS-B", S(R.string.map_of_aircraft_on_1090_mhz)),
             ToolEntry(Tool.Acars, "ACARS", S(R.string.airliner_messaging_131_mhz)),
+            ToolEntry(Tool.Airband, S(R.string.airband_title), S(R.string.airband_subtitle)),
             ToolEntry(Tool.Vdl2, "VDL Mode 2", S(R.string.vdl2_subtitle)),
             ToolEntry(Tool.Flarm, "FLARM", S(R.string.flarm_subtitle)),
             ToolEntry(Tool.Fpv, S(R.string.drones), S(R.string.analog_fpv_dji_and_rc_links)),

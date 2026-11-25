@@ -3166,4 +3166,37 @@
     <string name="search_tools_hint">"输入工具名称、功能或无线电的一部分：共 %1$d 个工具。"</string>
     <string name="search_no_tool">"没有与“%1$s”匹配的工具。"</string>
     <string name="sdr_tuner_unsupported">"此 RTL-SDR 使用 %1$s 调谐器，暂不支持（仅支持 R820T、R820T2 和 R828D）"</string>
+    <string name="spectrum_snapshot">"频谱快照"</string>
+    <string name="listen_notch_hint">"长按可在啸叫或载波上设置陷波；点按其标签即可移除。"</string>
+    <string name="listen_notch_chip">"陷波 %1$s ✕"</string>
+    <string name="listen_boost_off">"音量增强：关"</string>
+    <string name="listen_boost">"音量增强：+%1$s dB（软限幅）"</string>
+    <string name="sound_cues">"提示音"</string>
+    <string name="sound_cues_sub">"发现信号、解码器锁定或失锁以及过境结束时发出短音"</string>
+    <string name="pocsag_scan">"🔍 扫描"</string>
+    <string name="pocsag_scan_hint">"在给定频率周围 2 MHz 内搜索寻呼发射机，以 512、1200 和 2400 bit/s 解码每一个，并显示哪种速率可用。"</string>
+    <string name="pocsag_scan_centre">"扫描中心（MHz）"</string>
+    <string name="pocsag_scan_carriers">"找到的发射机"</string>
+    <string name="pocsag_scan_none">"暂无发射机：寻呼机是间歇发射的，请继续收听。"</string>
+    <string name="pocsag_scan_best">"以 %1$d bit/s 解码"</string>
+    <string name="pocsag_scan_no_page">"尚未解码任何消息"</string>
+    <string name="pmr_fleetsync_id">"车队 %1$d · 单元 %2$d"</string>
+    <string name="airband_title">"航空波段扫描器"</string>
+    <string name="airband_subtitle">"所有正在发射的航空频道，无需列表"</string>
+    <string name="airband_playing">"正在播放 %1$s MHz"</string>
+    <string name="airband_listening">"等待有频道发射"</string>
+    <string name="airband_window">"波段的一部分（每次 1.8 MHz）"</string>
+    <string name="airband_channels_title">"听到的频道"</string>
+    <string name="airband_pin_hint">"点按某频道只听它；再次点按回到最强的频道。"</string>
+    <string name="airband_none_yet">"尚无发射"</string>
+    <string name="airband_none_yet_body">"载波一出现频道便自动打开，静默 30 秒后关闭。"</string>
+    <string name="airband_how_it_works">"仅接收。扫描器以 8.33 和 25 kHz 步进监视 118–137 MHz 航空波段中的 1.8 MHz，打开每个正在发射的频道，以 AM 播放最强的一个，并在载波消失后保持 2 秒以免截断回复。收听航空通信在您所在地可能受到管制。"</string>
+    <string name="airband_on_air">"发射中"</string>
+    <string name="airband_ago">"%1$d 秒前"</string>
+    <string name="airband_talk">"通话 %1$d 秒"</string>
+    <string name="airband_pinned">"已固定"</string>
+    <plurals name="p_airband_channels">
+        <item quantity="one">"个频道"</item>
+        <item quantity="other">"个频道"</item>
+    </plurals>
 </resources>

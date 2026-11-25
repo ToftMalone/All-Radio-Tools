@@ -3262,4 +3262,37 @@
     <string name="search_tools_hint">"Type part of a tool\'s name, what it does or its radio: %1$d tools to search."</string>
     <string name="search_no_tool">"No tool matches “%1$s”."</string>
     <string name="sdr_tuner_unsupported">"This RTL-SDR stick has an %1$s tuner, not supported yet (only R820T, R820T2 and R828D are)"</string>
+    <string name="spectrum_snapshot">"Spectrum snapshot"</string>
+    <string name="listen_notch_hint">"A long press puts a notch on a whistle or carrier; tap its chip to remove it."</string>
+    <string name="listen_notch_chip">"Notch %1$s ✕"</string>
+    <string name="listen_boost_off">"Loudness boost: off"</string>
+    <string name="listen_boost">"Loudness boost: +%1$s dB (soft limiter)"</string>
+    <string name="sound_cues">"Sound cues"</string>
+    <string name="sound_cues_sub">"Short tones when a signal is found, a decoder locks or loses it, and a pass ends"</string>
+    <string name="pocsag_scan">"🔍 Scan"</string>
+    <string name="pocsag_scan_hint">"Searches the 2 MHz around the frequency given for pager carriers, decodes each at 512, 1200 and 2400 bit/s and says which rate works."</string>
+    <string name="pocsag_scan_centre">"Centre of the scan (MHz)"</string>
+    <string name="pocsag_scan_carriers">"Carriers found"</string>
+    <string name="pocsag_scan_none">"No carrier yet: pagers transmit in bursts, keep listening."</string>
+    <string name="pocsag_scan_best">"decodes at %1$d bit/s"</string>
+    <string name="pocsag_scan_no_page">"no page decoded yet"</string>
+    <string name="pmr_fleetsync_id">"fleet %1$d · unit %2$d"</string>
+    <string name="airband_title">"Airband scanner"</string>
+    <string name="airband_subtitle">"Every aviation channel that keys up, no list needed"</string>
+    <string name="airband_playing">"Playing %1$s MHz"</string>
+    <string name="airband_listening">"Waiting for a channel to key up"</string>
+    <string name="airband_window">"Part of the band (1.8 MHz at a time)"</string>
+    <string name="airband_channels_title">"Channels heard"</string>
+    <string name="airband_pin_hint">"Tap a channel to hear only it; tap again for the strongest one on air."</string>
+    <string name="airband_none_yet">"Nothing on air yet"</string>
+    <string name="airband_none_yet_body">"Channels open by themselves as soon as a carrier keys up, and close after 30 s of silence."</string>
+    <string name="airband_how_it_works">"Receive only. The scanner watches 1.8 MHz of the 118–137 MHz aviation band on the 8.33 and 25 kHz raster, opens every channel that keys up, plays the strongest one in AM and keeps it for 2 s after the carrier drops so a reply is not cut. Listening to aviation traffic may be regulated where you are."</string>
+    <string name="airband_on_air">"on air"</string>
+    <string name="airband_ago">"%1$d s ago"</string>
+    <string name="airband_talk">"%1$d s of talk"</string>
+    <string name="airband_pinned">"pinned"</string>
+    <plurals name="p_airband_channels">
+        <item quantity="one">"channel"</item>
+        <item quantity="other">"channels"</item>
+    </plurals>
 </resources>

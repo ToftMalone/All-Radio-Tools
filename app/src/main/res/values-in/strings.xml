@@ -3166,4 +3166,37 @@ Banjir adalah aliran frame pemasangan palsu yang memunculkan pop-up di setiap po
     <string name="search_tools_hint">"Ketik sebagian nama alat, fungsinya, atau radionya: %1$d alat."</string>
     <string name="search_no_tool">"Tidak ada alat yang cocok dengan “%1$s”."</string>
     <string name="sdr_tuner_unsupported">"Stik RTL-SDR ini memakai tuner %1$s, belum didukung (hanya R820T, R820T2, dan R828D)"</string>
+    <string name="spectrum_snapshot">"Cuplikan spektrum"</string>
+    <string name="listen_notch_hint">"Tekan lama memasang notch pada siulan atau carrier; ketuk chipnya untuk menghapus."</string>
+    <string name="listen_notch_chip">"Notch %1$s ✕"</string>
+    <string name="listen_boost_off">"Penguat volume: mati"</string>
+    <string name="listen_boost">"Penguat volume: +%1$s dB (pembatas lembut)"</string>
+    <string name="sound_cues">"Isyarat suara"</string>
+    <string name="sound_cues_sub">"Nada pendek saat sinyal ditemukan, dekoder mengunci atau kehilangannya, dan lintasan berakhir"</string>
+    <string name="pocsag_scan">"🔍 Pindai"</string>
+    <string name="pocsag_scan_hint">"Mencari pemancar pager dalam 2 MHz di sekitar frekuensi yang diberikan, mendekode tiap pemancar pada 512, 1200 dan 2400 bit/s dan menunjukkan kecepatan yang berhasil."</string>
+    <string name="pocsag_scan_centre">"Pusat pemindaian (MHz)"</string>
+    <string name="pocsag_scan_carriers">"Pemancar ditemukan"</string>
+    <string name="pocsag_scan_none">"Belum ada pemancar: pager memancar secara berkala, terus dengarkan."</string>
+    <string name="pocsag_scan_best">"terdekode pada %1$d bit/s"</string>
+    <string name="pocsag_scan_no_page">"belum ada pesan terdekode"</string>
+    <string name="pmr_fleetsync_id">"armada %1$d · unit %2$d"</string>
+    <string name="airband_title">"Pemindai penerbangan"</string>
+    <string name="airband_subtitle">"Setiap kanal penerbangan yang memancar, tanpa daftar"</string>
+    <string name="airband_playing">"Memutar %1$s MHz"</string>
+    <string name="airband_listening">"Menunggu kanal yang memancar"</string>
+    <string name="airband_window">"Bagian pita (1,8 MHz sekaligus)"</string>
+    <string name="airband_channels_title">"Kanal terdengar"</string>
+    <string name="airband_pin_hint">"Ketuk kanal untuk mendengar hanya itu; ketuk lagi untuk yang terkuat di udara."</string>
+    <string name="airband_none_yet">"Belum ada siaran"</string>
+    <string name="airband_none_yet_body">"Kanal terbuka sendiri begitu carrier memancar dan tertutup setelah 30 dtk hening."</string>
+    <string name="airband_how_it_works">"Hanya menerima. Pemindai mengawasi 1,8 MHz pita penerbangan 118–137 MHz pada langkah 8,33 dan 25 kHz, membuka setiap kanal yang memancar, memutar yang terkuat dalam AM dan menahannya 2 dtk setelah carrier hilang agar balasan tidak terpotong. Mendengarkan lalu lintas penerbangan mungkin diatur di tempat Anda."</string>
+    <string name="airband_on_air">"mengudara"</string>
+    <string name="airband_ago">"%1$d dtk lalu"</string>
+    <string name="airband_talk">"%1$d dtk bicara"</string>
+    <string name="airband_pinned">"disematkan"</string>
+    <plurals name="p_airband_channels">
+        <item quantity="one">"kanal"</item>
+        <item quantity="other">"kanal"</item>
+    </plurals>
 </resources>

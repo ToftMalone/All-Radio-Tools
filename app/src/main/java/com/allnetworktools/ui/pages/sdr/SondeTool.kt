@@ -101,7 +101,7 @@ import com.allnetworktools.util.P
 /** Immutable copy of a sonde for the UI. */
 data class SondeInfo(
     val serial: String,
-    /** "RS41", "M10", "M10+" or "M20". */
+    /** "RS41", "M10", "M10+", "M20", or a Graw "DFM-06" / "DFM-09" / "DFM-17"... */
     val model: String,
     val lat: Double?,
     val lon: Double?,
@@ -200,6 +200,9 @@ class SondeController(private val repo: SdrRepository, private val scope: Corout
         val demod = Rs41Demodulator(SAMPLE_RATE / 40.0) { f -> Rs41.parse(f)?.let { tracker.update(it, System.currentTimeMillis()); count++ } }
         val mDemod = MeteomodemDemodulator(SAMPLE_RATE / 20.0) { f -> Meteomodem.parse(f)?.let { tracker.update(it, System.currentTimeMillis()); count++ } }
         val horus = HorusReceiver { f -> tracker.update(f, System.currentTimeMillis()); count++ }
+        // Graw DFM-06/09/17 (2500 bit/s Manchester), on the same 100 kS/s channel as the Meteomodem sondes.
+        val dfmDecoder = com.allnetworktools.data.sdr.DfmDecoder { f -> tracker.update(f, System.currentTimeMillis()); count++ }
+        val dfm = com.allnetworktools.data.sdr.DfmDemodulator(SAMPLE_RATE / 20.0) { dfmDecoder.frame(it) }
         val d3 = FloatDecimator(5, 0.05)
         val cRe = FloatArray(8192)
         val cIm = FloatArray(8192)
@@ -221,6 +224,7 @@ class SondeController(private val repo: SdrRepository, private val scope: Corout
                     demod.feed(bRe, bIm, m)
                     val q = d3.process(aRe, aIm, k, cRe, cIm)
                     mDemod.feed(cRe, cIm, q)
+                    dfm.feed(cRe, cIm, q)
                     horus.feed(aRe, aIm, k)
                 }
                 val now = System.currentTimeMillis()
@@ -233,7 +237,13 @@ class SondeController(private val repo: SdrRepository, private val scope: Corout
                             landingOf(s))
                     }.sortedBy { it.ageS }
                     val total = count
-                    scope.launch { sondes = snapshot; totalFrames = total }
+                    scope.launch {
+                        val before = sondes.map { it.serial }.toSet()
+                        val after = snapshot.map { it.serial }.toSet()
+                        if ((after - before).isNotEmpty()) com.allnetworktools.util.SoundCues.play(com.allnetworktools.util.Cue.Found)
+                        else if ((before - after).isNotEmpty()) com.allnetworktools.util.SoundCues.play(com.allnetworktools.util.Cue.Lost)
+                        sondes = snapshot; totalFrames = total
+                    }
                 }
             }
         }, "sdr-sonde").start()

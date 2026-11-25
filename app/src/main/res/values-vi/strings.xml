@@ -3166,4 +3166,37 @@ Một đợt lũ là dòng khung ghép đôi giả làm bật cửa sổ trên m
     <string name="search_tools_hint">"Nhập một phần tên công cụ, chức năng hoặc sóng của nó: %1$d công cụ."</string>
     <string name="search_no_tool">"Không có công cụ nào khớp với “%1$s”."</string>
     <string name="sdr_tuner_unsupported">"USB RTL-SDR này dùng bộ dò %1$s, chưa được hỗ trợ (chỉ R820T, R820T2 và R828D)"</string>
+    <string name="spectrum_snapshot">"Ảnh phổ"</string>
+    <string name="listen_notch_hint">"Nhấn giữ để đặt bộ lọc khía lên tiếng huýt hoặc sóng mang; chạm vào chip để gỡ."</string>
+    <string name="listen_notch_chip">"Lọc khía %1$s ✕"</string>
+    <string name="listen_boost_off">"Tăng âm lượng: tắt"</string>
+    <string name="listen_boost">"Tăng âm lượng: +%1$s dB (giới hạn mềm)"</string>
+    <string name="sound_cues">"Âm báo"</string>
+    <string name="sound_cues_sub">"Tiếng ngắn khi tìm thấy tín hiệu, bộ giải mã bắt hoặc mất khóa, và khi kết thúc lượt bay qua"</string>
+    <string name="pocsag_scan">"🔍 Quét"</string>
+    <string name="pocsag_scan_hint">"Tìm các máy phát nhắn tin trong 2 MHz quanh tần số đã cho, giải mã từng máy ở 512, 1200 và 2400 bit/s và cho biết tốc độ nào dùng được."</string>
+    <string name="pocsag_scan_centre">"Tâm quét (MHz)"</string>
+    <string name="pocsag_scan_carriers">"Máy phát tìm thấy"</string>
+    <string name="pocsag_scan_none">"Chưa có máy phát: máy nhắn tin phát theo đợt, hãy tiếp tục nghe."</string>
+    <string name="pocsag_scan_best">"giải mã ở %1$d bit/s"</string>
+    <string name="pocsag_scan_no_page">"chưa giải mã được tin nào"</string>
+    <string name="pmr_fleetsync_id">"đội %1$d · máy %2$d"</string>
+    <string name="airband_title">"Máy quét hàng không"</string>
+    <string name="airband_subtitle">"Mọi kênh hàng không đang phát, không cần danh sách"</string>
+    <string name="airband_playing">"Đang phát %1$s MHz"</string>
+    <string name="airband_listening">"Đang chờ một kênh phát"</string>
+    <string name="airband_window">"Một phần băng (mỗi lần 1,8 MHz)"</string>
+    <string name="airband_channels_title">"Kênh đã nghe"</string>
+    <string name="airband_pin_hint">"Chạm vào kênh để chỉ nghe kênh đó; chạm lại để về kênh mạnh nhất."</string>
+    <string name="airband_none_yet">"Chưa có gì phát"</string>
+    <string name="airband_none_yet_body">"Kênh tự mở khi có sóng mang và đóng sau 30 giây im lặng."</string>
+    <string name="airband_how_it_works">"Chỉ thu. Máy quét theo dõi 1,8 MHz của băng hàng không 118–137 MHz theo bước 8,33 và 25 kHz, mở mọi kênh đang phát, phát kênh mạnh nhất ở AM và giữ 2 giây sau khi sóng mang mất để không cắt câu trả lời. Việc nghe liên lạc hàng không có thể bị quy định nơi bạn ở."</string>
+    <string name="airband_on_air">"đang phát"</string>
+    <string name="airband_ago">"%1$d giây trước"</string>
+    <string name="airband_talk">"%1$d giây nói"</string>
+    <string name="airband_pinned">"đã ghim"</string>
+    <plurals name="p_airband_channels">
+        <item quantity="one">"kênh"</item>
+        <item quantity="other">"kênh"</item>
+    </plurals>
 </resources>

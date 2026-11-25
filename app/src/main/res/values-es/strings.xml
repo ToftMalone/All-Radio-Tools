@@ -3249,4 +3249,37 @@ Una avalancha es un flujo de tramas de emparejamiento falsas que hace aparecer u
     <string name="search_tools_hint">"Escribe parte del nombre de una herramienta, lo que hace o su radio: %1$d herramientas."</string>
     <string name="search_no_tool">"Ninguna herramienta coincide con «%1$s»."</string>
     <string name="sdr_tuner_unsupported">"Este RTL-SDR tiene un sintonizador %1$s, aún no compatible (solo R820T, R820T2 y R828D)"</string>
+    <string name="spectrum_snapshot">"Captura del espectro"</string>
+    <string name="listen_notch_hint">"Una pulsación larga pone un filtro de rechazo en un silbido o portadora; toca su chip para quitarlo."</string>
+    <string name="listen_notch_chip">"Rechazo %1$s ✕"</string>
+    <string name="listen_boost_off">"Refuerzo de volumen: desactivado"</string>
+    <string name="listen_boost">"Refuerzo de volumen: +%1$s dB (limitador suave)"</string>
+    <string name="sound_cues">"Avisos sonoros"</string>
+    <string name="sound_cues_sub">"Tonos cortos cuando se encuentra una señal, un decodificador se engancha o la pierde, y al final de un paso"</string>
+    <string name="pocsag_scan">"🔍 Escaneo"</string>
+    <string name="pocsag_scan_hint">"Busca emisores de buscapersonas en los 2 MHz alrededor de la frecuencia dada, decodifica cada uno a 512, 1200 y 2400 bit/s e indica qué velocidad funciona."</string>
+    <string name="pocsag_scan_centre">"Centro del escaneo (MHz)"</string>
+    <string name="pocsag_scan_carriers">"Emisores encontrados"</string>
+    <string name="pocsag_scan_none">"Aún ningún emisor: los buscas emiten a ráfagas, sigue escuchando."</string>
+    <string name="pocsag_scan_best">"decodifica a %1$d bit/s"</string>
+    <string name="pocsag_scan_no_page">"ningún mensaje decodificado aún"</string>
+    <string name="pmr_fleetsync_id">"flota %1$d · unidad %2$d"</string>
+    <string name="airband_title">"Escáner aeronáutico"</string>
+    <string name="airband_subtitle">"Todos los canales de aviación que transmiten, sin lista"</string>
+    <string name="airband_playing">"Escuchando %1$s MHz"</string>
+    <string name="airband_listening">"Esperando un canal que transmita"</string>
+    <string name="airband_window">"Parte de la banda (1,8 MHz cada vez)"</string>
+    <string name="airband_channels_title">"Canales oídos"</string>
+    <string name="airband_pin_hint">"Toca un canal para oír solo ese; toca de nuevo para el más fuerte en el aire."</string>
+    <string name="airband_none_yet">"Nada en el aire aún"</string>
+    <string name="airband_none_yet_body">"Los canales se abren solos en cuanto emite una portadora y se cierran tras 30 s de silencio."</string>
+    <string name="airband_how_it_works">"Solo recepción. El escáner vigila 1,8 MHz de la banda aeronáutica 118–137 MHz en pasos de 8,33 y 25 kHz, abre cada canal que transmite, reproduce el más fuerte en AM y lo mantiene 2 s tras caer la portadora para no cortar una respuesta. Escuchar el tráfico aéreo puede estar regulado donde estás."</string>
+    <string name="airband_on_air">"en el aire"</string>
+    <string name="airband_ago">"hace %1$d s"</string>
+    <string name="airband_talk">"%1$d s de habla"</string>
+    <string name="airband_pinned">"fijado"</string>
+    <plurals name="p_airband_channels">
+        <item quantity="one">"canal"</item>
+        <item quantity="other">"canales"</item>
+    </plurals>
 </resources>

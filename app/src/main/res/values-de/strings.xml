@@ -3242,4 +3242,37 @@ Eine Flut ist ein Strom gefälschter Kopplungs-Frames, der auf jedem Telefon in 
     <string name="search_tools_hint">"Gib einen Teil des Namens, der Funktion oder des Funks eines Werkzeugs ein: %1$d Werkzeuge durchsuchbar."</string>
     <string name="search_no_tool">"Kein Werkzeug passt zu „%1$s“."</string>
     <string name="sdr_tuner_unsupported">"Dieser RTL-SDR-Stick hat einen %1$s-Tuner, der noch nicht unterstützt wird (nur R820T, R820T2 und R828D)"</string>
+    <string name="spectrum_snapshot">"Spektrum-Aufnahme"</string>
+    <string name="listen_notch_hint">"Ein langer Druck setzt eine Kerbe auf ein Pfeifen oder einen Träger; tippe auf ihren Chip, um sie zu entfernen."</string>
+    <string name="listen_notch_chip">"Kerbe %1$s ✕"</string>
+    <string name="listen_boost_off">"Lautstärke-Boost: aus"</string>
+    <string name="listen_boost">"Lautstärke-Boost: +%1$s dB (sanfter Begrenzer)"</string>
+    <string name="sound_cues">"Tonsignale"</string>
+    <string name="sound_cues_sub">"Kurze Töne, wenn ein Signal gefunden wird, ein Decoder einrastet oder es verliert und ein Überflug endet"</string>
+    <string name="pocsag_scan">"🔍 Suche"</string>
+    <string name="pocsag_scan_hint">"Sucht in den 2 MHz um die angegebene Frequenz nach Pager-Sendern, dekodiert jeden mit 512, 1200 und 2400 bit/s und zeigt, welche Rate funktioniert."</string>
+    <string name="pocsag_scan_centre">"Mitte der Suche (MHz)"</string>
+    <string name="pocsag_scan_carriers">"Gefundene Sender"</string>
+    <string name="pocsag_scan_none">"Noch kein Sender: Pager senden in Schüben, weiter zuhören."</string>
+    <string name="pocsag_scan_best">"dekodiert mit %1$d bit/s"</string>
+    <string name="pocsag_scan_no_page">"noch keine Nachricht dekodiert"</string>
+    <string name="pmr_fleetsync_id">"Flotte %1$d · Einheit %2$d"</string>
+    <string name="airband_title">"Flugfunk-Scanner"</string>
+    <string name="airband_subtitle">"Jeder Flugfunkkanal, der sendet, ohne Liste"</string>
+    <string name="airband_playing">"Spielt %1$s MHz"</string>
+    <string name="airband_listening">"Warte auf einen sendenden Kanal"</string>
+    <string name="airband_window">"Bandabschnitt (je 1,8 MHz)"</string>
+    <string name="airband_channels_title">"Gehörte Kanäle"</string>
+    <string name="airband_pin_hint">"Tippe auf einen Kanal, um nur ihn zu hören; nochmal für den stärksten auf Sendung."</string>
+    <string name="airband_none_yet">"Noch nichts auf Sendung"</string>
+    <string name="airband_none_yet_body">"Kanäle öffnen sich von selbst, sobald ein Träger sendet, und schließen nach 30 s Stille."</string>
+    <string name="airband_how_it_works">"Nur Empfang. Der Scanner überwacht 1,8 MHz des Flugfunkbands 118–137 MHz im 8,33- und 25-kHz-Raster, öffnet jeden Kanal, der sendet, spielt den stärksten in AM und hält ihn 2 s nach dem Trägerende, damit eine Antwort nicht abgeschnitten wird. Das Abhören des Flugfunks kann bei dir geregelt sein."</string>
+    <string name="airband_on_air">"auf Sendung"</string>
+    <string name="airband_ago">"vor %1$d s"</string>
+    <string name="airband_talk">"%1$d s gesprochen"</string>
+    <string name="airband_pinned">"angeheftet"</string>
+    <plurals name="p_airband_channels">
+        <item quantity="one">"Kanal"</item>
+        <item quantity="other">"Kanäle"</item>
+    </plurals>
 </resources>

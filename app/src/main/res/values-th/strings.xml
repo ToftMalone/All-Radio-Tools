@@ -3166,4 +3166,37 @@
     <string name="search_tools_hint">"พิมพ์ส่วนหนึ่งของชื่อเครื่องมือ สิ่งที่ทำ หรือวิทยุ: %1$d เครื่องมือ"</string>
     <string name="search_no_tool">"ไม่มีเครื่องมือที่ตรงกับ “%1$s”"</string>
     <string name="sdr_tuner_unsupported">"RTL-SDR นี้ใช้จูนเนอร์ %1$s ซึ่งยังไม่รองรับ (รองรับเฉพาะ R820T, R820T2 และ R828D)"</string>
+    <string name="spectrum_snapshot">"ภาพสเปกตรัม"</string>
+    <string name="listen_notch_hint">"กดค้างเพื่อวางนอตช์บนเสียงหวีดหรือคลื่นพาห์ แตะชิปเพื่อลบ"</string>
+    <string name="listen_notch_chip">"นอตช์ %1$s ✕"</string>
+    <string name="listen_boost_off">"เพิ่มเสียง: ปิด"</string>
+    <string name="listen_boost">"เพิ่มเสียง: +%1$s dB (ลิมิตเตอร์นุ่ม)"</string>
+    <string name="sound_cues">"สัญญาณเสียง"</string>
+    <string name="sound_cues_sub">"เสียงสั้นเมื่อพบสัญญาณ ตัวถอดรหัสล็อกหรือหลุด และเมื่อการผ่านสิ้นสุด"</string>
+    <string name="pocsag_scan">"🔍 สแกน"</string>
+    <string name="pocsag_scan_hint">"ค้นหาเครื่องส่งเพจเจอร์ใน 2 MHz รอบความถี่ที่กำหนด ถอดรหัสแต่ละตัวที่ 512, 1200 และ 2400 bit/s และบอกความเร็วที่ใช้ได้"</string>
+    <string name="pocsag_scan_centre">"ศูนย์กลางการสแกน (MHz)"</string>
+    <string name="pocsag_scan_carriers">"เครื่องส่งที่พบ"</string>
+    <string name="pocsag_scan_none">"ยังไม่มีเครื่องส่ง: เพจเจอร์ส่งเป็นช่วง ๆ ฟังต่อไป"</string>
+    <string name="pocsag_scan_best">"ถอดรหัสที่ %1$d bit/s"</string>
+    <string name="pocsag_scan_no_page">"ยังไม่มีข้อความที่ถอดรหัส"</string>
+    <string name="pmr_fleetsync_id">"ฟลีต %1$d · หน่วย %2$d"</string>
+    <string name="airband_title">"สแกนเนอร์การบิน"</string>
+    <string name="airband_subtitle">"ทุกช่องการบินที่กำลังส่ง ไม่ต้องมีรายการ"</string>
+    <string name="airband_playing">"กำลังเล่น %1$s MHz"</string>
+    <string name="airband_listening">"รอช่องที่กำลังส่ง"</string>
+    <string name="airband_window">"บางส่วนของย่าน (ครั้งละ 1.8 MHz)"</string>
+    <string name="airband_channels_title">"ช่องที่ได้ยิน"</string>
+    <string name="airband_pin_hint">"แตะช่องเพื่อฟังเฉพาะช่องนั้น แตะอีกครั้งเพื่อกลับไปช่องที่แรงที่สุด"</string>
+    <string name="airband_none_yet">"ยังไม่มีการส่ง"</string>
+    <string name="airband_none_yet_body">"ช่องเปิดเองเมื่อคลื่นพาห์ออกอากาศ และปิดหลังเงียบ 30 วินาที"</string>
+    <string name="airband_how_it_works">"รับอย่างเดียว สแกนเนอร์เฝ้าดู 1.8 MHz ของย่านการบิน 118–137 MHz ที่ระยะ 8.33 และ 25 kHz เปิดทุกช่องที่ส่ง เล่นช่องที่แรงที่สุดแบบ AM และคงไว้ 2 วินาทีหลังคลื่นพาห์หายเพื่อไม่ตัดคำตอบ การฟังการจราจรทางอากาศอาจมีกฎหมายควบคุมในพื้นที่ของคุณ"</string>
+    <string name="airband_on_air">"กำลังส่ง"</string>
+    <string name="airband_ago">"%1$d วินาทีที่แล้ว"</string>
+    <string name="airband_talk">"พูด %1$d วินาที"</string>
+    <string name="airband_pinned">"ปักหมุด"</string>
+    <plurals name="p_airband_channels">
+        <item quantity="one">"ช่อง"</item>
+        <item quantity="other">"ช่อง"</item>
+    </plurals>
 </resources>

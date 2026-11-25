@@ -184,6 +184,26 @@ class ListenController(repo: SdrRepository, scope: CoroutineScope, onAcquire: ()
 
     fun setSquelchLevel(v: Float) { squelch = v; wantSquelch = if (v <= SQUELCH_MIN) null else v.toDouble() }
 
+    /** Loudness boost after the demodulator, 0 to [MAX_BOOST_DB] dB, with a soft limiter. */
+    var boostDb by mutableFloatStateOf(0f)
+        private set
+    @Volatile private var wantBoost = 0f
+    fun setBoost(db: Float) { boostDb = db; wantBoost = db }
+
+    /** Notches set from the spectrum, in absolute hertz: they stay on their frequency when the dial moves. */
+    val notches = androidx.compose.runtime.mutableStateListOf<Long>()
+
+    fun addNotch(hz: Long) {
+        if (notches.any { kotlin.math.abs(it - hz) < 500 }) return
+        if (notches.size >= MAX_NOTCHES) notches.removeAt(0)
+        notches += hz
+    }
+
+    fun removeNotch(hz: Long) { notches.remove(hz) }
+
+    /** Where a long press at [fraction] of the spectrum width falls, in hertz. */
+    fun hzAt(fraction: Float): Long = centerHz + viewOffsetHz() + ((fraction.coerceIn(0f, 1f) - 0.5f) * viewSpanHz).toLong()
+
     /** Tunes to [hz]: inside the window only the digital tuner moves, outside the radio follows. */
     fun tune(hz: Long) {
         if (hz != frequencyHz) dvCall = null
@@ -247,11 +267,18 @@ class ListenController(repo: SdrRepository, scope: CoroutineScope, onAcquire: ()
         rx.dvEvent = { e -> dvDescribe(e)?.let { d -> post { dvCall = d } } }
         var analyzer = SpectrumAnalyzer(BINS)
         var lastFrame = 0L
+        var notchKey: Pair<List<Long>, Long>? = null
+        var quietSinceMs = 0L
+        var open = false
         return object : SdrSink {
             override fun feed(buf: ByteArray, len: Int) {
                 rx.mode = wantMode
                 rx.offsetHz = wantOffset
                 rx.squelchDb = wantSquelch
+                rx.boostDb = wantBoost
+                // The notches as offsets from the middle of the stream; a new array only when they or the centre moved.
+                val nk = notches.toList() to centerHz
+                if (nk != notchKey) { notchKey = nk; rx.notchesHz = DoubleArray(nk.first.size) { (nk.first[it] - nk.second).toDouble() } }
                 rx.feed(buf, len)
                 // Zoomed in, a longer FFT keeps BINS points across the narrower view.
                 val z = wantZoom
@@ -263,6 +290,12 @@ class ListenController(repo: SdrRepository, scope: CoroutineScope, onAcquire: ()
                     val view = wantView
                     val f = analyzer.frame()?.let { cutView(it, z, view) }
                     val level = rx.levelDb.toFloat()
+                    // With a squelch set: a station coming up after at least 2 s of quiet sounds the "found" cue.
+                    val sq = wantSquelch
+                    val nowOpen = sq != null && level >= sq
+                    if (nowOpen && !open && quietSinceMs != 0L && now - quietSinceMs >= 2_000) com.allnetworktools.util.SoundCues.play(com.allnetworktools.util.Cue.Found)
+                    if (!nowOpen && (open || quietSinceMs == 0L)) quietSinceMs = now
+                    open = nowOpen
                     post { if (f != null) { spectrum = f; frameOffsetHz = view }; levelDb = level }
                 }
             }
@@ -326,6 +359,8 @@ class ListenController(repo: SdrRepository, scope: CoroutineScope, onAcquire: ()
         /** The longest one press may transmit. */
         const val MAX_TALK_MS = 180_000L
         const val MAX_ZOOM = 16
+        const val MAX_BOOST_DB = 24f
+        const val MAX_NOTCHES = 4
         val Zooms = listOf(1, 2, 4, 8, 16)
         val Steps = listOf(100L, 500L, 1_000L, 5_000L, 12_500L, 25_000L, 100_000L)
 
@@ -456,7 +491,7 @@ fun ListenTool(vm: MainViewModel) {
                             AntFilterChip(if (w >= 1_000_000) "%d MHz".format(Locale.getDefault(), w / 1_000_000) else "%d kHz".format(Locale.getDefault(), w / 1_000), c.zoom == z, { c.chooseZoom(z) })
                         }
                     }
-                    Text(S(R.string.listen_tap_hint) + " " + S(R.string.listen_pinch_hint), style = rf(12, 16), color = cs.onSurfaceVariant)
+                    Text(S(R.string.listen_tap_hint) + " " + S(R.string.listen_pinch_hint) + " " + S(R.string.listen_notch_hint), style = rf(12, 16), color = cs.onSurfaceVariant)
                 }
             }
         }
@@ -486,6 +521,11 @@ fun ListenTool(vm: MainViewModel) {
                 Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                     Text(S(R.string.listen_volume), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
                     Slider(c.volume, { c.setVolumeLevel(it) }, valueRange = 0f..1f)
+                    Text(
+                        if (c.boostDb <= 0f) S(R.string.listen_boost_off) else S(R.string.listen_boost, "%.0f".format(Locale.getDefault(), c.boostDb)),
+                        style = rf(13, 18, 600), color = cs.onSurfaceVariant,
+                    )
+                    Slider(c.boostDb, { c.setBoost(Math.round(it / 3f) * 3f) }, valueRange = 0f..ListenController.MAX_BOOST_DB, steps = 7)
                     Text(
                         if (c.squelch <= ListenController.SQUELCH_MIN) S(R.string.listen_squelch_off) else S(R.string.listen_squelch, "%.0f".format(Locale.getDefault(), c.squelch)),
                         style = rf(13, 18, 600), color = cs.onSurfaceVariant,
@@ -531,9 +571,18 @@ private fun SpectrumPicker(c: ListenController) {
     val off = c.frequencyHz - c.centerHz - (if (c.running) c.frameOffsetHz else c.viewOffsetHz())
     val bw = c.mode.bandwidthHz
     var pinch by remember { mutableFloatStateOf(1f) }
+    val haptics = AntTheme.haptics
+    val notchColor = cs.error
+    val viewMid = c.centerHz + (if (c.running) c.frameOffsetHz else c.viewOffsetHz())
     Canvas(
         Modifier.fillMaxWidth().height(160.dp).clip(RoundedCornerShape(16.dp)).background(cs.surfaceContainerHigh)
-            .pointerInput(Unit) { detectTapGestures { p -> c.tuneFraction(p.x / size.width) } }
+            .pointerInput(Unit) {
+                detectTapGestures(
+                    onTap = { p -> c.tuneFraction(p.x / size.width) },
+                    // A long press puts a notch there: a carrier or whistle on the signal is taken out of the sound.
+                    onLongPress = { p -> haptics.confirm(); c.addNotch(c.hzAt(p.x / size.width)) },
+                )
+            }
             .pointerInput(Unit) {
                 // One finger tunes, two fingers zoom: each doubling of the pinch is one zoom step.
                 awaitEachGesture {
@@ -578,6 +627,21 @@ private fun SpectrumPicker(c: ListenController) {
         val left = when (c.mode) { ListenMode.Usb -> x; ListenMode.Lsb -> x - w; else -> x - w / 2 }
         drawRect(accent.copy(alpha = 0.25f), Offset(left, 0f), Size(w, size.height))
         drawLine(accent, Offset(x, 0f), Offset(x, size.height), 3f)
+        // The notches, dashed.
+        c.notches.forEach { hz ->
+            val nx = size.width * (0.5f + (hz - viewMid).toFloat() / span)
+            if (nx in 0f..size.width) drawLine(
+                notchColor, Offset(nx, 0f), Offset(nx, size.height), 3f,
+                pathEffect = androidx.compose.ui.graphics.PathEffect.dashPathEffect(floatArrayOf(10f, 8f)),
+            )
+        }
+    }
+    if (c.notches.isNotEmpty()) {
+        FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            c.notches.toList().forEach { hz ->
+                AntFilterChip(S(R.string.listen_notch_chip, ListenController.mhz(hz)), true, { c.removeNotch(hz) })
+            }
+        }
     }
 }
 

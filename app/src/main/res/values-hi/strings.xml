@@ -3242,4 +3242,37 @@
     <string name="search_tools_hint">"टूल के नाम, काम या रेडियो का कुछ हिस्सा लिखें: %1$d टूल।"</string>
     <string name="search_no_tool">"“%1$s” से कोई टूल मेल नहीं खाता।"</string>
     <string name="sdr_tuner_unsupported">"इस RTL-SDR स्टिक में %1$s ट्यूनर है, जो अभी समर्थित नहीं है (केवल R820T, R820T2 और R828D)"</string>
+    <string name="spectrum_snapshot">"स्पेक्ट्रम स्नैपशॉट"</string>
+    <string name="listen_notch_hint">"लंबा दबाने से सीटी या कैरियर पर नॉच लगता है; हटाने के लिए उसकी चिप दबाएं।"</string>
+    <string name="listen_notch_chip">"नॉच %1$s ✕"</string>
+    <string name="listen_boost_off">"आवाज़ बूस्ट: बंद"</string>
+    <string name="listen_boost">"आवाज़ बूस्ट: +%1$s dB (नरम लिमिटर)"</string>
+    <string name="sound_cues">"ध्वनि संकेत"</string>
+    <string name="sound_cues_sub">"सिग्नल मिलने, डिकोडर के लॉक होने या खोने, और पास खत्म होने पर छोटी ध्वनियाँ"</string>
+    <string name="pocsag_scan">"🔍 स्कैन"</string>
+    <string name="pocsag_scan_hint">"दी गई आवृत्ति के आसपास 2 MHz में पेजर ट्रांसमीटर खोजता है, हर एक को 512, 1200 और 2400 bit/s पर डिकोड करता है और बताता है कौन-सी दर काम करती है।"</string>
+    <string name="pocsag_scan_centre">"स्कैन का केंद्र (MHz)"</string>
+    <string name="pocsag_scan_carriers">"मिले ट्रांसमीटर"</string>
+    <string name="pocsag_scan_none">"अभी कोई ट्रांसमीटर नहीं: पेजर रुक-रुक कर भेजते हैं, सुनते रहें।"</string>
+    <string name="pocsag_scan_best">"%1$d bit/s पर डिकोड होता है"</string>
+    <string name="pocsag_scan_no_page">"अभी कोई संदेश डिकोड नहीं हुआ"</string>
+    <string name="pmr_fleetsync_id">"फ़्लीट %1$d · यूनिट %2$d"</string>
+    <string name="airband_title">"एयरबैंड स्कैनर"</string>
+    <string name="airband_subtitle">"हर प्रसारित करता विमानन चैनल, बिना सूची"</string>
+    <string name="airband_playing">"%1$s MHz चल रहा है"</string>
+    <string name="airband_listening">"किसी चैनल के प्रसारण की प्रतीक्षा"</string>
+    <string name="airband_window">"बैंड का हिस्सा (एक बार में 1.8 MHz)"</string>
+    <string name="airband_channels_title">"सुने गए चैनल"</string>
+    <string name="airband_pin_hint">"सिर्फ़ एक चैनल सुनने के लिए उसे दबाएं; सबसे तेज़ पर लौटने के लिए फिर दबाएं।"</string>
+    <string name="airband_none_yet">"अभी कुछ प्रसारित नहीं"</string>
+    <string name="airband_none_yet_body">"कैरियर आते ही चैनल अपने-आप खुलते हैं और 30 s शांति के बाद बंद होते हैं।"</string>
+    <string name="airband_how_it_works">"केवल रिसीव। स्कैनर 118–137 MHz विमानन बैंड के 1.8 MHz को 8.33 और 25 kHz अंतराल पर देखता है, हर प्रसारित चैनल खोलता है, सबसे तेज़ को AM में चलाता है और कैरियर रुकने के 2 s बाद तक रखता है ताकि जवाब न कटे। विमानन ट्रैफ़िक सुनना आपके यहाँ विनियमित हो सकता है।"</string>
+    <string name="airband_on_air">"प्रसारण में"</string>
+    <string name="airband_ago">"%1$d s पहले"</string>
+    <string name="airband_talk">"%1$d s बातचीत"</string>
+    <string name="airband_pinned">"पिन किया"</string>
+    <plurals name="p_airband_channels">
+        <item quantity="one">"चैनल"</item>
+        <item quantity="other">"चैनल"</item>
+    </plurals>
 </resources>

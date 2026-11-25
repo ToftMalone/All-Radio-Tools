@@ -3166,4 +3166,37 @@
     <string name="search_tools_hint">"도구 이름, 기능 또는 무선의 일부를 입력하세요: 도구 %1$d개"</string>
     <string name="search_no_tool">"“%1$s”와 일치하는 도구가 없습니다."</string>
     <string name="sdr_tuner_unsupported">"이 RTL-SDR에는 아직 지원되지 않는 %1$s 튜너가 있습니다(R820T, R820T2, R828D만 지원)"</string>
+    <string name="spectrum_snapshot">"스펙트럼 스냅샷"</string>
+    <string name="listen_notch_hint">"길게 누르면 휘파람 소리나 반송파에 노치를 둡니다. 칩을 눌러 제거하세요."</string>
+    <string name="listen_notch_chip">"노치 %1$s ✕"</string>
+    <string name="listen_boost_off">"음량 부스트: 끔"</string>
+    <string name="listen_boost">"음량 부스트: +%1$s dB (소프트 리미터)"</string>
+    <string name="sound_cues">"소리 신호"</string>
+    <string name="sound_cues_sub">"신호를 찾거나, 디코더가 잠기거나 놓칠 때, 패스가 끝날 때 짧은 소리"</string>
+    <string name="pocsag_scan">"🔍 스캔"</string>
+    <string name="pocsag_scan_hint">"지정한 주파수 주변 2 MHz에서 호출기 송신을 찾고 각각을 512, 1200, 2400 bit/s로 디코딩해 작동하는 속도를 알려줍니다."</string>
+    <string name="pocsag_scan_centre">"스캔 중심 (MHz)"</string>
+    <string name="pocsag_scan_carriers">"찾은 송신기"</string>
+    <string name="pocsag_scan_none">"아직 송신기 없음: 호출기는 간헐적으로 송신하니 계속 들어보세요."</string>
+    <string name="pocsag_scan_best">"%1$d bit/s로 디코딩"</string>
+    <string name="pocsag_scan_no_page">"아직 디코딩된 메시지 없음"</string>
+    <string name="pmr_fleetsync_id">"플릿 %1$d · 유닛 %2$d"</string>
+    <string name="airband_title">"항공 스캐너"</string>
+    <string name="airband_subtitle">"송신하는 모든 항공 채널, 목록 불필요"</string>
+    <string name="airband_playing">"%1$s MHz 재생 중"</string>
+    <string name="airband_listening">"송신하는 채널을 기다리는 중"</string>
+    <string name="airband_window">"대역 일부 (한 번에 1.8 MHz)"</string>
+    <string name="airband_channels_title">"들은 채널"</string>
+    <string name="airband_pin_hint">"채널을 누르면 그 채널만 듣고, 다시 누르면 가장 강한 채널로 돌아갑니다."</string>
+    <string name="airband_none_yet">"아직 송신 없음"</string>
+    <string name="airband_none_yet_body">"반송파가 나오면 채널이 자동으로 열리고 30초 무음 후 닫힙니다."</string>
+    <string name="airband_how_it_works">"수신 전용. 118–137 MHz 항공 대역 중 1.8 MHz를 8.33/25 kHz 간격으로 감시하고 송신 채널을 열어 가장 강한 것을 AM으로 재생하며, 응답이 끊기지 않도록 반송파가 끊긴 뒤 2초간 유지합니다. 항공 통신 청취는 지역에 따라 규제될 수 있습니다."</string>
+    <string name="airband_on_air">"송신 중"</string>
+    <string name="airband_ago">"%1$d초 전"</string>
+    <string name="airband_talk">"대화 %1$d초"</string>
+    <string name="airband_pinned">"고정됨"</string>
+    <plurals name="p_airband_channels">
+        <item quantity="one">"채널"</item>
+        <item quantity="other">"채널"</item>
+    </plurals>
 </resources>

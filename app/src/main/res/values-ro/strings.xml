@@ -3318,4 +3318,37 @@ Un val este un flux de cadre de asociere false care face să apară un pop-up pe
     <string name="search_tools_hint">"Scrie o parte din numele unui instrument, ce face sau radioul lui: %1$d instrumente."</string>
     <string name="search_no_tool">"Niciun instrument nu corespunde cu „%1$s”."</string>
     <string name="sdr_tuner_unsupported">"Acest stick RTL-SDR are un tuner %1$s, încă nesuportat (doar R820T, R820T2 și R828D)"</string>
+    <string name="spectrum_snapshot">"Captură a spectrului"</string>
+    <string name="listen_notch_hint">"O apăsare lungă pune un filtru de rejecție pe un fluierat sau o purtătoare; atinge cipul său ca să-l scoți."</string>
+    <string name="listen_notch_chip">"Rejecție %1$s ✕"</string>
+    <string name="listen_boost_off">"Amplificare volum: oprită"</string>
+    <string name="listen_boost">"Amplificare volum: +%1$s dB (limitator moale)"</string>
+    <string name="sound_cues">"Semnale sonore"</string>
+    <string name="sound_cues_sub">"Tonuri scurte când se găsește un semnal, un decodor se sincronizează sau îl pierde și când se termină o trecere"</string>
+    <string name="pocsag_scan">"🔍 Scanare"</string>
+    <string name="pocsag_scan_hint">"Caută emițătoare de pagere în cei 2 MHz din jurul frecvenței date, decodează fiecare la 512, 1200 și 2400 bit/s și spune ce viteză merge."</string>
+    <string name="pocsag_scan_centre">"Centrul scanării (MHz)"</string>
+    <string name="pocsag_scan_carriers">"Emițătoare găsite"</string>
+    <string name="pocsag_scan_none">"Niciun emițător încă: pagerele emit în rafale, continuă să asculți."</string>
+    <string name="pocsag_scan_best">"decodează la %1$d bit/s"</string>
+    <string name="pocsag_scan_no_page">"niciun mesaj decodat încă"</string>
+    <string name="pmr_fleetsync_id">"flotă %1$d · unitate %2$d"</string>
+    <string name="airband_title">"Scaner aviatic"</string>
+    <string name="airband_subtitle">"Fiecare canal aviatic care emite, fără listă"</string>
+    <string name="airband_playing">"Ascult %1$s MHz"</string>
+    <string name="airband_listening">"Aștept un canal care emite"</string>
+    <string name="airband_window">"Porțiune de bandă (câte 1,8 MHz)"</string>
+    <string name="airband_channels_title">"Canale auzite"</string>
+    <string name="airband_pin_hint">"Atinge un canal ca să-l auzi doar pe el; din nou pentru cel mai puternic în eter."</string>
+    <string name="airband_none_yet">"Nimic în eter încă"</string>
+    <string name="airband_none_yet_body">"Canalele se deschid singure când o purtătoare emite și se închid după 30 s de liniște."</string>
+    <string name="airband_how_it_works">"Doar recepție. Scanerul urmărește 1,8 MHz din banda aviatică 118–137 MHz pe rasterul de 8,33 și 25 kHz, deschide fiecare canal care emite, redă cel mai puternic în AM și îl ține 2 s după ce purtătoarea dispare, ca să nu taie un răspuns. Ascultarea traficului aerian poate fi reglementată acolo unde ești."</string>
+    <string name="airband_on_air">"în eter"</string>
+    <string name="airband_ago">"acum %1$d s"</string>
+    <string name="airband_talk">"%1$d s de vorbire"</string>
+    <string name="airband_pinned">"fixat"</string>
+    <plurals name="p_airband_channels">
+        <item quantity="one">"canal"</item>
+        <item quantity="other">"canale"</item>
+    </plurals>
 </resources>

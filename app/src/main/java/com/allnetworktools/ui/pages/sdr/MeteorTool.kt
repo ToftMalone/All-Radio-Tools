@@ -222,7 +222,17 @@ class MeteorController(
         )
     }
 
+    private var cuedPassEnd = 0L
+
     private fun publish(st: LrptStatus) {
+        if (st.locked && !status.locked) com.allnetworktools.util.SoundCues.play(com.allnetworktools.util.Cue.Lock)
+        if (!st.locked && status.locked) com.allnetworktools.util.SoundCues.play(com.allnetworktools.util.Cue.Lost)
+        // The pass being received has set: once per pass.
+        val now = System.currentTimeMillis()
+        passes.firstOrNull { it.setMs in (now - 5_000)..now && it.setMs != cuedPassEnd }?.let {
+            cuedPassEnd = it.setMs
+            com.allnetworktools.util.SoundCues.play(com.allnetworktools.util.Cue.PassEnded)
+        }
         status = st
         while (true) {
             val (apid, row, strip) = stripQueue.poll() ?: break

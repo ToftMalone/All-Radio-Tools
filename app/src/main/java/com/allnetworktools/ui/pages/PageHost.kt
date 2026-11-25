@@ -293,6 +293,7 @@ private fun PageBody(vm: MainViewModel, net: Network, page: Page) {
             Tool.Fpv -> com.allnetworktools.ui.pages.sdr.FpvTool(vm)
             Tool.Aprs -> com.allnetworktools.ui.pages.sdr.AprsTool(vm)
             Tool.Acars -> com.allnetworktools.ui.pages.sdr.AcarsTool(vm)
+            Tool.Airband -> com.allnetworktools.ui.pages.sdr.AirbandTool(vm)
             Tool.Wmbus -> com.allnetworktools.ui.pages.sdr.WmbusTool(vm)
             Tool.Vdl2 -> com.allnetworktools.ui.pages.sdr.Vdl2Tool(vm)
             Tool.Tpms -> com.allnetworktools.ui.pages.sdr.TpmsTool(vm)

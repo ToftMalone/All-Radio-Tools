@@ -3249,4 +3249,37 @@ Uma enxurrada é um fluxo de quadros de pareamento falsos que faz aparecer um po
     <string name="search_tools_hint">"Escreva parte do nome de uma ferramenta, o que faz ou o seu rádio: %1$d ferramentas."</string>
     <string name="search_no_tool">"Nenhuma ferramenta corresponde a «%1$s»."</string>
     <string name="sdr_tuner_unsupported">"Esta pen RTL-SDR tem um sintonizador %1$s, ainda não suportado (só R820T, R820T2 e R828D)"</string>
+    <string name="spectrum_snapshot">"Captura do espetro"</string>
+    <string name="listen_notch_hint">"Um toque longo põe um filtro de rejeição num assobio ou portadora; toque no seu chip para o retirar."</string>
+    <string name="listen_notch_chip">"Rejeição %1$s ✕"</string>
+    <string name="listen_boost_off">"Reforço de volume: desligado"</string>
+    <string name="listen_boost">"Reforço de volume: +%1$s dB (limitador suave)"</string>
+    <string name="sound_cues">"Sinais sonoros"</string>
+    <string name="sound_cues_sub">"Tons curtos quando um sinal é encontrado, um descodificador sincroniza ou perde e um passagem termina"</string>
+    <string name="pocsag_scan">"🔍 Varrimento"</string>
+    <string name="pocsag_scan_hint">"Procura emissores de pagers nos 2 MHz à volta da frequência dada, descodifica cada um a 512, 1200 e 2400 bit/s e indica que velocidade funciona."</string>
+    <string name="pocsag_scan_centre">"Centro do varrimento (MHz)"</string>
+    <string name="pocsag_scan_carriers">"Emissores encontrados"</string>
+    <string name="pocsag_scan_none">"Ainda nenhum emissor: os pagers emitem por rajadas, continue a ouvir."</string>
+    <string name="pocsag_scan_best">"descodifica a %1$d bit/s"</string>
+    <string name="pocsag_scan_no_page">"nenhuma mensagem descodificada ainda"</string>
+    <string name="pmr_fleetsync_id">"frota %1$d · unidade %2$d"</string>
+    <string name="airband_title">"Scanner aeronáutico"</string>
+    <string name="airband_subtitle">"Todos os canais de aviação que emitem, sem lista"</string>
+    <string name="airband_playing">"A ouvir %1$s MHz"</string>
+    <string name="airband_listening">"À espera de um canal que emita"</string>
+    <string name="airband_window">"Parte da banda (1,8 MHz de cada vez)"</string>
+    <string name="airband_channels_title">"Canais ouvidos"</string>
+    <string name="airband_pin_hint">"Toque num canal para ouvir só esse; toque de novo para o mais forte no ar."</string>
+    <string name="airband_none_yet">"Nada no ar ainda"</string>
+    <string name="airband_none_yet_body">"Os canais abrem sozinhos mal uma portadora emite e fecham após 30 s de silêncio."</string>
+    <string name="airband_how_it_works">"Só receção. O scanner vigia 1,8 MHz da banda aeronáutica 118–137 MHz em passos de 8,33 e 25 kHz, abre cada canal que emite, toca o mais forte em AM e mantém-no 2 s depois de a portadora cair para não cortar uma resposta. Ouvir o tráfego aéreo pode ser regulado onde está."</string>
+    <string name="airband_on_air">"no ar"</string>
+    <string name="airband_ago">"há %1$d s"</string>
+    <string name="airband_talk">"%1$d s de fala"</string>
+    <string name="airband_pinned">"fixado"</string>
+    <plurals name="p_airband_channels">
+        <item quantity="one">"canal"</item>
+        <item quantity="other">"canais"</item>
+    </plurals>
 </resources>

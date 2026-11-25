@@ -98,14 +98,15 @@ fun SettingsScreen(vm: MainViewModel) {
                 }
             }
             Section(S(R.string.measurements)) {
-                Item(0, 4, Sym.Straighten, S(R.string.units), S(R.string.distances_speeds_and_altitudes)) {
+                Item(0, 5, Sym.Straighten, S(R.string.units), S(R.string.distances_speeds_and_altitudes)) {
                     SegmentedRow(listOf(Units.Metric to S(R.string.metric), Units.Imperial to S(R.string.imperial)), s.units, { vm.updateSettings { setUnits(it) } }, Modifier.fillMaxWidth(), selectedColor = cs.primary, onSelectedColor = cs.onPrimary)
                 }
-                Item(1, 4, Sym.CellBars3, S(R.string.signal_display), S(R.string.raw_value_or_percentage)) {
+                Item(1, 5, Sym.CellBars3, S(R.string.signal_display), S(R.string.raw_value_or_percentage)) {
                     SegmentedRow(listOf(SignalDisplay.Dbm to "dBm", SignalDisplay.Percent to "%"), s.signal, { vm.updateSettings { setSignal(it) } }, Modifier.fillMaxWidth(), selectedColor = cs.primary, onSelectedColor = cs.onPrimary)
                 }
-                Item(2, 4, Sym.Vibration, S(R.string.haptic_feedback), S(R.string.vibrations_on_important_actions), trailing = { AntSwitch(s.haptics) }, onClick = { vm.updateSettings { setHaptics(!s.haptics) } })
-                Item(3, 4, Sym.ScreenLock, S(R.string.screen_always_on), S(R.string.during_a_measurement_or_a_recording), trailing = { AntSwitch(s.keepAwake) }, onClick = { vm.updateSettings { setKeepAwake(!s.keepAwake) } })
+                Item(2, 5, Sym.Vibration, S(R.string.haptic_feedback), S(R.string.vibrations_on_important_actions), trailing = { AntSwitch(s.haptics) }, onClick = { vm.updateSettings { setHaptics(!s.haptics) } })
+                Item(3, 5, Sym.ScreenLock, S(R.string.screen_always_on), S(R.string.during_a_measurement_or_a_recording), trailing = { AntSwitch(s.keepAwake) }, onClick = { vm.updateSettings { setKeepAwake(!s.keepAwake) } })
+                Item(4, 5, Sym.Notifications, S(R.string.sound_cues), S(R.string.sound_cues_sub), trailing = { AntSwitch(s.soundCues) }, onClick = { vm.updateSettings { setSoundCues(!s.soundCues) } })
             }
             Section(S(R.string.permissions)) {
                 PermRows.forEachIndexed { i, p ->

@@ -3249,4 +3249,37 @@ Una raffica è un flusso di finte trame di abbinamento che fa apparire un pop-up
     <string name="search_tools_hint">"Digita parte del nome di uno strumento, cosa fa o la sua radio: %1$d strumenti."</string>
     <string name="search_no_tool">"Nessuno strumento corrisponde a «%1$s»."</string>
     <string name="sdr_tuner_unsupported">"Questa chiavetta RTL-SDR ha un tuner %1$s, non ancora supportato (solo R820T, R820T2 e R828D)"</string>
+    <string name="spectrum_snapshot">"Istantanea dello spettro"</string>
+    <string name="listen_notch_hint">"Una pressione lunga mette un notch su un fischio o una portante; tocca il suo chip per toglierlo."</string>
+    <string name="listen_notch_chip">"Notch %1$s ✕"</string>
+    <string name="listen_boost_off">"Amplificazione: disattivata"</string>
+    <string name="listen_boost">"Amplificazione: +%1$s dB (limitatore morbido)"</string>
+    <string name="sound_cues">"Segnali sonori"</string>
+    <string name="sound_cues_sub">"Brevi toni quando si trova un segnale, un decoder aggancia o perde il segnale e finisce un passaggio"</string>
+    <string name="pocsag_scan">"🔍 Scansione"</string>
+    <string name="pocsag_scan_hint">"Cerca trasmettitori di cercapersone nei 2 MHz attorno alla frequenza data, decodifica ciascuno a 512, 1200 e 2400 bit/s e dice quale velocità funziona."</string>
+    <string name="pocsag_scan_centre">"Centro della scansione (MHz)"</string>
+    <string name="pocsag_scan_carriers">"Trasmettitori trovati"</string>
+    <string name="pocsag_scan_none">"Ancora nessun trasmettitore: i cercapersone trasmettono a raffiche, continua ad ascoltare."</string>
+    <string name="pocsag_scan_best">"decodifica a %1$d bit/s"</string>
+    <string name="pocsag_scan_no_page">"ancora nessun messaggio decodificato"</string>
+    <string name="pmr_fleetsync_id">"flotta %1$d · unità %2$d"</string>
+    <string name="airband_title">"Scanner aeronautico"</string>
+    <string name="airband_subtitle">"Ogni canale aeronautico che trasmette, senza lista"</string>
+    <string name="airband_playing">"In ascolto %1$s MHz"</string>
+    <string name="airband_listening">"In attesa di un canale che trasmetta"</string>
+    <string name="airband_window">"Porzione di banda (1,8 MHz alla volta)"</string>
+    <string name="airband_channels_title">"Canali ascoltati"</string>
+    <string name="airband_pin_hint">"Tocca un canale per sentire solo quello; tocca di nuovo per il più forte in onda."</string>
+    <string name="airband_none_yet">"Ancora niente in onda"</string>
+    <string name="airband_none_yet_body">"I canali si aprono da soli appena una portante trasmette e si chiudono dopo 30 s di silenzio."</string>
+    <string name="airband_how_it_works">"Solo ricezione. Lo scanner sorveglia 1,8 MHz della banda aeronautica 118–137 MHz a passi di 8,33 e 25 kHz, apre ogni canale che trasmette, riproduce il più forte in AM e lo tiene 2 s dopo la fine della portante per non tagliare una risposta. L\'ascolto del traffico aereo può essere regolamentato dove ti trovi."</string>
+    <string name="airband_on_air">"in onda"</string>
+    <string name="airband_ago">"%1$d s fa"</string>
+    <string name="airband_talk">"%1$d s di parlato"</string>
+    <string name="airband_pinned">"fissato"</string>
+    <plurals name="p_airband_channels">
+        <item quantity="one">"canale"</item>
+        <item quantity="other">"canali"</item>
+    </plurals>
 </resources>

@@ -210,4 +210,62 @@ class PocsagTest {
             assertTrue(net.channelsHz.all { kotlin.math.abs(it - c) in 100_000..PocsagReceiver.MAX_SPAN_HZ / 2 })
         }
     }
+    /** The scan finds two pagers on frequencies it was not told, and says each one's bit rate. */
+    @Test fun scanFindsCarriersAndTheirRate() {
+        val centre = 466_200_000L
+        val f1 = 466_025_000L
+        val f2 = 466_450_000L
+        var now = 0L
+        val rx = ArrayList<PocsagMessage>()
+        var carriers = emptyList<com.allnetworktools.data.sdr.PagerCarrier>()
+        val scanner = com.allnetworktools.data.sdr.PocsagScanner(centre, { rx += it }, { carriers = it }, clock = { now })
+        val rate = PocsagReceiver.SAMPLE_RATE.toDouble()
+        // Each network says its page twice, as paging networks do; the scan needs a moment to see the carrier.
+        val a = transmission(listOf(pages[0])).let { it + it }
+        val b = transmission(listOf(pages[1])).let { it + it }
+        val spbA = rate / 1200
+        val spbB = rate / 512
+        val n = (maxOf(a.size * spbA, b.size * spbB)).roundToInt() + 40_000
+        val rnd = Random(9)
+        val bytes = ByteArray(n * 2)
+        var pa = 0.0
+        var pb = 0.0
+        for (i in 0 until n) {
+            val ia = (i / spbA).toInt()
+            val ib = (i / spbB).toInt()
+            pa += 2 * PI * ((f1 - centre) + if (ia < a.size && a[ia]) 4500.0 else -4500.0) / rate
+            pb += 2 * PI * ((f2 - centre) + if (ib < b.size && b[ib]) 4500.0 else -4500.0) / rate
+            val sa = if (ia < a.size) 30.0 else 0.0
+            val sb = if (ib < b.size) 30.0 else 0.0
+            bytes[2 * i] = (sa * cos(pa) + sb * cos(pb) + rnd.nextInt(-4, 5)).roundToInt().toByte()
+            bytes[2 * i + 1] = (sa * sin(pa) + sb * sin(pb) + rnd.nextInt(-4, 5)).roundToInt().toByte()
+        }
+        var i = 0
+        while (i < bytes.size) {
+            val k = minOf(131072, bytes.size - i)
+            scanner.feed(bytes.copyOfRange(i, i + k), k)
+            now += (k / 2 * 1000L / PocsagReceiver.SAMPLE_RATE)
+            i += k
+        }
+        now += 2_000
+        scanner.feed(ByteArray(131072), 131072)
+        assertEquals(carriers.toString(), listOf(f1, f2), carriers.map { it.hz })
+        assertEquals(1200, carriers[0].bestBaud)
+        assertEquals(512, carriers[1].bestBaud)
+        assertEquals(rx.toString(), setOf("Intervention 12 rue des Lilas, 2e etage", "0612345678"), rx.map { it.text }.toSet())
+    }
+
+    @Test fun scanSeesAnFskCarrierAsOne() {
+        val db = FloatArray(1024) { -90f }
+        // Two tones 9 kHz apart (about 4.6 bins): one pager.
+        val centre = 466_000_000L
+        val bin = { hz: Long -> ((hz - centre) / (2_000_000.0 / 1024) + 512).roundToInt() }
+        db[bin(466_300_000L - 4_500)] = -50f; db[bin(466_300_000L + 4_500)] = -50f
+        for (k in bin(466_300_000L - 4_500) + 1 until bin(466_300_000L + 4_500)) db[k] = -70f
+        assertEquals(listOf(466_300_000L), com.allnetworktools.data.sdr.PocsagScanner.carriers(db, centre))
+        // A 200 kHz wide broadcast is not a pager; the DC spike is ignored.
+        for (k in bin(465_500_000L) until bin(465_700_000L)) db[k] = -40f
+        db[512] = -20f
+        assertEquals(listOf(466_300_000L), com.allnetworktools.data.sdr.PocsagScanner.carriers(db, centre))
+    }
 }

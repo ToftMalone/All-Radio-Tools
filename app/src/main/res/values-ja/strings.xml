@@ -3166,4 +3166,37 @@
     <string name="search_tools_hint">"ツール名、機能、または無線の一部を入力: %1$d 個のツール"</string>
     <string name="search_no_tool">"「%1$s」に一致するツールはありません。"</string>
     <string name="sdr_tuner_unsupported">"この RTL-SDR のチューナーは %1$s で、まだ対応していません（対応は R820T、R820T2、R828D のみ）"</string>
+    <string name="spectrum_snapshot">"スペクトラムのスナップショット"</string>
+    <string name="listen_notch_hint">"長押しで口笛音やキャリアにノッチを置きます。チップをタップで削除。"</string>
+    <string name="listen_notch_chip">"ノッチ %1$s ✕"</string>
+    <string name="listen_boost_off">"音量ブースト: オフ"</string>
+    <string name="listen_boost">"音量ブースト: +%1$s dB (ソフトリミッタ)"</string>
+    <string name="sound_cues">"サウンドキュー"</string>
+    <string name="sound_cues_sub">"信号の検出、デコーダのロックや喪失、パス終了時に短い音"</string>
+    <string name="pocsag_scan">"🔍 スキャン"</string>
+    <string name="pocsag_scan_hint">"指定周波数の前後 2 MHz でポケベル送信を探し、それぞれを 512、1200、2400 bit/s でデコードして有効な速度を示します。"</string>
+    <string name="pocsag_scan_centre">"スキャンの中心 (MHz)"</string>
+    <string name="pocsag_scan_carriers">"見つかった送信"</string>
+    <string name="pocsag_scan_none">"まだ送信なし: ポケベルは間欠的に送信します。聴き続けてください。"</string>
+    <string name="pocsag_scan_best">"%1$d bit/s でデコード"</string>
+    <string name="pocsag_scan_no_page">"まだデコードされたメッセージなし"</string>
+    <string name="pmr_fleetsync_id">"フリート %1$d · ユニット %2$d"</string>
+    <string name="airband_title">"航空無線スキャナー"</string>
+    <string name="airband_subtitle">"送信中の航空チャンネルすべて、リスト不要"</string>
+    <string name="airband_playing">"%1$s MHz を再生中"</string>
+    <string name="airband_listening">"送信するチャンネルを待機中"</string>
+    <string name="airband_window">"バンドの一部 (1.8 MHz ずつ)"</string>
+    <string name="airband_channels_title">"受信したチャンネル"</string>
+    <string name="airband_pin_hint">"タップでそのチャンネルのみ。もう一度で最も強いチャンネルへ。"</string>
+    <string name="airband_none_yet">"まだ送信なし"</string>
+    <string name="airband_none_yet_body">"キャリアが出るとチャンネルが自動で開き、30 秒の無音で閉じます。"</string>
+    <string name="airband_how_it_works">"受信専用。118–137 MHz の航空バンドのうち 1.8 MHz を 8.33/25 kHz 間隔で監視し、送信中のチャンネルを開き、最も強いものを AM で再生し、応答が切れないようキャリア消失後 2 秒保持します。航空無線の受信は地域によって規制されている場合があります。"</string>
+    <string name="airband_on_air">"送信中"</string>
+    <string name="airband_ago">"%1$d 秒前"</string>
+    <string name="airband_talk">"会話 %1$d 秒"</string>
+    <string name="airband_pinned">"固定"</string>
+    <plurals name="p_airband_channels">
+        <item quantity="one">"チャンネル"</item>
+        <item quantity="other">"チャンネル"</item>
+    </plurals>
 </resources>

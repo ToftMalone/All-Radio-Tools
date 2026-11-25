@@ -56,6 +56,16 @@ class ListenReceiver(private val sampleRate: Int = 2_000_000, private val onAudi
     @Volatile var offsetHz: Double = 0.0
     /** The IF power under which the sound is muted, in dB; null for no squelch. */
     @Volatile var squelchDb: Double? = null
+    /**
+     * Extra loudness after the demodulator, in dB (0 to 24), for a signal still too quiet at full volume; a soft limiter
+     * rounds off the peaks instead of clipping them.
+     */
+    @Volatile var boostDb = 0f
+    /**
+     * Notches, as offsets from the middle of the I/Q stream (like [offsetHz]): each takes a narrow band (about 400 Hz)
+     * out of the channel before it is demodulated, for a carrier or a whistle sitting on the wanted signal.
+     */
+    @Volatile var notchesHz: DoubleArray = DoubleArray(0)
     /** Power of the selected channel, in dB relative to full scale. */
     @Volatile var levelDb = -120.0
         private set
@@ -100,6 +110,50 @@ class ListenReceiver(private val sampleRate: Int = 2_000_000, private val onAudi
     private val histSRe = FloatArray(2 * SSB_TAPS)
     private val histSIm = FloatArray(2 * SSB_TAPS)
     private var posS = 0
+
+    // Notch state: one pole-zero pair per notch, at 250 kS/s, set again when a notch or the tuning moves.
+    private var notchKey: DoubleArray? = null
+    private var notchOff = Double.NaN
+    private var nRe = DoubleArray(0)
+    private var nIm = DoubleArray(0)
+    private var nxRe = DoubleArray(0)
+    private var nxIm = DoubleArray(0)
+    private var nyRe = DoubleArray(0)
+    private var nyIm = DoubleArray(0)
+
+    private fun setNotches(list: DoubleArray, offset: Double) {
+        notchKey = list
+        notchOff = offset
+        val inChannel = list.map { it - offset }.filter { kotlin.math.abs(it) < 120_000 }
+        nRe = DoubleArray(inChannel.size) { cos(2 * PI * inChannel[it] / 250_000) }
+        nIm = DoubleArray(inChannel.size) { sin(2 * PI * inChannel[it] / 250_000) }
+        nxRe = DoubleArray(inChannel.size); nxIm = DoubleArray(inChannel.size)
+        nyRe = DoubleArray(inChannel.size); nyIm = DoubleArray(inChannel.size)
+    }
+
+    /**
+     * The notches on one 250 kS/s sample: y = x - e^jw x[-1] + r e^jw y[-1], a zero on the unit circle at the notch and
+     * a pole just inside it, so only a few hundred hertz around it are taken away.
+     */
+    private fun notch(re: Float, im: Float, out: FloatArray) {
+        var xr = re.toDouble()
+        var xi = im.toDouble()
+        for (k in nRe.indices) {
+            val cr = nRe[k]
+            val ci = nIm[k]
+            val pr = nxRe[k] * cr - nxIm[k] * ci
+            val pi = nxRe[k] * ci + nxIm[k] * cr
+            val qr = nyRe[k] * cr - nyIm[k] * ci
+            val qi = nyRe[k] * ci + nyIm[k] * cr
+            val yr = xr - pr + NOTCH_R * qr
+            val yi = xi - pi + NOTCH_R * qi
+            nxRe[k] = xr; nxIm[k] = xi
+            nyRe[k] = yr; nyIm[k] = yi
+            xr = yr; xi = yi
+        }
+        out[0] = xr.toFloat(); out[1] = xi.toFloat()
+    }
+    private val notched = FloatArray(2)
 
     // Audio post-processing state.
     private var amAvg = 0f
@@ -151,6 +205,8 @@ class ListenReceiver(private val sampleRate: Int = 2_000_000, private val onAudi
     fun feed(buf: ByteArray, len: Int) {
         val m = mode
         if (h2Mode != m) retuneStage2(m)
+        val nl = notchesHz
+        if (nl !== notchKey || offsetHz != notchOff) setNotches(nl, offsetHz)
         val step = -2 * PI * offsetHz / sampleRate
         if (step != lastStep) { lastStep = step; stRe = cos(step); stIm = sin(step) }
         var i = 0
@@ -176,7 +232,7 @@ class ListenReceiver(private val sampleRate: Int = 2_000_000, private val onAudi
                 for (k in h1.indices) { ar += h1[k] * hist1Re[pos1 + k]; ai += h1[k] * hist1Im[pos1 + k] }
                 power += ar * ar + ai * ai
                 powerN++
-                stage2(ar, ai, m)
+                if (nRe.isEmpty()) stage2(ar, ai, m) else { notch(ar, ai, notched); stage2(notched[0], notched[1], m) }
             }
         }
         if (outN > 0) { onAudio(out, outN); outN = 0 }
@@ -207,7 +263,8 @@ class ListenReceiver(private val sampleRate: Int = 2_000_000, private val onAudi
 
     private fun emit(x: Float) {
         val sq = squelchDb
-        out[outN++] = if (sq != null && levelDb < sq) 0f else x
+        val b = boostDb
+        out[outN++] = if (sq != null && levelDb < sq) 0f else if (b <= 0f) x else softLimit(x * dbGain(b))
         if (outN == out.size) { onAudio(out, outN); outN = 0 }
     }
 
@@ -279,6 +336,19 @@ class ListenReceiver(private val sampleRate: Int = 2_000_000, private val onAudi
     }
 
     companion object {
+        /** Pole radius of the notches: about 400 Hz wide at 250 kS/s. */
+        private const val NOTCH_R = 0.99
+
+        fun dbGain(db: Float): Float = Math.pow(10.0, db / 20.0).toFloat()
+
+        /** Linear up to 0.7, then a tanh knee towards 1: loud peaks are rounded, never clipped hard. */
+        fun softLimit(x: Float): Float {
+            val a = kotlin.math.abs(x)
+            if (a <= 0.7f) return x
+            val y = 0.7f + 0.3f * kotlin.math.tanh((a - 0.7f) / 0.3f)
+            return if (x < 0) -y else y
+        }
+
         const val SAMPLE_RATE = 2_000_000
         const val AUDIO_RATE = 50_000
         private const val SSB_TAPS = 255

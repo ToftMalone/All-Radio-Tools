@@ -3242,4 +3242,37 @@ Sel, yakındaki her telefonda bir açılır pencere çıkaran sahte eşleştirme
     <string name="search_tools_hint">"Bir aracın adının, işlevinin veya radyosunun bir kısmını yazın: %1$d araç."</string>
     <string name="search_no_tool">"“%1$s” ile eşleşen araç yok."</string>
     <string name="sdr_tuner_unsupported">"Bu RTL-SDR çubuğunda %1$s alıcı var, henüz desteklenmiyor (yalnızca R820T, R820T2 ve R828D)"</string>
+    <string name="spectrum_snapshot">"Spektrum görüntüsü"</string>
+    <string name="listen_notch_hint">"Uzun basış bir ıslık veya taşıyıcıya çentik koyar; kaldırmak için çipine dokunun."</string>
+    <string name="listen_notch_chip">"Çentik %1$s ✕"</string>
+    <string name="listen_boost_off">"Ses güçlendirme: kapalı"</string>
+    <string name="listen_boost">"Ses güçlendirme: +%1$s dB (yumuşak sınırlayıcı)"</string>
+    <string name="sound_cues">"Ses işaretleri"</string>
+    <string name="sound_cues_sub">"Bir sinyal bulunduğunda, bir çözücü kilitlendiğinde veya kaybettiğinde ve bir geçiş bittiğinde kısa tonlar"</string>
+    <string name="pocsag_scan">"🔍 Tarama"</string>
+    <string name="pocsag_scan_hint">"Verilen frekansın çevresindeki 2 MHz içinde çağrı cihazı vericilerini arar, her birini 512, 1200 ve 2400 bit/sn ile çözer ve hangi hızın işe yaradığını söyler."</string>
+    <string name="pocsag_scan_centre">"Tarama merkezi (MHz)"</string>
+    <string name="pocsag_scan_carriers">"Bulunan vericiler"</string>
+    <string name="pocsag_scan_none">"Henüz verici yok: çağrı cihazları patlamalar halinde yayın yapar, dinlemeye devam edin."</string>
+    <string name="pocsag_scan_best">"%1$d bit/sn ile çözülüyor"</string>
+    <string name="pocsag_scan_no_page">"henüz çözülen mesaj yok"</string>
+    <string name="pmr_fleetsync_id">"filo %1$d · birim %2$d"</string>
+    <string name="airband_title">"Havacılık tarayıcısı"</string>
+    <string name="airband_subtitle">"Yayın yapan her havacılık kanalı, liste gerekmez"</string>
+    <string name="airband_playing">"Çalıyor %1$s MHz"</string>
+    <string name="airband_listening">"Yayın yapan bir kanal bekleniyor"</string>
+    <string name="airband_window">"Bandın bir kısmı (her seferinde 1,8 MHz)"</string>
+    <string name="airband_channels_title">"Duyulan kanallar"</string>
+    <string name="airband_pin_hint">"Yalnızca bir kanalı dinlemek için ona dokunun; en güçlüsüne dönmek için tekrar dokunun."</string>
+    <string name="airband_none_yet">"Henüz yayında bir şey yok"</string>
+    <string name="airband_none_yet_body">"Kanallar bir taşıyıcı yayına başlar başlamaz kendiliğinden açılır ve 30 sn sessizlikten sonra kapanır."</string>
+    <string name="airband_how_it_works">"Yalnızca alım. Tarayıcı 118–137 MHz havacılık bandının 1,8 MHz\'ini 8,33 ve 25 kHz aralıklarla izler, yayın yapan her kanalı açar, en güçlüsünü AM ile çalar ve bir yanıt kesilmesin diye taşıyıcı bittikten sonra 2 sn tutar. Hava trafiğini dinlemek bulunduğunuz yerde düzenlenmiş olabilir."</string>
+    <string name="airband_on_air">"yayında"</string>
+    <string name="airband_ago">"%1$d sn önce"</string>
+    <string name="airband_talk">"%1$d sn konuşma"</string>
+    <string name="airband_pinned">"sabitlendi"</string>
+    <plurals name="p_airband_channels">
+        <item quantity="one">"kanal"</item>
+        <item quantity="other">"kanal"</item>
+    </plurals>
 </resources>

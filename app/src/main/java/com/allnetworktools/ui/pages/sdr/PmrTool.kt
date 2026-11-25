@@ -57,7 +57,12 @@ import kotlinx.coroutines.CoroutineScope
 data class PmrChannelState(val ch: Int, val hz: Long, val overDb: Double, val lastMs: Long, val kind: String?, val ctcss: Double?)
 
 /** A digital call or its end, as the signalling gave it. */
-data class PmrCall(val atMs: Long, val hz: Long, val dmr: Boolean, val cc: Int?, val group: Boolean, val src: Int?, val dst: Int?, val slot: Int, val emergency: Boolean, val encrypted: Boolean, val end: Boolean)
+data class PmrCall(
+    val atMs: Long, val hz: Long, val dmr: Boolean, val cc: Int?, val group: Boolean, val src: Int?, val dst: Int?, val slot: Int,
+    val emergency: Boolean, val encrypted: Boolean, val end: Boolean,
+    /** A Kenwood FleetSync identity on an analogue call, instead of digital signalling. */
+    val fleet: com.allnetworktools.data.sdr.FleetSync.Message? = null,
+)
 
 /**
  * The PMR446 band at once: activity on the 16 analogue channels, CTCSS tones, DMR446 and dPMR446 call signalling with
@@ -122,9 +127,10 @@ class PmrController(repo: SdrRepository, scope: CoroutineScope, onAcquire: () ->
                 // The end frame names nobody: the call it closes is the last one heard on this channel.
                 is PmrEvent.DpmrEnd -> PmrCall(now, e.hz, false, null, true, log.firstOrNull { !it.dmr && it.hz == e.hz }?.src, null, 0, false, false, true)
                 is PmrEvent.Voice -> null
+                is PmrEvent.FleetSyncId -> PmrCall(now, e.hz, false, null, false, e.msg.unit, null, 0, false, false, false, fleet = e.msg)
             }
             val ch = chOf(e.hz)
-            kind[ch] = if (e is PmrEvent.Dmr || e is PmrEvent.DmrVoice) "DMR" else "dPMR"
+            kind[ch] = when (e) { is PmrEvent.Dmr, is PmrEvent.DmrVoice -> "DMR"; is PmrEvent.FleetSyncId -> "FleetSync"; else -> "dPMR" }
             last[ch] = now
             if (call != null) {
                 // A header or terminator is sent several times: one line per call and end.
@@ -301,6 +307,18 @@ private fun CallRow(c: PmrCall) {
         LeadingIcon(if (c.end) Sym.Stop else Sym.Mic, if (c.emergency) cs.errorContainer else acc.container, if (c.emergency) cs.onErrorContainer else acc.onContainer, 40.dp, RoundedCornerShape(12.dp), 22.dp)
         Column(Modifier.weight(1f)) {
             val id = { v: Int? -> v?.let { if (c.dmr) "$it" else Dpmr.idText(it) } ?: "?" }
+            val fs = c.fleet
+            if (fs != null) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        (if (fs.fs2) "FleetSync II" else "FleetSync") + " · " + S(R.string.pmr_fleetsync_id, fs.fleet, fs.unit),
+                        Modifier.weight(1f), style = rf(15, 20, 600), maxLines = 1,
+                    )
+                    Text(DateFormat.getTimeInstance(DateFormat.MEDIUM).format(Date(c.atMs)), style = rf(12, 16, tnum = true), color = cs.onSurfaceVariant)
+                }
+                Text("%.5f MHz · %s".format(Locale.getDefault(), c.hz / 1e6, fs.raw), style = rf(12, 16, tnum = true), color = cs.onSurfaceVariant)
+                return@Column
+            }
             val what = when {
                 c.end -> S(R.string.pmr_end_of_call)
                 c.group -> S(R.string.pmr_group_call, id(c.dst))

@@ -168,6 +168,8 @@ sealed class PmrEvent(val hz: Long) {
     class DmrVoice(hz: Long, val slot: Int) : PmrEvent(hz)
     class DpmrHeader(hz: Long, val cc: Int, val header: Dpmr.Header) : PmrEvent(hz)
     class DpmrEnd(hz: Long, val end: Dpmr.End) : PmrEvent(hz)
+    /** A Kenwood FleetSync identity burst: who keyed up. */
+    class FleetSyncId(hz: Long, val msg: FleetSync.Message) : PmrEvent(hz)
     /** Digital voice decoded: 160 samples at 8 kHz per 20 ms; [slot] 0 for dPMR. */
     class Voice(hz: Long, val slot: Int, val pcm: FloatArray) : PmrEvent(hz)
 }
@@ -195,6 +197,9 @@ class PmrChannel(val hz: Long, private val offHz: Double, narrow: Boolean, priva
     private val dpmr = FourFskSync(50_000.0, 2400.0, listOf(Dpmr.FS1, Dpmr.FS4), 0, intArrayOf(132, 132)) { dpmrFrame(it) }.also { s -> s.onRead = { dpmrPayload(it) } }
     // FS3, the end frame's sync, is half as long as FS1 and FS4: its own search.
     private val dpmrEnd = FourFskSync(50_000.0, 2400.0, listOf(Dpmr.FS3), 0, intArrayOf(36)) { dpmrEndFrame(it) }
+    // Kenwood FleetSync: the FFSK identity burst at the start of an analogue call.
+    private val fleetFramer = FleetSyncFramer { m -> onEvent(PmrEvent.FleetSyncId(hz, m)) }
+    private val ffsk = FfskDemodulator(50_000.0) { fleetFramer.bit(it) }
     // AMBE+2 decoders: one per DMR time slot (0 when the slot is not known), one for dPMR.
     private val ambe = Array(3) { AmbeDecoder() }
     private val ambeDpmr = AmbeDecoder()
@@ -255,6 +260,7 @@ class PmrChannel(val hz: Long, private val offHz: Double, narrow: Boolean, priva
      */
     fun pushFm(hz: Float) {
         nOut++
+        ffsk.push(hz)
         dmr.push(hz)
         dpmr.push(hz)
         dpmrEnd.push(hz)
