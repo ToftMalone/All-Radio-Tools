@@ -197,7 +197,7 @@ fun AcarsTool(vm: MainViewModel) {
     PageColumn {
         HeroCard {
             Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                Text("${c.messages.size}", style = gs(56, 60, 500, -1.5f, tnum = true))
+                com.allnetworktools.ui.components.RollingText("${c.messages.size}", style = gs(56, 60, 500, -1.5f, tnum = true))
                 Text(P(R.plurals.p_messages, c.messages.size), Modifier.padding(bottom = 8.dp), style = rf(18, 24, 500))
             }
             // With a free channel, the three European ones in the text give way to it.
@@ -221,12 +221,12 @@ fun AcarsTool(vm: MainViewModel) {
         if (tab == ToolTab.Main) {
             if (c.messages.isNotEmpty()) {
                 SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)) {
-                    c.messages.take(200).forEachIndexed { i, m ->
+                    com.allnetworktools.ui.components.LiveRows("acars", c.messages.take(200), { m -> m }, tapToSee = false) { i, m ->
                         if (i > 0) Hairline()
                         MessageRow(m)
                     }
                 }
-            }
+            } else ReceiveEmpty(c.running || c.starting, Sym.Flight, S(R.string.receive_none_yet), S(R.string.receive_none_yet_body))
         }
         if (tab == ToolTab.Settings) {
             SectionCard {

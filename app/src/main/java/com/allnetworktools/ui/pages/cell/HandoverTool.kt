@@ -53,7 +53,7 @@ fun HandoverTool(notificationsGranted: Boolean) {
     PageColumn {
         HeroCard {
             Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                Text(changes.toString(), style = gs(56, 60, 500, -1.5f, tnum = true))
+                com.allnetworktools.ui.components.RollingText(changes.toString(), style = gs(56, 60, 500, -1.5f, tnum = true))
                 Text(P(R.plurals.p_cell_changes, changes), Modifier.padding(bottom = 8.dp), style = rf(18, 24, 500))
             }
             Text(

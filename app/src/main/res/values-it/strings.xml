@@ -3315,4 +3315,9 @@ Una raffica è un flusso di finte trame di abbinamento che fa apparire un pop-up
     <string name="advice_dns_slow_body">"Il server DNS della tua connessione risponde in %1$s ms, %2$s in %3$s ms. Sceglilo come DNS privato nelle impostazioni di Android: i siti si apriranno più in fretta."</string>
     <string name="advice_dns_down_title">"Il tuo DNS non risponde"</string>
     <string name="advice_dns_down_body">"Il server DNS della tua connessione non ha risposto; %1$s ha risposto in %2$s ms. Sceglilo come DNS privato nelle impostazioni di Android."</string>
+    <string name="dashboard">"Pannello"</string>
+    <string name="ready_to_listen">"Pronto ad ascoltare"</string>
+    <string name="ready_to_listen_body">"Avvia la ricezione: ciò che questo strumento capta apparirà qui, il più recente in alto."</string>
+    <string name="receive_none_yet">"Ancora niente"</string>
+    <string name="receive_none_yet_body">"La ricezione è attiva: tutto ciò che lo strumento capta apparirà qui appena lo sente."</string>
 </resources>

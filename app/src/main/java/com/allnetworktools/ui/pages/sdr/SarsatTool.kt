@@ -132,7 +132,7 @@ fun SarsatTool(vm: MainViewModel) {
     PageColumn {
         HeroCard {
             Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                Text("${c.beacons.size}", style = gs(56, 60, 500, -1.5f, tnum = true))
+                com.allnetworktools.ui.components.RollingText("${c.beacons.size}", style = gs(56, 60, 500, -1.5f, tnum = true))
                 Text(P(R.plurals.p_sarsat_beacons, c.beacons.size), Modifier.padding(bottom = 8.dp), style = rf(18, 24, 500))
             }
             Text(S(R.string.sarsat_line, c.bursts, c.beacons.count { it.beacon.selfTest }), style = rf(14, 20, tnum = true))
@@ -152,11 +152,11 @@ fun SarsatTool(vm: MainViewModel) {
         val tab = ToolTabRow("SarsatTool0", map = false)
         if (tab == ToolTab.Main) {
             if (c.beacons.isEmpty()) {
-                if (c.running) ToolEmpty(Sym.Campaign, S(R.string.sarsat_none_yet), S(R.string.sarsat_none_yet_body), null)
+                ReceiveEmpty(c.running || c.starting, Sym.Campaign, S(R.string.sarsat_none_yet), S(R.string.sarsat_none_yet_body))
             } else {
                 val now = System.currentTimeMillis()
                 SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)) {
-                    c.beacons.forEachIndexed { i, s ->
+                    com.allnetworktools.ui.components.LiveRows("sarsat", c.beacons, { s -> s.beacon.hexId }, tapToSee = true) { i, s ->
                         if (i > 0) Hairline()
                         BeaconRow(s, now, s.beacon.hexId == c.selected, { c.selected = if (c.selected == s.beacon.hexId) null else s.beacon.hexId }) { lat, lon ->
                             actions.openUrl("geo:$lat,$lon?q=$lat,$lon(${s.beacon.hexId})")

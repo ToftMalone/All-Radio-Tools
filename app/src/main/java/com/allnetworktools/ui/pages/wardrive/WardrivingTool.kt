@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
+import com.allnetworktools.ui.components.fresh
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -208,7 +209,10 @@ fun WardrivingScreen(st: WardriveState, onUpload: () -> Unit, onExport: () -> Un
             }
         } else {
             val n = st.rows.size
-            itemsIndexed(st.rows, key = { _, r -> r.type.code + r.mac }) { i, r -> NetworkLine(r, onRow) }
+            itemsIndexed(st.rows, key = { _, r -> r.type.code + r.mac }) { i, r ->
+                // Rows slide to their new place as the list re-sorts; a network met for the first time is marked new.
+                androidx.compose.foundation.layout.Box(Modifier.animateItem().fresh("wardrive", r.type.code + r.mac, tapToSee = false)) { NetworkLine(r, onRow) }
+            }
         }
     }
 }

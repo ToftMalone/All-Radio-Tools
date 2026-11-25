@@ -271,6 +271,8 @@ private fun DroneDetails(d: Drone, me: Pair<Double, Double>?, now: Long) {
 
 /** Drones as arrows along their course, their pilots as dots joined to them, the selected one with its track. */
 private class DroneOverlay(private val density: Float) : Overlay() {
+    /** New fixes glide in rather than jump. */
+    private val glide = com.allnetworktools.ui.components.MarkerGlide<Any>()
     var drones: List<Drone> = emptyList()
     var selected: String? = null
     var me: GeoPoint? = null
@@ -285,6 +287,7 @@ private class DroneOverlay(private val density: Float) : Overlay() {
     private val dash = DashPathEffect(floatArrayOf(8f, 6f), 0f)
 
     override fun draw(c: Canvas, map: MapView, shadow: Boolean) {
+        glide.begin()
         if (shadow) return
         val proj = map.projection
         me?.let {
@@ -297,7 +300,7 @@ private class DroneOverlay(private val density: Float) : Overlay() {
             val sel = d.key == selected
             val live = d.now(now)
             val color = if (d.status == Status.Emergency) 0xFFE53935.toInt() else if (live) accent else 0xFF9E9E9E.toInt()
-            proj.toPixels(GeoPoint(d.lat!!, d.lon!!), pt)
+            proj.toPixels(glide.at(d.key, d.lat!!, d.lon!!), pt)
             if (sel && d.track.size > 1) {
                 path.reset()
                 d.track.forEachIndexed { i, (la, lo) -> proj.toPixels(GeoPoint(la, lo), pt2); if (i == 0) path.moveTo(pt2.x.toFloat(), pt2.y.toFloat()) else path.lineTo(pt2.x.toFloat(), pt2.y.toFloat()) }
@@ -336,6 +339,8 @@ private class DroneOverlay(private val density: Float) : Overlay() {
             text.style = Paint.Style.FILL; text.color = 0xFF202124.toInt()
             c.drawText(label, pt.x + size + 2 * density, pt.y - 2 * density, text)
         }
+        glide.end()
+        if (glide.moving) map.postInvalidateOnAnimation()
     }
 
     private fun Drone.now(t: Long) = active(t)
@@ -343,7 +348,7 @@ private class DroneOverlay(private val density: Float) : Overlay() {
     override fun onSingleTapConfirmed(e: MotionEvent, map: MapView): Boolean {
         val proj = map.projection
         fun dist(d: Drone): Float {
-            proj.toPixels(GeoPoint(d.lat!!, d.lon!!), pt)
+            proj.toPixels(glide.at(d.key, d.lat!!, d.lon!!), pt)
             return (pt.x - e.x) * (pt.x - e.x) + (pt.y - e.y) * (pt.y - e.y)
         }
         val hit = drones.minByOrNull(::dist)?.takeIf { dist(it) < (28 * density) * (28 * density) }

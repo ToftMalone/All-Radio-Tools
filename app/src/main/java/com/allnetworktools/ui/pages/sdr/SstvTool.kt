@@ -225,7 +225,7 @@ fun SstvTool(vm: MainViewModel) {
                     p.bitmap, p.image.mode, Modifier.fillMaxWidth().aspectRatio(p.image.width.toFloat() / p.image.height).clip(RoundedCornerShape(24.dp)),
                     contentScale = ContentScale.FillBounds,
                 )
-            } else if (c.running) ToolEmpty(Sym.PhotoCamera, S(R.string.sstv_none_yet), S(R.string.sstv_none_yet_body), null)
+            } else ReceiveEmpty(c.running || c.starting, Sym.PhotoCamera, S(R.string.sstv_none_yet), S(R.string.sstv_none_yet_body))
         }
         if (tab == ToolTab.Main) {
             if (c.history.size > 1 || (c.history.size == 1 && c.history[0] !== p)) {

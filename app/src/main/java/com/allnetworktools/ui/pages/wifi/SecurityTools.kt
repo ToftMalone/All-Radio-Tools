@@ -155,7 +155,7 @@ fun AuditTool(c: AuditController, conn: WifiConnection?, scan: List<WifiAp>?) {
                 val score = NetworkAudit.score(checks)
                 val (bad, warn) = summary(checks)
                 Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                    Text("$score", style = gs(64, 68, 500, tnum = true))
+                    com.allnetworktools.ui.components.RollingText("$score", style = gs(64, 68, 500, tnum = true))
                     Column(Modifier.padding(bottom = 10.dp)) {
                         Text("/ 100", style = rf(18, 24, 600, tnum = true))
                         Text(c.auditedSsid ?: "", style = rf(14, 20))

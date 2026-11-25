@@ -229,7 +229,7 @@ fun IsmTool(vm: MainViewModel) {
     PageColumn {
         HeroCard {
             Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                Text("${c.devices.size}", style = gs(56, 60, 500, -1.5f, tnum = true))
+                com.allnetworktools.ui.components.RollingText("${c.devices.size}", style = gs(56, 60, 500, -1.5f, tnum = true))
                 Text(P(R.plurals.p_devices, c.devices.size), Modifier.padding(bottom = 8.dp), style = rf(18, 24, 500))
             }
             Text(S(R.string.ism_heard, band, c.readings, c.unknown), style = rf(14, 20))
@@ -249,11 +249,11 @@ fun IsmTool(vm: MainViewModel) {
         val tab = ToolTabRow("IsmTool0", map = false)
         if (tab == ToolTab.Main) {
             if (c.devices.isEmpty()) {
-                if (c.running) ToolEmpty(Sym.Thermostat, S(R.string.tpms_none_yet), S(R.string.ism_none_yet_body), null)
+                ReceiveEmpty(c.running || c.starting, Sym.Thermostat, S(R.string.tpms_none_yet), S(R.string.ism_none_yet_body))
             } else {
                 val now = System.currentTimeMillis()
                 SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)) {
-                    c.devices.forEachIndexed { i, s ->
+                    com.allnetworktools.ui.components.LiveRows("ism", c.devices, { s -> s.key }, tapToSee = false) { i, s ->
                         if (i > 0) Hairline()
                         DeviceRow(s, now)
                     }

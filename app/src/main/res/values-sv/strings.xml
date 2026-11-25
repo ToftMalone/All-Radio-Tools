@@ -3308,4 +3308,9 @@ Ett flöde är en ström av falska parkopplingsramar som får en popup att visas
     <string name="advice_dns_slow_body">"Din anslutnings DNS-server svarar på %1$s ms, %2$s på %3$s ms. Välj den som privat DNS i Androids inställningar: sidor öppnas snabbare."</string>
     <string name="advice_dns_down_title">"Din DNS svarar inte"</string>
     <string name="advice_dns_down_body">"Din anslutnings DNS-server svarade inte; %1$s svarade på %2$s ms. Välj den som privat DNS i Androids inställningar."</string>
+    <string name="dashboard">"Översikt"</string>
+    <string name="ready_to_listen">"Redo att lyssna"</string>
+    <string name="ready_to_listen_body">"Starta mottagningen: det verktyget fångar visas här, det senaste överst."</string>
+    <string name="receive_none_yet">"Inget hört ännu"</string>
+    <string name="receive_none_yet_body">"Mottagningen är igång: allt verktyget fångar visas här så snart det hörs."</string>
 </resources>

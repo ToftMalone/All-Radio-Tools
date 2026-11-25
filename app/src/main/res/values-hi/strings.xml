@@ -3308,4 +3308,9 @@
     <string name="advice_dns_slow_body">"आपके कनेक्शन का DNS सर्वर %1$s ms में जवाब देता है, %2$s %3$s ms में। Android सेटिंग में उसे निजी DNS चुनें: साइटें तेज़ी से खुलेंगी।"</string>
     <string name="advice_dns_down_title">"आपका DNS जवाब नहीं दे रहा"</string>
     <string name="advice_dns_down_body">"आपके कनेक्शन के DNS सर्वर ने जवाब नहीं दिया; %1$s ने %2$s ms में जवाब दिया। Android सेटिंग में उसे निजी DNS चुनें।"</string>
+    <string name="dashboard">"डैशबोर्ड"</string>
+    <string name="ready_to_listen">"सुनने के लिए तैयार"</string>
+    <string name="ready_to_listen_body">"रिसेप्शन शुरू करें: यह टूल जो पकड़ेगा वह यहाँ दिखेगा, सबसे नया ऊपर।"</string>
+    <string name="receive_none_yet">"अभी तक कुछ नहीं सुना"</string>
+    <string name="receive_none_yet_body">"रिसेप्शन चालू है: टूल जो भी पकड़ेगा, सुनते ही यहाँ दिखेगा।"</string>
 </resources>

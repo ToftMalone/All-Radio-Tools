@@ -153,7 +153,7 @@ fun CubesatTool(vm: MainViewModel) {
     PageColumn {
         HeroCard {
             Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                Text("${c.frames.size}", style = gs(56, 60, 500, -1.5f, tnum = true))
+                com.allnetworktools.ui.components.RollingText("${c.frames.size}", style = gs(56, 60, 500, -1.5f, tnum = true))
                 Text(P(R.plurals.p_messages, c.frames.size), Modifier.padding(bottom = 8.dp), style = rf(18, 24, 500))
             }
             val s = c.sat
@@ -227,12 +227,12 @@ fun CubesatTool(vm: MainViewModel) {
         if (tab == ToolTab.Main) {
             if (c.frames.isNotEmpty()) {
                 SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)) {
-                    c.frames.take(100).forEachIndexed { i, f ->
+                    com.allnetworktools.ui.components.LiveRows("cubesat", c.frames.take(100), { f -> f }, tapToSee = false) { i, f ->
                         if (i > 0) Hairline()
                         FrameRow(f)
                     }
                 }
-            }
+            } else ReceiveEmpty(c.running || c.starting, Sym.SatelliteAlt, S(R.string.receive_none_yet), S(R.string.receive_none_yet_body))
         }
         if (tab == ToolTab.Settings) {
             SectionCard {

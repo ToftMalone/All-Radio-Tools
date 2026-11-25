@@ -259,7 +259,7 @@ fun AisTool(vm: MainViewModel) {
     PageColumn {
         HeroCard {
             Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                Text("${c.ships.size}", style = gs(56, 60, 500, -1.5f, tnum = true))
+                com.allnetworktools.ui.components.RollingText("${c.ships.size}", style = gs(56, 60, 500, -1.5f, tnum = true))
                 Text(P(R.plurals.p_ships, c.ships.size), Modifier.padding(bottom = 8.dp), style = rf(18, 24, 500))
             }
             Text(S(R.string.moving_161_975_and_162_025, withPos.size, P(R.plurals.p_located, withPos.size), moving), style = rf(14, 20))
@@ -283,12 +283,12 @@ fun AisTool(vm: MainViewModel) {
         if (tab == ToolTab.List) {
             if (c.ships.isNotEmpty()) {
                 SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)) {
-                    c.ships.forEachIndexed { i, s ->
+                    com.allnetworktools.ui.components.LiveRows("ais", c.ships, { s -> s.mmsi }, tapToSee = true) { i, s ->
                         if (i > 0) Hairline()
                         ShipRow(s, me, s.mmsi == c.selected) { c.selected = if (c.selected == s.mmsi) null else s.mmsi }
                     }
                 }
-            }
+            } else ReceiveEmpty(c.running || c.starting, Sym.Sailing, S(R.string.receive_none_yet), S(R.string.receive_none_yet_body))
         }
         if (tab == ToolTab.Settings) {
             SectionCard {
@@ -352,6 +352,8 @@ private fun ShipRow(s: Ship, me: Pair<Double, Double>?, selected: Boolean, onCli
 
 /** Moving ships as arrows along their course, the others as dots, labelled with their name. */
 private class ShipOverlay(private val density: Float) : Overlay() {
+    /** New fixes glide in rather than jump. */
+    private val glide = com.allnetworktools.ui.components.MarkerGlide<Any>()
     var ships: List<Ship> = emptyList()
     var selected: Int? = null
     var me: GeoPoint? = null
@@ -363,6 +365,7 @@ private class ShipOverlay(private val density: Float) : Overlay() {
     private val path = Path()
 
     override fun draw(c: Canvas, map: MapView, shadow: Boolean) {
+        glide.begin()
         if (shadow) return
         val proj = map.projection
         me?.let {
@@ -372,7 +375,7 @@ private class ShipOverlay(private val density: Float) : Overlay() {
             paint.color = 0xFF1E88E5.toInt(); c.drawCircle(pt.x.toFloat(), pt.y.toFloat(), 5 * density, paint)
         }
         ships.forEach { s ->
-            proj.toPixels(GeoPoint(s.lat!!, s.lon!!), pt)
+            proj.toPixels(glide.at(s.mmsi, s.lat!!, s.lon!!), pt)
             val sel = s.mmsi == selected
             val color = if (sel) 0xFFE53935.toInt() else if (s.aid) 0xFFF9A825.toInt() else accent
             val size = (if (sel) 13 else 9) * density
@@ -402,12 +405,14 @@ private class ShipOverlay(private val density: Float) : Overlay() {
             text.style = Paint.Style.FILL; text.color = 0xFF202124.toInt()
             c.drawText(label, pt.x + size + 2 * density, pt.y - 2 * density, text)
         }
+        glide.end()
+        if (glide.moving) map.postInvalidateOnAnimation()
     }
 
     override fun onSingleTapConfirmed(e: MotionEvent, map: MapView): Boolean {
         val proj = map.projection
         fun dist(s: Ship): Float {
-            proj.toPixels(GeoPoint(s.lat!!, s.lon!!), pt)
+            proj.toPixels(glide.at(s.mmsi, s.lat!!, s.lon!!), pt)
             return (pt.x - e.x) * (pt.x - e.x) + (pt.y - e.y) * (pt.y - e.y)
         }
         val hit = ships.minByOrNull(::dist)?.takeIf { dist(it) < (28 * density) * (28 * density) }

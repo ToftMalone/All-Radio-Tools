@@ -173,7 +173,7 @@ fun NfcDashboard(vm: MainViewModel) {
             Text(S(R.string.nfc_session_empty), style = rf(14, 20), color = cs.onSurfaceVariant)
         } else {
             Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                history.forEachIndexed { i, s -> TagLine(s, groupShape(i, history.size)) { vm.navigate { it.copy(page = Page.ToolPage(Tool.NfcRead)) } } }
+                com.allnetworktools.ui.components.LiveRows("nfc-history", history, { it }) { i, s -> TagLine(s, groupShape(i, history.size)) { vm.navigate { it.copy(page = Page.ToolPage(Tool.NfcRead)) } } }
             }
         }
     }
@@ -255,7 +255,7 @@ fun NfcReadTool(vm: MainViewModel) {
         if (others.isNotEmpty()) {
             SectionTitle(S(R.string.nfc_session_tags))
             Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                others.forEachIndexed { i, t -> TagLine(t, groupShape(i, others.size)) {} }
+                com.allnetworktools.ui.components.LiveRows("nfc-session", others, { it }) { i, t -> TagLine(t, groupShape(i, others.size)) {} }
             }
         }
         Text(S(R.string.nfc_hold_next), style = rf(13, 18), color = cs.onSurfaceVariant)
@@ -643,7 +643,7 @@ fun NfcAntennaTool(vm: MainViewModel) {
             Box(Modifier.size(150.dp).clip(CircleShape).background(color.copy(alpha = 0.18f)), contentAlignment = Alignment.Center) {
                 if (s.present) PulseRing(color, 140.dp, periodMs = 900)
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(if (s.present) "${s.rate}" else "—", style = gs(44, 50, 500, tnum = true), color = AntTheme.accent.onContainer)
+                    com.allnetworktools.ui.components.RollingText(if (s.present) "${s.rate}" else "—", style = gs(44, 50, 500, tnum = true), color = AntTheme.accent.onContainer)
                     Text(S(R.string.nfc_per_second), style = rf(12, 16), color = AntTheme.accent.onContainer)
                 }
             }

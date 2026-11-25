@@ -165,7 +165,7 @@ fun MeshScreen(vm: MainViewModel, c: MeshController, fileName: String, emptyIcon
     PageColumn {
         HeroCard {
             Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                Text("${s.nodes.size}", style = gs(56, 60, 500, -1.5f, tnum = true))
+                com.allnetworktools.ui.components.RollingText("${s.nodes.size}", style = gs(56, 60, 500, -1.5f, tnum = true))
                 Text(P(R.plurals.p_mesh_nodes, s.nodes.size), Modifier.padding(bottom = 8.dp), style = rf(18, 24, 500))
             }
             Text(
@@ -192,9 +192,9 @@ fun MeshScreen(vm: MainViewModel, c: MeshController, fileName: String, emptyIcon
         val now = System.currentTimeMillis()
         when (c.tab) {
             MeshTab.Nodes -> if (s.nodes.isEmpty()) {
-                if (c.running) ToolEmpty(emptyIcon, emptyTitle, emptyBody, null)
+                ReceiveEmpty(c.running || c.starting, emptyIcon, emptyTitle, emptyBody)
             } else SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)) {
-                s.nodes.forEachIndexed { i, n ->
+                com.allnetworktools.ui.components.LiveRows("mesh-nodes-$fileName", s.nodes, { n -> n.key }, tapToSee = true) { i, n ->
                     if (i > 0) Hairline()
                     NodeRow(n, me, now, n.key == c.selected) { c.selected = if (c.selected == n.key) null else n.key }
                 }
@@ -210,7 +210,7 @@ fun MeshScreen(vm: MainViewModel, c: MeshController, fileName: String, emptyIcon
             MeshTab.Messages -> if (s.messages.isEmpty()) {
                 Text(S(R.string.mesh_no_messages), Modifier.padding(horizontal = 4.dp), style = rf(13, 18), color = cs.onSurfaceVariant)
             } else SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)) {
-                s.messages.forEachIndexed { i, m ->
+                com.allnetworktools.ui.components.LiveRows("mesh-msgs-$fileName", s.messages, { m -> m }, tapToSee = false) { i, m ->
                     if (i > 0) Hairline()
                     MessageRow(m, now)
                 }
@@ -219,7 +219,7 @@ fun MeshScreen(vm: MainViewModel, c: MeshController, fileName: String, emptyIcon
             MeshTab.Packets -> if (s.packets.isEmpty()) {
                 Text(S(R.string.mesh_no_packets), Modifier.padding(horizontal = 4.dp), style = rf(13, 18), color = cs.onSurfaceVariant)
             } else SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)) {
-                s.packets.take(100).forEachIndexed { i, p ->
+                com.allnetworktools.ui.components.LiveRows("mesh-packets-$fileName", s.packets.take(100), { p -> p }, tapToSee = false) { i, p ->
                     if (i > 0) Hairline()
                     PacketRow(p, now)
                 }
@@ -345,6 +345,8 @@ private fun PacketRow(p: MeshPacketRow, now: Long) {
 
 /** Nodes as labelled dots; the selected one in red. */
 private class MeshOverlay(private val density: Float) : Overlay() {
+    /** New fixes glide in rather than jump. */
+    private val glide = com.allnetworktools.ui.components.MarkerGlide<Any>()
     var nodes: List<MeshNode> = emptyList()
     var selected: String? = null
     var me: GeoPoint? = null
@@ -355,6 +357,7 @@ private class MeshOverlay(private val density: Float) : Overlay() {
     private val pt = android.graphics.Point()
 
     override fun draw(c: Canvas, map: MapView, shadow: Boolean) {
+        glide.begin()
         if (shadow) return
         val proj = map.projection
         me?.let {
@@ -364,7 +367,7 @@ private class MeshOverlay(private val density: Float) : Overlay() {
             paint.color = 0xFF1E88E5.toInt(); c.drawCircle(pt.x.toFloat(), pt.y.toFloat(), 5 * density, paint)
         }
         nodes.forEach { n ->
-            proj.toPixels(GeoPoint(n.lat!!, n.lon!!), pt)
+            proj.toPixels(glide.at(n.key, n.lat!!, n.lon!!), pt)
             val sel = n.key == selected
             val r = (if (sel) 8 else 6) * density
             paint.style = Paint.Style.FILL
@@ -376,12 +379,14 @@ private class MeshOverlay(private val density: Float) : Overlay() {
             text.style = Paint.Style.FILL; text.color = 0xFF202124.toInt()
             c.drawText(label, pt.x + r + 3 * density, pt.y - 2 * density, text)
         }
+        glide.end()
+        if (glide.moving) map.postInvalidateOnAnimation()
     }
 
     override fun onSingleTapConfirmed(e: MotionEvent, map: MapView): Boolean {
         val proj = map.projection
         fun dist(n: MeshNode): Float {
-            proj.toPixels(GeoPoint(n.lat!!, n.lon!!), pt)
+            proj.toPixels(glide.at(n.key, n.lat!!, n.lon!!), pt)
             return (pt.x - e.x) * (pt.x - e.x) + (pt.y - e.y) * (pt.y - e.y)
         }
         val hit = nodes.minByOrNull(::dist)?.takeIf { dist(it) < (28 * density) * (28 * density) }

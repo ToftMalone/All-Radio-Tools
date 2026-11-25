@@ -203,7 +203,7 @@ fun CensorTool(c: CensorController, networkLabel: String, networkIcon: String) {
     PageColumn {
         HeroCard {
             Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                Text("$blocked", style = gs(56, 60, 500, -1.5f, tnum = true), color = if (blocked > 0) AntTheme.net.poor else cs.onSurface)
+                com.allnetworktools.ui.components.RollingText("$blocked", style = gs(56, 60, 500, -1.5f, tnum = true), color = if (blocked > 0) AntTheme.net.poor else cs.onSurface)
                 Text(S(R.string.cen_blocked_of, c.results.size), Modifier.padding(bottom = 8.dp), style = rf(18, 24, 500))
             }
             Text(S(R.string.cen_summary, ok, blocked, odd), style = rf(14, 20))

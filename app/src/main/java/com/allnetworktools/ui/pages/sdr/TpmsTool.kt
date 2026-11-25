@@ -209,7 +209,7 @@ fun TpmsTool(vm: MainViewModel) {
     PageColumn {
         HeroCard {
             Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                Text("${c.sensors.size}", style = gs(56, 60, 500, -1.5f, tnum = true))
+                com.allnetworktools.ui.components.RollingText("${c.sensors.size}", style = gs(56, 60, 500, -1.5f, tnum = true))
                 Text(P(R.plurals.p_sensors, c.sensors.size), Modifier.padding(bottom = 8.dp), style = rf(18, 24, 500))
             }
             Text(S(R.string.tpms_heard, mhz, c.readings), style = rf(14, 20))
@@ -229,11 +229,11 @@ fun TpmsTool(vm: MainViewModel) {
         val tab = ToolTabRow("TpmsTool0", map = false)
         if (tab == ToolTab.Main) {
             if (c.sensors.isEmpty()) {
-                if (c.running) ToolEmpty(Sym.DirectionsCar, S(R.string.tpms_none_yet), S(R.string.tpms_none_yet_body), null)
+                ReceiveEmpty(c.running || c.starting, Sym.DirectionsCar, S(R.string.tpms_none_yet), S(R.string.tpms_none_yet_body))
             } else {
                 val now = System.currentTimeMillis()
                 SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)) {
-                    c.sensors.forEachIndexed { i, s ->
+                    com.allnetworktools.ui.components.LiveRows("tpms", c.sensors, { s -> s.protocol + "/" + s.id }, tapToSee = false) { i, s ->
                         if (i > 0) Hairline()
                         SensorRow(s, now)
                     }

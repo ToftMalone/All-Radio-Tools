@@ -212,7 +212,7 @@ fun PingTool(c: PingController, prefill: String?) {
                 }
             }
         }
-        if (c.phase.active) {
+        com.allnetworktools.ui.components.AppearSection(c.phase.active) {
             SectionCard {
                 CardHeader(S(R.string.latency_per_packet)) { Legend(listOf("RTT" to AntTheme.accent.accent, S(R.string.lost) to cs.error)) }
                 LatencyBarChart(if (c.count == 0) c.results.takeLast(30) else c.results, if (c.count == 0) 30 else maxOf(c.count, 10), c.avg, running = c.phase == Phase.Running, modifier = Modifier.padding(top = 14.dp))

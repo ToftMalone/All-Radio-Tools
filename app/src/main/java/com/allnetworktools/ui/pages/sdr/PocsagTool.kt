@@ -225,7 +225,7 @@ fun PocsagTool(vm: MainViewModel) {
     PageColumn {
         HeroCard {
             Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                Text("${c.messages.size}", style = gs(56, 60, 500, -1.5f, tnum = true))
+                com.allnetworktools.ui.components.RollingText("${c.messages.size}", style = gs(56, 60, 500, -1.5f, tnum = true))
                 Text(P(R.plurals.p_messages, c.messages.size), Modifier.padding(bottom = 8.dp), style = rf(18, 24, 500))
             }
             Text(listOfNotNull(c.network?.name, mhzList(chans).takeIf { chans.isNotEmpty() }?.let { "$it MHz" }).joinToString("\n"), style = rf(14, 20))
@@ -243,11 +243,11 @@ fun PocsagTool(vm: MainViewModel) {
         if (c.running || c.starting) StartButton(S(R.string.stop), Sym.Stop) { c.stop() }
         else StartButton(S(R.string.start_receiving), Sym.PlayArrow, enabled = d != null && c.channels() != null) { d?.let(c::start) }
         val tab = ToolTabRow("PocsagTool0", map = false)
-        if (tab == ToolTab.Main && c.scan && (c.running || c.carriers.isNotEmpty())) {
+        com.allnetworktools.ui.components.AppearSection(tab == ToolTab.Main && c.scan && (c.running || c.carriers.isNotEmpty())) {
             SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 12.dp, bottom = 4.dp)) {
                 Text(S(R.string.pocsag_scan_carriers), style = rf(14, 20, 600))
                 if (c.carriers.isEmpty()) Text(S(R.string.pocsag_scan_none), Modifier.padding(vertical = 10.dp), style = rf(13, 18), color = cs.onSurfaceVariant)
-                c.carriers.forEachIndexed { i, k ->
+                com.allnetworktools.ui.components.LiveRows("pocsag-carriers", c.carriers, { k -> k.hz }, tapToSee = true) { i, k ->
                     if (i > 0) Hairline()
                     Row(
                         Modifier.fillMaxWidth().clickable { c.listenTo(k.hz) }.padding(vertical = 10.dp),
@@ -270,10 +270,10 @@ fun PocsagTool(vm: MainViewModel) {
         }
         if (tab == ToolTab.Main) {
             if (c.messages.isEmpty()) {
-                if (c.running) ToolEmpty(Sym.Sms, S(R.string.pocsag_none_yet), S(R.string.pocsag_none_yet_body), null)
+                ReceiveEmpty(c.running || c.starting, Sym.Sms, S(R.string.pocsag_none_yet), S(R.string.pocsag_none_yet_body))
             } else {
                 SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)) {
-                    c.messages.take(200).forEachIndexed { i, m ->
+                    com.allnetworktools.ui.components.LiveRows("pocsag", c.messages.take(200), { m -> m }, tapToSee = false) { i, m ->
                         if (i > 0) Hairline()
                         PageRow(m)
                     }

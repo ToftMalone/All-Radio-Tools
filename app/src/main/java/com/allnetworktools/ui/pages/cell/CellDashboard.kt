@@ -138,7 +138,7 @@ fun CellDashboard(vm: MainViewModel) {
             CellIdentityRows(serving)
             InfoRow(S(R.string.roaming_2), if (s?.roaming == true) S(R.string.yes) else S(R.string.no))
         }
-        if (sims.isNotEmpty()) {
+        com.allnetworktools.ui.components.AppearSection(sims.isNotEmpty()) {
             SectionCard(padding = androidx.compose.foundation.layout.PaddingValues(start = 16.dp, end = 16.dp, top = 6.dp, bottom = 8.dp)) {
                 Text(if (sims.size > 1) S(R.string.dual_sim) else "SIM", Modifier.padding(top = 6.dp, bottom = 4.dp), style = rf(14, 20, 600), color = roles.accent)
                 sims.forEach { sim ->

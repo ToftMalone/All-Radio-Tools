@@ -3462,4 +3462,9 @@
     <string name="advice_dns_slow_body">"DNS-сервер вашого підключення відповідає за %1$s мс, %2$s — за %3$s мс. Виберіть його як приватний DNS у налаштуваннях Android: сайти відкриватимуться швидше."</string>
     <string name="advice_dns_down_title">"Ваш DNS не відповідає"</string>
     <string name="advice_dns_down_body">"DNS-сервер вашого підключення не відповів; %1$s відповів за %2$s мс. Виберіть його як приватний DNS у налаштуваннях Android."</string>
+    <string name="dashboard">"Огляд"</string>
+    <string name="ready_to_listen">"Готово до прийому"</string>
+    <string name="ready_to_listen_body">"Запустіть прийом: усе, що впіймає інструмент, з\'явиться тут, нове зверху."</string>
+    <string name="receive_none_yet">"Поки нічого не чути"</string>
+    <string name="receive_none_yet_body">"Прийом триває: усе, що впіймає інструмент, з\'явиться тут, щойно буде почуто."</string>
 </resources>

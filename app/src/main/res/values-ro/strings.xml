@@ -3384,4 +3384,9 @@ Un val este un flux de cadre de asociere false care face să apară un pop-up pe
     <string name="advice_dns_slow_body">"Serverul DNS al conexiunii tale răspunde în %1$s ms, %2$s în %3$s ms. Alege-l ca DNS privat în setările Android: site-urile se vor deschide mai repede."</string>
     <string name="advice_dns_down_title">"DNS-ul tău nu răspunde"</string>
     <string name="advice_dns_down_body">"Serverul DNS al conexiunii tale n-a răspuns; %1$s a răspuns în %2$s ms. Alege-l ca DNS privat în setările Android."</string>
+    <string name="dashboard">"Panou"</string>
+    <string name="ready_to_listen">"Gata de ascultare"</string>
+    <string name="ready_to_listen_body">"Pornește recepția: ce prinde acest instrument va apărea aici, cel mai recent sus."</string>
+    <string name="receive_none_yet">"Nimic auzit încă"</string>
+    <string name="receive_none_yet_body">"Recepția e pornită: tot ce prinde instrumentul va apărea aici imediat ce e auzit."</string>
 </resources>

@@ -135,7 +135,7 @@ private fun titles(nav: NavState): Pair<String, String> {
     return when (val p = nav.page) {
         Page.Changelog -> S(R.string.changelog) to S(R.string.settings)
         Page.Settings -> S(R.string.settings) to "All Radio Tools ${com.allnetworktools.BuildConfig.VERSION_NAME}"
-        Page.Dashboard -> net.label to "Dashboard"
+        Page.Dashboard -> net.label to S(R.string.dashboard)
         Page.Tools -> net.label to S(R.string.tools)
         is Page.ToolPage -> p.tool.title to S(R.string.tools_2, net.label)
         Page.Home -> "" to ""
@@ -208,7 +208,7 @@ fun PageColumn(content: @Composable ColumnScope.() -> Unit) {
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         LocalPageTool.current?.takeIf { it.network == Network.Sdr }?.let { com.allnetworktools.ui.pages.sdr.SdrAdviceBanner(it) }
-        content()
+        androidx.compose.runtime.CompositionLocalProvider(com.allnetworktools.ui.components.LocalCardEntrance provides true) { content() }
     }
 }
 

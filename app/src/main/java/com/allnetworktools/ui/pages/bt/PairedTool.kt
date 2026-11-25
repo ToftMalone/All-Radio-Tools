@@ -99,7 +99,7 @@ fun PairedTool(device: BondedDevice?, rssi: Int?, onForget: () -> Boolean, onExp
                 )
             }
         }
-        if (device.connected) {
+        com.allnetworktools.ui.components.AppearSection(device.connected) {
             SectionCard(Modifier.rise(0)) {
                 Text(S(R.string.battery), style = rf(14, 20, 600), color = acc.accent)
                 Row(Modifier.padding(top = 12.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(16.dp)) {

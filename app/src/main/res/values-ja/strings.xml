@@ -3232,4 +3232,9 @@
     <string name="advice_dns_slow_body">"接続先の DNS サーバーは %1$s ms、%2$s は %3$s ms で応答します。Android の設定でプライベート DNS に選ぶと、サイトが速く開きます。"</string>
     <string name="advice_dns_down_title">"DNS が応答しません"</string>
     <string name="advice_dns_down_body">"接続先の DNS サーバーは応答しませんでした。%1$s は %2$s ms で応答しました。Android の設定でプライベート DNS に選んでください。"</string>
+    <string name="dashboard">"ダッシュボード"</string>
+    <string name="ready_to_listen">"受信の準備ができました"</string>
+    <string name="ready_to_listen_body">"受信を開始すると、このツールが捉えたものがここに表示されます（新しいものが上）。"</string>
+    <string name="receive_none_yet">"まだ何も受信していません"</string>
+    <string name="receive_none_yet_body">"受信中です。このツールが捉えたものは、受信次第ここに表示されます。"</string>
 </resources>

@@ -64,7 +64,7 @@ fun BeaconsTool(devices: List<BleDevice>) {
     PageColumn {
         HeroCard {
             Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                Text(found.size.toString(), style = gs(56, 60, 500, -1.5f, tnum = true))
+                com.allnetworktools.ui.components.RollingText(found.size.toString(), style = gs(56, 60, 500, -1.5f, tnum = true))
                 Text(P(R.plurals.p_beacons_detected, found.size), Modifier.padding(bottom = 8.dp), style = rf(18, 24, 500))
             }
             Text(S(R.string.ibeacon_eddystone_and_altbeacon_shops_museums), style = rf(14, 20))
@@ -137,7 +137,7 @@ fun EarbudsTool(devices: List<BleDevice>) {
     PageColumn {
         HeroCard {
             Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                Text(found.size.toString(), style = gs(56, 60, 500, -1.5f, tnum = true))
+                com.allnetworktools.ui.components.RollingText(found.size.toString(), style = gs(56, 60, 500, -1.5f, tnum = true))
                 Text(P(R.plurals.p_pairs_of_earbuds, found.size), Modifier.padding(bottom = 8.dp), style = rf(18, 24, 500))
             }
             Text(S(R.string.airpods_and_beats_battery_of_each), style = rf(14, 20))

@@ -156,7 +156,7 @@ fun LpwanTool(vm: MainViewModel) {
     PageColumn {
         HeroCard {
             Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                Text("${c.devices.size}", style = gs(56, 60, 500, -1.5f, tnum = true))
+                com.allnetworktools.ui.components.RollingText("${c.devices.size}", style = gs(56, 60, 500, -1.5f, tnum = true))
                 Text(P(R.plurals.p_devices, c.devices.size), Modifier.padding(bottom = 8.dp), style = rf(18, 24, 500))
             }
             Text(S(R.string.lpwan_heard, c.devices.count { !it.sigfox }, c.devices.count { it.sigfox }, c.badFrames), style = rf(14, 20))
@@ -176,11 +176,11 @@ fun LpwanTool(vm: MainViewModel) {
         val tab = ToolTabRow("LpwanTool0", map = false)
         if (tab == ToolTab.Main) {
             if (c.devices.isEmpty()) {
-                if (c.running) ToolEmpty(Sym.Hub, S(R.string.lpwan_none_yet), S(R.string.lpwan_none_yet_body), null)
+                ReceiveEmpty(c.running || c.starting, Sym.Hub, S(R.string.lpwan_none_yet), S(R.string.lpwan_none_yet_body))
             } else {
                 val now = System.currentTimeMillis()
                 SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)) {
-                    c.devices.forEachIndexed { i, dev ->
+                    com.allnetworktools.ui.components.LiveRows("lpwan", c.devices, { dev -> dev.key }, tapToSee = false) { i, dev ->
                         if (i > 0) Hairline()
                         DeviceRow(dev, now)
                     }

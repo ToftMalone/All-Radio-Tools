@@ -131,7 +131,7 @@ fun PositionCompareTool(vm: MainViewModel) {
                     Text(S(R.string.gnss_network_offset), style = rf(13, 18, 600))
                 }
                 Row(Modifier.padding(top = 6.dp), verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                    Text(if (gn >= 1000) fmt(gn / 1000, 1) else fmt(gn), style = gs(56, 60, 500, -1.5f, tnum = true))
+                    com.allnetworktools.ui.components.RollingText(if (gn >= 1000) fmt(gn / 1000, 1) else fmt(gn), style = gs(56, 60, 500, -1.5f, tnum = true))
                     Text(if (gn >= 1000) "km" else "m", Modifier.padding(bottom = 8.dp), style = rf(20, 26, 500))
                 }
                 val g = set.gnss!!
@@ -147,7 +147,7 @@ fun PositionCompareTool(vm: MainViewModel) {
             }
         }
         val points = Source.entries.mapNotNull { s -> set.of(s)?.let { s to it } }
-        if (points.isNotEmpty()) {
+        com.allnetworktools.ui.components.AppearSection(points.isNotEmpty()) {
             SectionCard(shape = RoundedCornerShape(28.dp), padding = androidx.compose.foundation.layout.PaddingValues(8.dp)) {
                 PositionMap(points.map { (s, l) -> Triple(GeoPoint(l.latitude, l.longitude), if (l.hasAccuracy()) l.accuracy else 0f, colors.getValue(s).toArgb()) })
                 Row(Modifier.padding(start = 8.dp, end = 8.dp, top = 8.dp, bottom = 4.dp), horizontalArrangement = Arrangement.spacedBy(14.dp)) {
@@ -175,7 +175,7 @@ fun PositionCompareTool(vm: MainViewModel) {
                 ),
             ) { (k, v, u), m -> MetricTile(k, v, u, modifier = m) }
         }
-        if (c.gnssToNetwork.size >= 3) {
+        com.allnetworktools.ui.components.AppearSection(c.gnssToNetwork.size >= 3) {
             SectionCard {
                 Row(verticalAlignment = Alignment.Bottom) {
                     Text(S(R.string.gnss_network_offset), Modifier.weight(1f), style = rf(16, 22, 600))

@@ -3308,4 +3308,9 @@ Eine Flut ist ein Strom gefälschter Kopplungs-Frames, der auf jedem Telefon in 
     <string name="advice_dns_slow_body">"Der DNS-Server deiner Verbindung antwortet in %1$s ms, %2$s in %3$s ms. Wähle ihn in den Android-Einstellungen als privates DNS: Seiten öffnen sich schneller."</string>
     <string name="advice_dns_down_title">"Dein DNS antwortet nicht"</string>
     <string name="advice_dns_down_body">"Der DNS-Server deiner Verbindung hat nicht geantwortet; %1$s antwortete in %2$s ms. Wähle ihn in den Android-Einstellungen als privates DNS."</string>
+    <string name="dashboard">"Übersicht"</string>
+    <string name="ready_to_listen">"Bereit zum Hören"</string>
+    <string name="ready_to_listen_body">"Starte den Empfang: Was dieses Werkzeug auffängt, erscheint hier, das Neueste oben."</string>
+    <string name="receive_none_yet">"Noch nichts gehört"</string>
+    <string name="receive_none_yet_body">"Der Empfang läuft: Alles, was dieses Werkzeug auffängt, erscheint hier, sobald es gehört wird."</string>
 </resources>

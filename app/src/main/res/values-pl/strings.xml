@@ -3462,4 +3462,9 @@ Zalew to strumień fałszywych ramek parowania, który wywołuje wyskakujące ok
     <string name="advice_dns_slow_body">"Serwer DNS twojego połączenia odpowiada w %1$s ms, %2$s w %3$s ms. Wybierz go jako prywatny DNS w ustawieniach Androida: strony otworzą się szybciej."</string>
     <string name="advice_dns_down_title">"Twój DNS nie odpowiada"</string>
     <string name="advice_dns_down_body">"Serwer DNS twojego połączenia nie odpowiedział; %1$s odpowiedział w %2$s ms. Wybierz go jako prywatny DNS w ustawieniach Androida."</string>
+    <string name="dashboard">"Pulpit"</string>
+    <string name="ready_to_listen">"Gotowy do nasłuchu"</string>
+    <string name="ready_to_listen_body">"Uruchom odbiór: to, co narzędzie wychwyci, pojawi się tutaj, najnowsze na górze."</string>
+    <string name="receive_none_yet">"Jeszcze nic nie słychać"</string>
+    <string name="receive_none_yet_body">"Odbiór trwa: wszystko, co narzędzie wychwyci, pojawi się tu, gdy tylko to usłyszy."</string>
 </resources>

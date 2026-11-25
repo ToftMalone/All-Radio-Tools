@@ -3232,4 +3232,9 @@ Một đợt lũ là dòng khung ghép đôi giả làm bật cửa sổ trên m
     <string name="advice_dns_slow_body">"Máy chủ DNS của kết nối trả lời trong %1$s ms, %2$s trong %3$s ms. Chọn nó làm DNS riêng trong cài đặt Android: trang web mở nhanh hơn."</string>
     <string name="advice_dns_down_title">"DNS của bạn không trả lời"</string>
     <string name="advice_dns_down_body">"Máy chủ DNS của kết nối không trả lời; %1$s trả lời trong %2$s ms. Chọn nó làm DNS riêng trong cài đặt Android."</string>
+    <string name="dashboard">"Bảng điều khiển"</string>
+    <string name="ready_to_listen">"Sẵn sàng nghe"</string>
+    <string name="ready_to_listen_body">"Bắt đầu thu: những gì công cụ này bắt được sẽ hiện ở đây, mới nhất ở trên."</string>
+    <string name="receive_none_yet">"Chưa nghe thấy gì"</string>
+    <string name="receive_none_yet_body">"Đang thu: mọi thứ công cụ bắt được sẽ hiện ở đây ngay khi nghe thấy."</string>
 </resources>

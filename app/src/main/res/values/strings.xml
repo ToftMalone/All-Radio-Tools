@@ -3328,4 +3328,9 @@
     <string name="advice_dns_slow_body">"Your connection\'s DNS server answers in %1$s ms, %2$s in %3$s ms. Set it as Private DNS in Android\'s settings: sites open faster."</string>
     <string name="advice_dns_down_title">"Your DNS isn\'t answering"</string>
     <string name="advice_dns_down_body">"Your connection\'s DNS server gave no answer; %1$s answered in %2$s ms. Set it as Private DNS in Android\'s settings."</string>
+    <string name="dashboard">"Dashboard"</string>
+    <string name="ready_to_listen">"Ready to listen"</string>
+    <string name="ready_to_listen_body">"Start receiving: what this tool picks up will show here, the newest first."</string>
+    <string name="receive_none_yet">"Nothing heard yet"</string>
+    <string name="receive_none_yet_body">"Reception is on: anything this tool picks up shows here as soon as it is heard."</string>
 </resources>

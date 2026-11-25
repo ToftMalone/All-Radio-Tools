@@ -3462,4 +3462,9 @@ Záplava je proud falešných rámců párování, který vyvolá vyskakovací o
     <string name="advice_dns_slow_body">"DNS server vašeho připojení odpovídá za %1$s ms, %2$s za %3$s ms. Zvolte ho jako soukromé DNS v nastavení Androidu: stránky se otevřou rychleji."</string>
     <string name="advice_dns_down_title">"Váš DNS neodpovídá"</string>
     <string name="advice_dns_down_body">"DNS server vašeho připojení neodpověděl; %1$s odpověděl za %2$s ms. Zvolte ho jako soukromé DNS v nastavení Androidu."</string>
+    <string name="dashboard">"Přehled"</string>
+    <string name="ready_to_listen">"Připraveno k poslechu"</string>
+    <string name="ready_to_listen_body">"Spusťte příjem: co nástroj zachytí, objeví se zde, nejnovější nahoře."</string>
+    <string name="receive_none_yet">"Zatím nic"</string>
+    <string name="receive_none_yet_body">"Příjem běží: vše, co nástroj zachytí, se tu objeví, jakmile to uslyší."</string>
 </resources>

@@ -97,7 +97,7 @@ fun GnssDashboard(vm: MainViewModel) {
                     Text(if (g.fix == FixType.None) S(R.string.searching) else g.fix.label, style = rf(13, 18, 700), color = roles.onAccent)
                 }
                 Row(Modifier.padding(top = 10.dp), verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                    Text(g.used.size.toString(), style = gs(52, 56, 500, -1.5f, tnum = true), color = roles.onContainer)
+                    com.allnetworktools.ui.components.RollingText(g.used.size.toString(), style = gs(52, 56, 500, -1.5f, tnum = true), color = roles.onContainer)
                     Text("/ ${g.visible.size}", Modifier.padding(bottom = 6.dp), style = rf(18, 24, 500), color = roles.onContainer)
                 }
                 Text(S(R.string.satellites_used_visible), style = rf(13, 18), color = roles.onContainer)
@@ -144,7 +144,7 @@ fun GnssDashboard(vm: MainViewModel) {
                 "Cap" to (loc?.takeIf { it.hasBearing() }?.let { "${Math.round(it.bearing)}°" } ?: "—"),
             ),
         ) { (k, v), mod -> ValueTile(k, v, mod) }
-        if (g.satellites.isNotEmpty()) {
+        com.allnetworktools.ui.components.AppearSection(g.satellites.isNotEmpty()) {
             SectionCard {
                 CardHeader(S(R.string.c_n0_per_satellite)) { Text("dB-Hz", style = rf(12, 16), color = cs.onSurfaceVariant) }
                 val bars = g.satellites.sortedWith(compareByDescending<Satellite> { it.used }.thenByDescending { it.cn0 }).take(16)

@@ -3232,4 +3232,9 @@ Banjir adalah aliran frame pemasangan palsu yang memunculkan pop-up di setiap po
     <string name="advice_dns_slow_body">"Server DNS koneksi Anda menjawab dalam %1$s ms, %2$s dalam %3$s ms. Pilih sebagai DNS pribadi di pengaturan Android: situs terbuka lebih cepat."</string>
     <string name="advice_dns_down_title">"DNS Anda tidak menjawab"</string>
     <string name="advice_dns_down_body">"Server DNS koneksi Anda tidak menjawab; %1$s menjawab dalam %2$s ms. Pilih sebagai DNS pribadi di pengaturan Android."</string>
+    <string name="dashboard">"Dasbor"</string>
+    <string name="ready_to_listen">"Siap mendengar"</string>
+    <string name="ready_to_listen_body">"Mulai penerimaan: apa yang ditangkap alat ini akan tampil di sini, yang terbaru di atas."</string>
+    <string name="receive_none_yet">"Belum ada yang terdengar"</string>
+    <string name="receive_none_yet_body">"Penerimaan aktif: semua yang ditangkap alat ini tampil di sini begitu terdengar."</string>
 </resources>

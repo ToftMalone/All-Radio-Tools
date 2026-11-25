@@ -8,6 +8,7 @@ import com.allnetworktools.util.S
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -126,6 +127,9 @@ fun groupShape(index: Int, count: Int, outer: Dp = 24.dp, inner: Dp = 8.dp): Sha
 }
 
 
+/** Set by the scrolling page of a network or tool: its cards rise in when they appear. */
+val LocalCardEntrance = androidx.compose.runtime.staticCompositionLocalOf { false }
+
 /** surfaceContainerLow card with 24 dp corners. */
 @Composable
 fun SectionCard(
@@ -138,6 +142,8 @@ fun SectionCard(
 ) {
     Column(
         modifier
+            // On a page, a card that comes in (a tab picked, a section that appears) rises into place.
+            .then(if (LocalCardEntrance.current) Modifier.fadeUp() else Modifier)
             .fillMaxWidth()
             .clip(shape)
             .background(color)
@@ -298,27 +304,35 @@ fun <T> SegmentedRow(
     container: Color = cs.surfaceContainerHigh,
 ) {
     val haptics = AntTheme.haptics
-    Row(
+    // The options share the width equally, so the selection is one pill that slides from option to option.
+    androidx.compose.foundation.layout.BoxWithConstraints(
         modifier.clip(RoundedCornerShape(height / 2 + 4.dp)).background(container).padding(4.dp),
-        horizontalArrangement = Arrangement.spacedBy(4.dp),
     ) {
-        options.forEach { (value, label) ->
-            val active = value == selected
-            val bg by animateColorAsState(if (active) selectedColor else Color.Transparent, tween(250, easing = Motion.Emphasized), label = "seg")
-            val fg by animateColorAsState(if (active) onSelectedColor else cs.onSurfaceVariant, tween(250, easing = Motion.Emphasized), label = "segFg")
-            Row(
-                Modifier
-                    .weight(1f)
-                    .height(height)
-                    .clip(RoundedCornerShape(height / 2 - 4.dp))
-                    .background(bg)
-                    .clickable { if (!active) { haptics.segment(); onSelect(value) } }
-                    .padding(horizontal = 6.dp),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                icons[value]?.let { Symbol(it, Modifier.padding(end = 4.dp), size = 18.dp, filled = active, tint = fg) }
-                Text(label, style = rf(if (height < 40.dp) 13 else 14, 18, 600), color = fg, maxLines = 1)
+        val gap = 4.dp
+        val n = options.size.coerceAtLeast(1)
+        val w = (maxWidth - gap * (n - 1)) / n
+        val idx = options.indexOfFirst { it.first == selected }
+        if (idx >= 0) {
+            val x by androidx.compose.animation.core.animateDpAsState((w + gap) * idx, androidx.compose.animation.core.spring(0.78f, 520f), label = "segPill")
+            Box(Modifier.offset(x = x).width(w).height(height).clip(RoundedCornerShape(height / 2 - 4.dp)).background(selectedColor))
+        }
+        Row(horizontalArrangement = Arrangement.spacedBy(gap)) {
+            options.forEach { (value, label) ->
+                val active = value == selected
+                val fg by animateColorAsState(if (active) onSelectedColor else cs.onSurfaceVariant, tween(250, easing = Motion.Emphasized), label = "segFg")
+                Row(
+                    Modifier
+                        .weight(1f)
+                        .height(height)
+                        .clip(RoundedCornerShape(height / 2 - 4.dp))
+                        .clickable { if (!active) { haptics.segment(); onSelect(value) } }
+                        .padding(horizontal = 6.dp),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    icons[value]?.let { Symbol(it, Modifier.padding(end = 4.dp), size = 18.dp, filled = active, tint = fg) }
+                    Text(label, style = rf(if (height < 40.dp) 13 else 14, 18, 600), color = fg, maxLines = 1)
+                }
             }
         }
     }

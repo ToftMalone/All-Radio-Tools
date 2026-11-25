@@ -239,7 +239,7 @@ private fun SignalHero(c: CoverageController, conn: WifiConnection) {
     val net = AntTheme.net
     HeroCard {
         Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-            Text(conn.rssi.toString(), style = gs(56, 60, 500, -1.5f, tnum = true))
+            com.allnetworktools.ui.components.RollingText(conn.rssi.toString(), style = gs(56, 60, 500, -1.5f, tnum = true))
             Text(S(R.string.dbm_here), Modifier.padding(bottom = 8.dp), style = rf(18, 24, 500))
         }
         Text(

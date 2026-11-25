@@ -116,7 +116,7 @@ fun SkyTool(vm: MainViewModel) {
     PageColumn {
         HeroCard {
             Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                Text(g.used.size.toString(), style = gs(48, 52, 500, -1.5f, tnum = true))
+                com.allnetworktools.ui.components.RollingText(g.used.size.toString(), style = gs(48, 52, 500, -1.5f, tnum = true))
                 Text("/ ${g.visible.size}", Modifier.padding(bottom = 6.dp), style = rf(18, 24, 500))
                 Box(Modifier.weight(1f))
                 Text(if (g.fix == FixType.None) S(R.string.searching) else g.fix.label, Modifier.padding(bottom = 8.dp), style = rf(14, 20, 600))
@@ -168,7 +168,7 @@ fun SkyTool(vm: MainViewModel) {
                 }
                 SectionCard(padding = androidx.compose.foundation.layout.PaddingValues(start = 16.dp, end = 16.dp, top = 12.dp, bottom = 4.dp)) {
                     Text(S(R.string.above), Modifier.padding(bottom = 4.dp), style = rf(14, 20, 600), color = AntTheme.accent.accent)
-                    overhead.sortedWith(compareByDescending<SatOverhead> { it.sat.used }.thenByDescending { it.sat.elevation }).forEach { o ->
+                    com.allnetworktools.ui.components.LiveRows("sky", overhead.sortedWith(compareByDescending<SatOverhead> { it.sat.used }.thenByDescending { it.sat.elevation }), { it.sat.constellation to it.sat.svid }) { _, o ->
                         Hairline()
                         Row(Modifier.fillMaxWidth().padding(vertical = 10.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                             val col = constellationColor(o.sat.constellation)

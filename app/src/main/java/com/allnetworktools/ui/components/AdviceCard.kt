@@ -62,3 +62,18 @@ fun AdviceCard(advice: Advice?, modifier: Modifier = Modifier) {
         }
     }
 }
+
+/**
+ * A section that comes and goes with [visible]: it unfolds in and folds away instead of popping, and lays nothing out
+ * while hidden. [content] is still called during the fold-away, so it must cope with the data that made it disappear.
+ */
+@Composable
+fun AppearSection(visible: Boolean, modifier: Modifier = Modifier, content: @Composable () -> Unit) {
+    val state = remember { MutableTransitionState(visible) }
+    state.targetState = visible
+    if (!state.currentState && !state.targetState) return
+    AnimatedVisibility(state, modifier, enter = expandVertically() + fadeIn(), exit = shrinkVertically() + fadeOut()) {
+        // Several cards in one section stay one under the other, spaced as on a page.
+        Column(verticalArrangement = Arrangement.spacedBy(12.dp)) { content() }
+    }
+}

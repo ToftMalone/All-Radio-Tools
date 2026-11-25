@@ -286,7 +286,7 @@ fun UnknownTrackersTool(
     PageColumn {
         HeroCard {
             Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                Text(following.toString(), style = gs(56, 60, 500, -1.5f, tnum = true))
+                com.allnetworktools.ui.components.RollingText(following.toString(), style = gs(56, 60, 500, -1.5f, tnum = true))
                 Text(P(R.plurals.p_trackers_are_following_you, following), Modifier.padding(bottom = 8.dp), style = rf(18, 24, 500))
             }
             Text(
@@ -342,7 +342,7 @@ fun UnknownTrackersTool(
         if (list.isNotEmpty() && shown.isEmpty()) {
             SectionCard { Text(S(R.string.no_device_of_this_kind_yet), style = rf(14, 20), color = cs.onSurfaceVariant) }
         }
-        if (shown.isNotEmpty()) {
+        com.allnetworktools.ui.components.AppearSection(shown.isNotEmpty()) {
             SectionCard(padding = androidx.compose.foundation.layout.PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)) {
                 shown.forEachIndexed { i, t ->
                     if (i > 0) com.allnetworktools.ui.components.Hairline()

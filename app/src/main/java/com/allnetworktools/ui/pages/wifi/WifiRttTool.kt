@@ -66,7 +66,7 @@ fun WifiRttTool(permitted: Boolean, permissionText: String, onFix: () -> Unit) {
         val nearest = ranged.firstOrNull()
         HeroCard {
             Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                Text(nearest?.distanceM?.let { metres(it) } ?: "—", style = gs(56, 60, 500, -1.5f, tnum = true))
+                com.allnetworktools.ui.components.RollingText(nearest?.distanceM?.let { metres(it) } ?: "—", style = gs(56, 60, 500, -1.5f, tnum = true))
                 Text(if (nearest != null) "m" else "", Modifier.padding(bottom = 8.dp), style = rf(18, 24, 500))
             }
             Text(nearest?.let { S(R.string.rtt_nearest, it.ssid) } ?: S(R.string.rtt_responders, state.responders, state.heard), style = rf(14, 20))
@@ -85,7 +85,7 @@ fun WifiRttTool(permitted: Boolean, permissionText: String, onFix: () -> Unit) {
                 Text(S(R.string.rtt_none_body, state.heard), Modifier.padding(top = 4.dp), style = rf(13, 18), color = cs.onSurfaceVariant)
             }
         }
-        if (state.tracks.isNotEmpty()) {
+        com.allnetworktools.ui.components.AppearSection(state.tracks.isNotEmpty()) {
             SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 12.dp, bottom = 8.dp)) {
                 Text(S(R.string.rtt_access_points), Modifier.padding(bottom = 4.dp), style = rf(14, 20, 600), color = AntTheme.accent.accent)
                 state.tracks.forEach { t ->

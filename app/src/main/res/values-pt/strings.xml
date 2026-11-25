@@ -3315,4 +3315,9 @@ Uma enxurrada é um fluxo de quadros de pareamento falsos que faz aparecer um po
     <string name="advice_dns_slow_body">"O servidor DNS da sua ligação responde em %1$s ms, %2$s em %3$s ms. Escolha-o como DNS privado nas definições do Android: os sites abrem mais depressa."</string>
     <string name="advice_dns_down_title">"O seu DNS não responde"</string>
     <string name="advice_dns_down_body">"O servidor DNS da sua ligação não respondeu; %1$s respondeu em %2$s ms. Escolha-o como DNS privado nas definições do Android."</string>
+    <string name="dashboard">"Painel"</string>
+    <string name="ready_to_listen">"Pronto para ouvir"</string>
+    <string name="ready_to_listen_body">"Inicie a receção: o que esta ferramenta captar aparecerá aqui, o mais recente no topo."</string>
+    <string name="receive_none_yet">"Nada ouvido ainda"</string>
+    <string name="receive_none_yet_body">"A receção está ativa: tudo o que a ferramenta captar aparecerá aqui assim que for ouvido."</string>
 </resources>

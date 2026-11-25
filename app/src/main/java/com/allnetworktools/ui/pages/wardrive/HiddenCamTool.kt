@@ -159,7 +159,7 @@ fun HiddenCamScreen(
     PageColumn {
         HeroCard {
             Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text("$likely", style = gs(56, 60, 500, -1.5f, tnum = true))
+                com.allnetworktools.ui.components.RollingText("$likely", style = gs(56, 60, 500, -1.5f, tnum = true))
                 Text(P(R.plurals.p_cam_likely, likely), Modifier.padding(bottom = 8.dp), style = rf(18, 24, 500))
             }
             Text(P(R.plurals.p_cam_possible, possible, possible), style = rf(14, 20))
@@ -178,7 +178,7 @@ fun HiddenCamScreen(
             }
         } else {
             Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                air.forEachIndexed { i, s -> SuspectRow(s, groupShape(i, air.size), s.key == picked) { onPick(s.key) } }
+                com.allnetworktools.ui.components.LiveRows("cam-air", air, { it.key }, tapToSee = true) { i, s -> SuspectRow(s, groupShape(i, air.size), s.key == picked) { onPick(s.key) } }
             }
         }
         SectionTitle(S(R.string.cam_on_network))
@@ -210,7 +210,7 @@ fun HiddenCamScreen(
         }
         (lan as? HiddenCamController.LanState.Done)?.suspects?.takeIf { it.isNotEmpty() }?.let { list ->
             Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                list.forEachIndexed { i, s -> SuspectRow(s, groupShape(i, list.size), false) {} }
+                com.allnetworktools.ui.components.LiveRows("cam-lan", list, { it.key }) { i, s -> SuspectRow(s, groupShape(i, list.size), false) {} }
             }
         }
         Column(
@@ -308,7 +308,7 @@ private fun Locator(s: CamSuspect) {
     ) {
         Text(S(R.string.cam_locating, s.name.ifEmpty { s.address }), style = rf(14, 20, 600), color = acc.onContainer, maxLines = 1, overflow = TextOverflow.Ellipsis)
         Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-            Text("$rssi", style = gs(48, 52, 500, -1f, tnum = true), color = acc.onContainer)
+            com.allnetworktools.ui.components.RollingText("$rssi", style = gs(48, 52, 500, -1f, tnum = true), color = acc.onContainer)
             Text("dBm", Modifier.padding(bottom = 6.dp), style = rf(16, 22, 500), color = acc.onContainer)
             Box(Modifier.weight(1f))
             Text(word, Modifier.padding(bottom = 6.dp), style = gs(22, 28, 600), color = color)

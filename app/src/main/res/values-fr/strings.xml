@@ -3403,4 +3403,9 @@
     <string name="advice_dns_slow_body">"Le serveur DNS de votre connexion répond en %1$s ms, %2$s en %3$s ms. Choisissez-le comme DNS privé dans les réglages d\'Android : les sites s\'ouvriront plus vite."</string>
     <string name="advice_dns_down_title">"Votre DNS ne répond pas"</string>
     <string name="advice_dns_down_body">"Le serveur DNS de votre connexion n\'a pas répondu ; %1$s a répondu en %2$s ms. Choisissez-le comme DNS privé dans les réglages d\'Android."</string>
+    <string name="dashboard">"Tableau de bord"</string>
+    <string name="ready_to_listen">"Prêt à écouter"</string>
+    <string name="ready_to_listen_body">"Lancez la réception : ce que l\'outil capte s\'affichera ici, le plus récent en haut."</string>
+    <string name="receive_none_yet">"Rien d\'entendu pour l\'instant"</string>
+    <string name="receive_none_yet_body">"La réception est lancée : tout ce que l\'outil capte s\'affichera ici dès qu\'il l\'entend."</string>
 </resources>

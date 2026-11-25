@@ -122,7 +122,7 @@ fun ZwaveTool(vm: MainViewModel) {
     PageColumn {
         HeroCard {
             Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                Text("${homes.size}", style = gs(56, 60, 500, -1.5f, tnum = true))
+                com.allnetworktools.ui.components.RollingText("${homes.size}", style = gs(56, 60, 500, -1.5f, tnum = true))
                 Text(P(R.plurals.p_zwave_networks, homes.size), Modifier.padding(bottom = 8.dp), style = rf(18, 24, 500))
             }
             Text(S(R.string.zwave_line, c.nodes.size, c.frames.size), style = rf(14, 20, tnum = true))
@@ -146,12 +146,12 @@ fun ZwaveTool(vm: MainViewModel) {
         val now = System.currentTimeMillis()
         if (tab == ToolTab.Main) {
             if (c.frames.isEmpty()) {
-                if (c.running) ToolEmpty(Sym.Lightbulb, S(R.string.zwave_none_yet), S(R.string.zwave_none_yet_body), null)
+                ReceiveEmpty(c.running || c.starting, Sym.Lightbulb, S(R.string.zwave_none_yet), S(R.string.zwave_none_yet_body))
             } else if (!c.showFrames) {
                 homes.forEach { (home, list) ->
                     SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 4.dp)) {
                         Text(S(R.string.zwave_network, home), style = rf(13, 18, 600), color = cs.onSurfaceVariant)
-                        list.forEachIndexed { i, n ->
+                        com.allnetworktools.ui.components.LiveRows("zwave-nodes", list, { n -> home to n.id }, tapToSee = false) { i, n ->
                             if (i > 0) Hairline()
                             Row(Modifier.fillMaxWidth().padding(vertical = 8.dp), verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                                 LeadingIcon(if (n.id == 1) Sym.Router else Sym.Lightbulb, AntTheme.accent.container, AntTheme.accent.onContainer, 36.dp, RoundedCornerShape(12.dp), 20.dp)
@@ -170,7 +170,7 @@ fun ZwaveTool(vm: MainViewModel) {
                 }
             } else {
                 SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)) {
-                    c.frames.take(100).forEachIndexed { i, f ->
+                    com.allnetworktools.ui.components.LiveRows("zwave-frames", c.frames.take(100), { f -> f }, tapToSee = false) { i, f ->
                         if (i > 0) Hairline()
                         Row(Modifier.fillMaxWidth().padding(vertical = 8.dp), verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                             Symbol(if (f.encrypted) Sym.Lock else Sym.LockOpen, size = 18.dp, tint = if (f.encrypted) cs.onSurfaceVariant else AntTheme.accent.accent)

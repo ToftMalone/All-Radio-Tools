@@ -101,7 +101,7 @@ fun DectTool(vm: MainViewModel) {
     PageColumn {
         HeroCard {
             Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                Text("${c.bases.size}", style = gs(56, 60, 500, -1.5f, tnum = true))
+                com.allnetworktools.ui.components.RollingText("${c.bases.size}", style = gs(56, 60, 500, -1.5f, tnum = true))
                 Text(P(R.plurals.p_bases, c.bases.size), Modifier.padding(bottom = 8.dp), style = rf(18, 24, 500))
             }
             Text(S(R.string.dect_heard, c.carrier, "%.3f".format(Locale.getDefault(), c.band.carrierHz(c.carrier) / 1e6), c.handsetBursts), style = rf(14, 20, tnum = true))
@@ -121,11 +121,11 @@ fun DectTool(vm: MainViewModel) {
         val tab = ToolTabRow("DectTool0", map = false)
         if (tab == ToolTab.Main) {
             if (c.bases.isEmpty()) {
-                if (c.running) ToolEmpty(Sym.Deskphone, S(R.string.dect_none_yet), S(R.string.dect_none_yet_body), null)
+                ReceiveEmpty(c.running || c.starting, Sym.Deskphone, S(R.string.dect_none_yet), S(R.string.dect_none_yet_body))
             } else {
                 val now = System.currentTimeMillis()
                 SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)) {
-                    c.bases.forEachIndexed { i, b ->
+                    com.allnetworktools.ui.components.LiveRows("dect", c.bases, { b -> b.rfpi }, tapToSee = false) { i, b ->
                         if (i > 0) Hairline()
                         BaseRow(b, c.band, now)
                     }

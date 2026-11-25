@@ -108,7 +108,7 @@ fun LoraAprsTool(vm: MainViewModel) {
     PageColumn {
         HeroCard {
             Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                Text("${c.stations.size}", style = gs(56, 60, 500, -1.5f, tnum = true))
+                com.allnetworktools.ui.components.RollingText("${c.stations.size}", style = gs(56, 60, 500, -1.5f, tnum = true))
                 Text(P(R.plurals.p_stations, c.stations.size), Modifier.padding(bottom = 8.dp), style = rf(18, 24, 500))
             }
             Text(S(R.string.lora_aprs_line, withPos.size, c.totalPackets), style = rf(14, 20, tnum = true))
@@ -131,10 +131,10 @@ fun LoraAprsTool(vm: MainViewModel) {
         }
         if (tab == ToolTab.List) {
             if (c.stations.isEmpty()) {
-                if (c.running) ToolEmpty(Sym.Radio, S(R.string.lora_aprs_none_yet), S(R.string.lora_aprs_none_yet_body), null)
+                ReceiveEmpty(c.running || c.starting, Sym.Radio, S(R.string.lora_aprs_none_yet), S(R.string.lora_aprs_none_yet_body))
             } else {
                 SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)) {
-                    c.stations.forEachIndexed { i, s ->
+                    com.allnetworktools.ui.components.LiveRows("loraaprs", c.stations, { s -> s.key }, tapToSee = true) { i, s ->
                         if (i > 0) Hairline()
                         StationRow(s, me, s.key == c.selected) { c.selected = if (c.selected == s.key) null else s.key }
                     }

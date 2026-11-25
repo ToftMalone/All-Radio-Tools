@@ -123,7 +123,7 @@ fun DscTool(vm: MainViewModel) {
     PageColumn {
         HeroCard {
             Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                Text("${c.calls.size}", style = gs(56, 60, 500, -1.5f, tnum = true))
+                com.allnetworktools.ui.components.RollingText("${c.calls.size}", style = gs(56, 60, 500, -1.5f, tnum = true))
                 Text(P(R.plurals.p_calls, c.calls.size), Modifier.padding(bottom = 8.dp), style = rf(18, 24, 500))
             }
             Text(S(R.string.dsc_heard, c.calls.count { it.call.distress }), style = rf(14, 20))
@@ -143,10 +143,10 @@ fun DscTool(vm: MainViewModel) {
         val tab = ToolTabRow("DscTool0", map = false)
         if (tab == ToolTab.Main) {
             if (c.calls.isEmpty()) {
-                if (c.running) ToolEmpty(Sym.Sailing, S(R.string.dsc_none_yet), S(R.string.dsc_none_yet_body), null)
+                ReceiveEmpty(c.running || c.starting, Sym.Sailing, S(R.string.dsc_none_yet), S(R.string.dsc_none_yet_body))
             } else {
                 SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)) {
-                    c.calls.forEachIndexed { i, h ->
+                    com.allnetworktools.ui.components.LiveRows("dsc", c.calls, { h -> h }, tapToSee = false) { i, h ->
                         if (i > 0) Hairline()
                         CallRow(h, kinds, natures, me)
                     }

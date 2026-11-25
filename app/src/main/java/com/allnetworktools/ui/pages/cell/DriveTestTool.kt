@@ -108,7 +108,7 @@ fun DriveTestTool(permitted: Boolean, onGrant: () -> Unit, notificationsGranted:
         }
         HeroCard {
             Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                Text(String.format(Locale.getDefault(), "%.1f", sum.distanceKm), style = gs(56, 60, 500, -1.5f, tnum = true))
+                com.allnetworktools.ui.components.RollingText(String.format(Locale.getDefault(), "%.1f", sum.distanceKm), style = gs(56, 60, 500, -1.5f, tnum = true))
                 Text("km", Modifier.padding(bottom = 8.dp), style = rf(18, 24, 500))
             }
             Text(

@@ -217,7 +217,7 @@ fun PmrTool(vm: MainViewModel) {
     PageColumn {
         HeroCard {
             Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                Text("$active", style = gs(56, 60, 500, -1.5f, tnum = true))
+                com.allnetworktools.ui.components.RollingText("$active", style = gs(56, 60, 500, -1.5f, tnum = true))
                 Text(S(R.string.pmr_active), Modifier.padding(bottom = 8.dp), style = rf(18, 24, 500))
             }
             Text(S(R.string.pmr_heard, c.channels.count { it.lastMs > 0 }, c.calls.count { it.fleet == null && it.mdc == null && it.tones == null }), style = rf(14, 20))
@@ -238,7 +238,7 @@ fun PmrTool(vm: MainViewModel) {
         if (tab == ToolTab.Main) {
             SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 12.dp, bottom = 8.dp)) {
                 Text(S(R.string.pmr_tap_to_listen), Modifier.padding(bottom = 6.dp), style = rf(12, 16), color = cs.onSurfaceVariant)
-                c.channels.forEachIndexed { i, ch ->
+                com.allnetworktools.ui.components.LiveRows("pmr-channels", c.channels, { ch -> ch.ch }, tapToSee = true) { i, ch ->
                     if (i > 0) Hairline()
                     ChannelRow(ch, c.listening == ch.ch, c.running, now) { c.listen(ch.ch) }
                 }
@@ -247,12 +247,12 @@ fun PmrTool(vm: MainViewModel) {
         if (tab == ToolTab.Main) {
             if (c.calls.isNotEmpty()) {
                 SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)) {
-                    c.calls.take(100).forEachIndexed { i, call ->
+                    com.allnetworktools.ui.components.LiveRows("pmr-calls", c.calls.take(100), { call -> call }, tapToSee = false) { i, call ->
                         if (i > 0) Hairline()
                         CallRow(call)
                     }
                 }
-            }
+            } else ReceiveEmpty(c.running || c.starting, Sym.SettingsInputAntenna, S(R.string.receive_none_yet), S(R.string.receive_none_yet_body))
         }
         if (tab == ToolTab.Settings) {
             SectionCard {

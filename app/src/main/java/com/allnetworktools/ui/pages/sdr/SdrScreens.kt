@@ -207,7 +207,10 @@ internal fun GainSettings(g: SdrGain, onChange: () -> Unit) {
                 }
             }
         }
-        if (!g.auto) g.advice?.let { GainAdviceLine(it) }
+        val advice = g.advice?.takeIf { !g.auto }
+        val shownAdvice = androidx.compose.runtime.remember { arrayOfNulls<com.allnetworktools.data.sdr.GainAdvice>(1) }
+        if (advice != null) shownAdvice[0] = advice
+        com.allnetworktools.ui.components.AppearSection(advice != null) { shownAdvice[0]?.let { GainAdviceLine(it) } }
         if (kind?.biasTee == true) BiasTeeLine()
         ConverterLine()
     }
@@ -375,4 +378,14 @@ internal fun hzLabel(hz: Long): String {
     val n = java.math.BigDecimal(hz).divide(java.math.BigDecimal(div)).setScale(3, java.math.RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()
     val sep = java.text.DecimalFormatSymbols.getInstance(java.util.Locale.getDefault()).decimalSeparator
     return "${if (sep == ',') n.replace('.', ',') else n} $unit"
+}
+
+/**
+ * Where a receiving tool lists what it heard, while there is nothing: before the start, what will show up here; once
+ * receiving, the tool's own "nothing yet" ([title], [body]).
+ */
+@Composable
+internal fun ReceiveEmpty(running: Boolean, icon: String, title: String, body: String) {
+    if (running) com.allnetworktools.ui.tools.ToolEmpty(icon, title, body, null)
+    else com.allnetworktools.ui.tools.ToolEmpty(icon, S(R.string.ready_to_listen), S(R.string.ready_to_listen_body), null)
 }

@@ -351,7 +351,7 @@ fun AprsTool(vm: MainViewModel) {
         if (RxTxRow("AprsTool") == RxTx.Tx) { AprsTxPage(c, device); return@PageColumn }
         HeroCard {
             Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                Text("${c.stations.size}", style = gs(56, 60, 500, -1.5f, tnum = true))
+                com.allnetworktools.ui.components.RollingText("${c.stations.size}", style = gs(56, 60, 500, -1.5f, tnum = true))
                 Text(P(R.plurals.p_stations, c.stations.size), Modifier.padding(bottom = 8.dp), style = rf(18, 24, 500))
             }
             Text(
@@ -378,12 +378,12 @@ fun AprsTool(vm: MainViewModel) {
         if (tab == ToolTab.List) {
             if (c.stations.isNotEmpty()) {
                 SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)) {
-                    c.stations.forEachIndexed { i, s ->
+                    com.allnetworktools.ui.components.LiveRows("aprs", c.stations, { s -> s.key }, tapToSee = true) { i, s ->
                         if (i > 0) Hairline()
                         StationRow(s, me, s.key == c.selected) { c.selected = if (c.selected == s.key) null else s.key }
                     }
                 }
-            }
+            } else ReceiveEmpty(c.running || c.starting, Sym.Radio, S(R.string.receive_none_yet), S(R.string.receive_none_yet_body))
         }
         if (tab == ToolTab.Settings) {
             SectionCard {
@@ -458,6 +458,8 @@ internal fun StationRow(s: AprsInfo, me: Pair<Double, Double>?, selected: Boolea
 
 /** Moving stations as arrows along their course, the others as dots, labelled with their callsign. */
 private class AprsOverlay(private val density: Float) : Overlay() {
+    /** New fixes glide in rather than jump. */
+    private val glide = com.allnetworktools.ui.components.MarkerGlide<Any>()
     var stations: List<AprsInfo> = emptyList()
     var selected: String? = null
     var me: GeoPoint? = null
@@ -469,6 +471,7 @@ private class AprsOverlay(private val density: Float) : Overlay() {
     private val path = Path()
 
     override fun draw(c: Canvas, map: MapView, shadow: Boolean) {
+        glide.begin()
         if (shadow) return
         val proj = map.projection
         me?.let {
@@ -478,7 +481,7 @@ private class AprsOverlay(private val density: Float) : Overlay() {
             paint.color = 0xFF1E88E5.toInt(); c.drawCircle(pt.x.toFloat(), pt.y.toFloat(), 5 * density, paint)
         }
         stations.forEach { s ->
-            proj.toPixels(GeoPoint(s.lat!!, s.lon!!), pt)
+            proj.toPixels(glide.at(s.key, s.lat!!, s.lon!!), pt)
             val sel = s.key == selected
             val color = if (sel) 0xFFE53935.toInt() else if (s.isWeather) 0xFF039BE5.toInt() else if (s.isRelay) 0xFF7E57C2.toInt() else accent
             val size = (if (sel) 13 else 9) * density
@@ -506,12 +509,14 @@ private class AprsOverlay(private val density: Float) : Overlay() {
             text.style = Paint.Style.FILL; text.color = 0xFF202124.toInt()
             c.drawText(s.title, pt.x + size + 2 * density, pt.y - 2 * density, text)
         }
+        glide.end()
+        if (glide.moving) map.postInvalidateOnAnimation()
     }
 
     override fun onSingleTapConfirmed(e: MotionEvent, map: MapView): Boolean {
         val proj = map.projection
         fun dist(s: AprsInfo): Float {
-            proj.toPixels(GeoPoint(s.lat!!, s.lon!!), pt)
+            proj.toPixels(glide.at(s.key, s.lat!!, s.lon!!), pt)
             return (pt.x - e.x) * (pt.x - e.x) + (pt.y - e.y) * (pt.y - e.y)
         }
         val hit = stations.minByOrNull(::dist)?.takeIf { dist(it) < (28 * density) * (28 * density) }

@@ -288,7 +288,7 @@ fun AdsbTool(vm: MainViewModel) {
     PageColumn {
         HeroCard {
             Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                Text("${c.planes.size}", style = gs(56, 60, 500, -1.5f, tnum = true))
+                com.allnetworktools.ui.components.RollingText("${c.planes.size}", style = gs(56, 60, 500, -1.5f, tnum = true))
                 Text(P(R.plurals.p_aircraft, c.planes.size), Modifier.padding(bottom = 8.dp), style = rf(18, 24, 500))
             }
             Text("${withPos.size} ${P(R.plurals.p_located, withPos.size)} · 1090 MHz", style = rf(14, 20))
@@ -312,15 +312,15 @@ fun AdsbTool(vm: MainViewModel) {
         if (tab == ToolTab.List) {
             if (c.planes.isNotEmpty()) {
                 SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)) {
-                    c.planes.forEachIndexed { i, p ->
+                    com.allnetworktools.ui.components.LiveRows("adsb", c.planes, { p -> p.icao }, tapToSee = true) { i, p ->
                         if (i > 0) Hairline()
                         PlaneRow(p, me, p.icao == c.selected) { c.selected = if (c.selected == p.icao) null else p.icao }
                     }
                 }
-            }
+            } else ReceiveEmpty(c.running || c.starting, Sym.Flight, S(R.string.receive_none_yet), S(R.string.receive_none_yet_body))
         }
         if (tab == ToolTab.List) {
-            if (c.modeAc.isNotEmpty()) {
+            com.allnetworktools.ui.components.AppearSection(c.modeAc.isNotEmpty()) {
                 SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 12.dp, bottom = 4.dp)) {
                     Text("Mode A/C", Modifier.padding(bottom = 4.dp), style = rf(14, 20, 600), color = AntTheme.accent.accent)
                     c.modeAc.forEach { m ->
@@ -428,6 +428,8 @@ private fun PlaneRow(p: Plane, me: Pair<Double, Double>?, selected: Boolean, onC
 
 /** Aircraft as arrows pointing along their track, labelled with their callsign. */
 private class PlaneOverlay(private val density: Float) : Overlay() {
+    /** New fixes glide in rather than jump. */
+    private val glide = com.allnetworktools.ui.components.MarkerGlide<Any>()
     var planes: List<Plane> = emptyList()
     var selected: Int? = null
     var me: GeoPoint? = null
@@ -439,6 +441,7 @@ private class PlaneOverlay(private val density: Float) : Overlay() {
     private val path = Path()
 
     override fun draw(c: Canvas, map: MapView, shadow: Boolean) {
+        glide.begin()
         if (shadow) return
         val proj = map.projection
         me?.let {
@@ -448,7 +451,7 @@ private class PlaneOverlay(private val density: Float) : Overlay() {
             paint.color = 0xFF1E88E5.toInt(); c.drawCircle(pt.x.toFloat(), pt.y.toFloat(), 5 * density, paint)
         }
         planes.forEach { p ->
-            proj.toPixels(GeoPoint(p.lat!!, p.lon!!), pt)
+            proj.toPixels(glide.at(p.icao, p.lat!!, p.lon!!), pt)
             val a = Math.toRadians(p.headingDeg ?: 0.0)
             val s = (if (p.icao == selected) 14 else 10) * density
             fun x(dx: Double, dy: Double) = (pt.x + dx * cos(a) - dy * sin(a)).toFloat()
@@ -473,15 +476,17 @@ private class PlaneOverlay(private val density: Float) : Overlay() {
             text.style = Paint.Style.FILL; text.color = 0xFF202124.toInt()
             c.drawText(label, pt.x + s + 2 * density, pt.y - 2 * density, text)
         }
+        glide.end()
+        if (glide.moving) map.postInvalidateOnAnimation()
     }
 
     override fun onSingleTapConfirmed(e: MotionEvent, map: MapView): Boolean {
         val proj = map.projection
         val hit = planes.minByOrNull { p ->
-            proj.toPixels(GeoPoint(p.lat!!, p.lon!!), pt)
+            proj.toPixels(glide.at(p.icao, p.lat!!, p.lon!!), pt)
             (pt.x - e.x) * (pt.x - e.x) + (pt.y - e.y) * (pt.y - e.y)
         }?.takeIf { p ->
-            proj.toPixels(GeoPoint(p.lat!!, p.lon!!), pt)
+            proj.toPixels(glide.at(p.icao, p.lat!!, p.lon!!), pt)
             (pt.x - e.x) * (pt.x - e.x) + (pt.y - e.y) * (pt.y - e.y) < (28 * density) * (28 * density)
         }
         onTap(hit?.icao)

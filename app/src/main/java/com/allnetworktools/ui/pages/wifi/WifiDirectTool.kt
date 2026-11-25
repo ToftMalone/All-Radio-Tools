@@ -59,7 +59,7 @@ fun WifiDirectTool(repo: WifiDirectRepository, permitted: Boolean, permissionTex
         val list = peers.orEmpty()
         HeroCard {
             Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                Text(list.size.toString(), style = gs(56, 60, 500, -1.5f, tnum = true))
+                com.allnetworktools.ui.components.RollingText(list.size.toString(), style = gs(56, 60, 500, -1.5f, tnum = true))
                 Text(P(R.plurals.p_devices, list.size), Modifier.padding(bottom = 8.dp), style = rf(18, 24, 500))
             }
             Text(
@@ -78,7 +78,7 @@ fun WifiDirectTool(repo: WifiDirectRepository, permitted: Boolean, permissionTex
                 )
             }
         }
-        if (list.isNotEmpty()) {
+        com.allnetworktools.ui.components.AppearSection(list.isNotEmpty()) {
             SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 12.dp, bottom = 4.dp)) {
                 Text(S(R.string.nearby), Modifier.padding(bottom = 4.dp), style = rf(14, 20, 600), color = AntTheme.accent.accent)
                 list.forEach { p ->

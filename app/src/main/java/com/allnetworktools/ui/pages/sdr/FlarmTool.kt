@@ -96,7 +96,7 @@ fun FlarmTool(vm: MainViewModel) {
     PageColumn {
         HeroCard {
             Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                Text("${c.aircraft.size}", style = gs(56, 60, 500, -1.5f, tnum = true))
+                com.allnetworktools.ui.components.RollingText("${c.aircraft.size}", style = gs(56, 60, 500, -1.5f, tnum = true))
                 Text(P(R.plurals.p_aircraft, c.aircraft.size), Modifier.padding(bottom = 8.dp), style = rf(18, 24, 500))
             }
             Text(S(R.string.flarm_heard, c.privateCount, c.newProtocol), style = rf(14, 20))
@@ -116,13 +116,13 @@ fun FlarmTool(vm: MainViewModel) {
         val tab = ToolTabRow("FlarmTool0", map = false)
         if (tab == ToolTab.Main) {
             if (c.aircraft.isEmpty()) {
-                if (c.running) ToolEmpty(Sym.Flight, S(R.string.flarm_none_yet), S(R.string.flarm_none_yet_body), null)
+                ReceiveEmpty(c.running || c.starting, Sym.Flight, S(R.string.flarm_none_yet), S(R.string.flarm_none_yet_body))
             } else {
                 val now = System.currentTimeMillis()
                 val types = S(R.string.flarm_types).split('|')
                 if (me == null) Empty(S(R.string.flarm_no_position))
                 SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)) {
-                    c.aircraft.forEachIndexed { i, a ->
+                    com.allnetworktools.ui.components.LiveRows("flarm", c.aircraft, { a -> a.id }, tapToSee = false) { i, a ->
                         if (i > 0) Hairline()
                         AircraftRow(a, types.getOrElse(a.type) { "?" }, me, now)
                     }

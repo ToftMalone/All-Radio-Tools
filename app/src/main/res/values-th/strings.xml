@@ -3232,4 +3232,9 @@
     <string name="advice_dns_slow_body">"เซิร์ฟเวอร์ DNS ของการเชื่อมต่อตอบใน %1$s ms ส่วน %2$s ตอบใน %3$s ms เลือกเป็น DNS ส่วนตัวในการตั้งค่า Android แล้วเว็บจะเปิดเร็วขึ้น"</string>
     <string name="advice_dns_down_title">"DNS ของคุณไม่ตอบ"</string>
     <string name="advice_dns_down_body">"เซิร์ฟเวอร์ DNS ของการเชื่อมต่อไม่ตอบ ส่วน %1$s ตอบใน %2$s ms เลือกเป็น DNS ส่วนตัวในการตั้งค่า Android"</string>
+    <string name="dashboard">"แดชบอร์ด"</string>
+    <string name="ready_to_listen">"พร้อมฟัง"</string>
+    <string name="ready_to_listen_body">"เริ่มรับสัญญาณ: สิ่งที่เครื่องมือนี้จับได้จะแสดงที่นี่ ล่าสุดอยู่บนสุด"</string>
+    <string name="receive_none_yet">"ยังไม่ได้ยินอะไร"</string>
+    <string name="receive_none_yet_body">"กำลังรับสัญญาณ: ทุกสิ่งที่เครื่องมือจับได้จะแสดงที่นี่ทันทีที่ได้ยิน"</string>
 </resources>

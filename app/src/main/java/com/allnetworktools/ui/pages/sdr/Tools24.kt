@@ -152,7 +152,7 @@ fun ZigbeeTool(vm: MainViewModel) {
     PageColumn {
         HeroCard {
             Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                Text("${c.networks.size}", style = gs(56, 60, 500, -1.5f, tnum = true))
+                com.allnetworktools.ui.components.RollingText("${c.networks.size}", style = gs(56, 60, 500, -1.5f, tnum = true))
                 Text(P(R.plurals.p_zwave_networks, c.networks.size), Modifier.padding(bottom = 8.dp), style = rf(18, 24, 500))
             }
             Text(S(R.string.zigbee_line, c.devices.size, c.frames.size), style = rf(14, 20, tnum = true))
@@ -176,7 +176,7 @@ fun ZigbeeTool(vm: MainViewModel) {
         val now = System.currentTimeMillis()
         if (tab == ToolTab.Main) {
             if (c.frames.isEmpty()) {
-                if (c.running) ToolEmpty(Sym.Hub, S(R.string.zigbee_none_yet), S(R.string.zigbee_none_yet_body), null)
+                ReceiveEmpty(c.running || c.starting, Sym.Hub, S(R.string.zigbee_none_yet), S(R.string.zigbee_none_yet_body))
             } else if (!c.showFrames) {
                 c.networks.forEach { n ->
                     SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 4.dp)) {
@@ -202,7 +202,7 @@ fun ZigbeeTool(vm: MainViewModel) {
                 }
             } else {
                 SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)) {
-                    c.frames.take(100).forEachIndexed { i, f ->
+                    com.allnetworktools.ui.components.LiveRows("zigbee-frames", c.frames.take(100), { f -> f }, tapToSee = false) { i, f ->
                         if (i > 0) Hairline()
                         Row(Modifier.fillMaxWidth().padding(vertical = 8.dp), verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                             Symbol(if (f.encrypted) Sym.Lock else Sym.LockOpen, size = 18.dp, tint = if (f.encrypted) cs.onSurfaceVariant else AntTheme.accent.accent)
@@ -309,7 +309,7 @@ fun AntTool(vm: MainViewModel) {
     PageColumn {
         HeroCard {
             Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                Text("${c.sensors.size}", style = gs(56, 60, 500, -1.5f, tnum = true))
+                com.allnetworktools.ui.components.RollingText("${c.sensors.size}", style = gs(56, 60, 500, -1.5f, tnum = true))
                 Text(P(R.plurals.p_ant_sensors, c.sensors.size), Modifier.padding(bottom = 8.dp), style = rf(18, 24, 500))
             }
             Text(S(R.string.ant_line, c.total), style = rf(14, 20, tnum = true))
@@ -330,9 +330,9 @@ fun AntTool(vm: MainViewModel) {
         val now = System.currentTimeMillis()
         if (tab == ToolTab.Main) {
             if (c.sensors.isEmpty()) {
-                if (c.running) ToolEmpty(Sym.Favorite, S(R.string.ant_none_yet), S(R.string.ant_none_yet_body), null)
+                ReceiveEmpty(c.running || c.starting, Sym.Favorite, S(R.string.ant_none_yet), S(R.string.ant_none_yet_body))
             } else SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)) {
-                c.sensors.forEachIndexed { i, s ->
+                com.allnetworktools.ui.components.LiveRows("ant", c.sensors, { s -> s.key }, tapToSee = true) { i, s ->
                     if (i > 0) Hairline()
                     val sel = s.key == c.selected
                     Row(Modifier.fillMaxWidth().clickable { c.selected = if (sel) null else s.key }.padding(vertical = 10.dp), verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {

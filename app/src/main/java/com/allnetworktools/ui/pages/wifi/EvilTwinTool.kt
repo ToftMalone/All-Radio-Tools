@@ -110,7 +110,7 @@ fun EvilTwinTool(
         val connectedFlagged = conn.bssid != null && mine != null && conn.bssid.lowercase() in mine.flagged.map { it.lowercase() }
         HeroCard {
             Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                Text(suspicious.toString(), style = gs(56, 60, 500, -1.5f, tnum = true))
+                com.allnetworktools.ui.components.RollingText(suspicious.toString(), style = gs(56, 60, 500, -1.5f, tnum = true))
                 Text(P(R.plurals.p_suspicious_access_points, suspicious), Modifier.padding(bottom = 8.dp), style = rf(18, 24, 500))
             }
             val aps = mine?.aps?.size ?: 0
@@ -127,7 +127,7 @@ fun EvilTwinTool(
                 }
             }
         }
-        if (connectedFlagged) {
+        com.allnetworktools.ui.components.AppearSection(connectedFlagged) {
             SectionCard(color = cs.errorContainer) {
                 Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                     Symbol(Sym.Warning, size = 24.dp, filled = true, tint = cs.onErrorContainer)

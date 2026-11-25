@@ -3616,4 +3616,9 @@
     <string name="advice_dns_slow_body">"يستجيب خادم DNS لاتصالك خلال %1$s مللي ثانية، و%2$s خلال %3$s مللي ثانية. اختره كـ DNS خاص في إعدادات أندرويد: ستفتح المواقع أسرع."</string>
     <string name="advice_dns_down_title">"DNS لديك لا يستجيب"</string>
     <string name="advice_dns_down_body">"لم يستجب خادم DNS لاتصالك؛ استجاب %1$s خلال %2$s مللي ثانية. اختره كـ DNS خاص في إعدادات أندرويد."</string>
+    <string name="dashboard">"لوحة المعلومات"</string>
+    <string name="ready_to_listen">"جاهز للاستماع"</string>
+    <string name="ready_to_listen_body">"ابدأ الاستقبال: ما تلتقطه هذه الأداة سيظهر هنا، الأحدث في الأعلى."</string>
+    <string name="receive_none_yet">"لم يُسمع شيء بعد"</string>
+    <string name="receive_none_yet_body">"الاستقبال يعمل: كل ما تلتقطه الأداة سيظهر هنا فور سماعه."</string>
 </resources>

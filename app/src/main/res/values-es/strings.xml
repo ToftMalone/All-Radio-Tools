@@ -3315,4 +3315,9 @@ Una avalancha es un flujo de tramas de emparejamiento falsas que hace aparecer u
     <string name="advice_dns_slow_body">"El servidor DNS de tu conexión responde en %1$s ms, %2$s en %3$s ms. Elígelo como DNS privado en los ajustes de Android: las webs abrirán más rápido."</string>
     <string name="advice_dns_down_title">"Tu DNS no responde"</string>
     <string name="advice_dns_down_body">"El servidor DNS de tu conexión no respondió; %1$s respondió en %2$s ms. Elígelo como DNS privado en los ajustes de Android."</string>
+    <string name="dashboard">"Panel"</string>
+    <string name="ready_to_listen">"Listo para escuchar"</string>
+    <string name="ready_to_listen_body">"Inicia la recepción: lo que capte esta herramienta aparecerá aquí, lo más reciente arriba."</string>
+    <string name="receive_none_yet">"Nada escuchado todavía"</string>
+    <string name="receive_none_yet_body">"La recepción está en marcha: todo lo que capte esta herramienta aparecerá aquí en cuanto lo oiga."</string>
 </resources>

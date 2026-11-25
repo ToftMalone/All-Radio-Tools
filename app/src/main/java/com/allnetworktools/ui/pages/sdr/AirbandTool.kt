@@ -138,7 +138,7 @@ fun AirbandTool(vm: MainViewModel) {
     PageColumn {
         HeroCard {
             Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                Text("${c.channels.size}", style = gs(56, 60, 500, -1.5f, tnum = true))
+                com.allnetworktools.ui.components.RollingText("${c.channels.size}", style = gs(56, 60, 500, -1.5f, tnum = true))
                 Text(P(R.plurals.p_airband_channels, c.channels.size), Modifier.padding(bottom = 8.dp), style = rf(18, 24, 500))
             }
             Text(
@@ -176,13 +176,13 @@ fun AirbandTool(vm: MainViewModel) {
             SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 12.dp, bottom = 4.dp)) {
                 Text(S(R.string.airband_channels_title), style = rf(14, 20, 600))
                 Text(S(R.string.airband_pin_hint), style = rf(12, 16), color = cs.onSurfaceVariant)
-                c.channels.forEachIndexed { i, ch ->
+                com.allnetworktools.ui.components.LiveRows("airband", c.channels, { ch -> ch.hz }, tapToSee = true) { i, ch ->
                     if (i > 0) Hairline()
                     ChannelRow(ch, c.pinned == ch.hz) { c.pin(ch.hz) }
                 }
             }
-        } else if (c.running) {
-            com.allnetworktools.ui.tools.ToolEmpty(Sym.Flight, S(R.string.airband_none_yet), S(R.string.airband_none_yet_body), null)
+        } else {
+            ReceiveEmpty(c.running || c.starting, Sym.Flight, S(R.string.airband_none_yet), S(R.string.airband_none_yet_body))
         }
         SectionCard {
             Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {

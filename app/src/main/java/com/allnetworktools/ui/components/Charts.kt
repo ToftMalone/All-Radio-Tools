@@ -187,7 +187,7 @@ fun SignalGauge(
             if (frac > 0.001f) drawArc(color, 180f, 180f * frac, false, topLeft, Size(r * 2, r * 2), style = stroke)
         }
         Column(Modifier.fillMaxWidth().padding(top = u * 70), horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(display, style = gs(52, 56, 500, -1.5f, tnum = true), maxLines = 1)
+            com.allnetworktools.ui.components.RollingText(display, style = gs(52, 56, 500, -1.5f, tnum = true))
             Text(label, Modifier.padding(top = 2.dp), style = rf(13, 18, 500), maxLines = 1)
         }
         val endColor = androidx.compose.material3.LocalContentColor.current.copy(alpha = 0.75f)

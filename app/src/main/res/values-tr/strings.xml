@@ -3308,4 +3308,9 @@ Sel, yakındaki her telefonda bir açılır pencere çıkaran sahte eşleştirme
     <string name="advice_dns_slow_body">"Bağlantınızın DNS sunucusu %1$s ms\'de yanıt veriyor, %2$s %3$s ms\'de. Android ayarlarında özel DNS olarak seçin: siteler daha hızlı açılır."</string>
     <string name="advice_dns_down_title">"DNS\'iniz yanıt vermiyor"</string>
     <string name="advice_dns_down_body">"Bağlantınızın DNS sunucusu yanıt vermedi; %1$s %2$s ms\'de yanıt verdi. Android ayarlarında özel DNS olarak seçin."</string>
+    <string name="dashboard">"Pano"</string>
+    <string name="ready_to_listen">"Dinlemeye hazır"</string>
+    <string name="ready_to_listen_body">"Alımı başlatın: bu aracın yakaladıkları burada görünür, en yenisi üstte."</string>
+    <string name="receive_none_yet">"Henüz bir şey duyulmadı"</string>
+    <string name="receive_none_yet_body">"Alım açık: aracın yakaladığı her şey duyulur duyulmaz burada görünür."</string>
 </resources>

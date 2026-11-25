@@ -3308,4 +3308,9 @@ Een vloed is een stroom nep-koppelframes die op elke telefoon in de buurt een po
     <string name="advice_dns_slow_body">"De DNS-server van je verbinding antwoordt in %1$s ms, %2$s in %3$s ms. Kies hem als privé-DNS in de Android-instellingen: sites openen sneller."</string>
     <string name="advice_dns_down_title">"Je DNS antwoordt niet"</string>
     <string name="advice_dns_down_body">"De DNS-server van je verbinding gaf geen antwoord; %1$s antwoordde in %2$s ms. Kies hem als privé-DNS in de Android-instellingen."</string>
+    <string name="dashboard">"Overzicht"</string>
+    <string name="ready_to_listen">"Klaar om te luisteren"</string>
+    <string name="ready_to_listen_body">"Start de ontvangst: wat deze tool opvangt verschijnt hier, het nieuwste bovenaan."</string>
+    <string name="receive_none_yet">"Nog niets gehoord"</string>
+    <string name="receive_none_yet_body">"De ontvangst loopt: alles wat deze tool opvangt verschijnt hier zodra het gehoord wordt."</string>
 </resources>

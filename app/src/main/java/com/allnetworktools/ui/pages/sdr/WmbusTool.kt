@@ -114,7 +114,7 @@ fun WmbusTool(vm: MainViewModel) {
     PageColumn {
         HeroCard {
             Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                Text("${c.meters.size}", style = gs(56, 60, 500, -1.5f, tnum = true))
+                com.allnetworktools.ui.components.RollingText("${c.meters.size}", style = gs(56, 60, 500, -1.5f, tnum = true))
                 Text(P(R.plurals.p_meters, c.meters.size), Modifier.padding(bottom = 8.dp), style = rf(18, 24, 500))
             }
             Text(S(R.string.wmbus_heard, c.telegrams, c.meters.count { it.frame.encrypted }), style = rf(14, 20))
@@ -134,11 +134,11 @@ fun WmbusTool(vm: MainViewModel) {
         val tab = ToolTabRow("WmbusTool0", map = false)
         if (tab == ToolTab.Main) {
             if (c.meters.isEmpty()) {
-                if (c.running) ToolEmpty(Sym.WaterDrop, S(R.string.wmbus_none_yet), S(R.string.wmbus_none_yet_body), null)
+                ReceiveEmpty(c.running || c.starting, Sym.WaterDrop, S(R.string.wmbus_none_yet), S(R.string.wmbus_none_yet_body))
             } else {
                 val now = System.currentTimeMillis()
                 SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)) {
-                    c.meters.forEachIndexed { i, m ->
+                    com.allnetworktools.ui.components.LiveRows("wmbus", c.meters, { m -> m.key }, tapToSee = false) { i, m ->
                         if (i > 0) Hairline()
                         MeterRow(m, types, quantities, now)
                     }

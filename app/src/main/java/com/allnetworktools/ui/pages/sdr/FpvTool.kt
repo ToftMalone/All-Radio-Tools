@@ -508,7 +508,7 @@ fun FpvTool(vm: MainViewModel) {
     PageColumn {
         HeroCard {
             Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                Text("$count", style = gs(56, 60, 500, -1.5f, tnum = true))
+                com.allnetworktools.ui.components.RollingText("$count", style = gs(56, 60, 500, -1.5f, tnum = true))
                 Text(
                     if (tab == FpvTab.Rc) P(R.plurals.p_rc_links, count) else P(R.plurals.p_drones_detected, count),
                     Modifier.padding(bottom = 8.dp), style = rf(18, 24, 500),

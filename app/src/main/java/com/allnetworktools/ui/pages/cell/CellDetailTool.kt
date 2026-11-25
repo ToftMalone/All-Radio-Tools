@@ -128,7 +128,7 @@ fun CellDetailTool(state: CellState?, arg: String?, onNeighbors: () -> Unit) {
                 }
             }
             Row(Modifier.padding(top = 14.dp), verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                Text(m.level?.let(::fmt) ?: "—", style = gs(56, 60, 500, -1.5f, tnum = true))
+                com.allnetworktools.ui.components.RollingText(m.level?.let(::fmt) ?: "—", style = gs(56, 60, 500, -1.5f, tnum = true))
                 Text("dBm ${if (m.rsrp != null) if (nr) "SS-RSRP" else "RSRP" else "RSSI"}", Modifier.padding(bottom = 8.dp), style = rf(16, 22, 500))
             }
             Sparkline(history.toList(), -120f, -70f, acc.accent, Modifier.padding(top = 8.dp).fillMaxWidth().height(52.dp), areaAlpha = 0f)

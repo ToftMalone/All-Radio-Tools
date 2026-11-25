@@ -83,7 +83,7 @@ fun WifiAwareTool(permitted: Boolean, permissionText: String, onFix: () -> Unit,
         }
         HeroCard {
             Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                Text(state.peers.size.toString(), style = gs(56, 60, 500, -1.5f, tnum = true))
+                com.allnetworktools.ui.components.RollingText(state.peers.size.toString(), style = gs(56, 60, 500, -1.5f, tnum = true))
                 Text(P(R.plurals.p_devices, state.peers.size), Modifier.padding(bottom = 8.dp), style = rf(18, 24, 500))
             }
             Text(S(R.string.wi_fi_aware_hero_body, c.myName), style = rf(14, 20))

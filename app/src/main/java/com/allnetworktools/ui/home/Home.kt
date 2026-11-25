@@ -23,7 +23,9 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -155,7 +157,8 @@ fun HomeScreen(
                     )
                 }
                 val rows = Network.entries.filter { it.inGrid }.chunked(2)
-                // Cards only hold an icon and a short description, so they stay compact.
+                // Cards only hold an icon and a short description, so they stay compact; a card with more to say (a
+                // radio turned off, with its button) makes its row taller, and both cards of the row grow together.
                 val cardH = 184.dp
                 Column(
                     // Padding sits inside the scroll area so the selection outline and scale are not clipped.
@@ -173,7 +176,7 @@ fun HomeScreen(
                         val pairRow = pair.toSet() == PairCards
                         val m = if (pairRow) merge.coerceIn(0f, 1f) else 0f
                         val cards: @Composable () -> Unit = {
-                            Row(horizontalArrangement = Arrangement.spacedBy(12.dp * (1f - m))) {
+                            Row(Modifier.height(IntrinsicSize.Min), horizontalArrangement = Arrangement.spacedBy(12.dp * (1f - m))) {
                                 pair.forEachIndexed { i, n ->
                                     val picked = selected == n
                                     // Where the two cards meet, their corners square off as they close the gap.
@@ -197,7 +200,8 @@ fun HomeScreen(
                                         shape = if (pairRow) shape else RoundedCornerShape(28.dp),
                                         modifier = Modifier
                                             .weight(1f)
-                                            .height(cardH)
+                                            .heightIn(min = cardH)
+                                            .fillMaxHeight()
                                             .onGloballyPositioned {
                                                 cardBounds[n] = it.boundsInRoot()
                                                 // The pair's page grows out of both cards at once.

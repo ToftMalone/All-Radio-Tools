@@ -7,6 +7,9 @@ import androidx.activity.compose.PredictiveBackHandler
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.height
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -279,6 +282,11 @@ private fun DockLayer(vm: MainViewModel, nav: NavState, modifier: Modifier, onCl
         else offset.animateTo(hidden, tween(350, easing = Motion.EmphasizedAccelerate))
     }
     if (!visible && offset.value >= hidden) return
+    // The page fades out under the dock instead of running into it; it leaves with the dock. It takes no touches.
+    Box(
+        modifier.fillMaxWidth().height(150.dp).graphicsLayer { translationY = offset.value * 0.8f }
+            .background(Brush.verticalGradient(listOf(Color.Transparent, cs.background.copy(alpha = 0.92f), cs.background))),
+    )
     ProvideAccent(lastNet) {
         FloatingDock(
             network = lastNet,

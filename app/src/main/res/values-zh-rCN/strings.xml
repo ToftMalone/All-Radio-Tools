@@ -3232,4 +3232,9 @@
     <string name="advice_dns_slow_body">"您连接的 DNS 服务器 %1$s 毫秒应答，%2$s 只需 %3$s 毫秒。在 Android 设置中把它设为私人 DNS，网站打开更快。"</string>
     <string name="advice_dns_down_title">"您的 DNS 没有应答"</string>
     <string name="advice_dns_down_body">"您连接的 DNS 服务器没有应答；%1$s 在 %2$s 毫秒内应答。在 Android 设置中把它设为私人 DNS。"</string>
+    <string name="dashboard">"仪表板"</string>
+    <string name="ready_to_listen">"准备接收"</string>
+    <string name="ready_to_listen_body">"开始接收：此工具收到的内容将显示在这里，最新的在最上面。"</string>
+    <string name="receive_none_yet">"尚未收到任何内容"</string>
+    <string name="receive_none_yet_body">"正在接收：此工具收到的任何内容一经收到就会显示在这里。"</string>
 </resources>

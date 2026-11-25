@@ -99,7 +99,7 @@ fun FloatingDock(
         val active = activeTab(page)
         DockTab.entries.filter { it != DockTab.Dashboard || network.hasDashboard }.forEach { tab ->
             val (icon, label) = when (tab) {
-                DockTab.Dashboard -> Sym.SpaceDashboard to "Dashboard"
+                DockTab.Dashboard -> Sym.SpaceDashboard to S(R.string.dashboard)
                 DockTab.Tools -> Sym.Handyman to S(R.string.tools)
             }
             TabButton(icon, label, tab == active) { onTab(tab) }
@@ -110,7 +110,12 @@ fun FloatingDock(
 @Composable
 private fun TabButton(icon: String, label: String, active: Boolean, onClick: () -> Unit) {
     val acc = AntTheme.accent
-    val width by animateDpAsState(if (active) 128.dp else 48.dp, Motion.standard(), label = "tabW")
+    // Open, the tab is as wide as its label needs (longer in some languages), never under 128 dp.
+    val measurer = androidx.compose.ui.text.rememberTextMeasurer()
+    val density = androidx.compose.ui.platform.LocalDensity.current
+    val labelW = androidx.compose.runtime.remember(label) { with(density) { measurer.measure(label, rf(14, 20, 600)).size.width.toDp() } }
+    val open = maxOf(128.dp, 24.dp + 6.dp + labelW + 32.dp)
+    val width by animateDpAsState(if (active) open else 48.dp, Motion.standard(), label = "tabW")
     val bg by animateColorAsState(if (active) acc.accent else Color.Transparent, tween(250, easing = Motion.Emphasized), label = "tabBg")
     val fg by animateColorAsState(if (active) acc.onAccent else acc.onContainer, tween(250, easing = Motion.Emphasized), label = "tabFg")
     val labelAlpha by animateFloatAsState(if (active) 1f else 0f, tween(200, easing = Motion.Emphasized), label = "tabLabel")

@@ -161,7 +161,7 @@ fun IntegrityTool(vm: MainViewModel) {
                 HeroChip(S(R.string.spoofing) + label(spoof), verdictColor(spoof))
             }
         }
-        if (c.cn0.size > 1) {
+        com.allnetworktools.ui.components.AppearSection(c.cn0.size > 1) {
             SectionCard {
                 Text(S(R.string.strength_of_the_4_best_satellites), style = rf(14, 20, 600), color = AntTheme.accent.accent)
                 LiveChart(c.cn0.toList(), 0f, 55f, 10f, AntTheme.accent.accent, Modifier.padding(top = 8.dp), capacity = 120, height = 120.dp)
@@ -524,7 +524,7 @@ fun SkyMaskTool(vm: MainViewModel) {
     PageColumn {
         HeroCard {
             Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                Text(open?.let { fmt(it * 100, 0) } ?: "—", style = gs(56, 60, 500, -1.5f, tnum = true))
+                com.allnetworktools.ui.components.RollingText(open?.let { fmt(it * 100, 0) } ?: "—", style = gs(56, 60, 500, -1.5f, tnum = true))
                 Text(S(R.string.open_sky), Modifier.padding(bottom = 8.dp), style = rf(18, 24, 500))
             }
             val dirs = listOf("N", "NNE", "ENE", "E", "ESE", "SSE", "S", "SSO", "OSO", "O", "ONO", "NNO")

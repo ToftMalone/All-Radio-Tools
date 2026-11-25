@@ -323,7 +323,7 @@ fun SondeTool(vm: MainViewModel) {
     PageColumn {
         HeroCard {
             Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                Text("${c.sondes.size}", style = gs(56, 60, 500, -1.5f, tnum = true))
+                com.allnetworktools.ui.components.RollingText("${c.sondes.size}", style = gs(56, 60, 500, -1.5f, tnum = true))
                 Text(P(R.plurals.p_sondes, c.sondes.size), Modifier.padding(bottom = 8.dp), style = rf(18, 24, 500))
             }
             Text(
@@ -350,12 +350,12 @@ fun SondeTool(vm: MainViewModel) {
         if (tab == ToolTab.List) {
             if (c.sondes.isNotEmpty()) {
                 SectionCard(padding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)) {
-                    c.sondes.forEachIndexed { i, s ->
+                    com.allnetworktools.ui.components.LiveRows("sonde", c.sondes, { s -> s.serial }, tapToSee = true) { i, s ->
                         if (i > 0) Hairline()
                         SondeRow(s, me, s.serial == c.selected) { c.selected = if (c.selected == s.serial) null else s.serial }
                     }
                 }
-            }
+            } else ReceiveEmpty(c.running || c.starting, Sym.Cloud, S(R.string.receive_none_yet), S(R.string.receive_none_yet_body))
         }
         if (tab == ToolTab.Settings) {
             // The Settings tab shows its settings straight away: nothing to unfold.
@@ -441,6 +441,8 @@ private fun SondeRow(s: SondeInfo, me: Pair<Double, Double>?, selected: Boolean,
 
 /** Each sonde's track as a line, its current position as a dot labelled with the serial and altitude. */
 private class SondeOverlay(private val density: Float) : Overlay() {
+    /** New fixes glide in rather than jump. */
+    private val glide = com.allnetworktools.ui.components.MarkerGlide<Any>()
     var sondes: List<SondeInfo> = emptyList()
     var selected: String? = null
     var me: GeoPoint? = null
@@ -452,6 +454,7 @@ private class SondeOverlay(private val density: Float) : Overlay() {
     private val path = Path()
 
     override fun draw(c: Canvas, map: MapView, shadow: Boolean) {
+        glide.begin()
         if (shadow) return
         val proj = map.projection
         me?.let {
@@ -473,7 +476,7 @@ private class SondeOverlay(private val density: Float) : Overlay() {
                 paint.color = color
                 c.drawPath(path, paint)
             }
-            proj.toPixels(GeoPoint(s.lat!!, s.lon!!), pt)
+            proj.toPixels(glide.at(s.serial, s.lat!!, s.lon!!), pt)
             val r = (if (s.serial == selected) 9 else 7) * density
             paint.style = Paint.Style.FILL
             paint.color = 0xFFFFFFFF.toInt(); c.drawCircle(pt.x.toFloat(), pt.y.toFloat(), r + 2 * density, paint)
@@ -493,7 +496,7 @@ private class SondeOverlay(private val density: Float) : Overlay() {
                 val k = 7 * density
                 c.drawLine(pt.x - k, pt.y - k, pt.x + k, pt.y + k, paint)
                 c.drawLine(pt.x - k, pt.y + k, pt.x + k, pt.y - k, paint)
-                proj.toPixels(GeoPoint(s.lat!!, s.lon!!), pt)
+                proj.toPixels(glide.at(s.serial, s.lat!!, s.lon!!), pt)
             }
             val label = s.serial + (s.altitudeM?.let { " · " + meters(it) } ?: "")
             text.color = 0xFFFFFFFF.toInt()
@@ -502,12 +505,14 @@ private class SondeOverlay(private val density: Float) : Overlay() {
             text.style = Paint.Style.FILL; text.color = 0xFF202124.toInt()
             c.drawText(label, pt.x + r + 4 * density, pt.y - 2 * density, text)
         }
+        glide.end()
+        if (glide.moving) map.postInvalidateOnAnimation()
     }
 
     override fun onSingleTapConfirmed(e: MotionEvent, map: MapView): Boolean {
         val proj = map.projection
         fun dist(s: SondeInfo): Float {
-            proj.toPixels(GeoPoint(s.lat!!, s.lon!!), pt)
+            proj.toPixels(glide.at(s.serial, s.lat!!, s.lon!!), pt)
             return (pt.x - e.x) * (pt.x - e.x) + (pt.y - e.y) * (pt.y - e.y)
         }
         val hit = sondes.minByOrNull(::dist)?.takeIf { dist(it) < (28 * density) * (28 * density) }
