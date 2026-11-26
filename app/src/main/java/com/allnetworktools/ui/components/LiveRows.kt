@@ -13,7 +13,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
@@ -22,7 +22,6 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.boundsInWindow
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.unit.dp
-import com.allnetworktools.ui.theme.AntTheme
 import com.allnetworktools.ui.theme.Motion
 import kotlinx.coroutines.delay
 
@@ -77,8 +76,9 @@ fun Modifier.fresh(list: String, id: Any, tapToSee: Boolean): Modifier {
             FreshItems.see(list, id)
         }
     }
-    val tint = AntTheme.accent.container
-    val edge = AntTheme.accent.accent
+    // One colour for "new" everywhere, apart from the tool's own colours (red-orange in the Wi-Fi + Bluetooth tools,
+    // where it read as a warning).
+    val mark = androidx.compose.material3.MaterialTheme.colorScheme.primary
     return this
         .then(
             if (tapToSee) Modifier.pointerInput(id) {
@@ -100,10 +100,11 @@ fun Modifier.fresh(list: String, id: Any, tapToSee: Boolean): Modifier {
                 visible = c.boundsInWindow().height >= c.size.height / 2f && c.size.height > 0
             },
         )
-        .drawBehind {
-            if (a <= 0.01f) return@drawBehind
-            val r = 12.dp.toPx()
-            drawRoundRect(tint.copy(alpha = 0.55f * a), Offset(-6.dp.toPx(), 0f), Size(size.width + 12.dp.toPx(), size.height), CornerRadius(r))
-            drawRoundRect(edge.copy(alpha = a), Offset(-6.dp.toPx(), 6.dp.toPx()), Size(3.dp.toPx(), size.height - 12.dp.toPx()), CornerRadius(2.dp.toPx()))
+        // Drawn over the row and inside it: a row that is a card of its own keeps its look, with no rim around it.
+        .drawWithContent {
+            drawContent()
+            if (a <= 0.01f) return@drawWithContent
+            drawRoundRect(mark.copy(alpha = 0.10f * a), cornerRadius = CornerRadius(12.dp.toPx()))
+            drawRoundRect(mark.copy(alpha = a), Offset(0f, 8.dp.toPx()), Size(3.dp.toPx(), (size.height - 16.dp.toPx()).coerceAtLeast(0f)), CornerRadius(2.dp.toPx()))
         }
 }

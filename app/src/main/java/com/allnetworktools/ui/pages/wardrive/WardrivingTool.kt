@@ -210,8 +210,9 @@ fun WardrivingScreen(st: WardriveState, onUpload: () -> Unit, onExport: () -> Un
         } else {
             val n = st.rows.size
             itemsIndexed(st.rows, key = { _, r -> r.type.code + r.mac }) { i, r ->
-                // Rows slide to their new place as the list re-sorts; a network met for the first time is marked new.
-                androidx.compose.foundation.layout.Box(Modifier.animateItem().fresh("wardrive", r.type.code + r.mac, tapToSee = false)) { NetworkLine(r, onRow) }
+                // A network met for the first time fades in and is marked new. No sliding to new places: the list
+                // re-sorts by signal every scan, so rows would always be moving over each other.
+                androidx.compose.foundation.layout.Box(Modifier.animateItem(fadeInSpec = androidx.compose.animation.core.tween(300), placementSpec = null, fadeOutSpec = null).fresh("wardrive", r.type.code + r.mac, tapToSee = false)) { NetworkLine(r, onRow) }
             }
         }
     }
