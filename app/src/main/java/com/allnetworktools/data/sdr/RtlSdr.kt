@@ -22,15 +22,16 @@ class RtlSdr private constructor(
     private val iface: UsbInterface,
     private val epIn: UsbEndpoint?,
     private val rtl: Rtl2832,
-    private val tuner: R82xx,
+    private val tuner: RtlTuner,
     private val model: R82xx.Model,
     tunerName: String,
 ) : SdrRadio {
+    private val fc0012 = tuner is Fc0012
     override val caps = SdrCaps(
         name = "RTL-SDR ($tunerName)",
-        // The Blog V4 and V4L up-convert the HF band.
-        minHz = if (model == R82xx.Model.Generic) 24_000_000L else 500_000L,
-        maxHz = 1_766_000_000L,
+        // The Blog V4 and V4L up-convert the HF band; the FC0012 covers less.
+        minHz = when { fc0012 -> Fc0012.MIN_HZ; model == R82xx.Model.Generic -> 24_000_000L; else -> 500_000L },
+        maxHz = if (fc0012) Fc0012.MAX_HZ else 1_766_000_000L,
         maxRate = 3_200_000,
     )
 
@@ -71,14 +72,17 @@ class RtlSdr private constructor(
     /** The HackRF gain scale (LNA + VGA + amplifier, up to 116 dB) spread over the tuner's 0 to 49.6 dB. */
     private fun applyGain(): Boolean {
         val total = lna + vga + (if (amp) 14 else 0)
-        val wanted = (total * R82xx.GAINS.last() / 116).coerceIn(0, R82xx.GAINS.last())
-        val g = R82xx.GAINS.minByOrNull { Math.abs(it - wanted) } ?: 0
+        val steps = tuner.gains
+        val lo = steps.first()
+        val hi = steps.last()
+        val wanted = (lo + total * (hi - lo) / 116).coerceIn(lo, hi)
+        val g = steps.minByOrNull { Math.abs(it - wanted) } ?: 0
         return tuned { tuner.setGain(g) } >= 0
     }
 
     /** [value] in dB: the nearest step the tuner can make. */
     override fun setNativeGain(value: Int): Boolean {
-        val g = R82xx.GAINS.minByOrNull { Math.abs(it - value * 10) } ?: 0
+        val g = tuner.gains.minByOrNull { Math.abs(it - value * 10) } ?: 0
         return tuned { tuner.setGain(g) } >= 0
     }
 
@@ -179,6 +183,23 @@ class RtlSdr private constructor(
             return null
         }
 
+        /**
+         * A stick with a Fitipower FC0012 (found by [otherTuner], which has just reset it through GPIO 4, with the
+         * repeater still on): zero-IF, so the baseband stays as [Rtl2832.initBaseband] left it, with both I and Q ADC
+         * inputs; GPIO 6 drives its VHF / UHF filter.
+         */
+        private fun openFc0012(conn: UsbDeviceConnection, iface: UsbInterface, ep: UsbEndpoint?, rtl: Rtl2832): RtlSdr? {
+            rtl.setGpioOutput(6)
+            rtl.demodWrite(0, 0x08, 0xcd, 1)
+            rtl.setIfFreq(0)
+            val tuner = Fc0012(rtl, rtl.rtlXtal)
+            val rc = tuner.init()
+            rtl.setI2cRepeater(false)
+            DebugLog.i("RTL-SDR", "FC0012 tuner init: $rc (xtal ${rtl.rtlXtal} Hz)")
+            if (rc < 0) { conn.releaseInterface(iface); conn.close(); return null }
+            return RtlSdr(conn, iface, ep, rtl, tuner, R82xx.Model.Generic, "FC0012")
+        }
+
         /** In place: the dongle's unsigned samples (0 to 255, centred on 127.5) become signed ones. */
         fun unsignedToSigned(buf: ByteArray, len: Int) {
             for (i in 0 until len) buf[i] = (buf[i].toInt() xor 0x80).toByte()
@@ -223,7 +244,8 @@ class RtlSdr private constructor(
             if (chip == null) {
                 // Which tuner it is, the way librtlsdr tells them apart, so the log says what such a stick holds.
                 val other = otherTuner(rtl)
-                DebugLog.w("RTL-SDR", "No R820T / R828D tuner answered; found ${other ?: "no known tuner"} (E4000, FC0012, FC0013 and FC2580 are not supported yet)")
+                if (other == "FC0012") return openFc0012(conn, iface, ep, rtl)
+                DebugLog.w("RTL-SDR", "No R820T / R828D / FC0012 tuner answered; found ${other ?: "no known tuner"} (E4000, FC0013 and FC2580 are not supported yet)")
                 unsupportedTuner = other ?: "?"
                 rtl.setI2cRepeater(false)
                 conn.releaseInterface(iface); conn.close()

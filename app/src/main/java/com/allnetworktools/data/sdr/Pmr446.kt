@@ -218,6 +218,27 @@ class PmrChannel(val hz: Long, private val offHz: Double, narrow: Boolean, priva
     /** Sample count up to which this channel carries digital signalling: its FM audio is then noise, not voice. */
     private var digitalUntil = 0L
     private var nOut = 0L
+    // What the DMR decoder did, for the debug log (issue #26: voice stopping during a call): counted, written every
+    // two seconds while there is something to say, so a call can be followed without filling the journal.
+    private val dmrStats = IntArray(7) // voice syncs, bursts read, voice frames out, muted (privacy), headers, terminators, other data
+    private var lastVoiceSyncN = -1L
+    private var statsFromN = 0L
+
+    private fun logDmr() {
+        if (nOut - statsFromN < 100_000) return
+        statsFromN = nOut
+        if (dmrStats.all { it == 0 }) return
+        val (syncs, bursts, frames, muted, headers, terms, data) = dmrStats.toList()
+        com.allnetworktools.util.DebugLog.i(
+            "DMR",
+            "${if (hz == 0L) "Listen" else "%.5f MHz".format(java.util.Locale.US, hz / 1e6)} · 2 s: voice syncs $syncs, B-F bursts read $bursts, " +
+                "voice frames $frames, muted as private $muted, headers $headers, terminators $terms, other data $data · privacy ${privacy.toList()}",
+        )
+        dmrStats.fill(0)
+    }
+
+    private operator fun <T> List<T>.component6() = this[5]
+    private operator fun <T> List<T>.component7() = this[6]
     // CTCSS: the discriminator averaged to 1 kS/s, kept for two seconds.
     private val low = FloatArray(2000)
     private var lowN = 0
@@ -268,6 +289,7 @@ class PmrChannel(val hz: Long, private val offHz: Double, narrow: Boolean, priva
      */
     fun pushFm(hz: Float) {
         nOut++
+        if (nOut and 0xFFF == 0L) logDmr()
         ffsk.push(hz)
         toneSig.push(hz)
         dmr.push(hz)
@@ -313,6 +335,11 @@ class PmrChannel(val hz: Long, private val offHz: Double, narrow: Boolean, priva
         digitalUntil = nOut + 50_000
         val slot = Dmr.syncSlot(s)
         if (Dmr.syncIsVoice(s)) {
+            dmrStats[0]++
+            // A gap in the voice syncs of a call (one every 360 ms): the time it lasted, to see where voice stops.
+            if (lastVoiceSyncN >= 0 && nOut - lastVoiceSyncN > 50_000L * 3 / 4 && nOut - lastVoiceSyncN < 50_000L * 10)
+                com.allnetworktools.util.DebugLog.i("DMR", "No voice sync for ${(nOut - lastVoiceSyncN) / 50} ms (slot $slot)")
+            lastVoiceSyncN = nOut
             onEvent(PmrEvent.DmrVoice(hz, slot))
             // Burst A of a superframe: B to F follow on the same slot every 60 ms (288 symbols), with embedded
             // signalling where the sync was; they are read with A's timing and levels.
@@ -323,22 +350,34 @@ class PmrChannel(val hz: Long, private val offHz: Double, narrow: Boolean, priva
         }
         Dmr.readData(bits)?.let { b ->
             when (b) {
-                is Dmr.Burst.Header -> privacy[slot] = b.lc.privacy
-                is Dmr.Burst.Terminator -> { privacy[slot] = false; dmr.cancelReads() }
-                else -> {}
+                is Dmr.Burst.Header -> {
+                    dmrStats[4]++
+                    if (b.lc.privacy != privacy[slot]) com.allnetworktools.util.DebugLog.i("DMR", "Header slot $slot: ${b.lc.src} -> ${b.lc.dst}, FLCO ${b.lc.flco}, private ${b.lc.privacy}")
+                    privacy[slot] = b.lc.privacy
+                }
+                is Dmr.Burst.Terminator -> {
+                    dmrStats[5]++
+                    // Logged with how long after the last voice sync: a terminator in the middle of voice is likely the
+                    // other time slot of a repeater (its syncs do not tell the slot), which would cut this call short.
+                    com.allnetworktools.util.DebugLog.i("DMR", "Terminator slot $slot, ${if (lastVoiceSyncN < 0) "no voice yet" else "${(nOut - lastVoiceSyncN) / 50} ms after the last voice sync"}")
+                    privacy[slot] = false; dmr.cancelReads()
+                }
+                else -> dmrStats[6]++
             }
             onEvent(PmrEvent.Dmr(hz, b, slot))
         }
     }
 
     private fun dmrVoiceBurst(f: FourFskSync.Frame) {
+        dmrStats[1]++
         digitalUntil = nOut + 50_000
         dmrVoice(f.sync, dibits(f.symbols, 0, 132))
     }
 
     /** The three AMBE+2 frames of a voice burst: its 216 voice bits around the centre field. */
     private fun dmrVoice(slot: Int, burst: IntArray) {
-        if (privacy[slot]) return
+        if (privacy[slot]) { dmrStats[3]++; return }
+        dmrStats[2] += 3
         val vs = IntArray(216)
         burst.copyInto(vs, 0, 0, 108)
         burst.copyInto(vs, 108, 156, 264)

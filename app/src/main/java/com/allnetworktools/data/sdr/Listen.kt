@@ -176,11 +176,20 @@ class ListenReceiver(private val sampleRate: Int = 2_000_000, private val onAudi
     private var dvQueued = 0
     private val dvGain = 1.6f
 
+    private var dvDropped = 0
+    private var dvDropLogMs = 0L
+
     private fun queueVoice(pcm: FloatArray) {
         // 8 kHz to 50 kHz: linear interpolation, 6.25 output samples per input one.
         val n = pcm.size * AUDIO_RATE / 8_000
         for (j in 0 until n) {
-            if (dvQueued >= dvBuf.size) break
+            if (dvQueued >= dvBuf.size) {
+                // Voice comes faster than it is played: said in the debug log (issue #26), at most every 2 s.
+                dvDropped += n - j
+                val now = System.currentTimeMillis()
+                if (now - dvDropLogMs > 2_000) { dvDropLogMs = now; com.allnetworktools.util.DebugLog.w("DMR", "Listen: voice queue full, $dvDropped samples dropped"); dvDropped = 0 }
+                break
+            }
             val x = j * 8_000.0 / AUDIO_RATE
             val i = x.toInt()
             val f = (x - i).toFloat()

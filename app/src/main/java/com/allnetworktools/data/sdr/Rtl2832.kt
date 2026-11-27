@@ -192,7 +192,22 @@ class Rtl2832(private val bus: RtlBus) {
 }
 
 /** The Rafael Micro R820T / R820T2 / R828D tuner behind an RTL2832U. */
-class R82xx(private val rtl: Rtl2832, private val r828d: Boolean, private val xtal: Int, private val model: Model) {
+/** A tuner behind the RTL2832U: R820T / R828D ([R82xx]) or Fitipower FC0012 ([Fc0012]). Call with the I2C repeater on. */
+interface RtlTuner {
+    /** Whether the synthesiser locked on the last tuning. */
+    val locked: Boolean
+    /** Total gains it can make, in tenths of a dB, lowest first. */
+    val gains: IntArray
+    fun init(): Int
+    /** Sets the filter for [bwIn] Hz of samples; returns the IF the demodulator must use (0 for a zero-IF tuner), or < 0. */
+    fun setBandwidth(bwIn: Int): Int
+    fun setFreq(freq: Long): Int
+    fun setGain(gainTenthDb: Int): Int
+    /** Powers the tuner down when reception ends. */
+    fun standby(): Int = 0
+}
+
+class R82xx(private val rtl: Rtl2832, private val r828d: Boolean, private val xtal: Int, private val model: Model) : RtlTuner {
     /** The RTL-SDR Blog dongles are told apart by their USB strings. */
     enum class Model { Generic, BlogV4, BlogV4L }
 
@@ -205,7 +220,8 @@ class R82xx(private val rtl: Rtl2832, private val r828d: Boolean, private val xt
     private var input = 0
     private var hasLock = false
     /** Whether the synthesiser locked on the last tuning. */
-    val locked get() = hasLock
+    override val locked get() = hasLock
+    override val gains get() = GAINS
     private var initDone = false
 
     // ---- I2C and shadow registers ------------------------------------------------------------------------------
@@ -464,7 +480,7 @@ class R82xx(private val rtl: Rtl2832, private val r828d: Boolean, private val xt
         return writeRegMask(0x19, polyfilCur, 0x60)
     }
 
-    fun init(): Int {
+    override fun init(): Int {
         xtalCapSel = XTAL_HIGH_CAP_0P
         regs.fill(0)
         write(0x05, IntArray(NUM_REGS) { if (it < INIT_ARRAY.size) INIT_ARRAY[it] else 0 })
@@ -475,7 +491,7 @@ class R82xx(private val rtl: Rtl2832, private val r828d: Boolean, private val xt
         return rc
     }
 
-    fun standby(): Int {
+    override fun standby(): Int {
         if (!initDone) return 0
         var rc = writeReg(0x06, 0xb1)
         if (rc < 0) return rc
@@ -487,7 +503,7 @@ class R82xx(private val rtl: Rtl2832, private val r828d: Boolean, private val xt
     }
 
     /** Filter and IF for a bandwidth; returns the IF the demodulator must be told. */
-    fun setBandwidth(bwIn: Int): Int {
+    override fun setBandwidth(bwIn: Int): Int {
         var bw = bwIn
         val reg0a: Int
         var reg0b: Int
@@ -527,7 +543,7 @@ class R82xx(private val rtl: Rtl2832, private val r828d: Boolean, private val xt
         return intFreq
     }
 
-    fun setFreq(freq: Long): Int {
+    override fun setFreq(freq: Long): Int {
         val v4 = model == Model.BlogV4
         val v4l = model == Model.BlogV4L
         // The V4 up-converts the HF band by 28.8 MHz so that no offset is needed in software.
@@ -588,7 +604,7 @@ class R82xx(private val rtl: Rtl2832, private val r828d: Boolean, private val xt
     }
 
     /** Manual gain in tenths of a dB: the LNA and the mixer are stepped up until the total is reached. */
-    fun setGain(gainTenthDb: Int): Int {
+    override fun setGain(gainTenthDb: Int): Int {
         var rc = writeRegMask(0x05, 0x10, 0x10)
         if (rc < 0) return rc
         rc = writeRegMask(0x07, 0, 0x10)
