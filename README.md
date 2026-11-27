@@ -1,7 +1,5 @@
 # 📡 All Radio Tools
 
-☕ **Enjoy the app?** [Support it on Ko-fi](https://ko-fi.com/toftmalone)
-
 **Everything that transmits around you, in one Android app.**
 
 All Radio Tools brings together tools to explore Wi-Fi, Bluetooth, the mobile network, GNSS, NFC and, with a HackRF (or an RTL-SDR, an Airspy or a PlutoSDR), the radio waves themselves: aircraft, gliders, radiosondes, ships, drones, satellites, walkie-talkies, sensors and meters. NFC tags and contactless cards too.
