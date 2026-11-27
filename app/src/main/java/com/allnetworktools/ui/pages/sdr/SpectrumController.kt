@@ -68,6 +68,8 @@ class SpectrumController(private val repo: SdrRepository, private val scope: Cor
     /** How much of the span is shown, around its centre: 1 for all of it, up to [MAX_ZOOM]. */
     var zoom by mutableIntStateOf(1)
         private set
+    /** The move buttons step a twentieth of the view (fine) instead of half of it (coarse); a long press switches. */
+    var fineMove by androidx.compose.runtime.mutableStateOf(false)
     @Volatile private var wantZoom = 1
 
     fun chooseZoom(z: Int) {

@@ -3333,4 +3333,9 @@
     <string name="ready_to_listen_body">"Start receiving: what this tool picks up will show here, the newest first."</string>
     <string name="receive_none_yet">"Nothing heard yet"</string>
     <string name="receive_none_yet_body">"Reception is on: anything this tool picks up shows here as soon as it is heard."</string>
+    <string name="spectrum_move_fine">"Fine moves: %1$s at a time"</string>
+    <string name="spectrum_move_coarse">"Coarse moves: %1$s at a time"</string>
+    <string name="spectrum_move_left">"Move left"</string>
+    <string name="spectrum_move_right">"Move right"</string>
+    <string name="spectrum_move_switch">"Switch between coarse and fine moves"</string>
 </resources>

@@ -3621,4 +3621,9 @@
     <string name="ready_to_listen_body">"ابدأ الاستقبال: ما تلتقطه هذه الأداة سيظهر هنا، الأحدث في الأعلى."</string>
     <string name="receive_none_yet">"لم يُسمع شيء بعد"</string>
     <string name="receive_none_yet_body">"الاستقبال يعمل: كل ما تلتقطه الأداة سيظهر هنا فور سماعه."</string>
+    <string name="spectrum_move_fine">"خطوات دقيقة: %1$s في كل مرة"</string>
+    <string name="spectrum_move_coarse">"خطوات كبيرة: %1$s في كل مرة"</string>
+    <string name="spectrum_move_left">"تحريك لليسار"</string>
+    <string name="spectrum_move_right">"تحريك لليمين"</string>
+    <string name="spectrum_move_switch">"التبديل بين الخطوات الكبيرة والدقيقة"</string>
 </resources>

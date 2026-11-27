@@ -165,7 +165,8 @@ class ListenController(repo: SdrRepository, scope: CoroutineScope, onAcquire: ()
     /** Recentres the view on the channel when it is forced to or when the channel left it. */
     private fun follow(force: Boolean) {
         val half = viewSpanHz / 2
-        if (force || kotlin.math.abs(frequencyHz - (centerHz + viewOffsetHz())) > half * 9 / 10) viewHz = frequencyHz
+        // Not while a finger drags along the spectrum: the view recentring under it would carry the frequency away.
+        if (force || (!dragging && kotlin.math.abs(frequencyHz - (centerHz + viewOffsetHz())) > half * 9 / 10)) viewHz = frequencyHz
         wantView = viewOffsetHz()
     }
 
@@ -211,7 +212,7 @@ class ListenController(repo: SdrRepository, scope: CoroutineScope, onAcquire: ()
         if (tx.transmitting) return
         frequencyHz = hz
         frequencyText = mhz(hz)
-        if (!running && !starting) { viewHz = hz; return }
+        if (!running && !starting) { if (!dragging) viewHz = hz; return }
         val off = hz - centerHz
         if (kotlin.math.abs(off) <= MAX_OFFSET_HZ) {
             wantOffset = off.toDouble()
@@ -232,9 +233,37 @@ class ListenController(repo: SdrRepository, scope: CoroutineScope, onAcquire: ()
     /** [fraction] is the position along the spectrum shown, 0 on the left edge and 1 on the right one. */
     fun tuneFraction(fraction: Float) {
         val hz = centerHz + viewOffsetHz() + ((fraction.coerceIn(0.01f, 0.99f) - 0.5f) * viewSpanHz).toLong()
-        // Never past the edges of the window, where the filters cut.
-        val lim = MAX_OFFSET_HZ + 100_000L
-        tune(snap(hz.coerceIn(centerHz - lim, centerHz + lim)))
+        // Never past the edges of the window, where the filters cut; while dragging, not past where the radio would have
+        // to be retuned either (the view would jump under the finger): the edge steps of [dragFraction] go further.
+        val lim = if (dragging) MAX_OFFSET_HZ else MAX_OFFSET_HZ + 100_000L
+        var v = snap(hz.coerceIn(centerHz - lim, centerHz + lim))
+        // Rounding to the step must not carry a drag past that limit either.
+        if (dragging) { while (v > centerHz + lim) v -= stepHz; while (v < centerHz - lim) v += stepHz }
+        tune(v)
+    }
+
+    /** A finger is dragging along the spectrum. */
+    private var dragging = false
+    private var lastEdgeMs = 0L
+
+    fun startDrag() { dragging = true; lastEdgeMs = 0L }
+
+    fun endDrag() { dragging = false }
+
+    /**
+     * A drag along the spectrum at [fraction]: the view stays still under the finger and the channel follows it. Held
+     * against an edge, the view and the channel move by a quarter of the width at a time, every [EDGE_MS], as the
+     * spectrum analyser does (recentring at each move made the frequency run away there).
+     */
+    fun dragFraction(fraction: Float, nowMs: Long = System.currentTimeMillis()) {
+        val f = fraction.coerceIn(0f, 1f)
+        if (f >= EDGE && f <= 1 - EDGE) { tuneFraction(f); return }
+        if (nowMs - lastEdgeMs < EDGE_MS) return
+        lastEdgeMs = nowMs
+        val step = (if (f < EDGE) -1 else 1) * viewSpanHz / 4
+        viewHz = centerHz + viewOffsetHz() + step
+        tune(snap(frequencyHz + step))
+        wantView = viewOffsetHz()
     }
 
     /** Tunes to [hz] in the mode its band usually uses (from the spectrum's marker). */
@@ -385,6 +414,9 @@ class ListenController(repo: SdrRepository, scope: CoroutineScope, onAcquire: ()
         const val SQUELCH_MIN = -70f
         private const val OFFSET_HZ = 250_000L
         private const val MAX_OFFSET_HZ = 800_000L
+        /** Held this close to an edge of the spectrum (a fraction of its width), a drag moves the view. */
+        const val EDGE = 0.04f
+        const val EDGE_MS = 700L
     }
 }
 
@@ -588,6 +620,7 @@ private fun SpectrumPicker(c: ListenController) {
                 awaitEachGesture {
                     awaitFirstDown(requireUnconsumed = false)
                     pinch = 1f
+                    c.startDrag()
                     do {
                         val event = awaitPointerEvent()
                         val pressed = event.changes.filter { it.pressed }
@@ -597,10 +630,12 @@ private fun SpectrumPicker(c: ListenController) {
                             if (pinch < 0.62f) { c.chooseZoom(c.zoom / 2); pinch = 1f }
                             event.changes.forEach { it.consume() }
                         } else if (pressed.size == 1 && pressed[0].positionChanged()) {
-                            c.tuneFraction(pressed[0].position.x / size.width)
+                            // Only a drag moves the view at an edge: a tap there just tunes.
+                            c.dragFraction(pressed[0].position.x / size.width)
                             pressed[0].consume()
                         }
                     } while (event.changes.any { it.pressed })
+                    c.endDrag()
                 }
             },
     ) {

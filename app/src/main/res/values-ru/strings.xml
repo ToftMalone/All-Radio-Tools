@@ -3467,4 +3467,9 @@
     <string name="ready_to_listen_body">"Запустите приём: всё, что поймает инструмент, появится здесь, новое сверху."</string>
     <string name="receive_none_yet">"Пока ничего не слышно"</string>
     <string name="receive_none_yet_body">"Приём идёт: всё, что поймает инструмент, появится здесь, как только будет услышано."</string>
+    <string name="spectrum_move_fine">"Точный шаг: по %1$s"</string>
+    <string name="spectrum_move_coarse">"Грубый шаг: по %1$s"</string>
+    <string name="spectrum_move_left">"Влево"</string>
+    <string name="spectrum_move_right">"Вправо"</string>
+    <string name="spectrum_move_switch">"Переключить грубый и точный шаг"</string>
 </resources>

@@ -3237,4 +3237,9 @@
     <string name="ready_to_listen_body">"开始接收：此工具收到的内容将显示在这里，最新的在最上面。"</string>
     <string name="receive_none_yet">"尚未收到任何内容"</string>
     <string name="receive_none_yet_body">"正在接收：此工具收到的任何内容一经收到就会显示在这里。"</string>
+    <string name="spectrum_move_fine">"精细移动：每次 %1$s"</string>
+    <string name="spectrum_move_coarse">"粗略移动：每次 %1$s"</string>
+    <string name="spectrum_move_left">"向左移动"</string>
+    <string name="spectrum_move_right">"向右移动"</string>
+    <string name="spectrum_move_switch">"在粗略和精细移动之间切换"</string>
 </resources>

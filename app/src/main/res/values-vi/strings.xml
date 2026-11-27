@@ -3237,4 +3237,9 @@ Một đợt lũ là dòng khung ghép đôi giả làm bật cửa sổ trên m
     <string name="ready_to_listen_body">"Bắt đầu thu: những gì công cụ này bắt được sẽ hiện ở đây, mới nhất ở trên."</string>
     <string name="receive_none_yet">"Chưa nghe thấy gì"</string>
     <string name="receive_none_yet_body">"Đang thu: mọi thứ công cụ bắt được sẽ hiện ở đây ngay khi nghe thấy."</string>
+    <string name="spectrum_move_fine">"Dịch tinh: mỗi lần %1$s"</string>
+    <string name="spectrum_move_coarse">"Dịch thô: mỗi lần %1$s"</string>
+    <string name="spectrum_move_left">"Dịch sang trái"</string>
+    <string name="spectrum_move_right">"Dịch sang phải"</string>
+    <string name="spectrum_move_switch">"Chuyển giữa dịch thô và dịch tinh"</string>
 </resources>

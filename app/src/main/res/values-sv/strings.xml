@@ -3313,4 +3313,9 @@ Ett flöde är en ström av falska parkopplingsramar som får en popup att visas
     <string name="ready_to_listen_body">"Starta mottagningen: det verktyget fångar visas här, det senaste överst."</string>
     <string name="receive_none_yet">"Inget hört ännu"</string>
     <string name="receive_none_yet_body">"Mottagningen är igång: allt verktyget fångar visas här så snart det hörs."</string>
+    <string name="spectrum_move_fine">"Fina steg: %1$s åt gången"</string>
+    <string name="spectrum_move_coarse">"Grova steg: %1$s åt gången"</string>
+    <string name="spectrum_move_left">"Flytta åt vänster"</string>
+    <string name="spectrum_move_right">"Flytta åt höger"</string>
+    <string name="spectrum_move_switch">"Växla mellan grova och fina steg"</string>
 </resources>

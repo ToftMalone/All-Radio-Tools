@@ -3320,4 +3320,9 @@ Una avalancha es un flujo de tramas de emparejamiento falsas que hace aparecer u
     <string name="ready_to_listen_body">"Inicia la recepción: lo que capte esta herramienta aparecerá aquí, lo más reciente arriba."</string>
     <string name="receive_none_yet">"Nada escuchado todavía"</string>
     <string name="receive_none_yet_body">"La recepción está en marcha: todo lo que capte esta herramienta aparecerá aquí en cuanto lo oiga."</string>
+    <string name="spectrum_move_fine">"Pasos finos: %1$s cada vez"</string>
+    <string name="spectrum_move_coarse">"Pasos gruesos: %1$s cada vez"</string>
+    <string name="spectrum_move_left">"Mover a la izquierda"</string>
+    <string name="spectrum_move_right">"Mover a la derecha"</string>
+    <string name="spectrum_move_switch">"Cambiar entre pasos gruesos y finos"</string>
 </resources>

@@ -3237,4 +3237,9 @@
     <string name="ready_to_listen_body">"수신을 시작하면 이 도구가 잡은 내용이 여기에 표시됩니다. 최신이 위에 옵니다."</string>
     <string name="receive_none_yet">"아직 수신된 것이 없습니다"</string>
     <string name="receive_none_yet_body">"수신 중입니다. 이 도구가 잡는 모든 것이 들리는 즉시 여기에 표시됩니다."</string>
+    <string name="spectrum_move_fine">"미세 이동: %1$s씩"</string>
+    <string name="spectrum_move_coarse">"큰 이동: %1$s씩"</string>
+    <string name="spectrum_move_left">"왼쪽으로 이동"</string>
+    <string name="spectrum_move_right">"오른쪽으로 이동"</string>
+    <string name="spectrum_move_switch">"큰 이동과 미세 이동 전환"</string>
 </resources>

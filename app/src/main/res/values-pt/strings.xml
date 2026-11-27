@@ -3320,4 +3320,9 @@ Uma enxurrada é um fluxo de quadros de pareamento falsos que faz aparecer um po
     <string name="ready_to_listen_body">"Inicie a receção: o que esta ferramenta captar aparecerá aqui, o mais recente no topo."</string>
     <string name="receive_none_yet">"Nada ouvido ainda"</string>
     <string name="receive_none_yet_body">"A receção está ativa: tudo o que a ferramenta captar aparecerá aqui assim que for ouvido."</string>
+    <string name="spectrum_move_fine">"Passos finos: %1$s de cada vez"</string>
+    <string name="spectrum_move_coarse">"Passos largos: %1$s de cada vez"</string>
+    <string name="spectrum_move_left">"Mover para a esquerda"</string>
+    <string name="spectrum_move_right">"Mover para a direita"</string>
+    <string name="spectrum_move_switch">"Alternar entre passos largos e finos"</string>
 </resources>

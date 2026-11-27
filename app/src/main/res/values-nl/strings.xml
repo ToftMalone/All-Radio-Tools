@@ -3313,4 +3313,9 @@ Een vloed is een stroom nep-koppelframes die op elke telefoon in de buurt een po
     <string name="ready_to_listen_body">"Start de ontvangst: wat deze tool opvangt verschijnt hier, het nieuwste bovenaan."</string>
     <string name="receive_none_yet">"Nog niets gehoord"</string>
     <string name="receive_none_yet_body">"De ontvangst loopt: alles wat deze tool opvangt verschijnt hier zodra het gehoord wordt."</string>
+    <string name="spectrum_move_fine">"Fijne stappen: %1$s per keer"</string>
+    <string name="spectrum_move_coarse">"Grove stappen: %1$s per keer"</string>
+    <string name="spectrum_move_left">"Naar links"</string>
+    <string name="spectrum_move_right">"Naar rechts"</string>
+    <string name="spectrum_move_switch">"Wisselen tussen grove en fijne stappen"</string>
 </resources>

@@ -3237,4 +3237,9 @@ Banjir adalah aliran frame pemasangan palsu yang memunculkan pop-up di setiap po
     <string name="ready_to_listen_body">"Mulai penerimaan: apa yang ditangkap alat ini akan tampil di sini, yang terbaru di atas."</string>
     <string name="receive_none_yet">"Belum ada yang terdengar"</string>
     <string name="receive_none_yet_body">"Penerimaan aktif: semua yang ditangkap alat ini tampil di sini begitu terdengar."</string>
+    <string name="spectrum_move_fine">"Langkah halus: %1$s sekali geser"</string>
+    <string name="spectrum_move_coarse">"Langkah kasar: %1$s sekali geser"</string>
+    <string name="spectrum_move_left">"Geser ke kiri"</string>
+    <string name="spectrum_move_right">"Geser ke kanan"</string>
+    <string name="spectrum_move_switch">"Beralih antara langkah kasar dan halus"</string>
 </resources>

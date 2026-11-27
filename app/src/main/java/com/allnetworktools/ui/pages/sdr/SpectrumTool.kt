@@ -1,5 +1,8 @@
 package com.allnetworktools.ui.pages.sdr
 
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.foundation.combinedClickable
 import kotlinx.coroutines.launch
 import com.allnetworktools.ui.components.fadeUp
 import androidx.compose.foundation.Canvas
@@ -193,9 +196,19 @@ fun SpectrumTool(vm: MainViewModel) {
                 }
                 WaterfallView(c, markerAt, onDrag = drag, onTap = put)
             }
-            // Move by half a width, zoom out and in, and the centre: a tap on it to type another frequency.
+            // Move (by half a width, or a twentieth in fine mode: a long press on either arrow switches), zoom out and in,
+            // and the centre: a tap on it to type another frequency.
+            val move = if (c.fineMove) span / 20 else span / 2
+            val actions = com.allnetworktools.ui.LocalActions.current
+            val haptics = AntTheme.haptics
+            val switchMove = {
+                c.fineMove = !c.fineMove
+                haptics.confirm()
+                val step = moveLabel(if (c.fineMove) span / 20 else span / 2)
+                actions.toast(S(if (c.fineMove) R.string.spectrum_move_fine else R.string.spectrum_move_coarse, step))
+            }
             Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                RoundButton(Sym.ChevronLeft) { c.retune((center - span / 2).toLong()) }
+                MoveButton(left = true, fine = c.fineMove, onLongClick = switchMove) { c.retune((center - move).toLong()) }
                 RoundButton(Sym.Remove, enabled = c.zoom > SpectrumController.Zooms.first()) {
                     SpectrumController.Zooms.lastOrNull { it < c.zoom }?.let(c::chooseZoom)
                 }
@@ -209,7 +222,7 @@ fun SpectrumTool(vm: MainViewModel) {
                 RoundButton(Sym.Add, enabled = c.zoom < SpectrumController.Zooms.last()) {
                     SpectrumController.Zooms.firstOrNull { it > c.zoom }?.let(c::chooseZoom)
                 }
-                RoundButton(Sym.ChevronRight) { c.retune((center + span / 2).toLong()) }
+                MoveButton(left = false, fine = c.fineMove, onLongClick = switchMove) { c.retune((center + move).toLong()) }
             }
             if (marker != null) MarkerBar(vm, c, db, markerAt, marker, center, span) { analysis = true }
             else if (db != null) Text(S(R.string.spectrum_marker_hint), Modifier.padding(horizontal = 8.dp), style = rf(12, 16), color = cs.onSurfaceVariant)
@@ -288,6 +301,36 @@ fun SpectrumTool(vm: MainViewModel) {
 /** Held this close to an edge (a fraction of the width), the marker moves the spectrum. */
 private const val EDGE = 0.04f
 private const val EDGE_MS = 700L
+
+/**
+ * A move button: a double arrow for coarse moves (half the view), a single one for fine moves (a twentieth); a long
+ * press switches between the two (the icon font holds only the single chevron, so the double one is two of them).
+ */
+@OptIn(androidx.compose.foundation.ExperimentalFoundationApi::class)
+@Composable
+private fun MoveButton(left: Boolean, fine: Boolean, onLongClick: () -> Unit, onClick: () -> Unit) {
+    val icon = if (left) Sym.ChevronLeft else Sym.ChevronRight
+    val label = S(if (left) R.string.spectrum_move_left else R.string.spectrum_move_right)
+    Box(
+        Modifier.size(44.dp).clip(CircleShape).background(cs.surfaceContainerHigh)
+            .combinedClickable(role = androidx.compose.ui.semantics.Role.Button, onClickLabel = label, onLongClickLabel = S(R.string.spectrum_move_switch), onLongClick = onLongClick, onClick = onClick)
+            .semantics { contentDescription = label },
+        contentAlignment = Alignment.Center,
+    ) {
+        androidx.compose.animation.AnimatedContent(fine, label = "move") { f ->
+            if (f) Symbol(icon, size = 22.dp, tint = cs.onSurface)
+            else Row(horizontalArrangement = Arrangement.spacedBy((-14).dp)) {
+                Symbol(icon, size = 22.dp, tint = cs.onSurface)
+                Symbol(icon, size = 22.dp, tint = cs.onSurface)
+            }
+        }
+    }
+}
+
+/** A move step as people read it: 50 kHz, 1 MHz, 2.5 MHz. */
+private fun moveLabel(hz: Double): String =
+    if (hz >= 1e6) "${java.math.BigDecimal(hz / 1e6).setScale(3, java.math.RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()} MHz"
+    else "${java.math.BigDecimal(hz / 1e3).setScale(1, java.math.RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()} kHz"
 
 @Composable
 private fun RoundButton(icon: String, tint: Color = cs.onSurface, background: Color = cs.surfaceContainerHigh, enabled: Boolean = true, onClick: () -> Unit) {

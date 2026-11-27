@@ -3467,4 +3467,9 @@ Zalew to strumień fałszywych ramek parowania, który wywołuje wyskakujące ok
     <string name="ready_to_listen_body">"Uruchom odbiór: to, co narzędzie wychwyci, pojawi się tutaj, najnowsze na górze."</string>
     <string name="receive_none_yet">"Jeszcze nic nie słychać"</string>
     <string name="receive_none_yet_body">"Odbiór trwa: wszystko, co narzędzie wychwyci, pojawi się tu, gdy tylko to usłyszy."</string>
+    <string name="spectrum_move_fine">"Dokładne kroki: po %1$s"</string>
+    <string name="spectrum_move_coarse">"Zgrubne kroki: po %1$s"</string>
+    <string name="spectrum_move_left">"W lewo"</string>
+    <string name="spectrum_move_right">"W prawo"</string>
+    <string name="spectrum_move_switch">"Przełącz między krokami zgrubnymi i dokładnymi"</string>
 </resources>

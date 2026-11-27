@@ -3313,4 +3313,9 @@
     <string name="ready_to_listen_body">"रिसेप्शन शुरू करें: यह टूल जो पकड़ेगा वह यहाँ दिखेगा, सबसे नया ऊपर।"</string>
     <string name="receive_none_yet">"अभी तक कुछ नहीं सुना"</string>
     <string name="receive_none_yet_body">"रिसेप्शन चालू है: टूल जो भी पकड़ेगा, सुनते ही यहाँ दिखेगा।"</string>
+    <string name="spectrum_move_fine">"बारीक कदम: एक बार में %1$s"</string>
+    <string name="spectrum_move_coarse">"बड़े कदम: एक बार में %1$s"</string>
+    <string name="spectrum_move_left">"बाएँ खिसकाएँ"</string>
+    <string name="spectrum_move_right">"दाएँ खिसकाएँ"</string>
+    <string name="spectrum_move_switch">"बड़े और बारीक कदमों के बीच बदलें"</string>
 </resources>

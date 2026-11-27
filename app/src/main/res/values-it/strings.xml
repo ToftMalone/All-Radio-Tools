@@ -3320,4 +3320,9 @@ Una raffica è un flusso di finte trame di abbinamento che fa apparire un pop-up
     <string name="ready_to_listen_body">"Avvia la ricezione: ciò che questo strumento capta apparirà qui, il più recente in alto."</string>
     <string name="receive_none_yet">"Ancora niente"</string>
     <string name="receive_none_yet_body">"La ricezione è attiva: tutto ciò che lo strumento capta apparirà qui appena lo sente."</string>
+    <string name="spectrum_move_fine">"Spostamento fine: %1$s alla volta"</string>
+    <string name="spectrum_move_coarse">"Spostamento ampio: %1$s alla volta"</string>
+    <string name="spectrum_move_left">"Sposta a sinistra"</string>
+    <string name="spectrum_move_right">"Sposta a destra"</string>
+    <string name="spectrum_move_switch">"Passa tra spostamento ampio e fine"</string>
 </resources>

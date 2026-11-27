@@ -3237,4 +3237,9 @@
     <string name="ready_to_listen_body">"受信を開始すると、このツールが捉えたものがここに表示されます（新しいものが上）。"</string>
     <string name="receive_none_yet">"まだ何も受信していません"</string>
     <string name="receive_none_yet_body">"受信中です。このツールが捉えたものは、受信次第ここに表示されます。"</string>
+    <string name="spectrum_move_fine">"細かい移動: %1$s ずつ"</string>
+    <string name="spectrum_move_coarse">"大きい移動: %1$s ずつ"</string>
+    <string name="spectrum_move_left">"左へ移動"</string>
+    <string name="spectrum_move_right">"右へ移動"</string>
+    <string name="spectrum_move_switch">"大きい移動と細かい移動を切り替え"</string>
 </resources>

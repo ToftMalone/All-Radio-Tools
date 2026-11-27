@@ -3313,4 +3313,9 @@ Sel, yakındaki her telefonda bir açılır pencere çıkaran sahte eşleştirme
     <string name="ready_to_listen_body">"Alımı başlatın: bu aracın yakaladıkları burada görünür, en yenisi üstte."</string>
     <string name="receive_none_yet">"Henüz bir şey duyulmadı"</string>
     <string name="receive_none_yet_body">"Alım açık: aracın yakaladığı her şey duyulur duyulmaz burada görünür."</string>
+    <string name="spectrum_move_fine">"İnce adımlar: her seferinde %1$s"</string>
+    <string name="spectrum_move_coarse">"Kaba adımlar: her seferinde %1$s"</string>
+    <string name="spectrum_move_left">"Sola kaydır"</string>
+    <string name="spectrum_move_right">"Sağa kaydır"</string>
+    <string name="spectrum_move_switch">"Kaba ve ince adımlar arasında geçiş yap"</string>
 </resources>

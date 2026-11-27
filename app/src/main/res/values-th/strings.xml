@@ -3237,4 +3237,9 @@
     <string name="ready_to_listen_body">"เริ่มรับสัญญาณ: สิ่งที่เครื่องมือนี้จับได้จะแสดงที่นี่ ล่าสุดอยู่บนสุด"</string>
     <string name="receive_none_yet">"ยังไม่ได้ยินอะไร"</string>
     <string name="receive_none_yet_body">"กำลังรับสัญญาณ: ทุกสิ่งที่เครื่องมือจับได้จะแสดงที่นี่ทันทีที่ได้ยิน"</string>
+    <string name="spectrum_move_fine">"เลื่อนละเอียด: ครั้งละ %1$s"</string>
+    <string name="spectrum_move_coarse">"เลื่อนหยาบ: ครั้งละ %1$s"</string>
+    <string name="spectrum_move_left">"เลื่อนไปทางซ้าย"</string>
+    <string name="spectrum_move_right">"เลื่อนไปทางขวา"</string>
+    <string name="spectrum_move_switch">"สลับระหว่างเลื่อนหยาบและละเอียด"</string>
 </resources>

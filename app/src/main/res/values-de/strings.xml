@@ -3313,4 +3313,9 @@ Eine Flut ist ein Strom gefälschter Kopplungs-Frames, der auf jedem Telefon in 
     <string name="ready_to_listen_body">"Starte den Empfang: Was dieses Werkzeug auffängt, erscheint hier, das Neueste oben."</string>
     <string name="receive_none_yet">"Noch nichts gehört"</string>
     <string name="receive_none_yet_body">"Der Empfang läuft: Alles, was dieses Werkzeug auffängt, erscheint hier, sobald es gehört wird."</string>
+    <string name="spectrum_move_fine">"Feine Schritte: je %1$s"</string>
+    <string name="spectrum_move_coarse">"Grobe Schritte: je %1$s"</string>
+    <string name="spectrum_move_left">"Nach links"</string>
+    <string name="spectrum_move_right">"Nach rechts"</string>
+    <string name="spectrum_move_switch">"Zwischen groben und feinen Schritten wechseln"</string>
 </resources>

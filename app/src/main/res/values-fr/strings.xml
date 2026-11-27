@@ -3408,4 +3408,9 @@
     <string name="ready_to_listen_body">"Lancez la réception : ce que l\'outil capte s\'affichera ici, le plus récent en haut."</string>
     <string name="receive_none_yet">"Rien d\'entendu pour l\'instant"</string>
     <string name="receive_none_yet_body">"La réception est lancée : tout ce que l\'outil capte s\'affichera ici dès qu\'il l\'entend."</string>
+    <string name="spectrum_move_fine">"Déplacement fin : %1$s à la fois"</string>
+    <string name="spectrum_move_coarse">"Déplacement grossier : %1$s à la fois"</string>
+    <string name="spectrum_move_left">"Aller à gauche"</string>
+    <string name="spectrum_move_right">"Aller à droite"</string>
+    <string name="spectrum_move_switch">"Basculer entre déplacement grossier et fin"</string>
 </resources>

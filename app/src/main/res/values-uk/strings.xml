@@ -3467,4 +3467,9 @@
     <string name="ready_to_listen_body">"Запустіть прийом: усе, що впіймає інструмент, з\'явиться тут, нове зверху."</string>
     <string name="receive_none_yet">"Поки нічого не чути"</string>
     <string name="receive_none_yet_body">"Прийом триває: усе, що впіймає інструмент, з\'явиться тут, щойно буде почуто."</string>
+    <string name="spectrum_move_fine">"Точний крок: по %1$s"</string>
+    <string name="spectrum_move_coarse">"Грубий крок: по %1$s"</string>
+    <string name="spectrum_move_left">"Ліворуч"</string>
+    <string name="spectrum_move_right">"Праворуч"</string>
+    <string name="spectrum_move_switch">"Перемкнути грубий і точний крок"</string>
 </resources>

@@ -3467,4 +3467,9 @@ Záplava je proud falešných rámců párování, který vyvolá vyskakovací o
     <string name="ready_to_listen_body">"Spusťte příjem: co nástroj zachytí, objeví se zde, nejnovější nahoře."</string>
     <string name="receive_none_yet">"Zatím nic"</string>
     <string name="receive_none_yet_body">"Příjem běží: vše, co nástroj zachytí, se tu objeví, jakmile to uslyší."</string>
+    <string name="spectrum_move_fine">"Jemné kroky: po %1$s"</string>
+    <string name="spectrum_move_coarse">"Hrubé kroky: po %1$s"</string>
+    <string name="spectrum_move_left">"Doleva"</string>
+    <string name="spectrum_move_right">"Doprava"</string>
+    <string name="spectrum_move_switch">"Přepnout mezi hrubými a jemnými kroky"</string>
 </resources>
